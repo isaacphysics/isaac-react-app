@@ -1,8 +1,6 @@
-import {CodeDTO, CodeSnippetDTO} from "../../../IsaacApiTypes";
+import {CodeSnippetDTO} from "../../../IsaacApiTypes";
 import React, {useEffect} from "react";
 import {Col, Row} from "reactstrap";
-import {Tabs} from "../elements/Tabs";
-import {fromPairs} from "lodash";
 
 import hljs from 'highlight.js';
 
@@ -15,9 +13,9 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         hljs.highlightAll();
     }, [doc]);
 
-    return <div className="tabbed-code mt-2 mb-3">
+    return <div>
         <Row>
-            <Col className="code-block">
+            <Col>
                 <pre>
                     <code className={doc.disableHighlighting ? 'plaintext' : doc.language}>
                         {doc.code}
