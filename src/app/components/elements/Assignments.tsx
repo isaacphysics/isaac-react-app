@@ -27,12 +27,13 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                 }
                 return a;
             }, new Set<number>())).sort();
-            const topics = Array.from((assignment.gameboard?.questions || []).reduce((a, c) => {
+            const topics = tags.getTopicTags(Array.from((assignment.gameboard?.questions || []).reduce((a, c) => {
+                debugger;
                 if (isDefined(c.tags) && c.tags.length > 0) {
-                    return new Set([...Array.from(a), ...c.tags.map(id => tags.getById(id as TAG_ID)?.title)])
+                    return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
                 }
                 return a;
-            }, new Set<string>())).filter(tag => isDefined(tag)).sort();
+            }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
             return <React.Fragment key={index}>
                 <hr />
                 <Row className="board-card">
