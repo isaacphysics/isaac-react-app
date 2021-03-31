@@ -300,18 +300,6 @@ export interface ChoiceDTO extends ContentDTO {
 export interface ChoiceQuestionDTO extends QuestionDTO {
 }
 
-export interface GlossaryTermDTO extends ContentDTO {
-    explanation?: ContentDTO;
-    examBoard: string;
-}
-
-export interface CodeSnippetDTO extends ContentDTO {
-    language?: string;
-    code?: string;
-    disableHighlighting?: boolean;
-    url?: string;
-}
-
 export interface ContentBaseDTO {
     id?: string;
     type?: string;
@@ -365,6 +353,18 @@ export interface FormulaDTO extends ChoiceDTO {
 
 export interface FreeTextRuleDTO extends ChoiceDTO {
     wordProximity?: number;
+}
+
+export interface GlossaryTermDTO extends ContentDTO {
+    explanation?: ContentDTO;
+    examBoard: string;
+}
+
+export interface CodeSnippetDTO extends ContentDTO {
+    language?: string;
+    code?: string;
+    disableHighlighting?: boolean;
+    url?: string;
 }
 
 export interface GraphChoiceDTO extends ChoiceDTO {
@@ -569,18 +569,6 @@ export interface Mark {
 export interface ExternalReference {
     title?: string;
     url?: string;
-}
-
-export interface GlossaryTerm extends Content {
-    explanation?: Content;
-    examBoard: string;
-}
-
-export interface CodeSnippet extends Content {
-    language?: string;
-    code?: string;
-    disableHighlighting?: boolean;
-    url?: string
 }
 
 export interface ContentBase {
