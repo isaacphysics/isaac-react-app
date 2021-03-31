@@ -9,6 +9,7 @@ import {determineGameboardSubjects, generateGameboardSubjectHexagons} from "../.
 import { isDefined } from "../../services/miscUtils";
 import tags from "../../services/tags";
 import { TAG_ID } from "../../services/constants";
+import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
@@ -65,7 +66,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                     </Col>
                     <Col xs={7} md={5} className="mt-sm-2">
                         <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.questions?.length || "0"}</p>
-                        {isDefined(levels) && levels.length > 0 && <p className="mb-0"><strong>{levels.length === 1 ? "Level" : "Levels"}:</strong> {levels.join(", ")}</p>}
+                        {SITE_SUBJECT !== SITE.CS && isDefined(levels) && levels.length > 0 && <p className="mb-0"><strong>{levels.length === 1 ? "Level" : "Levels"}:</strong> {levels.join(", ")}</p>}
                         {isDefined(topics) && topics.length > 0 && <p className="mb-0"><strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong> {topics.join(", ")}</p>}
                         {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
                     </Col>
