@@ -7,7 +7,7 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {loadQuizAssignmentFeedback, returnQuizToStudent, updateQuizAssignmentFeedbackMode} from "../../../state/actions/quizzes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {IsaacQuizDTO, IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizFeedbackMode, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
+import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizFeedbackMode, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend, formatMark} from '../AssignmentProgress';
 import {usePageSettings} from "../../../services/progress";
 import {PageSettings, QuizFeedbackModes} from "../../../../IsaacAppTypes";
