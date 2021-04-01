@@ -1,28 +1,11 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    Button,
-    Col,
-    Container,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle,
-    Label,
-    Row,
-    Spinner,
-    UncontrolledButtonDropdown
-} from "reactstrap"
+import {Button, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Label, Row, Spinner, UncontrolledButtonDropdown} from "reactstrap"
 import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
-import {
-    AppAssignmentProgress,
-    AppGroup,
-    EnhancedGameboard,
-    PageSettings,
-    SingleProgressDetailsProps
-} from "../../../IsaacAppTypes";
+import {AppAssignmentProgress, AppGroup, EnhancedGameboard, PageSettings, SingleProgressDetailsProps} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
@@ -32,6 +15,7 @@ import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreat
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {usePageSettings} from "../../services/progress";
 
 function selectGroups(state: AppState) {
     if (state != null) {
@@ -116,7 +100,7 @@ type ProgressDetailsProps = AssignmentDetailsProps & {
 
 const passMark = 0.75;
 
-function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {
+export function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {
     let result;
     if (formatAsPercentage) {
         result = denominator !== 0 ? Math.round(100 * numerator / denominator) + "%" : "100%";
@@ -519,11 +503,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
 export function AssignmentProgress(props: AssignmentProgressPageProps) {
     const dispatch = useDispatch();
     const {groups} = useSelector(selectGroups);
-
-    const [colourBlind, setColourBlind] = useState(false);
-    const [formatAsPercentage, setFormatAsPercentage] = useState(false);
-
-    const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
+    const pageSettings = usePageSettings();
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 

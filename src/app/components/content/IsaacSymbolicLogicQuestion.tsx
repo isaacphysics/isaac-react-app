@@ -236,11 +236,10 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 logicSyntax={examBoard === EXAM_BOARD.OCR ? 'logic' : 'binary'}
                 questionDoc={doc}
             />}
-            {isStaff(user) && <div className="eqn-editor-input">
+            {!readonly && isStaff(user) && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <InputGroup className="my-2">
                     <Input type="text" onChange={updateEquation} value={textInput}
-                           readOnly={readonly}
                            placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
                         <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>

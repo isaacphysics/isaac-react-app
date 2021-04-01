@@ -1,6 +1,6 @@
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
-import {ContentSummaryDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../../IsaacApiTypes";
 
 type QuizState = {quizzes: ContentSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -23,10 +23,35 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
             return NOT_FOUND;
         case ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS:
             return [...quizAssignments ?? [], action.newAssignment];
+        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
+                if (assignment.id === action.quizAssignmentId) {
+                    return {...assignment, cancelling: true};
+                }
+                return assignment;
+            }) : quizAssignments;
+        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
+                if (assignment.id === action.quizAssignmentId) {
+                    return {...assignment, cancelling: undefined};
+                }
+                return assignment;
+            }) : quizAssignments;
+        case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.filter(assignment => {
+                return assignment.id !== action.quizAssignmentId;
+            }) : quizAssignments;
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS:
+            return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
+                if (assignment.id === action.quizAssignmentId) {
+                    return {...assignment, ...action.update};
+                }
+                return assignment;
+            }) : quizAssignments;
         default:
             return quizAssignments;
     }
-}
+};
 
 type QuizAssignedToMeState = QuizAssignmentDTO[] | NOT_FOUND_TYPE | null;
 export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, action: Action) => {
@@ -50,7 +75,28 @@ export const quizAssignedToMe = (quizAssignments: QuizAssignedToMeState = null, 
         default:
             return quizAssignments;
     }
-}
+};
+
+type QuizAttemptedFreelyByMeState = QuizAttemptDTO[] | NOT_FOUND_TYPE | null;
+export const quizAttemptedFreelyByMe = (quizAttempts: QuizAttemptedFreelyByMeState = null, action: Action): QuizAttemptedFreelyByMeState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST:
+            return null;
+        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS:
+            return action.attempts;
+        case ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE:
+            return NOT_FOUND;
+        case ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS:
+            return (quizAttempts !== NOT_FOUND && quizAttempts?.map(attempt => {
+                if (attempt?.id === action.attempt.id) {
+                    return action.attempt;
+                }
+                return attempt;
+            })) || null;
+        default:
+            return quizAttempts;
+    }
+};
 
 type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
 export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Action): QuizAttemptState => {
@@ -71,7 +117,66 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
                 return possibleAttempt;
             }
             return null;
+        case ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST:
+            if (possibleAttempt && 'attempt' in possibleAttempt && possibleAttempt.attempt.quizId === action.quizId) {
+                // Optimistically keep current attempt
+                return possibleAttempt;
+            }
+            return null;
         default:
             return possibleAttempt;
+    }
+};
+
+type QuizAssignmentState = {assignment: QuizAssignmentDTO} | {error: string} | null;
+export const quizAssignment = (possibleAssignment: QuizAssignmentState = null, action: Action): QuizAssignmentState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST:
+            return null;
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS:
+            return {assignment: action.assignment};
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE:
+            return {error: action.error};
+        case ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS:
+            if (possibleAssignment && 'assignment' in possibleAssignment && possibleAssignment.assignment.id === action.quizAssignmentId) {
+                return {assignment: {
+                    ...possibleAssignment.assignment,
+                    userFeedback: possibleAssignment.assignment.userFeedback?.map(feedback => {
+                        if (feedback.user?.id === action.feedback.user?.id) {
+                            return action.feedback;
+                        } else {
+                            return feedback;
+                        }
+                    }),
+                }};
+            }
+            return possibleAssignment;
+        case ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS:
+            if (possibleAssignment && 'assignment' in possibleAssignment && possibleAssignment.assignment.id === action.quizAssignmentId) {
+                return {assignment: {
+                    ...possibleAssignment.assignment,
+                    ...action.update,
+                }};
+            }
+            return possibleAssignment;
+        default:
+            return possibleAssignment;
+    }
+};
+
+type QuizPreviewState = {quiz: IsaacQuizDTO} | {error: string} | null;
+export const quizPreview = (quizPreview: QuizPreviewState = null, action: Action): QuizPreviewState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST:
+            if (quizPreview && 'quiz' in quizPreview && quizPreview.quiz.id === action.quizId) {
+                return quizPreview;
+            }
+            return null;
+        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE:
+            return {error: action.error};
+        case ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS:
+            return {quiz: action.quiz};
+        default:
+            return quizPreview;
     }
 }

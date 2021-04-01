@@ -2,7 +2,7 @@ import {useEffect, useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {isDefined} from "./miscUtils";
-import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO} from "../../IsaacApiTypes";
+import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
 import {deregisterQuestion, registerQuestion} from "../state/actions";
 
@@ -35,20 +35,28 @@ export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     return qs;
 }
 
-export function useCurrentQuizAttempt() {
-    const attemptState = useSelector(selectors.quizzes.currentQuizAttempt);
-    const error = isDefined(attemptState) && 'error' in attemptState ? attemptState.error : null;
-    const attempt = isDefined(attemptState) && 'attempt' in attemptState ? attemptState.attempt : null;
-    const questions = useMemo(() => {
+export function useQuizQuestions(attempt: QuizAttemptDTO | null) {
+    return useMemo(() => {
         return extractQuestions(attempt?.quiz);
     }, [attempt?.quiz]);
-    const sections = useMemo(() => {
+}
+
+export function useQuizSections(attempt: QuizAttemptDTO | null) {
+    return useMemo(() => {
         const sections: { [id: string]: IsaacQuizSectionDTO } = {};
         attempt?.quiz?.children?.forEach(section => {
             sections[section.id as string] = section as IsaacQuizSectionDTO;
         });
         return sections;
     }, [attempt?.quiz]);
+}
+
+export function useCurrentQuizAttempt() {
+    const attemptState = useSelector(selectors.quizzes.currentQuizAttempt);
+    const error = isDefined(attemptState) && 'error' in attemptState ? attemptState.error : null;
+    const attempt = isDefined(attemptState) && 'attempt' in attemptState ? attemptState.attempt : null;
+    const questions = useQuizQuestions(attempt);
+    const sections = useQuizSections(attempt);
 
     const dispatch = useDispatch();
 

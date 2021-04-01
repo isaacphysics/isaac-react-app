@@ -7,7 +7,7 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem,
+    GameboardItem, QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
@@ -457,11 +457,34 @@ export type Action =
 
     | {type: ACTION_TYPE.QUIZ_LOAD_ASSIGNMENT_ATTEMPT_REQUEST; quizAssignmentId: number}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number}
+    | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
 
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_REQUEST; quizAssignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS; assignment: ApiTypes.QuizAssignmentDTO}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE; error: string}
+
+    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST; quizAssignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_SUCCESS; quizAssignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE; quizAssignmentId: number}
+
+    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_REQUEST; quizId: string}
+    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS; quiz: ApiTypes.IsaacQuizDTO}
+    | {type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE; error: string}
+
+    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS; attempts: ApiTypes.QuizAttemptDTO[]}
+    | {type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS; quizAssignmentId: number; feedback: ApiTypes.QuizUserFeedbackDTO}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS; quizAssignmentId: number; update: ApiTypes.QuizAssignmentDTO}
     ;
 
 export type NOT_FOUND_TYPE = 404;
@@ -877,3 +900,5 @@ export type FasttrackConceptsState = {gameboardId: string; concept: string; item
 export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
     groupName?: string;
 }
+
+export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];

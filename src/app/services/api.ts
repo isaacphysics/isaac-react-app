@@ -556,5 +556,26 @@ export const api = {
         loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
         },
+        loadQuizAssignmentFeedback: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
+            return endpoint.get(`/quiz/assignment/${quizAssignmentId}`);
+        },
+        cancelQuizAssignment: (quizAssignmentId: number): AxiosPromise<never> => {
+            return endpoint.delete(`/quiz/assignment/${quizAssignmentId}`);
+        },
+        loadQuizPreview: (quizId: string): AxiosPromise<ApiTypes.IsaacQuizDTO> => {
+            return endpoint.get(`/quiz/${quizId}/preview`);
+        },
+        loadFreeQuizAttempt: (quizId: string): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
+            return endpoint.post(`/quiz/${quizId}/attempt`);
+        },
+        loadAttemptedFreelyByMe: (): AxiosPromise<ApiTypes.QuizAttemptDTO[]> => {
+            return endpoint.get(`/quiz/free_attempts`);
+        },
+        markQuizAttemptAsIncomplete: (quizAssignmentId: number, userId: number): AxiosPromise<ApiTypes.QuizUserFeedbackDTO> => {
+            return endpoint.post(`/quiz/assignment/${quizAssignmentId}/${userId}/incomplete`);
+        },
+        updateQuizAssignment: (quizAssignmentId: number, update: ApiTypes.QuizAssignmentDTO): AxiosPromise<never> => {
+            return endpoint.post(`/quiz/assignment/${quizAssignmentId}`, update);
+        }
     },
 };
