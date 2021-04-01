@@ -11,6 +11,7 @@ import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../ele
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
+import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
 
 interface QuizDoAsssignmentProps {
     match: {params: {quizAssignmentId: string, page: string}}
@@ -43,6 +44,7 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
     }, [dispatch, quizAssignmentId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
+    useSectionViewLogging(attempt, pageNumber);
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 
