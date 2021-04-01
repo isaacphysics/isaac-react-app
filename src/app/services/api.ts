@@ -576,6 +576,9 @@ export const api = {
         },
         updateQuizAssignment: (quizAssignmentId: number, update: ApiTypes.QuizAssignmentDTO): AxiosPromise<never> => {
             return endpoint.post(`/quiz/assignment/${quizAssignmentId}`, update);
+        },
+        logQuizSectionView: (quizAttemptId: number, page: number): AxiosPromise<never> => {
+            return endpoint.post(`/quiz/attempt/${quizAttemptId}/log`, `sectionNumber=${page}`, {});
         }
     },
 };

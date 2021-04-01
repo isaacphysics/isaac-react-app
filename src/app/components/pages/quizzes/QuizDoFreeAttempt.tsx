@@ -11,6 +11,7 @@ import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../ele
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
+import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
 
 interface QuizDoFreeAttemptProps {
     match: {params: {quizId: string, page: string}}
@@ -43,6 +44,7 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
     }, [dispatch, quizId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
+    useSectionViewLogging(attempt, pageNumber);
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 

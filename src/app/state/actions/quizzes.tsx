@@ -205,3 +205,8 @@ export const updateQuizAssignmentFeedbackMode = (quizAssignmentId: number, quizF
         return false;
     }
 };
+
+export const logQuizSectionView = (quizAttemptId: number, page: number) => async () => {
+    // No actual dispatch
+    api.quizzes.logQuizSectionView(quizAttemptId, page);
+};
