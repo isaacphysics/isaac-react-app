@@ -28,7 +28,6 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                 return a;
             }, new Set<number>())).sort();
             const topics = tags.getTopicTags(Array.from((assignment.gameboard?.questions || []).reduce((a, c) => {
-                debugger;
                 if (isDefined(c.tags) && c.tags.length > 0) {
                     return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
                 }
