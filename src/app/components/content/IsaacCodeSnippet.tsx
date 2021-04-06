@@ -24,7 +24,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
             </Col>
         </Row>
         {doc.url && <Row>
-            <Col className="text-center">
+            <Col className="text-center mb-2">
                 <a href={doc.url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </Col>
         </Row>}
