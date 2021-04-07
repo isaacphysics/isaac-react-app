@@ -367,6 +367,13 @@ export interface GlossaryTermDTO extends ContentDTO {
     examBoard?: EXAM_BOARD;
 }
 
+export interface CodeSnippetDTO extends ContentDTO {
+    language?: string;
+    code?: string;
+    disableHighlighting?: boolean;
+    url?: string;
+}
+
 export interface GraphChoiceDTO extends ChoiceDTO {
     graphSpec?: string;
 }
