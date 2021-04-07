@@ -12,7 +12,9 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const codeSnippetRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
-        codeSnippetRef.current && hljs.highlightBlock(codeSnippetRef.current);
+        if (codeSnippetRef.current) {
+            hljs.highlightBlock(codeSnippetRef.current);
+        }
     }, [doc]);
 
     return <div>
