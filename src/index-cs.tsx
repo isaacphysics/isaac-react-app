@@ -7,10 +7,10 @@ import {Provider} from "react-redux";
 import {store} from "./app/state/store";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
 import {printAsciiArtLogoToConsole} from "./app/services/easterEggs/csLogoAsciiArt";
-import {registerLanguages} from "./app/services/highlightJsConfig";
+import * as highlightJsConfig from "./app/services/highlightJsConfig";
 
 printAsciiArtLogoToConsole();
-registerLanguages();
+highlightJsConfig.registerLanguages();
 
 ReactDOM.render(
     <React.StrictMode>
