@@ -1,5 +1,5 @@
 import {CodeSnippetDTO} from "../../../IsaacApiTypes";
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
 
 import hljs from 'highlight.js';
@@ -9,15 +9,17 @@ interface IsaacCodeProps {
 }
 
 export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
+    const codeSnippetRef = useRef<HTMLElement>(null);
+
     useEffect(() => {
-        hljs.highlightAll();
+        codeSnippetRef.current && hljs.highlightBlock(codeSnippetRef.current);
     }, [doc]);
 
     return <div>
         <Row>
             <Col>
                 <pre>
-                    <code className={doc.disableHighlighting ? 'plaintext' : doc.language}>
+                    <code ref={codeSnippetRef} className={doc.disableHighlighting ? 'plaintext' : doc.language}>
                         {doc.code}
                     </code>
                 </pre>
