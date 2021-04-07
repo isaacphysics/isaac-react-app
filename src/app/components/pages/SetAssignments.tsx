@@ -41,10 +41,12 @@ import {
     formatBoardOwner,
     generateGameboardSubjectHexagons
 } from "../../services/gameboards";
-import {connect, useDispatch} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import { isStaff } from "../../services/user";
+import { isDefined } from "../../services/miscUtils";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -62,7 +64,7 @@ interface SetAssignmentsPageProps {
     loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
     loadGroupsForBoard: (board: GameboardDTO) => void;
     deleteBoard: (board: GameboardDTO) => void;
-    assignBoard: (board: GameboardDTO, groupId?: number, dueDate?: Date) => Promise<boolean>;
+    assignBoard: (board: GameboardDTO, groupId?: number, dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
@@ -76,12 +78,15 @@ type BoardProps = SetAssignmentsPageProps & {
 const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const [groupId, setGroupId] = useState<number>();
     const [dueDate, setDueDate] = useState<Date>();
+    const [assignmentNotes, setAssignmentNotes] = useState<string>();
+    const user = useSelector(selectors.user.orNull);
 
     function assign() {
-        assignBoard(board, groupId, dueDate).then(success => {
+        assignBoard(board, groupId, dueDate, assignmentNotes).then(success => {
             if (success) {
                 setGroupId(-1);
                 setDueDate(undefined);
+                setAssignmentNotes('');
             }
         });
     }
@@ -100,7 +105,24 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
         </Label>
-        <Button className="mt-3 mb-2" block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]} onClick={assign} disabled={groupId === null}>Assign to group</Button>
+        {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
+            <Input type="textarea"
+                   spellCheck={true}
+                   rows={3}
+                   value={assignmentNotes}
+                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}
+                />
+                <p className="mt-1 mb-0"><small>{(assignmentNotes || '').length}/500 characters</small></p>
+                {isDefined(assignmentNotes) && assignmentNotes.length > 500 &&
+                    <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
+                }
+        </Label>}
+        <Button
+            className="mt-2 mb-2"
+            block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
+            onClick={assign}
+            disabled={groupId === null || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+        >Assign to group</Button>
     </Container>;
 };
 

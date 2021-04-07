@@ -413,8 +413,8 @@ export const api = {
         unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
             return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
         },
-        assign: (board: ApiTypes.GameboardDTO, groupId: number, dueDate?: number) => {
-            return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupId})
+        assign: (board: ApiTypes.GameboardDTO, groupId: number, dueDate?: number, assignmentNotes?: string) => {
+            return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupId, notes: assignmentNotes})
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${boardId}`);

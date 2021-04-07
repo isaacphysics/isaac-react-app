@@ -32,7 +32,13 @@ export interface TestQuestionDTO extends ChoiceQuestionDTO {
 export interface AssignmentDTO extends IAssignmentLike {
     gameboardId?: string;
     gameboard?: GameboardDTO;
+    groupId?: number;
+    groupName?: string;
+    ownerUserId?: number;
     assignerSummary?: UserSummaryDTO;
+    notes?: string;
+    creationDate?: Date;
+    dueDate?: Date;
     _id?: number;
 }
 

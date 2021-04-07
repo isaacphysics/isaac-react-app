@@ -1551,7 +1551,7 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
     }
 };
 
-export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date) => async (dispatch: Dispatch<Action>) => {
+export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
     if (groupId == null) {
         dispatch(showToast({color: "danger", title: "Board assignment failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
         return false;
@@ -1568,11 +1568,11 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         }
     }
 
-    const assignment = {board, groupId, dueDate: dueDateUTC};
+    const assignment = {board, groupId, dueDate: dueDateUTC, notes};
 
     dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, ...assignment});
     try {
-        await api.boards.assign(board, groupId, dueDateUTC);
+        await api.boards.assign(board, groupId, dueDateUTC, notes);
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment});
         dispatch(showToast({color: "success", title: "Assignment saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
         return true;
