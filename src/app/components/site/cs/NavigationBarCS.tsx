@@ -36,11 +36,10 @@ export const NavigationBarCS = () => {
         </NavigationSection>
 
         <NavigationSection title="Events">
-            {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My Event Reservations</LinkItem>}
+            {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
-            <LinkItem to="/pages/2020_student_mentoring_cohort2">Student mentoring</LinkItem>
-            <LinkItem to="/pages/2020_teacher_mentoring_cohort2">Teacher Mentoring</LinkItem>
+            <LinkItem to="/pages/2020_teacher_mentoring_cohort2">Teacher mentoring</LinkItem>
         </NavigationSection>
 
         <NavigationSection title={<React.Fragment>
