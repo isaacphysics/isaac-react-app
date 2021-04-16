@@ -6,10 +6,15 @@ import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
 import _cloneDeep from 'lodash/cloneDeep';
 import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
-import {GREEK_LETTERS_MAP} from '../../../services/constants';
+import {ACTION_TYPE, GREEK_LETTERS_MAP} from '../../../services/constants';
 import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
 import { ContentDTO } from '../../../../IsaacApiTypes';
 import { isDefined } from '../../../services/miscUtils';
+import { store } from '../../../state/store';
+import { closeActiveModal, openActiveModal } from "../../../state/actions";
+import { connect } from "react-redux";
+import { ActiveModal } from "../../../../IsaacAppTypes";
+import { PageFragment } from "../PageFragment";
 
 class MenuItem {
     public type: string;
@@ -41,6 +46,10 @@ interface InequalityModalProps {
     logicSyntax?: string;
     visible: boolean;
     questionDoc?: ContentDTO;
+    showHelpModal: (editorModal: string) => {
+        type: ACTION_TYPE;
+        activeModal: ActiveModal;
+    };
 }
 
 interface InequalityModalState {
@@ -74,7 +83,18 @@ interface InequalityModalState {
     numberInputValue?: number;
 }
 
-export class InequalityModal extends React.Component<InequalityModalProps> {
+interface InequalityHelpModalProps {
+    editorMode: string;
+}
+
+const InequalityHelpModal = (props: InequalityHelpModalProps) => {
+    const fragmentId = `eqn_editor_help_modal_${props.editorMode}`;
+    return <>
+        <PageFragment fragmentId={fragmentId}/>
+        </>
+}
+
+class InequalityModalComponent extends React.Component<InequalityModalProps> {
     public state: InequalityModalState;
 
     private _vHexagon = `
@@ -1226,6 +1246,13 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
                 onClick={() => { if (this.state.sketch) this.state.sketch.centre() }}
                 onKeyUp={() => { if (this.state.sketch) this.state.sketch.centre() }}
             >Centre</div>
+            <div
+                className="inequality-ui help button"
+                role="button" tabIndex={-1}
+                onClick={() => this.props.showHelpModal(this.props.editorMode || 'modemissing')}
+                onKeyUp={() => this.props.showHelpModal(this.props.editorMode || 'modemissing')}
+            >Help</div>
+
             <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
             {this.state.showQuestionReminder && (this.props.questionDoc?.value || (this.props.questionDoc?.children && this.props.questionDoc?.children?.length > 0)) && <div className="question-reminder">
                 {this.state.showQuestionReminder && <IsaacContentValueOrChildren value={this.props.questionDoc.value} encoding={this.props.questionDoc.encoding}>
@@ -1243,3 +1270,12 @@ export class InequalityModal extends React.Component<InequalityModalProps> {
         </div>;
     }
 }
+
+export const InequalityModal = connect(null, dispatch => ({
+    showHelpModal: (editorMode: string) => dispatch(openActiveModal({
+        closeAction: () => { store.dispatch(closeActiveModal()) },
+        size: 'xl',
+        title: 'Quick Help',
+        body: <InequalityHelpModal editorMode={editorMode} />
+    }))
+}))(InequalityModalComponent);
