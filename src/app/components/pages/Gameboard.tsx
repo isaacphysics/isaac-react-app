@@ -156,8 +156,8 @@ export const Gameboard = withRouter(({location}: {location: Location}) => {
             </RS.Col>
         </RS.Row>
         :
-        <RS.Row className="col-4 offset-2 offset-md-4">
-            <RS.Col className="mt-4">
+        <RS.Row>
+            <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
                     {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
                 </RS.Button>
