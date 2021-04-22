@@ -198,6 +198,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                                     logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                                                     dispatch(openActiveModal({
                                                                         closeAction: () => {dispatch(closeActiveModal())},
+                                                                        closeLabelOverride: "CANCEL",
                                                                         size: "xl",
                                                                         title: "Search questions",
                                                                         body: <QuestionSearchModal

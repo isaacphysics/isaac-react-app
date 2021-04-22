@@ -600,6 +600,7 @@ export interface Toast {
 
 export interface ActiveModal {
     closeAction?: () => void;
+    closeLabelOverride?: string;
     size?: string;
     title: string;
     body: any;
