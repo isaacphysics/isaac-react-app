@@ -22,6 +22,7 @@ import {useCurrentExamBoard} from "../../../services/examBoard";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isEqual} from "lodash";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -90,7 +91,31 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack, 0);
     },[searchDebounce, searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack]);
 
-    return <div>
+    const addSelectionsRow = <div className="d-lg-flex align-items-baseline">
+        <div className="flex-grow-1 mb-1">
+            <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
+                {{
+                    [SITE.PHY]: `${selectedQuestions.size} Question${selectedQuestions.size !== 1 ? "s" : ""} Selected`,
+                    [SITE.CS]: `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
+                }[SITE_SUBJECT]}
+            </strong>
+        </div>
+        <div>
+            <RS.Input
+                type="button"
+                value={{[SITE.PHY]: "Add Selections to Gameboard", [SITE.CS]: "Add selections to gameboard"}[SITE_SUBJECT]}
+                disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
+                className={"btn btn-block btn-secondary border-0"}
+                onClick={() => {
+                    setOriginalSelectedQuestions(selectedQuestions);
+                    setOriginalQuestionOrder(questionOrder);
+                    dispatch(closeActiveModal());
+                }}
+            />
+        </div>
+    </div>;
+
+    return <div className="mb-4">
         <div className="row">
             {SITE_SUBJECT === SITE.PHY && <div className="text-wrap col-lg-3 my-2">
                 <RS.Label htmlFor="question-search-book">Book</RS.Label>
@@ -182,28 +207,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 />
             </div>
         </div>
-        <div className="d-sm-flex align-items-baseline mt-4">
-            <div className="flex-grow-1 mb-1">
-                <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
-                    {{
-                        [SITE.PHY]: `${selectedQuestions.size} Question${selectedQuestions.size !== 1 ? "s" : ""} Selected`,
-                        [SITE.CS]: `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
-                    }[SITE_SUBJECT]}
-                </strong>
-            </div>
-            <div>
-                <RS.Input
-                    type="button"
-                    value={{[SITE.PHY]: "Return to Board", [SITE.CS]: "Return to board"}[SITE_SUBJECT]}
-                    disabled={selectedQuestions.size === 0}
-                    className={"btn btn-block btn-secondary border-0"}
-                    onClick={() => {
-                        setOriginalSelectedQuestions(selectedQuestions);
-                        setOriginalQuestionOrder(questionOrder);
-                        dispatch(closeActiveModal());
-                    }}
-                />
-            </div>
+        <div className="mt-4">
+            {addSelectionsRow}
         </div>
         <RS.Table bordered responsive className="mt-4">
             <thead>
@@ -243,5 +248,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 }
             </tbody>
         </RS.Table>
+        {questions && questions.length > 5 && <div className="mt-2">
+            {addSelectionsRow}
+        </div>}
     </div>;
 };
