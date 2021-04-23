@@ -119,6 +119,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
+    const [singleQuestionSort, setSingleQuestionSort] = useState(false);
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     let questions = assignment.gameboard.questions;
@@ -174,7 +175,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
         return item.user.authorisedFullAccess && item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]);
 
-    const sortedProgress = orderBy(semiSortedProgress, (item) => {
+    const sortedProgress = orderBy((singleQuestionSort ? progress : semiSortedProgress), (item) => {
         switch (sortOrder) {
             case "name":
                 return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
@@ -201,6 +202,11 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
 
     function toggleSort(itemOrder: SortOrder) {
         setSortOrder(itemOrder);
+        if (typeof itemOrder === "number") {
+            setSingleQuestionSort(true)
+        } else {
+            setSingleQuestionSort(false);
+        }
         if (sortOrder == itemOrder) {
             setReverseOrder(!reverseOrder);
         } else {
