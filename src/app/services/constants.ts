@@ -572,7 +572,7 @@ export enum TAG_ID {
     dataAndInformation = "data_and_information",
     dataStructuresAndAlgorithms = "data_structures_and_algorithms",
     gcseToALevel = "gcse_to_a_level",
-    impactsOfTechnology = "impact_of_tech",
+    impactsOfDigitalTechnology = "impacts_of_digital_tech",
     machineLearningAi = "machine_learning_ai",
     mathsForCs = "maths_for_cs",
     programmingFundamentals = "programming_fundamentals",
@@ -622,13 +622,9 @@ export enum TAG_ID {
     gcseNetworking = "gcse_networking",
     gcseDataRepresentation = "gcse_data_representation",
     gcseSystems = "gcse_systems",
-    // Impacts of technology
-    legal = "legal",
-    ethical = "ethical",
-    cultural = "cultural",
-    environmental = "environmental",
-    moral = "moral",
-    trends = "trends",
+    // Impacts of digital technology
+    legislation = "legislation",
+    impactsOfTech = "impacts_of_tech",
     // Maths for CS
     numberSystems = "number_systems",
     mathsFunctions = "functions",
@@ -636,7 +632,7 @@ export enum TAG_ID {
     graphsForAi = "graphs_for_ai",
     neuralNetworks = "neural_networks",
     machineLearning = "machine_learning",
-    backpropagationAndRegression = "backpropogation_and_regression",
+    backpropagationAndRegression = "regression",
     // Programming fundamentals topics
     programmingConcepts = "programming_concepts",
     subroutines = "subroutines",

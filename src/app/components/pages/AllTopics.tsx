@@ -9,23 +9,12 @@ import {TAG_ID} from "../../services/constants";
 
 export const AllTopics = () => {
 
-    // This points the relevant new tags to existing topic summary pages
-    const topicSummaryMap: {[topicId: string]: string} = {
-        [TAG_ID.proceduralProgramming]: "procedural_and_structured_programming",
-        [TAG_ID.eventDrivenProgramming]: "guis",
-        [TAG_ID.searching]: "searching_sorting_pathfinding",
-        [TAG_ID.modelsOfComputation]: "theory_of_computation",
-        [TAG_ID.operatingSystems]: "operating_systems_and_software",
-        [TAG_ID.numberRepresentation]: "number_bases",
-        [TAG_ID.stringHandling]: "string_manipulation",
-    };
-
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
         if (!topic.hidden) {
             return <React.Fragment>
                 <Link
-                    to={topic.comingSoon ? "/coming_soon" : `/topics/${topicSummaryMap[topic.id] || topic.id}`}
+                    to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}
                     className={topic.comingSoon ? "text-muted" : ""}
                 >
                     <TextTag>

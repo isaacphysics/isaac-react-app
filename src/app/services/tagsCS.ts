@@ -16,7 +16,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.computerScience},
         {id: TAG_ID.dataStructuresAndAlgorithms, title: "Data structures and algorithms", parent: TAG_ID.computerScience},
         {id: TAG_ID.gcseToALevel, title: "GCSE to A level transition", parent: TAG_ID.computerScience},
-        {id: TAG_ID.impactsOfTechnology, title: "Impacts of technology", parent: TAG_ID.computerScience},
+        {id: TAG_ID.impactsOfDigitalTechnology, title: "Impacts of digital technology", parent: TAG_ID.computerScience},
         {id: TAG_ID.machineLearningAi, title: "Machine learning and AI", parent: TAG_ID.computerScience, hidden: true},
         {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.computerScience},
         {id: TAG_ID.programmingFundamentals, title: "Programming fundamentals", parent: TAG_ID.computerScience},
@@ -67,12 +67,8 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel},
         {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
         // Impacts of technology topics
-        {id: TAG_ID.legal, title: "Legal", parent: TAG_ID.impactsOfTechnology},
-        {id: TAG_ID.moral, title: "Moral", parent: TAG_ID.impactsOfTechnology, hidden: true},
-        {id: TAG_ID.ethical, title: "Ethical", parent: TAG_ID.impactsOfTechnology},
-        {id: TAG_ID.cultural, title: "Cultural", parent: TAG_ID.impactsOfTechnology},
-        {id: TAG_ID.environmental, title: "Environmental", parent: TAG_ID.impactsOfTechnology},
-        {id: TAG_ID.trends, title: "Trends", parent: TAG_ID.impactsOfTechnology, hidden: true},
+        {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology},
+        {id: TAG_ID.impactsOfTech, title: "Impacts of technology", parent: TAG_ID.impactsOfDigitalTechnology},
         //Machine learning topics
         {id: TAG_ID.graphsForAi, title: "Graphs to aid AI", parent: TAG_ID.machineLearningAi},
         {id: TAG_ID.neuralNetworks, title: "Artificial neural networks", parent: TAG_ID.machineLearningAi},
