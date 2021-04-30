@@ -43,6 +43,33 @@ export const AllTopics = () => {
     const categoryDescendentIds = tags.getDescendents(TAG_ID.computerScience).map(t => t.id);
     const subcategoryTags = tags.getSubcategoryTags(categoryDescendentIds);
 
+    const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) < "H"});
+    const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > "H"});
+
+    const topicColumn = (subTags: Tag[]) => {
+        return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6}>
+            {subTags.sort((a, b) => (a.title > b.title) ? 1 : -1).map((subcategory) => {
+                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
+                const topicTags = tags.getTopicTags(subcategoryDescendentIds);
+                if (!subcategory.hidden) {
+                    return <React.Fragment key={subcategory.id}>
+                        <h3>{subcategory.title}</h3>
+                        <ul className="list-unstyled mb-3 link-list">
+                            {topicTags.map((topic) =>
+                                <li
+                                    className="border-0 px-0 py-0 pb-1 bg-transparent"
+                                    key={topic.id}
+                                >
+                                    {renderTopic(topic)}
+                                </li>
+                            )}
+                        </ul>
+                    </React.Fragment>
+                }
+            })}
+        </Col>
+    };
+
     return <div className="pattern-02">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="All topics"/>
@@ -51,49 +78,8 @@ export const AllTopics = () => {
 
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
-                    <Col key={TAG_ID.computerScience} md={6}>
-                    {subcategoryTags.sort((a, b) => (a.title > b.title) ? 1 : -1).map((subcategory) => {
-                        const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
-                        const topicTags = tags.getTopicTags(subcategoryDescendentIds);
-                        console.log(topicTags);
-                        if (subcategory.title.charAt(0) < "H" && !subcategory.hidden) {
-                            return <React.Fragment key={subcategory.id}>
-                                <h3>{subcategory.title}</h3>
-                                <ul className="list-unstyled mb-3 link-list">
-                                    {topicTags.map((topic) =>
-                                        <li
-                                            className="border-0 px-0 py-0 pb-1 bg-transparent"
-                                            key={topic.id}
-                                        >
-                                            {renderTopic(topic)}
-                                        </li>
-                                    )}
-                                </ul>
-                            </React.Fragment>
-                        }
-                    })}
-                    </Col>
-                    <Col key={TAG_ID.computerScience + "_2"} md={6}>
-                        {subcategoryTags.sort((a, b) => (a.title > b.title) ? 1 : -1).map((subcategory) => {
-                                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
-                                const topicTags = tags.getTopicTags(subcategoryDescendentIds);
-                                if (subcategory.title.charAt(0) > "H" && !subcategory.hidden) {
-                                    return <React.Fragment key={subcategory.id}>
-                                        <h3>{subcategory.title}</h3>
-                                        <ul className="list-unstyled mb-3 link-list">
-                                            {topicTags.map((topic) =>
-                                                <li
-                                                    className="border-0 px-0 py-0 pb-1 bg-transparent"
-                                                    key={topic.id}
-                                                >
-                                                    {renderTopic(topic)}
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </React.Fragment>
-                                }
-                            })}
-                    </Col>
+                    {topicColumn(firstColTags)}
+                    {topicColumn(secondColTags)}
                 </Col>
             </Row>
         </Container>

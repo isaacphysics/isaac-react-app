@@ -10,18 +10,18 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computerScience, title: "Computer Science"},
 
         // Computer science strands
-        {id: TAG_ID.gcseToALevel, title: "GCSE to A level", parent: TAG_ID.computerScience},
-        {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.computerScience},
-        {id: TAG_ID.dataStructuresAndAlgorithms, title: "Data structures and algorithms", parent: TAG_ID.computerScience},
         {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.computerScience},
         {id: TAG_ID.computerSystems, title: "Computer systems", parent: TAG_ID.computerScience},
-        {id: TAG_ID.programmingFundamentals, title: "Programming fundamentals", parent: TAG_ID.computerScience},
-        {id: TAG_ID.programmingParadigms, title: "Programming paradigms", parent: TAG_ID.computerScience},
-        {id: TAG_ID.cyberSecurity, title: "Cyber security", parent: TAG_ID.computerScience},
+        {id: TAG_ID.cyberSecurity, title: "Cybersecurity", parent: TAG_ID.computerScience},
+        {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.computerScience},
+        {id: TAG_ID.dataStructuresAndAlgorithms, title: "Data structures and algorithms", parent: TAG_ID.computerScience},
+        {id: TAG_ID.gcseToALevel, title: "GCSE to A level transition", parent: TAG_ID.computerScience},
         {id: TAG_ID.impactsOfTechnology, title: "Impacts of technology", parent: TAG_ID.computerScience},
         {id: TAG_ID.machineLearningAi, title: "Machine learning and AI", parent: TAG_ID.computerScience, hidden: true},
-        {id: TAG_ID.mathsForCs, title: "Maths for Computer Science", parent: TAG_ID.computerScience},
-        {id: TAG_ID.softwareEngineering, title: "Software Engineering", parent: TAG_ID.computerScience},
+        {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.computerScience},
+        {id: TAG_ID.programmingFundamentals, title: "Programming fundamentals", parent: TAG_ID.computerScience},
+        {id: TAG_ID.programmingParadigms, title: "Programming paradigms", parent: TAG_ID.computerScience},
+        {id: TAG_ID.softwareEngineering, title: "Software engineering", parent: TAG_ID.computerScience},
         {id: TAG_ID.theoryOfComputation, title: "Theory of Computation", parent: TAG_ID.computerScience},
 
         // Computer networks topics
@@ -37,7 +37,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems},
         {id: TAG_ID.software, title: "Software", parent: TAG_ID.computerSystems},
         {id: TAG_ID.operatingSystems, title: "Operating systems", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.programmingLanguages, title: "High and low level languages", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.programmingLanguages, title: "High- and low-level languages", parent: TAG_ID.computerSystems},
         {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems},
         // Cyber security topics
         {id: TAG_ID.socialEngineering, title: "Social engineering", parent: TAG_ID.cyberSecurity},
@@ -80,7 +80,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.backpropagationAndRegression, title: "Backpropagation and regression", parent: TAG_ID.machineLearningAi},
         // Maths for cs topics
         {id: TAG_ID.numberSystems, title: "Number systems and sets", parent: TAG_ID.mathsForCs},
-        {id: TAG_ID.mathsFunctions, title: "Functions", parent: TAG_ID.mathsForCs},
+        {id: TAG_ID.mathsFunctions, title: "Mathematical functions", parent: TAG_ID.mathsForCs},
         // Programming  fundamentals topics
         {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programmingFundamentals},
@@ -98,7 +98,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.softwareEngineering},
         {id: TAG_ID.testing, title: "Testing", parent: TAG_ID.softwareEngineering},
         {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.softwareEngineering},
-        {id: TAG_ID.softwareProject, title: "Programming project / NEA", parent: TAG_ID.softwareEngineering},
+        {id: TAG_ID.softwareProject, title: "A level programming project / NEA", parent: TAG_ID.softwareEngineering},
         // Theory of computation topics
         {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.theoryOfComputation},
         {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.theoryOfComputation}
