@@ -49,18 +49,18 @@ function QuizItem({item}: QuizAssignmentProps) {
                     <p>{assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}</p> :
                     attempt && <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>
                 }
-                {assignment && <p className="mb-1 mt-3">
+                {assignment && <p>
                     Set: {formatDate(assignment.creationDate)}
                     {assignment.assignerSummary && <> by {extractTeacherName(assignment.assignerSummary)}</>}
                 </p>}
-                {attempt && <p className="mb-1 mt-3">
+                {attempt && <p>
                     {status === Status.Complete ?
                         `Completed: ${formatDate(attempt.completedDate)}`
                         : `Started: ${formatDate(attempt.startDate)}`
                     }
                 </p>}
 
-                <div className="text-center mt-3">
+                <div className="text-center mt-4">
                     {assignment ? <>
                         {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>
                             {{[SITE.CS]: "Start quiz", [SITE.PHY]: "Start Quiz"}[SITE_SUBJECT]}
