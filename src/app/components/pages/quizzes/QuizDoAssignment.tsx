@@ -65,4 +65,4 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
     </RS.Container>;
 };
 
-export const QuizDoAsssignment = withRouter(QuizDoAsssignmentComponent);
+export const QuizDoAssignment = withRouter(QuizDoAsssignmentComponent);

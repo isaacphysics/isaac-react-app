@@ -37,10 +37,10 @@ function QuizFooter(props: QuizAttemptProps) {
     let controls;
     let prequel = null;
     if (page === null) {
-        prequel = <p>Click on a section title or click &lsquo;Next&rsquo; to look at your detailed feedback.</p>
+        prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at your detailed feedback.</p>
         controls = <>
             <Spacer/>
-            <RS.Button color="primary" tag={Link} replace to={pageLink(attempt, 1)}>Next</RS.Button>
+            <RS.Button tag={Link} replace to={pageLink(attempt, 1)}>Next</RS.Button>
         </>;
     } else {
         controls = <QuizPagination {...props} page={page} finalLabel="Back to Overview" />;
@@ -77,7 +77,7 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page}}}: 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
         questions, sections, pageLink, pageHelp};
 
-    return <RS.Container>
+    return <RS.Container className="mb-5">
         <ShowLoading until={attempt}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />

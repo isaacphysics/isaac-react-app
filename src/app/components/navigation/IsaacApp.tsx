@@ -74,7 +74,7 @@ import {ClientError} from "../pages/ClientError";
 import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
 import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
 import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
-import {QuizDoAsssignment} from "../pages/quizzes/QuizDoAssignment";
+import {QuizDoAssignment} from "../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../pages/quizzes/QuizAttemptFeedback";
 import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../pages/quizzes/QuizPreview";
@@ -159,8 +159,8 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
                     {/* Quiz pages */}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />}
+                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />}
                     {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
                     {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
                     {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />}

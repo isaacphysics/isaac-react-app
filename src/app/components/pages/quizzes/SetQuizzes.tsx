@@ -66,7 +66,8 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                     {{[SITE.CS]: "View results", [SITE.PHY]: "View Results"}[SITE_SUBJECT]}
                 </RS.Button>
             </RS.CardFooter>
-    </RS.Card></div>;
+        </RS.Card>
+    </div>;
 }
 
 const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
