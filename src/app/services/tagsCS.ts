@@ -43,7 +43,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.socialEngineering, title: "Social engineering", parent: TAG_ID.cyberSecurity},
         {id: TAG_ID.maliciousCode, title: "Malicious code", parent: TAG_ID.cyberSecurity},
         {id: TAG_ID.security, title: "Network security", parent: TAG_ID.cyberSecurity},
-        {id: TAG_ID.identificationPrevention, title: "Identification and prevention", parent: TAG_ID.cyberSecurity},
+        {id: TAG_ID.identificationPrevention, title: "Managing security threats", parent: TAG_ID.cyberSecurity},
         // Data and information topics
         {id: TAG_ID.numberRepresentation, title: "Representation of numbers", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.textRepresentation, title: "Representation of text", parent: TAG_ID.dataAndInformation},

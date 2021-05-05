@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Badge, Col, Container, Row} from "reactstrap";
+import {Badge, Col, Container, Row, Alert} from "reactstrap";
 import "../../services/tagsPhy";
 import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -63,10 +63,26 @@ export const AllTopics = () => {
         <Container>
             <TitleAndBreadcrumb currentPageTitle="All topics"/>
 
+            <Row>
+                <Col lg={{size: 8, offset: 2}} className="py-md-2 d-md-flex">
+                    <Alert color="warning" className="mb-0 mt-2">
+                            <Row style={{alignItems: "center"}}>
+                                <Col xs={12} md={12}>
+                                    <span>We have made some changes to this page to prepare for the platform to cover
+                                        GCSE content as well as A level content. <span className="not_mobile">Some of the topics have been split
+                                            into smaller topics, but all of your bookmarks should still work.</span> Please&nbsp;
+                                        <Link to="/contact">contact us if you find any issues</Link>.
+                                    </span>
+                                </Col>
+                            </Row>
+                    </Alert>
+                </Col>
+            </Row>
+
             {/* Search topics TODO MT */}
 
             <Row>
-                <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
+                <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-2 pl-md-4 pr-md-4 pb-md-4 d-md-flex">
                     {topicColumn(firstColTags)}
                     {topicColumn(secondColTags)}
                 </Col>
