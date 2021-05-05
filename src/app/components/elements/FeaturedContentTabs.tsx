@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {Tabs} from "./Tabs";
 import {Button, Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
@@ -14,9 +14,10 @@ export function FeaturedContentTabs() {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(fetchFragment(COMPUTER_SCIENTIST_FRAGMENT_ID));}, [dispatch]);
     const computerScientist = useSelector((state: AppState) => state?.fragments && state.fragments[COMPUTER_SCIENTIST_FRAGMENT_ID]);
+    const tabOverride = useRef(1 + Math.floor(Math.random() * 2)); // useRef so that it does not change on re-render
 
     return <div className="tabs-featured-question">
-        <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={1 + Math.floor(Math.random() * 2)}>
+        <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={tabOverride.current}>
             {{
                 "Featured question": <Row className="feattab-row">
                     <Col md={8} className="feattab-info pl-md-4">
