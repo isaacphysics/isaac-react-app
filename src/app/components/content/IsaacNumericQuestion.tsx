@@ -142,7 +142,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                 />
                                 {!readonly && <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
-                                    <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                                    <UncontrolledTooltip placement="right" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
                                         3.7<br />
                                         3x10^14<br />
