@@ -119,7 +119,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const noCharts = {[SITE.CS]: 2, [SITE.PHY]: 3}[SITE_SUBJECT];
 
     return <RS.Row>
-        <RS.Col xl={12/noCharts} md={6} className="mt-4 d-flex flex-column">
+        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={6} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 Questions by {topTagLevel}
             </div>
@@ -128,7 +128,8 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     <strong>{isAllZero(categoryColumns) ? "No data" : ""}</strong>
                 </div>
             </div>
-        </RS.Col>
+        </RS.Col>}
+        {SITE_SUBJECT === SITE.CS && <RS.Col md={3}/>}
         <RS.Col xl={12/noCharts} md={6} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <Select
@@ -148,6 +149,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>
+        {SITE_SUBJECT === SITE.CS && <RS.Col md={3}/>}
         {SITE_SUBJECT === SITE.PHY && <RS.Col xl={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 Questions by level

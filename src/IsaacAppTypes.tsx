@@ -849,6 +849,7 @@ export interface BaseTag {
     parent?: TAG_ID;
     comingSoon?: string;
     new?: boolean;
+    hidden?: boolean;
 }
 
 export interface Tag extends BaseTag {
