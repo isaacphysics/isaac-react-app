@@ -44,7 +44,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = fal
     }
 
     return <React.Fragment>
-        {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Row className="glossary_term">
+        {(!isDefined(doc.examBoard) || doc.examBoard === '' || examBoard === doc.examBoard) && <Col><Row className="glossary_term">
             <Col md={3} className="glossary_term_name">
                 <p id={anchorId}>
                     {linkToGlossary && <a href={location.origin + location.pathname + '#' + anchorId}>
@@ -52,13 +52,14 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = fal
                         <strong>{doc.value}</strong>
                     </a>}
                     {!linkToGlossary && <strong>{doc.value}</strong>}
+                    <span className="only-print">: </span>
                 </p>
             </Col>
             <Col>
                 {doc.explanation && <IsaacContent doc={doc.explanation} />}
                 {/* {_tags && _tags.length > 0 && <p className="topics">Used in: {_tags.map(tag => tag.title).join(', ')}</p>} */}
             </Col>
-        </Row>}
+        </Row></Col>}
     </React.Fragment>;
 };
 
