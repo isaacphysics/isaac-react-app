@@ -1,24 +1,21 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {loadQuizzesAttemptedFreelyByMe, loadQuizAssignedToMe, loadQuizzes} from "../../../state/actions/quizzes";
+import {loadQuizAssignedToMe, loadQuizzes, loadQuizzesAttemptedFreelyByMe} from "../../../state/actions/quizzes";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
-import { partition } from 'lodash';
-import { Link } from 'react-router-dom';
+import {partition} from 'lodash';
 import {NOT_FOUND} from "../../../services/constants";
 import {Spacer} from "../../elements/Spacer";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {Card} from "reactstrap";
-import {CardBody} from "reactstrap";
 import {Tabs} from "../../elements/Tabs";
 
 interface MyQuizzesPageProps {

@@ -6,19 +6,20 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {loadQuizzes, showQuizSettingModal, loadQuizAssignments, markQuizAsCancelled} from "../../../state/actions/quizzes";
+import {
+    loadQuizAssignments,
+    loadQuizzes,
+    markQuizAsCancelled,
+    showQuizSettingModal
+} from "../../../state/actions/quizzes";
 import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {loadGroups} from "../../../state/actions";
 import {NOT_FOUND} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {Card} from "reactstrap";
-import {CardBody} from "reactstrap";
-import {Container} from "reactstrap";
 import {Tabs} from "../../elements/Tabs";
-import {IsaacTabbedHints} from "../../content/IsaacHints";
-import {below, DeviceSize, useDeviceSize} from "../../../services/device";
+import {below, useDeviceSize} from "../../../services/device";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
