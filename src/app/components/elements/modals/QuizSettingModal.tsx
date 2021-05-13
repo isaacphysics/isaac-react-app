@@ -64,8 +64,8 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     const dueDateInvalid = isDefined(dueDate) && dueDate.getTime() < now.getTime();
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
 
-    return <div>
-        <RS.Label className="w-100">Set quiz to the following groups:<br/>
+    return <div className="mb-4">
+        <RS.Label className="w-100 mb-4">Set quiz to the following groups:<br/>
             <Select
                 value={selectedGroups}
                 onChange={(s) => {
@@ -83,12 +83,12 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
             />
             {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
         </RS.Label>
-        <RS.Label className="w-100">Set an optional due date:<br/>
+        <RS.Label className="w-100 mb-4">Set an optional due date:<br/>
             <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
                        defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <RS.FormFeedback>Due date must be after today</RS.FormFeedback>}
         </RS.Label>
-        <RS.Label className="w-100">What level of feedback should students get:<br/>
+        <RS.Label className="w-100 mb-4">What level of feedback should students get:<br/>
             <Select
                 value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
                 onChange={(s) => {

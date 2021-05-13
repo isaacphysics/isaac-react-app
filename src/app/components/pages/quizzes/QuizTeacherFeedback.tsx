@@ -193,7 +193,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                 <p>
                     <RS.Label for="feedbackMode" className="pr-1">Feedback mode:</RS.Label>
                     <RS.UncontrolledDropdown className="d-inline-block">
-                        <RS.DropdownToggle caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                        <RS.DropdownToggle color="dark" outline className="px-3" caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                             {settingFeedbackMode ?
                                 <>Saving <RS.Spinner size="sm" className="quizFeedbackModeSpinner" /></>
                             :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
