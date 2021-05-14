@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
-import {debounce, range} from "lodash";
+import {debounce, isEqual, range} from "lodash";
 import Select from "react-select";
 import {
     convertExamBoardToOption,
@@ -22,7 +22,6 @@ import {useCurrentExamBoard} from "../../../services/examBoard";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {isEqual} from "lodash";
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -82,6 +81,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         newSortState[key] = order;
         setSortState(newSortState);
     };
+
+    const tagOptions = SITE_SUBJECT === SITE.PHY ? tags.allTags.map(groupTagSelectionsByParent) :
+        tags.allSubcategoryTags.map(groupTagSelectionsByParent);
 
     useEffect(() => {
         setSearchExamBoards([examBoardTagMap[examBoard]].filter(tag => !!tag));
@@ -144,7 +146,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select inputId="question-search-topic"
                     isMulti
-                    options={tags.allTags.map(groupTagSelectionsByParent)}
+                    options={tagOptions}
                     name="colors"
                     className="basic-multi-select"
                     classNamePrefix="select"

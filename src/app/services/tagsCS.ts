@@ -70,10 +70,10 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology},
         {id: TAG_ID.impactsOfTech, title: "Impacts of technology", parent: TAG_ID.impactsOfDigitalTechnology},
         //Machine learning topics
-        {id: TAG_ID.graphsForAi, title: "Graphs to aid AI", parent: TAG_ID.machineLearningAi},
-        {id: TAG_ID.neuralNetworks, title: "Artificial neural networks", parent: TAG_ID.machineLearningAi},
-        {id: TAG_ID.machineLearning, title: "Types of machine learning", parent: TAG_ID.machineLearningAi},
-        {id: TAG_ID.backpropagationAndRegression, title: "Backpropagation and regression", parent: TAG_ID.machineLearningAi},
+        {id: TAG_ID.graphsForAi, title: "Graphs to aid AI", parent: TAG_ID.machineLearningAi, hidden: true},
+        {id: TAG_ID.neuralNetworks, title: "Artificial neural networks", parent: TAG_ID.machineLearningAi, hidden: true},
+        {id: TAG_ID.machineLearning, title: "Types of machine learning", parent: TAG_ID.machineLearningAi, hidden: true},
+        {id: TAG_ID.backpropagationAndRegression, title: "Backpropagation and regression", parent: TAG_ID.machineLearningAi, hidden: true},
         // Maths for cs topics
         {id: TAG_ID.numberSystems, title: "Number systems and sets", parent: TAG_ID.mathsForCs},
         {id: TAG_ID.mathsFunctions, title: "Mathematical functions", parent: TAG_ID.mathsForCs},
