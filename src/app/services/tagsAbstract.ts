@@ -55,12 +55,14 @@ export abstract class AbstractBaseTagService {
 
     public getSubcategoryTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.subcategory);
     public getSubcategoryTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.subcategory);
+    public allSubcategoryTags = this.getSubcategoryTags(this.allTagIds);
 
     public getFieldTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.field);
     public getFieldTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.field);
 
     public getTopicTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.topic);
     public getTopicTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.topic);
+    public allTopicTags = this.getTopicTags(this.allTagIds);
 
     public getChildren(tagId: TAG_ID) {
         let children: Tag[] = [];
@@ -89,7 +91,7 @@ export abstract class AbstractBaseTagService {
         let tags = [];
         for (const i in tagArray) {
             let tag = this.getById(tagArray[i]);
-            if (tag != null && tag.type === tagType) {
+            if (tag != null && tag.type === tagType && !tag.hidden) {
                 tags.push(tag);
             }
         }
