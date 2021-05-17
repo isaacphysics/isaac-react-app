@@ -79,7 +79,7 @@ export function FeaturedContentTabs() {
                     </Col>
                 </Row>,
 
-                "Computer Scientist of the month": <ShowLoading
+                "Computer Science Journeys": <ShowLoading
                     until={computerScientist}
                     thenRender={(cserOfTheMonth) => {
                         return <div className="computer-scientist-of-the-month mt-4 mb-md-5">
@@ -87,7 +87,7 @@ export function FeaturedContentTabs() {
                         </div>
                     }}
                     ifNotFound={<div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
-                        Unfortunately, we don't currently have a Computer Scientist of the month.<br />
+                        Unfortunately, we don't currently have a Computer Science Journey to display.<br />
                         Please check back later!
                     </div>}
                 />
