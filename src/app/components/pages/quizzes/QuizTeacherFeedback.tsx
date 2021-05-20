@@ -103,24 +103,25 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
         <th className="student-name">
             {valid ?
-                <RS.Dropdown isOpen={!working && dropdownOpen} toggle={toggle} disabled={working}>
-                    <RS.DropdownToggle
-                        tag="div"
-                        tabIndex={0}
-                        className="btn quiz-student-menu"
-                        data-toggle="dropdown"
-                        aria-expanded={dropdownOpen}
+                <>
+                    <RS.Button color="link" onClick={toggle} disabled={working}>
+                        <div
+                            tabIndex={0}
+                            className="btn quiz-student-menu"
+                            data-toggle="dropdown"
+                            aria-expanded={dropdownOpen}
                         >
-                        {row.user?.givenName}
-                        <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
-                        <span className="quiz-student-menu-icon">
+                            {row.user?.givenName}
+                            <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
+                            <span className="quiz-student-menu-icon">
                             {working ? <RS.Spinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
                         </span>
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu right>
-                        <RS.DropdownItem onClick={returnToStudent}>Return to student</RS.DropdownItem>
-                    </RS.DropdownMenu>
-                </RS.Dropdown>
+                        </div>
+                    </RS.Button>
+                    {!working && dropdownOpen && <div className="py-2 px-3">
+                        <RS.Button size="sm" onClick={returnToStudent}>Return to student</RS.Button>
+                    </div>}
+                </>
             :   <>
                     {row.user?.givenName}
                     <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
