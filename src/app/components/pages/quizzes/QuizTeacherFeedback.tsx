@@ -209,8 +209,8 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                         </RS.DropdownMenu>
                     </RS.UncontrolledDropdown>
                 </p>
-                <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-                    <AssignmentProgressLegend pageSettings={pageSettings} />
+                <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
+                    <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey />
                     <ResultsTable assignment={assignment} pageSettings={pageSettings} />
                 </div>
             </>}
