@@ -131,7 +131,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
 function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
 
-    return <table className="progress-table w-100 mb-5">
+    return <table className="progress-table w-100 mb-5 border">
         <tbody>
         <tr>
             <th>&nbsp;</th>

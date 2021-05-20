@@ -48,7 +48,7 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 
-    return <RS.Container>
+    return <RS.Container className="mb-5">
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />
