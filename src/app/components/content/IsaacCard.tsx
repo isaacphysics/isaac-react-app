@@ -44,18 +44,18 @@ export const IsaacCard = ({doc, imageClassName}: IsaacCardProps) => {
         </Card> :
         <Card>
             <CardTitle className="px-3">
-                <Row>
+                <Row className="mb-sm-0 mb-lg-2">
                     <Col>
                         {title}
                     </Col>
                 </Row>
             </CardTitle>
-            <CardBody className="px-3">
-                <Row>
-                    {image && <Col md="3" className="justify-content-md-center col-centered">
+            <CardBody>
+                <Row className="mx-2">
+                    {image && <Col xs={4} sm={12} lg={4} className="col-centered">
                         <img className={classes} src={imgSrc} alt=""/>
                     </Col>}
-                    <Col md="9">
+                    <Col xs={image ? 8 : 12} sm={12} lg={image ? 8 : 12}>
                         <aside>
                             {subtitle}
                         </aside>
