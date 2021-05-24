@@ -15,10 +15,12 @@ interface IsaacHorizontalProps {
 
 export const IsaacHorizontal = (props: any) => {
     const {doc: {children}} = props as IsaacHorizontalProps;
-    return <RS.Container className="content-value">
+    const numberOfColumns = children.length;
+
+    return <RS.Container>
         <RS.Row>
             {children.map((child, index) => (
-                <RS.Col key={index}>
+                <RS.Col key={index} lg={Math.floor(12/numberOfColumns)}>
                     <IsaacContent key={index} doc={child} />
                 </RS.Col>
             ))}
