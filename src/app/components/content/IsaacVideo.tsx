@@ -93,11 +93,15 @@ export function IsaacVideo(props: IsaacVideoProps) {
     }, [dispatch, pageId]);
 
 
+    const detailsForPrintOut = <div className="only-print">
+        Video description: {altText || "No text description available"}
+    </div>;
+
     // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
     const accordionSectionContext = useContext(AccordionSectionContext);
     const videoInAnAccordionSection = accordionSectionContext.open !== null;
     if (videoInAnAccordionSection && !accordionSectionContext.open) {
-        return null;
+        return detailsForPrintOut;
     }
 
     return <div>
@@ -107,8 +111,6 @@ export function IsaacVideo(props: IsaacVideoProps) {
                 : altText
             }
         </div>
-        <div className="only-print">
-            Video description: {altText || "No text description available"}
-        </div>
+        {detailsForPrintOut}
     </div>;
 }
