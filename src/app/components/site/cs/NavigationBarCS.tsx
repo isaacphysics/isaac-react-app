@@ -16,6 +16,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/progress">My progress</LinkItem>
             {QUIZ_FEATURE && <LinkItem to="/quizzes">My quizzes</LinkItem>}
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
+            <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teachers">
