@@ -25,6 +25,48 @@ interface CurrentGroupInviteModalProps {
     firstTime: boolean;
 }
 
+interface AdditionalManagerRemovalModalProps {
+    groupToModify: AppGroup;
+    user: RegisteredUserDTO;
+    showArchived: boolean;
+}
+
+const AdditionalManagerRemovalModalBody = ({groupToModify}: AdditionalManagerRemovalModalProps) => {
+    return <React.Fragment>
+        <p>You are about to remove yourself as a manager from &apos;{groupToModify.groupName}&apos;.  The group will not appear any more on your
+            Assignment Progress page or on the Manage Groups page.  You will still have student connections with the
+            students who agreed to share data with you.  The group owner will <strong>not</strong> be notified.</p>
+    </React.Fragment>
+};
+
+export const additionalManagerRemovalModal = ({groupToModify, user, showArchived}: AdditionalManagerRemovalModalProps) => {
+    return {
+        closeAction: () => {store.dispatch(closeActiveModal())},
+        title: "Additional manager self removal",
+        body: <AdditionalManagerRemovalModalBody groupToModify={groupToModify} user={user} showArchived={showArchived}/>,
+        buttons: [
+            <RS.Row key={0}>
+                <RS.Col>
+                    <RS.Button block key={2} color="secondary" onClick={() => {
+                        store.dispatch(closeActiveModal());
+                    }}>
+                        Cancel
+                    </RS.Button>
+                </RS.Col>
+                <RS.Col>
+                    <RS.Button block key={1} color="secondary" onClick={() => {
+                        store.dispatch(deleteGroupManager(groupToModify, user, showArchived));
+                        store.dispatch(closeActiveModal());
+                        store.dispatch(selectGroup(null));
+                    }}>
+                        Confirm
+                    </RS.Button>
+                </RS.Col>
+            </RS.Row>
+        ]
+    }
+};
+
 const CurrentGroupInviteModal = ({firstTime}: CurrentGroupInviteModalProps) => {
     const group = useSelector(selectors.groups.current);
     return group && <React.Fragment>

@@ -62,7 +62,11 @@ import {
 } from "../components/elements/modals/TeacherConnectionModalCreators";
 import * as persistence from "../services/localStorage";
 import {KEY} from "../services/localStorage";
-import {groupInvitationModal, groupManagersModal} from "../components/elements/modals/GroupsModalCreators";
+import {
+    additionalManagerRemovalModal,
+    groupInvitationModal,
+    groupManagersModal
+} from "../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
 import {selectors} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
@@ -1424,11 +1428,14 @@ export const addGroupManager = (group: AppGroup, managerEmail: string) => async 
     }
 };
 
-export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmailAddressDTO, showArchived?: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST, group, manager});
     try {
         await api.groups.deleteManager(group, manager);
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
+        if (typeof showArchived === "boolean") {
+            dispatch(loadGroups(showArchived) as any);
+        }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
         dispatch(showErrorToastIfNeeded("Group manager removal failed", e));
@@ -1441,6 +1448,10 @@ export const showGroupEmailModal = (users?: number[]) => async (dispatch: Dispat
 
 export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(groupInvitationModal(firstTime)) as any);
+};
+
+export const showAdditionalManagerSelfRemovalModal = (groupToModify: AppGroup, user: RegisteredUserDTO, showArchived: boolean) => async (dispatch: Dispatch<Action>) => {
+    dispatch(openActiveModal(additionalManagerRemovalModal({groupToModify, user, showArchived})) as any);
 };
 
 export const showGroupManagersModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
