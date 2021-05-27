@@ -210,7 +210,9 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
             <tbody>{additionalManagers && additionalManagers.map(manager =>
                 <tr key={manager.email}>
                     <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
-                    {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete"><Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ? removeManager(manager) : removeSelf(manager)}>
+                    {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete">
+                        <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
+                            removeManager(manager) : removeSelf(manager)}>
                         Remove
                     </Button></td>}
                 </tr>
