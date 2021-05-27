@@ -228,7 +228,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                 <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
                     <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => showGroupManagersModal()}>
-                        {isUserGroupOwner ? "Edit" : "View"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                        Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
@@ -276,11 +276,8 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
             {group && <React.Fragment>
                 <Row>
                     <Col>
-                        {isUserGroupOwner ? <Button block color="tertiary" onClick={toggleArchived}>
+                        {isUserGroupOwner && <Button block color="tertiary" onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
-                        </Button> :
-                        <Button block color="tertiary" onClick={() => user?.loggedIn && showAdditionalManagerSelfRemovalModal(group, user, showArchived)}>
-                            Remove self as additional manager
                         </Button>}
                     </Col>
                 </Row>
