@@ -49,7 +49,7 @@ export const additionalManagerRemovalModal = ({groupToModify, user, showArchived
         buttons: [
             <RS.Row key={0}>
                 <RS.Col>
-                    <RS.Button block key={2} color="secondary" onClick={() => {
+                    <RS.Button block outline key={2} color="primary" onClick={() => {
                         store.dispatch(closeActiveModal());
                     }}>
                         Cancel
