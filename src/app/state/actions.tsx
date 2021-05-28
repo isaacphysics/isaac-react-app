@@ -1433,7 +1433,7 @@ export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmai
     try {
         await api.groups.deleteManager(group, manager);
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
-        if (typeof showArchived === "boolean") {
+        if (isDefined(showArchived)) {
             dispatch(loadGroups(showArchived) as any);
         }
     } catch (e) {
