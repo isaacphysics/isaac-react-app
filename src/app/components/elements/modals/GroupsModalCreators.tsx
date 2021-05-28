@@ -3,6 +3,7 @@ import {connect, ResolveThunks, useSelector} from "react-redux";
 import {sortBy} from "lodash";
 import {history} from "../../../services/history";
 import * as RS from "reactstrap";
+import {Button} from "reactstrap";
 
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {Action, AppGroup} from "../../../../IsaacAppTypes";
@@ -13,6 +14,7 @@ import {
     closeActiveModal,
     deleteGroupManager,
     selectGroup,
+    showAdditionalManagerSelfRemovalModal,
     showGroupInvitationModal,
     showGroupManagersModal
 } from "../../../state/actions";
@@ -24,6 +26,48 @@ import {bindActionCreators, Dispatch} from "redux";
 interface CurrentGroupInviteModalProps {
     firstTime: boolean;
 }
+
+interface AdditionalManagerRemovalModalProps {
+    groupToModify: AppGroup;
+    user: RegisteredUserDTO;
+    showArchived: boolean;
+}
+
+const AdditionalManagerRemovalModalBody = ({groupToModify}: AdditionalManagerRemovalModalProps) => {
+    return <React.Fragment>
+        <p>You are about to remove yourself as a manager from &apos;{groupToModify.groupName}&apos;. This group will no longer appear on your
+            Assignment Progress page or on the Manage Groups page.  You will still have student connections with the
+            students who agreed to share data with you.  The group owner will <strong>not</strong> be notified.</p>
+    </React.Fragment>
+};
+
+export const additionalManagerRemovalModal = ({groupToModify, user, showArchived}: AdditionalManagerRemovalModalProps) => {
+    return {
+        closeAction: () => {store.dispatch(closeActiveModal())},
+        title: "Remove yourself as a group manager",
+        body: <AdditionalManagerRemovalModalBody groupToModify={groupToModify} user={user} showArchived={showArchived}/>,
+        buttons: [
+            <RS.Row key={0}>
+                <RS.Col>
+                    <RS.Button block outline key={2} color="primary" onClick={() => {
+                        store.dispatch(closeActiveModal());
+                    }}>
+                        Cancel
+                    </RS.Button>
+                </RS.Col>
+                <RS.Col>
+                    <RS.Button block key={1} color="secondary" onClick={() => {
+                        store.dispatch(deleteGroupManager(groupToModify, user, showArchived));
+                        store.dispatch(closeActiveModal());
+                        store.dispatch(selectGroup(null));
+                    }}>
+                        Confirm
+                    </RS.Button>
+                </RS.Col>
+            </RS.Row>
+        ]
+    }
+};
 
 const CurrentGroupInviteModal = ({firstTime}: CurrentGroupInviteModalProps) => {
     const group = useSelector(selectors.groups.current);
@@ -99,10 +143,11 @@ interface CurrentGroupManagersModalProps {
     addGroupManager: (group: AppGroup, managerEmail: string) => Promise<boolean>;
     deleteGroupManager: (group: AppGroup, manager: UserSummaryWithEmailAddressDTO) => void;
     showGroupInvitationModal: (firstTime: boolean) => void;
+    showAdditionalManagerSelfRemovalModal: (groupToModify: AppGroup, user: RegisteredUserDTO, showArchived: boolean) => void;
     userIsOwner: boolean;
 }
 
-const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupManager, showGroupInvitationModal, userIsOwner}: CurrentGroupManagersModalProps) => {
+const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupManager, showGroupInvitationModal, userIsOwner, showAdditionalManagerSelfRemovalModal}: CurrentGroupManagersModalProps) => {
     const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
 
     const [newManagerEmail, setNewManagerEmail] = useState("");
@@ -128,10 +173,17 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
         }
     }
 
+    function removeSelf(manager: RegisteredUserDTO | null) {
+        if (manager && group) {
+            store.dispatch(closeActiveModal());
+            showAdditionalManagerSelfRemovalModal(group, manager, false)
+        }
+    }
+
     return group && <React.Fragment>
         <h2>Selected group: {group.groupName}</h2>
 
-        <p>Sharing this group lets other teachers edit the group name, add and remove students, set new assignments and view assignment progress. It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.</p>
+        <p>Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress. It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.</p>
 
         {!userIsOwner && group.ownerSummary && <div>
             <h4>Group owner:</h4>
@@ -158,8 +210,11 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
             <tbody>{additionalManagers && additionalManagers.map(manager =>
                 <tr key={manager.email}>
                     <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
-                    {userIsOwner && <td className="group-table-delete"><a className="delete-icon" href="javascript:void(0)"
-                        onClick={() => removeManager(manager)} aria-label="Remove manager">X</a></td>}
+                    {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete">
+                        <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
+                            removeManager(manager) : removeSelf(manager)}>
+                        Remove
+                    </Button></td>}
                 </tr>
             )}</tbody>
         </RS.Table>
@@ -183,7 +238,7 @@ const CurrentGroupManagersModal = ({group, user, addGroupManager, deleteGroupMan
 // action creator binding of deleteGroupManager has to happen not at the top-level because we are in a circular dependency,
 // so deleteGroupManager is undefined at the top-level in this file.
 function mapDispatch(dispatch: Dispatch<Action>) {
-    return bindActionCreators({addGroupManager, deleteGroupManager, showGroupInvitationModal}, dispatch);
+    return bindActionCreators({addGroupManager, deleteGroupManager, showGroupInvitationModal, showAdditionalManagerSelfRemovalModal}, dispatch);
 }
 
 // This is built into connect, but we can't use it because of the above.

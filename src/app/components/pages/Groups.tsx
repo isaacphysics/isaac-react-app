@@ -32,6 +32,7 @@ import {
     loadGroups,
     resetMemberPassword,
     selectGroup,
+    showAdditionalManagerSelfRemovalModal,
     showGroupEmailModal,
     showGroupInvitationModal,
     showGroupManagersModal,
@@ -42,7 +43,7 @@ import {AppState} from "../../state/reducers";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
-import {UserGroupDTO} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -51,13 +52,15 @@ import {isStaff} from "../../services/user";
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),
     group: selectors.groups.current(state),
+    user: state.user as RegisteredUserDTO
 });
 
-const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal};
+const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal, showAdditionalManagerSelfRemovalModal};
 
 interface GroupsPageProps {
     groups: {active: AppGroup[] | null; archived: AppGroup[] | null};
     group: AppGroup | null;
+    user: RegisteredUserDTO;
     loadGroups: (getArchived: boolean) => void;
     selectGroup: (group: UserGroupDTO | null) => void;
     createGroup: (groupName: string) => Promise<AppGroup>;
@@ -69,6 +72,7 @@ interface GroupsPageProps {
     showGroupInvitationModal: (firstTime: boolean) => void;
     showGroupManagersModal: () => void;
     showGroupEmailModal: (users?: number[]) => void;
+    showAdditionalManagerSelfRemovalModal: (groupToModify: AppGroup, user: RegisteredUserDTO, showArchived: boolean) => void;
 }
 
 enum SortOrder {
@@ -168,13 +172,14 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
     </div>;
 };
 
-const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal}: GroupEditorProps) => {
+const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal, showArchived, showAdditionalManagerSelfRemovalModal}: GroupEditorProps & {showArchived: boolean}) => {
     const [isExpanded, setExpanded] = useState(false);
 
     const initialGroupName = group ? group.groupName : "";
     const [newGroupName, setNewGroupName] = useState(initialGroupName);
 
     const user = useSelector((state: AppState) => state && state.user || null);
+    const isUserGroupOwner = user?.loggedIn && user.id === group?.ownerId;
 
     useEffect(() => {
         setExpanded(false);
@@ -220,10 +225,10 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
     return <Card>
         <CardBody>
             <Row className="mt-2">
-                <Col xs={5} sm={6} md={3} lg={3}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
+                <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
                     <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => showGroupManagersModal()}>
-                        Edit<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                        Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
@@ -250,9 +255,9 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                 <InputGroup className="w-100">
                     <Input
                         innerRef={groupNameRef} length={50} placeholder="Group name" value={newGroupName}
-                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"
+                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={!isUserGroupOwner && group !== null}
                     />
-                    <InputGroupAddon addonType="append">
+                    {(isUserGroupOwner || group === null) && <InputGroupAddon addonType="append">
                         <Button
                             color={{[SITE.PHY]: "secondary", [SITE.CS]: "primary"}[SITE_SUBJECT]}
                             className="p-0 border-dark" disabled={newGroupName == "" || initialGroupName == newGroupName}
@@ -260,7 +265,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                         >
                             {group ? "Update" : "Create"}
                         </Button>
-                    </InputGroupAddon>
+                    </InputGroupAddon>}
                 </InputGroup>
             </Form>
             <Row className="pt-1 mb-3">
@@ -271,9 +276,9 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
             {group && <React.Fragment>
                 <Row>
                     <Col>
-                        <Button block color="tertiary" onClick={toggleArchived}>
+                        {isUserGroupOwner && <Button block color="tertiary" onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
-                        </Button>
+                        </Button>}
                     </Col>
                 </Row>
                 <Row className="mt-4">
@@ -331,7 +336,7 @@ const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorPro
 };
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
-    const {group, groups, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal} = props;
+    const {group, groups, user, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal, showAdditionalManagerSelfRemovalModal} = props;
 
     const [showArchived, setShowArchived] = useState(false);
 
@@ -376,10 +381,16 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
     };
 
     const confirmDeleteGroup = (groupToDelete: AppGroup) => {
-        if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
-            deleteGroup(groupToDelete);
-            if (group && group.id == groupToDelete.id) {
-                selectGroup(null);
+        if (user.id === groupToDelete.ownerId) {
+            if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
+                deleteGroup(groupToDelete);
+                if (group && group.id == groupToDelete.id) {
+                    selectGroup(null);
+                }
+            }
+        } else {
+            if (confirm("You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '" + groupToDelete.groupName + "'?")) {
+                showAdditionalManagerSelfRemovalModal(groupToDelete, user, showArchived);
             }
         }
     };
@@ -474,7 +485,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                                             </button>
                                                         </div>
                                                         {group && group.id == g.id && <div className="d-md-none py-2">
-                                                            <GroupEditor {...props} createNewGroup={createNewGroup} />
+                                                            <GroupEditor {...props} createNewGroup={createNewGroup} showArchived={showArchived}/>
                                                         </div>}
                                                     </div>
                                                 )}
@@ -488,7 +499,7 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                 </ShowLoading>
             </Col>
             <Col md={8} className="d-none d-md-block">
-                <GroupEditor {...props} createNewGroup={createNewGroup} groupNameRef={groupNameRef} />
+                <GroupEditor {...props} createNewGroup={createNewGroup} groupNameRef={groupNameRef} showArchived={showArchived} />
             </Col>
         </Row>
     </Container>;
