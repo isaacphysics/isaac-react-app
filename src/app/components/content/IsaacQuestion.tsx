@@ -33,8 +33,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
     const sigFigsFeedback = <p>
-        Your <strong>Significant figures</strong> are incorrect, read our&nbsp;
-        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> sig fig guide</a></strong>.
+        Whether your answer is correct or not, it has the wrong number of&nbsp;
+        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
     // Register Question Part in Redux
