@@ -1,21 +1,22 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {loadQuizzesAttemptedFreelyByMe, loadQuizAssignedToMe, loadQuizzes} from "../../../state/actions/quizzes";
+import {loadQuizAssignedToMe, loadQuizzes, loadQuizzesAttemptedFreelyByMe} from "../../../state/actions/quizzes";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
-import { partition } from 'lodash';
-import { Link } from 'react-router-dom';
+import {partition} from 'lodash';
 import {NOT_FOUND} from "../../../services/constants";
 import {Spacer} from "../../elements/Spacer";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {Tabs} from "../../elements/Tabs";
 
 interface MyQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -37,55 +38,67 @@ function QuizItem({item}: QuizAssignmentProps) {
     const attempt = isAttempt(item) ? item : assignment?.attempt;
     const status: Status = !attempt ? Status.Unstarted : !attempt.completedDate ? Status.Started : Status.Complete;
     return <div className="p-2">
-        <RS.Card><RS.CardBody>
-            <RS.CardTitle><h4>{item.quizSummary?.title || item.quizId }</h4></RS.CardTitle>
-            {assignment ? <>
-                <p>
-                    {assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}
-                </p>
-                {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>Start quiz</RS.Button>}
-                {status === Status.Started && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>Continue quiz</RS.Button>}
-                {status === Status.Complete && (
-                    assignment.quizFeedbackMode !== "NONE" ?
-                        <RS.Button tag={Link} to={`/quiz/attempt/${assignment.attempt?.id}/feedback`}>View feedback</RS.Button>
-                    :
-                        <p>No feedback available</p>
-                )}
-            </> : attempt && <>
-                <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>
-                {status === Status.Started && <RS.Button tag={Link} to={`/quiz/attempt/${attempt.quizId}`}>Continue quiz</RS.Button>}
-                {status === Status.Complete && (
-                    attempt.feedbackMode !== "NONE" ?
-                        <RS.Button tag={Link} to={`/quiz/attempt/${attempt.id}/feedback`}>View feedback</RS.Button>
-                        :
-                        <p>No feedback available</p>
-                )}
-            </>}
-            {assignment && <p className="mb-1 mt-3">
-                Set: {formatDate(assignment.creationDate)}
-                {assignment.assignerSummary && <>
-                    by {extractTeacherName(assignment.assignerSummary)}
-                </>}
-            </p>}
-            {attempt && <p className="mb-1 mt-3">
-                {status === Status.Complete ?
-                    `Completed: ${formatDate(attempt.completedDate)}`
-                    : `Started: ${formatDate(attempt.startDate)}`
+        <RS.Card className="card-neat">
+            <RS.CardBody>
+                <h4 className="border-bottom pb-3 mb-3">{item.quizSummary?.title || item.quizId }</h4>
+
+                {assignment ?
+                    <p>{assignment.dueDate && <>Due date: <strong>{formatDate(assignment.dueDate)}</strong></>}</p> :
+                    attempt && <p>Freely {status === Status.Started ? "attempting" : "attempted"}</p>
                 }
-            </p>}
-        </RS.CardBody>
-    </RS.Card></div>;
+                {assignment && <p>
+                    Set: {formatDate(assignment.creationDate)}
+                    {assignment.assignerSummary && <> by {extractTeacherName(assignment.assignerSummary)}</>}
+                </p>}
+                {attempt && <p>
+                    {status === Status.Complete ?
+                        `Completed: ${formatDate(attempt.completedDate)}`
+                        : `Started: ${formatDate(attempt.startDate)}`
+                    }
+                </p>}
+
+                <div className="text-center mt-4">
+                    {assignment ? <>
+                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>
+                            {{[SITE.CS]: "Start quiz", [SITE.PHY]: "Start Quiz"}[SITE_SUBJECT]}
+                        </RS.Button>}
+                        {status === Status.Started && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>
+                            {{[SITE.CS]: "Continue quiz", [SITE.PHY]: "Continue Quiz"}[SITE_SUBJECT]}
+                        </RS.Button>}
+                        {status === Status.Complete && (
+                            assignment.quizFeedbackMode !== "NONE" ?
+                                <RS.Button tag={Link} to={`/quiz/attempt/${assignment.attempt?.id}/feedback`}>
+                                    {{[SITE.CS]: "View feedback", [SITE.PHY]: "View Feedback"}[SITE_SUBJECT]}
+                                </RS.Button>
+                                :
+                                <strong>No feedback available</strong>
+                        )}
+                    </> : attempt && <>
+                        {status === Status.Started && <RS.Button tag={Link} to={`/quiz/attempt/${attempt.quizId}`}>
+                            {{[SITE.CS]: "Continue quiz", [SITE.PHY]: "Continue Quiz"}[SITE_SUBJECT]}
+                        </RS.Button>}
+                        {status === Status.Complete && (
+                            attempt.feedbackMode !== "NONE" ?
+                                <RS.Button tag={Link} to={`/quiz/attempt/${attempt.id}/feedback`}>
+                                    {{[SITE.CS]: "View feedback", [SITE.PHY]: "View Feedback"}[SITE_SUBJECT]}
+                                </RS.Button>
+                                :
+                                <strong>No feedback available</strong>
+                        )}
+                    </>}
+                </div>
+            </RS.CardBody>
+        </RS.Card>
+    </div>;
 }
 
 interface AssignmentGridProps {
     quizzes: Quiz[];
-    title: string;
     empty: string;
 }
 
-function QuizGrid({quizzes, title, empty}: AssignmentGridProps) {
+function QuizGrid({quizzes, empty}: AssignmentGridProps) {
     return <>
-        <h2>{title}</h2>
         {quizzes.length === 0 && <p>{empty}</p>}
         {quizzes.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
             {quizzes.map(item => <QuizItem key={(isAttempt(item) ? 'at' : 'as') + item.id} item={item}/>)}
@@ -123,27 +136,46 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     const [completedQuizzes, incompleteQuizzes] = partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle="My quizzes" help={pageHelp} />
-        <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Your quiz assignments failed to load, please try refreshing the page.</RS.Alert>}>
-            <QuizGrid quizzes={incompleteQuizzes} title="Quizzes assigned and in progress" empty="You don't have any incomplete or assigned quizzes." />
-            <QuizGrid quizzes={completedQuizzes} title="Completed quizzes" empty="You haven't completed any quizzes." />
-        </ShowLoading>
-        <ShowLoading until={quizzes}>
-            {quizzes && <>
-                <h2>Quizzes you can take any time</h2>
-                {quizzes.length === 0 && <p><em>There are no quizzes currently available.</em></p>}
-                <RS.ListGroup className="mb-3 quiz-list">
-                    {quizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
-                        <div className="flex-grow-1 p-2 d-flex">
-                            <span>{quiz.title}</span>
-                            {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
-                            <Spacer />
-                            <RS.Button tag={Link} to={{pathname: `/quiz/attempt/${quiz.id}`}}>Take Quiz</RS.Button>
-                        </div>
-                    </RS.ListGroupItem>)}
-                </RS.ListGroup>
-            </>}
-        </ShowLoading>
+        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "My quizzes", [SITE.PHY]: "My Quizzes"}[SITE_SUBJECT]} help={pageHelp} />
+
+        <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
+            {{
+                [{[SITE.CS]: "In progress quizzes", [SITE.PHY]: "In Progress Quizzes"}[SITE_SUBJECT]]:
+                    <ShowLoading
+                        until={quizAssignments}
+                        ifNotFound={<RS.Alert color="warning">Your quiz assignments failed to load, please try refreshing the page.</RS.Alert>}
+                    >
+                        <QuizGrid quizzes={incompleteQuizzes} empty="You don't have any incomplete or assigned quizzes."/>
+                    </ShowLoading>,
+
+                [{[SITE.CS]: "Completed quizzes", [SITE.PHY]: "Completed Quizzes"}[SITE_SUBJECT]]:
+                    <ShowLoading
+                        until={quizAssignments}
+                        ifNotFound={<RS.Alert color="warning">Your quiz assignments failed to load, please try refreshing the page.</RS.Alert>}
+                    >
+                        <QuizGrid quizzes={completedQuizzes} empty="You haven't completed any quizzes."/>
+                    </ShowLoading>,
+
+                [{[SITE.CS]: "Practice quizzes", [SITE.PHY]: "Practice Quizzes"}[SITE_SUBJECT]]:
+                    <ShowLoading until={quizzes}>
+                        {quizzes && <>
+                            {quizzes.length === 0 && <p><em>There are no quizzes currently available.</em></p>}
+                            <RS.ListGroup className="mb-3 quiz-list">
+                                {quizzes.map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                    <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
+                                        <span className="mb-2 mb-sm-0">{quiz.title}</span>
+                                        {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
+                                        <Spacer />
+                                        <RS.Button tag={Link} to={{pathname: `/quiz/attempt/${quiz.id}`}}>
+                                            {{[SITE.CS]: "Take quiz", [SITE.PHY]: "Take Quiz"}[SITE_SUBJECT]}
+                                        </RS.Button>
+                                    </div>
+                                </RS.ListGroupItem>)}
+                            </RS.ListGroup>
+                        </>}
+                    </ShowLoading>
+            }}
+        </Tabs>
     </RS.Container>;
 };
 

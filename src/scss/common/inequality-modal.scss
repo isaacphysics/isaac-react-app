@@ -97,7 +97,6 @@
                 bottom: 25px;
                 right: 5px;
                 background-color: transparent;
-                background-image: url('/assets/inequality-confirm-cs.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
@@ -123,10 +122,21 @@
                 bottom: 25px;
                 left: 5px;
                 background-color: transparent;
-                background-image: url('/assets/inequality-centre-cs.svg');
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position-y: center;
+            }
+
+            &.help {
+                width: 90px;
+                height: 90px;
+                bottom: 125px;
+                left: 5px;
+                background-color: transparent;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position-y: center;
+                z-index: 255;
             }
 
             &.trash {

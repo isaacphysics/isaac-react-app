@@ -30,7 +30,11 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 className="h-title pb-5 mb-4"
                 close={
                     activeModal.closeAction ?
-                        <button className="close" onClick={activeModal.closeAction}>Close</button> : null
+                        <button className="close" onClick={activeModal.closeAction}>
+                            {activeModal?.closeLabelOverride || "Close"}
+                        </button>
+                        :
+                        null
                 }
             >
                 {activeModal.title}

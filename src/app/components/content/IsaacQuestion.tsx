@@ -29,8 +29,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
     const canSubmit = questionPart?.canSubmit && !locked || false;
-    const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
+    const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs") && SITE_SUBJECT === SITE.PHY;
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
+
+    const sigFigsFeedback = <p>
+        Whether your answer is correct or not, it has the wrong number of&nbsp;
+        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+    </p>;
 
     // Register Question Part in Redux
     useEffect((): (() => void) => {
@@ -74,7 +79,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
                     <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 {validationResponse.explanation && <div className="mb-2">
-                    <IsaacContent doc={validationResponse.explanation} />
+                    {sigFigsError ?
+                        sigFigsFeedback :
+                        <IsaacContent doc={validationResponse.explanation}/>
+                    }
                 </div>}
             </div>}
 

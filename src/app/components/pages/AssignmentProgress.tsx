@@ -1,11 +1,28 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Button, Col, Container, DropdownItem, DropdownMenu, DropdownToggle, Label, Row, Spinner, UncontrolledButtonDropdown} from "reactstrap"
+import {
+    Button,
+    Col,
+    Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Label,
+    Row,
+    Spinner,
+    UncontrolledButtonDropdown
+} from "reactstrap"
 import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
-import {AppAssignmentProgress, AppGroup, EnhancedGameboard, PageSettings, SingleProgressDetailsProps} from "../../../IsaacAppTypes";
+import {
+    AppAssignmentProgress,
+    AppGroup,
+    EnhancedGameboard,
+    PageSettings,
+    SingleProgressDetailsProps
+} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
@@ -83,6 +100,7 @@ enum SortOrder {
 
 interface AssignmentProgressLegendProps {
     pageSettings: PageSettings;
+    showQuestionKey?: boolean;
 }
 
 type GroupDetailsProps = AssignmentProgressPageProps & {
@@ -99,6 +117,18 @@ type ProgressDetailsProps = AssignmentDetailsProps & {
 };
 
 const passMark = 0.75;
+export const ICON = {
+    [SITE.CS]: {
+        correct: <img src="/assets/tick-rp.svg" alt="Correct" style={{width: 30}} />,
+        incorrect: <img src="/assets/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
+        notAttempted: <img src="/assets/dash.svg" alt="Not attempted" style={{width: 30}} />,
+    },
+    [SITE.PHY]: {
+        correct: <svg style={{width: 30, height: 30}}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg>,
+        incorrect: <svg style={{width: 30, height: 30}}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg>,
+        notAttempted: <svg  style={{width: 30, height: 30}}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg>,
+    }
+}[SITE_SUBJECT];
 
 export function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {
     let result;
@@ -119,6 +149,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
     const [reverseOrder, setReverseOrder] = useState(false);
+    const [singleQuestionSort, setSingleQuestionSort] = useState(false);
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     let questions = assignment.gameboard.questions;
@@ -174,7 +205,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
         return item.user.authorisedFullAccess && item.notAttemptedPartResults.reduce(function(sum, increment) {return sum + increment;}, 0);
     }, [reverseOrder ? "desc" : "asc"]);
 
-    const sortedProgress = orderBy(semiSortedProgress, (item) => {
+    const sortedProgress = orderBy((singleQuestionSort ? progress : semiSortedProgress), (item) => {
         switch (sortOrder) {
             case "name":
                 return (item.user.familyName + ", " + item.user.givenName).toLowerCase();
@@ -201,6 +232,11 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
 
     function toggleSort(itemOrder: SortOrder) {
         setSortOrder(itemOrder);
+        if (typeof itemOrder === "number") {
+            setSingleQuestionSort(true)
+        } else {
+            setSingleQuestionSort(false);
+        }
         if (sortOrder == itemOrder) {
             setReverseOrder(!reverseOrder);
         } else {
@@ -409,12 +445,30 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
 };
 
 export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) => {
-    const {pageSettings} = props;
+    const {pageSettings, showQuestionKey} = props;
     return <div className="p-4"><div className="assignment-progress-legend">
-        <ul className="block-grid-xs-5">
+        {showQuestionKey && <>
+            <Label htmlFor="question-key">Question key:</Label>
+            <ul id="question-key" className="block-grid-xs-3">
+                <li className="d-flex flex-wrap align-items-center justify-content-center">
+                    <div className="key-cell">{ICON.correct}</div>
+                    <div className="key-description">Correct</div>
+                </li>
+                <li className="d-flex flex-wrap align-items-center justify-content-center">
+                    <div className="key-cell">{ICON.notAttempted}</div>
+                    <div className="key-description">Not attempted</div>
+                </li>
+                <li className="d-flex flex-wrap align-items-center justify-content-center">
+                    <div className="key-cell">{ICON.incorrect}</div>
+                    <div className="key-description">Incorrect</div>
+                </li>
+            </ul>
+        </>}
+        {showQuestionKey && <Label htmlFor="key" className="mt-2">Section key:</Label>}
+        <ul id="key" className="block-grid-xs-5">
             <li className="d-flex flex-wrap">
                 <div className="key-cell">
-                    <span className="completed"></span>
+                    <span className="completed" />
                 </div>
                 <div className="key-description">100% correct</div>
             </li>

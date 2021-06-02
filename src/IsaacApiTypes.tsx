@@ -223,6 +223,7 @@ export interface QuizFeedbackDTO {
     complete?: boolean;
     overallMark?: Mark;
     sectionMarks?: { [index: string]: Mark };
+    questionMarks?: { [index: string]: Mark };
 }
 
 export interface QuizUserFeedbackDTO {

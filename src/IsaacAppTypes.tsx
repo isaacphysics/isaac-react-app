@@ -600,6 +600,7 @@ export interface Toast {
 
 export interface ActiveModal {
     closeAction?: () => void;
+    closeLabelOverride?: string;
     size?: string;
     title: string;
     body: any;
@@ -848,6 +849,7 @@ export interface BaseTag {
     parent?: TAG_ID;
     comingSoon?: string;
     new?: boolean;
+    hidden?: boolean;
 }
 
 export interface Tag extends BaseTag {

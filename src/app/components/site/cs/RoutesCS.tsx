@@ -30,9 +30,17 @@ export const RoutesCS = [
     // <TrackedRoute key={key++} exact path="/group_progress/:groupId" ifUser={isTeacher} component={SingleGroupProgress} />,
 
     // Topics
+    <Redirect key={key++} from="/topics/procedural_and_structured_programming" to="/topics/procedural_programming" />,
+    <Redirect key={key++} from="/topics/guis" to="/topics/event_driven_programming" />,
+    <Redirect key={key++} from="/topics/searching_sorting_pathfinding" to="/topics/searching" />,
+    <Redirect key={key++} from="/topics/theory_of_computation" to="/topics/models_of_computation" />,
+    <Redirect key={key++} from="/topics/operating_systems_and_software" to="/topics/operating_systems" />,
+    <Redirect key={key++} from="/topics/number_bases" to="/topics/number_representation" />,
+    <Redirect key={key++} from="/topics/string_manipulation" to="/topics/string_handling" />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
+
 
     // Books:
     <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,

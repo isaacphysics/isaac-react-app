@@ -49,7 +49,7 @@ import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
-import {isTest, QUIZ_FEATURE} from "../../services/constants";
+import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {RedirectToEvent} from "./RedirectToEvent";
@@ -74,7 +74,7 @@ import {ClientError} from "../pages/ClientError";
 import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
 import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
 import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
-import {QuizDoAsssignment} from "../pages/quizzes/QuizDoAssignment";
+import {QuizDoAssignment} from "../pages/quizzes/QuizDoAssignment";
 import {QuizAttemptFeedback} from "../pages/quizzes/QuizAttemptFeedback";
 import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../pages/quizzes/QuizPreview";
@@ -159,26 +159,26 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
                     {/* Quiz pages */}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAsssignment} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />}
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quiz/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />}
+                    <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />
+                    <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
+                    <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
+                    <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
+                    <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />
+                    <TrackedRoute exact path="/quiz/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />
+                    <TrackedRoute exact path="/quiz/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />
+                    <TrackedRoute exact path="/quiz/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
+                    <TrackedRoute exact path="/quiz/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
 
                     {/* Student pages */}
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                     <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/quizzes" ifUser={isLoggedIn} component={MyQuizzes} />}
+                    <TrackedRoute exact path="/quizzes" ifUser={isLoggedIn} component={MyQuizzes} />
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
-                    {QUIZ_FEATURE && <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />}
+                    <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

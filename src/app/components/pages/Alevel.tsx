@@ -23,8 +23,8 @@ export const Alevel = () => {
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
-            <IsaacCard doc={{title: "Master Mathematics", subtitle: "Revise your maths skills with easier and harder questions.",
-                clickUrl: "/pages/master_maths", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            <IsaacCard doc={{title: "Practise Maths", subtitle: "Practise A Level (or equivalent) exam questions by topic.",
+                clickUrl: " /pages/maths_practice", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
             <IsaacCard doc={{title: "Maths for Sciences Book", subtitle: "Interactive questions from our pre-university Maths book.",
                 clickUrl: "/books/pre_uni_maths", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}

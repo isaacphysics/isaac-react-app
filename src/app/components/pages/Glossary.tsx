@@ -29,11 +29,11 @@ interface Item<T> {
 
 export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const [searchText, setSearchText] = useState("");
-    const topics = tags.allTags.sort((a,b) => a.title.localeCompare(b.title));
+    const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const examBoard = useCurrentExamBoard();
-    
+
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
             const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
@@ -71,7 +71,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
         if (event.key === 'Enter') {
             scrollToKey(event.currentTarget.getAttribute('key') || '');
         }
-    }    
+    }
 
     useEffect(() => {
         if (hash.includes("#")) {

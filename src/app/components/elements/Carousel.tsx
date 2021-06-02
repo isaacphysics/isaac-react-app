@@ -15,17 +15,17 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
 
     const next = () => {
         if (!animating) {
-            const nextIndex = activeIndex === items.length - 1 ? 0 : activeIndex + 1;
-            setActiveIndex(nextIndex);
+            setActiveIndex(activeIndex + 1);
         }
     };
+    useEffect(() => {if (activeIndex >= items.length) setActiveIndex(0)}, [activeIndex, setActiveIndex]);
 
     const previous = () => {
         if (!animating) {
-            const nextIndex = activeIndex === 0 ? items.length - 1 : activeIndex - 1;
-            setActiveIndex(nextIndex);
+            setActiveIndex(activeIndex - 1);
         }
     };
+    useEffect(() => {if (activeIndex == -1) setActiveIndex(items.length - 1)}, [activeIndex, setActiveIndex]);
 
     const onExiting = () => setAnimating(true);
     const onExited = () => setAnimating(false);
@@ -45,7 +45,7 @@ const ControlledCarouselInstance = ({children, collectionTag}: any) => {
         const classToCallback = {
             "carousel-control-prev": ifKeyIsEnter(previous),
             "carousel-control-next": ifKeyIsEnter(next)
-        }
+        };
         if (carouselContainer.current) {
             for (let [cssClass, callback] of Object.entries(classToCallback)) {
                 const elements = carouselContainer.current.getElementsByClassName(cssClass);

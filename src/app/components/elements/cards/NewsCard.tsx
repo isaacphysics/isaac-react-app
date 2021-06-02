@@ -46,7 +46,7 @@ export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
                         Read more
                     </Link> :
                     // eslint-disable-next-line react/jsx-no-target-blank
-                    <a href={url} target="_blank" rel="noopener">
+                    <a className="focus-target" href={url} target="_blank" rel="noopener">
                         Find out more
                     </a>
                 }

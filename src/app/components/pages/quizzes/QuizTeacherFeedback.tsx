@@ -4,11 +4,21 @@ import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {loadQuizAssignmentFeedback, returnQuizToStudent, updateQuizAssignmentFeedbackMode} from "../../../state/actions/quizzes";
+import {
+    loadQuizAssignmentFeedback,
+    returnQuizToStudent,
+    updateQuizAssignmentFeedbackMode
+} from "../../../state/actions/quizzes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizFeedbackMode, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
-import {AssignmentProgressLegend, formatMark} from '../AssignmentProgress';
+import {
+    IsaacQuizSectionDTO,
+    Mark,
+    QuizAssignmentDTO,
+    QuizFeedbackMode,
+    QuizUserFeedbackDTO
+} from "../../../../IsaacApiTypes";
+import {AssignmentProgressLegend, formatMark, ICON} from '../AssignmentProgress';
 import {usePageSettings} from "../../../services/progress";
 import {PageSettings, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
@@ -16,6 +26,7 @@ import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
+import {isQuestion} from "../../../services/questions";
 
 interface QuizTeacherFeedbackProps {
     match: {params: {quizAssignmentId: string}}
@@ -28,6 +39,10 @@ const pageHelp = <span>
 interface ResultsTableProps {
     assignment: QuizAssignmentDTO;
     pageSettings: PageSettings;
+}
+
+function questionsInSection(section?: IsaacQuizSectionDTO) {
+    return section?.children?.filter(child => isQuestion(child)) || [];
 }
 
 const passMark = 0.75;
@@ -88,38 +103,46 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
         <th className="student-name">
             {valid ?
-                <RS.Dropdown isOpen={!working && dropdownOpen} toggle={toggle} disabled={working}>
-                    <RS.DropdownToggle
-                        tag="div"
-                        tabIndex={0}
-                        className="btn quiz-student-menu"
-                        data-toggle="dropdown"
-                        aria-expanded={dropdownOpen}
+                <>
+                    <RS.Button color="link" onClick={toggle} disabled={working}>
+                        <div
+                            tabIndex={0}
+                            className="btn quiz-student-menu"
+                            data-toggle="dropdown"
+                            aria-expanded={dropdownOpen}
                         >
-                        {row.user?.givenName}
-                        <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
-                        <span className="quiz-student-menu-icon">
+                            {row.user?.givenName}
+                            <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
+                            <span className="quiz-student-menu-icon">
                             {working ? <RS.Spinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
                         </span>
-                    </RS.DropdownToggle>
-                    <RS.DropdownMenu right>
-                        <RS.DropdownItem onClick={returnToStudent}>Return to student</RS.DropdownItem>
-                    </RS.DropdownMenu>
-                </RS.Dropdown>
+                        </div>
+                    </RS.Button>
+                    {!working && dropdownOpen && <div className="py-2 px-3">
+                        <RS.Button size="sm" onClick={returnToStudent}>Return to student</RS.Button>
+                    </div>}
+                </>
             :   <>
                     {row.user?.givenName}
                     <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
                 </>
             }
         </th>
-        {!valid && <td colSpan={sections.length + 1}>{message}</td>}
+        {!valid && <td colSpan={sections.map(questionsInSection).flat().length + 1}>{message}</td>}
         {valid && <>
             {sections.map(section => {
                 const mark = row.feedback?.sectionMarks?.[section.id as string];
                 const outOf = quiz?.sectionTotals?.[section.id as string];
-                return <td key={section.id} className={markQuestionClasses(row, mark, outOf)}>
-                    {formatMark(mark?.correct as number, outOf as number, pageSettings.formatAsPercentage)}
-                </td>;
+                return questionsInSection(section).map(question => {
+                    const questionMark = row.feedback?.questionMarks?.[question.id as string] || {} as Mark;
+                    const icon =
+                        questionMark.correct === 1 ? ICON.correct :
+                        questionMark.incorrect === 1 ? ICON.incorrect :
+                        /* default */ ICON.notAttempted;
+                    return <td key={question.id} className={markQuestionClasses(row, mark, outOf)}>
+                        {icon}
+                    </td>
+                }).flat()
             })}
             <td className="total-column">
                 {formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}
@@ -131,16 +154,24 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
 function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
 
-    return <table className="progress-table w-100 mb-5">
+    return <table className="progress-table w-100 mb-5 border">
         <tbody>
-        <tr>
-            <th>&nbsp;</th>
-            {sections.map(section => <th key={section.id}>{section.title}</th>)}
-            <th>Overall</th>
-        </tr>
-        {assignment.userFeedback?.map(row =>
-            <ResultRow key={row.user?.id} pageSettings={pageSettings} row={row} assignment={assignment} />
-        )}
+            <tr className="bg-white">
+                <th>&nbsp;</th>
+                {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
+                    {section.title}
+                </th>)}
+                <th rowSpan={2} className="border-bottom">Overall</th>
+            </tr>
+            <tr className="bg-white">
+                <th className="bg-white border-bottom">&nbsp;</th>
+                {sections.map(section => questionsInSection(section).map((question, index) => <th key={question.id} className="border">
+                    {`Q${index + 1}`}
+                </th>)).flat()}
+            </tr>
+            {assignment.userFeedback?.map(row =>
+                <ResultRow key={row.user?.id} pageSettings={pageSettings} row={row} assignment={assignment} />
+            )}
         </tbody>
     </table>;
 }
@@ -193,7 +224,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                 <p>
                     <RS.Label for="feedbackMode" className="pr-1">Feedback mode:</RS.Label>
                     <RS.UncontrolledDropdown className="d-inline-block">
-                        <RS.DropdownToggle caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                        <RS.DropdownToggle color="dark" outline className="px-3" caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                             {settingFeedbackMode ?
                                 <>Saving <RS.Spinner size="sm" className="quizFeedbackModeSpinner" /></>
                             :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
@@ -209,8 +240,8 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                         </RS.DropdownMenu>
                     </RS.UncontrolledDropdown>
                 </p>
-                <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-                    <AssignmentProgressLegend pageSettings={pageSettings} />
+                <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
+                    <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey />
                     <ResultsTable assignment={assignment} pageSettings={pageSettings} />
                 </div>
             </>}

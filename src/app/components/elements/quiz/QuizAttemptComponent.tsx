@@ -15,6 +15,7 @@ import {useDispatch} from "react-redux";
 import {Col, Row} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {TempExamBoardPicker} from "../inputs/TempExamBoardPicker";
+import {below, useDeviceSize} from "../../../services/device";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -150,17 +151,17 @@ interface QuizPaginationProps {
 }
 
 export function QuizPagination({attempt, page, sections, pageLink, finalLabel}: QuizAttemptProps & QuizPaginationProps) {
+    const deviceSize = useDeviceSize();
     const sectionCount = Object.keys(sections).length;
     const backLink = pageLink(attempt, page > 1 ? page - 1 : undefined);
     const finalSection = page === sectionCount;
     const nextLink = pageLink(attempt, !finalSection ? page + 1 : undefined);
-    return <>
-        <RS.Button color="tertiary" tag={Link} replace to={backLink}>Back</RS.Button>
-        <Spacer/>
-        Section {page} / {sectionCount}
-        <Spacer/>
-        <RS.Button color="primary" tag={Link} replace to={nextLink}>{finalSection ? finalLabel : "Next"}</RS.Button>
-    </>;
+
+    return <div className="d-flex w-100 justify-content-between align-items-center">
+        <RS.Button color="primary" outline size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={backLink}>Back</RS.Button>
+        <div className="d-none d-md-block">Section {page} / {sectionCount}</div>
+        <RS.Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={nextLink}>{finalSection ? finalLabel : "Next"}</RS.Button>
+    </div>;
 }
 
 export function QuizAttemptComponent(props: QuizAttemptProps) {
@@ -168,10 +169,10 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt}}>
         <QuizTitle {...props} />
         {page === null ?
-            <>
+            <div className="mt-4">
                 <QuizHeader {...props} />
                 <QuizContents {...props} />
-            </>
+            </div>
             :
             <QuizSection {...props} page={page}/>
         }
