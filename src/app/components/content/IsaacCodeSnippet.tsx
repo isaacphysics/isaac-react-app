@@ -2,7 +2,7 @@ import {CodeSnippetDTO} from "../../../IsaacApiTypes";
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
 
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -13,7 +13,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
 
     useEffect(() => {
         if (codeSnippetRef.current) {
-            hljs.highlightBlock(codeSnippetRef.current);
+            hljs.highlightElement(codeSnippetRef.current);
         }
     }, [doc]);
 
