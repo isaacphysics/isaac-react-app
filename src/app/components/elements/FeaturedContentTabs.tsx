@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {fetchFragment} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {apiHelper} from "../../services/api";
 
 const COMPUTER_SCIENTIST_FRAGMENT_ID = "computer-scientist-of-the-month";
 
@@ -49,12 +50,9 @@ export function FeaturedContentTabs() {
                                         "value": "Cleopatra has a problem. She wants to visit the Great Pyramid, but her maths teacher, Ptolemy, says she can only do this if she solves a logic puzzle. \n\nEvery block in the pyramid contains a number that is the sum of the two numbers below, e.g. G = K + L. Some of the numbers are missing. To help Cleopatra solve the puzzle, type the number that should be in block A below.",
                                     },
                                     {
-                                        "id": "dsa_ctm_01|e1297595-c800-4f29-820f-5d69d471851c|dsa_ctm_01|e1297595-c800-4f29-820f-5d69d471851c|fig1",
-                                        "type": "figure",
-                                        "encoding": "markdown",
-                                        "value": "Number pyramid",
-                                        "src": "content/computer_science/theory_of_computation/computational_thinking/questions/figures/Isaac_Computer_Science_Computational_Methods_Diagrams_V2_Artboard%203.svg",
-                                        "altText": "A pyramid of blocks. Some blocks have numbers and some numbers are missing. Each block's value is the sum of the two blocks below. "
+                                        "type": "content",
+                                        "encoding": "html",
+                                        "value": `<div class="text-center mb-3"><img src=${apiHelper.determineImageUrl("content/computer_science/theory_of_computation/computational_thinking/questions/figures/Isaac_Computer_Science_Computational_Methods_Diagrams_V2_Artboard%203.svg")} alt="A pyramid of blocks. Some blocks have numbers and some numbers are missing. Each block's value is the sum of the two blocks below." class="mw-100"></div>`
                                     }
                                 ],
                                 "requireUnits": false,
