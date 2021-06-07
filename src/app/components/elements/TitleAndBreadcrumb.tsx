@@ -1,5 +1,5 @@
 import React, {ReactElement} from "react";
-import {PageTitleProps, PageTitle} from "./PageTitle";
+import {PageTitle, PageTitleProps} from "./PageTitle";
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import {HOME_CRUMB} from "../../services/constants";
@@ -45,6 +45,7 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;
     children?: ReactElement | boolean;
+    modalId?: string;
 };
 
 export const TitleAndBreadcrumb = (props: TitleAndBreadcrumbProps) => {
