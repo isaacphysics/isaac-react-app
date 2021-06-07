@@ -4,6 +4,7 @@ import python from 'highlight.js/lib/languages/python'
 import php from 'highlight.js/lib/languages/php'
 import csharp from 'highlight.js/lib/languages/csharp'
 import plaintext from 'highlight.js/lib/languages/plaintext'
+import sql from 'highlight.js/lib/languages/sql'
 
 export function registerLanguages() {
     hljs.registerLanguage('javascript', javascript);
@@ -11,4 +12,5 @@ export function registerLanguages() {
     hljs.registerLanguage('php', php);
     hljs.registerLanguage('csharp', csharp);
     hljs.registerLanguage('plaintext', plaintext);
+    hljs.registerLanguage('sql', sql);
 }
