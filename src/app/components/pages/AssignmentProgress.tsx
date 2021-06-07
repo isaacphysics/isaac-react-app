@@ -466,31 +466,31 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
         </>}
         {showQuestionKey && <Label htmlFor="key" className="mt-2">Section key:</Label>}
         <ul id="key" className="block-grid-xs-5">
-            <li className="d-flex flex-wrap">
+            <li className="d-flex flex-wrap px-2">
                 <div className="key-cell">
                     <span className="completed" />
                 </div>
                 <div className="key-description">100% correct</div>
             </li>
-            <li className="d-flex flex-wrap">
+            <li className="d-flex flex-wrap px-2">
                 <div className="key-cell"><span className="passed">&nbsp;</span>
                 </div>
                 <div className="key-description">&ge;{passMark * 100}% correct
                     {/*<span className="d-none d-xl-inline"> (or Mastery)</span>*/}
                 </div>
             </li>
-            <li className="d-flex flex-wrap">
+            <li className="d-flex flex-wrap px-2">
                 <div className="key-cell"><span className="in-progress">&nbsp;</span>
                 </div>
                 <div className="key-description">&lt;{passMark * 100}% correct</div>
             </li>
-            <li className="d-flex flex-wrap">
+            <li className="d-flex flex-wrap px-2">
                 <div className="key-cell"><span>&nbsp;</span>
                 </div>
                 <div className="key-description"><span className="d-none d-md-inline">Not attempted</span><span
                     className="d-inline d-md-none">No attempt</span></div>
             </li>
-            <li className="d-flex flex-wrap">
+            <li className="d-flex flex-wrap px-2">
                 <div className="key-cell"><span className="failed">&nbsp;</span>
                 </div>
                 <div className="key-description">&gt;{100 -(passMark * 100)}% incorrect</div>
