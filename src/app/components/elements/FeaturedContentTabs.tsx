@@ -38,34 +38,27 @@ export function FeaturedContentTabs() {
                         {/*TODO FEATURED_QUESTION_UPDATE uncomment TempExamBoardPicker if featured question needs it
                          <TempExamBoardPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />*/}
                         <div className="mb-5 mt-md-n2"> {/* TODO FEATURED_QUESTION_UPDATE remove negative margin if there is an exposition */}
-                            <IsaacContent doc={{ /* Search for: TODO FEATURED_QUESTION_UPDATE  */
+                            <IsaacContent doc={{ /* Search for: TODO FEATURED_QUESTION_UPDATE. Use the JSON from the API endpoint and not the Editor.  */
+                                "id": "dsa_ctm_01|e1297595-c800-4f29-820f-5d69d471851c", /* FEATURED_QUESTION_UPDATE remember to add question ID to question part ID! */
+                                "type": "isaacNumericQuestion",
                                 "encoding": "markdown",
-                                "type": "isaacStringMatchQuestion",
-                                "id": "dsa_datastruct_05|3b5e8bb3-f217-4bb6-b8ff-636d8ee35988", /* FEATURED_QUESTION_UPDATE remember to add question ID to question part ID! */
                                 "children": [
                                     {
                                         "type": "content",
-                                        "value": "The following diagram is an abstraction of a stack. The stack currently contains three items (names). The pointer to the top of the stack is shown in pink.",
-                                        "encoding": "markdown"
-                                    },
-                                    {
-                                        "type": "image",
-                                        "value": "A stack",
                                         "encoding": "markdown",
-                                        "src": "content/theory/data-structures-and-algorithms/data-structures/questions/figures/Isaac_Computer_Science_2_Data_Structures_Project_OUTLINE_V6_38.png",
-                                        "altText": "A stack with three elements. At the bottom, in position 0, is Rosie; in position 1 is Millie; and at the top of the stack, in position 2, is Ciara. The pointer to the top of the stack is currently pointing to Ciara in position 2."
+                                        "value": "Cleopatra has a problem. She wants to visit the Great Pyramid, but her maths teacher, Ptolemy, says she can only do this if she solves a logic puzzle. \n\nEvery block in the pyramid contains a number that is the sum of the two numbers below, e.g. G = K + L. Some of the numbers are missing. To help Cleopatra solve the puzzle, type the number that should be in block A below.",
                                     },
                                     {
-                                        "type": "content",
-                                        "value": "The following operations are carried out in the order given: push Harry, pop, push Luna, peek, pop, pop.",
-                                        "encoding": "markdown"
-                                    },
-                                    {
-                                        "type": "content",
+                                        "id": "dsa_ctm_01|e1297595-c800-4f29-820f-5d69d471851c|dsa_ctm_01|e1297595-c800-4f29-820f-5d69d471851c|fig1",
+                                        "type": "figure",
                                         "encoding": "markdown",
-                                        "value": "a) To which position will the `top` pointer point after all the operations have been carried out?"
+                                        "value": "Number pyramid",
+                                        "src": "content/computer_science/theory_of_computation/computational_thinking/questions/figures/Isaac_Computer_Science_Computational_Methods_Diagrams_V2_Artboard%203.svg",
+                                        "altText": "A pyramid of blocks. Some blocks have numbers and some numbers are missing. Each block's value is the sum of the two blocks below. "
                                     }
-                                ]
+                                ],
+                                "requireUnits": false,
+                                "availableUnits": []
                             }} />
                         </div>
                     </Col>
