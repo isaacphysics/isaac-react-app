@@ -179,11 +179,11 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             </div>
                         </div>}
                         <RS.Row id="progress-questions">
-                            {progress?.mostRecentQuestions && <RS.Col md={12} lg={6} className="mt-4">
+                            {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <RS.Col md={12} lg={6} className="mt-4">
                                 <h4>Most recently attempted questions</h4>
                                 <LinkToContentSummaryList items={progress.mostRecentQuestions}/>
                             </RS.Col>}
-                            {progress?.oldestIncompleteQuestions && <RS.Col md={12} lg={6} className="mt-4">
+                            {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <RS.Col md={12} lg={6} className="mt-4">
                                 <h4>Oldest unsolved questions</h4>
                                 <LinkToContentSummaryList items={progress.oldestIncompleteQuestions}/>
                             </RS.Col>}
