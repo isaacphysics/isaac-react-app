@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -117,8 +117,10 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     const dispatch = useDispatch();
 
+    const [startIndex, _setStartIndex] = useState(0);
+
     useEffect(() => {
-        dispatch(loadQuizzes());
+        dispatch(loadQuizzes(startIndex));
         dispatch(loadQuizAssignedToMe());
         dispatch(loadQuizzesAttemptedFreelyByMe());
     }, [dispatch]);
