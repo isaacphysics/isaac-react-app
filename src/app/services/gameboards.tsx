@@ -38,7 +38,7 @@ const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}
 const createGameboardHistory = (title: string, gameboardId: string) => {
     return [
         // TODO could also push a link to my gameboards here when it exists
-        {title: title, to: createGameabordLink(gameboardId)}
+        {title: title /* WARNING: Do not dangerously set html here */, to: createGameabordLink(gameboardId)}
     ]
 };
 export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {

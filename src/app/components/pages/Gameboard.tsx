@@ -187,7 +187,10 @@ export const Gameboard = withRouter(({location}: {location: Location}) => {
                         return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
                     }
                     return <React.Fragment>
-                        <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
+                        <TitleAndBreadcrumb currentPageTitle={
+                            /* WARNING: do not dangerously set HTML for gameboard title as it is defined by users */
+                            gameboard && gameboard.title || "Filter Generated Gameboard"
+                        } />
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
                         {userButtons}
                     </React.Fragment>

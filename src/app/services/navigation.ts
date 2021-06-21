@@ -10,8 +10,9 @@ import {useCurrentExamBoard} from "./examBoard";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {selectors} from "../state/selectors";
+import {TrustedHtmlObject} from "../components/elements/TrustedHtml";
 
-export interface LinkInfo {title: string; to?: string; replace?: boolean}
+export interface LinkInfo {title: string | TrustedHtmlObject; to?: string; replace?: boolean}
 export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
 export interface PageNavigation {
     collectionType?: CollectionType;

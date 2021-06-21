@@ -214,7 +214,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
     return <RS.Container>
         <ShowLoading until={assignmentState}>
             {assignment && <>
-                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+                <TitleAndBreadcrumb currentPageTitle={{__dangerouslySetHtml: quizTitle}} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
                 <p className="d-flex">
                     <span>
                         Set by: {extractTeacherName(assignment.assignerSummary ?? null)} on {formatDate(assignment.creationDate)}
@@ -246,7 +246,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                 </div>
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
+                <TitleAndBreadcrumb currentPageTitle={{__dangerouslySetHtml: quizTitle}} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
                 <RS.Alert color="danger">
                     <h4 className="alert-heading">Error loading quiz feedback</h4>
                     <p>{error}</p>

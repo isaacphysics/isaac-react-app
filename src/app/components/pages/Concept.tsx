@@ -38,7 +38,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
             <Container>
                 <TitleAndBreadcrumb
                     intermediateCrumbs={navigation.breadcrumbHistory}
-                    currentPageTitle={doc.title as string}
+                    currentPageTitle={{__dangerouslySetHtml: doc.title as string}}
                     collectionType={navigation.collectionType}
                 />
                 <div className="no-print d-flex align-items-center">

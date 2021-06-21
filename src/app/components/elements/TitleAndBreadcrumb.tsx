@@ -1,13 +1,13 @@
 import React, {ReactElement} from "react";
-import {PageTitleProps, PageTitle} from "./PageTitle";
+import {PageTitle, PageTitleProps} from "./PageTitle";
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import {HOME_CRUMB} from "../../services/constants";
 import {CollectionType, LinkInfo} from "../../services/navigation";
-import {TrustedHtml} from "./TrustedHtml";
+import {TrustedHtmlObject, TrustedHtmlOrString} from "./TrustedHtml";
 
 interface BreadcrumbTrailProps {
-    currentPageTitle: string;
+    currentPageTitle: string | TrustedHtmlObject;
     intermediateCrumbs?: LinkInfo[];
     collectionType?: CollectionType;
 }
@@ -28,16 +28,16 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
 
     return <Breadcrumb className="py-md-2 px-md-0 mb-3 mb-md-0 bread">
         {breadcrumbHistory.map((breadcrumb) => (
-            <BreadcrumbItem key={breadcrumb.title}>
+            <BreadcrumbItem key={JSON.stringify(breadcrumb.title)}>
                 {breadcrumb.to ?
-                    <Link to={breadcrumb.to} replace={breadcrumb.replace}><TrustedHtml html={breadcrumb.title} span /></Link>
+                    <Link to={breadcrumb.to} replace={breadcrumb.replace}><TrustedHtmlOrString possibleHtml={breadcrumb.title} span /></Link>
                     :
-                    <TrustedHtml html={breadcrumb.title} span />
+                    <TrustedHtmlOrString possibleHtml={breadcrumb.title} span />
                 }
             </BreadcrumbItem>
         ))}
         <BreadcrumbItem active>
-            <TrustedHtml html={currentPageTitle} span />
+            <TrustedHtmlOrString possibleHtml={currentPageTitle} span />
         </BreadcrumbItem>
     </Breadcrumb>;
 };

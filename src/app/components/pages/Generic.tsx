@@ -33,7 +33,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
         return <div className={doc.subjectId || ""}>
             <Container>
-                <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
+                <TitleAndBreadcrumb currentPageTitle={{__dangerouslySetHtml: doc.title as string}} />
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">

@@ -345,8 +345,8 @@ function manipulateHtml(html: string) {
 
     return htmlDom.innerHTML;
 }
-
-export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
+interface TrustedHtmlOptionsProps {span?: boolean}
+export const TrustedHtml = ({html, span}: {html: string} & TrustedHtmlOptionsProps) => {
     const user = useSelector(selectors.user.orNull);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
@@ -359,3 +359,12 @@ export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
     const ElementType = span ? "span" : "div";
     return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
 };
+
+export type TrustedHtmlObject = {__dangerouslySetHtml: string};
+export function TrustedHtmlOrString({possibleHtml, ...anyOtherProps}: {possibleHtml: string | TrustedHtmlObject} & TrustedHtmlOptionsProps) {
+    if (typeof possibleHtml === "string") {
+        return <React.Fragment>{possibleHtml}</React.Fragment>;
+    } else {
+        return <TrustedHtml {...{...anyOtherProps, html: possibleHtml.__dangerouslySetHtml}} />
+    }
+}

@@ -22,7 +22,7 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isLoggedIn, isStaff, isStudent, isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
@@ -127,7 +127,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
 
         return <RS.Container className="events mb-5">
             <TitleAndBreadcrumb
-                currentPageTitle={event.title as string} subTitle={event.subtitle}
+                currentPageTitle={{__dangerouslySetHtml: event.title as string}} subTitle={event.subtitle}
                 breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
             />
 

@@ -9,10 +9,10 @@ import {QuizAttemptContext} from "../../content/QuizQuestion";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
-import {Col, Row} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {TempExamBoardPicker} from "../inputs/TempExamBoardPicker";
 import {below, useDeviceSize} from "../../../services/device";
@@ -140,8 +140,8 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview}: QuizAttemptProp
         const sections = attempt.quiz?.children;
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
-        return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
-                                   intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink(attempt)}]}/>;
+        return <TitleAndBreadcrumb currentPageTitle={{__dangerouslySetHtml: sectionTitle}} help={pageHelp}
+                                   intermediateCrumbs={[...crumbs, {title: {__dangerouslySetHtml: quizTitle}, replace: true, to: pageLink(attempt)}]}/>;
     }
 };
 

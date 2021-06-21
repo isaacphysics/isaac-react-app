@@ -79,7 +79,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
             <Container>
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
-                    currentPageTitle={title}
+                    currentPageTitle={{__dangerouslySetHtml: title}}
                     intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                     collectionType={navigation.collectionType}
                     level={doc.level}

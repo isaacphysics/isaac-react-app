@@ -42,7 +42,7 @@ export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDo
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title && currentTopic.relatedContent) {
         result.push(ALL_TOPICS_CRUMB);
         if (isValidIdForTopic(currentDocId, currentTopic)) {
-            result.push({title: currentTopic.title, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`});
+            result.push({title: {__dangerouslySetHtml: currentTopic.title}, to: `/topics/${currentTopic.id.slice("topic_summary_".length)}`});
         }
     }
     return result;
