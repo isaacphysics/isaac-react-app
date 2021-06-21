@@ -20,7 +20,7 @@ import {useDeviceSize} from "../../services/device";
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 
 function itemiseTag(tag: Tag) {
-    return {value: tag.id, label: tag.title}
+    return {value: tag.id, label: tag.trustedTitle}
 }
 function itemiseLevels(possibleLevels: string[]) {
     return possibleLevels

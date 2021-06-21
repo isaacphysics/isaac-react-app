@@ -77,7 +77,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                 <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
                 {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
                 {questionTags && <div className="gameboard-tags">
-                    {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
+                    {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.trustedTitle}</span>))}
                 </div>}
             </div>
             {/*TODO CS Level*/}

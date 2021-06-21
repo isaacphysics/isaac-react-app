@@ -47,7 +47,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     const isAllZero = (arr: (string | number)[][]) => arr.filter((elem) => elem[1] > 0).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
+    const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.trustedTitle, questionsByTag[tag.id] || 0]);
     const levelColumns = [...Array(7)].map((_, i) => [`Level ${i}`, questionsByLevel[i as Levels] || 0]);
 
     useEffect(() => {

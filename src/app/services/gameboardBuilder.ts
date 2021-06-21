@@ -77,7 +77,7 @@ export const convertGameboardItemToContentSummary = (question: GameboardItem) =>
 export const convertTagToSelectionOption = (tag: Tag) => {
     return {
         value: tag.id,
-        label: `${tag.title}${tag.comingSoon ? ` (Coming ${tag.comingSoon})`: ""}`,
+        label: `${tag.trustedTitle}${tag.comingSoon ? ` (Coming ${tag.comingSoon})`: ""}`,
         isDisabled: !!tag.comingSoon,
         isHidden: !!tag.hidden,
     }
@@ -85,7 +85,7 @@ export const convertTagToSelectionOption = (tag: Tag) => {
 
 export const groupTagSelectionsByParent = (parent: Tag) => {
     return {
-        label: parent.title,
+        label: parent.trustedTitle,
         options: tags.getChildren(parent.id).map(convertTagToSelectionOption).filter(tag => !tag.isHidden)
     };
 };

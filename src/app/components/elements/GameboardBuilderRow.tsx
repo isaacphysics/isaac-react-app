@@ -24,7 +24,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
 
     const topicTag = () => {
         const tag = question.tags && tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);
-        return tag && tag.title;
+        return tag && tag.trustedTitle;
     };
     const tagIcon = (tag: string) => {
         return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag}</span>

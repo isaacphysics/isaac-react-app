@@ -18,7 +18,7 @@ export const AllTopics = () => {
                     className={topic.comingSoon ? "text-muted" : ""}
                 >
                     <TextTag>
-                        {topic.title}
+                        {topic.trustedTitle}
                     </TextTag>
                 </Link>
                 {" "}
@@ -37,12 +37,12 @@ export const AllTopics = () => {
 
     const topicColumn = (subTags: Tag[]) => {
         return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6}>
-            {subTags.sort((a, b) => (a.title > b.title) ? 1 : -1).map((subcategory) => {
+            {subTags.sort((a, b) => (a.trustedTitle > b.trustedTitle) ? 1 : -1).map((subcategory) => {
                 const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
                 const topicTags = tags.getTopicTags(subcategoryDescendentIds);
                 if (!subcategory.hidden) {
                     return <React.Fragment key={subcategory.id}>
-                        <h3>{subcategory.title}</h3>
+                        <h3>{subcategory.trustedTitle}</h3>
                         <ul className="list-unstyled mb-3 link-list">
                             {topicTags.map((topic) =>
                                 <li

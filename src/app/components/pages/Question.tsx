@@ -44,7 +44,7 @@ function getTags(docTags?: string[]) {
     if (!docTags) return [];
 
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[])
-        .map(tag => ({title: tag.title}));
+        .map(tag => ({title: {__dangerouslySetHtml: tag.title}}));
 }
 
 export const Question = withRouter(({questionIdOverride, match, location}: QuestionPageProps) => {

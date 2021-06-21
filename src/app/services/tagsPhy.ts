@@ -10,64 +10,64 @@ export class PhysicsTagService extends AbstractBaseTagService {
     private static readonly tagHierarchy = [TAG_LEVEL.subject, TAG_LEVEL.field, TAG_LEVEL.topic];
     private static readonly baseTags: BaseTag[] = [
         // Subjects
-        {id: TAG_ID.physics, title: "Physics"},
-        {id: TAG_ID.maths, title: "Maths"},
-        {id: TAG_ID.chemistry, title: "Chemistry"},
+        {id: TAG_ID.physics, trustedTitle: "Physics"},
+        {id: TAG_ID.maths, trustedTitle: "Maths"},
+        {id: TAG_ID.chemistry, trustedTitle: "Chemistry"},
 
         // Physics fields
-        {id: TAG_ID.mechanics, title: "Mechanics", parent: TAG_ID.physics},
-        {id: TAG_ID.waves, title: "Waves", parent: TAG_ID.physics},
-        {id: TAG_ID.fields, title: "Fields", parent: TAG_ID.physics},
-        {id: TAG_ID.circuits, title: "Circuits", parent: TAG_ID.physics},
+        {id: TAG_ID.mechanics, trustedTitle: "Mechanics", parent: TAG_ID.physics},
+        {id: TAG_ID.waves, trustedTitle: "Waves", parent: TAG_ID.physics},
+        {id: TAG_ID.fields, trustedTitle: "Fields", parent: TAG_ID.physics},
+        {id: TAG_ID.circuits, trustedTitle: "Circuits", parent: TAG_ID.physics},
         // Mechanics topics
-        {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
-        {id: TAG_ID.dynamics, title: "Dynamics", parent: TAG_ID.mechanics},
-        {id: TAG_ID.shm, title: "SHM", parent: TAG_ID.mechanics},
-        {id: TAG_ID.angularMotion, title: "Angular Motion", parent: TAG_ID.mechanics},
-        {id: TAG_ID.circularMotion, title: "Circular Motion", parent: TAG_ID.mechanics},
-        {id: TAG_ID.kinematics, title: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
+        {id: TAG_ID.statics, trustedTitle: "Statics", parent: TAG_ID.mechanics},
+        {id: TAG_ID.dynamics, trustedTitle: "Dynamics", parent: TAG_ID.mechanics},
+        {id: TAG_ID.shm, trustedTitle: "SHM", parent: TAG_ID.mechanics},
+        {id: TAG_ID.angularMotion, trustedTitle: "Angular Motion", parent: TAG_ID.mechanics},
+        {id: TAG_ID.circularMotion, trustedTitle: "Circular Motion", parent: TAG_ID.mechanics},
+        {id: TAG_ID.kinematics, trustedTitle: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
         // Fields topics
-        {id: TAG_ID.electric, title: "Electric Fields", parent: TAG_ID.fields},
-        {id: TAG_ID.magnetic, title: "Magnetic Fields", parent: TAG_ID.fields},
-        {id: TAG_ID.gravitational, title: `Gravi${softHyphen}tational Fields`, parent: TAG_ID.fields},
-        {id: TAG_ID.combined, title: "Combined Fields", parent: TAG_ID.fields},
+        {id: TAG_ID.electric, trustedTitle: "Electric Fields", parent: TAG_ID.fields},
+        {id: TAG_ID.magnetic, trustedTitle: "Magnetic Fields", parent: TAG_ID.fields},
+        {id: TAG_ID.gravitational, trustedTitle: `Gravi${softHyphen}tational Fields`, parent: TAG_ID.fields},
+        {id: TAG_ID.combined, trustedTitle: "Combined Fields", parent: TAG_ID.fields},
         // Circuits topics
-        {id: TAG_ID.resistors, title: "Resistors", parent: TAG_ID.circuits},
-        {id: TAG_ID.capacitors, title: "Capacitors", parent: TAG_ID.circuits},
-        {id: TAG_ID.generalCircuits, title: "General Circuits",  parent: TAG_ID.circuits},
+        {id: TAG_ID.resistors, trustedTitle: "Resistors", parent: TAG_ID.circuits},
+        {id: TAG_ID.capacitors, trustedTitle: "Capacitors", parent: TAG_ID.circuits},
+        {id: TAG_ID.generalCircuits, trustedTitle: "General Circuits",  parent: TAG_ID.circuits},
         // Waves topics:
-        {id: TAG_ID.optics, title: `Optics`, parent: TAG_ID.waves},
-        {id: TAG_ID.superposition, title: `Super${softHyphen}position`, parent: TAG_ID.waves},
-        {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.waves},
+        {id: TAG_ID.optics, trustedTitle: `Optics`, parent: TAG_ID.waves},
+        {id: TAG_ID.superposition, trustedTitle: `Super${softHyphen}position`, parent: TAG_ID.waves},
+        {id: TAG_ID.waveMotion, trustedTitle: "Wave Motion", parent: TAG_ID.waves},
 
         // Maths fields
-        {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
-        {id: TAG_ID.calculus, title: "Calculus", parent: TAG_ID.maths},
-        {id: TAG_ID.algebra, title: "Algebra", parent: TAG_ID.maths},
-        {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.maths},
+        {id: TAG_ID.geometry, trustedTitle: "Geometry", parent: TAG_ID.maths},
+        {id: TAG_ID.calculus, trustedTitle: "Calculus", parent: TAG_ID.maths},
+        {id: TAG_ID.algebra, trustedTitle: "Algebra", parent: TAG_ID.maths},
+        {id: TAG_ID.functions, trustedTitle: "Functions", parent: TAG_ID.maths},
         // Geometry topics
-        {id: TAG_ID.geomVectors, title: "Vectors", parent: TAG_ID.geometry},
-        {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
-        {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
+        {id: TAG_ID.geomVectors, trustedTitle: "Vectors", parent: TAG_ID.geometry},
+        {id: TAG_ID.trigonometry, trustedTitle: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
+        {id: TAG_ID.shapes, trustedTitle: "Shapes", parent: TAG_ID.geometry},
         // Calculus topics
-        {id: TAG_ID.differentiation, title: `Differen${softHyphen}tiation`, parent: TAG_ID.calculus},
-        {id: TAG_ID.integration, title: "Integration", parent: TAG_ID.calculus},
-        {id: TAG_ID.differentialEq, title: "Differential Equations", parent: TAG_ID.calculus},
+        {id: TAG_ID.differentiation, trustedTitle: `Differen${softHyphen}tiation`, parent: TAG_ID.calculus},
+        {id: TAG_ID.integration, trustedTitle: "Integration", parent: TAG_ID.calculus},
+        {id: TAG_ID.differentialEq, trustedTitle: "Differential Equations", parent: TAG_ID.calculus},
         // Algebra topics
-        {id: TAG_ID.simultaneous, title: `Simul${softHyphen}taneous Equations`, parent: TAG_ID.algebra},
-        {id: TAG_ID.quadratics, title: "Quadratics", parent: TAG_ID.algebra},
-        {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
-        {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
-        {id: TAG_ID.complex_numbers, title: "Complex Numbers", parent: TAG_ID.algebra},
+        {id: TAG_ID.simultaneous, trustedTitle: `Simul${softHyphen}taneous Equations`, parent: TAG_ID.algebra},
+        {id: TAG_ID.quadratics, trustedTitle: "Quadratics", parent: TAG_ID.algebra},
+        {id: TAG_ID.manipulation, trustedTitle: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
+        {id: TAG_ID.series, trustedTitle: "Series", parent: TAG_ID.algebra},
+        {id: TAG_ID.complex_numbers, trustedTitle: "Complex Numbers", parent: TAG_ID.algebra},
         // Functions topics
-        {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
-        {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
+        {id: TAG_ID.generalFunctions, trustedTitle: "General Functions", parent: TAG_ID.functions},
+        {id: TAG_ID.graphSketching, trustedTitle: "Graph Sketching", parent: TAG_ID.functions},
 
         // Chemistry fields
-        {id: TAG_ID.chemPhysics, title: "Physical Chemistry", parent: TAG_ID.chemistry},
+        {id: TAG_ID.chemPhysics, trustedTitle: "Physical Chemistry", parent: TAG_ID.chemistry},
         // Physical Chemistry topics:
-        {id: TAG_ID.thermodynamics, title: `Thermo${softHyphen}dynamics`, parent: TAG_ID.chemPhysics},
-        {id: TAG_ID.kinetics, title: "Reaction Kinetics", parent: TAG_ID.chemPhysics},
+        {id: TAG_ID.thermodynamics, trustedTitle: `Thermo${softHyphen}dynamics`, parent: TAG_ID.chemPhysics},
+        {id: TAG_ID.kinetics, trustedTitle: "Reaction Kinetics", parent: TAG_ID.chemPhysics},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}

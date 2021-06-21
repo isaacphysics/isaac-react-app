@@ -845,7 +845,7 @@ export type LevelAttempts<T> = { [level in Levels]?: T; }
 
 export interface BaseTag {
     id: TAG_ID;
-    title: string;
+    trustedTitle: string;
     parent?: TAG_ID;
     comingSoon?: string;
     new?: boolean;

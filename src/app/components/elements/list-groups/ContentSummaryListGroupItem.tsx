@@ -25,7 +25,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
 
     const itemTopic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
-    let topicTitle = itemTopic ? itemTopic.title : null;
+    let topicTitle = itemTopic ? itemTopic.trustedTitle : null;
 
     const questionIcon = {
         [SITE.CS]: item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>,
