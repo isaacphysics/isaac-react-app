@@ -326,5 +326,8 @@ export function LaTeX({markup}: {markup: string}) {
     const examBoard = useCurrentExamBoard();
     const figureNumbers = useContext(FigureNumberingContext);
 
-    return <span dangerouslySetInnerHTML={{__html: katexify(escapeHtml(markup), user, examBoard, screenReaderHoverText, figureNumbers)}} />
+    const escapedMarkup = escape(markup);
+    const katexHtml = katexify(escapedMarkup, user, examBoard, screenReaderHoverText, figureNumbers);
+
+    return <span dangerouslySetInnerHTML={{__html: katexHtml}} />
 }
