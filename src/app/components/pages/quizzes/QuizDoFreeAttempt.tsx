@@ -46,6 +46,8 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
     useSectionViewLogging(attempt, pageNumber);
 
+    const assignedQuizError = error?.toString().includes("You are currently set this quiz");
+
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 
     return <RS.Container className="mb-5">
@@ -56,9 +58,12 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
             </>}
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Quiz" intermediateCrumbs={myQuizzesCrumbs} />
-                <RS.Alert color="danger">
+                <RS.Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
                     <h4 className="alert-heading">Error loading quiz!</h4>
                     <p>{error}</p>
+                    {assignedQuizError && <>
+                        <p>You can view your assigned quizzes <a href={"/quizzes"} target="_self" rel="noopener noreferrer">here</a>.</p>
+                    </>}
                 </RS.Alert>
             </>}
         </ShowLoading>
