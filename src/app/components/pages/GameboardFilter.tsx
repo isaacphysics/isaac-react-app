@@ -21,19 +21,19 @@ import Select from "react-select";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 const stageOptions = [
-    {label: "GCSE", value: "GCSE"},
-    {label: "A Level", value: "A Level"},
-    {label: "Further A", value: "Further A"},
-    {label: "University", value: "University"}
+    {label: "GCSE", value: "gcse"},
+    {label: "A Level", value: "a_level"},
+    {label: "Further A", value: "further_a"},
+    {label: "University", value: "university"}
 ]
 
 const difficultyOptions = [
-    {label: "Practice (P1)", value: "Practice 1"},
-    {label: "Practice (P2)", value: "Practice 2"},
-    {label: "Practice (P3)", value: "Practice 3"},
-    {label: "Challenge (C1)", value: "Challenge 1"},
-    {label: "Challenge (C2)", value: "Challenge 2"},
-    {label: "Challenge (C3)", value: "Challenge 3"}
+    {label: "Practice (P1)", value: "practice_1"},
+    {label: "Practice (P2)", value: "practice_2"},
+    {label: "Practice (P3)", value: "practice_3"},
+    {label: "Challenge (C1)", value: "challenge_1"},
+    {label: "Challenge (C2)", value: "challenge_2"},
+    {label: "Challenge (C3)", value: "challenge_3"}
 ];
 
 const questionCategoryOptions = [
