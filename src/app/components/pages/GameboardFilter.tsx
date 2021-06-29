@@ -39,8 +39,8 @@ const difficultyOptions = [
 const questionCategoryOptions = [
     {label: "Learn and Practice", value: QUESTION_CATEGORY.PROBLEM_SOLVING},
     {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
-    {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
-    {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
+    // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
+    // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
 ]
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
