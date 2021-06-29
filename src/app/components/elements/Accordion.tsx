@@ -6,11 +6,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import {TrustedHtml} from "./TrustedHtml";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
+import {LaTeX} from "./LaTeX";
 
 interface AccordionsProps {
     id?: string;
@@ -143,7 +143,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
                 {SITE_SUBJECT === SITE.PHY && level && <span className="accordion-level badge-secondary">Level {level}</span>}
                 <div className="accordion-title pl-3">
                     <RS.Row><span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
-                        {trustedTitle && <div className="p-3"><TrustedHtml html={trustedTitle} /></div>}</RS.Row>
+                        {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}</RS.Row>
                 </div>
 
                 {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordionIcon}>
