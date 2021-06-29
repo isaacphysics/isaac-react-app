@@ -20,8 +20,7 @@ import {NOT_FOUND} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
-import { isDefined } from "../../../services/miscUtils";
-import { title } from "process";
+import {isDefined} from "../../../services/miscUtils";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
