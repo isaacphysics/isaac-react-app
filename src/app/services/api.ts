@@ -312,8 +312,8 @@ export const api = {
         },
         generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
             // TODO FILTER: Temporarily force physics to search for problem solving questions
-            if (SITE_SUBJECT === SITE.PHY) {
-                params['questionCategories'] = QUESTION_CATEGORY.PROBLEM_SOLVING;
+            if (SITE_SUBJECT === SITE.PHY && !Object.keys(params).includes("questionCategories")) {
+                params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
             }
             return endpoint.get(`/gameboards`, {params});
         }

@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
-import {NOT_FOUND, TAG_ID} from '../../services/constants';
+import {NOT_FOUND, QUESTION_CATEGORY, TAG_ID} from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
@@ -13,12 +13,39 @@ import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {history} from "../../services/history";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {Item} from "../../services/select";
+import {Item, unwrapValue} from "../../services/select";
 import {LevelsFilterHexagonal, LevelsFilterSummary} from "../elements/svg/LevelsFilter";
 import {useDeviceSize} from "../../services/device";
+import {AppState} from "../../state/reducers";
+import Select from "react-select";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
+const stageOptions = [
+    {label: "GCSE", value: "gcse"},
+    {label: "A Level", value: "a_level"},
+    {label: "Further A", value: "further_a"},
+    {label: "University", value: "university"}
+]
 
+const difficultyOptions = [
+    {label: "Practice (P1)", value: "practice_1"},
+    {label: "Practice (P2)", value: "practice_2"},
+    {label: "Practice (P3)", value: "practice_3"},
+    {label: "Challenge (C1)", value: "challenge_1"},
+    {label: "Challenge (C2)", value: "challenge_2"},
+    {label: "Challenge (C3)", value: "challenge_3"}
+];
+
+const questionCategoryOptions = [
+    {label: "Learn and Practice", value: QUESTION_CATEGORY.PROBLEM_SOLVING},
+    {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
+    // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
+    // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
+]
+
+function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
+    return options.filter(option => values.includes(option.value));
+}
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title}
 }
@@ -31,8 +58,23 @@ function toCSV<T>(items: Item<T>[]) {
     return items.map(item => item.value).join(",");
 }
 
-function processQueryString(query: string): {queryLevels: Item<number>[], querySelections: Item<TAG_ID>[][]} {
-    const {levels, subjects, fields, topics} = queryString.parse(query);
+function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefined) {
+    if (queryParamValue) {
+        return queryParamValue instanceof Array ? queryParamValue : queryParamValue.split(",");
+    } else {
+        return [];
+    }
+}
+
+interface QueryStringResponse {
+    queryLevels: Item<number>[];
+    querySelections: Item<TAG_ID>[][];
+    queryStages: Item<string>[];
+    queryDifficulties: Item<string>[];
+    queryQuestionCategories: Item<string>[];
+}
+function processQueryString(query: string): QueryStringResponse {
+    const {levels, subjects, fields, topics, stages, difficulties, questionCategories} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
     let levelItems: Item<number>[] = [];
@@ -43,6 +85,10 @@ function processQueryString(query: string): {queryLevels: Item<number>[], queryS
             [] :
             itemiseLevels(levelArray);
     }
+
+    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), stageOptions);
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), difficultyOptions);
+    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), questionCategoryOptions);
 
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;
@@ -56,7 +102,10 @@ function processQueryString(query: string): {queryLevels: Item<number>[], queryS
         }
     })
 
-    return {queryLevels: levelItems, querySelections: selectionItems}
+    return {
+        queryLevels: levelItems, querySelections: selectionItems,
+        queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems
+    }
 }
 
 function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[]) {
@@ -77,7 +126,9 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
-    const {queryLevels, querySelections} = processQueryString(location.search);
+    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
+    const {queryLevels, querySelections, queryStages, queryDifficulties, queryQuestionCategories} =
+        processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
@@ -115,15 +166,27 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     const [levels, setLevels] = useState<Item<number>[]>(queryLevels);
 
+    const [stages, setStages] = useState<Item<string>[]>(queryStages);
+
+    const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
+
+    const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
+
     const boardName = generateBoardName(selections, levels);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
 
     function loadNewGameboard() {
         // Load a gameboard
-        const params: { [key: string]: string } = {
-            levels: toCSV(levels.length === 0 ? levelOptions : levels)
-        };
+        const params: { [key: string]: string } = {};
+        if (!betaFeature?.AUDIENCE_CONTEXT) {
+            params.levels = toCSV(levels.length === 0 ? levelOptions : levels);
+        }
+        if (betaFeature?.AUDIENCE_CONTEXT) {
+            if (stages.length) params.stages = toCSV(stages);
+            if (difficulties.length) params.difficulties = toCSV(difficulties);
+            if (questionCategories.length) params.questionCategories = toCSV(questionCategories);
+        }
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
@@ -144,7 +207,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             setBoardStack([]);
             loadNewGameboard();
         }
-    }, [selections, levels]);
+    }, [selections, levels, stages, difficulties, questionCategories, betaFeature?.AUDIENCE_CONTEXT]);
 
     function refresh() {
         if (gameboard) {
@@ -183,12 +246,12 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 <RS.Col sm={8} lg={9}>
                     <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
-                            <RS.Col lg={6}>
+                            {!betaFeature?.AUDIENCE_CONTEXT && <RS.Col lg={6}>
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     Levels:
                                     <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
                                 </RS.Label>
-                            </RS.Col>
+                            </RS.Col>}
                             <RS.Col lg={6} className="mt-3 mt-lg-0">
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     <span>Topics:</span>
@@ -214,16 +277,42 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             {/* Filter */}
             {filterExpanded && <RS.Row className="mb-sm-4">
                 <RS.Col xs={12}>
-                    <div className="mb-1"><strong>Select your question filters...</strong></div>
+                    <div className="mb-1"><strong>
+                        {betaFeature?.AUDIENCE_CONTEXT ?
+                            "Click these buttons to choose your question gameboard" :
+                            "Select your question filters..."}
+                    </strong></div>
                 </RS.Col>
                 <RS.Col lg={4}>
-                    <RS.Label className={`mt-2 mt-lg-0`} for="level-selector">
-                        Levels:
-                    </RS.Label>
-                    <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
-                    <div className="mt-2 mt-sm-4">
-                        <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
-                    </div>
+                    {!betaFeature?.AUDIENCE_CONTEXT && <>
+                        <RS.Label className={`mt-2 mt-lg-0`} htmlFor="level-selector">
+                            Levels:
+                        </RS.Label>
+                        <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
+                        <div className="mt-2 mt-sm-4">
+                            <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
+                        </div>
+                    </>}
+                    {betaFeature?.AUDIENCE_CONTEXT && <>
+                        <div>
+                            <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                                I am interested in stage...
+                            </RS.Label>
+                            <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={stageOptions} />
+                        </div>
+                        <div>
+                            <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
+                                I would like some questions from Isaac to...
+                            </RS.Label>
+                            <Select id="question-category-selector" onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={questionCategoryOptions} />
+                        </div>
+                        <div>
+                            <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
+                                I would like questions for...
+                            </RS.Label>
+                            <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isMulti value={difficulties} options={difficultyOptions} />
+                        </div>
+                    </>}
                 </RS.Col>
                 <RS.Col lg={8}>
                     <RS.Label className={`mt-4 mt-lg-0`}>
@@ -254,7 +343,6 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
             />
         </RS.Card>
-
 
         <div ref={gameboardRef} className="row mt-4 mb-3">
             <RS.Col>

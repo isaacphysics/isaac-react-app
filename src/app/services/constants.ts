@@ -878,7 +878,10 @@ export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
 
 
 export enum QUESTION_CATEGORY {
-    PROBLEM_SOLVING = "problem_solving"
+    PROBLEM_SOLVING = "problem_solving",
+    QUICK_QUIZ = "quick_quiz",
+    TOPIC_TEST = "topic_test",
+    MASTER_MATHS_AND_PHYSICS = "master_maths_and_physics",
 }
 
 export const specificDoughnutColours: { [key: string]: string } = {
