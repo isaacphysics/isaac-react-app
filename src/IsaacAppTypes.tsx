@@ -788,6 +788,9 @@ export interface QuestionSearchQuery {
     searchString: string;
     tags: string;
     levels?: string;
+    stages?: string;
+    difficulties?: string;
+    examBoards?: string;
     fasttrack: boolean;
     startIndex: number;
     limit: number;
