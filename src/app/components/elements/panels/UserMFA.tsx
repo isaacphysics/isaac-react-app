@@ -99,7 +99,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                                         <Button
                                             className="btn-secondary"
                                             disabled={!mfaVerificationCode}
-                                            onClick={setupMFA}
+                                            type="submit"
                                         >
                                             {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                         </Button>

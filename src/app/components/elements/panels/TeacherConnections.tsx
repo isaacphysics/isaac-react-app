@@ -75,7 +75,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                             />
                             <RS.InputGroupAddon addonType="append">
-                                <RS.Button onClick={processToken} className="p-0 border-dark" color="secondary" disabled={editingOtherUser}>
+                                <RS.Button type="submit" className="p-0 border-dark" color="secondary" disabled={editingOtherUser}>
                                     Connect
                                 </RS.Button>
                             </RS.InputGroupAddon>

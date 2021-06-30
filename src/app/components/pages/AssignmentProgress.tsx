@@ -435,9 +435,9 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
             <div className="gameboard-links align-items-center">
                 <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={() => openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
+                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + assignment._id} onClick={() => openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
