@@ -4,7 +4,14 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
-import {NOT_FOUND, QUESTION_CATEGORY, TAG_ID} from '../../services/constants';
+import {
+    DIFFICULTY_OPTIONS,
+    NOT_FOUND,
+    QUESTION_CATEGORY,
+    QUESTION_CATEGORY_OPTIONS,
+    STAGE_OPTIONS,
+    TAG_ID
+} from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
@@ -20,28 +27,6 @@ import {AppState} from "../../state/reducers";
 import Select from "react-select";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
-const stageOptions = [
-    {label: "GCSE", value: "gcse"},
-    {label: "A Level", value: "a_level"},
-    {label: "Further A", value: "further_a"},
-    {label: "University", value: "university"}
-]
-
-const difficultyOptions = [
-    {label: "Practice (P1)", value: "practice_1"},
-    {label: "Practice (P2)", value: "practice_2"},
-    {label: "Practice (P3)", value: "practice_3"},
-    {label: "Challenge (C1)", value: "challenge_1"},
-    {label: "Challenge (C2)", value: "challenge_2"},
-    {label: "Challenge (C3)", value: "challenge_3"}
-];
-
-const questionCategoryOptions = [
-    {label: "Learn and Practice", value: QUESTION_CATEGORY.PROBLEM_SOLVING},
-    {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
-    // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
-    // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
-]
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -86,9 +71,9 @@ function processQueryString(query: string): QueryStringResponse {
             itemiseLevels(levelArray);
     }
 
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), stageOptions);
-    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), difficultyOptions);
-    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), questionCategoryOptions);
+    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), STAGE_OPTIONS);
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_OPTIONS);
+    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_OPTIONS);
 
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;
@@ -298,19 +283,19 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                             <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                                 I am interested in stage...
                             </RS.Label>
-                            <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={stageOptions} />
+                            <Select id="stage-selector" isClearable isMulti onChange={unwrapValue(setStages)} value={stages} options={STAGE_OPTIONS} />
                         </div>
                         <div>
                             <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
                                 I would like some questions from Isaac to...
                             </RS.Label>
-                            <Select id="question-category-selector" onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={questionCategoryOptions} />
+                            <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_OPTIONS} />
                         </div>
                         <div>
                             <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
                                 I would like questions for...
                             </RS.Label>
-                            <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isMulti value={difficulties} options={difficultyOptions} />
+                            <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_OPTIONS} />
                         </div>
                     </>}
                 </RS.Col>
