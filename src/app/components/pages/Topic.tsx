@@ -11,7 +11,7 @@ import {Button, Col, Container, Row, Card, CardBody, CardTitle, Nav, NavItem, Na
 import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID, EXAM_BOARD} from "../../services/constants";
 import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {atLeastOne} from "../../services/validation";
 import {selectors} from '../../state/selectors';
 
@@ -41,7 +41,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <TempExamBoardPicker className="text-right" />
+                    <UserContextPicker className="text-right" />
 
                     {relatedConcepts && atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />

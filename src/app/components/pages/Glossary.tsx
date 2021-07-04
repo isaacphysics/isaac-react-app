@@ -9,7 +9,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
+import {UserContextPicker} from '../elements/inputs/UserContextPicker';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import { isDefined } from '../../services/miscUtils';
 import tags from "../../services/tags";
@@ -180,7 +180,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                     </Row>
                 </Col>
                 <Col md={{size: 3}} className="py-4">
-                    <TempExamBoardPicker className="text-right" />
+                    <UserContextPicker className="text-right" />
                 </Col>
             </Row>
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>

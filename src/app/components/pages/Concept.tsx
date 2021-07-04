@@ -14,7 +14,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {NavigationLinks} from "../elements/NavigationLinks";
-import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
@@ -53,7 +53,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
 
                 <Row className="concept-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
-                        <TempExamBoardPicker className="text-right" />
+                        <UserContextPicker className="text-right" />
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

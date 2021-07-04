@@ -10,7 +10,7 @@ import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../servi
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
-import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
@@ -97,7 +97,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                 </div>
                 <Row className="question-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
-                        <TempExamBoardPicker className="no-print text-right"/>
+                        <UserContextPicker className="no-print text-right"/>
 
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
                             {isTeacher(user) && <React.Fragment>
