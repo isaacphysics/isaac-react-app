@@ -144,7 +144,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                 <div className="question-actions question-actions-leftmost mt-3">
                     <ShareLink linkUrl={`/glossary`}/>
                 </div>
-                <div className="question-actions mt-3 not_mobile">
+                <div className="question-actions mt-3 not-mobile">
                     <PrintButton/>
                 </div>
             </div>

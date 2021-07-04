@@ -42,18 +42,22 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                     collectionType={navigation.collectionType}
                 />
                 <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`/concepts/${doc.id}`}/>
+                    <div className="not-mobile">
+                        <EditContentButton doc={doc} />
                     </div>
-                    <div className="question-actions mt-3 not_mobile">
-                        <PrintButton/>
+                    <div className="mt-3 mr-sm-1 ml-auto">
+                        <UserContextPicker className="no-print text-right" />
+                    </div>
+                    <div className="question-actions">
+                        <ShareLink linkUrl={`/concepts/${conceptId}`} />
+                    </div>
+                    <div className="question-actions not-mobile">
+                        <PrintButton />
                     </div>
                 </div>
 
                 <Row className="concept-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
-                        <UserContextPicker className="text-right" />
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

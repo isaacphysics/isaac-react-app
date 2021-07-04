@@ -87,18 +87,21 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
                 <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`/questions/${questionId}`}/>
+                    <div className="not-mobile">
+                        <EditContentButton doc={doc} />
                     </div>
-                    <div className="question-actions mt-3 not_mobile">
-                        <PrintButton questionPage={true}/>
+                    <div className="mt-3 mr-sm-1 ml-auto">
+                        <UserContextPicker className="no-print text-right" />
+                    </div>
+                    <div className="question-actions">
+                        <ShareLink linkUrl={`/questions/${questionId}`} />
+                    </div>
+                    <div className="question-actions not-mobile">
+                        <PrintButton questionPage />
                     </div>
                 </div>
                 <Row className="question-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
-                        <UserContextPicker className="no-print text-right"/>
-
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
                             {isTeacher(user) && <React.Fragment>
                                 <strong>
