@@ -6,13 +6,13 @@ import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 export function useUserContext(): {examBoard: EXAM_BOARD} {
     const user = useSelector((state: AppState) => state && state.user);
-    const tempExamBoardPreference = useSelector((state: AppState) => state?.tempExamBoard);
+    const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
 
     let examBoard;
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
     } else if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
-        examBoard = tempExamBoardPreference || EXAM_BOARD.AQA;
+        examBoard = transientUserContext?.examBoard || EXAM_BOARD.AQA;
     } else {
         examBoard = user.examBoard;
     }

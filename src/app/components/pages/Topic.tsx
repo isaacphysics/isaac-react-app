@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {fetchTopicSummary, setTempExamBoard} from "../../state/actions";
+import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
-import {Button, Col, Container, Row, Card, CardBody, CardTitle, Nav, NavItem, NavLink} from "reactstrap";
-import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID, EXAM_BOARD} from "../../services/constants";
+import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
+import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";

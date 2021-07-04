@@ -3,10 +3,11 @@ import {FormGroup, Input, Label} from "reactstrap";
 import {useUserContext} from "../../../services/userContext";
 import {EXAM_BOARD} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {setTempExamBoard} from "../../../state/actions";
+import {setTransientExamBoardPreference} from "../../../state/actions";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
+import {isLoggedIn} from "../../../services/user";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useDispatch();
@@ -17,9 +18,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const showStageSelector = betaFeature?.AUDIENCE_CONTEXT;
     const showExamBoardSelector = SITE_SUBJECT === SITE.CS && (
         betaFeature?.AUDIENCE_CONTEXT ||
-        !user?.loggedIn ||
-        user.examBoard === undefined ||
-        user.examBoard === EXAM_BOARD.OTHER
+        !isLoggedIn(user) || user.examBoard === undefined || user.examBoard === EXAM_BOARD.OTHER
     );
 
     return <div className="d-flex">
@@ -43,7 +42,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.examBoard}
                 onChange={event => {
                     if (event.target.value in EXAM_BOARD) {
-                        dispatch(setTempExamBoard(event.target.value as EXAM_BOARD));
+                        dispatch(setTransientExamBoardPreference(event.target.value as EXAM_BOARD));
                     }
                 }}
             >

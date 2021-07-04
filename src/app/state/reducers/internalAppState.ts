@@ -25,13 +25,13 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
     }
 };
 
-export type TempExamBoardState = EXAM_BOARD | null;
-export const tempExamBoard = (tempExamBoard: TempExamBoardState = null, action: Action) => {
+export type TransientUserContextState = {examBoard?: EXAM_BOARD} | null;
+export const transientUserContext = (transientUserContext: TransientUserContextState = null, action: Action) => {
     switch (action.type) {
-        case ACTION_TYPE.EXAM_BOARD_SET_TEMP:
-            return action.examBoard;
+        case ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD:
+            return {...transientUserContext, examBoard: action.examBoard};
         default:
-            return tempExamBoard;
+            return transientUserContext;
     }
 };
 

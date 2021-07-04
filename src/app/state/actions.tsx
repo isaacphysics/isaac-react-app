@@ -364,7 +364,9 @@ export const updateCurrentUser = (
     }
 };
 
-export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
+export function setTransientExamBoardPreference(examBoard: EXAM_BOARD) {
+    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD, examBoard};
+}
 
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});

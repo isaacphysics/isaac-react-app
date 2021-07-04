@@ -60,7 +60,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPE.EXAM_BOARD_SET_TEMP; examBoard: EXAM_BOARD}
+    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
