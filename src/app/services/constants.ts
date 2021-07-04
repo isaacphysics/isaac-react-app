@@ -878,7 +878,9 @@ export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
 
 
 export enum QUESTION_CATEGORY {
+    LEARN_AND_PRACTICE = "learn_and_practice", /* pseudo option */
     PROBLEM_SOLVING = "problem_solving",
+    BOOK_QUESTIONS = "book",
     QUICK_QUIZ = "quick_quiz",
     TOPIC_TEST = "topic_test",
     MASTER_MATHS_AND_PHYSICS = "master_maths_and_physics",
@@ -901,7 +903,7 @@ export const DIFFICULTY_OPTIONS = [
 ];
 
 export const QUESTION_CATEGORY_OPTIONS = [
-    {label: "Learn and Practice", value: QUESTION_CATEGORY.PROBLEM_SOLVING},
+    {label: "Learn and Practice", value: QUESTION_CATEGORY.LEARN_AND_PRACTICE},
     {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
     // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
     // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
