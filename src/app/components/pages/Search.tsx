@@ -15,8 +15,8 @@ import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
-import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
 import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {filterOnExamBoard, useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import Select, {Styles, ValueType} from "react-select";
@@ -60,7 +60,7 @@ export const Search = withRouter((props: {history: History; location: Location})
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);
     const user = useSelector(selectors.user.orNull);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(urlFilters.map(itemise))

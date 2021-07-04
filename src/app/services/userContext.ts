@@ -4,20 +4,21 @@ import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
-export const useCurrentExamBoard = () => {
+export function useUserContext(): {examBoard: EXAM_BOARD} {
     const user = useSelector((state: AppState) => state && state.user);
     const tempExamBoardPreference = useSelector((state: AppState) => state?.tempExamBoard);
 
+    let examBoard;
     if (SITE_SUBJECT === SITE.PHY) {
-        return EXAM_BOARD.NONE;
-    }
-
-    if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
-        return tempExamBoardPreference || EXAM_BOARD.AQA;
+        examBoard = EXAM_BOARD.NONE;
+    } else if (!user || user.examBoard == undefined || user.examBoard == EXAM_BOARD.OTHER) {
+        examBoard = tempExamBoardPreference || EXAM_BOARD.AQA;
     } else {
-        return user.examBoard;
+        examBoard = user.examBoard;
     }
-};
+    return {examBoard};
+}
+
 
 const contentTypesToFilter = [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT];
 export const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {

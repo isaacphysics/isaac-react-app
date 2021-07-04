@@ -25,7 +25,7 @@ import {
     STAGE_OPTIONS
 } from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
-import {useCurrentExamBoard} from "../../../services/examBoard";
+import {useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
@@ -66,7 +66,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
     const user = useSelector((state: AppState) => state && state.user);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], levels: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {

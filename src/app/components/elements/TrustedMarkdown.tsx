@@ -12,7 +12,7 @@ import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
-import {useCurrentExamBoard} from "../../services/examBoard";
+import {useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
@@ -39,8 +39,8 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
-    const examBoard = useCurrentExamBoard();
-    let examBoardTag = ''
+    const {examBoard} = useUserContext();
+    let examBoardTag = '';
     if (examBoard === EXAM_BOARD.AQA) { examBoardTag = 'aqa' }
     else if (examBoard === EXAM_BOARD.OCR) { examBoardTag = 'ocr' }
 

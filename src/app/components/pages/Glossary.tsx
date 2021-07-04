@@ -16,7 +16,7 @@ import tags from "../../services/tags";
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
 import Select from "react-select";
-import { useCurrentExamBoard } from "../../services/examBoard";
+import { useUserContext } from "../../services/userContext";
 
 interface GlossaryProps {
     location: { hash: string },
@@ -32,7 +32,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
