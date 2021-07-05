@@ -283,7 +283,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                             <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                                 I am interested in stage...
                             </RS.Label>
-                            <Select id="stage-selector" isClearable isMulti onChange={unwrapValue(setStages)} value={stages} options={STAGE_OPTIONS} />
+                            <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={STAGE_OPTIONS} />
                         </div>
                         <div>
                             <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
