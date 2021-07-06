@@ -16,12 +16,24 @@ import {
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
-import {EXAM_BOARD, examBoardTagMap, SortOrder} from "../../../services/constants";
+import {
+    DIFFICULTY_OPTIONS,
+    EXAM_BOARD,
+    EXAM_BOARD_OPTIONS,
+    examBoardTagMap,
+    SortOrder,
+    STAGE_OPTIONS
+} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {useCurrentExamBoard} from "../../../services/examBoard";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+
+const selectStyle = {
+    className: "basic-multi-select", classNamePrefix: "select",
+    menuPortalTarget: document.body, styles: {menuPortal: (base: object) => ({...base, zIndex: 9999})}
+}
 
 interface QuestionSearchModalProps {
     originalSelectedQuestions: Map<string, ContentSummaryDTO>;
@@ -30,15 +42,18 @@ interface QuestionSearchModalProps {
     setOriginalQuestionOrder: (a: string[]) => void;
     eventLog: object[];
 }
-
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useDispatch();
+    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
+    const audienceContextBeta = betaFeature?.AUDIENCE_CONTEXT || false;
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
     const [searchQuestionName, setSearchQuestionName] = useState("");
     const [searchLevels, setSearchLevels] = useState<string[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<string[]>([]);
+    const [searchStages, setSearchStages] = useState<string[]>([]);
+    const [searchDifficulties, setSearchDifficulties] = useState<string[]>([]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
@@ -54,24 +69,37 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const examBoard = useCurrentExamBoard();
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], levels: string[], examBoard: string[], book: string[], fasttrack: boolean, startIndex: number) => {
+        debounce((searchString: string, topics: string[], levels: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
             const isBookSearch = book.length > 0; // Tasty.
-            if (searchString.length === 0 && topics.length === 0 && levels.length === 0 && book.length === 0 && !fasttrack) {
+            if ([searchString, topics, levels, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
                 dispatch(clearQuestionSearch);
                 return;
             }
+
+            let tags;
+            let examBoardString;
+            if (!audienceContextBeta) {
+                tags = (isBookSearch ? book : [...([topics, examBoards].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
+            } else {
+                tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ")
+                examBoardString = examBoards.join(",");
+            }
+
             dispatch(searchQuestions({
                 searchString: searchString,
                 // N.B. This endpoint claims to support multiple levels, but it doesn't seem to work, so we restrict the select below to only pick one level.
                 levels: !isBookSearch && levels.length > 0 ? levels.join(",") : undefined,
-                tags: (isBookSearch ? book : [...([topics, examBoard].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" "),
+                tags,
+                stages: stages.join(",") || undefined,
+                difficulties: difficulties.join(",") || undefined,
+                examBoards: examBoardString,
                 fasttrack,
                 startIndex,
                 limit: -1
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, levels, examBoard, book, fasttrack, startIndex});
+            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, levels, examBoards, book, stages, difficulties, fasttrack, startIndex});
         }, 250),
         []
     );
@@ -86,12 +114,14 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         tags.allSubcategoryTags.map(groupTagSelectionsByParent);
 
     useEffect(() => {
-        setSearchExamBoards([examBoardTagMap[examBoard]].filter(tag => !!tag));
+        if (!audienceContextBeta) {
+            setSearchExamBoards([examBoardTagMap[examBoard]].filter(tag => !!tag));
+        }
     }, [user, examBoard]);
 
     useEffect(() => {
-        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack, 0);
-    },[searchDebounce, searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack]);
+        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
+    },[searchDebounce, searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
 
     const addSelectionsRow = <div className="d-lg-flex align-items-baseline">
         <div className="flex-grow-1 mb-1">
@@ -118,10 +148,15 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     </div>;
 
     return <div className="mb-4">
-        <div className="row">
-            {SITE_SUBJECT === SITE.PHY && <div className="text-wrap col-lg-3 my-2">
+        <RS.Row>
+            {SITE_SUBJECT === SITE.PHY && <RS.Col lg={3} className="text-wrap my-2">
                 <RS.Label htmlFor="question-search-book">Book</RS.Label>
-                <Select inputId="question-search-book"
+                <Select
+                    inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
+                    onChange={(e) => {
+                        selectOnChange(setSearchBook)(e);
+                        sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
+                    }}
                     options={[
                         {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
                         {value: "phys_book_gcse", label: "GCSE Physics"},
@@ -129,76 +164,71 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"},
                         {value: "physics_skills_14", label: "A Level Physics (2nd Edition - Old)"},
                     ]}
-                    name="books"
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="None"
-                    onChange={(e) => {
-                        selectOnChange(setSearchBook)(e);
-                        sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
-                    }}
-                    isClearable
-                    menuPortalTarget={document.body}
-                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
                 />
-            </div>}
-            {!isBookSearch && <div className="text-wrap col-lg-6 mt-2">
+            </RS.Col>}
+            {!isBookSearch && <RS.Col lg={audienceContextBeta ? SITE_SUBJECT === SITE.CS ? 12 : 9 : 6} className="text-wrap mt-2">
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
-                <Select inputId="question-search-topic"
-                    isMulti
-                    options={tagOptions}
-                    name="colors"
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Any"
-                    onChange={multiSelectOnChange(setSearchTopics)}
-                    menuPortalTarget={document.body}
-                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
+                <Select
+                    inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
+                    options={tagOptions} onChange={multiSelectOnChange(setSearchTopics)}
                 />
-            </div>}
-            {SITE_SUBJECT === SITE.CS && <div className="text-wrap my-2 col-lg-6">
-                <RS.Label htmlFor="question-search-exam-board">Exam board</RS.Label>
-                <Select inputId="question-search-exam-board"
-                    isMulti
-                    options={Object.keys(EXAM_BOARD).map((name) => {
-                        return {value: examBoardTagMap[name], label: name};
-                    })}
-                    name="colors"
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Any"
-                    value={searchExamBoards.map(convertExamBoardToOption)}
-                    onChange={multiSelectOnChange(setSearchExamBoards)}
-                    menuPortalTarget={document.body}
-                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
+            </RS.Col>}
+            {!audienceContextBeta && <React.Fragment>
+                {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className="text-wrap my-2">
+                    <RS.Label htmlFor="question-search-exam-board">Exam board</RS.Label>
+                    <Select
+                        inputId="question-search-exam-board" isMulti placeholder="Any" {...selectStyle}
+                        options={Object.keys(EXAM_BOARD).map((name) => {
+                            return {value: examBoardTagMap[name], label: name};
+                        })}
+                        value={searchExamBoards.map(convertExamBoardToOption)}
+                        onChange={multiSelectOnChange(setSearchExamBoards)}
+                    />
+                </RS.Col>}
+                {SITE_SUBJECT === SITE.PHY && !isBookSearch && <RS.Col lg={3} className={`text-wrap my-2`}>
+                    <RS.Label htmlFor="question-search-level">Level</RS.Label>
+                    <Select
+                        inputId="question-search-level" isClearable placeholder="Any" {...selectStyle}
+                        onChange={selectOnChange(setSearchLevels)}
+                        options={[
+                            ...(range(1,6).map((i) => {return { value: i.toString(), label: i.toString() }})),
+                            {value: '6', label: '6 (Post A-Level)'}]}
+                    />
+                </RS.Col>}
+            </React.Fragment>}
+        </RS.Row>
+        {audienceContextBeta && !isBookSearch && <RS.Row>
+            <RS.Col lg={6} className={`text-wrap my-2`}>
+                <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
+                <Select
+                    inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
+                    options={STAGE_OPTIONS} onChange={multiSelectOnChange(setSearchStages)}
                 />
-            </div>}
-            {SITE_SUBJECT === SITE.PHY && <div className={`text-wrap col-lg-3 my-2 ${isBookSearch ? "d-none" : ""}`}>
-                <RS.Label htmlFor="question-search-level">Level</RS.Label>
-                <Select inputId="question-search-level"
-                    options={[
-                        ...(range(1,6).map((i) => {return { value: i.toString(), label: i.toString() }})),
-                        {value: '6', label: '6 (Post A-Level)'}]}
-                    name="colors"
-                    className="basic-multi-select"
-                    classNamePrefix="select"
-                    placeholder="Any"
-                    onChange={selectOnChange(setSearchLevels)}
-                    isClearable
-                    menuPortalTarget={document.body}
-                    styles={{menuPortal: base => ({...base, zIndex: 9999})}}
+            </RS.Col>
+            {SITE_SUBJECT === SITE.PHY && !isBookSearch && <RS.Col lg={6} className={`text-wrap my-2`}>
+                <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
+                <Select
+                    inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
+                    options={DIFFICULTY_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
                 />
-            </div>}
-        </div>
-        <div className="row">
-            {SITE_SUBJECT === SITE.PHY && isStaff(user) && <div className="text-wrap col">
+            </RS.Col>}
+            {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
+                <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
+                <Select
+                    inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
+                    options={EXAM_BOARD_OPTIONS} onChange={multiSelectOnChange(setSearchExamBoards)}
+                />
+            </RS.Col>}
+        </RS.Row>}
+        <RS.Row>
+            {SITE_SUBJECT === SITE.PHY && isStaff(user) && <RS.Col className="text-wrap mb-2">
                 <RS.Form>
                     <RS.Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</RS.Label>
                 </RS.Form>
-            </div>}
-        </div>
-        <div className="row">
-            <div className="text-wrap col-lg-12 mt-2">
+            </RS.Col>}
+        </RS.Row>
+        <RS.Row>
+            <RS.Col lg={12} className="text-wrap mt-2">
                 <RS.Label htmlFor="question-search-title">Search</RS.Label>
                 <RS.Input id="question-search-title"
                     type="text"
@@ -207,8 +237,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         setSearchQuestionName(e.target.value);
                     }}
                 />
-            </div>
-        </div>
+            </RS.Col>
+        </RS.Row>
         <div className="mt-4">
             {addSelectionsRow}
         </div>
@@ -236,7 +266,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         let qIsPublic = searchResultIsPublic(question, user);
                         if (isBookSearch) return qIsPublic;
                         let qLevelsMatch = (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString())));
-                        let qExamboardsMatch = (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0));
+                        let qExamboardsMatch = audienceContextBeta || (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0));
                         let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
 
                         return qIsPublic && qLevelsMatch && qExamboardsMatch && qTopicsMatch;

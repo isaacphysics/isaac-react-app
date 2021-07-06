@@ -5,11 +5,24 @@ import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
-import {Button, Col, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
-import {TrustedHtml} from "../elements/TrustedHtml";
+import {
+    Button,
+    Col,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Input,
+    InputGroup,
+    InputGroupAddon,
+    Label,
+    Row,
+    UncontrolledTooltip
+} from "reactstrap";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import uuid from 'uuid';
+import {LaTeX} from "../elements/LaTeX";
 
 interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;
@@ -78,7 +91,7 @@ function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: s
 function wrapUnitForSelect(unit?: string): string {
     switch (unit) {
         case undefined:
-            return "&nbsp;";
+            return "\u00A0";
         case "":
             return "None";
         default:
@@ -158,7 +171,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                             Units <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle caret disabled={readonly} className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
-                                    <TrustedHtml span html={wrapUnitForSelect(currentAttemptUnits)}/>
+                                    <LaTeX markup={wrapUnitForSelect(currentAttemptUnits)}/>
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     {selectedUnits.map((unit) =>
@@ -166,7 +179,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                             data-unit={unit || 'None'}
                                             className={unit === currentAttemptUnits ? "btn bg-grey selected" : ""}
                                             onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
-                                            <TrustedHtml span html={wrapUnitForSelect(unit)}/>
+                                            <LaTeX markup={wrapUnitForSelect(unit)}/>
                                         </DropdownItem>
                                     )}
                                 </DropdownMenu>

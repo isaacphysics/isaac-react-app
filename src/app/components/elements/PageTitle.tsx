@@ -1,11 +1,11 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {Button, UncontrolledTooltip} from "reactstrap";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {TrustedHtml} from "./TrustedHtml";
 import {closeActiveModal, openActiveModal, setMainContentId} from "../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {PageFragment} from "./PageFragment";
+import {LaTeX} from "./LaTeX";
 
 export interface PageTitleProps {
     currentPageTitle: string;
@@ -50,7 +50,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, level, m
     };
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
-        <TrustedHtml span html={currentPageTitle} />
+        <LaTeX markup={currentPageTitle} />
         {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== 0 &&
             <span className="float-right h-subtitle">Level {level}</span>}
         {help && <span id="title-help">Help</span>}

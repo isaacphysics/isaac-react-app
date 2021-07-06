@@ -52,7 +52,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     useEffect(() => {
         const charts: Chart[] = [];
-        if (!isAllZero(categoryColumns)) {
+        if (SITE_SUBJECT === SITE.PHY && !isAllZero(categoryColumns)) {
             charts.push(bb.generate({
                 data: {
                     columns: categoryColumns,

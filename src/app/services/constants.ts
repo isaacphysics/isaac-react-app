@@ -878,8 +878,42 @@ export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
 
 
 export enum QUESTION_CATEGORY {
-    PROBLEM_SOLVING = "problem_solving"
+    LEARN_AND_PRACTICE = "learn_and_practice", /* pseudo option */
+    PROBLEM_SOLVING = "problem_solving",
+    BOOK_QUESTIONS = "book",
+    QUICK_QUIZ = "quick_quiz",
+    TOPIC_TEST = "topic_test",
+    MASTER_MATHS_AND_PHYSICS = "master_maths_and_physics",
 }
+
+export const STAGE_OPTIONS = [
+    {label: "GCSE", value: "gcse"},
+    {label: "A Level", value: "a_level"},
+    {label: "Further A", value: "further_a"},
+    {label: "University", value: "university"}
+]
+
+export const DIFFICULTY_OPTIONS = [
+    {label: "Practice (P1)", value: "practice_1"},
+    {label: "Practice (P2)", value: "practice_2"},
+    {label: "Practice (P3)", value: "practice_3"},
+    {label: "Challenge (C1)", value: "challenge_1"},
+    {label: "Challenge (C2)", value: "challenge_2"},
+    {label: "Challenge (C3)", value: "challenge_3"}
+];
+
+export const QUESTION_CATEGORY_OPTIONS = [
+    {label: "Learn and Practice", value: QUESTION_CATEGORY.LEARN_AND_PRACTICE},
+    {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
+    // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
+    // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
+];
+
+export const EXAM_BOARD_OPTIONS = [
+    {label: "OCR", value: "ocr"},
+    {label: "AQA", value: "aqa"},
+]
+
 
 export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {
