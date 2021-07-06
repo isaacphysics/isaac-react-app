@@ -21,6 +21,8 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, level, m
     const openModal = useSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
+    const showModal = modalId && SITE_SUBJECT === SITE.PHY;
+
     useEffect(() => {dispatch(setMainContentId("main-heading"));}, []);
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
@@ -40,22 +42,22 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, level, m
         </>
     };
 
-    const openHelpModal = (modalId: string) => {
+    function openHelpModal(modalId: string) {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal())},
             size: "xl",
             title: "Help",
             body: <HelpModal modalId={modalId}/>
         }))
-    };
+    }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         <LaTeX markup={currentPageTitle} />
         {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== 0 &&
             <span className="float-right h-subtitle">Level {level}</span>}
-        {help && <span id="title-help">Help</span>}
-        {help && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
-        {modalId && <Button color="link" id="title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>}
+        {help && !showModal && <span id="title-help">Help</span>}
+        {help && !showModal && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
+        {modalId && showModal && <Button color="link" id="title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>}
         {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
     </h1>
 };
