@@ -80,7 +80,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
 
     const dispatch = useDispatch();
 
-    const [startIndex, _setStartIndex] = useState(0);
+    const startIndex = 0;
     const [titleFilter, setTitleFilter] = useState<string|undefined>();
 
     useEffect(() => {
@@ -122,7 +122,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                             value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
                             placeholder="Search by title" aria-label="Search by title"
                         />
-                        {filteredQuizzes.length === 0 && <p><em>There are no quizzes you can set.</em></p>}
+                        {filteredQuizzes.length === 0 && <p><em>There are no quizzes you can set which match your search term.</em></p>}
                         <RS.ListGroup className="mb-2 quiz-list">
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
