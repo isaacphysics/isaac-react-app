@@ -8,9 +8,9 @@ import * as RS from "reactstrap";
 import {selectors} from "../../state/selectors";
 import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
-import {TrustedHtml} from "./TrustedHtml";
 import {Hexagon} from "./svg/Hexagon";
 import {HexagonConnection} from "./svg/HexagonConnection";
+import {LaTeX} from "./LaTeX";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -371,7 +371,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 <div className="d-none d-lg-block">
                     <br className="d-none d-lg-block"/>
                     {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1 mt-xl-3">
-                        <TrustedHtml span html={`${currentlyWorkingOn.title} Practice`} />
+                        <LaTeX markup={`${currentlyWorkingOn.title} Practice`} />
                     </h4>}
                 </div>
             </RS.Col>
@@ -397,7 +397,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             <RS.Col cols={12} className="d-block d-lg-none">
                 <div>
                     {currentlyWorkingOn.isConcept && <h4 className="mt-2">
-                        <TrustedHtml span html={`${currentlyWorkingOn.title} Practice`} />
+                        <LaTeX markup={`${currentlyWorkingOn.title} Practice`} />
                     </h4>}
                 </div>
             </RS.Col>
