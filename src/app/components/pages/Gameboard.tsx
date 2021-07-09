@@ -37,7 +37,6 @@ function getTags(docTags?: string[]) {
 }
 
 const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
@@ -83,7 +82,7 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                 </div>}
             </div>
             {/*TODO CS Level*/}
-            {SITE_SUBJECT === SITE.PHY && !betaFeature?.AUDIENCE_CONTEXT && question.level !== undefined && question.level !== 0 &&
+            {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
                 <span className="gameboard-tags">Level {question.level}</span>}
         </Link>
     </RS.ListGroupItem>;
