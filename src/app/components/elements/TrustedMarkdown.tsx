@@ -4,7 +4,7 @@ import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
-import {EXAM_BOARD, MARKDOWN_RENDERER} from "../../services/constants";
+import {EXAM_BOARD_NULL_OPTIONS, MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
@@ -40,9 +40,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
     const {examBoard} = useUserContext();
-    let examBoardTag = '';
-    if (examBoard === EXAM_BOARD.AQA) { examBoardTag = 'aqa' }
-    else if (examBoard === EXAM_BOARD.OCR) { examBoardTag = 'ocr' }
+    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard.toLowerCase() : "";
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));

@@ -7,13 +7,23 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem, QuizFeedbackMode,
+    GameboardItem,
+    QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
+    TOTPSharedSecretDTO,
+    UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
+import {
+    ACTION_TYPE,
+    DOCUMENT_TYPE,
+    EXAM_BOARD,
+    MEMBERSHIP_STATUS,
+    STAGE,
+    TAG_ID,
+    TAG_LEVEL
+} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -60,6 +70,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
+    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE; stage: STAGE}
     | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}

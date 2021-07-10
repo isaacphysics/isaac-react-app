@@ -14,6 +14,7 @@ import {
     NO_CONTENT,
     NOT_FOUND,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
+    STAGE,
     TAG_ID
 } from "../services/constants";
 import {
@@ -364,6 +365,9 @@ export const updateCurrentUser = (
     }
 };
 
+export function setTransientStagePreference(stage: STAGE) {
+    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE, stage};
+}
 export function setTransientExamBoardPreference(examBoard: EXAM_BOARD) {
     return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD, examBoard};
 }

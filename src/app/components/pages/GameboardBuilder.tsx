@@ -35,10 +35,12 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
+import {getFilteredExamBoardOptions} from "../../services/userContext";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
+    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
 
     const dispatch = useDispatch();
 
@@ -118,10 +120,11 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
                         <Select inputId="question-search-level"
                             isMulti
-                            options={[
-                                { value: examBoardTagMap[EXAM_BOARD.AQA], label: 'AQA' },
-                                { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
-                                { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
+                            options={
+                                [{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }].concat(
+                                    getFilteredExamBoardOptions([], false, betaFeature?.AUDIENCE_CONTEXT)
+                                        .map(i => ({value: examBoardTagMap[i.value], label: i.label})))
+                            }
                             name="colors"
                             className="basic-multi-select"
                             classNamePrefix="select"

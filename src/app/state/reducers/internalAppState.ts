@@ -1,5 +1,5 @@
 import {Action, PrintingSettings} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, EXAM_BOARD} from "../../services/constants";
+import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
@@ -25,9 +25,11 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
     }
 };
 
-export type TransientUserContextState = {examBoard?: EXAM_BOARD} | null;
+export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE} | null;
 export const transientUserContext = (transientUserContext: TransientUserContextState = null, action: Action) => {
     switch (action.type) {
+        case ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE:
+            return {...transientUserContext, stage: action.stage}
         case ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD:
             return {...transientUserContext, examBoard: action.examBoard};
         default:
