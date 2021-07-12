@@ -25,13 +25,15 @@ export const mainContentId = (state: MainContentIdState = null, action: Action) 
     }
 };
 
-export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE} | null;
+export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE, showOtherContent?: boolean} | null;
 export const transientUserContext = (transientUserContext: TransientUserContextState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE:
             return {...transientUserContext, stage: action.stage}
         case ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD:
             return {...transientUserContext, examBoard: action.examBoard};
+        case ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT:
+            return {...transientUserContext, showOtherContent: action.showOtherContent}
         default:
             return transientUserContext;
     }

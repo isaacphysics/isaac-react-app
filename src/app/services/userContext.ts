@@ -23,6 +23,7 @@ const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUB
 interface UserContext {
     examBoard: EXAM_BOARD;
     stage: STAGE;
+    showOtherContent?: boolean;
 }
 
 export function useUserContext(): UserContext {
@@ -43,7 +44,9 @@ export function useUserContext(): UserContext {
     // Stage
     const stage = transientUserContext?.stage ?? defaultStage;
 
-    return {examBoard, stage};
+    const showOtherContent = transientUserContext?.showOtherContent ?? true;
+
+    return {examBoard, stage, showOtherContent};
 }
 
 const EXAM_BOARD_ITEM_OPTIONS = [

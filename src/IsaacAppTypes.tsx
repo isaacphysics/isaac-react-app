@@ -72,6 +72,7 @@ export type Action =
 
     | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE; stage: STAGE}
     | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}
+    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT; showOtherContent: boolean}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}

@@ -372,6 +372,10 @@ export function setTransientExamBoardPreference(examBoard: EXAM_BOARD) {
     return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD, examBoard};
 }
 
+export function setTransientShowOtherContentPreference(showOtherContent: boolean) {
+    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT, showOtherContent};
+}
+
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
     try {

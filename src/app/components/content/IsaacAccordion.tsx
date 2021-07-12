@@ -60,6 +60,17 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                 return section;
             })
 
+            // If cs have show other content set to false hide non-audience content
+            .map(section => {
+                if (
+                    SITE_SUBJECT === SITE.CS && userContext.showOtherContent === false &&
+                    !isIntendedAudience(section.audience, userContext, user, betaFeature?.AUDIENCE_CONTEXT)
+                ) {
+                    section.hidden = true;
+                }
+                return section;
+            })
+
             // Filter out hidden sections before they mess up indexing
             .filter(section => !section.hidden)
 

@@ -1,13 +1,17 @@
 import React from "react";
-import {FormGroup, Input, Label} from "reactstrap";
+import {CustomInput, FormGroup, Input, Label} from "reactstrap";
 import {getFilteredExamBoardOptions, getFilteredStages, useUserContext} from "../../../services/userContext";
 import {EXAM_BOARD, EXAM_BOARD_NULL_OPTIONS, STAGE} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {setTransientExamBoardPreference, setTransientStagePreference} from "../../../state/actions";
+import {
+    setTransientExamBoardPreference,
+    setTransientShowOtherContentPreference,
+    setTransientStagePreference
+} from "../../../state/actions";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
-import {isLoggedIn} from "../../../services/user";
+import {isLoggedIn, isStaff} from "../../../services/user";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useDispatch();
@@ -15,6 +19,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
+    const showHideOtherContentSelector = betaFeature?.AUDIENCE_CONTEXT && SITE_SUBJECT === SITE.CS && isStaff(user);
     const showStageSelector = betaFeature?.AUDIENCE_CONTEXT;
     const showExamBoardSelector = SITE_SUBJECT === SITE.CS && (
         betaFeature?.AUDIENCE_CONTEXT ||
@@ -24,6 +29,16 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     );
 
     return <div className="d-flex">
+        {/* Show other content Selector */}
+        {showHideOtherContentSelector && <FormGroup className={`mr-2 ${className}`}>
+            <Label className="d-inline-block pr-4" htmlFor="uc-show-other-content-check">Show other content? </Label>
+            <CustomInput
+                className="w-auto d-inline-block pl-1 pr-0" type="checkbox" id="uc-show-other-content-check"
+                checked={userContext.showOtherContent}
+                onChange={e => dispatch(setTransientShowOtherContentPreference(e.target.checked))}
+            />
+        </FormGroup>}
+
         {/* Stage Selector */}
         {showStageSelector && <FormGroup className={`${showExamBoardSelector ? "mr-2" : ""} ${className}`}>
             {!hideLabels && <Label className="d-inline-block pr-2" htmlFor="uc-stage-select">Stage</Label>}
