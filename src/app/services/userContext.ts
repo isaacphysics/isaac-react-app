@@ -16,7 +16,9 @@ import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {PotentialUser} from "../../IsaacAppTypes";
-import {isAdmin, isEventLeaderOrStaff, isEventManager, isLoggedIn, isStaff, isTeacher} from "./user";
+import {roleRequirements} from "./user";
+
+const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUBJECT];
 
 interface UserContext {
     examBoard: EXAM_BOARD;
@@ -32,14 +34,14 @@ export function useUserContext(): UserContext {
     let examBoard;
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
-    } else if (betaFeature?.AUDIENCE_CONTEXT || !user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard)) {
-        examBoard = transientUserContext?.examBoard || EXAM_BOARD.AQA;
+    } else if (!user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard) || (betaFeature?.AUDIENCE_CONTEXT && transientUserContext?.examBoard !== undefined)) {
+        examBoard = transientUserContext?.examBoard ?? EXAM_BOARD.NONE;
     } else {
         examBoard = user.examBoard;
     }
 
     // Stage
-    const stage = transientUserContext?.stage || STAGE.A_LEVEL;
+    const stage = transientUserContext?.stage ?? defaultStage;
 
     return {examBoard, stage};
 }
@@ -57,7 +59,8 @@ const EXAM_BOARD_ITEM_OPTIONS = [
 export function getFilteredExamBoardOptions(stages: STAGE[], includeNullOptions: boolean, audienceContextBetaFeature?: boolean) {
     return EXAM_BOARD_ITEM_OPTIONS
         .filter(i =>
-            (stages.length === 0) ||
+            stages.length === 0 ||
+            stages.includes(STAGE.NONE) ||
             (stages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) ||
             (stages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value))
         )
@@ -96,37 +99,52 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
     }
 
     return intendedAudience.some(audienceClause => {
-        let matchesAllCriteriaSoFar = true;
-
         // If stages are specified do we have any of them in our context
         if (audienceClause.stage) {
-            // If beta feature is enabled we should treat users as if they have A Level selected
-            const userStages = audienceBetaFeatureEnabled ? [STAGE.A_LEVEL] : userContext.stage;
-            const satisfiesStageCriteria = audienceClause.stage.some(stage => userStages.includes(stage as STAGE));
-            matchesAllCriteriaSoFar = matchesAllCriteriaSoFar && satisfiesStageCriteria;
+            // If beta feature is not enabled we should treat users as if they have A Level selected
+            const nonBetaFeatureOption = {[SITE.PHY]: STAGE.NONE, [SITE.CS]: STAGE.A_LEVEL}[SITE_SUBJECT];
+            const userStage = audienceBetaFeatureEnabled ? userContext.stage : nonBetaFeatureOption;
+            const satisfiesStageCriteria = userStage === STAGE.NONE || audienceClause.stage.includes(userStage);
+            if (!satisfiesStageCriteria) {
+                return false;
+            }
         }
 
         // If exam boards are specified do we have any of them in our context
         if (audienceClause.examBoard) {
-            const satisfiesExamBoardCriteria = audienceClause.examBoard.some(examBoard => userContext.examBoard.includes(examBoard));
-            matchesAllCriteriaSoFar = matchesAllCriteriaSoFar && satisfiesExamBoardCriteria;
+            // If beta feature is enabled we should treat users as if they have A Level selected
+            const nonBetaFeatureOption = EXAM_BOARD.NONE;
+            const userExamBoard = audienceBetaFeatureEnabled ? userContext.examBoard : nonBetaFeatureOption;
+            const satisfiesExamBoardCriteria =
+                userExamBoard === EXAM_BOARD.NONE || audienceClause.examBoard.includes(userExamBoard.toLowerCase());
+            if (!satisfiesExamBoardCriteria) {
+                return false;
+            }
         }
 
         // If a role is specified do we have any of those roles or greater
         if (audienceClause.roleAtLeast) {
-            const roleRequirements: Record<Role, (u: typeof user) => boolean> = {
-                "STUDENT": isLoggedIn,
-                "TEACHER": isTeacher,
-                "EVENT_LEADER": isEventLeaderOrStaff,
-                "CONTENT_EDITOR": isStaff,
-                "EVENT_MANAGER": isEventManager,
-                "ADMIN": isAdmin
-            };
-
-            const matchesRoleCriteria = audienceClause.roleAtLeast.some(role =>
+            const satisfiesRoleCriteria = audienceClause.roleAtLeast.some(role =>
                 Object.keys(roleRequirements).includes(role) && roleRequirements[role as Role](user));
-            matchesAllCriteriaSoFar = matchesAllCriteriaSoFar && matchesRoleCriteria;
+            if (!satisfiesRoleCriteria) {
+                return false;
+            }
         }
-        return matchesAllCriteriaSoFar;
+
+        // Passed all requirements, this user is the intended audience
+        return true;
     });
+}
+
+export function mergeDisplayOptions(source: ContentBaseDTO["display"], update: ContentBaseDTO["display"]): ContentBaseDTO["display"] {
+    const srcCopy = {...source};
+    if (update) {
+        if (update.audience && update.audience.length > 0) {
+            srcCopy.audience = update.audience;
+        }
+        if (update.nonAudience && update.nonAudience.length > 0) {
+            srcCopy.nonAudience = update.nonAudience;
+        }
+    }
+    return srcCopy;
 }

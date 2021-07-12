@@ -33,7 +33,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.stage}
                 onChange={e => dispatch(setTransientStagePreference(e.target.value as STAGE))}
             >
-                {getFilteredStages(false).map(item =>
+                {getFilteredStages(true).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
             </Input>
@@ -48,6 +48,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.examBoard}
                 onChange={e => dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))}
             >
+                {betaFeature?.AUDIENCE_CONTEXT && <option value={EXAM_BOARD.NONE}>None</option>}
                 {getFilteredExamBoardOptions([userContext.stage], false, betaFeature?.AUDIENCE_CONTEXT).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
