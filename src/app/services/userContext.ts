@@ -16,7 +16,7 @@ import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {PotentialUser} from "../../IsaacAppTypes";
-import {roleRequirements} from "./user";
+import {isLoggedIn, roleRequirements} from "./user";
 
 const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUBJECT];
 
@@ -123,9 +123,11 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         }
 
         // If a role is specified do we have any of those roles or greater
-        if (audienceClause.roleAtLeast) {
-            const satisfiesRoleCriteria = audienceClause.roleAtLeast.some(role =>
-                Object.keys(roleRequirements).includes(role) && roleRequirements[role as Role](user));
+        if (audienceClause.role) {
+            const satisfiesRoleCriteria = audienceClause.role.some(role =>
+                (role === "logged_in" && isLoggedIn(user)) ||
+                (Object.keys(roleRequirements).includes(role.toUpperCase()) && roleRequirements[role.toUpperCase() as Role](user))
+            );
             if (!satisfiesRoleCriteria) {
                 return false;
             }
