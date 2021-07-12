@@ -25,6 +25,7 @@ import {FastTrackProgress} from "../elements/FastTrackProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import queryString from "query-string";
+import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -122,6 +123,8 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                                 this question
                             </RS.Button>.
                         </div>}
+
+                        <IntendedAudienceWarningBanner doc={doc} />
 
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc}/>

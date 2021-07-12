@@ -20,6 +20,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -58,11 +59,11 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
 
                 <Row className="concept-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
+                        <IntendedAudienceWarningBanner doc={doc} />
+
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
-
-                        {/* Superseded notice */}
 
                         {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
