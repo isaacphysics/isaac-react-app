@@ -14,7 +14,7 @@ export const IsaacRegexStringMatchQuestion = ({doc, questionId, readonly}: {doc:
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value;
 
-    return <div className="stringmatch-question">
+    return <div className="regexstringmatch-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                 {doc.children}
