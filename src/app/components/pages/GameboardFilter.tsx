@@ -275,9 +275,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     {betaFeature?.AUDIENCE_CONTEXT && <>
                         <div>
                             <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                                I am interested in stage(s)...
+                                I am interested in stage...
                             </RS.Label>
-                            <Select id="stage-selector" isClearable isMulti onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(false)} />
+                            <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(false)} />
                         </div>
                         <div>
                             <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
