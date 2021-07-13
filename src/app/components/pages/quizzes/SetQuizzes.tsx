@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAssignmentDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, QuizAssignmentDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {
@@ -20,6 +20,7 @@ import {NOT_FOUND} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
+import {isDefined} from "../../../services/miscUtils";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -74,15 +75,33 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
     const quizzes = useSelector(selectors.quizzes.available);
+    const [filteredQuizzes, setFilteredQuizzes] = useState<Array<ContentSummaryDTO> | undefined>();
     const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     const dispatch = useDispatch();
 
+    const startIndex = 0;
+    const [titleFilter, setTitleFilter] = useState<string|undefined>();
+
     useEffect(() => {
         dispatch(loadGroups(false));
-        dispatch(loadQuizzes());
+        dispatch(loadQuizzes(startIndex));
         dispatch(loadQuizAssignments());
-    }, [dispatch]);
+    }, [dispatch, startIndex]);
+
+    useEffect(() => {
+        if (isDefined(titleFilter) && isDefined(quizzes)) {
+            const results = quizzes.filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()));
+
+            if (isDefined(results) && results.length > 0) {
+                setFilteredQuizzes(results);
+            } else {
+                setFilteredQuizzes([]);
+            }
+            return; // Ugly but works...
+        }
+        setFilteredQuizzes(quizzes);
+    }, [titleFilter, quizzes]);
 
     const pageHelp = <span>
         Use this page to manage and set quizzes to your groups. You can assign any quiz the Isaac team have built.
@@ -95,12 +114,17 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         <Tabs className="my-4 mb-5" tabContentClass="mt-4">
             {{
                 [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Available Quizzes"}[SITE_SUBJECT]]:
-                <ShowLoading until={quizzes}>
-                    {quizzes && <>
+                <ShowLoading until={filteredQuizzes}>
+                    {filteredQuizzes && <>
                         <p>The following quizzes are available to set to your groups.</p>
-                        {quizzes.length === 0 && <p><em>There are no quizzes you can set.</em></p>}
+                        <RS.Input
+                            id="available-quizzes-title-filter" type="search" className="mb-4"
+                            value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
+                            placeholder="Search by title" aria-label="Search by title"
+                        />
+                        {filteredQuizzes.length === 0 && <p><em>There are no quizzes you can set which match your search term.</em></p>}
                         <RS.ListGroup className="mb-2 quiz-list">
-                            {quizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                            {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                     <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}

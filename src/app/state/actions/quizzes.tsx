@@ -10,10 +10,10 @@ import {selectors} from "../selectors";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
 import {AppState} from "../reducers";
 
-export const loadQuizzes = () => async (dispatch: Dispatch<Action>) => {
+export const loadQuizzes = (startIndex: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZZES_REQUEST});
     try {
-        const quizzes = await api.quizzes.available();
+        const quizzes = await api.quizzes.available(startIndex);
         dispatch({type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS, quizzes: quizzes.data});
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Loading quizzes failed", e));
