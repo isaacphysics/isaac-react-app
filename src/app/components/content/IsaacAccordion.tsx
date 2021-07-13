@@ -9,7 +9,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 
 const defaultDisplay = {
-    [SITE.PHY]: {audience: ["open"], nonAudience: ["closed"]},
+    [SITE.PHY]: {audience: [], nonAudience: []},
     [SITE.CS]: {audience: ["open"], nonAudience: ["de-emphasised", "closed"]}
 }[SITE_SUBJECT]
 
