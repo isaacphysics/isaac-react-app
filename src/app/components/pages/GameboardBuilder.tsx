@@ -17,7 +17,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
-import {resourceFound, isValidGameboardId} from "../../services/validation";
+import {isValidGameboardId, resourceFound} from "../../services/validation";
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -26,7 +26,7 @@ import {
     multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {EXAM_BOARD, examBoardTagMap} from "../../services/constants";
+import {examBoardTagMap} from "../../services/constants";
 import {history} from "../../services/history"
 import Select from "react-select";
 import {withRouter} from "react-router-dom";

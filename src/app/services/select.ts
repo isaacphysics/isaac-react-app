@@ -1,4 +1,3 @@
-import React from "react";
 import {ValueType} from "react-select";
 
 export interface Item<T> {value: T; label: string;}
