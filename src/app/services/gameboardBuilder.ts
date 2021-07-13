@@ -94,19 +94,20 @@ export const convertExamBoardToOption = (examBoard: string) => {
     return {value: examBoard, label: tagExamBoardMap[examBoard]};
 };
 
-export const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
-    if (e && (e as {value: string; label: string}[]).map) {
-        const arr = e as {value: string; label: string}[];
-        setValue(arr.map((item) => item.value));
+// TODO REMOVE AUDIENCE_CONTEXT Let's move from multiSelectOnChange and selectOnChange to select.ts.unwrapValue(...) for types and consistency
+export const multiSelectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
+    if (e && Array.isArray(e)) {
+        setValue(e.map((item) => item.value));
     } else {
         setValue([]);
     }
 };
-
-export const selectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
-    if (e && (e as {value: string; label: string}).value) {
-        const item = e as {value: string; label: string};
-        setValue([item.value]);
+export const selectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
+    if (e) {
+        const value = (e as {value: T; label: string})?.value;
+        if (value) {
+            setValue([value]);
+        }
     } else {
         setValue([]);
     }

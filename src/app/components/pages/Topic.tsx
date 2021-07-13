@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
-import {fetchTopicSummary, setTempExamBoard} from "../../state/actions";
+import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
-import {Button, Col, Container, Row, Card, CardBody, CardTitle, Nav, NavItem, NavLink} from "reactstrap";
-import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID, EXAM_BOARD} from "../../services/constants";
-import {useCurrentExamBoard} from "../../services/examBoard";
+import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
+import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {atLeastOne} from "../../services/validation";
 import {selectors} from '../../state/selectors';
 
@@ -19,7 +19,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const dispatch = useDispatch();
     const topicPage = useSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useSelector(selectors.user.orNull);
-    let examBoard = useCurrentExamBoard();
+    let {examBoard} = useUserContext();
 
     useEffect(
         () => {dispatch(fetchTopicSummary(topicName))},
@@ -41,7 +41,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <TempExamBoardPicker className="text-right" />
+                    <UserContextPicker className="text-right" />
 
                     {relatedConcepts && atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
@@ -79,7 +79,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     </Card>
                 </Col>
             </Row>}
-            
+
             <Row className="pb-5">
                 <Col md={{size: 8, offset: 2}} className="py-3">
 

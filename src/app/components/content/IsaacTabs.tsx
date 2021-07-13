@@ -2,7 +2,7 @@ import React, {ReactElement} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {useCurrentExamBoard} from "../../services/examBoard";
+import {useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {useDispatch} from "react-redux";
 import {closeActiveModal, openActiveModal} from '../../state/actions';
@@ -31,13 +31,13 @@ export const IsaacTabs = (props: any) => {
     });
 
     // EXAM BOARD Special Case
-    const examBoardFilter = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
     const tabTitles = Object.keys(tabTitlesToContent);
     const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
     if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab) {
         return <div className="examboard-special-tabs">
-            <button className="expand-button" onClick={() => expandToModal(tabTitlesToContent[examBoardFilter])}>+</button>
-            {tabTitlesToContent[examBoardFilter]}
+            <button className="expand-button" onClick={() => expandToModal(tabTitlesToContent[examBoard])}>+</button>
+            {tabTitlesToContent[examBoard]}
         </div>;
     }
 

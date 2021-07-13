@@ -7,7 +7,7 @@ import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
-import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
+import {filterOnExamBoard, useUserContext} from "../../services/userContext";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -124,8 +124,8 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
 
 export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const dispatch = useDispatch();
-    const currentExamBoard = useCurrentExamBoard();
-    const examBoardFilteredContent = filterOnExamBoard(content, currentExamBoard);
+    const {examBoard} = useUserContext();
+    const examBoardFilteredContent = filterOnExamBoard(content, examBoard);
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = examBoardFilteredContent

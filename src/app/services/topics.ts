@@ -1,7 +1,7 @@
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, NOT_FOUND} from "./constants";
 import {LinkInfo} from "./navigation";
-import {filterOnExamBoard} from "./examBoard";
+import {filterOnExamBoard} from "./userContext";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {CurrentTopicState} from "../state/reducers/topicState";
 

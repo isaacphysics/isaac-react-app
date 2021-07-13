@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {AppState} from "../../state/reducers";
-import {useCurrentExamBoard} from "../../services/examBoard";
+import {useUserContext} from "../../services/userContext";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
 import he from "he";
@@ -323,7 +323,7 @@ export function LaTeX({markup}: {markup: string}) {
     const user = useSelector(selectors.user.orNull);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
     const figureNumbers = useContext(FigureNumberingContext);
 
     const escapedMarkup = escapeHtml(markup);
