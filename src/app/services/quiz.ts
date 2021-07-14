@@ -11,7 +11,7 @@ import {deregisterQuestion, registerQuestion} from "../state/actions";
 function isQuestion(doc: ContentDTO) {
     return ["isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
         "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacStringMatchQuestion", "isaacFreeTextQuestion",
-        "isaacSymbolicLogicQuestion", "isaacGraphSketcherQuestion"].indexOf(doc.type as string) >= 0;
+        "isaacSymbolicLogicQuestion", "isaacGraphSketcherQuestion", "isaacClozeQuestion"].indexOf(doc.type as string) >= 0;
 }
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {

@@ -133,6 +133,9 @@ export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
 }
 
+export interface IsaacClozeDndQuestionDTO extends IsaacParsonsQuestionDTO {
+}
+
 export interface IsaacPodDTO extends ContentDTO {
     image?: ImageDTO;
     url?: string;

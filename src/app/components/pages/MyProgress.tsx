@@ -28,6 +28,7 @@ export const siteSpecific = {
     [SITE.PHY]: {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion"
+            // TODO isaacClozeDndQuestion when it exists
         ],
         questionTagsStatsList: [
             "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16"
@@ -39,6 +40,7 @@ export const siteSpecific = {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
             "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion"
+            // TODO isaacClozeDndQuestion when it exists
         ],
         questionTagsStatsList: [] as string[],
         typeColWidth: "col-lg-4",
