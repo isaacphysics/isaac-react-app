@@ -9,27 +9,31 @@ import {DragDropContext, Draggable, Droppable, DropResult, ResponderProvided} fr
 import ReactDOM from 'react-dom';
 
 function InlineDroppable({id, items, contentHolder}: {id: string, items: ItemDTO[], contentHolder: RefObject<HTMLDivElement>}) {
-    const droppable = <Droppable droppableId={id}>
-        {(provided, snapshot) => <div
-            ref={provided.innerRef} {...provided.droppableProps}
-            className={`d-flex rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-        >
-            {items.map((item, i) =>
-                <Draggable key={item.id} draggableId={item.id as string} index={i}>
-                    {(provided, snapshot) =>
-                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <RS.Badge className="m-2 p-2">{item.value}</RS.Badge>
-                        </div>
-                    }
-                </Draggable>
-            )}
-            {provided.placeholder}
-        </div>}
-    </Droppable>;
-
     const droppableTarget = contentHolder.current?.querySelector(`#${id}`);
     if (droppableTarget) {
-        return ReactDOM.createPortal(droppable, droppableTarget);
+        return ReactDOM.createPortal(
+            <Droppable droppableId={id}>
+                {(provided, snapshot) => <div
+                    ref={provided.innerRef} {...provided.droppableProps}
+                    className={`d-flex rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                >
+                    {items.map((item, i) =>
+                        <Draggable key={item.id} draggableId={item.id || `${i}`} index={i}>
+                            {(provided, snapshot) =>
+                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                    <RS.Badge className="m-2 p-2">
+                                        <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
+                                            {item.children}
+                                        </IsaacContentValueOrChildren>
+                                    </RS.Badge>
+                                </div>
+                            }
+                        </Draggable>
+                    )}
+                    {provided.placeholder}
+                </div>}
+            </Droppable>
+        , droppableTarget);
     }
     return null;
 }
@@ -84,22 +88,27 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
 
             {/* An inline droppable (or probably a list of them) will still need to get rendered in the react tree somewhere */}
             <InlineDroppable id={dropLocationBaseId + "1"} items={dropState[dropLocationBaseId + "1"] || []} contentHolder={questionContentRef} />
-        </div>
 
-        <Droppable droppableId={itemsAreaId} direction="horizontal">
-            {(provided, snapshot) => <div
-                ref={provided.innerRef} {...provided.droppableProps}
-                className={`d-flex rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-            >
-                {nonSelectedItems.map((item, i) => <Draggable key={item.id} draggableId={item.id as string} index={i}>
-                    {(provided, snapshot) =>
-                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <RS.Badge className="m-2 p-2">{item.value}</RS.Badge>
-                        </div>
-                    }
-                </Draggable>)}
-                {provided.placeholder}
-            </div>}
-        </Droppable>
+            {/* Items section */}
+            <Droppable droppableId={itemsAreaId} direction="horizontal">
+                {(provided, snapshot) => <div
+                    ref={provided.innerRef} {...provided.droppableProps}
+                    className={`d-flex rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                >
+                    {nonSelectedItems.map((item, i) => <Draggable key={item.id} draggableId={item.id || `${i}`} index={i}>
+                        {(provided, snapshot) =>
+                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                <RS.Badge className="m-2 p-2">
+                                    <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
+                                        {item.children}
+                                    </IsaacContentValueOrChildren>
+                                </RS.Badge>
+                            </div>
+                        }
+                    </Draggable>)}
+                    {provided.placeholder}
+                </div>}
+            </Droppable>
+        </div>
     </DragDropContext>;
 }
