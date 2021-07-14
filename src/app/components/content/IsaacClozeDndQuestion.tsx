@@ -1,21 +1,50 @@
-import React, {useState} from "react";
+import React, {RefObject, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {IsaacClozeDndQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {useDispatch, useSelector, useStore} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {DragDropContext, Draggable, Droppable, DropResult, ResponderProvided} from "react-beautiful-dnd";
+import ReactDOM from 'react-dom';
+
+function InlineDroppable({id, items, contentHolder}: {id: string, items: ItemDTO[], contentHolder: RefObject<HTMLDivElement>}) {
+    const droppable = <Droppable droppableId={id}>
+        {(provided, snapshot) => <div
+            ref={provided.innerRef} {...provided.droppableProps}
+            className={`d-flex rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+        >
+            {items.map((item, i) =>
+                <Draggable key={item.id} draggableId={item.id as string} index={i}>
+                    {(provided, snapshot) =>
+                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <RS.Badge className="m-2 p-2">{item.value}</RS.Badge>
+                        </div>
+                    }
+                </Draggable>
+            )}
+            {provided.placeholder}
+        </div>}
+    </Droppable>;
+
+    const droppableTarget = contentHolder.current?.querySelector(`#${id}`);
+    if (droppableTarget) {
+        return ReactDOM.createPortal(droppable, droppableTarget);
+    }
+    return null;
+}
 
 export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacClozeDndQuestionDTO; questionId: string; readonly?: boolean}) {
     const dispatch = useDispatch();
-    const store = useStore();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttempt = questionPart?.currentAttempt as ItemChoiceDTO;
+    const cssFriendlyQuestionPartId = questionPart?.id?.replace("|", "-") ?? ""; // Maybe we need to clean up IDs more?
 
-    const itemsAreaId = `${questionPart?.id as string}-items-area`;
-    const dropLocationBaseId = `${questionPart?.id as string}-drop-location-`
+    const questionContentRef = useRef<HTMLDivElement>(null);
+
+    const itemsAreaId = `${cssFriendlyQuestionPartId}-items-area`;
+    const dropLocationBaseId = `${cssFriendlyQuestionPartId}-drop-location-`
 
     const [nonSelectedItems, setNonSelectedItems] = useState([...doc.items]);
     const [dropState, setDropState] = useState<{[dropId: string]: ItemDTO[]}>({[dropLocationBaseId + "1"]: []});
@@ -42,30 +71,21 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
         // let itemChoice: ItemChoiceDTO = {type: "itemChoice", items: currentItems};
         // dispatch(setCurrentAttempt(questionId, {}));
     }
+
+
     return <DragDropContext onDragEnd={updateAttempt}>
-        <div className="question-content">
+        <div ref={questionContentRef} className="question-content">
+            {/* Prove that it is possible to find an element even if it has been set as inner html */}
+            <div dangerouslySetInnerHTML={{__html: `<div id="${dropLocationBaseId + "1"}" />`}} />
+
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                 {doc.children}
             </IsaacContentValueOrChildren>
 
-            <Droppable droppableId={dropLocationBaseId + "1"}>
-                {(provided, snapshot) => <div
-                    ref={provided.innerRef} {...provided.droppableProps}
-                    className={`d-flex rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-                >
-                    {(dropState[dropLocationBaseId + "1"] || []).map((item, i) =>
-                        <Draggable key={item.id} draggableId={item.id as string} index={i}>
-                            {(provided, snapshot) =>
-                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    <RS.Badge className="m-2 p-2">{item.value}</RS.Badge>
-                                </div>
-                            }
-                        </Draggable>
-                    )}
-                    {provided.placeholder}
-                </div>}
-            </Droppable>
+            {/* An inline droppable (or probably a list of them) will still need to get rendered in the react tree somewhere */}
+            <InlineDroppable id={dropLocationBaseId + "1"} items={dropState[dropLocationBaseId + "1"] || []} contentHolder={questionContentRef} />
         </div>
+
         <Droppable droppableId={itemsAreaId} direction="horizontal">
             {(provided, snapshot) => <div
                 ref={provided.innerRef} {...provided.droppableProps}
