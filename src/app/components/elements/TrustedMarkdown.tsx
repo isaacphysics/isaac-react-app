@@ -17,9 +17,7 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* opt
     }
 };
 
-export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
-    const [markdownWithGlossary, glossaryTooltips] = useGlossaryTermsInMarkdown(markdown);
-
+function useRegExRulesInMarkdown(markdown: string): string {
     // RegEx replacements to match Latex inspired Isaac Physics functionality
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
@@ -30,12 +28,18 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
             "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
         });
     }
-    let regexProcessedMarkdown = markdownWithGlossary;
+    let regexProcessedMarkdown = markdown;
     Object.entries(regexRules).forEach(([replacement, rule]) =>
         regexProcessedMarkdown = regexProcessedMarkdown.replace(rule, replacement)
     );
+    return regexProcessedMarkdown;
+}
 
-    const html = MARKDOWN_RENDERER.render(regexProcessedMarkdown);
+export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
+    let glossaryTooltips;
+    [markdown, glossaryTooltips] = useGlossaryTermsInMarkdown(markdown);
+    markdown = useRegExRulesInMarkdown(markdown);
+    const html = MARKDOWN_RENDERER.render(markdown);
     return <div>
         <TrustedHtml html={html} />
         {glossaryTooltips}
