@@ -36,7 +36,8 @@ export function useUserContext(): UserContext {
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
     } else if (!user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard) || (betaFeature?.AUDIENCE_CONTEXT && transientUserContext?.examBoard !== undefined)) {
-        examBoard = transientUserContext?.examBoard ?? EXAM_BOARD.NONE;
+        const defaultExamBoard = betaFeature?.AUDIENCE_CONTEXT ? EXAM_BOARD.NONE : EXAM_BOARD.AQA;
+        examBoard = transientUserContext?.examBoard ?? defaultExamBoard;
     } else {
         examBoard = user.examBoard;
     }
