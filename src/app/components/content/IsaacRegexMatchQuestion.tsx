@@ -2,19 +2,19 @@ import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {IsaacRegexStringMatchQuestionDTO} from "../../../IsaacApiTypes";
+import {IsaacRegexMatchQuestionDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 
 
-export const IsaacRegexStringMatchQuestion = ({doc, questionId, readonly}: {doc: IsaacRegexStringMatchQuestionDTO; questionId: string; readonly?: boolean}) => {
+export const IsaacRegexMatchQuestion = ({doc, questionId, readonly}: {doc: IsaacRegexMatchQuestionDTO; questionId: string; readonly?: boolean}) => {
     const dispatch = useDispatch();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttemptValue = questionPart?.currentAttempt?.value;
 
-    return <div className="regexstringmatch-question">
+    return <div className="regexmatch-question">
         <div className="question-content">
             <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                 {doc.children}

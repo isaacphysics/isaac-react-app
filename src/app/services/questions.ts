@@ -3,7 +3,7 @@ import {IsaacItemQuestion} from "../components/content/IsaacItemQuestion";
 import {IsaacParsonsQuestion} from "../components/content/IsaacParsonsQuestion";
 import {IsaacNumericQuestion} from "../components/content/IsaacNumericQuestion";
 import {IsaacStringMatchQuestion} from "../components/content/IsaacStringMatchQuestion";
-import {IsaacRegexStringMatchQuestion} from "../components/content/IsaacRegexStringMatchQuestion";
+import {IsaacRegexMatchQuestion} from "../components/content/IsaacRegexMatchQuestion";
 import {IsaacFreeTextQuestion} from "../components/content/IsaacFreeTextQuestion";
 import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLogicQuestion";
 import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
@@ -22,7 +22,7 @@ export const QUESTION_TYPES = new Map([
     ["isaacSymbolicQuestion", IsaacSymbolicQuestion],
     ["isaacSymbolicChemistryQuestion", IsaacSymbolicChemistryQuestion],
     ["isaacStringMatchQuestion", IsaacStringMatchQuestion],
-    ["isaacRegexStringMatchQuestion", IsaacRegexStringMatchQuestion],
+    ["isaacRegexMatchQuestion", IsaacRegexMatchQuestion],
     ["isaacFreeTextQuestion", IsaacFreeTextQuestion],
     ["isaacSymbolicLogicQuestion", IsaacSymbolicLogicQuestion],
     ["isaacGraphSketcherQuestion", IsaacGraphSketcherQuestion],
