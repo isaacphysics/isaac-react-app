@@ -579,6 +579,9 @@ export const api = {
         },
         logQuizSectionView: (quizAttemptId: number, page: number): AxiosPromise<never> => {
             return endpoint.post(`/quiz/attempt/${quizAttemptId}/log`, `sectionNumber=${page}`, {});
+        },
+        getQuizAssignmentResultsSummaryCSV: (assignmentId: number) => {
+            return endpoint.get(`/quiz/assignment/${assignmentId}/download`);
         }
     },
 };
