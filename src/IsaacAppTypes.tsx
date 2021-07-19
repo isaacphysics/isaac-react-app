@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, RefObject} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
@@ -7,7 +7,7 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem,
+    GameboardItem, ItemDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
@@ -678,6 +678,7 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
+export const ClozeDropRegionContext = React.createContext<{register: (id: string) => void} | undefined>(undefined);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;

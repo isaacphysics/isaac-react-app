@@ -6,6 +6,7 @@ import {useSelector} from "react-redux";
 import {useUserContext} from "../../services/userContext";
 import {selectors} from "../../state/selectors";
 import {katexify} from "./LaTeX";
+import {useClozeDropRegionsInHtml} from "../content/IsaacClozeDndQuestion";
 
 const htmlDom = document.createElement("html");
 function manipulateHtml(html: string) {
@@ -42,8 +43,11 @@ export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
 
     const figureNumbers = useContext(FigureNumberingContext);
 
+    html = useClozeDropRegionsInHtml(html);
     html = manipulateHtml(katexify(html, user, examBoard, screenReaderHoverText, figureNumbers));
 
     const ElementType = span ? "span" : "div";
-    return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
+    return <React.Fragment>
+        <ElementType dangerouslySetInnerHTML={{__html: html}} />
+    </React.Fragment>;
 };
