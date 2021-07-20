@@ -1,0 +1,266 @@
+import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import {connect} from "react-redux";
+import * as RS from "reactstrap";
+import {setCurrentAttempt} from "../../state/actions";
+import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
+import {AppState} from "../../state/reducers";
+import {FormulaDTO, IsaacSymbolicVariableQuestionDTO} from "../../../IsaacApiTypes";
+import {InequalityModal} from "../elements/modals/InequalityModal";
+import katex from "katex";
+import {ifKeyIsEnter} from "../../services/navigation";
+import {selectors} from "../../state/selectors";
+import {Inequality, makeInequality} from "inequality";
+import {parseMathsExpression, ParsingError} from "inequality-grammar";
+
+import _flattenDeep from 'lodash/flatMapDeep';
+import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
+import {jsonHelper} from "../../services/json";
+import uuid from "uuid";
+import { isDefined } from '../../services/miscUtils';
+import {isNullOrUndefined} from "util";
+
+// Magic starts here
+interface ChildrenMap {
+    children: {[key: string]: ChildrenMap};
+}
+
+function countChildren(root: ChildrenMap) {
+    let q = [root];
+    let count = 1;
+    while (q.length > 0) {
+        const e = q.shift();
+        if (!e) continue;
+
+        const c = Object.keys(e.children).length;
+        if (c > 0) {
+            count = count + c;
+            q = q.concat(Object.values(e.children));
+        }
+    }
+    return count;
+}
+
+function isError(p: ParsingError | any[]): p is ParsingError {
+    return p.hasOwnProperty("error");
+}
+
+const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
+    const pageQuestions = selectors.questions.getQuestions(state);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
+    const r: {currentAttempt?: FormulaDTO | null} = {};
+    if (questionPart) {
+        r.currentAttempt = questionPart.currentAttempt;
+    }
+    return r;
+};
+const dispatchToProps = {setCurrentAttempt};
+
+interface IsaacSymbolicVariableQuestionProps {
+    doc: IsaacSymbolicVariableQuestionDTO;
+    questionId: string;
+    currentAttempt?: FormulaDTO | null;
+    setCurrentAttempt: (questionId: string, attempt: FormulaDTO) => void;
+    readonly?: boolean;
+}
+const IsaacSymbolicVariableQuestionComponent = (props: IsaacSymbolicVariableQuestionProps) => {
+    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
+    const [modalVisible, setModalVisible] = useState(false);
+    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
+    const [textInput, setTextInput] = useState('');
+
+    if (doc.enumeratedVariables && doc.value) {
+        const equation = doc.value.match(/\$.*?\$/g);
+        let replaceEquation = equation && equation[0];
+        if (isDefined(replaceEquation)) {
+            for (let i = 0; i < replaceEquation.length; i++) {
+                if (replaceEquation[i] in doc.enumeratedVariables) {
+                    replaceEquation = replaceEquation.replace(replaceEquation[i], doc.enumeratedVariables[replaceEquation[i]].toString())
+                }
+            }
+        }
+        if (isDefined(replaceEquation)) {
+            doc.value = doc.value.replace(/\$.*?\$/g, replaceEquation)
+        }
+        console.log(replaceEquation);
+        console.log(doc.value)
+    }
+
+    function currentAttemptPythonExpression(): string {
+        return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";
+    }
+
+    const [inputState, setInputState] = useState(() => ({pythonExpression: currentAttemptPythonExpression(), userInput: '', valid: true}));
+
+    let currentAttemptValue: any | undefined;
+    if (currentAttempt && currentAttempt.value) {
+        currentAttemptValue = jsonHelper.parseOrDefault(currentAttempt.value, {result: {tex: '\\textrm{PLACEHOLDER HERE}'}});
+    }
+
+    const updateState = (state: any) => {
+        const newState = sanitiseInequalityState(state);
+        const pythonExpression = newState?.result?.python || "";
+        const previousPythonExpression = currentAttemptValue?.result?.python || "";
+        if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
+            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(newState), pythonExpression: pythonExpression, enumeratedVariables: doc.enumeratedVariables});
+        }
+        initialEditorSymbols.current = state.symbols;
+    };
+
+    useEffect(() => {
+        // Only update the text-entry box if the graphical editor is visible OR if this is the first load
+        const pythonExpression = currentAttemptPythonExpression();
+        if (modalVisible || textInput === '') {
+            setTextInput(pythonExpression);
+        }
+        if (inputState.pythonExpression !== pythonExpression) {
+            setInputState({...inputState, userInput: textInput, pythonExpression});
+        }
+    }, [currentAttempt]);
+
+    const closeModal = (previousYPosition: number) => () => {
+        document.body.style.overflow = "initial";
+        setModalVisible(false);
+        if (isDefined(previousYPosition)) {
+            window.scrollTo(0, previousYPosition);
+        }
+    };
+
+    const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
+
+    const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
+    const sketchRef = useRef<Inequality>();
+
+    useLayoutEffect(() => {
+        const {sketch} = makeInequality(
+            hiddenEditorRef.current,
+            100,
+            0,
+            _flattenDeep((currentAttemptValue || { symbols: [] }).symbols),
+            {
+                textEntry: true,
+                fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
+                fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
+            }
+        );
+        sketch.log = { initialState: [], actions: [] };
+        sketch.onNewEditorState = updateState;
+        sketch.onCloseMenus = () => undefined;
+        sketch.isUserPrivileged = () => true;
+        sketch.onNotifySymbolDrag = () => undefined;
+        sketch.isTrashActive = () => false
+
+        sketchRef.current = sketch;
+    }, [hiddenEditorRef.current]);
+
+    const [errors, setErrors] = useState<string[]>();
+
+    const debounceTimer = useRef<number|null>(null);
+    const updateEquation = (e: ChangeEvent<HTMLInputElement>) => {
+        const pycode = e.target.value;
+        setTextInput(pycode);
+        setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
+
+        // Parse that thing
+        if (debounceTimer.current) {
+            window.clearTimeout(debounceTimer.current);
+            debounceTimer.current = null;
+        }
+        debounceTimer.current = window.setTimeout(() => {
+            const parsedExpression = parseMathsExpression(pycode);
+
+            if (isError(parsedExpression) || (parsedExpression.length === 0 && pycode !== '')) {
+                const openBracketsCount = pycode.split('(').length - 1;
+                const closeBracketsCount = pycode.split(')').length - 1;
+                const regexStr = "[^ 0-9A-Za-z()*+,-./<=>^_±²³¼½¾×÷=]+";
+                const badCharacters = new RegExp(regexStr);
+                const _errors = [];
+                if (/\\[a-zA-Z()]|[{}]/.test(pycode)) {
+                    _errors.push('LaTeX syntax is not supported.');
+                }
+                if (/\|.+?\|/.test(pycode)) {
+                    _errors.push('Vertical bar syntax for absolute value is not supported; use abs() instead.');
+                }
+                if (badCharacters.test(pycode)) {
+                    const usedBadChars: string[] = [];
+                    for(let i = 0; i < pycode.length; i++) {
+                        const char = pycode.charAt(i);
+                        if (badCharacters.test(char)) {
+                            if (!usedBadChars.includes(char)) {
+                                usedBadChars.push(char);
+                            }
+                        }
+                    }
+                    _errors.push('Some of the characters you are using are not allowed: ' + usedBadChars.join(" "));
+                }
+                if (openBracketsCount !== closeBracketsCount) {
+                    _errors.push('You are missing some ' + (closeBracketsCount > openBracketsCount ? 'opening' : 'closing') + ' brackets.');
+                }
+                if (/\.[0-9]/.test(pycode)) {
+                    _errors.push('Please convert decimal numbers to fractions.');
+                }
+                setErrors(_errors);
+            } else {
+                if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(pycode)) {
+                    // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
+                    setErrors(["Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!"])
+                } else {
+                    setErrors(undefined);
+                }
+                if (pycode === '') {
+                    const state = {result: {tex: "", python: "", mathml: ""}};
+                    setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    initialEditorSymbols.current = [];
+                } else if (parsedExpression.length === 1) {
+                    // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
+                    // so textInput will almost certainly be out of sync with pycode which is the current content of the text box.
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[0], true, true, pycode);
+                } else {
+                    const sizes = parsedExpression.map(countChildren);
+                    const i = sizes.indexOf(Math.max.apply(null, sizes));
+                    sketchRef.current && sketchRef.current.parseSubtreeObject(parsedExpression[i], true, true, pycode);
+                }
+            }
+        }, 250);
+    };
+
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
+    const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
+
+    return (
+        <div className="symbolic-question">
+            <div className="question-content">
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                    {doc.children}
+                </IsaacContentValueOrChildren>
+            </div>
+            {/* TODO Accessibility */}
+            {!readonly && <div className="eqn-editor-input">
+                <RS.InputGroup className="my-2">
+                    <RS.Input type="text" onChange={updateEquation} value={textInput}
+                              placeholder="Enter answer..."/>
+                    <RS.InputGroupAddon addonType="append">
+                        <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
+                        <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                            Here are some examples of expressions you can type:<br />
+                            <br />
+                            a*x^2 + b x + c<br />
+                            (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
+                            1/2 mv**2<br />
+                            log(x_a, 2) == log(x_a) / log(2)<br />
+                            <br />
+                            As you type, the box above will preview the result.
+                        </RS.UncontrolledTooltip>
+                    </RS.InputGroupAddon>
+                </RS.InputGroup>
+                {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                    {errors.map(e => (<li key={e}>{e}</li>))}
+                </ul></div>}
+                {symbolList && <div className="eqn-editor-symbols">
+                    The following symbols may be useful: <pre>{symbolList}</pre>
+                </div>}
+            </div>}
+        </div>
+    );
+};
+
+export const IsaacSymbolicVariableQuestion = connect(stateToProps, dispatchToProps)(IsaacSymbolicVariableQuestionComponent);

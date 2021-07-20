@@ -179,6 +179,11 @@ export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestion
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
 
+export interface IsaacSymbolicVariableQuestionDTO extends IsaacSymbolicQuestionDTO {
+    variables?: string;
+    enumeratedVariables?: {[id: string] : number};
+}
+
 export interface IsaacSymbolicQuestionDTO extends IsaacQuestionBaseDTO {
     formulaSeed?: string;
     availableSymbols?: string[];
@@ -359,6 +364,7 @@ export interface FigureDTO extends ImageDTO {
 
 export interface FormulaDTO extends ChoiceDTO {
     pythonExpression?: string;
+    enumeratedVariables?: {[id: string] : number};
 }
 
 export interface FreeTextRuleDTO extends ChoiceDTO {

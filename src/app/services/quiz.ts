@@ -10,7 +10,7 @@ import {deregisterQuestion, registerQuestion} from "../state/actions";
 // FIXME - this wasn't supposed to be hardcoded here, but circular dependency issues mean we cannot import ./questions!
 function isQuestion(doc: ContentDTO) {
     return ["isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-        "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacStringMatchQuestion", "isaacFreeTextQuestion",
+        "isaacSymbolicQuestion", "isaacSymbolicVariableQuestion", "isaacSymbolicChemistryQuestion", "isaacStringMatchQuestion", "isaacFreeTextQuestion",
         "isaacSymbolicLogicQuestion", "isaacGraphSketcherQuestion"].indexOf(doc.type as string) >= 0;
 }
 
