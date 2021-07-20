@@ -17,7 +17,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
-import {resourceFound, isValidGameboardId} from "../../services/validation";
+import {isValidGameboardId, resourceFound} from "../../services/validation";
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -26,7 +26,7 @@ import {
     multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {EXAM_BOARD, examBoardTagMap} from "../../services/constants";
+import {examBoardTagMap} from "../../services/constants";
 import {history} from "../../services/history"
 import Select from "react-select";
 import {withRouter} from "react-router-dom";
@@ -35,10 +35,12 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
+import {getFilteredExamBoardOptions} from "../../services/userContext";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
+    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
 
     const dispatch = useDispatch();
 
@@ -118,10 +120,11 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
                         <Select inputId="question-search-level"
                             isMulti
-                            options={[
-                                { value: examBoardTagMap[EXAM_BOARD.AQA], label: 'AQA' },
-                                { value: examBoardTagMap[EXAM_BOARD.OCR], label: 'OCR' },
-                                { value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
+                            options={
+                                [{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }].concat(
+                                    getFilteredExamBoardOptions([], false, betaFeature?.AUDIENCE_CONTEXT)
+                                        .map(i => ({value: examBoardTagMap[i.value], label: i.label})))
+                            }
                             name="colors"
                             className="basic-multi-select"
                             classNamePrefix="select"

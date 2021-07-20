@@ -14,6 +14,7 @@ import {
     NO_CONTENT,
     NOT_FOUND,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
+    STAGE,
     TAG_ID
 } from "../services/constants";
 import {
@@ -364,7 +365,16 @@ export const updateCurrentUser = (
     }
 };
 
-export const setTempExamBoard = (examBoard: EXAM_BOARD) => ({type: ACTION_TYPE.EXAM_BOARD_SET_TEMP, examBoard});
+export function setTransientStagePreference(stage: STAGE) {
+    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE, stage};
+}
+export function setTransientExamBoardPreference(examBoard: EXAM_BOARD) {
+    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD, examBoard};
+}
+
+export function setTransientShowOtherContentPreference(showOtherContent: boolean) {
+    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT, showOtherContent};
+}
 
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});

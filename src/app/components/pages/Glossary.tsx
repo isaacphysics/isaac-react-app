@@ -9,14 +9,14 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
+import {UserContextPicker} from '../elements/inputs/UserContextPicker';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import { isDefined } from '../../services/miscUtils';
 import tags from "../../services/tags";
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
 import Select from "react-select";
-import { useCurrentExamBoard } from "../../services/examBoard";
+import { useUserContext } from "../../services/userContext";
 
 interface GlossaryProps {
     location: { hash: string },
@@ -32,7 +32,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
@@ -144,7 +144,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                 <div className="question-actions question-actions-leftmost mt-3">
                     <ShareLink linkUrl={`/glossary`}/>
                 </div>
-                <div className="question-actions mt-3 not_mobile">
+                <div className="question-actions mt-3 not-mobile">
                     <PrintButton/>
                 </div>
             </div>
@@ -180,7 +180,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                     </Row>
                 </Col>
                 <Col md={{size: 3}} className="py-4">
-                    <TempExamBoardPicker className="text-right" />
+                    <UserContextPicker className="text-right" />
                 </Col>
             </Row>
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>

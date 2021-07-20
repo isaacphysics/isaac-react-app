@@ -11,7 +11,7 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
 import { sanitiseInequalityState } from '../../services/questions';
 import _flattenDeep from 'lodash/flattenDeep';
-import {useCurrentExamBoard} from "../../services/examBoard";
+import {useUserContext} from "../../services/userContext";
 import {selectQuestionPart} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
 import { Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip } from 'reactstrap';
@@ -69,7 +69,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
     const [textInput, setTextInput] = useState('');
     const user = useSelector(selectors.user.orNull);
 

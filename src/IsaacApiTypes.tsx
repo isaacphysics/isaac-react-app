@@ -313,6 +313,8 @@ export interface ContentBaseDTO {
     type?: string;
     tags?: string[];
     version?: string;
+    audience?: {[contextProperty: string]: string[]}[];
+    display?: {[intendedAudienceOrNot: string]: string[]};
 }
 
 export interface ContentDTO extends ContentBaseDTO {

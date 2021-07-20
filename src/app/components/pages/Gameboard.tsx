@@ -36,8 +36,7 @@ function getTags(docTags?: string[]) {
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
 }
 
-const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
+const GameboardItem = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
@@ -83,13 +82,13 @@ const gameboardItem = (gameboard: GameboardDTO, question: GameboardItem) => {
                 </div>}
             </div>
             {/*TODO CS Level*/}
-            {SITE_SUBJECT === SITE.PHY && !betaFeature?.AUDIENCE_CONTEXT && question.level !== undefined && question.level !== 0 &&
+            {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
                 <span className="gameboard-tags">Level {question.level}</span>}
         </Link>
     </RS.ListGroupItem>;
 };
 
-export const Wildcard = (wildcard: IsaacWildcard) => {
+export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
     const itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const icon = <img src="/assets/wildcard.svg" alt="Optional extra information icon"/>;
     return <RS.ListGroupItem key={wildcard.id} className={itemClasses}>
@@ -111,10 +110,10 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
         <RS.Col lg={{size: 10, offset: 1}}>
             <RS.ListGroup className="link-list list-group-links list-gameboard">
                 {gameboard?.wildCard && showWildcard(gameboard) &&
-                    Wildcard(gameboard.wildCard)
+                    <Wildcard wildcard={gameboard.wildCard} />
                 }
-                {gameboard?.questions && gameboard.questions.map(
-                    gameboardItem.bind(null, gameboard)
+                {gameboard?.questions && gameboard.questions.map(q =>
+                    <GameboardItem gameboard={gameboard} question={q} />
                 )}
             </RS.ListGroup>
         </RS.Col>

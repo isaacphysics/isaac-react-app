@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {determineGameboardHistory, determineNextGameboardItem, determinePreviousGameboardItem} from "./gameboards";
 import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
-import {useCurrentExamBoard} from "./examBoard";
+import {useUserContext} from "./userContext";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {selectors} from "../state/selectors";
@@ -36,7 +36,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
 
     const currentGameboard = useSelector(selectors.board.currentGameboard);
     const currentTopic = useSelector(selectors.topic.currentTopic);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
 
     if (doc === null || doc === NOT_FOUND) {
         return defaultPageNavigation;
