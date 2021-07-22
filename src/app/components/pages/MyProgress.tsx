@@ -180,7 +180,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                         </div>}
                         <RS.Row id="progress-questions">
                             {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <RS.Col md={12} lg={6} className="mt-4">
-                                <h4>Most recently attempted questions</h4>
+                                <h4>Most recently answered questions</h4>
                                 <LinkToContentSummaryList items={progress.mostRecentQuestions}/>
                             </RS.Col>}
                             {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <RS.Col md={12} lg={6} className="mt-4">
