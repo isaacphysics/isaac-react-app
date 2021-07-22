@@ -14,6 +14,8 @@
     "@babel/preset-react": "7.7.4",
     "@babel/preset-typescript": "7.7.7",
     "@babel/runtime": "7.7.7",
+    "@codemirror/basic-setup": "^0.18.2",
+    "@codemirror/lang-python": "^0.18.0",
     "@react-google-maps/api": "^1.8.1",
     "@svgr/webpack": "^4.2.0",
     "@types/classnames": "^2.2.6",
@@ -65,7 +67,6 @@
     "file-loader": "2.0.0",
     "fs-extra": "7.0.1",
     "he": "^1.2.0",
-    "highlight.js": "^11.0.0",
     "history": "^4.9.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
@@ -111,6 +112,7 @@
     "remarkable": "^1.7.4",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
+    "skulpt": "^1.2.0",
     "string.prototype.matchall": "^4.0.0",
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "^4.1.0",
@@ -125,7 +127,9 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "2.2.0",
     "webpack-merge": "4.2.2",
-    "workbox-webpack-plugin": "3.6.3"
+    "workbox-webpack-plugin": "3.6.3",
+    "xterm": "^4.13.0",
+    "xterm-addon-fit": "^0.5.0"
   },
   "scripts": {
     "build-phy": "webpack --env prod --config config/webpack.config.physics.js",
