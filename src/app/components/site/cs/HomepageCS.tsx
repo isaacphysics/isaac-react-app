@@ -64,23 +64,26 @@ export const HomepageCS = () => {
                         />
                     </Col>
                 </Row>
-                <Row>
-                    <Col size={6} className="pt-3 text-center">
-                        <Button size="lg" tag={Link} to={user && user.loggedIn ? "/topics" : "/register"} color="secondary" block>
-                            {"GCSE resources"}
-                        </Button>
-                    </Col>
-                    <Col size={6} className="pt-3 text-center">
-                        <Button size="lg" tag={Link} to={user && user.loggedIn ? "/search" : "/login"} color="secondary" block>
-                            {"A Level resources"}
-                        </Button>
-                    </Col>
-                    <Col size={6} className="pt-3 text-center">
-                        <Button size="lg" tag={Link} to={'/events'} color="primary" outline block>
-                            {"Events"}
-                        </Button>
-                    </Col>
-                </Row>
+                <Container>
+                    <h3>Show me</h3>
+                    <Row>
+                        <Col size={6} className="pt-3 text-center">
+                            <Button size="lg" tag={Link} to={"/"} color="secondary" block>
+                                GCSE resources
+                            </Button>
+                        </Col>
+                        <Col size={6} className="pt-3 text-center">
+                            <Button size="lg" tag={Link} to={"/"} color="secondary" block>
+                                A Level resources
+                            </Button>
+                        </Col>
+                        <Col size={6} className="pt-3 text-center">
+                            <Button size="lg" tag={Link} to={'/events'} color="primary" outline block>
+                                Events
+                            </Button>
+                        </Col>
+                    </Row>
+                </Container>
             </Container>
         </section>
 
