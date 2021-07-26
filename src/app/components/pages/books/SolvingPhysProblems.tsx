@@ -5,10 +5,6 @@ import {PageFragment} from "../../elements/PageFragment";
 
 export const SolvingPhysProblems = () => {
 
-    const pageHelp = <span>
-        The Isaac Physics Guide to Solving Physics Problems
-    </span>;
-
     return <Container className="physics">
         <Col>
             <div className="book-intro">
