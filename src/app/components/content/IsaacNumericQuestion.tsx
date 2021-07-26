@@ -137,6 +137,8 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
 
     const helpTooltipId = useMemo(() => `numeric-input-help-${uuid.v4()}`, []);
 
+    const noDisplayUnit = doc.displayUnit == null || doc.displayUnit === ""
+
     return (
         <div className="numeric-question">
             <div className="question-content">
@@ -166,14 +168,14 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                             </InputGroup>
                         </Label>
                     </div>
-                    {doc.requireUnits && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
+                    {(doc.requireUnits || doc.displayUnit) && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
                         <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Units <br/>
-                            <Dropdown disabled={readonly} isOpen={isOpen} toggle={() => {setIsOpen(!isOpen);}}>
-                                <DropdownToggle caret disabled={readonly} className="px-2 py-1" color={currentAttemptUnitsWrong ? "danger" : undefined}>
-                                    <LaTeX markup={wrapUnitForSelect(currentAttemptUnits)}/>
+                            <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
+                                <DropdownToggle caret={noDisplayUnit} disabled={readonly} className={`${noDisplayUnit ? "" : "border-dark"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
+                                    <LaTeX markup={wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}/>
                                 </DropdownToggle>
-                                <DropdownMenu right>
+                                {noDisplayUnit && <DropdownMenu right>
                                     {selectedUnits.map((unit) =>
                                         <DropdownItem key={wrapUnitForSelect(unit)}
                                             data-unit={unit || 'None'}
@@ -182,7 +184,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                             <LaTeX markup={wrapUnitForSelect(unit)}/>
                                         </DropdownItem>
                                     )}
-                                </DropdownMenu>
+                                </DropdownMenu>}
                             </Dropdown>
                         </Label>
                     </div>}

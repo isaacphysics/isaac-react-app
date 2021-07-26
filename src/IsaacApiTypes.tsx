@@ -127,6 +127,7 @@ export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
     requireUnits?: boolean;
     availableUnits?: string[];
     knownUnits?: string[];
+    displayUnit?: string;
 }
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
