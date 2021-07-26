@@ -1,4 +1,5 @@
 import {
+    CODE_LANGUAGE,
     DOCUMENT_TYPE,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
@@ -17,6 +18,7 @@ import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {PotentialUser} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
+import {isDefined} from "./miscUtils";
 
 const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUBJECT];
 
@@ -24,6 +26,7 @@ interface UserContext {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
+    codeLanguage: CODE_LANGUAGE;
 }
 
 export function useUserContext(): UserContext {
@@ -42,12 +45,23 @@ export function useUserContext(): UserContext {
         examBoard = user.examBoard;
     }
 
+    // Code Language
+    let codeLanguage;
+    if (SITE_SUBJECT === SITE.PHY) {
+        codeLanguage = CODE_LANGUAGE.NONE;
+    } else if (user && isDefined(user.codeLanguage)) {
+        codeLanguage = user.codeLanguage;
+    } else {
+        const defaultCodeLanguage = CODE_LANGUAGE.PYTHON;
+        codeLanguage = defaultCodeLanguage;
+    }
+
     // Stage
     const stage = transientUserContext?.stage ?? defaultStage;
 
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
 
-    return {examBoard, stage, showOtherContent};
+    return {examBoard, stage, showOtherContent, codeLanguage};
 }
 
 const EXAM_BOARD_ITEM_OPTIONS = [

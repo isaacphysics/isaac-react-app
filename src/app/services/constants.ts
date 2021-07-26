@@ -3,6 +3,7 @@ import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
 import {BookingStatus} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
+import hljs from "highlight.js/lib/core";
 
 // Temporary Feature Flags
 export const QUIZ_FEATURE = ENV_QUIZ_FEATURE_FLAG || false;
@@ -535,6 +536,25 @@ export enum ACTION_TYPE {
     QUIZ_ASSIGNMENT_UPDATE_REQUEST = "QUIZ_ASSIGNMENT_UPDATE_REQUEST",
     QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS = "QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS",
 }
+
+export enum CODE_LANGUAGE {
+    JAVASCRIPT = "JAVASCRIPT",
+    PYTHON = "PYTHON",
+    PHP = "PHP",
+    CSHARP = "CSHARP",
+    PLAINTEXT = "PLAINTEXT",
+    SQL = "SQL",
+    NONE = "",
+}
+
+export const codeLanguagesMap: {[language: string]: string} = {
+    [CODE_LANGUAGE.JAVASCRIPT]: "Javascript",
+    [CODE_LANGUAGE.PYTHON]: "Python",
+    [CODE_LANGUAGE.PHP]: "PHP",
+    [CODE_LANGUAGE.CSHARP]: "C#",
+    [CODE_LANGUAGE.PLAINTEXT]: "plaintext",
+    [CODE_LANGUAGE.SQL]: "SQL",
+};
 
 // EXAM BOARDS
 export enum EXAM_BOARD {
