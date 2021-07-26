@@ -9,7 +9,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, NOT_FOUND} from "./constants";
+import {CODE_LANGUAGE, EXAM_BOARD, NOT_FOUND} from "./constants";
 import {SITE_SUBJECT, SITE} from "./siteConstants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -59,6 +59,14 @@ export const validateExamBoard = (user: ValidationUser | null) => {
     }
 };
 
+export const validateCodeLanguage = (user: ValidationUser | null) => {
+    if (user?.codeLanguage) {
+        return user.codeLanguage in CODE_LANGUAGE;
+    } else {
+        return true;
+    }
+}
+
 export const validateSubjectInterests = (subjectInterests?: SubjectInterests | null) => {
     return subjectInterests &&
         Object.values(subjectInterests).length > 0 &&
@@ -90,7 +98,7 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
-        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
+        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user) && validateCodeLanguage(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
         (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
 }
