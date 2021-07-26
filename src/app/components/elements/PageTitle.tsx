@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {PageFragment} from "./PageFragment";
 import {LaTeX} from "./LaTeX";
+import {ShowLoading} from "../handlers/ShowLoading";
 
 export interface PageTitleProps {
     currentPageTitle: string;
@@ -37,9 +38,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, level, m
     }
 
     const HelpModal = (props: HelpModalProps) => {
-        return <>
-            <PageFragment fragmentId={props.modalId}/>
-        </>
+        return <PageFragment fragmentId={props.modalId} renderFragmentNotFound={help}/>
     };
 
     function openHelpModal(modalId: string) {

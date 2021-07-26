@@ -1,15 +1,16 @@
-import React, {useEffect} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
+import {isDefined} from "../../services/miscUtils";
 
 
 interface PageFragmentComponentProps {
     fragmentId: string;
-    renderFragmentNotFound?: boolean;
+    renderFragmentNotFound?: boolean | string | ReactElement;
 }
 
 export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentComponentProps) => {
@@ -22,13 +23,15 @@ export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentC
     }, [dispatch, fragmentId]);
 
     const notFoundComponent = <div>
+        {isDefined(renderFragmentNotFound) && typeof renderFragmentNotFound !== "boolean" ?
+            <div className="my-4">{renderFragmentNotFound}</div> : <>
         <h2>Content not found</h2>
         <h3 className="my-4">
             <small>
                 {"We're sorry, page fragment not found: "}
                 <code>{fragmentId}</code>
             </small>
-        </h3>
+        </h3></>}
     </div>;
 
     return <React.Fragment>
