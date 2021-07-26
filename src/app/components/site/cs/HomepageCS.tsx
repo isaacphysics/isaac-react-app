@@ -34,8 +34,8 @@ export const HomepageCS = () => {
                                 <Container>
                                     <Row className="flex-nowrap">
                                         <Col>
-                                            <a href="https://teachcomputing.org" target="_blank" rel="noopener">
-                                                <svg className="ml-lg-0 mt-5 mt-lg-4 ml-md-5 w-100 w-md-75 w-lg-100" style={{fill: "#007fa2"}} aria-label="Teach Computing Logo" viewBox="0 0 221 119" version="1.1"
+                                            <a className="ml-lg-0 mt-5 mt-lg-4 ml-md-5 w-100 w-md-75 w-lg-100" href="https://teachcomputing.org" target="_blank" rel="noopener">
+                                                <svg className="w-100" style={{fill: "#007fa2"}} aria-label="Teach Computing Logo" viewBox="0 0 221 119" version="1.1"
                                                      xmlns="http://www.w3.org/2000/svg">
                                                     <title>
                                                         Teach Computing
@@ -47,8 +47,8 @@ export const HomepageCS = () => {
                                             </a>
                                         </Col>
                                         <Col>
-                                            <a href="https://teachcomputing.org" target="_blank" rel="noopener">
-                                                <img className="w-100 w-md-75 w-lg-100" alt="NCCE Logo" src="https://www.stem.org.uk/sites/default/files/fieldable-panel-panes/rich-text/NCCE%20logo.png"/>
+                                            <a className="w-100 w-md-75 w-lg-100" href="https://teachcomputing.org" target="_blank" rel="noopener">
+                                                <img className="w-100" alt="NCCE Logo" src="https://www.stem.org.uk/sites/default/files/fieldable-panel-panes/rich-text/NCCE%20logo.png"/>
                                             </a>
                                         </Col>
                                     </Row>

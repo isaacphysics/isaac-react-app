@@ -10,37 +10,37 @@ export const NavigationBarCS = () => {
     const assignmentBadge = useAssignmentBadge();
 
     return <NavigationBar>
-        <NavigationSection title={<>Students {assignmentBadge}</>} topLevelLink={!isLoggedIn(user)} to="/students">
+        <NavigationSection title={<>My Isaac {assignmentBadge}</>} topLevelLink={!isLoggedIn(user)} to="/students">
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
             {QUIZ_FEATURE && <LinkItem to="/quizzes">My quizzes</LinkItem>}
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
-            <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teachers">
-            <LinkItem to="/teachers">Teacher tools</LinkItem>
-            <LinkItem to="/set_assignments">Set assignments</LinkItem>
+            {/*<LinkItem to="/teachers">Teacher tools</LinkItem>*/}
             <LinkItem to="/groups">Manage groups</LinkItem>
+            <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
+            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
             {QUIZ_FEATURE && <LinkItem to="/set_quizzes">Set quizzes</LinkItem>}
         </NavigationSection>}
 
-        <NavigationSection title="Topics">
-            <LinkItem to="/topics">All topics</LinkItem>
+        <NavigationSection title="Learn">
+            <LinkItem to="/topics">GCSE topics</LinkItem>
+            <LinkItem to="/topics">A level topics</LinkItem>
             <LinkItem to="/pages/specification_page_aqa">AQA view</LinkItem>
             <LinkItem to="/pages/specification_page_ocr">OCR view</LinkItem>
-            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
             <LinkItem to="/glossary">Glossary</LinkItem>
+            <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Events">
             {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
-            <LinkItem to="/pages/2020_teacher_mentoring_cohort2">Teacher mentoring</LinkItem>
         </NavigationSection>
 
         <NavigationSection title={<React.Fragment>
