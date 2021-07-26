@@ -5,6 +5,7 @@ import php from 'highlight.js/lib/languages/php'
 import csharp from 'highlight.js/lib/languages/csharp'
 import plaintext from 'highlight.js/lib/languages/plaintext'
 import sql from 'highlight.js/lib/languages/sql'
+import {Language, LanguageFn} from "highlight.js";
 
 export function registerLanguages() {
     hljs.registerLanguage('javascript', javascript);
@@ -13,6 +14,7 @@ export function registerLanguages() {
     hljs.registerLanguage('csharp', csharp);
     hljs.registerLanguage('plaintext', plaintext);
     hljs.registerLanguage('sql', sql);
+    hljs.registerLanguage('pseudocode', isaacPseudocodeHighlightDefinition);
 }
 
 export function addLineNumbers(code: Element) {
@@ -49,4 +51,116 @@ export function addLineNumbers(code: Element) {
     }
 
     code.appendChild(lineNumbersWrapper);
+}
+
+// FIXME: remove the ts-ignore when highlight.js fixes "match" to be allowed to be an array of regexes.
+// @ts-ignore
+const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
+    if (!hljsLib) return {} as Language;  // FIXME: nasty hack to ensure 'hljsLib' has correct type below, remove if types fixed.
+
+    const KEYWORDS = [
+        "GLOBAL",
+        "MOD",
+        "AND",
+        "OR",
+        "NOT",
+        "IF",
+        "THEN",
+        "ELSEIF",
+        "ELSE",
+        "ENDIF",
+        "SELECT",
+        "CASE",
+        "DEFAULT",
+        "ENDSELECT",
+        "FOR",
+        "TO",
+        "NEXT",
+        "WHILE",
+        "ENDWHILE",
+        "DO",
+        "REPEAT",
+        "UNTIL",
+        "FUNCTION",
+        "RETURN",
+        "ENDFUNCTION",
+        "PROCEDURE",
+        "ENDPROCEDURE",
+        "BYREF",
+        "BYVAL",
+        "RECORD",
+        "ENDRECORD",
+        "ARRAY",
+        "CLASS",
+        "ENDCLASS",
+        "PRIVATE",
+        "PUBLIC",
+        "PROTECTED",
+        "NEW",
+    ];
+
+    const LITERALS = [
+        "False",
+        "True",
+        "Null",
+    ]
+
+    const BUILT_INS = [
+        "STR",
+        "INT",
+        "FLOAT",
+        "INPUT",
+        "PRINT",
+        "LEN",
+        "OPEN_READ",
+        "OPEN_WRITE",
+        "OPEN_APPEND",
+        "READ_LINE",
+        "READ_ALL",
+        "WRITE_LINE",
+        "WRITE_ALL",
+        "CLOSE",
+        "END_OF_FILE",
+        "ASC",
+        "CHR",
+        "RANDOM_INT"
+    ]
+
+    const FUNCTION_DEFINITION = {
+        match: [
+            /FUNCTION|PROCEDURE/,
+            /\s+/,
+            hljsLib.UNDERSCORE_IDENT_RE,
+            /(?=\()/
+        ],
+        scope: {
+            1: "keyword",
+            3: "title.function"
+        },
+        contains: [],
+    };
+
+    return {
+        name: 'pseudocode',
+        aliases: [
+            'isaacPseudocode',
+        ],
+        keywords: {
+           $pattern: hljsLib.UNDERSCORE_IDENT_RE,
+            keyword: KEYWORDS,
+            literal: LITERALS,
+            built_in: BUILT_INS,
+        },
+        contains: [
+            hljsLib.QUOTE_STRING_MODE,
+            // C-style comments:
+            hljsLib.C_LINE_COMMENT_MODE,
+            hljsLib.C_BLOCK_COMMENT_MODE,
+            // Or Python-style comments:
+            hljsLib.HASH_COMMENT_MODE,
+            // Other nice things to highlight:
+            hljsLib.NUMBER_MODE,
+            FUNCTION_DEFINITION,
+        ]
+    };
 }
