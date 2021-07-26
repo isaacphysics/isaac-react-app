@@ -4,7 +4,7 @@ import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import {useCurrentExamBoard} from "../../services/examBoard";
+import {useUserContext} from "../../services/userContext";
 import tags from "../../services/tags";
 import { isDefined } from '../../services/miscUtils';
 import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
@@ -24,7 +24,7 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = fal
     if (parsedAnchorId) {
         anchorId = parsedAnchorId.slice(1,3).filter(i => typeof i === 'string').join('|').toLowerCase().replace(/[^a-z0-9]/g, '-');
     }
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
 
     useEffect(() => {
         if (hash.includes("#")) {

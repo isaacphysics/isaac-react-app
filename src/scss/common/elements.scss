@@ -235,8 +235,8 @@ button.btn.btn-link.login-b,
   margin-left: 5px;
   background-color: transparent;
 }
-.not_mobile {
-  @media (max-width: 767px) {
+.not-mobile {
+  @include respond-below(sm) {
     display: none;
   }
 }

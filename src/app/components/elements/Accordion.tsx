@@ -18,18 +18,23 @@ interface AccordionsProps {
     index: number;
     location: {hash: string};
     children?: React.ReactElement;
+    startOpen?: boolean;
+    deEmphasised?: boolean;
 }
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
     const page = useSelector((state: AppState) => (state && state.doc) || null);
 
     // Toggle
     const isFirst = index === 0;
     const openFirst = SITE_SUBJECT === SITE.CS || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
-    const [open, setOpen] = useState(openFirst && isFirst);
+    const [open, setOpen] = useState(startOpen === undefined ? (openFirst && isFirst) : startOpen);
+
+    // If start open changes we need to update whether or not the accordion section should be open
+    useEffect(() => {if (startOpen !== undefined) {setOpen(startOpen);}}, [setOpen, startOpen]);
 
     // Hash anchoring
     let anchorId: string | null = null;
@@ -127,7 +132,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={open ? 'active' : ''}
+                className={`${open ? 'active' : ''} ${deEmphasised ? 'text-light bg-dark' : ""}`}
                 onClick={(event: any) => {
                     pauseAllVideos();
                     const nextState = !open;

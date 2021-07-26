@@ -36,8 +36,8 @@ export function FeaturedContentTabs() {
                     <Col md={4}>
                     </Col>
                     <Col md={8}>
-                        {/*TODO FEATURED_QUESTION_UPDATE uncomment TempExamBoardPicker if featured question needs it
-                         <TempExamBoardPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />*/}
+                        {/*TODO FEATURED_QUESTION_UPDATE uncomment UserContextPicker if featured question needs it
+                         <UserContextPicker className="float-right pt-md-5 pr-md-5 pt-3 pr-3" hideLabel />*/}
                         <div className="mb-5 mt-md-n2"> {/* TODO FEATURED_QUESTION_UPDATE remove negative margin if there is an exposition */}
                             <IsaacContent doc={{ /* Search for: TODO FEATURED_QUESTION_UPDATE. Use the JSON from the API endpoint and not the Editor.  */
                                 "id": "dsa_ctm_01|e1297595-c800-4f29-820f-5d69d471851c", /* FEATURED_QUESTION_UPDATE remember to add question ID to question part ID! */

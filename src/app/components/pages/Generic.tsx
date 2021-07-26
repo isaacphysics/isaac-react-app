@@ -39,7 +39,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                     <div className="question-actions question-actions-leftmost mt-3">
                         <ShareLink linkUrl={`/pages/${doc.id}`}/>
                     </div>
-                    <div className="question-actions mt-3 not_mobile">
+                    <div className="question-actions mt-3 not-mobile">
                         <PrintButton/>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../servi
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
-import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
@@ -25,6 +25,7 @@ import {FastTrackProgress} from "../elements/FastTrackProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import queryString from "query-string";
+import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -87,18 +88,21 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
                 <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`/questions/${questionId}`}/>
+                    <div className="not-mobile">
+                        <EditContentButton doc={doc} />
                     </div>
-                    <div className="question-actions mt-3 not_mobile">
-                        <PrintButton questionPage={true}/>
+                    <div className="mt-3 mr-sm-1 ml-auto">
+                        <UserContextPicker className="no-print text-right" />
+                    </div>
+                    <div className="question-actions">
+                        <ShareLink linkUrl={`/questions/${questionId}`} />
+                    </div>
+                    <div className="question-actions not-mobile">
+                        <PrintButton questionPage />
                     </div>
                 </div>
                 <Row className="question-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
-                        <TempExamBoardPicker className="no-print text-right"/>
-
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
                             {isTeacher(user) && <React.Fragment>
                                 <strong>
@@ -119,6 +123,8 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                                 this question
                             </RS.Button>.
                         </div>}
+
+                        <IntendedAudienceWarningBanner doc={doc} />
 
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc}/>

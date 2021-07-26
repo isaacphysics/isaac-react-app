@@ -1,4 +1,5 @@
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
+import {Role} from "../../IsaacApiTypes";
 
 export function isLoggedIn(user?: PotentialUser | null): user is LoggedInUser {
     return user ? user.loggedIn : false;
@@ -35,6 +36,15 @@ export function isEventLeaderOrStaff(user?: PotentialUser | null): boolean {
 export function isAdminOrEventManager(user?: PotentialUser | null): boolean {
     return isAdmin(user) || isEventManager(user);
 }
+
+export const roleRequirements: Record<Role, (u: PotentialUser | null) => boolean> = {
+    "STUDENT": isLoggedIn,
+    "TEACHER": isTeacher,
+    "EVENT_LEADER": isEventLeaderOrStaff,
+    "CONTENT_EDITOR": isStaff,
+    "EVENT_MANAGER": isEventManager,
+    "ADMIN": isAdmin
+};
 
 export function extractTeacherName(teacher: {givenName?: string; familyName?: string} | null): string | null {
     if (null == teacher) {

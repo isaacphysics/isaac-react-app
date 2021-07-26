@@ -87,7 +87,8 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
 
 export const showWildcard = (board: GameboardDTO) => {
     const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
-    return board?.id && re.test(board.id)
+    const isaacPhysicsBoard = board?.tags?.includes("ISAAC_BOARD") && SITE_SUBJECT === SITE.PHY;
+    return board?.id && (re.test(board.id) || isaacPhysicsBoard)
 };
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {

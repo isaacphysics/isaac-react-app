@@ -3,7 +3,7 @@ import {history} from "./history";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, IsaacQuestionBaseDTO} from "../../IsaacApiTypes";
 import {DOCUMENT_TYPE, EXAM_BOARD, NOT_FOUND} from "./constants";
-import {useCurrentExamBoard} from "./examBoard";
+import {useUserContext} from "./userContext";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import queryString from "query-string";
@@ -134,7 +134,7 @@ export function useFastTrackInformation(
     const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
     const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
     const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
 
     return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, examBoard, canSubmit}
 }
