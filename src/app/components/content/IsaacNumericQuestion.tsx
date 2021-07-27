@@ -172,10 +172,10 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                         <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Units <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
-                                <DropdownToggle caret={noDisplayUnit} disabled={readonly} className={`${noDisplayUnit ? "" : "border-dark"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
+                                <DropdownToggle disabled={readonly || !noDisplayUnit} className={`${noDisplayUnit ? "" : "border-dark display-unit"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
                                     <LaTeX markup={wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}/>
                                 </DropdownToggle>
-                                {noDisplayUnit && <DropdownMenu right>
+                                <DropdownMenu right>
                                     {selectedUnits.map((unit) =>
                                         <DropdownItem key={wrapUnitForSelect(unit)}
                                             data-unit={unit || 'None'}
@@ -184,7 +184,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                             <LaTeX markup={wrapUnitForSelect(unit)}/>
                                         </DropdownItem>
                                     )}
-                                </DropdownMenu>}
+                                </DropdownMenu>
                             </Dropdown>
                         </Label>
                     </div>}
