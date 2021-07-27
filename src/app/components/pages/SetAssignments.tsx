@@ -8,12 +8,16 @@ import {
     CardSubtitle,
     CardTitle,
     Col,
-    Container, CustomInput,
-    Form,
+    Container,
     Input,
-    Label, Modal,
+    Label,
+    Modal,
+    ModalBody,
+    ModalHeader,
+    ModalFooter,
     Row,
-    Spinner, Table,
+    Spinner,
+    Table,
     UncontrolledTooltip
 } from "reactstrap";
 import {Link, withRouter} from "react-router-dom";
@@ -212,11 +216,11 @@ const Board = (props: BoardProps) => {
                     </div>
                 </td>
             </tr>
-            <RS.Modal isOpen={modal} toggle={toggleAssignModal}>
-                <RS.ModalHeader toggle={toggleAssignModal}>
+            <Modal isOpen={modal} toggle={toggleAssignModal}>
+                <ModalHeader toggle={toggleAssignModal}>
                     Assign / Unassign
-                </RS.ModalHeader>
-                <RS.ModalBody>
+                </ModalHeader>
+                <ModalBody>
                     <p className="px-1"> Manage assignment of groups to gameboard: {board.title}</p>
                     <hr className="text-center" />
                     <AssignGroup {...props} />
@@ -231,11 +235,11 @@ const Board = (props: BoardProps) => {
                         )}</Container>}
                         {!hasAssignedGroups && <p>No groups.</p>}
                     </div>
-                </RS.ModalBody>
-                <RS.ModalFooter>
+                </ModalBody>
+                <ModalFooter>
                     <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
-                </RS.ModalFooter>
-            </RS.Modal>
+                </ModalFooter>
+            </Modal>
         </>
         :
         <Card className="board-card">
