@@ -40,7 +40,7 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
-    boardCompletionSelection, boardLevelsSelection,
+    boardLevelsSelection,
     determineGameboardLevels,
     determineGameboardSubjects,
     formatBoardOwner,
@@ -256,7 +256,7 @@ const Board = (props: BoardProps) => {
                         : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
                     </UncontrolledTooltip>
                     }
-                        </span>
+                </span>
             </button>
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
