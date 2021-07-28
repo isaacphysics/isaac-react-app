@@ -186,6 +186,7 @@ const Board = (props: BoardProps) => {
     const boardLevels = determineGameboardLevels(board);
 
     return boardView == boardViews.table ?
+        // Table view
         <>
             <tr key={board.id} className="board-card">
                 <td>
@@ -210,6 +211,11 @@ const Board = (props: BoardProps) => {
                 <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
                 <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
                 <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
+                <td className="text-center align-middle">
+                    <Button block color="tertiary" style={{fontSize: 15}} className="text-nowrap" onClick={toggleAssignModal}>
+                        {"Assign / Unassign"}
+                    </Button>
+                </td>
                 <td className="text-center align-middle">
                     <div className="table-share-link">
                         <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
@@ -242,6 +248,7 @@ const Board = (props: BoardProps) => {
             </Modal>
         </>
         :
+        // Card view
         <Card className="board-card">
         <CardBody className="pb-4 pt-4">
             <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
@@ -507,7 +514,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>
+                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 3}}>
                                                 <Label className="w-100">Levels
                                                     <Select inputId="levels-select"
                                                             isMulti
@@ -540,11 +547,6 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                             <Table className="mb-0">
                                                 <thead>
                                                 <tr>
-                                                    {/*<th className="align-middle pointer-cursor">*/}
-                                                    {/*    <button className="table-button" onClick={() => boardOrder == BoardOrder.completion ? setBoardOrder(BoardOrder["-completion"]) : setBoardOrder(BoardOrder.completion)}>*/}
-                                                    {/*        Completion {boardOrder == BoardOrder.completion ? sortIcon.ascending : boardOrder == BoardOrder["-completion"] ? sortIcon.descending : sortIcon.sortable}*/}
-                                                    {/*    </button>*/}
-                                                    {/*</th>*/}
                                                     <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
                                                     <th className="align-middle pointer-cursor">
                                                         <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
@@ -563,6 +565,8 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                             Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                                                         </button>
                                                     </th>
+                                                    <th className="text-center align-middle">Assignments</th>
+                                                    <th className="text-center align-middle">Share</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
