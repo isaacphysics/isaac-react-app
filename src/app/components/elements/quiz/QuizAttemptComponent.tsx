@@ -1,4 +1,10 @@
-import {IsaacQuizDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import {
+    IsaacQuizDTO,
+    IsaacQuizRubricDTO,
+    IsaacQuizSectionDTO,
+    QuestionDTO,
+    QuizAttemptDTO
+} from "../../../../IsaacApiTypes";
 import React from "react";
 import {isDefined} from "../../../services/miscUtils";
 import {extractTeacherName} from "../../../services/user";
@@ -9,13 +15,14 @@ import {QuizAttemptContext} from "../../content/QuizQuestion";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
-import {Col, Row} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {below, useDeviceSize} from "../../../services/device";
+import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -105,8 +112,23 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
     }
 }
 
+function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
+    const allSections = attempt.quiz?.children;
+    const rubric = allSections?.filter(section => section["type"] === "isaacQuizRubric")[0] as IsaacQuizRubricDTO;
+    if (rubric) {
+        return <div>
+            <IsaacContentValueOrChildren value={rubric.value}>
+                {rubric.children}
+            </IsaacContentValueOrChildren>
+        </div>
+    } else {
+        return <div/>
+    }
+}
+
 function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
-    const sections = attempt.quiz?.children;
+    const allSections = attempt.quiz?.children;
+    const sections = allSections?.filter(section => section["type"] === "isaacQuizSection");
     const section = sections && sections[page - 1];
     return section ?
         <Row className="question-content-container">
@@ -137,7 +159,8 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview}: QuizAttemptProp
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
                                    intermediateCrumbs={crumbs}/>;
     } else {
-        const sections = attempt.quiz?.children;
+        const allSections = attempt.quiz?.children;
+        const sections = allSections?.filter(section => section["type"] === "isaacQuizSection");
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
@@ -171,6 +194,7 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
         {page === null ?
             <div className="mt-4">
                 <QuizHeader {...props} />
+                <QuizRubric {...props}/>
                 <QuizContents {...props} />
             </div>
             :

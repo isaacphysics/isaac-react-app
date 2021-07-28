@@ -168,6 +168,9 @@ export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
 export interface IsaacQuizSectionDTO extends SeguePageDTO {
 }
 
+export interface IsaacQuizRubricDTO extends SeguePageDTO {
+}
+
 export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
     multiLineEntry?: boolean;
     preserveTrailingWhitespace?: boolean;

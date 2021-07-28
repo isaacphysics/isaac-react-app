@@ -45,7 +45,9 @@ export function useQuizSections(attempt: QuizAttemptDTO | null) {
     return useMemo(() => {
         const sections: { [id: string]: IsaacQuizSectionDTO } = {};
         attempt?.quiz?.children?.forEach(section => {
-            sections[section.id as string] = section as IsaacQuizSectionDTO;
+            if (section.type === "isaacQuizSection") {
+                sections[section.id as string] = section as IsaacQuizSectionDTO;
+            }
         });
         return sections;
     }, [attempt?.quiz]);
