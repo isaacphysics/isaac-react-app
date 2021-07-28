@@ -1,6 +1,5 @@
 import {
     IsaacQuizDTO,
-    IsaacQuizRubricDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAttemptDTO
@@ -113,8 +112,7 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
 }
 
 function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
-    const allSections = attempt.quiz?.children;
-    const rubric = allSections?.filter(section => section["type"] === "isaacQuizRubric")[0] as IsaacQuizRubricDTO;
+    const rubric = attempt.quiz?.rubric;
     if (rubric) {
         return <div>
             <IsaacContentValueOrChildren value={rubric.value}>
