@@ -61,7 +61,7 @@ export const AdminContentErrors = () => {
                 <Row>
                     <Col lg={4} className="mb-2">
                         <Label className="w-100">
-                            Filter error messages <Input type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error type"/>
+                            Filter errors <Input type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
                         </Label>
                     </Col>
                 </Row>
