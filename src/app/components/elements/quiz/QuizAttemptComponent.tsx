@@ -125,8 +125,7 @@ function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
 }
 
 function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
-    const allSections = attempt.quiz?.children;
-    const sections = allSections?.filter(section => section["type"] === "isaacQuizSection");
+    const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
     return section ?
         <Row className="question-content-container">
@@ -157,8 +156,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview}: QuizAttemptProp
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
                                    intermediateCrumbs={crumbs}/>;
     } else {
-        const allSections = attempt.quiz?.children;
-        const sections = allSections?.filter(section => section["type"] === "isaacQuizSection");
+        const sections = attempt.quiz?.children;
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
