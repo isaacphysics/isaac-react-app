@@ -2,7 +2,7 @@
 
 // Manually added/modified parts
 
-import {CODE_LANGUAGE, EXAM_BOARD} from "./app/services/constants";
+import {PROGRAMMING_LANGUAGE, EXAM_BOARD} from "./app/services/constants";
 
 export interface IsaacCardDTO extends ContentDTO {
     image?: ImageDTO;
@@ -467,7 +467,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     schoolId?: string;
     role?: Role;
     schoolOther?: string;
-    codeLanguage?: CODE_LANGUAGE;
+    programmingLanguage?: PROGRAMMING_LANGUAGE;
     examBoard?: EXAM_BOARD;
     firstLogin?: boolean;
     lastUpdated?: Date;

@@ -1,6 +1,6 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
-import {CODE_LANGUAGE, codeLanguagesMap, EXAM_BOARD, UserFacingRole} from "../../../services/constants";
+import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, EXAM_BOARD, UserFacingRole} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {allRequiredInformationIsPresent, validateEmail, validateExamBoard,} from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -144,25 +144,25 @@ export const UserDetails = (props: UserDetailsProps) => {
         {SITE_SUBJECT === SITE.CS && <Row className="mt-3">
             <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2 form-required" htmlFor="code-language-select">
-                        Code language
+                    <Label className="d-inline-block pr-2 form-required" htmlFor="programming-language-select">
+                        Programming language
                     </Label>
                     <Input
-                        type="select" name="select" id="code-language-select"
-                        value={userToUpdate.codeLanguage}
+                        type="select" name="select" id="programming-language-select"
+                        value={userToUpdate.programmingLanguage}
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                             setUserToUpdate(
-                                Object.assign({}, userToUpdate, {codeLanguage: event.target.value})
+                                Object.assign({}, userToUpdate, {programmingLanguage: event.target.value})
                             )
                         }
                         invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
                     >
                         <option value={undefined}></option>
-                        <option value={CODE_LANGUAGE.JAVASCRIPT}>{codeLanguagesMap[CODE_LANGUAGE.JAVASCRIPT]}</option>
-                        <option value={CODE_LANGUAGE.PYTHON}>{codeLanguagesMap[CODE_LANGUAGE.PYTHON]}</option>
-                        <option value={CODE_LANGUAGE.PHP}>{codeLanguagesMap[CODE_LANGUAGE.PHP]}</option>
-                        <option value={CODE_LANGUAGE.CSHARP}>{codeLanguagesMap[CODE_LANGUAGE.CSHARP]}</option>
-                        <option value={CODE_LANGUAGE.SQL}>{codeLanguagesMap[CODE_LANGUAGE.SQL]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.JAVASCRIPT}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVASCRIPT]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.PHP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PHP]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.SQL}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.SQL]}</option>
                     </Input>
                 </FormGroup>
             </Col>

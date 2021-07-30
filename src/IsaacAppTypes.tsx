@@ -16,7 +16,7 @@ import {
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
-    ACTION_TYPE, CODE_LANGUAGE,
+    ACTION_TYPE, PROGRAMMING_LANGUAGE,
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
@@ -572,7 +572,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
-export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean; examBoard?: EXAM_BOARD; codeLanguage?: CODE_LANGUAGE};
+export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean; examBoard?: EXAM_BOARD; programmingLanguage?: PROGRAMMING_LANGUAGE};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;

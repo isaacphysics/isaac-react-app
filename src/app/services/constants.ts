@@ -537,7 +537,7 @@ export enum ACTION_TYPE {
     QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS = "QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS",
 }
 
-export enum CODE_LANGUAGE {
+export enum PROGRAMMING_LANGUAGE {
     JAVASCRIPT = "JAVASCRIPT",
     PYTHON = "PYTHON",
     PHP = "PHP",
@@ -547,13 +547,13 @@ export enum CODE_LANGUAGE {
     NONE = "",
 }
 
-export const codeLanguagesMap: {[language: string]: string} = {
-    [CODE_LANGUAGE.JAVASCRIPT]: "Javascript",
-    [CODE_LANGUAGE.PYTHON]: "Python",
-    [CODE_LANGUAGE.PHP]: "PHP",
-    [CODE_LANGUAGE.CSHARP]: "C#",
-    [CODE_LANGUAGE.PLAINTEXT]: "plaintext",
-    [CODE_LANGUAGE.SQL]: "SQL",
+export const programmingLanguagesMap: {[language: string]: string} = {
+    [PROGRAMMING_LANGUAGE.JAVASCRIPT]: "Javascript",
+    [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
+    [PROGRAMMING_LANGUAGE.PHP]: "PHP",
+    [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
+    [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
+    [PROGRAMMING_LANGUAGE.SQL]: "SQL",
 };
 
 // EXAM BOARDS

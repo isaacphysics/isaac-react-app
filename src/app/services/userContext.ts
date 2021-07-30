@@ -1,5 +1,5 @@
 import {
-    CODE_LANGUAGE,
+    PROGRAMMING_LANGUAGE,
     DOCUMENT_TYPE,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
@@ -26,7 +26,7 @@ interface UserContext {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
-    codeLanguage: CODE_LANGUAGE;
+    programmingLanguage: PROGRAMMING_LANGUAGE;
 }
 
 export function useUserContext(): UserContext {
@@ -46,14 +46,14 @@ export function useUserContext(): UserContext {
     }
 
     // Code Language
-    let codeLanguage;
+    let programmingLanguage;
     if (SITE_SUBJECT === SITE.PHY) {
-        codeLanguage = CODE_LANGUAGE.NONE;
-    } else if (user && isDefined(user.codeLanguage)) {
-        codeLanguage = user.codeLanguage;
+        programmingLanguage = PROGRAMMING_LANGUAGE.NONE;
+    } else if (user && isDefined(user.programmingLanguage)) {
+        programmingLanguage = user.programmingLanguage;
     } else {
-        const defaultCodeLanguage = CODE_LANGUAGE.PYTHON;
-        codeLanguage = defaultCodeLanguage;
+        const defaultProgrammingLanguage = PROGRAMMING_LANGUAGE.PYTHON;
+        programmingLanguage = defaultProgrammingLanguage;
     }
 
     // Stage
@@ -61,7 +61,7 @@ export function useUserContext(): UserContext {
 
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
 
-    return {examBoard, stage, showOtherContent, codeLanguage};
+    return {examBoard, stage, showOtherContent, programmingLanguage};
 }
 
 const EXAM_BOARD_ITEM_OPTIONS = [
