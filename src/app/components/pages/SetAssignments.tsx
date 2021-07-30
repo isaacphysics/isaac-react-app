@@ -56,7 +56,6 @@ import {isMobile} from "../../services/device";
 import Select from "react-select";
 import {multiSelectOnChange} from "../../services/gameboardBuilder";
 import {sortIcon} from "../../services/constants";
-import subject from "../../services/subject";
 
 enum boardViews {
     "table" = "Table View",
