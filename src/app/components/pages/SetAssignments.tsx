@@ -56,6 +56,7 @@ import {isMobile} from "../../services/device";
 import Select from "react-select";
 import {multiSelectOnChange} from "../../services/gameboardBuilder";
 import {sortIcon} from "../../services/constants";
+import subject from "../../services/subject";
 
 enum boardViews {
     "table" = "Table View",
@@ -223,7 +224,11 @@ const Board = (props: BoardProps) => {
                 </td>
             </tr>
             <Modal isOpen={modal} toggle={toggleAssignModal}>
-                <ModalHeader toggle={toggleAssignModal}>
+                <ModalHeader close={
+                    <button className="close" onClick={toggleAssignModal}>
+                            {"Close"}
+                    </button>
+                }>
                     Assign / Unassign
                 </ModalHeader>
                 <ModalBody>
@@ -305,6 +310,13 @@ enum boardCreators {
     "someoneelse" = "Someone else"
 }
 
+enum boardSubjects {
+    "all" = "All",
+    "physics" = "Physics",
+    "maths" = "Maths",
+    "chemistry" = "Chemistry"
+}
+
 enum BoardLimit {
     "six" = "6",
     "eighteen" = "18",
@@ -343,6 +355,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
     const [boardView, setBoardView] = useState(isMobile() ? boardViews.card : boardViews.table);
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
+    const [boardSubject, setBoardSubject] = useState<boardSubjects>(boardSubjects.all);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
     const [levels, setLevels] = useState<string[]>([]);
 
@@ -514,7 +527,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 3}}>
+                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>
                                                 <Label className="w-100">Levels
                                                     <Select inputId="levels-select"
                                                             isMulti
@@ -533,14 +546,20 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                     />
                                                 </Label>
                                             </Col>}
-                                            <Col sm={6} lg={SITE_SUBJECT == SITE.PHY ? 2 : {size: 2, offset: 4}}>
-                                            <Label className="w-100">
-                                                Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
-                                                {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                                            </Input>
-                                            </Label>
-                                        </Col>
-
+                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={2}>
+                                                <Label className="w-100">
+                                                    Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as boardSubjects)}>
+                                                    {Object.values(boardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+                                                </Input>
+                                                </Label>
+                                            </Col>}
+                                            <Col lg={SITE_SUBJECT == SITE.PHY ? 2 : {size: 2, offset: 6}}>
+                                                <Label className="w-100">
+                                                    Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
+                                                    {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                                                    </Input>
+                                                </Label>
+                                            </Col>
                                         </Row>
 
                                         <div className="overflow-auto mt-3">
@@ -573,6 +592,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                 {boards.boards
                                                     .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
                                                         && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                                                        && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
                                                         && (boardLevelsSelection(board, levels)))
                                                     .map(board =>
                                                         <Board
