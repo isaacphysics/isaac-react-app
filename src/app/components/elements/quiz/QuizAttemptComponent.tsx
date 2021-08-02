@@ -65,8 +65,7 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                 </table>;
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
-        return <React.Fragment>
-            <div><TrustedMarkdown markdown={(attempt.quiz as IsaacQuizDTO).rubric || ""}></TrustedMarkdown></div>
+        return <div>
             <h4>Quiz sections</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
@@ -81,7 +80,7 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                     </li>;
                 })}
             </ul>
-        </React.Fragment>;
+        </div>;
     }
 }
 
