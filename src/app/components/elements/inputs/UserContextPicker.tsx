@@ -1,7 +1,7 @@
 import React from "react";
 import {CustomInput, FormGroup, Input, Label} from "reactstrap";
 import {getFilteredExamBoardOptions, getFilteredStages, useUserContext} from "../../../services/userContext";
-import {EXAM_BOARD, EXAM_BOARD_NULL_OPTIONS, STAGE} from "../../../services/constants";
+import {EXAM_BOARD, EXAM_BOARD_NULL_OPTIONS, STAGE, STAGE_NULL_OPTIONS} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {
     setTransientExamBoardPreference,
@@ -52,10 +52,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.stage}
                 onChange={e => {
                     if (betaFeature?.AUDIENCE_CONTEXT) {
-                        history.push({search: queryString.stringify(
-                            {...qParams, stage: e.target.value},
-                            {encode: false}
-                        )});
+                        const newParams = {...qParams, stage: e.target.value};
+                        if (STAGE_NULL_OPTIONS.has(e.target.value as STAGE)) {delete newParams.stage;}
+                        history.push({search: queryString.stringify(newParams, {encode: false})});
                     }
                     dispatch(setTransientStagePreference(e.target.value as STAGE));
                 }}
@@ -75,10 +74,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.examBoard}
                 onChange={e => {
                     if (betaFeature?.AUDIENCE_CONTEXT) {
-                        history.push({search: queryString.stringify(
-                            {...qParams, examBoard: e.target.value.toLowerCase()},
-                            {encode: false}
-                        )});
+                        const newParams = {...qParams, examBoard: e.target.value.toLowerCase()};
+                        if (EXAM_BOARD_NULL_OPTIONS.has(e.target.value as EXAM_BOARD)) {delete newParams.examBoard;}
+                        history.push({search: queryString.stringify(newParams, {encode: false})});
                     }
                     dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
                 }}

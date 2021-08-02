@@ -21,6 +21,7 @@ import {useQueryParams} from "./reactRouterExtension";
 import {isDefined} from "./miscUtils";
 import {history} from "./history";
 import queryString from "query-string";
+import {useEffect} from "react";
 
 const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUBJECT];
 
@@ -37,7 +38,7 @@ export function useUserContext(): UserContext {
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
 
     // Exam Board
-    let examBoard;
+    let examBoard: EXAM_BOARD;
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
     } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard.toUpperCase() as EXAM_BOARD)) {
@@ -50,7 +51,7 @@ export function useUserContext(): UserContext {
     }
 
     // Stage
-    let stage;
+    let stage: STAGE;
     if (qParams.stage && Object.values(STAGE).includes(qParams.stage as STAGE)) {
         stage = qParams.stage as STAGE;
     } else if (isDefined(transientUserContext.stage)) {
@@ -62,12 +63,15 @@ export function useUserContext(): UserContext {
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
 
     // Update query params
-    if (betaFeature?.AUDIENCE_CONTEXT && (stage !== qParams.stage || examBoard !== qParams.examBoard?.toUpperCase())) {
-        history.push({search: queryString.stringify(
-            {...qParams, stage: stage, examBoard: examBoard.toLowerCase()},
-            {encode: false}
-        )});
-    }
+    useEffect(() => {
+        if (betaFeature?.AUDIENCE_CONTEXT && (stage !== qParams.stage || examBoard !== qParams.examBoard?.toUpperCase())) {
+            console.log("l")
+            const newParams = {...qParams, stage, examBoard: examBoard.toLowerCase()};
+            if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;}
+            if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;}
+            history.push({search: queryString.stringify(newParams, {encode: false})});
+        }
+    }, []);
 
     return {examBoard, stage, showOtherContent};
 }
