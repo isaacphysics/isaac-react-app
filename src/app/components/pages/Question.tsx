@@ -95,7 +95,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                         <UserContextPicker className="no-print text-right" />
                     </div>
                     <div className="question-actions">
-                        <ShareLink linkUrl={`/questions/${questionId}`} />
+                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} />
                     </div>
                     <div className="question-actions not-mobile">
                         <PrintButton questionPage />

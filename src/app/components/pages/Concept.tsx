@@ -50,7 +50,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                         <UserContextPicker className="no-print text-right" />
                     </div>
                     <div className="question-actions">
-                        <ShareLink linkUrl={`/concepts/${conceptId}`} />
+                        <ShareLink linkUrl={`/concepts/${conceptId}${location.search || ""}`} />
                     </div>
                     <div className="question-actions not-mobile">
                         <PrintButton />
