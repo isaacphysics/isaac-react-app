@@ -65,7 +65,6 @@ export function useUserContext(): UserContext {
     // Update query params
     useEffect(() => {
         if (betaFeature?.AUDIENCE_CONTEXT && (stage !== qParams.stage || examBoard !== qParams.examBoard?.toUpperCase())) {
-            console.log("l")
             const newParams = {...qParams, stage, examBoard: examBoard.toLowerCase()};
             if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;}
             if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;}

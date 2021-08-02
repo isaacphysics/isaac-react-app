@@ -6,6 +6,7 @@ import {useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {useDispatch} from "react-redux";
 import {closeActiveModal, openActiveModal} from '../../state/actions';
+import {EXAM_BOARD} from "../../services/constants";
 
 interface IsaacTabsProps {
     doc: {children: {title?: string; children?: ContentDTO[]}[]};
@@ -34,7 +35,7 @@ export const IsaacTabs = (props: any) => {
     const {examBoard} = useUserContext();
     const tabTitles = Object.keys(tabTitlesToContent);
     const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
-    if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab) {
+    if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab && [EXAM_BOARD.AQA, EXAM_BOARD.OCR].includes(examBoard)) {
         return <div className="examboard-special-tabs">
             <button className="expand-button" onClick={() => expandToModal(tabTitlesToContent[examBoard])}>+</button>
             {tabTitlesToContent[examBoard]}
