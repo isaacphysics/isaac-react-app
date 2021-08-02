@@ -40,8 +40,8 @@ export function useUserContext(): UserContext {
     let examBoard;
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
-    } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard as EXAM_BOARD)) {
-        examBoard = qParams.examBoard as EXAM_BOARD;
+    } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard.toUpperCase() as EXAM_BOARD)) {
+        examBoard = qParams.examBoard.toUpperCase() as EXAM_BOARD;
     } else if (!user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard) || (betaFeature?.AUDIENCE_CONTEXT && transientUserContext?.examBoard !== undefined)) {
         const defaultExamBoard = betaFeature?.AUDIENCE_CONTEXT ? EXAM_BOARD.NONE : EXAM_BOARD.AQA;
         examBoard = transientUserContext?.examBoard ?? defaultExamBoard;
@@ -62,8 +62,11 @@ export function useUserContext(): UserContext {
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
 
     // Update query params
-    if (betaFeature?.AUDIENCE_CONTEXT && (stage !== qParams.stage || examBoard !== qParams.examBoard)) {
-        history.push({search: queryString.stringify({...qParams, examBoard, stage}, {encode: false})});
+    if (betaFeature?.AUDIENCE_CONTEXT && (stage !== qParams.stage || examBoard !== qParams.examBoard?.toUpperCase())) {
+        history.push({search: queryString.stringify(
+            {...qParams, stage: stage, examBoard: examBoard.toLowerCase()},
+            {encode: false}
+        )});
     }
 
     return {examBoard, stage, showOtherContent};

@@ -52,7 +52,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.stage}
                 onChange={e => {
                     if (betaFeature?.AUDIENCE_CONTEXT) {
-                        history.push({search: queryString.stringify({...qParams, stage: e.target.value}, {encode: false})});
+                        history.push({search: queryString.stringify(
+                            {...qParams, stage: e.target.value},
+                            {encode: false}
+                        )});
                     }
                     dispatch(setTransientStagePreference(e.target.value as STAGE));
                 }}
@@ -72,7 +75,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.examBoard}
                 onChange={e => {
                     if (betaFeature?.AUDIENCE_CONTEXT) {
-                        history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
+                        history.push({search: queryString.stringify(
+                            {...qParams, examBoard: e.target.value.toLowerCase()},
+                            {encode: false}
+                        )});
                     }
                     dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
                 }}
