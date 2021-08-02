@@ -137,7 +137,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
 
     const helpTooltipId = useMemo(() => `numeric-input-help-${uuid.v4()}`, []);
 
-    const noDisplayUnit = doc.displayUnit == null || doc.displayUnit === ""
+    const noDisplayUnit = doc.displayUnit == null || doc.displayUnit === "";
 
     return (
         <div className="numeric-question">
@@ -170,7 +170,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                     </div>
                     {(doc.requireUnits || doc.displayUnit) && <div className="unit-selection w-100 w-sm-50 w-md-100 w-lg-25">
                         <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
-                            Units <br/>
+                            Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle disabled={readonly || !noDisplayUnit} className={`${noDisplayUnit ? "" : "border-dark display-unit"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
                                     <LaTeX markup={wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}/>
