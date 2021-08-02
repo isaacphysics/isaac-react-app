@@ -12,10 +12,14 @@ import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
 import {isLoggedIn, isStaff} from "../../../services/user";
+import {useQueryParams} from "../../../services/reactRouterExtension";
+import {history} from "../../../services/history";
+import queryString from "query-string";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useDispatch();
     const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
+    const qParams = useQueryParams();
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
@@ -46,7 +50,12 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-stage-select"
                 aria-label={hideLabels ? "Stage" : undefined}
                 value={userContext.stage}
-                onChange={e => dispatch(setTransientStagePreference(e.target.value as STAGE))}
+                onChange={e => {
+                    if (betaFeature?.AUDIENCE_CONTEXT) {
+                        history.push({search: queryString.stringify({...qParams, stage: e.target.value}, {encode: false})});
+                    }
+                    dispatch(setTransientStagePreference(e.target.value as STAGE));
+                }}
             >
                 {getFilteredStages(true).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
@@ -61,7 +70,12 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-exam-board-select"
                 aria-label={hideLabels ? "Exam Board" : undefined}
                 value={userContext.examBoard}
-                onChange={e => dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))}
+                onChange={e => {
+                    if (betaFeature?.AUDIENCE_CONTEXT) {
+                        history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
+                    }
+                    dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
+                }}
             >
                 {betaFeature?.AUDIENCE_CONTEXT && <option value={EXAM_BOARD.NONE}>None</option>}
                 {getFilteredExamBoardOptions([userContext.stage], false, betaFeature?.AUDIENCE_CONTEXT).map(item =>

@@ -19,6 +19,8 @@ import {PotentialUser} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {useQueryParams} from "./reactRouterExtension";
 import {isDefined} from "./miscUtils";
+import {history} from "./history";
+import queryString from "query-string";
 
 const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUBJECT];
 
@@ -58,6 +60,11 @@ export function useUserContext(): UserContext {
     }
 
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
+
+    // Update query params
+    if (betaFeature?.AUDIENCE_CONTEXT && (stage !== qParams.stage || examBoard !== qParams.examBoard)) {
+        history.push({search: queryString.stringify({...qParams, examBoard, stage}, {encode: false})});
+    }
 
     return {examBoard, stage, showOtherContent};
 }
