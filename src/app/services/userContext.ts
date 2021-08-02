@@ -17,6 +17,8 @@ import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {PotentialUser} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
+import {useQueryParams} from "./reactRouterExtension";
+import {isDefined} from "./miscUtils";
 
 const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUBJECT];
 
@@ -28,6 +30,7 @@ interface UserContext {
 
 export function useUserContext(): UserContext {
     const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
+    const qParams = useQueryParams(true);
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
 
@@ -35,6 +38,8 @@ export function useUserContext(): UserContext {
     let examBoard;
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
+    } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard as EXAM_BOARD)) {
+        examBoard = qParams.examBoard as EXAM_BOARD;
     } else if (!user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard) || (betaFeature?.AUDIENCE_CONTEXT && transientUserContext?.examBoard !== undefined)) {
         const defaultExamBoard = betaFeature?.AUDIENCE_CONTEXT ? EXAM_BOARD.NONE : EXAM_BOARD.AQA;
         examBoard = transientUserContext?.examBoard ?? defaultExamBoard;
@@ -43,7 +48,14 @@ export function useUserContext(): UserContext {
     }
 
     // Stage
-    const stage = transientUserContext?.stage ?? defaultStage;
+    let stage;
+    if (qParams.stage && Object.values(STAGE).includes(qParams.stage as STAGE)) {
+        stage = qParams.stage as STAGE;
+    } else if (isDefined(transientUserContext.stage)) {
+        stage = transientUserContext.stage;
+    } else {
+        stage = defaultStage;
+    }
 
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
 
