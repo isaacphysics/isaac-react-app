@@ -79,23 +79,40 @@ export const HomepageCS = () => {
                     </Row>}
                 <Container>
                     <h3>Show me</h3>
-                    <Row>
-                        <Col size={6} className="pt-3 text-center">
+                    <Container className="d-flex flex-wrap">
+                        <div className="flex-fill p-2">
                             <Button size="lg" tag={Link} to={"/"} color="secondary" block>
                                 GCSE resources
                             </Button>
-                        </Col>
-                        <Col size={6} className="pt-3 text-center">
+                        </div>
+                        <div className="flex-fill p-2">
                             <Button size="lg" tag={Link} to={"/"} color="secondary" block>
                                 A Level resources
                             </Button>
-                        </Col>
-                        <Col size={6} className="pt-3 text-center">
-                            <Button size="lg" tag={Link} to={'/events'} color="primary" outline block>
+                        </div>
+                        <div className="flex-fill p-2">
+                            <Button size="lg" tag={Link} to={"/events"} color="primary" outline block>
                                 Events
                             </Button>
-                        </Col>
-                    </Row>
+                        </div>
+                    </Container>
+                    {/*<Row>*/}
+                    {/*    <Col size={4} className="pt-3 text-center">*/}
+                    {/*        <Button size="lg" tag={Link} to={"/"} color="secondary" block>*/}
+                    {/*            GCSE resources*/}
+                    {/*        </Button>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col size={4} className="pt-3 text-center">*/}
+                    {/*        <Button size="lg" tag={Link} to={"/"} color="secondary" block>*/}
+                    {/*            A Level resources*/}
+                    {/*        </Button>*/}
+                    {/*    </Col>*/}
+                    {/*    <Col size={4} className="pt-3 text-center">*/}
+                    {/*        <Button size="lg" tag={Link} to={'/events'} color="primary" outline block>*/}
+                    {/*            Events*/}
+                    {/*        </Button>*/}
+                    {/*    </Col>*/}
+                    {/*</Row>*/}
                 </Container>
             </Container>
         </section>
