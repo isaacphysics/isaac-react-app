@@ -11,6 +11,8 @@ import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {SubjectInterestTableInput} from "../inputs/SubjectInterestTableInput";
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {AppState} from "../../../state/reducers";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -23,6 +25,7 @@ interface UserDetailsProps {
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
+    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
@@ -141,7 +144,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </div>
             </Col>}
         </Row>
-        {SITE_SUBJECT === SITE.CS && <Row className="mt-3">
+        {SITE_SUBJECT === SITE.CS && betaFeature?.AUDIENCE_CONTEXT && <Row className="mt-3">
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2 form-required" htmlFor="programming-language-select">
