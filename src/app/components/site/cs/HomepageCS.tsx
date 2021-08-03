@@ -90,7 +90,7 @@ export const HomepageCS = () => {
                                 A Level resources
                             </Button>
                         </div>
-                        <div className="flex-fill p-2">
+                        <div className="flex-fill w-100 w-md-auto p-2">
                             <Button size="lg" tag={Link} to={"/events"} color="primary" outline block>
                                 Events
                             </Button>
