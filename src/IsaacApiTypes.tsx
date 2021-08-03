@@ -159,6 +159,7 @@ export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
+    rubric?: ContentDTO;
     visibleToStudents?: boolean;
     defaultFeedbackMode?: QuizFeedbackMode;
     total?: number;
