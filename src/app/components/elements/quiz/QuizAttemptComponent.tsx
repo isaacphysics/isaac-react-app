@@ -113,15 +113,11 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
 
 function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
     const rubric = attempt.quiz?.rubric;
-    if (rubric) {
-        return <div>
-            <IsaacContentValueOrChildren value={rubric.value}>
-                {rubric.children}
-            </IsaacContentValueOrChildren>
-        </div>
-    } else {
-        return <div/>
-    }
+    return <div>
+        {rubric && <IsaacContentValueOrChildren value={rubric.value}>
+            {rubric.children}
+        </IsaacContentValueOrChildren>}
+    </div>
 }
 
 function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
