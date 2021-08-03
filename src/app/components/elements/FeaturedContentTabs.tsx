@@ -20,6 +20,19 @@ export function FeaturedContentTabs() {
     return <div className="tabs-featured-question">
         <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={tabOverride.current}>
             {{
+                "Computer Science Journeys": <ShowLoading
+                    until={computerScientist}
+                    thenRender={(cserOfTheMonth) => {
+                        return <div className="computer-scientist-of-the-month mt-4 mb-md-5">
+                            <IsaacContent doc={cserOfTheMonth} />
+                        </div>
+                    }}
+                    ifNotFound={<div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
+                        Unfortunately, we don't currently have a Computer Science Journey to display.<br />
+                        Please check back later!
+                    </div>}
+                />,
+
                 "Featured question": <Row className="feattab-row">
                     <Col md={8} className="feattab-info pl-md-4">
                         <h2 className="h-question-mark">
@@ -68,20 +81,7 @@ export function FeaturedContentTabs() {
                             Explore by topic
                         </Button>
                     </Col>
-                </Row>,
-
-                "Computer Science Journeys": <ShowLoading
-                    until={computerScientist}
-                    thenRender={(cserOfTheMonth) => {
-                        return <div className="computer-scientist-of-the-month mt-4 mb-md-5">
-                            <IsaacContent doc={cserOfTheMonth} />
-                        </div>
-                    }}
-                    ifNotFound={<div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
-                        Unfortunately, we don't currently have a Computer Science Journey to display.<br />
-                        Please check back later!
-                    </div>}
-                />
+                </Row>
             }}
         </Tabs>
     </div>
