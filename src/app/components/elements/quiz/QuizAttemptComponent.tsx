@@ -9,14 +9,13 @@ import {QuizAttemptContext} from "../../content/QuizQuestion";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
-import {Col, Row} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {TempExamBoardPicker} from "../inputs/TempExamBoardPicker";
 import {below, useDeviceSize} from "../../../services/device";
-import { TrustedMarkdown } from "../TrustedMarkdown";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
