@@ -128,6 +128,18 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
     }
 };
 
+type StudentQuizAttemptState = {studentAttempt: QuizAttemptDTO} | {error: string} | null;
+export const studentQuizAttempt = (possibleAttempt: StudentQuizAttemptState = null, action: Action): StudentQuizAttemptState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS:
+            return {studentAttempt: action.studentAttempt};
+        case ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE:
+            return {error: action.error};
+        default:
+            return possibleAttempt;
+    }
+};
+
 type QuizAssignmentState = {assignment: QuizAssignmentDTO} | {error: string} | null;
 export const quizAssignment = (possibleAssignment: QuizAssignmentState = null, action: Action): QuizAssignmentState => {
     switch (action.type) {

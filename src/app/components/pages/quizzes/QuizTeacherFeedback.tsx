@@ -5,7 +5,7 @@ import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
-    loadQuizAssignmentFeedback,
+    loadQuizAssignmentFeedback, loadQuizAttemptFeedback,
     returnQuizToStudent,
     updateQuizAssignmentFeedbackMode
 } from "../../../state/actions/quizzes";
@@ -76,6 +76,10 @@ interface ResultRowProps {
     assignment: QuizAssignmentDTO;
 }
 
+function openStudentFeedback(assignment: QuizAssignmentDTO, userId: number | undefined) {
+    isDefined(assignment?.id) && isDefined(userId) && window.open(`/quiz/attempt/feedback/${assignment.id}/${userId}`, '_blank')
+}
+
 function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [working, setWorking] = useState(false);
@@ -122,6 +126,9 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                     </RS.Button>
                     {!working && dropdownOpen && <div className="py-2 px-3">
                         <RS.Button size="sm" onClick={returnToStudent}>Return to student</RS.Button>
+                    </div>}
+                    {!working && dropdownOpen && <div className="py-2 px-3">
+                        <RS.Button size="sm" onClick={() => openStudentFeedback(assignment, row.user?.id)}>View attempt</RS.Button>
                     </div>}
                 </>
             :   <>

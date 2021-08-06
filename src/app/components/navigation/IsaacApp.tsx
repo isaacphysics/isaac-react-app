@@ -163,6 +163,8 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
                     <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
                     <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
+                    <TrackedRoute exact path="/quiz/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacher} component={QuizAttemptFeedback} />
+                    <TrackedRoute exact path="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacher} component={QuizAttemptFeedback} />
                     <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />
                     <TrackedRoute exact path="/quiz/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />
                     <TrackedRoute exact path="/quiz/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />

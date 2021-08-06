@@ -53,10 +53,13 @@ export function useQuizSections(attempt: QuizAttemptDTO | null) {
 
 export function useCurrentQuizAttempt() {
     const attemptState = useSelector(selectors.quizzes.currentQuizAttempt);
+    const studentAttemptState = useSelector(selectors.quizzes.currentStudentQuizAttempt);
     const error = isDefined(attemptState) && 'error' in attemptState ? attemptState.error : null;
     const attempt = isDefined(attemptState) && 'attempt' in attemptState ? attemptState.attempt : null;
-    const questions = useQuizQuestions(attempt);
-    const sections = useQuizSections(attempt);
+    const studentError = isDefined(studentAttemptState) && 'error' in studentAttemptState ? studentAttemptState.error : null;
+    const studentAttempt = isDefined(studentAttemptState) && 'studentAttempt' in studentAttemptState ? studentAttemptState.studentAttempt : null;
+    const questions = useQuizQuestions(isDefined(studentAttempt) ? studentAttempt : attempt);
+    const sections = useQuizSections(isDefined(studentAttempt) ? studentAttempt : attempt);
 
     const dispatch = useDispatch();
 
@@ -68,5 +71,5 @@ export function useCurrentQuizAttempt() {
         };
     }, [dispatch, questions]);
 
-    return {attempt, questions, sections, error};
+    return {attempt, studentAttempt, questions, sections, error, studentError};
 }
