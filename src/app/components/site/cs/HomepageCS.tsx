@@ -96,23 +96,6 @@ export const HomepageCS = () => {
                             </Button>
                         </div>
                     </Container>
-                    {/*<Row>*/}
-                    {/*    <Col size={4} className="pt-3 text-center">*/}
-                    {/*        <Button size="lg" tag={Link} to={"/"} color="secondary" block>*/}
-                    {/*            GCSE resources*/}
-                    {/*        </Button>*/}
-                    {/*    </Col>*/}
-                    {/*    <Col size={4} className="pt-3 text-center">*/}
-                    {/*        <Button size="lg" tag={Link} to={"/"} color="secondary" block>*/}
-                    {/*            A Level resources*/}
-                    {/*        </Button>*/}
-                    {/*    </Col>*/}
-                    {/*    <Col size={4} className="pt-3 text-center">*/}
-                    {/*        <Button size="lg" tag={Link} to={'/events'} color="primary" outline block>*/}
-                    {/*            Events*/}
-                    {/*        </Button>*/}
-                    {/*    </Col>*/}
-                    {/*</Row>*/}
                 </Container>
             </Container>
         </section>

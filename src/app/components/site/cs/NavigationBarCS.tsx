@@ -19,7 +19,6 @@ export const NavigationBarCS = () => {
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teachers">
-            {/*<LinkItem to="/teachers">Teacher tools</LinkItem>*/}
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
@@ -28,10 +27,8 @@ export const NavigationBarCS = () => {
         </NavigationSection>}
 
         <NavigationSection title="Learn">
-            <LinkItem to="/topics">GCSE topics</LinkItem>
-            <LinkItem to="/topics">A level topics</LinkItem>
-            <LinkItem to="/pages/specification_page_aqa">AQA view</LinkItem>
-            <LinkItem to="/pages/specification_page_ocr">OCR view</LinkItem>
+            <LinkItem to="/topics?stage=gcse">GCSE topics</LinkItem>
+            <LinkItem to="/topics?stage=a_level">A level topics</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
             <LinkItem to="/glossary">Glossary</LinkItem>
             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
