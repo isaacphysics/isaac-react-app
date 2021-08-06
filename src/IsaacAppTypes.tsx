@@ -4,7 +4,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
-    ContentBase,
+    ContentBase, ContentBaseDTO,
     ContentSummaryDTO,
     GameboardDTO,
     GameboardItem,
@@ -866,6 +866,7 @@ export interface BaseTag {
     comingSoon?: string;
     new?: boolean;
     hidden?: boolean;
+    stages?: STAGE[];
 }
 
 export interface Tag extends BaseTag {

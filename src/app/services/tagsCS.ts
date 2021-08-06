@@ -1,4 +1,4 @@
-import {SUBJECTS, TAG_ID, TAG_LEVEL} from "./constants";
+import {STAGE, SUBJECTS, TAG_ID, TAG_LEVEL} from "./constants";
 import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {AbstractBaseTagService} from "./tagsAbstract";
@@ -10,7 +10,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computerScience, title: "Computer Science"},
 
         // Computer science strands
-        {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.computerScience},
+        {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.computerScience, stages: [STAGE.A_LEVEL]},
         {id: TAG_ID.computerSystems, title: "Computer systems", parent: TAG_ID.computerScience},
         {id: TAG_ID.cyberSecurity, title: "Cybersecurity", parent: TAG_ID.computerScience},
         {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.computerScience},
@@ -21,8 +21,8 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.computerScience},
         {id: TAG_ID.programmingFundamentals, title: "Programming fundamentals", parent: TAG_ID.computerScience},
         {id: TAG_ID.programmingParadigms, title: "Programming paradigms", parent: TAG_ID.computerScience},
-        {id: TAG_ID.softwareEngineering, title: "Software engineering", parent: TAG_ID.computerScience},
-        {id: TAG_ID.theoryOfComputation, title: "Theory of Computation", parent: TAG_ID.computerScience},
+        {id: TAG_ID.softwareEngineering, title: "Software engineering", parent: TAG_ID.computerScience, stages: [STAGE.A_LEVEL]},
+        {id: TAG_ID.theoryOfComputation, title: "Theory of Computation", parent: TAG_ID.computerScience, stages: [STAGE.A_LEVEL]},
 
         // Computer networks topics
         {id: TAG_ID.networking, title: "Network fundamentals", parent: TAG_ID.computerNetworks},
