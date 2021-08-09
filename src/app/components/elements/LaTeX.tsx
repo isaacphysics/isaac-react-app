@@ -3,7 +3,13 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {AppState} from "../../state/reducers";
 import {useUserContext} from "../../services/userContext";
-import {FigureNumberingContext, FigureNumbersById, PotentialUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
+import {
+    BooleanNotation,
+    FigureNumberingContext,
+    FigureNumbersById,
+    PotentialUser,
+    UserPreferencesDTO
+} from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
 import he from "he";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -225,7 +231,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: PotentialUser | null, userPreferences : UserPreferencesDTO | null, examBoard: EXAM_BOARD | null, screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: PotentialUser | null, examBoard: EXAM_BOARD | null, booleanNotation : BooleanNotation | null,  screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -262,8 +268,8 @@ export function katexify(html: string, user: PotentialUser | null, userPreferenc
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse;
                 if (SITE_SUBJECT == SITE.CS) {
-                    if (user?.loggedIn && !userPreferences?.BOOLEAN_NOTATION?.BOARD_SPECIFIC) {
-                        macrosToUse = userPreferences?.BOOLEAN_NOTATION?.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
+                    if (user?.loggedIn && booleanNotation && !booleanNotation.BOARD_SPECIFIC) {
+                        macrosToUse = booleanNotation?.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
                     } else {
                         macrosToUse = examBoard == EXAM_BOARD.AQA ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
                     }
@@ -325,14 +331,15 @@ export function katexify(html: string, user: PotentialUser | null, userPreferenc
 
 export function LaTeX({markup}: {markup: string}) {
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = useSelector(selectors.userPreferences.orNull);
+    const booleanNotation = useSelector((state: AppState) => (state?.userPreferences?.BETA_FEATURE?.BOOLEAN_NOTATION &&
+        state?.userPreferences?.BOOLEAN_NOTATION) || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const {examBoard} = useUserContext();
     const figureNumbers = useContext(FigureNumberingContext);
 
     const escapedMarkup = escapeHtml(markup);
-    const katexHtml = katexify(escapedMarkup, user, userPreferences, examBoard, screenReaderHoverText, figureNumbers);
+    const katexHtml = katexify(escapedMarkup, user, examBoard, booleanNotation, screenReaderHoverText, figureNumbers);
 
     return <span dangerouslySetInnerHTML={{__html: katexHtml}} />
 }

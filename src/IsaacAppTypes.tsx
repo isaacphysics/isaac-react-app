@@ -533,6 +533,7 @@ export interface ShortcutResponse {
 export interface UserBetaFeaturePreferences {
     SCREENREADER_HOVERTEXT?: boolean;
     AUDIENCE_CONTEXT?: boolean;
+    BOOLEAN_NOTATION?: boolean;
 }
 
 export interface UserEmailPreferences {

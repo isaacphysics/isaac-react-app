@@ -24,6 +24,7 @@ interface UserDetailsProps {
     setSubjectInterests: (si: SubjectInterests) => void;
     booleanNotation: BooleanNotation;
     setBooleanNotation: (bn: BooleanNotation) => void;
+    allowBooleanNotationOption: boolean;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -33,7 +34,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
-        booleanNotation, setBooleanNotation,
+        booleanNotation, setBooleanNotation, allowBooleanNotationOption,
         submissionAttempted, editingOtherUser
     } = props;
 
@@ -148,7 +149,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
             </Col>}
-            {SITE_SUBJECT === SITE.CS && <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && allowBooleanNotationOption && <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2 form-required" htmlFor="boolean-notation-preference">
                         Boolean logic notation

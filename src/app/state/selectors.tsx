@@ -122,10 +122,6 @@ export const selectors = {
         orNull: (state: AppState) => state?.user || null,
     },
 
-    userPreferences:  {
-        orNull: (state: AppState) => state?.userPreferences || null,
-    },
-
     mainContentId: {
         orDefault: (state: AppState) => state?.mainContentId || "main",
     },
