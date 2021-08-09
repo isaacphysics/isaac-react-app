@@ -1,6 +1,7 @@
 import {
     AdditionalInformation,
-    AugmentedEvent, BooleanNotation,
+    AugmentedEvent,
+    BooleanNotation,
     NOT_FOUND_TYPE,
     SubjectInterests,
     UserEmailPreferences,

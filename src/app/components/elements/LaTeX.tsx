@@ -7,8 +7,7 @@ import {
     BooleanNotation,
     FigureNumberingContext,
     FigureNumbersById,
-    PotentialUser,
-    UserPreferencesDTO
+    PotentialUser
 } from "../../../IsaacAppTypes";
 import {EXAM_BOARD} from "../../services/constants";
 import he from "he";
