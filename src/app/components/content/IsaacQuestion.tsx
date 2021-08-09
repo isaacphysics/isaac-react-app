@@ -30,12 +30,18 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const locked = questionPart?.locked;
     const canSubmit = questionPart?.canSubmit && !locked || false;
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs") && SITE_SUBJECT === SITE.PHY;
+    const tooManySigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_many");
+    const tooFewSigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_few");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
-    const sigFigsFeedback = <p>
+    const tooManySigFigsFeedback = <p>
         Whether your answer is correct or not, it has the wrong number of&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
+
+    const tooFewSigFigsFeedback = <p>
+        We can&apos;t mark this until you provide more sig figs
+    </p>
 
     // Register Question Part in Redux
     useEffect((): (() => void) => {
@@ -79,8 +85,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
                     <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 {validationResponse.explanation && <div className="mb-2">
-                    {sigFigsError ?
-                        sigFigsFeedback :
+                    {tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
                         <IsaacContent doc={validationResponse.explanation}/>
                     }
                 </div>}
