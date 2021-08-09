@@ -79,7 +79,6 @@ export const validateUserGender = (user?: ValidationUser | null) => {
 
 export const validateBooleanNotation = (booleanNotation? : BooleanNotation | null) => {
     // Make sure only one of the possible keys are true at a time
-    console.log(booleanNotation)
     return booleanNotation &&
         ["ENG", "MATH", "BOARD_SPECIFIC"].filter(key => (booleanNotation[key as keyof BooleanNotation] || false)).length === 1;
 }
