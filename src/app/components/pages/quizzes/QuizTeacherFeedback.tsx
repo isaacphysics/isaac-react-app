@@ -5,7 +5,7 @@ import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
-    loadQuizAssignmentFeedback, loadQuizAttemptFeedback,
+    loadQuizAssignmentFeedback,
     returnQuizToStudent,
     updateQuizAssignmentFeedbackMode
 } from "../../../state/actions/quizzes";
@@ -28,7 +28,7 @@ import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {isQuestion} from "../../../services/questions";
 import {API_PATH} from "../../../services/constants";
-import { getQuizAssignmentResultsSummaryCSV } from "../../../state/actions";
+import {getQuizAssignmentResultsSummaryCSV} from "../../../state/actions";
 
 interface QuizTeacherFeedbackProps {
     match: {params: {quizAssignmentId: string}}
