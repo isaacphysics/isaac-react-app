@@ -1,6 +1,6 @@
 import {
     AdditionalInformation,
-    AugmentedEvent,
+    AugmentedEvent, BooleanNotation,
     NOT_FOUND_TYPE,
     SubjectInterests,
     UserEmailPreferences,
@@ -11,6 +11,7 @@ import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {EXAM_BOARD, NOT_FOUND} from "./constants";
 import {SITE_SUBJECT, SITE} from "./siteConstants";
+import {convertExamBoardToOption} from "./gameboardBuilder";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -76,6 +77,13 @@ export const validateUserGender = (user?: ValidationUser | null) => {
     return user && user.gender && user.gender !== "UNKNOWN";
 };
 
+export const validateBooleanNotation = (booleanNotation? : BooleanNotation | null) => {
+    // Make sure only one of the possible keys are true at a time
+    console.log(booleanNotation)
+    return booleanNotation &&
+        ["ENG", "MATH", "BOARD_SPECIFIC"].filter(key => (booleanNotation[key as keyof BooleanNotation] || false)).length === 1;
+}
+
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {
         const now = new Date();
@@ -92,7 +100,8 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
     return user && userPreferences &&
         (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
-        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
+        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST)) &&
+        (SITE_SUBJECT !== SITE.CS || validateBooleanNotation(userPreferences.BOOLEAN_NOTATION));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

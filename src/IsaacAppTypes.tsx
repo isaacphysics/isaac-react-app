@@ -560,10 +560,17 @@ export interface SubjectInterests {
     ENGINEERING_UNI?: boolean;
 }
 
+export interface BooleanNotation {
+    ENG?: boolean,
+    MATH?: boolean,
+    BOARD_SPECIFIC?: boolean
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
+    BOOLEAN_NOTATION?: BooleanNotation;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

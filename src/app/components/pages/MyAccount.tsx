@@ -19,6 +19,7 @@ import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
+    BooleanNotation,
     PotentialUser,
     SubjectInterests,
     UserEmailPreferences,
@@ -134,9 +135,11 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     useEffect(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
         const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
+        const currentBooleanNotation = (userPreferences && userPreferences.BOOLEAN_NOTATION) ? userPreferences.BOOLEAN_NOTATION: {};
         const currentUserPreferences = {
             EMAIL_PREFERENCE: currentEmailPreferences,
             SUBJECT_INTEREST: currentSubjectInterests,
+            BOOLEAN_NOTATION: currentBooleanNotation
         };
 
         setEmailPreferences(currentEmailPreferences);
@@ -159,6 +162,17 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setSubjectInterests(newSubjectInterests: SubjectInterests) {
         setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
+    }
+
+    function setBooleanNotation(newBooleanNotation: BooleanNotation) {
+        // Makes a new object, with all the boolean notation flags being false apart
+        // from those that are set as true in the newBooleanNotation parameter
+        const fullNewBooleanNotation = ["ENG", "MATH", "BOARD_SPECIFIC"]
+            .reduce((acc, key) => acc[key as keyof BooleanNotation] ? acc : {...acc, [key]: false}, newBooleanNotation);
+
+        // fullNewBooleanNotation might contain more than one true flag, but this is
+        // checked in the validation step
+        setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: fullNewBooleanNotation});
     }
 
     // Form's submission method
@@ -246,6 +260,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
                                     setSubjectInterests={setSubjectInterests}
+                                    booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}}
+                                    setBooleanNotation={setBooleanNotation}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
