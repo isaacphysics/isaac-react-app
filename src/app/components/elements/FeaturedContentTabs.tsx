@@ -15,10 +15,11 @@ export function FeaturedContentTabs() {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(fetchFragment(COMPUTER_SCIENTIST_FRAGMENT_ID));}, [dispatch]);
     const computerScientist = useSelector((state: AppState) => state?.fragments && state.fragments[COMPUTER_SCIENTIST_FRAGMENT_ID]);
-    const tabOverride = useRef(1 + Math.floor(Math.random() * 2)); // useRef so that it does not change on re-render
+    //const tabOverride = useRef(1 + Math.floor(Math.random() * 2)); // useRef so that it does not change on re-render
 
     return <div className="tabs-featured-question">
-        <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={tabOverride.current}>
+        {/* use tabOverride.current below for random tab on page refresh */}
+        <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={1}>
             {{
                 "Computer Science Journeys": <ShowLoading
                     until={computerScientist}
