@@ -40,8 +40,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     </p>;
 
     const tooFewSigFigsFeedback = <p>
-        We can&apos;t mark this until you provide more sig figs
-    </p>
+        We can&apos;t mark this until you provide more&nbsp;
+        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+    </p>;
 
     // Register Question Part in Redux
     useEffect((): (() => void) => {
