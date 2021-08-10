@@ -218,6 +218,7 @@ export interface QuizAttemptDTO extends IHasQuizSummary {
     completedDate?: Date;
     quiz?: IsaacQuizDTO;
     quizAssignment?: QuizAssignmentDTO;
+    userSummary?: UserSummaryDTO;
     feedbackMode?: QuizFeedbackMode;
 }
 

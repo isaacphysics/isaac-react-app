@@ -146,6 +146,9 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentId, quizA
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
     }
+    if (isDefined(attempt.userSummary)) {
+        quizTitle += ` for ${attempt.userSummary.givenName} ${attempt.userSummary.familyName}`
+    }
     if (preview) {
         quizTitle += " Preview";
     }
