@@ -1,10 +1,9 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {BooleanNotation, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
-import {BOOLEAN_NOTATION, EXAM_BOARD, UserFacingRole} from "../../../services/constants";
+import {EXAM_BOARD, UserFacingRole} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {
     allRequiredInformationIsPresent,
-    validateBooleanNotation,
     validateEmail,
     validateExamBoard,
 } from "../../../services/validation";

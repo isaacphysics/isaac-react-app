@@ -100,7 +100,7 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
         (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
         (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST)) &&
-        (SITE_SUBJECT !== SITE.CS || (userPreferences.BETA_FEATURE?.AUDIENCE_CONTEXT === null || validateBooleanNotation(userPreferences.BOOLEAN_NOTATION)));
+        (SITE_SUBJECT !== SITE.CS || (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT !== true || validateBooleanNotation(userPreferences.BOOLEAN_NOTATION)));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

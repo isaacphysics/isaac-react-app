@@ -66,7 +66,7 @@ const RequiredAccountInfoBody = () => {
     const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
         validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
         validateExamBoard(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue) &&
-        validateBooleanNotation(initialBooleanNotationValue);
+        (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT !== true || validateBooleanNotation(initialBooleanNotationValue));
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -106,9 +106,7 @@ const RequiredAccountInfoBody = () => {
                     </div>}
                 </RS.Col>}
                 {!(validateUserSchool(initialUserValue) &&
-                    (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT === null ||
-                        (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT && validateBooleanNotation(initialBooleanNotationValue))
-                    )
+                    (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT !== true || validateBooleanNotation(initialBooleanNotationValue))
                   ) && <RS.Col>
                     {!validateUserSchool(initialUserValue) &&
                         <SchoolInput

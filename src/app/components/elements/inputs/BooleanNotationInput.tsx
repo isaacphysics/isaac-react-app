@@ -1,6 +1,6 @@
 import {FormGroup, Input, Label} from "reactstrap";
 import {BOOLEAN_NOTATION} from "../../../services/constants";
-import {BooleanNotation, SubjectInterests} from "../../../../IsaacAppTypes";
+import {BooleanNotation} from "../../../../IsaacAppTypes";
 import React, {ChangeEvent} from "react";
 import {validateBooleanNotation} from "../../../services/validation";
 
