@@ -1,4 +1,9 @@
-import {IsaacQuizDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import {
+    IsaacQuizDTO,
+    IsaacQuizSectionDTO,
+    QuestionDTO,
+    QuizAttemptDTO
+} from "../../../../IsaacApiTypes";
 import React from "react";
 import {isDefined} from "../../../services/miscUtils";
 import {extractTeacherName} from "../../../services/user";
@@ -9,13 +14,14 @@ import {QuizAttemptContext} from "../../content/QuizQuestion";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
-import {Col, Row} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {below, useDeviceSize} from "../../../services/device";
+import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -105,6 +111,15 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
     }
 }
 
+function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
+    const rubric = attempt.quiz?.rubric;
+    return <div>
+        {rubric && <IsaacContentValueOrChildren value={rubric.value}>
+            {rubric.children}
+        </IsaacContentValueOrChildren>}
+    </div>
+}
+
 function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
@@ -171,6 +186,7 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
         {page === null ?
             <div className="mt-4">
                 <QuizHeader {...props} />
+                <QuizRubric {...props}/>
                 <QuizContents {...props} />
             </div>
             :

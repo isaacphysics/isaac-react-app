@@ -38,6 +38,7 @@ export const NavigationBarCS = () => {
             {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
+            <LinkItem to="/safeguarding">Safeguarding</LinkItem>
         </NavigationSection>
 
         <NavigationSection title={<React.Fragment>
