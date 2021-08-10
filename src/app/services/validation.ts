@@ -10,7 +10,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, NOT_FOUND} from "./constants";
+import {BOOLEAN_NOTATION, EXAM_BOARD, NOT_FOUND} from "./constants";
 import {SITE_SUBJECT, SITE} from "./siteConstants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -80,7 +80,7 @@ export const validateUserGender = (user?: ValidationUser | null) => {
 export const validateBooleanNotation = (booleanNotation? : BooleanNotation | null) => {
     // Make sure only one of the possible keys are true at a time
     return booleanNotation &&
-        ["ENG", "MATH", "BOARD_SPECIFIC"].filter(key => (booleanNotation[key as keyof BooleanNotation] || false)).length === 1;
+        Object.keys(BOOLEAN_NOTATION).filter(key => (booleanNotation[key as keyof BooleanNotation] || false)).length === 1;
 }
 
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
@@ -100,7 +100,7 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
         (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
         (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST)) &&
-        (SITE_SUBJECT !== SITE.CS || (userPreferences.BETA_FEATURE?.BOOLEAN_NOTATION === null || validateBooleanNotation(userPreferences.BOOLEAN_NOTATION)));
+        (SITE_SUBJECT !== SITE.CS || (userPreferences.BETA_FEATURE?.AUDIENCE_CONTEXT === null || validateBooleanNotation(userPreferences.BOOLEAN_NOTATION)));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

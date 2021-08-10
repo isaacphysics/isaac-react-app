@@ -533,7 +533,6 @@ export interface ShortcutResponse {
 export interface UserBetaFeaturePreferences {
     SCREENREADER_HOVERTEXT?: boolean;
     AUDIENCE_CONTEXT?: boolean;
-    BOOLEAN_NOTATION?: boolean;
 }
 
 export interface UserEmailPreferences {
@@ -563,8 +562,7 @@ export interface SubjectInterests {
 
 export interface BooleanNotation {
     ENG?: boolean,
-    MATH?: boolean,
-    BOARD_SPECIFIC?: boolean
+    MATH?: boolean
 }
 
 export interface UserPreferencesDTO {

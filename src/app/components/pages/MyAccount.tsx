@@ -166,9 +166,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setBooleanNotation(newBooleanNotation: BooleanNotation) {
         // Makes a new object, with all the boolean notation flags being false apart
-        // from those that are set as true in the newBooleanNotation parameter
-        const fullNewBooleanNotation = ["ENG", "MATH", "BOARD_SPECIFIC"]
-            .reduce((acc, key) => acc[key as keyof BooleanNotation] ? acc : {...acc, [key]: false}, newBooleanNotation);
+        // from those that are set in the newBooleanNotation parameter
+        const fullNewBooleanNotation = {ENG: false, MATH: false, ...newBooleanNotation};
 
         // fullNewBooleanNotation might contain more than one true flag, but this is
         // checked in the validation step
@@ -262,7 +261,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     setSubjectInterests={setSubjectInterests}
                                     booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}}
                                     setBooleanNotation={setBooleanNotation}
-                                    allowBooleanNotationOption={userPreferences?.BETA_FEATURE?.BOOLEAN_NOTATION || false}
+                                    allowBooleanNotationOption={userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT || false}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

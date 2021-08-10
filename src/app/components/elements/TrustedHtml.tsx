@@ -36,7 +36,7 @@ function manipulateHtml(html: string) {
 
 export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
     const user = useSelector(selectors.user.orNull);
-    const booleanNotation = useSelector((state: AppState) => (state?.userPreferences?.BETA_FEATURE?.BOOLEAN_NOTATION &&
+    const booleanNotation = useSelector((state: AppState) => (state?.userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT &&
         state?.userPreferences?.BOOLEAN_NOTATION) || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);

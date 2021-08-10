@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
+    validateBooleanNotation,
     validateEmailPreferences,
     validateExamBoard,
     validateSubjectInterests,
@@ -21,6 +22,7 @@ import {GenderInput} from "../inputs/GenderInput";
 import {EXAM_BOARD} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
+import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -41,9 +43,13 @@ const RequiredAccountInfoBody = () => {
     const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? Object.assign({}, userPreferences.EMAIL_PREFERENCE): {};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
 
+    const initialBooleanNotationValue = (userPreferences && userPreferences.BOOLEAN_NOTATION) ? Object.assign({}, userPreferences.BOOLEAN_NOTATION): {};
+    const [booleanNotation, setBooleanNotation] = useState(initialBooleanNotationValue);
+
     const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences,
-        SUBJECT_INTEREST: subjectInterests
+        SUBJECT_INTEREST: subjectInterests,
+        BOOLEAN_NOTATION: booleanNotation
     };
 
     // Form submission
@@ -59,7 +65,8 @@ const RequiredAccountInfoBody = () => {
 
     const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
         validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
-        validateExamBoard(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
+        validateExamBoard(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue) &&
+        validateBooleanNotation(initialBooleanNotationValue);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -98,12 +105,23 @@ const RequiredAccountInfoBody = () => {
                         </RS.FormGroup>
                     </div>}
                 </RS.Col>}
-                {!validateUserSchool(initialUserValue) && <RS.Col>
-                    <SchoolInput
-                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                        submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required
-                    />
+                {!(validateUserSchool(initialUserValue) &&
+                    (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT === null ||
+                        (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT && validateBooleanNotation(initialBooleanNotationValue))
+                    )
+                  ) && <RS.Col>
+                    {!validateUserSchool(initialUserValue) &&
+                        <SchoolInput
+                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                            submissionAttempted={submissionAttempted} idPrefix="modal"
+                            required
+                        />
+                    }
+                    {userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT && !validateBooleanNotation(initialBooleanNotationValue) &&
+                        <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation}
+                                              submissionAttempted={submissionAttempted}
+                        />
+                    }
                 </RS.Col>}
             </RS.Row>
             {!validateSubjectInterests(initialSubjectInterestsValue) && <RS.Row className="d-flex flex-wrap my-1">

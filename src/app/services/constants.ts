@@ -564,6 +564,12 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.WJEC]: "examboard_wjec",
 };
 
+// BOOLEAN LOGIC NOTATION OPTIONS
+export enum BOOLEAN_NOTATION {
+    ENG = "ENG",
+    MATH = "MATH"
+}
+
 // STAGES
 export enum STAGE {
     GCSE = "gcse",
