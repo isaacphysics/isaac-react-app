@@ -10,7 +10,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computerScience, title: "Computer Science"},
 
         // Computer science strands
-        {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.computerScience, stages: [STAGE.A_LEVEL]},
+        {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.computerScience},
         {id: TAG_ID.computerSystems, title: "Computer systems", parent: TAG_ID.computerScience},
         {id: TAG_ID.cyberSecurity, title: "Cybersecurity", parent: TAG_ID.computerScience},
         {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.computerScience},
@@ -21,8 +21,8 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.computerScience},
         {id: TAG_ID.programmingFundamentals, title: "Programming fundamentals", parent: TAG_ID.computerScience},
         {id: TAG_ID.programmingParadigms, title: "Programming paradigms", parent: TAG_ID.computerScience},
-        {id: TAG_ID.softwareEngineering, title: "Software engineering", parent: TAG_ID.computerScience, stages: [STAGE.A_LEVEL]},
-        {id: TAG_ID.theoryOfComputation, title: "Theory of Computation", parent: TAG_ID.computerScience, stages: [STAGE.A_LEVEL]},
+        {id: TAG_ID.softwareEngineering, title: "Software engineering", parent: TAG_ID.computerScience},
+        {id: TAG_ID.theoryOfComputation, title: "Theory of Computation", parent: TAG_ID.computerScience},
 
         // Computer networks topics
         {id: TAG_ID.networking, title: "Network fundamentals", parent: TAG_ID.computerNetworks},
@@ -61,11 +61,11 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.pathfinding, title: "Pathfinding algorithms", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms},
         // GCSE to A level transition topics
-        {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseBooleanLogic, title: "GCSE Boolean logic", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseBooleanLogic, title: "GCSE Boolean logic", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
         // Impacts of technology topics
         {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology},
         {id: TAG_ID.impactsOfTech, title: "Impacts of technology", parent: TAG_ID.impactsOfDigitalTechnology},

@@ -4,7 +4,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
-    ContentBase, ContentBaseDTO,
+    ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
     GameboardItem,

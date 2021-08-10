@@ -63,7 +63,7 @@ export const AllTopics = () => {
                 const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
                 const topicTags = tags.getTopicTags(subcategoryDescendentIds);
                 const topicComponents =
-                    topicTags.filter(topic => (topic.stages == null && stage === STAGE.A_LEVEL) || topic.stages?.includes(stage))
+                    topicTags.map(topic => (topic.stages?.includes(stage) || stage === STAGE.A_LEVEL) ? topic : {...topic, comingSoon: "soon!"})
                     .map(topic =>
                         <li
                             className="border-0 px-0 py-0 pb-1 bg-transparent"
