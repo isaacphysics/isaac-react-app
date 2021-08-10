@@ -175,6 +175,10 @@ export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
     preserveTrailingWhitespace?: boolean;
 }
 
+export interface IsaacRegexMatchQuestionDTO extends IsaacQuestionBaseDTO {
+    multiLineEntry?: boolean;
+}
+
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
 
