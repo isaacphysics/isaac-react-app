@@ -6,6 +6,7 @@ import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {isDefined} from "../../services/miscUtils";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface ShowLoadingProps<T> {
     until: T | NOT_FOUND_TYPE | null | undefined;
@@ -17,7 +18,11 @@ interface ShowLoadingProps<T> {
 
 const defaultPlaceholder = <div className="w-100 text-center">
     <h2 className="pt-5 pb-2">Loading...</h2>
-    <Spinner color="primary" />
+    {SITE_SUBJECT === SITE.CS ?
+        <img id="cs-spinner" alt="Isaac Computer Science loading spinner" src="/assets/isaac-cs-spinner-css.svg"/>
+        :
+        <Spinner color="primary"/>
+    }
 </div>;
 
 export const ShowLoading = <T extends {}>({until, children, thenRender, placeholder=defaultPlaceholder, ifNotFound=<NotFound />}: ShowLoadingProps<T>) => {
