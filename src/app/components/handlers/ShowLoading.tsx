@@ -19,7 +19,7 @@ interface ShowLoadingProps<T> {
 const defaultPlaceholder = <div className="w-100 text-center">
     <h2 className="pt-5 pb-2">Loading...</h2>
     {SITE_SUBJECT === SITE.CS ?
-        <img id="cs-spinner" alt="Isaac Computer Science loading spinner" src="/assets/isaac-cs-spinner-css.svg"/>
+        <img id="cs-spinner" alt="Isaac Computer Science loading spinner" src="/assets/isaac-cs-typer-css.svg"/>
         :
         <Spinner color="primary"/>
     }
