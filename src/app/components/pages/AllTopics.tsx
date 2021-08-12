@@ -91,12 +91,15 @@ export const AllTopics = () => {
             {/* Search topics TODO MT */}
 
             <Tabs className="pt-3" tabContentClass="pt-3">{{
-                Isaac: <Row>
-                    <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
-                        {topicColumn(firstColTags)}
-                        {topicColumn(secondColTags)}
-                    </Col>
-                </Row>,
+                All: <>
+                    {/* Add exposition for what 'All' tab is (in relation to other exam board pages for clarification) TODO CP */}
+                    <Row>
+                        <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
+                            {topicColumn(firstColTags)}
+                            {topicColumn(secondColTags)}
+                        </Col>
+                    </Row>
+                </>,
                 AQA: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_aqa" /></div>,
                 OCR: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_ocr" /></div>
             }}</Tabs>
