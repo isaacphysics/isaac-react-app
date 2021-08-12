@@ -15,16 +15,7 @@ export const AllTopics = () => {
     const params = queryString.parse(search);
 
     const stageString = (params.stage ? (Array.isArray(params.stage) ? params.stage[0] : params.stage) : "a_level").toLowerCase();
-    const stage = (() => {
-        switch (stageString) {
-            case STAGE.GCSE:
-                return STAGE.GCSE;
-            case STAGE.A_LEVEL:
-                return STAGE.A_LEVEL;
-            default:
-                return STAGE.A_LEVEL;
-        }
-    })();
+    const stage = stageString === STAGE.GCSE ? STAGE.GCSE : STAGE.A_LEVEL;
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
