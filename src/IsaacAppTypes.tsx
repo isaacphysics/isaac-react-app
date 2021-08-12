@@ -560,6 +560,10 @@ export interface SubjectInterests {
     ENGINEERING_UNI?: boolean;
 }
 
+export interface NonAudienceContent {
+    SEE_NON_AUDIENCE?: boolean
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
