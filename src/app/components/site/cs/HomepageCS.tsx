@@ -20,17 +20,17 @@ export const HomepageCS = () => {
     const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0" : ""}`}>
         <h3>Show me</h3>
         <Row>
-            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="p-2">
+            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
                     GCSE resources
                 </Button>
             </Col>
-            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="p-2">
+            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/topics?stage=a_level"} color="secondary" block>
                     A Level resources
                 </Button>
             </Col>
-            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="p-2">
+            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/events"} color="secondary" block>
                     Events
                 </Button>
