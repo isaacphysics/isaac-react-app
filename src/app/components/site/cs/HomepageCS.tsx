@@ -20,18 +20,18 @@ export const HomepageCS = () => {
     const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={className}>
         <h3>Show me</h3>
         <Container className="d-flex flex-wrap">
-            <div className="flex-fill p-2">
-                <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="primary" block>
+            <div className="w-100 p-2">
+                <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
                     GCSE resources
                 </Button>
             </div>
-            <div className="flex-fill p-2">
-                <Button size="lg" tag={Link} to={"/topics?stage=a_level"} color="primary" block>
+            <div className="w-100 p-2">
+                <Button size="lg" tag={Link} to={"/topics?stage=a_level"} color="secondary" block>
                     A Level resources
                 </Button>
             </div>
-            <div className="flex-fill w-100 w-md-auto p-2">
-                <Button size="lg" tag={Link} to={"/events"} color="primary" block>
+            <div className="w-100 p-2">
+                <Button size="lg" tag={Link} to={"/events"} color="secondary" block>
                     Events
                 </Button>
             </div>
@@ -43,14 +43,14 @@ export const HomepageCS = () => {
             <Container className="pt-4 z1">
                 {user && user.loggedIn ? <>
                         <Row className="pt-4">
-                            <Col md="9" lg="7" className="d-none d-sm-block order-last">
-                                <img id="homepageHeroImg" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />
+                            <Col md="9" lg="6" className="d-none d-sm-block order-last my-lg-4">
+                                <img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />
                             </Col>
-                            <Col md="3" lg="5">
+                            <Col md="3" lg="6">
                                 <Container className="pb-2 d-block">
                                     <h1 id="homepageName">Welcome {user.givenName}</h1>
                                 </Container>
-                                <ShowMeButtons className="d-none d-lg-block" />
+                                <ShowMeButtons className="d-none d-lg-block mt-xl-2" />
                             </Col>
                         </Row>
                         <Row>
