@@ -2,7 +2,7 @@ import {
     IsaacQuizDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
-    QuizAttemptDTO
+    QuizAttemptDTO, UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
 import {isDefined} from "../../../services/miscUtils";
@@ -35,6 +35,7 @@ export interface QuizAttemptProps {
     preview?: boolean;
     studentId?: string;
     quizAssignmentId?: string;
+    studentUser?: UserSummaryDTO;
 }
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
@@ -141,13 +142,13 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 
 export const myQuizzesCrumbs = [{title: "My quizzes", to: `/quizzes`}];
 export const teacherQuizzesCrumbs = [{title: "Set quizzes", to: `/set_quizzes`}];
-const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentId, quizAssignmentId}: QuizAttemptProps) => {
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentId, quizAssignmentId, studentUser}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Quiz";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
     }
-    if (isDefined(attempt.userSummary)) {
-        quizTitle += ` for ${attempt.userSummary.givenName} ${attempt.userSummary.familyName}`
+    if (isDefined(studentUser)) {
+        quizTitle += ` for ${studentUser.givenName} ${studentUser.familyName}`
     }
     if (preview) {
         quizTitle += " Preview";

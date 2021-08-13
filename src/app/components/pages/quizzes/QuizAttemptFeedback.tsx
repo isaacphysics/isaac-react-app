@@ -68,7 +68,7 @@ const pageHelp = <span>
 </span>;
 
 const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, studentId, quizAssignmentId}}}: QuizAttemptFeedbackProps) => {
-    const {attempt, studentAttempt, questions, sections, error, studentError} = useCurrentQuizAttempt();
+    const {attempt, studentAttempt, studentUser, questions, sections, error, studentError} = useCurrentQuizAttempt();
 
     const dispatch = useDispatch();
 
@@ -93,7 +93,7 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, stu
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
     const subProps: QuizAttemptProps = {attempt: attemptToView as QuizAttemptDTO, page: pageNumber,
-        questions, sections, pageLink, pageHelp, studentId, quizAssignmentId};
+        questions, sections, pageLink, pageHelp, studentId, quizAssignmentId, studentUser};
 
     return <RS.Container className="mb-5">
         <ShowLoading until={attemptToView}>

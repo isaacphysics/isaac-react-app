@@ -177,13 +177,13 @@ export const selectors = {
             if ('error' in quizAttempt) {
                 return quizAttempt;
             }
-            if (isDefined(quizAttempt.studentAttempt.quiz)) {
+            if (isDefined(quizAttempt?.studentAttempt?.attempt?.quiz)) {
                 const questions = selectors.questions.getQuestions(state);
                 const answerMap = questions?.reduce((map, q) => {
                     map[q.id as string] = q.currentAttempt;
                     return map;
                 }, {} as {[id: string]: ChoiceDTO | undefined}) ?? {};
-                const quizQuestions = extractQuestions(quizAttempt.studentAttempt.quiz);
+                const quizQuestions = extractQuestions(quizAttempt?.studentAttempt?.attempt?.quiz);
                 quizQuestions.forEach(question => {
                     if (answerMap[question.id as string] && (question.bestAttempt === null || question.bestAttempt?.correct === undefined)) {
                         question.bestAttempt = {answer: answerMap[question.id as string]};

@@ -1,6 +1,12 @@
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
-import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../../IsaacApiTypes";
+import {
+    ContentSummaryDTO,
+    IsaacQuizDTO,
+    QuizAssignmentDTO,
+    QuizAttemptDTO,
+    QuizAttemptFeedbackDTO
+} from "../../../IsaacApiTypes";
 
 type QuizState = {quizzes: ContentSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -128,7 +134,7 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
     }
 };
 
-type StudentQuizAttemptState = {studentAttempt: QuizAttemptDTO} | {error: string} | null;
+type StudentQuizAttemptState = {studentAttempt: QuizAttemptFeedbackDTO} | {error: string} | null;
 export const studentQuizAttempt = (possibleAttempt: StudentQuizAttemptState = null, action: Action): StudentQuizAttemptState => {
     switch (action.type) {
         case ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS:
