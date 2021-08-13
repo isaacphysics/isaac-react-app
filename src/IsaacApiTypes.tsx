@@ -127,6 +127,7 @@ export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
     requireUnits?: boolean;
     availableUnits?: string[];
     knownUnits?: string[];
+    displayUnit?: string;
 }
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
@@ -158,6 +159,7 @@ export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
 }
 
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
+    rubric?: ContentDTO;
     visibleToStudents?: boolean;
     defaultFeedbackMode?: QuizFeedbackMode;
     total?: number;
@@ -171,6 +173,10 @@ export interface IsaacQuizSectionDTO extends SeguePageDTO {
 export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
     multiLineEntry?: boolean;
     preserveTrailingWhitespace?: boolean;
+}
+
+export interface IsaacRegexMatchQuestionDTO extends IsaacQuestionBaseDTO {
+    multiLineEntry?: boolean;
 }
 
 export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestionDTO {

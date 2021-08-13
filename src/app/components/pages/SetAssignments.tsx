@@ -121,7 +121,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             className="mt-2 mb-2"
             block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
             onClick={assign}
-            disabled={groupId === null || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+            disabled={groupId === null || groupId === -1 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
         >Assign to group</Button>
     </Container>;
 };
