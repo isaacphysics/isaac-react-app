@@ -17,25 +17,25 @@ export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useSelector(selectors.user.orNull);
 
-    const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={className}>
+    const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0" : ""}`}>
         <h3>Show me</h3>
-        <Container className="d-flex flex-wrap">
-            <div className="w-100 p-2">
+        <Row>
+            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="p-2">
                 <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
                     GCSE resources
                 </Button>
-            </div>
-            <div className="w-100 p-2">
+            </Col>
+            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="p-2">
                 <Button size="lg" tag={Link} to={"/topics?stage=a_level"} color="secondary" block>
                     A Level resources
                 </Button>
-            </div>
-            <div className="w-100 p-2">
+            </Col>
+            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="p-2">
                 <Button size="lg" tag={Link} to={"/events"} color="secondary" block>
                     Events
                 </Button>
-            </div>
-        </Container>
+            </Col>
+        </Row>
     </Container>;
 
     return <div id="homepage">
@@ -61,13 +61,13 @@ export const HomepageCS = () => {
                     </>
                     :
                     <Row>
-                        <Col lg="5" className="order-first pb-lg-5 pb-3">
+                        <Col lg="5" className="order-first pb-lg-5 pb-3 lead">
                             <Row>
                                 <Col>
                                     <h1>
                                         Computer Science learning
                                     </h1>
-                                    <p>
+                                    <p className="mt-4">
                                         Welcome to Isaac Computer Science, the free online platform for students and
                                         teachers.
                                     </p>
@@ -79,7 +79,7 @@ export const HomepageCS = () => {
                                 </Col>
                             </Row>
                         </Col>
-                        <Col lg="7" className="order-last order-lg-1 px-lg-5 pt-lg-5 align-self-center text-center pattern-03">
+                        <Col lg="7" className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03">
                             <iframe
                                 title="Isaac Computer Science introduction video" width="640" height="345"
                                 className="mw-100 pt-lg-4"
