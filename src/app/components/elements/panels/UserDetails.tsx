@@ -34,8 +34,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         [SITE.CS]: "/pages/teacher_accounts"
     };
 
-    const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
-        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
+    const allRequiredFieldsValid =
+        userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 
     return <CardBody className="pt-0">
         <Row>
@@ -47,7 +47,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>
         <Row className="mb-3">
             <Col>
-                Account type: <b>{userToUpdate && userToUpdate.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate && userToUpdate.role == "STUDENT" && <span>
+                Account type: <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate?.role == "STUDENT" && <span>
                     <small>(Are you a teacher? {" "}
                         <Link to={teacherRequestRoute[SITE_SUBJECT]} target="_blank">
                             Upgrade your account
@@ -62,9 +62,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                     <Input
                         id="first-name-input" type="text" name="givenName" maxLength={255}
                         defaultValue={userToUpdate.givenName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setUserToUpdate(Object.assign({}, userToUpdate, {givenName: e.target.value}))
-                        }}
+                        onChange={e => setUserToUpdate({...userToUpdate, givenName: e.target.value})}
                         required
                     />
                 </FormGroup>
@@ -75,9 +73,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                     <Input
                         id="last-name-input" type="text" name="last-name" maxLength={255}
                         defaultValue={userToUpdate.familyName}
-                        onChange={(e:  React.ChangeEvent<HTMLInputElement>) => {
-                            setUserToUpdate(Object.assign({}, userToUpdate, {familyName: e.target.value}))
-                        }}
+                        onChange={e => setUserToUpdate({...userToUpdate, familyName: e.target.value})}
                         required
                     />
                 </FormGroup>
@@ -90,9 +86,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                     <Input
                         invalid={!validateEmail(userToUpdate.email)} id="email-input" type="email"
                         name="email" defaultValue={userToUpdate.email}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            setUserToUpdate(Object.assign({}, userToUpdate, {email: event.target.value}))
-                        }}
+                        onChange={event => setUserToUpdate({...userToUpdate, email: event.target.value})}
                         aria-describedby="emailValidationMessage" required
                     />
                     <FormFeedback id="emailValidationMessage">
@@ -117,14 +111,10 @@ export const UserDetails = (props: UserDetailsProps) => {
                     <Input
                         type="select" name="select" id="exam-board-select"
                         value={userToUpdate.examBoard}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                            setUserToUpdate(
-                                Object.assign({}, userToUpdate, {examBoard: event.target.value})
-                            )
-                        }
+                        onChange={event => setUserToUpdate({...userToUpdate, examBoard: event.target.value})}
                         invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
                     >
-                        <option value={undefined}></option>
+                        <option value={undefined} />
                         <option value={EXAM_BOARD.OTHER}>Other</option>
                         <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
                         <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>

@@ -53,13 +53,13 @@ const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
     return {
-        errorMessage: state ? state.error : null,
-        userAuthSettings: state ? state.userAuthSettings : null,
-        userPreferences: state ? state.userPreferences : null,
-        firstLogin: history.location && history.location.state && (history.location.state as any).firstLogin,
-        hashAnchor: (hash && hash.slice(1)) || null,
-        authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null,
-        userOfInterest: (searchParams && searchParams.userId) ? (searchParams.userId as string) : null,
+        errorMessage: state?.error ?? null,
+        userAuthSettings: state?.userAuthSettings ?? null,
+        userPreferences: state?.userPreferences ?? null,
+        firstLogin: history?.location?.state?.firstLogin,
+        hashAnchor: hash?.slice(1) ?? null,
+        authToken: searchParams?.authToken as string ?? null,
+        userOfInterest: searchParams?.userId as string ?? null,
         userToEdit: state && {...state.adminUserGet, loggedIn: true} || {loggedIn: false}
     }
 };
@@ -132,8 +132,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
     useEffect(() => {
-        const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
+        const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
+        const currentSubjectInterests = (userPreferences?.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentUserPreferences = {
             EMAIL_PREFERENCE: currentEmailPreferences,
             SUBJECT_INTEREST: currentSubjectInterests,
@@ -225,8 +225,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-md-none">Connections</span>
                             </NavLink>
                         </NavItem>
-                        {!editingOtherUser &&
-                        <NavItem>
+                        {!editingOtherUser && <NavItem>
                             <NavLink
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
@@ -234,8 +233,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-none d-lg-block">Email preferences</span>
                                 <span className="d-block d-lg-none">Emails</span>
                             </NavLink>
-                        </NavItem>
-                        }
+                        </NavItem>}
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
@@ -286,11 +284,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                         <CardFooter className="py-4">
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
-                                    {errorMessage && errorMessage.type === "generalError" &&
-                                        <h3 role="alert" className="text-danger text-center">
-                                            {errorMessage.generalError}
-                                        </h3>
-                                    }
+                                    {errorMessage?.type === "generalError" && <h3 role="alert" className="text-danger text-center">
+                                        {errorMessage.generalError}
+                                    </h3>}
                                     {/* Teacher connections does not have a save */}
                                     <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"
