@@ -41,8 +41,9 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <UserContextPicker className="text-right" />
-
+                    <div className="d-flex justify-content-end">
+                        <UserContextPicker />
+                    </div>
                     {relatedConcepts && atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
                     }
