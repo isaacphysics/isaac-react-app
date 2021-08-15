@@ -549,7 +549,7 @@ export enum EXAM_BOARD {
     EDUCAS = "EDUCAS",
     WJEC = "WJEC",
     OTHER = "OTHER",
-    NONE = "",
+    NONE = "NONE",
 }
 export const EXAM_BOARDS_OLD = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.OTHER, EXAM_BOARD.NONE]);
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.OTHER, EXAM_BOARD.NONE]);
@@ -570,7 +570,7 @@ export enum STAGE {
     A_LEVEL = "a_level",
     FURTHER_A = "further_a",
     UNIVERSITY = "university",
-    NONE = "",
+    NONE = "none",
 }
 export const STAGE_NULL_OPTIONS = new Set([STAGE.NONE]);
 export const STAGES_PHY = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);

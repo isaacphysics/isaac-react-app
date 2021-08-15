@@ -13,7 +13,7 @@ import {UserContextPicker} from '../elements/inputs/UserContextPicker';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import { isDefined } from '../../services/miscUtils';
 import tags from "../../services/tags";
-import { TAG_ID } from '../../services/constants';
+import {EXAM_BOARD, TAG_ID} from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
 import Select from "react-select";
 import { useUserContext } from "../../services/userContext";
@@ -175,7 +175,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                         <Col>
                             {searchText !== "" && <span className="pr-4">Search: <strong>{searchText}</strong></span>}
                             {isDefined(filterTopic) && <span className="pr-4">Topic: <strong>{filterTopic.title}</strong></span>}
-                            {examBoard !== "" && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
+                            {examBoard !== EXAM_BOARD.NONE && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
                         </Col>
                     </Row>
                 </Col>
