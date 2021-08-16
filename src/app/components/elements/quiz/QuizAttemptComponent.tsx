@@ -4,7 +4,7 @@ import {
     QuestionDTO,
     QuizAttemptDTO
 } from "../../../../IsaacApiTypes";
-import React from "react";
+import React, { useState } from "react";
 import {isDefined} from "../../../services/miscUtils";
 import {extractTeacherName} from "../../../services/user";
 import {Spacer} from "../Spacer";
@@ -22,6 +22,7 @@ import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
+import { closeActiveModal, openActiveModal } from "../../../state/actions";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -123,10 +124,29 @@ function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
 function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
+    const rubric = attempt.quiz?.rubric;
+    const dispatch = useDispatch();
+
+    const openQuestionModal = (attempt: QuizAttemptDTO) => {
+        dispatch(openActiveModal({
+            closeAction: () => {dispatch(closeActiveModal())}, size: "lg",
+            title: "Quiz rubric", body: <QuizRubric attempt={attempt} />
+        }))
+    };
+
     return section ?
         <Row className="question-content-container">
             <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
                 <UserContextPicker className="no-print text-right"/>
+                <Row>
+                    <Col className="text-right">
+                        <RS.Button color="tertiary" outline className="mb-4"
+                            alt="Show rubric" title="Show rubric in a modal"
+                            onClick={() => {rubric && openQuestionModal(attempt)}}>
+                            Show rubric
+                        </RS.Button>
+                    </Col>
+                </Row>
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>
                 </WithFigureNumbering>
