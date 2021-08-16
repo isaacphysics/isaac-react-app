@@ -10,7 +10,7 @@ export const NavigationBarCS = () => {
     const assignmentBadge = useAssignmentBadge();
 
     return <NavigationBar>
-        <NavigationSection title={<>My Isaac {assignmentBadge}</>} topLevelLink={!isLoggedIn(user)} to="/students">
+        <NavigationSection title={<>My Isaac {assignmentBadge}</>}>
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
