@@ -556,10 +556,21 @@ export interface SubjectInterests {
     ENGINEERING_UNI?: boolean;
 }
 
+export interface ProgrammingLanguage {
+    JAVASCRIPT?: boolean;
+    PYTHON?: boolean;
+    PHP?: boolean;
+    CSHARP?: boolean;
+    PLAINTEXT?: boolean;
+    SQL?: boolean;
+    NONE?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
+    PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

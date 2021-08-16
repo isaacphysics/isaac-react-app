@@ -14,7 +14,7 @@ interface IsaacCodeTabsProps {
 export const IsaacCodeTabs = (props: any) => {
     const {doc: {children}} = props as IsaacCodeTabsProps;
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
-    const {programmingLanguage} = useUserContext();
+    const {currentProgrammingLanguage} = useUserContext();
     const [defaultTabIndex, setDefaultTabIndex] = useState<number | undefined>(undefined);
 
     children.forEach((child, index) => {
@@ -28,8 +28,8 @@ export const IsaacCodeTabs = (props: any) => {
     const tabTitles = Object.keys(tabTitlesToContent);
 
     useEffect(() => {
-        isDefined(programmingLanguage) && isDefined(tabTitles) && setDefaultTabIndex(tabTitles.indexOf(programmingLanguagesMap[programmingLanguage]));
-    }, [programmingLanguage, tabTitles]);
+        isDefined(currentProgrammingLanguage) && isDefined(tabTitles) && setDefaultTabIndex(tabTitles.indexOf(programmingLanguagesMap[currentProgrammingLanguage]));
+    }, [currentProgrammingLanguage, tabTitles]);
 
     return <Tabs className="isaac-tab" tabContentClass="pt-4" activeTabOverride={defaultTabIndex ? defaultTabIndex + 1 : 1}>
         {tabTitlesToContent}

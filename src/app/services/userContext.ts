@@ -16,7 +16,7 @@ import {ContentBaseDTO, ContentSummaryDTO, Role} from "../../IsaacApiTypes";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import {PotentialUser} from "../../IsaacAppTypes";
+import {PotentialUser, ProgrammingLanguage} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {isDefined} from "./miscUtils";
 
@@ -26,13 +26,17 @@ interface UserContext {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
-    programmingLanguage: PROGRAMMING_LANGUAGE;
+    currentProgrammingLanguage?: string;
 }
 
 export function useUserContext(): UserContext {
     const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
+    const {PROGRAMMING_LANGUAGE: programmingLanguage} = useSelector((state: AppState) => state?.userPreferences) || {};
+
+    // Programming Language
+    const currentProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
 
     // Exam Board
     let examBoard;
@@ -45,23 +49,12 @@ export function useUserContext(): UserContext {
         examBoard = user.examBoard;
     }
 
-    // Code Language
-    let programmingLanguage;
-    if (SITE_SUBJECT === SITE.PHY) {
-        programmingLanguage = PROGRAMMING_LANGUAGE.NONE;
-    } else if (user && isDefined(user.programmingLanguage)) {
-        programmingLanguage = user.programmingLanguage;
-    } else {
-        const defaultProgrammingLanguage = PROGRAMMING_LANGUAGE.PYTHON;
-        programmingLanguage = defaultProgrammingLanguage;
-    }
-
     // Stage
     const stage = transientUserContext?.stage ?? defaultStage;
 
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
 
-    return {examBoard, stage, showOtherContent, programmingLanguage};
+    return {examBoard, stage, showOtherContent, currentProgrammingLanguage};
 }
 
 const EXAM_BOARD_ITEM_OPTIONS = [

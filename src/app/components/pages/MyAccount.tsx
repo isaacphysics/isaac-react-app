@@ -19,7 +19,7 @@ import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
-    PotentialUser,
+    PotentialUser, ProgrammingLanguage,
     SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
@@ -134,9 +134,11 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     useEffect(() => {
         const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
         const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
+        const currentProgrammingLanguage = (userPreferences && userPreferences.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
         const currentUserPreferences = {
             EMAIL_PREFERENCE: currentEmailPreferences,
             SUBJECT_INTEREST: currentSubjectInterests,
+            PROGRAMMING_LANGUAGE: currentProgrammingLanguage,
         };
 
         setEmailPreferences(currentEmailPreferences);
@@ -159,6 +161,22 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setSubjectInterests(newSubjectInterests: SubjectInterests) {
         setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
+    }
+
+    function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
+        const clearLanguages = {
+            JAVASCRIPT: false,
+            PYTHON: false,
+            PHP: false,
+            CSHARP: false,
+            PLAINTEXT: false,
+            SQL: false,
+            NONE: false,
+        };
+
+        const fullNewProgrammingLanguage = {...clearLanguages, ...newProgrammingLanguage};
+
+        setMyUserPreferences({...myUserPreferences, PROGRAMMING_LANGUAGE: fullNewProgrammingLanguage});
     }
 
     // Form's submission method
@@ -246,6 +264,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
                                     setSubjectInterests={setSubjectInterests}
+                                    programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}}
+                                    setProgrammingLanguage={setProgrammingLanguage}
+                                    allowProgrammingLanguageOption={userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT || false}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

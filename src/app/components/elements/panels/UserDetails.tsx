@@ -1,5 +1,5 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
+import {ProgrammingLanguage, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, EXAM_BOARD, UserFacingRole} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {allRequiredInformationIsPresent, validateEmail, validateExamBoard,} from "../../../services/validation";
@@ -19,6 +19,9 @@ interface UserDetailsProps {
     setUserToUpdate: (user: any) => void;
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
+    programmingLanguage: ProgrammingLanguage;
+    setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
+    allowProgrammingLanguageOption: boolean;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -29,6 +32,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
+        programmingLanguage, setProgrammingLanguage, allowProgrammingLanguageOption,
         submissionAttempted, editingOtherUser
     } = props;
 
@@ -144,7 +148,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </div>
             </Col>}
         </Row>
-        {SITE_SUBJECT === SITE.CS && betaFeature?.AUDIENCE_CONTEXT && <Row className="mt-3">
+        {SITE_SUBJECT === SITE.CS && <Row className="mt-3">
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2 form-required" htmlFor="programming-language-select">
@@ -152,11 +156,10 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
-                        value={userToUpdate.programmingLanguage}
-                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                            setUserToUpdate(
-                                Object.assign({}, userToUpdate, {programmingLanguage: event.target.value})
-                            )
+                        value={Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key : val, undefined)}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                            setProgrammingLanguage({[event.target.value]: true})
+                        }
                         }
                         invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
                     >
