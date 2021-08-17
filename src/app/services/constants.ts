@@ -543,7 +543,7 @@ export enum PROGRAMMING_LANGUAGE {
     CSHARP = "CSHARP",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
-    NONE = "",
+    NONE = "NONE",
 }
 
 export const programmingLanguagesMap: {[language: string]: string} = {

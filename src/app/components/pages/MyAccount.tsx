@@ -38,7 +38,7 @@ import {
 } from "../../services/validation";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
-import {ACCOUNT_TAB} from "../../services/constants";
+import {ACCOUNT_TAB, PROGRAMMING_LANGUAGE} from "../../services/constants";
 import {history} from "../../services/history"
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -164,7 +164,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     }
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
-        const clearLanguages = {
+        const clearLanguages: {[pl in PROGRAMMING_LANGUAGE]: false} = {
             JAVASCRIPT: false,
             PYTHON: false,
             PHP: false,

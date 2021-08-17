@@ -1,6 +1,6 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {ProgrammingLanguage, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
-import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, EXAM_BOARD, UserFacingRole} from "../../../services/constants";
+import {EXAM_BOARD, PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
 import React, {ChangeEvent} from "react";
 import {allRequiredInformationIsPresent, validateEmail, validateExamBoard,} from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -148,22 +148,22 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </div>
             </Col>}
         </Row>
-        {SITE_SUBJECT === SITE.CS && <Row className="mt-3">
+        {SITE_SUBJECT === SITE.CS && allowProgrammingLanguageOption && <Row className="mt-3">
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2 form-required" htmlFor="programming-language-select">
-                        Programming language
+                        Preferred programming language
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
-                        value={Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key : val, undefined)}
+                        value={Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key : val, "")}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setProgrammingLanguage({[event.target.value]: true})
                         }
                         }
                         invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
                     >
-                        <option value={undefined}></option>
+                        <option value=""></option>
                         <option value={PROGRAMMING_LANGUAGE.JAVASCRIPT}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVASCRIPT]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PHP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PHP]}</option>

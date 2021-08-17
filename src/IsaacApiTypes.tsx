@@ -2,7 +2,7 @@
 
 // Manually added/modified parts
 
-import {PROGRAMMING_LANGUAGE, EXAM_BOARD} from "./app/services/constants";
+import {EXAM_BOARD} from "./app/services/constants";
 
 export interface IsaacCardDTO extends ContentDTO {
     image?: ImageDTO;

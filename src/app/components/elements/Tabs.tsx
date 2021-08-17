@@ -43,7 +43,6 @@ export const Tabs = (props: TabsProps) => {
     }
 
     return <div
-        key={activeTabOverride} // important because we want to reset state if the activeTabOverride prop is changed
         className={className}
     >
         <Nav tabs className="flex-wrap">

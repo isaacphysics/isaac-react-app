@@ -16,10 +16,11 @@ import {
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
-    ACTION_TYPE, PROGRAMMING_LANGUAGE,
+    ACTION_TYPE,
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
+    PROGRAMMING_LANGUAGE,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -556,15 +557,7 @@ export interface SubjectInterests {
     ENGINEERING_UNI?: boolean;
 }
 
-export interface ProgrammingLanguage {
-    JAVASCRIPT?: boolean;
-    PYTHON?: boolean;
-    PHP?: boolean;
-    CSHARP?: boolean;
-    PLAINTEXT?: boolean;
-    SQL?: boolean;
-    NONE?: boolean;
-}
+export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
 
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
