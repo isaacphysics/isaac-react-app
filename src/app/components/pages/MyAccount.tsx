@@ -165,13 +165,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     }
 
     function setBooleanNotation(newBooleanNotation: BooleanNotation) {
-        // Makes a new object, with all the boolean notation flags being false apart
-        // from those that are set in the newBooleanNotation parameter
-        const fullNewBooleanNotation = {ENG: false, MATH: false, ...newBooleanNotation};
-
-        // fullNewBooleanNotation might contain more than one true flag, but this is
-        // checked in the validation step
-        setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: fullNewBooleanNotation});
+        setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: newBooleanNotation});
     }
 
     // Form's submission method

@@ -78,9 +78,10 @@ export const validateUserGender = (user?: ValidationUser | null) => {
 };
 
 export const validateBooleanNotation = (booleanNotation? : BooleanNotation | null) => {
-    // Make sure only one of the possible keys are true at a time
-    return booleanNotation &&
-        Object.keys(BOOLEAN_NOTATION).filter(key => (booleanNotation[key as keyof BooleanNotation] || false)).length === 1;
+    // Make sure at most one of the possible keys are true at a time
+    return booleanNotation && Object.keys(BOOLEAN_NOTATION)
+        .filter(key => (key !== BOOLEAN_NOTATION.NONE && (booleanNotation[key as keyof BooleanNotation] || false)))
+        .length <= 1;
 }
 
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
@@ -99,8 +100,7 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
     return user && userPreferences &&
         (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
-        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST)) &&
-        (SITE_SUBJECT !== SITE.CS || (userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT !== true || validateBooleanNotation(userPreferences.BOOLEAN_NOTATION)));
+        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

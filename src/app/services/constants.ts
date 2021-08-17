@@ -567,7 +567,8 @@ export const examBoardTagMap: {[examBoard: string]: string} = {
 // BOOLEAN LOGIC NOTATION OPTIONS
 export enum BOOLEAN_NOTATION {
     ENG = "ENG",
-    MATH = "MATH"
+    MATH = "MATH",
+    NONE = "NONE"
 }
 
 // STAGES

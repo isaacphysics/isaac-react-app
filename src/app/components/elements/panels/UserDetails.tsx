@@ -44,7 +44,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     };
 
     const allRequiredFieldsValid = userToUpdate && userToUpdate.email &&
-        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null, BOOLEAN_NOTATION: booleanNotation});
+        allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
 
     return <CardBody className="pt-0">
         <Row>
