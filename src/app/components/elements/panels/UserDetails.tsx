@@ -151,12 +151,12 @@ export const UserDetails = (props: UserDetailsProps) => {
         {SITE_SUBJECT === SITE.CS && allowProgrammingLanguageOption && <Row className="mt-3">
             <Col md={6}>
                 <FormGroup>
-                    <Label className="d-inline-block pr-2 form-required" htmlFor="programming-language-select">
+                    <Label className="d-inline-block pr-2" htmlFor="programming-language-select">
                         Preferred programming language
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
-                        value={Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key : val, "")}
+                        value={Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] ? key : val, "")}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setProgrammingLanguage({[event.target.value]: true})
                         }
