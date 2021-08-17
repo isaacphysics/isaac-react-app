@@ -270,7 +270,7 @@ export function katexify(html: string, user: PotentialUser | null, examBoard: EX
                     if (user?.loggedIn && booleanNotation) {
                         macrosToUse = booleanNotation?.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
                     } else {
-                        macrosToUse = examBoard == EXAM_BOARD.AQA ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
+                        macrosToUse = KatexMacrosWithMathsBool;
                     }
                 } else {
                     macrosToUse = KatexBaseMacros;
