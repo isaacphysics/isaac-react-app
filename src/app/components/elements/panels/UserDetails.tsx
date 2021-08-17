@@ -28,7 +28,6 @@ interface UserDetailsProps {
 }
 
 export const UserDetails = (props: UserDetailsProps) => {
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
