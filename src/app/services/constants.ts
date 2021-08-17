@@ -3,7 +3,6 @@ import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
 import {BookingStatus} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import hljs from "highlight.js/lib/core";
 
 // Temporary Feature Flags
 export const QUIZ_FEATURE = ENV_QUIZ_FEATURE_FLAG || false;

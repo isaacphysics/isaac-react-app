@@ -59,14 +59,6 @@ export const validateExamBoard = (user: ValidationUser | null) => {
     }
 };
 
-export const validateProgrammingLanguage = (user: ValidationUser | null) => {
-    if (user?.programmingLanguage) {
-        return user.programmingLanguage in PROGRAMMING_LANGUAGE;
-    } else {
-        return true;
-    }
-}
-
 export const validateSubjectInterests = (subjectInterests?: SubjectInterests | null) => {
     return subjectInterests &&
         Object.values(subjectInterests).length > 0 &&
@@ -98,7 +90,7 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
     return user && userPreferences &&
-        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user) && validateProgrammingLanguage(user))) &&
+        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
         (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
 }

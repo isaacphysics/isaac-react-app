@@ -467,7 +467,6 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     schoolId?: string;
     role?: Role;
     schoolOther?: string;
-    programmingLanguage?: PROGRAMMING_LANGUAGE;
     examBoard?: EXAM_BOARD;
     firstLogin?: boolean;
     lastUpdated?: Date;
