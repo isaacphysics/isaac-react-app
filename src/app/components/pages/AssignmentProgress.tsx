@@ -9,7 +9,6 @@ import {
     DropdownToggle,
     Label,
     Row,
-    Spinner,
     UncontrolledButtonDropdown
 } from "reactstrap"
 import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
@@ -33,6 +32,7 @@ import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 import {usePageSettings} from "../../services/progress";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 function selectGroups(state: AppState) {
     if (state != null) {
@@ -405,7 +405,7 @@ const ProgressLoader = (props: AssignmentDetailsProps) => {
     const progress = assignment.progress;
 
     return progress ? <ProgressDetails {...props} progress={progress} />
-        : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>;
+        : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
 };
 
 const AssignmentDetails = (props: AssignmentDetailsProps) => {
@@ -518,7 +518,7 @@ const GroupDetails = (props: GroupDetailsProps) => {
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend pageSettings={pageSettings}/>
         {gameboardsLoaded ? group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>)
-            : <div className="p-4 text-center"><Spinner color="primary" size="lg" /></div>}
+            : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>}
     </div>;
 };
 

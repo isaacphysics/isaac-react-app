@@ -17,7 +17,7 @@ interface ShowLoadingProps<T> {
 
 const defaultPlaceholder = <div className="w-100 text-center">
     <h2 className="pt-5 pb-2">Loading...</h2>
-    <IsaacSpinner/>
+    <IsaacSpinner />
 </div>;
 
 export const ShowLoading = <T extends {}>({until, children, thenRender, placeholder=defaultPlaceholder, ifNotFound=<NotFound />}: ShowLoadingProps<T>) => {

@@ -3,7 +3,7 @@ import {useDispatch} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {handleProviderCallback} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
-import {Spinner} from "reactstrap";
+import {IsaacSpinner} from "./IsaacSpinner";
 
 interface ProviderCallbackHandlerProps {
     match: {params: {provider: AuthenticationProvider}};
@@ -17,7 +17,7 @@ export const ProviderCallbackHandler = withRouter((props: ProviderCallbackHandle
     return <React.Fragment>
         <div className="w-100 text-center">
             <h2 className="pt-5 pb-2">Signing in...</h2>
-            <Spinner color="primary" />
+            <IsaacSpinner />
         </div>
     </React.Fragment>;
 });

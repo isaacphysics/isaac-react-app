@@ -15,7 +15,6 @@ import {
     Input,
     Label,
     Row,
-    Spinner,
     Table
 } from 'reactstrap';
 import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
@@ -38,6 +37,7 @@ import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import Select from "react-select";
 import {multiSelectOnChange} from "../../services/gameboardBuilder";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -278,7 +278,7 @@ export const MyGameboards = () => {
                 <div className="mt-4 mb-2">
                     {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
                         with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
-                    {!boards && <h4>You have <Spinner size="sm" /> saved gameboards...</h4>}
+                    {!boards && <h4>You have <IsaacSpinner size="sm" /> saved gameboards...</h4>}
                 </div>
                 <div>
                     {boardView !== boardViews.table && <Row>
@@ -326,7 +326,7 @@ export const MyGameboards = () => {
                                 </div>
                                 <div className="text-center mt-2 mb-5" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}
                                 </div>
                             </div>
                             :

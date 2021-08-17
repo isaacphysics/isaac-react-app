@@ -29,6 +29,7 @@ import {Spacer} from "../../elements/Spacer";
 import {isQuestion} from "../../../services/questions";
 import {API_PATH} from "../../../services/constants";
 import { getQuizAssignmentResultsSummaryCSV } from "../../../state/actions";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 interface QuizTeacherFeedbackProps {
     match: {params: {quizAssignmentId: string}}
@@ -116,7 +117,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                             {row.user?.givenName}
                             <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
                             <span className="quiz-student-menu-icon">
-                            {working ? <RS.Spinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                            {working ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
                         </span>
                         </div>
                     </RS.Button>
@@ -229,7 +230,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                         <RS.UncontrolledDropdown className="d-inline-block">
                             <RS.DropdownToggle color="dark" outline className="px-3" caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                                 {settingFeedbackMode ?
-                                    <>Saving <RS.Spinner size="sm" className="quizFeedbackModeSpinner" /></>
+                                    <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
                                 :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
                             </RS.DropdownToggle>
                             <RS.DropdownMenu>

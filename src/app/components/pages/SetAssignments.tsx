@@ -13,7 +13,6 @@ import {
     Input,
     Label,
     Row,
-    Spinner,
     UncontrolledTooltip
 } from "reactstrap";
 import {Link, withRouter} from "react-router-dom";
@@ -47,6 +46,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import { isStaff } from "../../services/user";
 import { isDefined } from "../../services/miscUtils";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -172,7 +172,7 @@ const Board = (props: BoardProps) => {
             <button onClick={() => setShowAssignments(!showAssignments)} id={hexagonId} className="board-subject-hexagon-container">
                 {generateGameboardSubjectHexagons(boardSubjects)}
                 <span className="groups-assigned">
-                    <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
+                    <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
                     group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
                     {board.assignedGroups &&
                         <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
@@ -351,7 +351,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
-                {!boards && <h4>You have <Spinner size="sm" /> gameboards ready to assign...</h4>}
+                {!boards && <h4>You have <IsaacSpinner size="sm" /> gameboards ready to assign...</h4>}
                 <Row>
                     <Col>
                         <Form inline>
@@ -372,7 +372,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                         </div>
                         <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
                             <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                            {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+                            {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}
                         </div>
                     </div>}
                 </ShowLoading>
