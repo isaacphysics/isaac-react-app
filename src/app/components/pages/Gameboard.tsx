@@ -36,7 +36,7 @@ function getTags(docTags?: string[]) {
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
 }
 
-const GameboardItem = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
+const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
@@ -113,7 +113,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
                     <Wildcard wildcard={gameboard.wildCard} />
                 }
                 {gameboard?.questions && gameboard.questions.map(q =>
-                    <GameboardItem gameboard={gameboard} question={q} />
+                    <GameboardItemComponent gameboard={gameboard} question={q} />
                 )}
             </RS.ListGroup>
         </RS.Col>
