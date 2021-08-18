@@ -463,6 +463,15 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
+export type Stage = "gcse" | "a_level" | "further_a" | "university" | "none";
+
+export type ExamBoard = "AQA" | "OCR" | "CIE" | "EDEXCEL" | "EDUCAS" | "WJEC" | "OTHER" | "NONE";
+
+export interface UserContext {
+    stage?: Stage;
+    examBoard?: ExamBoard;
+}
+
 export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     givenName?: string;
     familyName?: string;
@@ -474,6 +483,8 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     role?: Role;
     schoolOther?: string;
     examBoard?: EXAM_BOARD;
+    registeredContexts?: UserContext[];
+    registeredContextsLastConfirmed?: Date;
     firstLogin?: boolean;
     lastUpdated?: Date;
     lastSeen?: Date;
