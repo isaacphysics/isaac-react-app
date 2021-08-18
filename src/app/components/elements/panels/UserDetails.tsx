@@ -120,23 +120,19 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="programming-language-select">
-                        Preferred programming language
-                        {/*TODO MT*/}
+                        Default programming language
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
-                        /* TODO MT */
-                        value={Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] ? key : val, "")}
+                        value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] ? key : val, "")}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setProgrammingLanguage({[event.target.value]: true})
                         }}
                     >
                         <option value=""></option>
-                        <option value={PROGRAMMING_LANGUAGE.JAVASCRIPT}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVASCRIPT]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
-                        <option value={PROGRAMMING_LANGUAGE.PHP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PHP]}</option>
                         <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
-                        <option value={PROGRAMMING_LANGUAGE.SQL}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.SQL]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.JAVASCRIPT}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVASCRIPT]}</option>
                     </Input>
                 </FormGroup>
             </Col>
