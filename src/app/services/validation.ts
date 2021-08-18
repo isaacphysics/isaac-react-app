@@ -10,7 +10,7 @@ import {
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {EXAM_BOARD, NOT_FOUND, STAGE} from "./constants";
-import {SITE_SUBJECT, SITE} from "./siteConstants";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -49,14 +49,6 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
         (prev, next) => prev && (next === true || next === false),
         true
     );
-};
-
-export const validateExamBoard = (user: ValidationUser | null) => {
-    if (user && user.examBoard) {
-        return user.examBoard in EXAM_BOARD;
-    } else {
-        return false;
-    }
 };
 
 export function validateUserContexts (userContexts?: UserContext[]): boolean {
@@ -99,7 +91,7 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences &&
-        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
+        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
         (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST)) &&
         validateUserContexts(userContexts);

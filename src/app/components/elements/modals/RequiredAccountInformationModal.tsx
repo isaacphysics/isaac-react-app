@@ -8,7 +8,6 @@ import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateExamBoard,
     validateSubjectInterests,
     validateUserGender,
     validateUserSchool
@@ -18,7 +17,6 @@ import {isLoggedIn} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {EXAM_BOARD} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 
@@ -59,7 +57,7 @@ const RequiredAccountInfoBody = () => {
 
     const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
         validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
-        validateExamBoard(initialUserValue) && validateSubjectInterests(initialSubjectInterestsValue);
+        validateSubjectInterests(initialSubjectInterestsValue);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -72,30 +70,13 @@ const RequiredAccountInfoBody = () => {
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {!(validateUserGender(initialUserValue) && validateExamBoard(initialUserValue)) && <RS.Col>
+                {!validateUserGender(initialUserValue) && <RS.Col>
                     {!validateUserGender(initialUserValue) && <div>
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
                             required
                         />
-                    </div>}
-                    {!validateExamBoard(initialUserValue) && <div>
-                        <RS.FormGroup>
-                            <RS.Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
-                                Exam board
-                            </RS.Label>
-                            <RS.Input
-                                type="select" name="select" id="exam-board-select"
-                                value={userToUpdate.examBoard} invalid={submissionAttempted && !validateExamBoard(userToUpdate)}
-                                onChange={event => setUserToUpdate(Object.assign({}, userToUpdate, {examBoard: event.target.value}))}
-                            >
-                                <option value={undefined} />
-                                <option value={EXAM_BOARD.AQA}>{EXAM_BOARD.AQA}</option>
-                                <option value={EXAM_BOARD.OCR}>{EXAM_BOARD.OCR}</option>
-                                <option value={EXAM_BOARD.OTHER}>Other</option>
-                            </RS.Input>
-                        </RS.FormGroup>
                     </div>}
                 </RS.Col>}
                 {!validateUserSchool(initialUserValue) && <RS.Col>
