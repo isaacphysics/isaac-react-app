@@ -330,8 +330,7 @@ export function katexify(html: string, user: PotentialUser | null, examBoard: EX
 
 export function LaTeX({markup}: {markup: string}) {
     const user = useSelector(selectors.user.orNull);
-    const booleanNotation = useSelector((state: AppState) => (state?.userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT &&
-        state?.userPreferences?.BOOLEAN_NOTATION) || null);
+    const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const {examBoard} = useUserContext();
