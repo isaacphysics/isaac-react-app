@@ -131,7 +131,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
     // - User Contexts
-    const [userContextsToUpdate, setUserContextsToUpdate] = useState<UserContext[]>([...userToUpdate.registeredContexts]);
+    const [userContextsToUpdate, setUserContextsToUpdate] = useState<UserContext[]>(
+        userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]
+    );
+    useEffect(function keepUserContextUpdated() {
+        setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
+    }, [userToUpdate?.registeredContexts]);
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 

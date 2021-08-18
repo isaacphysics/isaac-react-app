@@ -54,7 +54,6 @@ interface UserContextAccountInputProps {
     submissionAttempted: boolean;
 }
 export function UserContextAccountInput({user, userContexts, setUserContexts, submissionAttempted}: UserContextAccountInputProps) {
-    useEffect(function ensureOneUserContext() {if (userContexts.length === 0) setUserContexts([{}]);}, [userContexts.length]);
     const teacher = isTeacher({...user, loggedIn: true});
     const numberOfPossibleStages = getFilteredStages(false).length;
 

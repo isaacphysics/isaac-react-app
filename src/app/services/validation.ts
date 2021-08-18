@@ -51,7 +51,7 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
     );
 };
 
-export function validateUserContexts (userContexts?: UserContext[]): boolean {
+export function validateUserContexts(userContexts?: UserContext[]): boolean {
     if (userContexts === undefined) {return false;}
     if (userContexts.length === 0) {return false;}
     return userContexts.every(uc =>

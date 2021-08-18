@@ -8,7 +8,7 @@ import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateSubjectInterests,
+    validateSubjectInterests, validateUserContexts,
     validateUserGender,
     validateUserSchool
 } from "../../../services/validation";
@@ -19,25 +19,29 @@ import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
+import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = useSelector((state: AppState) => state && state.userPreferences);
+    const userPreferences = useSelector((state: AppState) => state?.userPreferences);
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
-    const initialUserValue = Object.assign({}, user, {password: null});
+    const initialUserValue = {...user, password: null};
     const [userToUpdate, setUserToUpdate] = useState(initialUserValue);
 
     // We clone the initial value otherwise userPreferences.SUBJECT_INTEREST becomes the local state subjectInterests which gets updated by setSubjectInterests(...)
-    const initialSubjectInterestsValue = (userPreferences && userPreferences.SUBJECT_INTEREST) ? Object.assign({}, userPreferences.SUBJECT_INTEREST) : {};
+    const initialSubjectInterestsValue = {...userPreferences?.SUBJECT_INTEREST};
     const [subjectInterests, setSubjectInterests] = useState(initialSubjectInterestsValue);
 
-    const initialEmailPreferencesValue = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? Object.assign({}, userPreferences.EMAIL_PREFERENCE): {};
+    const initialEmailPreferencesValue = {...userPreferences?.EMAIL_PREFERENCE};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
+
+    const initialUserContexts = user?.loggedIn ? [...user.registeredContexts] : [];
+    const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
     const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences,
@@ -49,15 +53,15 @@ const RequiredAccountInfoBody = () => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, [/* TODO MT */])) {
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, undefined, null, user));
+        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
+            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user));
             dispatch(closeActiveModal());
         }
     }
 
     const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
         validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
-        validateSubjectInterests(initialSubjectInterestsValue);
+        validateSubjectInterests(initialSubjectInterestsValue) && validateUserContexts(initialUserContexts);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -70,12 +74,17 @@ const RequiredAccountInfoBody = () => {
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {!validateUserGender(initialUserValue) && <RS.Col>
-                    {!validateUserGender(initialUserValue) && <div>
+                {(!validateUserGender(initialUserValue) || !validateUserContexts(initialUserContexts)) && <RS.Col>
+                    {!validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
                             required
+                        />
+                    </div>}
+                    {!validateUserContexts(initialUserContexts) && <div>
+                        <UserContextAccountInput
+                            user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted}
                         />
                     </div>}
                 </RS.Col>}
@@ -110,7 +119,7 @@ const RequiredAccountInfoBody = () => {
             />
         </div>}
 
-        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, [/* TODO MT */]) && <div>
+        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
                 Required information in this form is not set
             </h4>
