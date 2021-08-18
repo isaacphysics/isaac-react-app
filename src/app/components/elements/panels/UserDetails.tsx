@@ -37,7 +37,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
 
     const allRequiredFieldsValid =
-        userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
+        userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}, userContexts);
 
     return <CardBody className="pt-0">
         <Row>
@@ -124,7 +124,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>}
             {betaFeature?.AUDIENCE_CONTEXT && <Col md={6}>
-                <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} />
+                <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted} />
             </Col>}
             <Col md={6}>
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}

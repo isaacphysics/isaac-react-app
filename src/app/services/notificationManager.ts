@@ -14,7 +14,7 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
     if([ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
         if (
             state && isLoggedIn(state.user) &&
-            !allRequiredInformationIsPresent(state.user, state.userPreferences) &&
+            !allRequiredInformationIsPresent(state.user, state.userPreferences, [/*TODO MT*/]) &&
             !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))
         ) {
             persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());

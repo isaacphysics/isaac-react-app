@@ -7,9 +7,9 @@ import {
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
-import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
+import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, NOT_FOUND} from "./constants";
+import {EXAM_BOARD, NOT_FOUND, STAGE} from "./constants";
 import {SITE_SUBJECT, SITE} from "./siteConstants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -59,6 +59,15 @@ export const validateExamBoard = (user: ValidationUser | null) => {
     }
 };
 
+export function validateUserContexts (userContexts?: UserContext[]): boolean {
+    if (userContexts === undefined) {return false;}
+    if (userContexts.length === 0) {return false;}
+    return userContexts.every(uc =>
+        Object.values(STAGE).includes(uc.stage as STAGE) && //valid stage
+        (SITE_SUBJECT !== SITE.CS || Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD)) // valid exam board for cs
+    );
+}
+
 export const validateSubjectInterests = (subjectInterests?: SubjectInterests | null) => {
     return subjectInterests &&
         Object.values(subjectInterests).length > 0 &&
@@ -88,11 +97,12 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
 };
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
-export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
+export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences &&
         (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
-        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
+        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST)) &&
+        validateUserContexts(userContexts);
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

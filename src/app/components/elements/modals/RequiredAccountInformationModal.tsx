@@ -51,7 +51,7 @@ const RequiredAccountInfoBody = () => {
         event.preventDefault();
         setSubmissionAttempted(true);
 
-        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate)) {
+        if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, [/* TODO MT */])) {
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, undefined, null, user));
             dispatch(closeActiveModal());
         }
@@ -129,7 +129,7 @@ const RequiredAccountInfoBody = () => {
             />
         </div>}
 
-        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate) && <div>
+        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, [/* TODO MT */]) && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
                 Required information in this form is not set
             </h4>

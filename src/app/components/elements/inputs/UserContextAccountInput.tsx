@@ -13,14 +13,16 @@ interface UserContextRowProps {
     userContext: UserContext;
     setUserContext: (ucs: UserContext) => void;
     showNullStageOption: boolean;
+    submissionAttempted: boolean;
 }
-function UserContextRow({userContext, setUserContext, showNullStageOption}: UserContextRowProps) {
+function UserContextRow({userContext, setUserContext, showNullStageOption, submissionAttempted}: UserContextRowProps) {
     return <React.Fragment>
         {/* Stage Selector */}
         <Input
             className="form-control w-auto d-inline-block pl-1 pr-0" type="select"
             aria-label="Stage"
             value={userContext.stage || ""}
+            invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
             onChange={e => setUserContext({...userContext, stage: e.target.value as STAGE})}
         >
             <option value=""></option>
@@ -34,6 +36,7 @@ function UserContextRow({userContext, setUserContext, showNullStageOption}: User
             className="form-control w-auto d-inline-block pl-1 pr-0 ml-2" type="select"
             aria-label="Exam Board"
             value={userContext.examBoard || ""}
+            invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
             onChange={e => setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD})}
         >
             <option value=""></option>
@@ -48,8 +51,9 @@ interface UserContextAccountInputProps {
     user: ValidationUser;
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
+    submissionAttempted: boolean;
 }
-export function UserContextAccountInput({user, userContexts, setUserContexts}: UserContextAccountInputProps) {
+export function UserContextAccountInput({user, userContexts, setUserContexts, submissionAttempted}: UserContextAccountInputProps) {
     useEffect(function ensureOneUserContext() {if (userContexts.length === 0) setUserContexts([{}]);}, [userContexts.length]);
     const teacher = isTeacher({...user, loggedIn: true});
     const numberOfPossibleStages = getFilteredStages(false).length;
@@ -68,7 +72,7 @@ export function UserContextAccountInput({user, userContexts, setUserContexts}: U
 
                 return <RS.FormGroup key={userContext.stage || index}>
                     <UserContextRow
-                        userContext={userContext} showNullStageOption={userContexts.length <= 1}
+                        userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
                     />
 
