@@ -58,7 +58,10 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                     {Object.keys(sections).map((k, index) => {
                         const section = sections[k];
                         return <tr key={k}>
-                            <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td>
+                            {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
+                                <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td> :
+                                <td>{section.title}</td>
+                            }
                             <td>
                                 {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
                                 {" / "}
