@@ -9,7 +9,6 @@ import {
     DropdownToggle,
     Label,
     Row,
-    Spinner,
     UncontrolledButtonDropdown
 } from "reactstrap"
 import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
