@@ -1,8 +1,8 @@
 import React, {ChangeEvent} from "react";
-import {ProgrammingLanguage, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
 import {allRequiredInformationIsPresent, validateEmail} from "../../../services/validation";
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {BooleanNotation, ProgrammingLanguage, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
@@ -11,6 +11,7 @@ import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteC
 import {SubjectInterestTableInput} from "../inputs/SubjectInterestTableInput";
 import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
+import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -21,6 +22,9 @@ interface UserDetailsProps {
     setUserContexts: (uc: UserContext[]) => void;
     programmingLanguage: ProgrammingLanguage;
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
+    booleanNotation: BooleanNotation;
+    setBooleanNotation: (bn: BooleanNotation) => void;
+    allowBooleanNotationOption: boolean;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -32,6 +36,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         subjectInterests, setSubjectInterests,
         userContexts, setUserContexts,
         programmingLanguage, setProgrammingLanguage,
+        booleanNotation, setBooleanNotation, allowBooleanNotationOption,
         submissionAttempted, editingOtherUser
     } = props;
 
@@ -138,6 +143,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Input>
                 </FormGroup>
             </Col>
+            {SITE_SUBJECT === SITE.CS && allowBooleanNotationOption && <Col md={6}>
+                <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} />
+            </Col>}
         </Row>}
         {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
             <Col>

@@ -563,11 +563,17 @@ export interface SubjectInterests {
 
 export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
 
+export interface BooleanNotation {
+    ENG?: boolean,
+    MATH?: boolean
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
+    BOOLEAN_NOTATION?: BooleanNotation;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

@@ -80,11 +80,11 @@ const RequiredAccountInfoBody = () => {
                     </div>}
                 </RS.Col>}
                 {!validateUserSchool(initialUserValue) && <RS.Col>
-                    <SchoolInput
-                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                        submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required
-                    />
+                        <SchoolInput
+                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                            submissionAttempted={submissionAttempted} idPrefix="modal"
+                            required
+                        />
                 </RS.Col>}
             </RS.Row>
         </RS.CardBody>}

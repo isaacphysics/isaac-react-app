@@ -1,6 +1,7 @@
 import {
     AdditionalInformation,
     AugmentedEvent,
+    BooleanNotation,
     NOT_FOUND_TYPE,
     UserEmailPreferences,
     UserPreferencesDTO,
@@ -8,8 +9,8 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, NOT_FOUND, STAGE} from "./constants";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {STAGE, BOOLEAN_NOTATION, EXAM_BOARD, NOT_FOUND} from "./constants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -69,6 +70,13 @@ export const validateUserSchool = (user?: ValidationUser | null) => {
 export const validateUserGender = (user?: ValidationUser | null) => {
     return user && user.gender && user.gender !== "UNKNOWN";
 };
+
+export const validateBooleanNotation = (booleanNotation? : BooleanNotation | null) => {
+    // Make sure at most one of the possible keys are true at a time
+    return booleanNotation && Object.keys(BOOLEAN_NOTATION)
+        .filter(key => (key !== BOOLEAN_NOTATION.NONE && (booleanNotation[key as keyof BooleanNotation] || false)))
+        .length <= 1;
+}
 
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {

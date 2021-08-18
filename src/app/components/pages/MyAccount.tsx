@@ -19,6 +19,7 @@ import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes
 import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
+    BooleanNotation,
     PotentialUser,
     ProgrammingLanguage,
     SubjectInterests,
@@ -144,10 +145,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
         const currentSubjectInterests = (userPreferences?.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentProgrammingLanguage = (userPreferences?.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
+        const currentBooleanNotation = (userPreferences?.BOOLEAN_NOTATION) ? userPreferences.BOOLEAN_NOTATION: {};
         const currentUserPreferences = {
             EMAIL_PREFERENCE: currentEmailPreferences,
             SUBJECT_INTEREST: currentSubjectInterests,
             PROGRAMMING_LANGUAGE: currentProgrammingLanguage,
+            BOOLEAN_NOTATION: currentBooleanNotation,
         };
 
         setEmailPreferences(currentEmailPreferences);
@@ -173,19 +176,17 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     }
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
-        const clearLanguages: {[pl in PROGRAMMING_LANGUAGE]: false} = {
-            JAVASCRIPT: false,
-            PYTHON: false,
-            PHP: false,
-            CSHARP: false,
-            PLAINTEXT: false,
-            SQL: false,
-            NONE: false,
+        const clearLanguages: { [pl in PROGRAMMING_LANGUAGE]: false } = {
+            JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, PLAINTEXT: false, SQL: false, NONE: false,
         };
 
         const fullNewProgrammingLanguage = {...clearLanguages, ...newProgrammingLanguage};
 
         setMyUserPreferences({...myUserPreferences, PROGRAMMING_LANGUAGE: fullNewProgrammingLanguage});
+    }
+
+    function setBooleanNotation(newBooleanNotation: BooleanNotation) {
+        setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: newBooleanNotation});
     }
 
     // Form's submission method
@@ -280,8 +281,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
                                     setSubjectInterests={setSubjectInterests}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                    programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}}
-                                    setProgrammingLanguage={setProgrammingLanguage}
+                                    programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}} setProgrammingLanguage={setProgrammingLanguage}
+                                    booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}}
+                                    setBooleanNotation={setBooleanNotation} /* TODO MT */
+                                    allowBooleanNotationOption={userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT || false}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
