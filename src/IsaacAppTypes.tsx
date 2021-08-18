@@ -876,6 +876,7 @@ export interface BaseTag {
     comingSoon?: string;
     new?: boolean;
     hidden?: boolean;
+    stages?: STAGE[];
 }
 
 export interface Tag extends BaseTag {

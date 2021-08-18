@@ -1,4 +1,4 @@
-import {SUBJECTS, TAG_ID, TAG_LEVEL} from "./constants";
+import {STAGE, SUBJECTS, TAG_ID, TAG_LEVEL} from "./constants";
 import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {AbstractBaseTagService} from "./tagsAbstract";
@@ -61,11 +61,11 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.pathfinding, title: "Pathfinding algorithms", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms},
         // GCSE to A level transition topics
-        {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseBooleanLogic, title: "GCSE Boolean logic", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
+        {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseBooleanLogic, title: "GCSE Boolean logic", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
+        {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel, stages: [STAGE.GCSE, STAGE.A_LEVEL]},
         // Impacts of technology topics
         {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology},
         {id: TAG_ID.impactsOfTech, title: "Impacts of technology", parent: TAG_ID.impactsOfDigitalTechnology},

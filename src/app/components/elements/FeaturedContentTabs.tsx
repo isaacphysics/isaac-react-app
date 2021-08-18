@@ -15,11 +15,25 @@ export function FeaturedContentTabs() {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(fetchFragment(COMPUTER_SCIENTIST_FRAGMENT_ID));}, [dispatch]);
     const computerScientist = useSelector((state: AppState) => state?.fragments && state.fragments[COMPUTER_SCIENTIST_FRAGMENT_ID]);
-    const tabOverride = useRef(1 + Math.floor(Math.random() * 2)); // useRef so that it does not change on re-render
+    //const tabOverride = useRef(1 + Math.floor(Math.random() * 2)); // useRef so that it does not change on re-render
 
     return <div className="tabs-featured-question">
-        <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={tabOverride.current}>
+        {/* use tabOverride.current below for random tab on page refresh */}
+        <Tabs tabContentClass="mt-3 mt-md-5" activeTabOverride={1}>
             {{
+                "Computer Science Journeys": <ShowLoading
+                    until={computerScientist}
+                    thenRender={(cserOfTheMonth) => {
+                        return <div className="computer-scientist-of-the-month mt-4 mb-md-5">
+                            <IsaacContent doc={cserOfTheMonth} />
+                        </div>
+                    }}
+                    ifNotFound={<div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
+                        Unfortunately, we don't currently have a Computer Science Journey to display.<br />
+                        Please check back later!
+                    </div>}
+                />,
+
                 "Featured question": <Row className="feattab-row">
                     <Col md={8} className="feattab-info pl-md-4">
                         <h2 className="h-question-mark">
@@ -68,20 +82,7 @@ export function FeaturedContentTabs() {
                             Explore by topic
                         </Button>
                     </Col>
-                </Row>,
-
-                "Computer Science Journeys": <ShowLoading
-                    until={computerScientist}
-                    thenRender={(cserOfTheMonth) => {
-                        return <div className="computer-scientist-of-the-month mt-4 mb-md-5">
-                            <IsaacContent doc={cserOfTheMonth} />
-                        </div>
-                    }}
-                    ifNotFound={<div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
-                        Unfortunately, we don't currently have a Computer Science Journey to display.<br />
-                        Please check back later!
-                    </div>}
-                />
+                </Row>
             }}
         </Tabs>
     </div>
