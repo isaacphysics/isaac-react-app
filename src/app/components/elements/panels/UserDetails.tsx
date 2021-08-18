@@ -1,4 +1,4 @@
-import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
+import {CardBody, Col, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {UserFacingRole} from "../../../services/constants";
 import React from "react";
@@ -95,18 +95,22 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <DobInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted} editingOtherUser={editingOtherUser}/>
             </Col>
+            <Col md={6}>
+                <FormGroup>
+                    <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                                 required={SITE_SUBJECT === SITE.CS}/>
+                </FormGroup>
+            </Col>
         </Row>
         <Row>
             <Col md={6}>
-                <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                    required={SITE_SUBJECT === SITE.CS}/>
+                <FormGroup>
+                    <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                                 required={SITE_SUBJECT === SITE.CS}/>
+                </FormGroup>
             </Col>
             <Col md={6}>
                 <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted} />
-            </Col>
-            <Col md={6}>
-                <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                    required={SITE_SUBJECT === SITE.CS}/>
             </Col>
         </Row>
         {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">

@@ -131,10 +131,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
     // - User Contexts
-    const [userContextsToUpdate, setUserContextsToUpdate] = useState<UserContext[]>(
-        userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]
-    );
-    useEffect(function keepUserContextUpdated() {
+    const [userContextsToUpdate, setUserContextsToUpdate] =
+        useState<UserContext[]>(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
+    useEffect(function keepUserContextsUpdated() {
         setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
     }, [userToUpdate?.registeredContexts]);
 
