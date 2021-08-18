@@ -8,14 +8,13 @@ import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
-    validateSubjectInterests, validateUserContexts,
+    validateUserContexts,
     validateUserGender,
     validateUserSchool
 } from "../../../services/validation";
 import {isMobile} from "../../../services/device";
 import {isLoggedIn} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
@@ -33,20 +32,13 @@ const RequiredAccountInfoBody = () => {
     const initialUserValue = {...user, password: null};
     const [userToUpdate, setUserToUpdate] = useState(initialUserValue);
 
-    // We clone the initial value otherwise userPreferences.SUBJECT_INTEREST becomes the local state subjectInterests which gets updated by setSubjectInterests(...)
-    const initialSubjectInterestsValue = {...userPreferences?.SUBJECT_INTEREST};
-    const [subjectInterests, setSubjectInterests] = useState(initialSubjectInterestsValue);
-
     const initialEmailPreferencesValue = {...userPreferences?.EMAIL_PREFERENCE};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
 
     const initialUserContexts = user?.loggedIn ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
-    const userPreferencesToUpdate = {
-        EMAIL_PREFERENCE: emailPreferences,
-        SUBJECT_INTEREST: subjectInterests
-    };
+    const userPreferencesToUpdate = {EMAIL_PREFERENCE: emailPreferences,};
 
     // Form submission
     function formSubmission(event: React.FormEvent<HTMLFormElement>) {
@@ -60,8 +52,7 @@ const RequiredAccountInfoBody = () => {
     }
 
     const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
-        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) &&
-        validateSubjectInterests(initialSubjectInterestsValue) && validateUserContexts(initialUserContexts);
+        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -96,16 +87,6 @@ const RequiredAccountInfoBody = () => {
                     />
                 </RS.Col>}
             </RS.Row>
-            {!validateSubjectInterests(initialSubjectInterestsValue) && <RS.Row className="d-flex flex-wrap my-1">
-                <RS.Col>
-                    <div>
-                        <StudyingCsInput
-                            subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests}
-                            submissionAttempted={submissionAttempted} idPrefix="modal-"
-                        />
-                    </div>
-                </RS.Col>
-            </RS.Row>}
         </RS.CardBody>}
 
         {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>

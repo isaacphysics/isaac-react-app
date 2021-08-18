@@ -60,12 +60,6 @@ export function validateUserContexts(userContexts?: UserContext[]): boolean {
     );
 }
 
-export const validateSubjectInterests = (subjectInterests?: SubjectInterests | null) => {
-    return subjectInterests &&
-        Object.values(subjectInterests).length > 0 &&
-        (subjectInterests.CS_ALEVEL === true || subjectInterests.CS_ALEVEL === false);
-};
-
 export const validateUserSchool = (user?: ValidationUser | null) => {
     return !!user && (
         (!!user.schoolId) ||
@@ -93,7 +87,6 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
     return user && userPreferences &&
         (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
-        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST)) &&
         validateUserContexts(userContexts);
 }
 
