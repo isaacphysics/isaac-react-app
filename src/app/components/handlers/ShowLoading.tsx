@@ -15,8 +15,8 @@ interface ShowLoadingProps<T> {
     ifNotFound?: ReactElement;
 }
 
-const defaultPlaceholder = <div className="w-100 text-center">
-    <h2 className="pt-5 pb-2">Loading...</h2>
+const defaultPlaceholder = <div className="w-100 text-center pb-2">
+    <h2 className="pt-5">Loading...</h2>
     <IsaacSpinner />
 </div>;
 
