@@ -2,7 +2,6 @@ import {
     AdditionalInformation,
     AugmentedEvent,
     NOT_FOUND_TYPE,
-    SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser

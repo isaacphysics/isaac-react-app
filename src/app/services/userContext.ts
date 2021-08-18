@@ -6,6 +6,7 @@ import {
     EXAM_BOARDS_CS_GCSE,
     EXAM_BOARDS_OLD,
     examBoardTagMap,
+    PROGRAMMING_LANGUAGE,
     STAGE,
     STAGE_NULL_OPTIONS,
     STAGES_CS,
@@ -15,7 +16,7 @@ import {ContentBaseDTO, ContentSummaryDTO, Role} from "../../IsaacApiTypes";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import {PotentialUser} from "../../IsaacAppTypes";
+import {PotentialUser, ProgrammingLanguage} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {useQueryParams} from "./reactRouterExtension";
 import {isDefined} from "./miscUtils";
@@ -29,6 +30,7 @@ interface UserContext {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
+    preferredProgrammingLanguage?: string;
 }
 
 export function useUserContext(): UserContext {
@@ -36,6 +38,10 @@ export function useUserContext(): UserContext {
     const qParams = useQueryParams(true);
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
+    const {PROGRAMMING_LANGUAGE: programmingLanguage} = useSelector((state: AppState) => state?.userPreferences) || {};
+
+    // Programming Language
+    const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
 
     // Exam Board
     let examBoard: EXAM_BOARD;
@@ -72,7 +78,7 @@ export function useUserContext(): UserContext {
         }
     }, []);
 
-    return {examBoard, stage, showOtherContent};
+    return {examBoard, stage, showOtherContent, preferredProgrammingLanguage};
 }
 
 const EXAM_BOARD_ITEM_OPTIONS = [

@@ -1,8 +1,8 @@
-import {CardBody, Col, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
-import {UserFacingRole} from "../../../services/constants";
-import React from "react";
-import {allRequiredInformationIsPresent, validateEmail,} from "../../../services/validation";
+import React, {ChangeEvent} from "react";
+import {ProgrammingLanguage, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
+import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
+import {allRequiredInformationIsPresent, validateEmail} from "../../../services/validation";
+import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
@@ -19,6 +19,9 @@ interface UserDetailsProps {
     setSubjectInterests: (si: SubjectInterests) => void;
     userContexts: UserContext[];
     setUserContexts: (uc: UserContext[]) => void;
+    programmingLanguage: ProgrammingLanguage;
+    setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
+    allowProgrammingLanguageOption: boolean; /* TODO MT */
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -29,6 +32,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
         userContexts, setUserContexts,
+        programmingLanguage, setProgrammingLanguage, allowProgrammingLanguageOption,
         submissionAttempted, editingOtherUser
     } = props;
 
@@ -113,6 +117,31 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted} />
             </Col>
         </Row>
+        {SITE_SUBJECT === SITE.CS && allowProgrammingLanguageOption && <Row className="mt-3">
+            <Col md={6}>
+                <FormGroup>
+                    <Label className="d-inline-block pr-2" htmlFor="programming-language-select">
+                        Preferred programming language
+                        {/*TODO MT*/}
+                    </Label>
+                    <Input
+                        type="select" name="select" id="programming-language-select"
+                        /* TODO MT */
+                        value={Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] ? key : val, "")}
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                            setProgrammingLanguage({[event.target.value]: true})
+                        }}
+                    >
+                        <option value=""></option>
+                        <option value={PROGRAMMING_LANGUAGE.JAVASCRIPT}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVASCRIPT]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.PHP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PHP]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.SQL}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.SQL]}</option>
+                    </Input>
+                </FormGroup>
+            </Col>
+        </Row>}
         {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
             <Col>
                 <SubjectInterestTableInput stateObject={subjectInterests} setStateFunction={setSubjectInterests}/>
