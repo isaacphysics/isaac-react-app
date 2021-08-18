@@ -50,7 +50,7 @@ import {
     QuestionDTO,
     RegisteredUserDTO,
     Role,
-    TestCaseDTO,
+    TestCaseDTO, UserContext,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
@@ -300,6 +300,7 @@ export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => as
 export const updateCurrentUser = (
     updatedUser: ValidationUser,
     updatedUserPreferences: UserPreferencesDTO,
+    userContexts: UserContext[] | undefined,
     passwordCurrent: string | null,
     currentUser: PotentialUser
 ) => async (dispatch: Dispatch<Action>) => {
@@ -327,7 +328,7 @@ export const updateCurrentUser = (
 
     try {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
+        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         await dispatch(requestCurrentUser() as any);
 

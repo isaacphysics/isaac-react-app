@@ -15,7 +15,7 @@ import {
     TabContent,
     TabPane,
 } from "reactstrap";
-import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
+import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
@@ -80,8 +80,9 @@ interface AccountPageProps {
     updateCurrentUser: (
         updatedUser: ValidationUser,
         updatedUserPreferences: UserPreferencesDTO,
+        userContexts: UserContext[] | undefined,
         passwordCurrent: string | null,
-        currentUser: PotentialUser
+        currentUser: PotentialUser,
     ) => void;
     firstLogin: boolean;
     hashAnchor: string | null;
@@ -128,6 +129,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
+
+    // - User Contexts
+    const [userContextsToUpdate, setUserContextsToUpdate] = useState<UserContext[]>([...userToUpdate.registeredContexts]);
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
@@ -179,8 +183,16 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
-            (!userToUpdate.password || isNewPasswordConfirmed)) {
-            updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
+            (!userToUpdate.password || isNewPasswordConfirmed))
+        {
+            const userContextsUpdated = JSON.stringify(userContextsToUpdate) !== JSON.stringify(userToUpdate.registeredContexts);
+            updateCurrentUser(
+                userToUpdate,
+                editingOtherUser ? {} : myUserPreferences,
+                userContextsUpdated ? userContextsToUpdate : undefined,
+                currentPassword,
+                user,
+            );
         }
     }
 
@@ -244,6 +256,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
                                     setSubjectInterests={setSubjectInterests}
+                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

@@ -1,22 +1,27 @@
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
 import {EXAM_BOARD, UserFacingRole} from "../../../services/constants";
-import React, {ChangeEvent} from "react";
+import React from "react";
 import {allRequiredInformationIsPresent, validateEmail, validateExamBoard,} from "../../../services/validation";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {StudyingCsInput} from "../inputs/StudyingCsInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
+import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {SubjectInterestTableInput} from "../inputs/SubjectInterestTableInput";
 import {Link} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {AppState} from "../../../state/reducers";
+import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
     subjectInterests: SubjectInterests;
     setSubjectInterests: (si: SubjectInterests) => void;
+    userContexts: UserContext[];
+    setUserContexts: (uc: UserContext[]) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -26,13 +31,10 @@ export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
+        userContexts, setUserContexts,
         submissionAttempted, editingOtherUser
     } = props;
-
-    const teacherRequestRoute = {
-        [SITE.PHY]: "/pages/contact_us_teacher",
-        [SITE.CS]: "/pages/teacher_accounts"
-    };
+    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
 
     const allRequiredFieldsValid =
         userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null});
@@ -49,7 +51,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col>
                 Account type: <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate?.role == "STUDENT" && <span>
                     <small>(Are you a teacher? {" "}
-                        <Link to={teacherRequestRoute[SITE_SUBJECT]} target="_blank">
+                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
                             Upgrade your account
                         </Link>{".)"}</small>
                 </span>}
@@ -103,7 +105,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
                     required={SITE_SUBJECT === SITE.CS}/>
             </Col>
-            {SITE_SUBJECT === SITE.CS && <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && !betaFeature?.AUDIENCE_CONTEXT && <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2 form-required" htmlFor="exam-board-select">
                         Exam board
@@ -121,11 +123,14 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Input>
                 </FormGroup>
             </Col>}
+            {betaFeature?.AUDIENCE_CONTEXT && <Col md={6}>
+                <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} />
+            </Col>}
             <Col md={6}>
                 <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
                     required={SITE_SUBJECT === SITE.CS}/>
             </Col>
-            {SITE_SUBJECT === SITE.CS && <Col md={6}>
+            {SITE_SUBJECT === SITE.CS && !betaFeature?.AUDIENCE_CONTEXT && <Col md={6}>
                 <div className="mt-2 mb-2 pt-1">
                     <StudyingCsInput subjectInterests={subjectInterests} setSubjectInterests={setSubjectInterests} submissionAttempted={submissionAttempted} />
                 </div>
