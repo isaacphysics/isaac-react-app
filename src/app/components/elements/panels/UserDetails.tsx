@@ -21,7 +21,6 @@ interface UserDetailsProps {
     setUserContexts: (uc: UserContext[]) => void;
     programmingLanguage: ProgrammingLanguage;
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
-    allowProgrammingLanguageOption: boolean; /* TODO MT */
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -32,7 +31,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         userToUpdate, setUserToUpdate,
         subjectInterests, setSubjectInterests,
         userContexts, setUserContexts,
-        programmingLanguage, setProgrammingLanguage, allowProgrammingLanguageOption,
+        programmingLanguage, setProgrammingLanguage,
         submissionAttempted, editingOtherUser
     } = props;
 
@@ -117,7 +116,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted} />
             </Col>
         </Row>
-        {SITE_SUBJECT === SITE.CS && allowProgrammingLanguageOption && <Row className="mt-3">
+        {SITE_SUBJECT === SITE.CS && <Row>
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="programming-language-select">

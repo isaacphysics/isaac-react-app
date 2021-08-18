@@ -19,7 +19,8 @@ import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes
 import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
-    PotentialUser, ProgrammingLanguage,
+    PotentialUser,
+    ProgrammingLanguage,
     SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
@@ -281,7 +282,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}}
                                     setProgrammingLanguage={setProgrammingLanguage}
-                                    allowProgrammingLanguageOption={userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT || false}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
