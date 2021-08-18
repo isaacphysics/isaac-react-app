@@ -71,13 +71,6 @@ export const validateUserGender = (user?: ValidationUser | null) => {
     return user && user.gender && user.gender !== "UNKNOWN";
 };
 
-export const validateBooleanNotation = (booleanNotation? : BooleanNotation | null) => {
-    // Make sure at most one of the possible keys are true at a time
-    return booleanNotation && Object.keys(BOOLEAN_NOTATION)
-        .filter(key => (key !== BOOLEAN_NOTATION.NONE && (booleanNotation[key as keyof BooleanNotation] || false)))
-        .length <= 1;
-}
-
 const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     if (dateOfAction) {
         const now = new Date();

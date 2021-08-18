@@ -2,15 +2,13 @@ import {FormGroup, Input, Label} from "reactstrap";
 import {BOOLEAN_NOTATION} from "../../../services/constants";
 import {BooleanNotation} from "../../../../IsaacAppTypes";
 import React, {ChangeEvent} from "react";
-import {validateBooleanNotation} from "../../../services/validation";
 
 interface BooleanNotationInputProps {
     booleanNotation: BooleanNotation;
     setBooleanNotation: (bn: BooleanNotation) => void;
-    submissionAttempted: boolean;
     isRequired?: boolean;
 }
-export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, submissionAttempted, isRequired = false} : BooleanNotationInputProps) => {
+export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isRequired = false} : BooleanNotationInputProps) => {
 
     return <FormGroup>
         <Label className={`d-inline-block pr-2 ${isRequired ? "form-required" : ""}`} htmlFor="boolean-notation-preference">
@@ -33,10 +31,9 @@ export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, submi
                     setBooleanNotation(Object.assign({}, newBooleanNotation));
                 }
             }
-            invalid={submissionAttempted && !validateBooleanNotation(booleanNotation)}
             required={isRequired}
         >
-            <option value={BOOLEAN_NOTATION.NONE}>No preference</option>
+            <option value={BOOLEAN_NOTATION.NONE}></option>
             <option value={BOOLEAN_NOTATION.MATH}>And (&and;) Or (&or;) Not (&not;)</option>
             <option value={BOOLEAN_NOTATION.ENG}>And (&middot;) Or (+) Not (bar)</option>
         </Input>

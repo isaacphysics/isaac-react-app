@@ -143,7 +143,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} />
+                <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />
             </Col>
         </Row>}
         {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
