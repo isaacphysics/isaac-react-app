@@ -282,9 +282,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     setSubjectInterests={setSubjectInterests}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}} setProgrammingLanguage={setProgrammingLanguage}
-                                    booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}}
-                                    setBooleanNotation={setBooleanNotation} /* TODO MT */
-                                    allowBooleanNotationOption={userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT || false}
+                                    booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}} setBooleanNotation={setBooleanNotation}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

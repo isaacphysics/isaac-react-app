@@ -24,7 +24,6 @@ interface UserDetailsProps {
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
     booleanNotation: BooleanNotation;
     setBooleanNotation: (bn: BooleanNotation) => void;
-    allowBooleanNotationOption: boolean;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -36,7 +35,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         subjectInterests, setSubjectInterests,
         userContexts, setUserContexts,
         programmingLanguage, setProgrammingLanguage,
-        booleanNotation, setBooleanNotation, allowBooleanNotationOption,
+        booleanNotation, setBooleanNotation,
         submissionAttempted, editingOtherUser
     } = props;
 
@@ -143,9 +142,9 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Input>
                 </FormGroup>
             </Col>
-            {SITE_SUBJECT === SITE.CS && allowBooleanNotationOption && <Col md={6}>
+            <Col md={6}>
                 <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted} />
-            </Col>}
+            </Col>
         </Row>}
         {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
             <Col>
