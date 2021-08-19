@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
 import {QUIZ_FEATURE} from "../../../services/constants";
+import {Badge} from "reactstrap";
 
 export const NavigationBarCS = () => {
     const user = useSelector(selectors.user.orNull);
@@ -27,7 +28,7 @@ export const NavigationBarCS = () => {
         </NavigationSection>}
 
         <NavigationSection title="Learn">
-            <LinkItem to="/topics?stage=gcse">GCSE topics</LinkItem>
+            <LinkItem to="/topics?stage=gcse" badgeTitle="BETA">GCSE topics</LinkItem>
             <LinkItem to="/topics?stage=a_level">A level topics</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
             <LinkItem to="/glossary">Glossary</LinkItem>
