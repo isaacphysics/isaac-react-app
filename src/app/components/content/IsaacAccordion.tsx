@@ -11,8 +11,8 @@ import {resourceFound} from "../../services/validation";
 import {DOCUMENT_TYPE} from "../../services/constants";
 
 const defaultConceptDisplay = {
-    [SITE.PHY]: {audience: [], nonAudience: []},
-    [SITE.CS]: {audience: ["open"], nonAudience: ["de-emphasised", "closed"]}
+    [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
+    [SITE.CS]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
 }[SITE_SUBJECT];
 const defaultQuestionDisplay = {audience: [], nonAudience: []};
 
