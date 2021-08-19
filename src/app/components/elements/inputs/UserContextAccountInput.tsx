@@ -62,7 +62,7 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
         <RS.Label htmlFor="user-context-selector" className="form-required">
             {teacher ? "I am teaching" : "I am studying"}
         </RS.Label>
-        {!teacher && <small className="float-right mt-1"><Link to={TEACHER_REQUEST_ROUTE} target="_blank">I am a teacher!</Link></small>}
+        {!teacher && <span className="float-right mt-1"><Link to={TEACHER_REQUEST_ROUTE} target="_blank">I am a teacher</Link></span>}
         <RS.FormGroup id="user-context-selector" className={SITE_SUBJECT === SITE.PHY ? "d-flex flex-wrap" : ""}>
             {userContexts.map((userContext, index) => {
                 const showPlusOption = teacher &&
