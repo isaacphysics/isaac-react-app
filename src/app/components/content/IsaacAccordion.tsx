@@ -27,7 +27,6 @@ interface SectionWithDisplaySettings extends ContentDTO {
     hidden?: boolean;
 }
 export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const page = useSelector((state: AppState) => (state && state.doc) || null);
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
@@ -45,25 +44,15 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // For CS we want relevant sections to appear first
             .sort((sectionA, sectionB) => {
                 if (SITE_SUBJECT !== SITE.CS) {return 0;}
-                const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user, betaFeature?.AUDIENCE_CONTEXT);
-                const isAudienceB = isIntendedAudience(sectionB.audience, userContext, user, betaFeature?.AUDIENCE_CONTEXT);
+                const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user);
+                const isAudienceB = isIntendedAudience(sectionB.audience, userContext, user);
                 return isAudienceA === isAudienceB ? 0 : isAudienceB ? 1 : -1;
             })
 
             // Handle conditional display settings
             .map(section => {
-                // Physics non-beta feature users ignore audience and exit early
-                if (SITE_SUBJECT === SITE.PHY && !betaFeature?.AUDIENCE_CONTEXT) {
-                    return section;
-                }
-
                 let sectionDisplay = mergeDisplayOptions(accordionDisplay, section.display);
-                // CS non-beta feature users just hide non-A level content so we override the display rules
-                if (!betaFeature?.AUDIENCE_CONTEXT) {
-                    sectionDisplay = {audience: [], nonAudience: ["hidden"]}
-                }
-
-                const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user, betaFeature?.AUDIENCE_CONTEXT) ?
+                const sectionDisplaySettings = isIntendedAudience(section.audience, userContext, user) ?
                         sectionDisplay?.["audience"] : sectionDisplay?.["nonAudience"];
                 if (sectionDisplaySettings?.includes("open")) {section.startOpen = true;}
                 if (sectionDisplaySettings?.includes("closed")) {section.startOpen = false;}
@@ -76,7 +65,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             .map(section => {
                 if (
                     SITE_SUBJECT === SITE.CS && userContext.showOtherContent === false &&
-                    !isIntendedAudience(section.audience, userContext, user, betaFeature?.AUDIENCE_CONTEXT)
+                    !isIntendedAudience(section.audience, userContext, user)
                 ) {
                     section.hidden = true;
                 }

@@ -14,9 +14,7 @@ import queryString from "query-string";
 import {history} from "../../services/history";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
 import {Item, unwrapValue} from "../../services/select";
-import {LevelsFilterHexagonal, LevelsFilterSummary} from "../elements/svg/LevelsFilter";
 import {useDeviceSize} from "../../services/device";
-import {AppState} from "../../state/reducers";
 import Select from "react-select";
 import {getFilteredStages} from "../../services/userContext";
 
@@ -105,7 +103,6 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const {queryLevels, querySelections, queryStages, queryDifficulties, queryQuestionCategories} =
         processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
@@ -158,14 +155,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     function loadNewGameboard() {
         // Load a gameboard
         const params: { [key: string]: string } = {};
-        if (!betaFeature?.AUDIENCE_CONTEXT) {
-            params.levels = toCSV(levels.length === 0 ? levelOptions : levels);
-        }
-        if (betaFeature?.AUDIENCE_CONTEXT) {
-            if (stages.length) params.stages = toCSV(stages);
-            if (difficulties.length) params.difficulties = toCSV(difficulties);
-            if (questionCategories.length) params.questionCategories = toCSV(questionCategories);
-        }
+        if (stages.length) params.stages = toCSV(stages);
+        if (difficulties.length) params.difficulties = toCSV(difficulties);
+        if (questionCategories.length) params.questionCategories = toCSV(questionCategories);
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
@@ -186,7 +178,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             setBoardStack([]);
             loadNewGameboard();
         }
-    }, [selections, levels, stages, difficulties, questionCategories, betaFeature?.AUDIENCE_CONTEXT]);
+    }, [selections, levels, stages, difficulties, questionCategories]);
 
     function refresh() {
         if (gameboard) {
@@ -225,12 +217,6 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 <RS.Col sm={8} lg={9}>
                     <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
-                            {!betaFeature?.AUDIENCE_CONTEXT && <RS.Col lg={6}>
-                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
-                                    Levels:
-                                    <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
-                                </RS.Label>
-                            </RS.Col>}
                             <RS.Col lg={6} className="mt-3 mt-lg-0">
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     <span>Topics:</span>
@@ -256,42 +242,27 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             {/* Filter */}
             {filterExpanded && <RS.Row className="mb-sm-4">
                 <RS.Col xs={12}>
-                    <div className="mb-1"><strong>
-                        {betaFeature?.AUDIENCE_CONTEXT ?
-                            "Click these buttons to choose your question gameboard" :
-                            "Select your question filters..."}
-                    </strong></div>
+                    <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
                 </RS.Col>
                 <RS.Col lg={4}>
-                    {!betaFeature?.AUDIENCE_CONTEXT && <>
-                        <RS.Label className={`mt-2 mt-lg-0`} htmlFor="level-selector">
-                            Levels:
+                    <div>
+                        <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                            I am interested in stage...
                         </RS.Label>
-                        <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
-                        <div className="mt-2 mt-sm-4">
-                            <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
-                        </div>
-                    </>}
-                    {betaFeature?.AUDIENCE_CONTEXT && <>
-                        <div>
-                            <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                                I am interested in stage...
-                            </RS.Label>
-                            <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(false)} />
-                        </div>
-                        <div>
-                            <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
-                                I would like some questions from Isaac to...
-                            </RS.Label>
-                            <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />
-                        </div>
-                        <div>
-                            <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                                I would like questions for...
-                            </RS.Label>
-                            <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
-                        </div>
-                    </>}
+                        <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(false)} />
+                    </div>
+                    <div>
+                        <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
+                            I would like some questions from Isaac to...
+                        </RS.Label>
+                        <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />
+                    </div>
+                    <div>
+                        <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
+                            I would like questions for...
+                        </RS.Label>
+                        <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
+                    </div>
                 </RS.Col>
                 <RS.Col lg={8}>
                     <RS.Label className={`mt-4 mt-lg-0`}>

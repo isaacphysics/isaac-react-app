@@ -4,7 +4,6 @@ import {
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
-    EXAM_BOARDS_OLD,
     examBoardTagMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
@@ -89,7 +88,7 @@ const EXAM_BOARD_ITEM_OPTIONS = [
     {label: "Other", value: EXAM_BOARD.OTHER},
     {label: "None", value: EXAM_BOARD.NONE},
 ];
-export function getFilteredExamBoardOptions(stages: STAGE[], includeNullOptions: boolean, audienceContextBetaFeature?: boolean) {
+export function getFilteredExamBoardOptions(stages: STAGE[], includeNullOptions: boolean) {
     return EXAM_BOARD_ITEM_OPTIONS
         .filter(i =>
             stages.length === 0 ||
@@ -97,8 +96,7 @@ export function getFilteredExamBoardOptions(stages: STAGE[], includeNullOptions:
             (stages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) ||
             (stages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value))
         )
-        .filter(i => includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
-        .filter(i => audienceContextBetaFeature || EXAM_BOARDS_OLD.has(i.value));
+        .filter(i => includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value));
 }
 
 const STAGE_ITEM_OPTIONS = [
@@ -125,7 +123,7 @@ export const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM
     });
 };
 
-export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserContext, user: PotentialUser | null, audienceBetaFeatureEnabled?: boolean): boolean {
+export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserContext, user: PotentialUser | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
         return true;
@@ -134,9 +132,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
     return intendedAudience.some(audienceClause => {
         // If stages are specified do we have any of them in our context
         if (audienceClause.stage) {
-            // If beta feature is not enabled we should treat users as if they have A Level selected
-            const nonBetaFeatureOption = {[SITE.PHY]: STAGE.NONE, [SITE.CS]: STAGE.A_LEVEL}[SITE_SUBJECT];
-            const userStage = audienceBetaFeatureEnabled ? userContext.stage : nonBetaFeatureOption;
+            const userStage = userContext.stage;
             const satisfiesStageCriteria = userStage === STAGE.NONE || audienceClause.stage.includes(userStage);
             if (!satisfiesStageCriteria) {
                 return false;
@@ -145,9 +141,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
 
         // If exam boards are specified do we have any of them in our context
         if (audienceClause.examBoard) {
-            // If beta feature is enabled we should treat users as if they have A Level selected
-            const nonBetaFeatureOption = EXAM_BOARD.NONE;
-            const userExamBoard = audienceBetaFeatureEnabled ? userContext.examBoard : nonBetaFeatureOption;
+            const userExamBoard = userContext.examBoard;
             const satisfiesExamBoardCriteria =
                 userExamBoard === EXAM_BOARD.NONE || audienceClause.examBoard.includes(userExamBoard.toLowerCase());
             if (!satisfiesExamBoardCriteria) {

@@ -40,7 +40,7 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
             onChange={e => setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD})}
         >
             <option value=""></option>
-            {getFilteredExamBoardOptions([userContext.stage as STAGE || STAGE.NONE], true, true).map(item =>
+            {getFilteredExamBoardOptions([userContext.stage as STAGE || STAGE.NONE], true).map(item =>
                 <option key={item.value} value={item.value}>{item.label}</option>
             )}
         </Input>}

@@ -40,7 +40,6 @@ import {getFilteredExamBoardOptions} from "../../services/userContext";
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
 
     const dispatch = useDispatch();
 
@@ -122,7 +121,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             isMulti
                             options={
                                 [{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }].concat(
-                                    getFilteredExamBoardOptions([], false, betaFeature?.AUDIENCE_CONTEXT)
+                                    getFilteredExamBoardOptions([], false)
                                         .map(i => ({value: examBoardTagMap[i.value], label: i.label})))
                             }
                             name="colors"

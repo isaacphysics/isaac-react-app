@@ -5,16 +5,14 @@ import {ContentBaseDTO} from "../../../IsaacApiTypes";
 import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
-import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
 
 export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
     // If this page is intended for this user's context no need to show a warning banner
-    if (!betaFeature?.AUDIENCE_CONTEXT || isIntendedAudience(doc.audience, userContext, user, betaFeature?.AUDIENCE_CONTEXT)) {
+    if (isIntendedAudience(doc.audience, userContext, user)) {
         return <React.Fragment />;
     }
 

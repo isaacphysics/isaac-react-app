@@ -4,10 +4,9 @@ import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
-import {debounce, isEqual, range} from "lodash";
+import {debounce, isEqual} from "lodash";
 import Select from "react-select";
 import {
-    convertExamBoardToOption,
     groupTagSelectionsByParent,
     logEvent,
     multiSelectOnChange,
@@ -16,16 +15,9 @@ import {
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
-import {
-    DIFFICULTY_ITEM_OPTIONS,
-    EXAM_BOARD,
-    EXAM_BOARDS_OLD,
-    examBoardTagMap,
-    SortOrder,
-    STAGE,
-} from "../../../services/constants";
+import {DIFFICULTY_ITEM_OPTIONS, SortOrder, STAGE,} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
-import {getFilteredExamBoardOptions, getFilteredStages, useUserContext} from "../../../services/userContext";
+import {getFilteredExamBoardOptions, getFilteredStages} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
@@ -44,8 +36,6 @@ interface QuestionSearchModalProps {
 }
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useDispatch();
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
-    const audienceContextBeta = betaFeature?.AUDIENCE_CONTEXT || false;
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
@@ -66,7 +56,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
     const user = useSelector((state: AppState) => state && state.user);
-    const {examBoard} = useUserContext();
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], levels: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
@@ -77,14 +66,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 return;
             }
 
-            let tags;
-            let examBoardString;
-            if (!audienceContextBeta) {
-                tags = (isBookSearch ? book : [...([topics, examBoards].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ");
-            } else {
-                tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ")
-                examBoardString = examBoards.join(",");
-            }
+            const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ")
+            const examBoardString = examBoards.join(",");
 
             dispatch(searchQuestions({
                 searchString: searchString,
@@ -112,12 +95,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const tagOptions = SITE_SUBJECT === SITE.PHY ? tags.allTags.map(groupTagSelectionsByParent) :
         tags.allSubcategoryTags.map(groupTagSelectionsByParent);
-
-    useEffect(() => {
-        if (!audienceContextBeta) {
-            setSearchExamBoards([examBoardTagMap[examBoard]].filter(tag => !!tag));
-        }
-    }, [user, examBoard]);
 
     useEffect(() => {
         searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
@@ -166,40 +143,15 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     ]}
                 />
             </RS.Col>}
-            {!isBookSearch && <RS.Col lg={audienceContextBeta ? SITE_SUBJECT === SITE.CS ? 12 : 9 : 6} className="text-wrap mt-2">
+            {!isBookSearch && <RS.Col lg={SITE_SUBJECT === SITE.CS ? 12 : 9} className="text-wrap mt-2">
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
                     options={tagOptions} onChange={multiSelectOnChange(setSearchTopics)}
                 />
             </RS.Col>}
-            {!audienceContextBeta && <React.Fragment>
-                {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className="text-wrap my-2">
-                    <RS.Label htmlFor="question-search-exam-board">Exam board</RS.Label>
-                    <Select
-                        inputId="question-search-exam-board" isMulti placeholder="Any" {...selectStyle}
-                        options={
-                            Object.values(EXAM_BOARD)
-                                .filter(e => EXAM_BOARDS_OLD.has(e))
-                                .map(name => ({value: examBoardTagMap[name], label: name}))
-                        }
-                        value={searchExamBoards.map(convertExamBoardToOption)}
-                        onChange={multiSelectOnChange(setSearchExamBoards)}
-                    />
-                </RS.Col>}
-                {SITE_SUBJECT === SITE.PHY && !isBookSearch && <RS.Col lg={3} className={`text-wrap my-2`}>
-                    <RS.Label htmlFor="question-search-level">Level</RS.Label>
-                    <Select
-                        inputId="question-search-level" isClearable placeholder="Any" {...selectStyle}
-                        onChange={selectOnChange(setSearchLevels)}
-                        options={[
-                            ...(range(1,6).map((i) => {return { value: i.toString(), label: i.toString() }})),
-                            {value: '6', label: '6 (Post A-Level)'}]}
-                    />
-                </RS.Col>}
-            </React.Fragment>}
         </RS.Row>
-        {audienceContextBeta && !isBookSearch && <RS.Row>
+        {!isBookSearch && <RS.Row>
             <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
                 <Select
@@ -218,7 +170,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredExamBoardOptions(searchStages, false, audienceContextBeta)}
+                    options={getFilteredExamBoardOptions(searchStages, false)}
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
             </RS.Col>}
@@ -269,10 +221,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         let qIsPublic = searchResultIsPublic(question, user);
                         if (isBookSearch) return qIsPublic;
                         let qLevelsMatch = (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString())));
-                        let qExamboardsMatch = audienceContextBeta || (searchExamBoards.length == 0 || (question.tags && question.tags.filter((tag) => searchExamBoards.includes(tag)).length > 0));
                         let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
 
-                        return qIsPublic && qLevelsMatch && qExamboardsMatch && qTopicsMatch;
+                        return qIsPublic && qLevelsMatch && qTopicsMatch;
                     })).map((question) =>
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}

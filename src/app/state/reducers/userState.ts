@@ -31,13 +31,10 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
 };
 
 type UserPreferencesState = UserPreferencesDTO | null;
-function withAudienceContextBetaFeatureOn(userPreferences: UserPreferencesDTO) { /* TODO REMOVE AUDIENCE_CONTEXT */
-    return {...userPreferences, BETA_FEATURE: {...userPreferences?.BETA_FEATURE, AUDIENCE_CONTEXT: true}};
-}
 export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-            return withAudienceContextBetaFeatureOn({...action.userPreferences});
+            return {...action.userPreferences};
         default:
             return userPreferences;
     }

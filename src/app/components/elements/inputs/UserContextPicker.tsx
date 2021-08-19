@@ -10,27 +10,20 @@ import {
 } from "../../../state/actions";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
-import {AppState} from "../../../state/reducers";
-import {isLoggedIn, isStaff} from "../../../services/user";
+import {isStaff} from "../../../services/user";
 import {useQueryParams} from "../../../services/reactRouterExtension";
 import {history} from "../../../services/history";
 import queryString from "query-string";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useDispatch();
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const qParams = useQueryParams();
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
-    const showHideOtherContentSelector = betaFeature?.AUDIENCE_CONTEXT && SITE_SUBJECT === SITE.CS && isStaff(user);
-    const showStageSelector = betaFeature?.AUDIENCE_CONTEXT;
-    const showExamBoardSelector = SITE_SUBJECT === SITE.CS && (
-        betaFeature?.AUDIENCE_CONTEXT ||
-        !isLoggedIn(user) ||
-        user.examBoard === undefined ||
-        EXAM_BOARD_NULL_OPTIONS.has(user.examBoard)
-    );
+    const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && isStaff(user);
+    const showStageSelector = true;
+    const showExamBoardSelector = SITE_SUBJECT === SITE.CS;
 
     return <div className="d-flex">
         {/* Show other content Selector */}
@@ -51,11 +44,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 aria-label={hideLabels ? "Stage" : undefined}
                 value={userContext.stage}
                 onChange={e => {
-                    if (betaFeature?.AUDIENCE_CONTEXT) {
-                        const newParams = {...qParams, stage: e.target.value};
-                        if (STAGE_NULL_OPTIONS.has(e.target.value as STAGE)) {delete newParams.stage;}
-                        history.push({search: queryString.stringify(newParams, {encode: false})});
-                    }
+                    const newParams = {...qParams, stage: e.target.value};
+                    if (STAGE_NULL_OPTIONS.has(e.target.value as STAGE)) {delete newParams.stage;}
+                    history.push({search: queryString.stringify(newParams, {encode: false})});
                     dispatch(setTransientStagePreference(e.target.value as STAGE));
                 }}
             >
@@ -73,16 +64,14 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 aria-label={hideLabels ? "Exam Board" : undefined}
                 value={userContext.examBoard}
                 onChange={e => {
-                    if (betaFeature?.AUDIENCE_CONTEXT) {
-                        const newParams = {...qParams, examBoard: e.target.value.toLowerCase()};
-                        if (EXAM_BOARD_NULL_OPTIONS.has(e.target.value as EXAM_BOARD)) {delete newParams.examBoard;}
-                        history.push({search: queryString.stringify(newParams, {encode: false})});
-                    }
+                    const newParams = {...qParams, examBoard: e.target.value.toLowerCase()};
+                    if (EXAM_BOARD_NULL_OPTIONS.has(e.target.value as EXAM_BOARD)) {delete newParams.examBoard;}
+                    history.push({search: queryString.stringify(newParams, {encode: false})});
                     dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
                 }}
             >
-                {betaFeature?.AUDIENCE_CONTEXT && <option value={EXAM_BOARD.NONE}>None</option>}
-                {getFilteredExamBoardOptions([userContext.stage], false, betaFeature?.AUDIENCE_CONTEXT).map(item =>
+                <option value={EXAM_BOARD.NONE}>None</option>
+                {getFilteredExamBoardOptions([userContext.stage], false).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
             </Input>
