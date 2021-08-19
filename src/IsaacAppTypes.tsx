@@ -20,6 +20,7 @@ import {
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
+    PROGRAMMING_LANGUAGE,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -560,10 +561,13 @@ export interface SubjectInterests {
     ENGINEERING_UNI?: boolean;
 }
 
+export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
+    PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {

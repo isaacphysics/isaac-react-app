@@ -1,7 +1,8 @@
-import React, {ReactNode, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
+import {isDefined} from "../../services/miscUtils";
 
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -25,6 +26,10 @@ export const Tabs = (props: TabsProps) => {
     const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false} = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
+    useEffect(() => {
+        isDefined(activeTabOverride) && setActiveTab(activeTabOverride)
+    }, [activeTabOverride]);
+
     function changeTab(tabIndex: number) {
         pauseAllVideos();
         let nextTabIndex = tabIndex;
@@ -38,7 +43,6 @@ export const Tabs = (props: TabsProps) => {
     }
 
     return <div
-        key={activeTabOverride} // important because we want to reset state if the activeTabOverride prop is changed
         className={className}
     >
         <Nav tabs className="flex-wrap">
