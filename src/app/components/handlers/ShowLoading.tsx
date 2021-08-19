@@ -16,7 +16,7 @@ interface ShowLoadingProps<T> {
 }
 
 const defaultPlaceholder = <div className="w-100 text-center pb-2">
-    <h2 className="pt-5">Loading...</h2>
+    <h2 aria-hidden="true" className="pt-5">Loading...</h2>
     <IsaacSpinner />
 </div>;
 
