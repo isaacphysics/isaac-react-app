@@ -34,7 +34,6 @@ interface UserContext {
 }
 
 export function useUserContext(): UserContext {
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
     const qParams = useQueryParams(true);
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
@@ -49,9 +48,8 @@ export function useUserContext(): UserContext {
         examBoard = EXAM_BOARD.NONE;
     } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard.toUpperCase() as EXAM_BOARD)) {
         examBoard = qParams.examBoard.toUpperCase() as EXAM_BOARD;
-    } else if (!user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard) || (betaFeature?.AUDIENCE_CONTEXT && transientUserContext?.examBoard !== undefined)) {
-        const defaultExamBoard = betaFeature?.AUDIENCE_CONTEXT ? EXAM_BOARD.NONE : EXAM_BOARD.AQA;
-        examBoard = transientUserContext?.examBoard ?? defaultExamBoard;
+    } else if (!user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard) || transientUserContext?.examBoard !== undefined) {
+        examBoard = transientUserContext?.examBoard ?? EXAM_BOARD.NONE;
     } else {
         examBoard = user.examBoard;
     }
@@ -70,10 +68,10 @@ export function useUserContext(): UserContext {
 
     // Update query params
     useEffect(() => {
-        if (betaFeature?.AUDIENCE_CONTEXT && (stage !== qParams.stage || examBoard !== qParams.examBoard?.toUpperCase())) {
+        if (stage !== qParams.stage || examBoard !== qParams.examBoard?.toUpperCase()) {
             const newParams = {...qParams, stage, examBoard: examBoard.toLowerCase()};
-            if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;}
-            if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;}
+            if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;} /* TODO MT people might want to share none view */
+            if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;} /* TODO MT people might want to share none view */
             history.push({search: queryString.stringify(newParams, {encode: false})});
         }
     }, []);
