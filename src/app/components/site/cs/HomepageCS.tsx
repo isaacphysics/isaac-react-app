@@ -17,7 +17,7 @@ export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useSelector(selectors.user.orNull);
 
-    const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0" : ""}`}>
+    const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
         <h3>Show me</h3>
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
@@ -43,10 +43,10 @@ export const HomepageCS = () => {
             <Container className="pt-4 z1">
                 {user && user.loggedIn ? <>
                         <Row className="pt-4">
-                            <Col md="9" lg="6" className="d-none d-sm-block order-last my-lg-4">
+                            <Col md="9" lg="7" className="d-none d-sm-block order-last my-lg-4 text-center">
                                 <img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />
                             </Col>
-                            <Col md="3" lg="6">
+                            <Col md="3" lg="5">
                                 <Container className="pb-2 d-block">
                                     <h1 id="homepageName">Welcome {user.givenName}</h1>
                                 </Container>
@@ -61,7 +61,7 @@ export const HomepageCS = () => {
                     </>
                     :
                     <Row>
-                        <Col lg="5" className="order-first pb-lg-5 pb-3 lead">
+                        <Col lg="5" className="order-first pb-3">
                             <Row>
                                 <Col>
                                     <h1>
