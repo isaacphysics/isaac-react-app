@@ -20,8 +20,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const qParams = useQueryParams();
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
 
-    const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && isStaff(user);
+    const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && segueEnvironment === "DEV";
     const showStageSelector = true;
     const showExamBoardSelector = SITE_SUBJECT === SITE.CS;
 
