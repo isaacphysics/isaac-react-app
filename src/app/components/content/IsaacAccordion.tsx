@@ -16,6 +16,11 @@ const defaultConceptDisplay = {
 }[SITE_SUBJECT];
 const defaultQuestionDisplay = {audience: [], nonAudience: []};
 
+function stringifyAudience(audience: ContentDTO["audience"]): string {
+    // return audience?.map(audienceObject => Object.values(audienceObject).map(values => values.join(", ")).join(" AND ")).join(" OR ") || "All"
+    return audience?.map(audienceObject => audienceObject.stage?.join(", ")).join(" OR ") || "All"; // Stage only
+}
+
 interface SectionWithDisplaySettings extends ContentDTO {
     startOpen?: boolean;
     deEmphasised?: boolean;
@@ -85,7 +90,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                 <Accordion
                     key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
                     startOpen={section.startOpen} deEmphasised={section.deEmphasised}
-                    trustedTitle={section?.title || ""}
+                    trustedTitle={section?.title || ""} audienceString={stringifyAudience(section.audience)}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>

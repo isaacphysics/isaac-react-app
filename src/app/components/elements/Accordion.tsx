@@ -20,11 +20,12 @@ interface AccordionsProps {
     children?: React.ReactElement;
     startOpen?: boolean;
     deEmphasised?: boolean;
+    audienceString?: string;
 }
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
     const page = useSelector((state: AppState) => (state && state.doc) || null);
 
@@ -144,8 +145,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                {/*TODO CS Level*/}
-                {SITE_SUBJECT === SITE.PHY && level && <span className="accordion-level badge-secondary">Level {level}</span>}
+                {isConceptPage && audienceString && <span className="accordion-level badge-secondary">{audienceString}</span>}
                 <div className="accordion-title pl-3">
                     <RS.Row><span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}</RS.Row>
