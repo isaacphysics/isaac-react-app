@@ -47,6 +47,8 @@ export function useUserContext(): UserContext {
         examBoard = qParams.examBoard.toUpperCase() as EXAM_BOARD;
     } else if (isDefined(transientUserContext?.examBoard)) {
         examBoard = transientUserContext?.examBoard;
+    } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
+        examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
     } else {
         examBoard = EXAM_BOARD.NONE;
     }
@@ -57,6 +59,8 @@ export function useUserContext(): UserContext {
         stage = qParams.stage as STAGE;
     } else if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
+    } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
+        stage = user.registeredContexts[0].stage as STAGE;
     } else {
         stage = STAGE.NONE;
     }
