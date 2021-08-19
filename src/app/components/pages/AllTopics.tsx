@@ -5,7 +5,7 @@ import "../../services/tagsPhy";
 import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
-import {STAGE, TAG_ID} from "../../services/constants";
+import {EXAM_BOARD, STAGE, TAG_ID} from "../../services/constants";
 import queryString from "query-string";
 import {PageFragment} from "../elements/PageFragment";
 import {Tabs} from "../elements/Tabs";
@@ -75,6 +75,8 @@ export const AllTopics = () => {
         </Col>
     };
 
+
+
     return <div className="pattern-02">
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
@@ -91,8 +93,13 @@ export const AllTopics = () => {
                         </Col>
                     </Row>
                 </>,
-                AQA: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_aqa" /></div>,
-                OCR: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_ocr" /></div>
+                ...(stage === STAGE.A_LEVEL && {AQA: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_aqa" /></div>}),
+                ...(stage === STAGE.A_LEVEL && {OCR: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_ocr" /></div>}),
+                ...(stage === STAGE.GCSE && {AQA: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_aqa" /></div>}),
+                ...(stage === STAGE.GCSE && {OCR: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_ocr" /></div>}),
+                ...(stage === STAGE.GCSE && {EDEXCEL: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_edexcel" /></div>}),
+                ...(stage === STAGE.GCSE && {EDUCAS: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_educas" /></div>}),
+                ...(stage === STAGE.GCSE && {WJEC: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_wjec" /></div>}),
             }}</Tabs>
         </Container>
     </div>;
