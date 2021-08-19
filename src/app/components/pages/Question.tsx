@@ -87,14 +87,11 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                 >
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
-                <div className="no-print d-flex align-items-center">
+                <div className="no-print d-flex align-items-center mt-3">
                     <div className="not-mobile">
                         <EditContentButton doc={doc} />
                     </div>
-                    <div className="mt-3 mr-sm-1 ml-auto">
-                        <UserContextPicker className="no-print text-right" />
-                    </div>
-                    <div className="question-actions">
+                    <div className="question-actions ml-auto">
                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} />
                     </div>
                     <div className="question-actions not-mobile">
