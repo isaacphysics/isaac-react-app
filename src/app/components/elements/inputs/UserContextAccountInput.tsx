@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {isTeacher} from "../../../services/user";
 import * as RS from "reactstrap";
-import {Input} from "reactstrap";
+import {CustomInput, Input} from "reactstrap";
 import {EXAM_BOARD, STAGE} from "../../../services/constants";
 import {getFilteredExamBoardOptions, getFilteredStages} from "../../../services/userContext";
 import {Link} from "react-router-dom";
@@ -56,6 +56,7 @@ interface UserContextAccountInputProps {
 export function UserContextAccountInput({user, userContexts, setUserContexts, submissionAttempted}: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
     const numberOfPossibleStages = getFilteredStages(false).length;
+    const onlyOneSelected = userContexts.length === 1;
 
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">
@@ -91,6 +92,15 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
 
                 </RS.FormGroup>
             })}
+            {SITE_SUBJECT === SITE.CS && <RS.Label>
+                <CustomInput type="checkbox" className="d-inline-block"/>{" "}
+                {
+                    (onlyOneSelected && userContexts[0].stage === "gcse") ? "Also show A Level content" :
+                    (onlyOneSelected && userContexts[0].stage === "a_level") ? "Also show GCSE content" :
+                    /* else */ "Also show content for other stage and exam boards"
+                }
+            </RS.Label>}
         </RS.FormGroup>
+
     </div>
 }

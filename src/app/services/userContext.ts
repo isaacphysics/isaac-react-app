@@ -102,11 +102,11 @@ export function getFilteredExamBoardOptions(stages: STAGE[], includeNullOptions:
 }
 
 const STAGE_ITEM_OPTIONS = [
-    {label: "None", value: STAGE.NONE},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
     {label: "University", value: STAGE.UNIVERSITY},
+    {label: "None", value: STAGE.NONE},
 ];
 export function getFilteredStages(includeNullOptions: boolean) {
     return STAGE_ITEM_OPTIONS
