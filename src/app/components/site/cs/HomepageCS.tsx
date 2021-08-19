@@ -8,6 +8,7 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
+import {ExternalLink} from "../../elements/ExternalLink";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -76,6 +77,11 @@ export const HomepageCS = () => {
                                         <li>Use it for <strong>homework</strong></li>
                                         <li>Use it for <strong>revision</strong></li>
                                     </ul>
+
+                                    <p>
+                                        Isaac Computer Science is part of the <ExternalLink href="https://teachcomputing.org/">NCCE</ExternalLink>,<br />
+                                        a <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> funded project.
+                                    </p>
                                 </Col>
                             </Row>
                         </Col>
