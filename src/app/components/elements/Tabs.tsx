@@ -28,7 +28,7 @@ export const Tabs = (props: TabsProps) => {
 
     useEffect(() => {
         isDefined(activeTabOverride) && setActiveTab(activeTabOverride)
-    }, [activeTabOverride]);
+    }, [activeTabOverride, children]);
 
     function changeTab(tabIndex: number) {
         pauseAllVideos();

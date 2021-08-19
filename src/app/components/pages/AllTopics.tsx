@@ -5,7 +5,7 @@ import "../../services/tagsPhy";
 import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
-import {EXAM_BOARD, STAGE, TAG_ID} from "../../services/constants";
+import {EXAM_BOARDS_CS_A_LEVEL, EXAM_BOARDS_CS_GCSE, STAGE, TAG_ID} from "../../services/constants";
 import queryString from "query-string";
 import {PageFragment} from "../elements/PageFragment";
 import {Tabs} from "../elements/Tabs";
@@ -16,6 +16,7 @@ export const AllTopics = () => {
 
     const stageString = (params.stage ? (Array.isArray(params.stage) ? params.stage[0] : params.stage) : "a_level").toLowerCase();
     const stage = stageString === STAGE.GCSE ? STAGE.GCSE : STAGE.A_LEVEL;
+    const stageExamBoards = Array.from({[STAGE.GCSE]: EXAM_BOARDS_CS_GCSE, [STAGE.A_LEVEL]: EXAM_BOARDS_CS_A_LEVEL}[stage]);
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
@@ -75,32 +76,34 @@ export const AllTopics = () => {
         </Col>
     };
 
-
-
     return <div className="pattern-02">
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
 
-            {/* Search topics TODO MT */}
-
-            <Tabs className="pt-3" tabContentClass="pt-3">{{
-                All: <>
-                    {/* Add exposition for what 'All' tab is (in relation to other exam board pages for clarification) TODO CP */}
-                    <Row>
-                        <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
-                            {topicColumn(firstColTags)}
-                            {topicColumn(secondColTags)}
-                        </Col>
-                    </Row>
-                </>,
-                ...(stage === STAGE.A_LEVEL && {AQA: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_aqa" /></div>}),
-                ...(stage === STAGE.A_LEVEL && {OCR: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="a_level_specification_ocr" /></div>}),
-                ...(stage === STAGE.GCSE && {AQA: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_aqa" /></div>}),
-                ...(stage === STAGE.GCSE && {OCR: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_ocr" /></div>}),
-                ...(stage === STAGE.GCSE && {EDEXCEL: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_edexcel" /></div>}),
-                ...(stage === STAGE.GCSE && {EDUCAS: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_educas" /></div>}),
-                ...(stage === STAGE.GCSE && {WJEC: <div className="bg-light-grey py-md-3"><PageFragment fragmentId="gcse_specification_wjec" /></div>}),
-            }}</Tabs>
+            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1}>
+                {
+                    Object.assign(
+                        {
+                            All: <>
+                                {/* Add exposition for what 'All' tab is (in relation to other exam board pages for clarification) TODO CP */}
+                                <Row>
+                                    <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
+                                        {topicColumn(firstColTags)}
+                                        {topicColumn(secondColTags)}
+                                    </Col>
+                                </Row>
+                            </>
+                        },
+                        ...stageExamBoards.map(examBoard => ({
+                            [examBoard]: <Row>
+                                <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4">
+                                    <PageFragment fragmentId={`${stage}_specification_${examBoard.toLowerCase()}`} />
+                                </Col>
+                            </Row>
+                        }))
+                    )
+                }
+            </Tabs>
         </Container>
     </div>;
 };
