@@ -88,7 +88,7 @@ const EXAM_BOARD_ITEM_OPTIONS = [
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
-    {label: "EDUCAS", value: EXAM_BOARD.EDUCAS},
+    {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "Other", value: EXAM_BOARD.OTHER},
     {label: "None", value: EXAM_BOARD.NONE},

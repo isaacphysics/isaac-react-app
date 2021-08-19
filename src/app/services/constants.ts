@@ -565,20 +565,20 @@ export enum EXAM_BOARD {
     OCR = "OCR",
     CIE = "CIE",
     EDEXCEL = "EDEXCEL",
-    EDUCAS = "EDUCAS",
+    EDUQAS = "EDUQAS",
     WJEC = "WJEC",
     OTHER = "OTHER",
     NONE = "NONE",
 }
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.OTHER, EXAM_BOARD.NONE]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUCAS, EXAM_BOARD.WJEC */]);
-export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUCAS, EXAM_BOARD.WJEC]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
+export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 export const examBoardTagMap: {[examBoard: string]: string} = {
     [EXAM_BOARD.AQA]: "examboard_aqa",
     [EXAM_BOARD.OCR]: "examboard_ocr",
     [EXAM_BOARD.CIE]: "examboard_cie",
     [EXAM_BOARD.EDEXCEL]: "examboard_edexcel",
-    [EXAM_BOARD.EDUCAS]: "examboard_educas",
+    [EXAM_BOARD.EDUQAS]: "examboard_eduqas",
     [EXAM_BOARD.WJEC]: "examboard_wjec",
 };
 

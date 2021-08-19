@@ -465,7 +465,7 @@ export interface GroupMembershipDTO {
 
 export type Stage = "gcse" | "a_level" | "further_a" | "university" | "none";
 
-export type ExamBoard = "AQA" | "OCR" | "CIE" | "EDEXCEL" | "EDUCAS" | "WJEC" | "OTHER" | "NONE";
+export type ExamBoard = "AQA" | "OCR" | "CIE" | "EDEXCEL" | "EDUQAS" | "WJEC" | "OTHER" | "NONE";
 
 export interface UserContext {
     stage?: Stage;
