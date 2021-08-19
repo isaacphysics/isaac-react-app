@@ -23,8 +23,6 @@ import {history} from "./history";
 import queryString from "query-string";
 import {useEffect} from "react";
 
-const defaultStage = {[SITE.CS]: STAGE.A_LEVEL, [SITE.PHY]: STAGE.NONE}[SITE_SUBJECT];
-
 interface UserContext {
     examBoard: EXAM_BOARD;
     stage: STAGE;
@@ -47,10 +45,10 @@ export function useUserContext(): UserContext {
         examBoard = EXAM_BOARD.NONE;
     } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard.toUpperCase() as EXAM_BOARD)) {
         examBoard = qParams.examBoard.toUpperCase() as EXAM_BOARD;
-    } else if (!user || user.examBoard === undefined || EXAM_BOARD_NULL_OPTIONS.has(user.examBoard) || transientUserContext?.examBoard !== undefined) {
-        examBoard = transientUserContext?.examBoard ?? EXAM_BOARD.NONE;
+    } else if (isDefined(transientUserContext?.examBoard)) {
+        examBoard = transientUserContext?.examBoard;
     } else {
-        examBoard = user.examBoard;
+        examBoard = EXAM_BOARD.NONE;
     }
 
     // Stage
@@ -60,7 +58,7 @@ export function useUserContext(): UserContext {
     } else if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
     } else {
-        stage = defaultStage;
+        stage = STAGE.NONE;
     }
 
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
