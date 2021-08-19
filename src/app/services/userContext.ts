@@ -67,7 +67,10 @@ export function useUserContext(): UserContext {
 
     // Update query params
     useEffect(() => {
-        if (stage !== qParams.stage || examBoard !== qParams.examBoard?.toUpperCase()) {
+        if (
+            (stage !== qParams.stage && !STAGE_NULL_OPTIONS.has(stage)) ||
+            (examBoard !== qParams.examBoard?.toUpperCase() && !EXAM_BOARD_NULL_OPTIONS.has(examBoard))
+        ) {
             const newParams = {...qParams, stage, examBoard: examBoard.toLowerCase()};
             if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;} /* TODO MT people might want to share none view */
             if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;} /* TODO MT people might want to share none view */
