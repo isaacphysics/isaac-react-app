@@ -93,15 +93,30 @@ const EXAM_BOARD_ITEM_OPTIONS = [
     {label: "Other", value: EXAM_BOARD.OTHER},
     {label: "None", value: EXAM_BOARD.NONE},
 ];
-export function getFilteredExamBoardOptions(stages: STAGE[], includeNullOptions: boolean) {
+export function getFilteredExamBoardOptions(userForRestriction: PotentialUser | null, stagesRestriction: STAGE[], includeNullOptions: boolean) {
     return EXAM_BOARD_ITEM_OPTIONS
+        // Restrict by stage
         .filter(i =>
-            stages.length === 0 ||
-            stages.includes(STAGE.NONE) ||
-            (stages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) ||
-            (stages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value))
+            stagesRestriction.length === 0 ||
+            stagesRestriction.includes(STAGE.NONE) ||
+            (stagesRestriction.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) ||
+            (stagesRestriction.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value))
         )
-        .filter(i => includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value));
+        // Restrict by includeNullOptions flag
+        .filter(i => includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
+        // Restrict by account settings - bypassed with null (logged out user for example)
+        .filter(i => userForRestriction === null ||
+            isLoggedIn(userForRestriction) && (
+                // user has a null option selected
+                userForRestriction.registeredContexts
+                    ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
+                    .some(rc => EXAM_BOARD_NULL_OPTIONS.has(rc.examBoard as EXAM_BOARD)) ||
+                // stage is one of registered context selections
+                userForRestriction.registeredContexts
+                    ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
+                    .map(rc => rc.examBoard).includes(i.value)
+            )
+        );
 }
 
 const STAGE_ITEM_OPTIONS = [
@@ -111,10 +126,22 @@ const STAGE_ITEM_OPTIONS = [
     {label: "University", value: STAGE.UNIVERSITY},
     {label: "None", value: STAGE.NONE},
 ];
-export function getFilteredStages(includeNullOptions: boolean) {
+export function getFilteredStages(userForRestriction: PotentialUser | null, includeNullOptions: boolean) {
+    // TODO MT param for add additional option for query param case
     return STAGE_ITEM_OPTIONS
+        // Restrict by subject stages
         .filter(i => ({[SITE.PHY]: STAGES_PHY, [SITE.CS]: STAGES_CS}[SITE_SUBJECT].has(i.value)))
-        .filter(i => includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value));
+        // Restrict by includeNullOptions flag
+        .filter(i => includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
+        // Restrict by account settings - bypassed with null (logged out user for example)
+        .filter(i => userForRestriction === null ||
+            isLoggedIn(userForRestriction) && (
+                // user has a null option selected
+                userForRestriction.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
+                // stage is one of registered context selections
+                userForRestriction.registeredContexts?.map(rc => rc.stage).includes(i.value)
+            )
+        );
 }
 
 const contentTypesToFilter = [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT];

@@ -26,7 +26,7 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
             onChange={e => setUserContext({...userContext, stage: e.target.value as STAGE})}
         >
             <option value=""></option>
-            {getFilteredStages(showNullStageOption).map(item =>
+            {getFilteredStages(null, showNullStageOption).map(item =>
                 <option key={item.value} value={item.value}>{item.label}</option>
             )}
         </Input>
@@ -40,7 +40,7 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
             onChange={e => setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD})}
         >
             <option value=""></option>
-            {getFilteredExamBoardOptions([userContext.stage as STAGE || STAGE.NONE], true).map(item =>
+            {getFilteredExamBoardOptions(null, [userContext.stage as STAGE || STAGE.NONE], true).map(item =>
                 <option key={item.value} value={item.value}>{item.label}</option>
             )}
         </Input>}
@@ -55,7 +55,7 @@ interface UserContextAccountInputProps {
 }
 export function UserContextAccountInput({user, userContexts, setUserContexts, submissionAttempted}: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
-    const numberOfPossibleStages = getFilteredStages(false).length;
+    const numberOfPossibleStages = getFilteredStages(null,false).length;
     const onlyOneSelected = userContexts.length === 1;
 
     return <div>

@@ -156,7 +156,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
                 <Select
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredStages(false)} onChange={multiSelectOnChange(setSearchStages)}
+                    options={getFilteredStages(null,false)} onChange={multiSelectOnChange(setSearchStages)}
                 />
             </RS.Col>
             {SITE_SUBJECT === SITE.PHY && !isBookSearch && <RS.Col lg={6} className={`text-wrap my-2`}>
@@ -170,7 +170,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredExamBoardOptions(searchStages, false)}
+                    options={getFilteredExamBoardOptions(null, searchStages, false)}
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
             </RS.Col>}

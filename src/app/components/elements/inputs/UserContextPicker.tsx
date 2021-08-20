@@ -10,7 +10,6 @@ import {
 } from "../../../state/actions";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
-import {isStaff} from "../../../services/user";
 import {useQueryParams} from "../../../services/reactRouterExtension";
 import {history} from "../../../services/history";
 import queryString from "query-string";
@@ -23,8 +22,8 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
 
     const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && segueEnvironment === "DEV";
-    const showStageSelector = true;
-    const showExamBoardSelector = SITE_SUBJECT === SITE.CS;
+    const showStageSelector = getFilteredStages(user, false).length > 1;
+    const showExamBoardSelector = SITE_SUBJECT === SITE.CS && getFilteredExamBoardOptions(user,[], false).length > 1;
 
     return <div className="d-flex">
         {/* Show other content Selector */}
@@ -45,13 +44,21 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 aria-label={hideLabels ? "Stage" : undefined}
                 value={userContext.stage}
                 onChange={e => {
-                    const newParams = {...qParams, stage: e.target.value};
+                    const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
                     if (STAGE_NULL_OPTIONS.has(e.target.value as STAGE)) {delete newParams.stage;}
+                    if (SITE_SUBJECT === SITE.CS) {
+                        // drive exam board selection so that it is a valid option
+                        const examBoard =
+                            getFilteredExamBoardOptions(user, [e.target.value as STAGE], false)[0] ||
+                            EXAM_BOARD.NONE;
+                        if (!EXAM_BOARD_NULL_OPTIONS.has(examBoard.value)) {newParams.examBoard = examBoard;}
+                        dispatch(setTransientExamBoardPreference(examBoard.value));
+                    }
                     history.push({search: queryString.stringify(newParams, {encode: false})});
                     dispatch(setTransientStagePreference(e.target.value as STAGE));
                 }}
             >
-                {getFilteredStages(true).map(item =>
+                {getFilteredStages(user, true).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
             </Input>
@@ -71,8 +78,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
                 }}
             >
-                <option value={EXAM_BOARD.NONE}>None</option>
-                {getFilteredExamBoardOptions([userContext.stage], false).map(item =>
+                {getFilteredExamBoardOptions(user,[userContext.stage], true).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
             </Input>

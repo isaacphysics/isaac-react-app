@@ -63,7 +63,7 @@ function processQueryString(query: string): QueryStringResponse {
             itemiseLevels(levelArray);
     }
 
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStages(false));
+    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStages(null,false));
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
 
@@ -249,7 +249,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                             I am interested in stage...
                         </RS.Label>
-                        <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(false)} />
+                        <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(null,false)} />
                     </div>
                     <div>
                         <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
