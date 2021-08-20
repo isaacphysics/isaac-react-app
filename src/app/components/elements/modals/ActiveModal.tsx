@@ -34,17 +34,26 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
             // @ts-ignore
             modalRef.current.handleEscape = (e) => {
                 // @ts-ignore
-                const backdrop = modalRef.current._dialog ? modalRef.current._dialog.parentNode : null;
-                if (backdrop && e.target === backdrop) {
-                    dispatch(closeActiveModal());
+                if (modalRef.current.props.keyboard && e.keyCode === 27) { // 27 is the key code for esc
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // @ts-ignore
+                    const backdrop = modalRef.current._dialog ? modalRef.current._dialog.parentNode : null;
+                    if (backdrop && e.target === backdrop) {
+                        dispatch(closeActiveModal());
+                    }
                 }
             }
             // @ts-ignore
             modalRef.current.handleBackdropClick = (e) => {
                 // @ts-ignore
-                const backdrop = modalRef.current._dialog ? modalRef.current._dialog.parentNode : null;
-                if (backdrop && e.target === backdrop) {
-                    dispatch(closeActiveModal());
+                if (e.target === modalRef.current._mouseDownElement) {
+                    e.stopPropagation();
+                    // @ts-ignore
+                    const backdrop = modalRef.current._dialog ? modalRef.current._dialog.parentNode : null;
+                    if (backdrop && e.target === backdrop) {
+                        dispatch(closeActiveModal());
+                    }
                 }
             };
         }
