@@ -104,18 +104,18 @@ export function getFilteredExamBoardOptions(userForRestriction: PotentialUser | 
         )
         // Restrict by includeNullOptions flag
         .filter(i => includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
-        // Restrict by account settings - bypassed with null (logged out user for example)
-        .filter(i => userForRestriction === null ||
-            isLoggedIn(userForRestriction) && (
-                // user has a null option selected
-                userForRestriction.registeredContexts
-                    ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
-                    .some(rc => EXAM_BOARD_NULL_OPTIONS.has(rc.examBoard as EXAM_BOARD)) ||
-                // stage is one of registered context selections
-                userForRestriction.registeredContexts
-                    ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
-                    .map(rc => rc.examBoard).includes(i.value)
-            )
+        // Restrict by account settings
+        .filter(i =>
+            // skip if null or logged out user
+            userForRestriction === null || !isLoggedIn(userForRestriction) ||
+            // user has a null option selected
+            userForRestriction.registeredContexts
+                ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
+                .some(rc => EXAM_BOARD_NULL_OPTIONS.has(rc.examBoard as EXAM_BOARD)) ||
+            // stage is one of registered context selections
+            userForRestriction.registeredContexts
+                ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
+                .map(rc => rc.examBoard).includes(i.value)
         );
 }
 
@@ -133,14 +133,14 @@ export function getFilteredStages(userForRestriction: PotentialUser | null, incl
         .filter(i => ({[SITE.PHY]: STAGES_PHY, [SITE.CS]: STAGES_CS}[SITE_SUBJECT].has(i.value)))
         // Restrict by includeNullOptions flag
         .filter(i => includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
-        // Restrict by account settings - bypassed with null (logged out user for example)
-        .filter(i => userForRestriction === null ||
-            isLoggedIn(userForRestriction) && (
-                // user has a null option selected
-                userForRestriction.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
-                // stage is one of registered context selections
-                userForRestriction.registeredContexts?.map(rc => rc.stage).includes(i.value)
-            )
+        // Restrict by account settings
+        .filter(
+            // skip if null or logged out user
+            i => userForRestriction === null || !isLoggedIn(userForRestriction) ||
+            // user has a null option selected
+            userForRestriction.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
+            // stage is one of registered context selections
+            userForRestriction.registeredContexts?.map(rc => rc.stage).includes(i.value)
         );
 }
 
