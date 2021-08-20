@@ -90,8 +90,7 @@ export const EXAM_BOARD_ITEM_OPTIONS = [
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
     {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
-    {label: "Other", value: EXAM_BOARD.OTHER},
-    {label: "None", value: EXAM_BOARD.NONE},
+    {label: "All Exam Boards", value: EXAM_BOARD.NONE},
 ];
 export function getFilteredExamBoardOptions(userForRestriction: PotentialUser | null, stagesRestriction: STAGE[], includeNullOptions: boolean) {
     return EXAM_BOARD_ITEM_OPTIONS
@@ -124,7 +123,7 @@ export const STAGE_ITEM_OPTIONS = [
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
     {label: "University", value: STAGE.UNIVERSITY},
-    {label: "None", value: STAGE.NONE},
+    {label: "All Stages", value: STAGE.NONE},
 ];
 export function getFilteredStages(userForRestriction: PotentialUser | null, includeNullOptions: boolean) {
     return STAGE_ITEM_OPTIONS
