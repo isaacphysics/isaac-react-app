@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal} from "../../../state/actions";
@@ -12,6 +12,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const ModalBody = activeModal && activeModal.body;
     const dispatch = useDispatch();
     const [isOpen, setIsOpen] = useState(true);
+    const modalRef = useRef(null);
 
     const toggle = () => {
         const isNowOpen = !isOpen;
@@ -24,7 +25,32 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         }
     }, [dispatch, isOpen]);
 
-    return <RS.Modal toggle={toggle} isOpen={isOpen} size={(activeModal && activeModal.size) || "lg"}>
+    // Override default modal handing of escape key and backdrop click to
+    // make sure scrollbar is unlocked on close.
+    // TODO this feels like a patch on top of an issue with how 'toggle' works
+    //  since that is what gets called in the Modal component.
+    useEffect(() => {
+        if (modalRef && modalRef.current) {
+            // @ts-ignore
+            modalRef.current.handleEscape = (e) => {
+                // @ts-ignore
+                const backdrop = modalRef.current._dialog ? modalRef.current._dialog.parentNode : null;
+                if (backdrop && e.target === backdrop) {
+                    dispatch(closeActiveModal());
+                }
+            }
+            // @ts-ignore
+            modalRef.current.handleBackdropClick = (e) => {
+                // @ts-ignore
+                const backdrop = modalRef.current._dialog ? modalRef.current._dialog.parentNode : null;
+                if (backdrop && e.target === backdrop) {
+                    dispatch(closeActiveModal());
+                }
+            };
+        }
+    });
+
+    return <RS.Modal ref={modalRef} toggle={toggle} isOpen={isOpen} size={(activeModal && activeModal.size) || "lg"}>
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"
