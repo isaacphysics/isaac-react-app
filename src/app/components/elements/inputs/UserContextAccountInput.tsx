@@ -82,12 +82,15 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
                         ×
                     </button>}
 
-                    {showPlusOption && <button
-                        className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none`} aria-label="Add stage"
-                        onClick={() => setUserContexts([...userContexts, {}])}
-                    >
-                        +
-                    </button>}
+                    {showPlusOption && <RS.Label inline>
+                        <button
+                            className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none`} aria-label="Add stage"
+                            onClick={() => setUserContexts([...userContexts, {}])}
+                        >
+                            +
+                        </button>
+                        {SITE_SUBJECT === SITE.CS && <span className="ml-1">add stage</span>}
+                    </RS.Label>}
 
                 </RS.FormGroup>
             })}
