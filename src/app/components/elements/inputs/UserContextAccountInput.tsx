@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {isTeacher} from "../../../services/user";
 import * as RS from "reactstrap";
@@ -56,11 +56,10 @@ interface UserContextAccountInputProps {
 export function UserContextAccountInput({user, userContexts, setUserContexts, submissionAttempted}: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
     const numberOfPossibleStages = getFilteredStages(null,false).length;
-    const onlyOneSelected = userContexts.length === 1;
 
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">
-            {teacher ? "I am teaching" : "I am studying"}
+            {teacher ? "Highlight content I am teaching" : "Highlight content I am studying"}
         </RS.Label>
         {!teacher && <span className="float-right mt-1"><Link to={TEACHER_REQUEST_ROUTE} target="_blank">I am a teacher</Link></span>}
         <RS.FormGroup id="user-context-selector" className={SITE_SUBJECT === SITE.PHY ? "d-flex flex-wrap" : ""}>
@@ -94,11 +93,7 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
             })}
             {SITE_SUBJECT === SITE.CS && <RS.Label>
                 <CustomInput type="checkbox" className="d-inline-block"/>{" "}
-                {
-                    (onlyOneSelected && userContexts[0].stage === "gcse") ? "Also show A Level content" :
-                    (onlyOneSelected && userContexts[0].stage === "a_level") ? "Also show GCSE content" :
-                    /* else */ "Also show content for other stage and exam boards"
-                }
+                Hide all other content (NOTE: Switch needs wiring)
             </RS.Label>}
         </RS.FormGroup>
 
