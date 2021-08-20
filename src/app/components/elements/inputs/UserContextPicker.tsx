@@ -1,6 +1,12 @@
 import React from "react";
 import {CustomInput, FormGroup, Input, Label} from "reactstrap";
-import {getFilteredExamBoardOptions, getFilteredStages, useUserContext} from "../../../services/userContext";
+import {
+    EXAM_BOARD_ITEM_OPTIONS,
+    getFilteredExamBoardOptions,
+    getFilteredStages,
+    STAGE_ITEM_OPTIONS,
+    useUserContext
+} from "../../../services/userContext";
 import {EXAM_BOARD, EXAM_BOARD_NULL_OPTIONS, STAGE, STAGE_NULL_OPTIONS} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -49,10 +55,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     if (SITE_SUBJECT === SITE.CS) {
                         // drive exam board selection so that it is a valid option
                         const examBoard =
-                            getFilteredExamBoardOptions(user, [e.target.value as STAGE], false)[0] ||
+                            getFilteredExamBoardOptions(user, [e.target.value as STAGE], false)[0].value ||
                             EXAM_BOARD.NONE;
-                        if (!EXAM_BOARD_NULL_OPTIONS.has(examBoard.value)) {newParams.examBoard = examBoard;}
-                        dispatch(setTransientExamBoardPreference(examBoard.value));
+                        if (!EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {newParams.examBoard = examBoard.toLowerCase();}
+                        dispatch(setTransientExamBoardPreference(examBoard));
                     }
                     history.push({search: queryString.stringify(newParams, {encode: false})});
                     dispatch(setTransientStagePreference(e.target.value as STAGE));
@@ -61,6 +67,13 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {getFilteredStages(user, true).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
+                {/* If the userContext.stage is not in the user's normal list of options (following link with q. params) add it */}
+                {!getFilteredStages(user, true).map(s => s.value).includes(userContext.stage) &&
+                    <option key={userContext.stage} value={userContext.stage}>
+                        {STAGE_ITEM_OPTIONS.filter(o => o.value === userContext.stage)[0]?.label}
+                        {" (from query parameter)"}
+                    </option>
+                }
             </Input>
         </FormGroup>}
 
@@ -81,6 +94,13 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {getFilteredExamBoardOptions(user,[userContext.stage], true).map(item =>
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )}
+                {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
+                {!getFilteredExamBoardOptions(user,[userContext.stage], true).map(s => s.value).includes(userContext.examBoard) &&
+                    <option key={userContext.examBoard} value={userContext.examBoard}>
+                        {EXAM_BOARD_ITEM_OPTIONS.filter(o => o.value === userContext.examBoard)[0]?.label}
+                        {" (from link)"}
+                    </option>
+                }
             </Input>
         </FormGroup>}
     </div>;

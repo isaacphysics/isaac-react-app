@@ -83,7 +83,7 @@ export function useUserContext(): UserContext {
     return {examBoard, stage, showOtherContent, preferredProgrammingLanguage};
 }
 
-const EXAM_BOARD_ITEM_OPTIONS = [
+export const EXAM_BOARD_ITEM_OPTIONS = [
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
@@ -119,7 +119,7 @@ export function getFilteredExamBoardOptions(userForRestriction: PotentialUser | 
         );
 }
 
-const STAGE_ITEM_OPTIONS = [
+export const STAGE_ITEM_OPTIONS = [
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
@@ -127,7 +127,6 @@ const STAGE_ITEM_OPTIONS = [
     {label: "None", value: STAGE.NONE},
 ];
 export function getFilteredStages(userForRestriction: PotentialUser | null, includeNullOptions: boolean) {
-    // TODO MT param for add additional option for query param case
     return STAGE_ITEM_OPTIONS
         // Restrict by subject stages
         .filter(i => ({[SITE.PHY]: STAGES_PHY, [SITE.CS]: STAGES_CS}[SITE_SUBJECT].has(i.value)))
