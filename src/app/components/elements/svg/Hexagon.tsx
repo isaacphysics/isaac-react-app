@@ -1,5 +1,4 @@
-import React from "react"
-import {calculateDashArray, generatePolygon, SVGShapeProps} from "./SVGUtils";
+import {generatePolygon, SVGShapeProps} from "./SVGUtils";
 
 export interface HexagonProportions {
     halfWidth: number;

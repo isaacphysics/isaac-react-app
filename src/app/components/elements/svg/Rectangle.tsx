@@ -1,4 +1,3 @@
-import React from "react";
 import {generatePolygon, SVGShapeProps} from "./SVGUtils";
 
 export interface RectangleProportions {
