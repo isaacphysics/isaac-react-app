@@ -97,7 +97,7 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
                     />
 
                     {teacher && userContexts.length > 1 && <button
-                        className="mx-2 close float-none align-middle" aria-label="clear stage row"
+                        type="button" className="mx-2 close float-none align-middle" aria-label="clear stage row"
                         onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
                     >
                         ×
@@ -105,8 +105,8 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
 
                     {showPlusOption && <RS.Label inline>
                         <button
+                            type="button" aria-label="Add stage"
                             className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none pointer-cursor`}
-                            aria-label="Add stage"
                             onClick={() => setUserContexts([...userContexts, {}])}
                         >
                             +
