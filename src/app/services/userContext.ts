@@ -11,26 +11,26 @@ import {
     STAGES_CS,
     STAGES_PHY
 } from "./constants";
-import {ContentBaseDTO, ContentSummaryDTO, Role} from "../../IsaacApiTypes";
+import {ContentBaseDTO, ContentSummaryDTO, Role, UserContext} from "../../IsaacApiTypes";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {PotentialUser, ProgrammingLanguage} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
-import {useQueryParams} from "./reactRouterExtension";
 import {isDefined} from "./miscUtils";
 import {history} from "./history";
 import queryString from "query-string";
 import {useEffect} from "react";
+import {useQueryParams} from "./reactRouterExtension";
 
-interface UserContext {
+interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
     preferredProgrammingLanguage?: string;
 }
 
-export function useUserContext(): UserContext {
+export function useUserContext(): UseUserContextReturnType {
     const qParams = useQueryParams(true);
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
@@ -83,7 +83,7 @@ export function useUserContext(): UserContext {
     return {examBoard, stage, showOtherContent, preferredProgrammingLanguage};
 }
 
-export const EXAM_BOARD_ITEM_OPTIONS = [
+const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
@@ -92,53 +92,88 @@ export const EXAM_BOARD_ITEM_OPTIONS = [
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "All Exam Boards", value: EXAM_BOARD.NONE},
 ];
-export function getFilteredExamBoardOptions(userForRestriction: PotentialUser | null, stagesRestriction: STAGE[], includeNullOptions: boolean) {
-    return EXAM_BOARD_ITEM_OPTIONS
-        // Restrict by stage
+interface ExamBoardFilterOptions {
+    byUser?: PotentialUser | null;
+    byStages?: STAGE[];
+    byUserContexts?: UserContext[];
+    includeNullOptions?: boolean;
+}
+export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
+    if (!filter) {return  _EXAM_BOARD_ITEM_OPTIONS;}
+    return _EXAM_BOARD_ITEM_OPTIONS
+        // by stage
         .filter(i =>
-            stagesRestriction.length === 0 ||
-            stagesRestriction.includes(STAGE.NONE) ||
-            (stagesRestriction.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) ||
-            (stagesRestriction.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value))
+            !isDefined(filter.byStages) || // ignore if not set
+            i.value === EXAM_BOARD.NONE || // none does not get filtered by stage
+            filter.byStages.length === 0 || // if there are no stages to filter by all pass
+            filter.byStages.includes(STAGE.NONE) || // none in the stage level allows for all exam boards
+            (filter.byStages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) || // if there is gcse in stages allow GCSE boards
+            (filter.byStages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value)) // if there is a_level in stage allow A Level boards
         )
-        // Restrict by includeNullOptions flag
-        .filter(i => includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
-        // Restrict by account settings
+        // includeNullOptions flag
+        .filter(i => filter.includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
+        // by user account settings
         .filter(i =>
             // skip if null or logged out user
-            userForRestriction === null || !isLoggedIn(userForRestriction) ||
+            !isLoggedIn(filter.byUser) ||
             // user has a null option selected
-            userForRestriction.registeredContexts
-                ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
+            filter.byUser.registeredContexts
+                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE))
                 .some(rc => EXAM_BOARD_NULL_OPTIONS.has(rc.examBoard as EXAM_BOARD)) ||
             // stage is one of registered context selections
-            userForRestriction.registeredContexts
-                ?.filter(rc => stagesRestriction.length === 0 || stagesRestriction.includes(rc.stage as STAGE))
+            filter.byUser.registeredContexts
+                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE))
                 .map(rc => rc.examBoard).includes(i.value)
-        );
+        )
+        // Restrict by existing user context selections
+        .filter(i =>
+            !isDefined(filter.byUserContexts) ||
+            !filter.byUserContexts
+                .filter(uc => !filter.byStages || filter.byStages.includes(uc.stage as STAGE))
+                .map(uc => uc.examBoard).includes(i.value));
 }
 
-export const STAGE_ITEM_OPTIONS = [
+const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
     {label: "University", value: STAGE.UNIVERSITY},
     {label: "All Stages", value: STAGE.NONE},
 ];
-export function getFilteredStages(userForRestriction: PotentialUser | null, includeNullOptions: boolean) {
-    return STAGE_ITEM_OPTIONS
+interface StageFilterOptions {
+    byUser?: PotentialUser | null;
+    byUserContexts?: UserContext[];
+    includeNullOptions?: boolean;
+}
+export function getFilteredStageOptions(filter?: StageFilterOptions) {
+    if (!filter) {return _STAGE_ITEM_OPTIONS;}
+    return _STAGE_ITEM_OPTIONS
         // Restrict by subject stages
         .filter(i => ({[SITE.PHY]: STAGES_PHY, [SITE.CS]: STAGES_CS}[SITE_SUBJECT].has(i.value)))
         // Restrict by includeNullOptions flag
-        .filter(i => includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
+        .filter(i => filter.includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
         // Restrict by account settings
-        .filter(
+        .filter(i =>
             // skip if null or logged out user
-            i => userForRestriction === null || !isLoggedIn(userForRestriction) ||
+            !isLoggedIn(filter.byUser) ||
             // user has a null option selected
-            userForRestriction.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
+            filter.byUser.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
             // stage is one of registered context selections
-            userForRestriction.registeredContexts?.map(rc => rc.stage).includes(i.value)
+            filter.byUser.registeredContexts?.map(rc => rc.stage).includes(i.value)
+        )
+        // Restrict by user contexts
+        .filter(i =>
+            !filter.byUserContexts ||
+            // if options at stage are exhausted don't offer it
+            // - physics
+            (SITE_SUBJECT === SITE.PHY && !filter.byUserContexts.map(uc => uc.stage).includes(i.value)) ||
+            // - computer science
+            (SITE_SUBJECT === SITE.CS && !(
+                // stage already has a null option selected
+                filter.byUserContexts.some(uc => uc.stage === i.value && EXAM_BOARD_NULL_OPTIONS.has(uc.examBoard as EXAM_BOARD)) ||
+                // every exam board has been recorded for the stage
+                getFilteredExamBoardOptions({byUser: filter.byUser, byStages: [i.value], byUserContexts: filter.byUserContexts}).length === 0
+            ))
         );
 }
 
@@ -153,7 +188,7 @@ export const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM
     });
 };
 
-export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UserContext, user: PotentialUser | null): boolean {
+export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
         return true;

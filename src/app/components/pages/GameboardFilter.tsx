@@ -16,7 +16,7 @@ import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../element
 import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select from "react-select";
-import {getFilteredStages} from "../../services/userContext";
+import {getFilteredStageOptions} from "../../services/userContext";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 
@@ -63,7 +63,7 @@ function processQueryString(query: string): QueryStringResponse {
             itemiseLevels(levelArray);
     }
 
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStages(null,false));
+    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStageOptions());
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
 
@@ -249,7 +249,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                             I am interested in stage...
                         </RS.Label>
-                        <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(null,false)} />
+                        <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
                     </div>
                     <div>
                         <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">

@@ -4,7 +4,7 @@ import {isTeacher} from "../../../services/user";
 import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
 import {EXAM_BOARD, STAGE} from "../../../services/constants";
-import {getFilteredExamBoardOptions, getFilteredStages} from "../../../services/userContext";
+import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {UserContext} from "../../../../IsaacApiTypes";
@@ -14,8 +14,10 @@ interface UserContextRowProps {
     setUserContext: (ucs: UserContext) => void;
     showNullStageOption: boolean;
     submissionAttempted: boolean;
+    existingUserContexts: UserContext[];
 }
-function UserContextRow({userContext, setUserContext, showNullStageOption, submissionAttempted}: UserContextRowProps) {
+function UserContextRow({userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts}: UserContextRowProps) {
+    const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
     return <React.Fragment>
         {/* Stage Selector */}
         <Input
@@ -23,10 +25,23 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
             aria-label="Stage"
             value={userContext.stage || ""}
             invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
-            onChange={e => setUserContext({...userContext, stage: e.target.value as STAGE})}
+            onChange={e => {
+                const stage = e.target.value as STAGE;
+                let examBoard;
+                if (SITE_SUBJECT === SITE.CS) {
+                    const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1
+                    examBoard = getFilteredExamBoardOptions({
+                        byStages: [e.target.value as STAGE || STAGE.NONE], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
+                    })[0]?.value || EXAM_BOARD.NONE;
+                }
+                setUserContext({...userContext, stage, examBoard});
+            }}
         >
             <option value=""></option>
-            {getFilteredStages(null, showNullStageOption).map(item =>
+            {getFilteredStageOptions({
+                byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard)),
+                includeNullOptions: showNullStageOption
+            }).map(item =>
                 <option key={item.value} value={item.value}>{item.label}</option>
             )}
         </Input>
@@ -40,9 +55,15 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
             onChange={e => setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD})}
         >
             <option value=""></option>
-            {getFilteredExamBoardOptions(null, [userContext.stage as STAGE || STAGE.NONE], true).map(item =>
-                <option key={item.value} value={item.value}>{item.label}</option>
-            )}
+            {getFilteredExamBoardOptions({
+                byStages: [userContext.stage as STAGE || STAGE.NONE],
+                includeNullOptions: onlyUCWithThisStage,
+                byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard))
+            })
+                .map(item =>
+                    <option key={item.value} value={item.value}>{item.label}</option>
+                )
+            }
         </Input>}
     </React.Fragment>
 }
@@ -55,7 +76,6 @@ interface UserContextAccountInputProps {
 }
 export function UserContextAccountInput({user, userContexts, setUserContexts, submissionAttempted}: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
-    const numberOfPossibleStages = getFilteredStages(null,false).length;
 
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">
@@ -66,13 +86,14 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
             {userContexts.map((userContext, index) => {
                 const showPlusOption = teacher &&
                     index === userContexts.length - 1 &&
-                    index < numberOfPossibleStages - 1 &&
-                    userContext.stage !== STAGE.NONE;
+                    // at least one exam board for the potential stage
+                    getFilteredStageOptions({byUserContexts: userContexts}).length > 0;
 
-                return <RS.FormGroup key={userContext.stage || index}>
+                return <RS.FormGroup key={index}>
                     <UserContextRow
                         userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
+                        existingUserContexts={userContexts}
                     />
 
                     {teacher && userContexts.length > 1 && <button
@@ -84,7 +105,8 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
 
                     {showPlusOption && <RS.Label inline>
                         <button
-                            className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none`} aria-label="Add stage"
+                            className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none pointer-cursor`}
+                            aria-label="Add stage"
                             onClick={() => setUserContexts([...userContexts, {}])}
                         >
                             +

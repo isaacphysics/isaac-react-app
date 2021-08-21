@@ -17,7 +17,7 @@ import tags from "../../../services/tags";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {DIFFICULTY_ITEM_OPTIONS, SortOrder, STAGE,} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
-import {getFilteredExamBoardOptions, getFilteredStages} from "../../../services/userContext";
+import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
@@ -156,7 +156,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
                 <Select
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredStages(null,false)} onChange={multiSelectOnChange(setSearchStages)}
+                    options={getFilteredStageOptions()} onChange={multiSelectOnChange(setSearchStages)}
                 />
             </RS.Col>
             {SITE_SUBJECT === SITE.PHY && !isBookSearch && <RS.Col lg={6} className={`text-wrap my-2`}>
@@ -170,7 +170,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredExamBoardOptions(null, searchStages, false)}
+                    options={getFilteredExamBoardOptions({byStages: searchStages})}
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
             </RS.Col>}

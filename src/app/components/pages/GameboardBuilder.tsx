@@ -121,8 +121,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             isMulti
                             options={
                                 [{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }].concat(
-                                    getFilteredExamBoardOptions(null, [], false)
-                                        .map(i => ({value: examBoardTagMap[i.value], label: i.label})))
+                                    getFilteredExamBoardOptions().map(i => ({value: examBoardTagMap[i.value], label: i.label})))
                             }
                             name="colors"
                             className="basic-multi-select"
