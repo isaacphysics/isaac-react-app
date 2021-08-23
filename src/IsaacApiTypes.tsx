@@ -43,7 +43,7 @@ export interface AssignmentDTO extends IAssignmentLike {
 }
 
 export interface GameboardDTO extends HasTitleOrId {
-    questions?: GameboardItem[];
+    contents?: GameboardItem[];
     wildCard?: IsaacWildcard;
     wildCardPosition?: number;
     creationDate?: Date;
@@ -467,9 +467,17 @@ export type Stage = "gcse" | "a_level" | "further_a" | "university" | "none";
 
 export type ExamBoard = "AQA" | "OCR" | "CIE" | "EDEXCEL" | "EDUQAS" | "WJEC" | "OTHER" | "NONE";
 
+export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
+
 export interface UserContext {
     stage?: Stage;
     examBoard?: ExamBoard;
+}
+
+export interface AudienceContext {
+    stage?: Stage[];
+    examBoard?: ExamBoard[];
+    difficulty?: Difficulty[];
 }
 
 export interface RegisteredUserDTO extends AbstractSegueUserDTO {
@@ -541,10 +549,13 @@ export interface IAssignmentLike {
 
 export interface GameboardItem {
     id?: string;
+    contentType?: string;
     title?: string;
     description?: string;
     uri?: string;
     tags?: string[];
+    audience?: AudienceContext[];
+    creationContext?: AudienceContext;
     level?: number;
     difficulty?: number;
     questionPartsCorrect?: number;

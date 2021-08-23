@@ -114,13 +114,13 @@ export const selectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e
 };
 
 export const loadGameboardQuestionOrder = (gameboard: GameboardDTO) => {
-    return gameboard.questions && gameboard.questions.map((question) => {
+    return gameboard.contents && gameboard.contents.map((question) => {
         return question.id;
     }).filter((id) => id) as string[];
 };
 
 export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
-    return gameboard.questions && gameboard.questions.map(convertGameboardItemToContentSummary).reduce((map, question) => {
+    return gameboard.contents && gameboard.contents.map(convertGameboardItemToContentSummary).reduce((map, question) => {
         question.id && map.set(question.id, question);
         return map;
     }, new Map<string, ContentSummaryDTO>());

@@ -1620,7 +1620,7 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
     const state = getState();
     if (state && state.boards && state.boards.boards && state.boards.boards.boards) {
         const board = state.boards.boards.boards.find(board => board.id == boardId);
-        if (board && board.questions && board.questions.every(q => q.questionPartsTotal !== undefined)) {
+        if (board && board.contents && board.contents.every(q => q.questionPartsTotal !== undefined)) {
             // Don't load the board if it is already available and questions have been loaded
             return;
         }

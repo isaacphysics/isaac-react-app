@@ -112,7 +112,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
                 {gameboard?.wildCard && showWildcard(gameboard) &&
                     <Wildcard wildcard={gameboard.wildCard} />
                 }
-                {gameboard?.questions && gameboard.questions.map(q =>
+                {gameboard?.contents && gameboard.contents.map(q =>
                     <GameboardItemComponent gameboard={gameboard} question={q} />
                 )}
             </RS.ListGroup>

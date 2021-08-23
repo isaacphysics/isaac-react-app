@@ -47,14 +47,14 @@ export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
 
 export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.questions) {
-        currentGameboard.questions.map(question => boardQuestions.push(question.id));
+    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+        currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
-            const gameboardContentIds = currentGameboard.questions.map(q => q.id);
+            const gameboardContentIds = currentGameboard.contents.map(q => q.id);
             if (gameboardContentIds.includes(currentDocId)) {
                 const nextIndex = gameboardContentIds.indexOf(currentDocId) + 1;
                 if (nextIndex < gameboardContentIds.length) {
-                    const nextContent = currentGameboard.questions[nextIndex];
+                    const nextContent = currentGameboard.contents[nextIndex];
                     return {title: nextContent.title as string, to: `/questions/${nextContent.id}`};
                 }
             }
@@ -64,14 +64,14 @@ export const determineNextGameboardItem = (currentGameboard: CurrentGameboardSta
 
 export const determinePreviousGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.questions) {
-        currentGameboard.questions.map(question => boardQuestions.push(question.id));
+    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+        currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
-            const gameboardContentIds = currentGameboard.questions.map(q => q.id);
+            const gameboardContentIds = currentGameboard.contents.map(q => q.id);
             if (gameboardContentIds.includes(currentDocId)) {
                 const previousIndex = gameboardContentIds.indexOf(currentDocId) - 1;
                 if (previousIndex > -1) {
-                    const previousContent = currentGameboard.questions[previousIndex];
+                    const previousContent = currentGameboard.contents[previousIndex];
                     return {title: previousContent.title as string, to: `/questions/${previousContent.id}`};
                 }
             }
@@ -97,7 +97,7 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
     }
     const subjects = ["physics", "maths", "chemistry"];
     let allSubjects: string[] = [];
-    board.questions?.map((item) => {
+    board.contents?.map((item) => {
         let tags = intersection(subjects, item.tags || []);
         tags.forEach(tag => allSubjects.push(tag));
     }
@@ -114,7 +114,7 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
 export const determineGameboardLevels = (board: GameboardDTO) => {
     // TODO alter functionality for CS when required
     let allLevels: string[] = [];
-    board.questions?.map((item) => {
+    board.contents?.map((item) => {
         item.level && allLevels.push(item.level.toString());
     });
     allLevels.sort();

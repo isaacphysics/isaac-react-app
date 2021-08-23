@@ -257,7 +257,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             dispatch(createGameboard({
                                 id: gameboardURL,
                                 title: gameboardTitle,
-                                questions: questionOrder.map((questionId) => {
+                                contents: questionOrder.map((questionId) => {
                                     const question = selectedQuestions.get(questionId);
                                     return question && convertContentSummaryToGameboardItem(question);
                                 }).filter((question) => question !== undefined) as GameboardItem[],

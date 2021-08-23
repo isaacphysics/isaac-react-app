@@ -21,13 +21,13 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
 
     return <ShowLoading until={assignments}>
         {isDefined(assignments) && assignments.map((assignment, index) => {
-            const levels = Array.from((assignment.gameboard?.questions || []).reduce((a, c) => {
+            const levels = Array.from((assignment.gameboard?.contents || []).reduce((a, c) => {
                 if (isDefined(c.level) && c.level > 0) {
                     a.add(c.level);
                 }
                 return a;
             }, new Set<number>())).sort();
-            const topics = tags.getTopicTags(Array.from((assignment.gameboard?.questions || []).reduce((a, c) => {
+            const topics = tags.getTopicTags(Array.from((assignment.gameboard?.contents || []).reduce((a, c) => {
                 if (isDefined(c.tags) && c.tags.length > 0) {
                     return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
                 }
@@ -65,7 +65,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         }
                     </Col>
                     <Col xs={7} md={5} className="mt-sm-2">
-                        <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.questions?.length || "0"}</p>
+                        <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.contents?.length || "0"}</p>
                         {SITE_SUBJECT !== SITE.CS && isDefined(levels) && levels.length > 0 && <p className="mb-0"><strong>{levels.length === 1 ? "Level" : "Levels"}:</strong> {levels.join(", ")}</p>}
                         {isDefined(topics) && topics.length > 0 && <p className="mb-0"><strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong> {topics.join(", ")}</p>}
                         {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
