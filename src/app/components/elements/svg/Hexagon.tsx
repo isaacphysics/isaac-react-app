@@ -22,7 +22,7 @@ function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
         ', ' + 0 * halfWidth + ' ' + 1 * quarterHeight;
 }
 
-interface HexagonProps<T> extends SVGShapeProps<T> {
+export interface HexagonProps<T> extends SVGShapeProps<T> {
     halfWidth: number;
     quarterHeight: number;
 }

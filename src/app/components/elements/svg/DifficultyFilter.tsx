@@ -1,10 +1,35 @@
-import {calculateHexagonProportions, Hexagon} from "./Hexagon";
+import {calculateHexagonProportions, Hexagon, HexagonProps} from "./Hexagon";
 import {ifKeyIsEnter} from "../../../services/navigation";
 import React from "react";
 import {Item} from "../../../services/select";
 import {generateSquareProportions, Rectangle} from "./Rectangle";
 import {Diamond, generateDiamondProportions} from "./Diamond";
 import {calculateOctagonProportions, Octagon} from "./Octagon";
+
+interface ConcentricHexagonProps<T> extends HexagonProps<T> {
+    active?: boolean,
+    ringSize?: number
+}
+
+function ConcentricHexagon<T> (props : ConcentricHexagonProps<T>) {
+    const {active, ringSize = 0, ...hexagon} = props;
+
+    const ringProps = {...hexagon, ...calculateHexagonProportions(hexagon.halfWidth - ringSize, 0), clickable: false};
+    console.log(ringProps);
+    const innerProps = {...hexagon, ...calculateHexagonProportions(ringProps.halfWidth  - ringSize, 0), clickable: false};
+    console.log(innerProps);
+
+    return <>
+        <Hexagon {...hexagon} className={`hex practice difficulty ${active ? "active" : ""}`} />
+        <g transform={`translate(${(hexagon.halfWidth - ringProps.halfWidth)}, ${2 * (hexagon.quarterHeight - ringProps.quarterHeight)})`}>
+            <Hexagon {...ringProps} className={`hex practice difficulty mini ${active ? "" : "active"}`} />
+        </g>
+        <g transform={`translate(${(hexagon.halfWidth - innerProps.halfWidth)}, ${2 * (hexagon.quarterHeight - innerProps.quarterHeight)})`}>
+            <Hexagon {...innerProps} className={`hex practice difficulty mini ${active ? "active" : ""}`} />
+        </g>
+    </>
+}
+
 
 export interface DifficultyFilterProps {
     difficultyOptions: Item<string>[];
@@ -47,6 +72,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                         );
                     }
                     return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`} >
+                        {/*<ConcentricHexagon {...hexagon} active={isSelected} ringSize={3} className="hex practice difficulty" />*/}
                         <Hexagon {...hexagon} className={`hex practice difficulty ${isSelected ? "active" : ""}`} />
                         <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
                             <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
