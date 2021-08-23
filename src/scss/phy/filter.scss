@@ -1,6 +1,6 @@
 @import "../common/filter";
 
-$shapes: hex, square;
+$shapes: hex, square, octagon, diamond;
 
 svg {
   @each $shape in $shapes {
@@ -23,6 +23,11 @@ svg {
       &:not(.active) {
         fill: none;
         stroke: $gray-160;
+      }
+
+      &.mini:not(.active) {
+        fill: white;
+        stroke: none;
       }
 
       &.none {

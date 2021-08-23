@@ -17,7 +17,7 @@ import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select from "react-select";
 import {getFilteredStages} from "../../services/userContext";
-import {DifficultyFilterHexagonal} from "../elements/svg/DifficultyFilter";
+import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 
 const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
 
@@ -262,7 +262,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
                             I would like questions for...
                         </RS.Label>
-                        <DifficultyFilterHexagonal difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
+                        <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
                         {/*<Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
                     </div>
                 </RS.Col>
