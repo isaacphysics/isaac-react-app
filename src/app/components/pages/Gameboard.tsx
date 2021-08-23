@@ -16,6 +16,8 @@ import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
 import {AppState} from "../../state/reducers";
+import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
+import {Rectangle} from "../elements/svg/Rectangle";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -63,6 +65,11 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
 
     const questionTags = getTags(question.tags);
 
+    // Difficulty icon proportions
+    const difficultyIconWidth = 25;
+    const difficultyIconXPadding = 3;
+    const miniHexagon = calculateHexagonProportions(difficultyIconWidth / 2, 0)
+
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
             <span>
@@ -83,7 +90,29 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             </div>
             {/*TODO CS Level*/}
             {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
-                <span className="gameboard-tags">Level {question.level}</span>}
+                <span className="gameboard-tags">
+                    Level {question.level} <span className="px-3" />
+                    <svg width={`${3 * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`} height={`${miniHexagon.quarterHeight * 4}px`} >
+                        {Array(((question.level - 1) % 3) + 1).fill(Math.ceil(question.level / 3)).map((shape, i) =>
+                            <g transform={`translate(${(2 - i) * (difficultyIconWidth + 2 * difficultyIconXPadding)}, 0)`}>
+                                {shape === 1 ?
+                                    <Hexagon {...miniHexagon} className="hex difficulty practice mini active" />
+                                    :
+                                    <Rectangle className="square difficulty challenge mini active"
+                                               width={difficultyIconWidth} height={difficultyIconWidth} />
+                                }
+                                {i === 0 &&
+                                    <foreignObject width={difficultyIconWidth}
+                                                   height={difficultyIconWidth + (shape === 1 ? 2 : 0)}>
+                                        <div className={`difficulty-title active difficulty-${i + 1}`}>
+                                            {shape === 1 ? "P" : "C"}
+                                        </div>
+                                    </foreignObject>
+                                }
+                            </g>
+                        )}
+                    </svg>
+                </span>}
         </Link>
     </RS.ListGroupItem>;
 };
