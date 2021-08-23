@@ -101,7 +101,8 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                                     <Rectangle className="square difficulty challenge mini active"
                                                width={difficultyIconWidth} height={difficultyIconWidth} />
                                 }
-                                {i === 0 &&
+                                {/* @ts-ignore */}
+                                {i === ((question.level - 1) % 3) &&
                                     <foreignObject width={difficultyIconWidth}
                                                    height={difficultyIconWidth + (shape === 1 ? 2 : 0)}>
                                         <div className={`difficulty-title active difficulty-${i + 1}`}>
