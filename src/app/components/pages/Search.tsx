@@ -20,6 +20,7 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import Select, {Styles, ValueType} from "react-select";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 interface Item<T> {
     value: T;
@@ -123,7 +124,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                         <RS.CardHeader className="search-header">
                             <RS.Col md={5} sm={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </RS.Col>
                             <RS.Col md={7} sm={12}>
