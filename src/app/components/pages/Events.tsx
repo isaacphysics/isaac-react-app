@@ -51,15 +51,6 @@ export const Events = withRouter(({history, location}: {history: History; locati
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help="Follow the links below to find out more about our FREE events." />
-            {SITE_SUBJECT === SITE.CS &&
-                <RS.Alert color="warning" className="mb-0">
-                    <RS.Container className="text-center">
-                        Our events facilitators are taking a summer break after a very busy and challenging year in
-                        2020/2021. Events will resume at the end of August. Until then, please check out the 40+ online
-                        topics for self-directed learning. Thank you!
-                    </RS.Container>
-                </RS.Alert>
-            }
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
