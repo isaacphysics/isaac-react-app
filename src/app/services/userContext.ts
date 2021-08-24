@@ -12,6 +12,7 @@ import {
     STAGES_PHY
 } from "./constants";
 import {ContentBaseDTO, ContentSummaryDTO, Role, UserContext} from "../../IsaacApiTypes";
+import {useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
@@ -32,6 +33,7 @@ interface UseUserContextReturnType {
 
 export function useUserContext(): UseUserContextReturnType {
     const qParams = useQueryParams(true);
+    const existingLocation = useLocation();
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
     const {PROGRAMMING_LANGUAGE: programmingLanguage} = useSelector((state: AppState) => state?.userPreferences) || {};
@@ -76,7 +78,7 @@ export function useUserContext(): UseUserContextReturnType {
             const newParams = {...qParams, stage, examBoard};
             if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;} /* TODO MT people might want to share none view */
             if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;} /* TODO MT people might want to share none view */
-            history.push({search: queryString.stringify(newParams, {encode: false})});
+            history.push({...existingLocation, search: queryString.stringify(newParams, {encode: false})});
         }
     }, []);
 
