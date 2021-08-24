@@ -15,7 +15,6 @@ import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
-import {AppState} from "../../state/reducers";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -113,7 +112,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
                     <Wildcard wildcard={gameboard.wildCard} />
                 }
                 {gameboard?.contents && gameboard.contents.map(q =>
-                    <GameboardItemComponent gameboard={gameboard} question={q} />
+                    <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
                 )}
             </RS.ListGroup>
         </RS.Col>

@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Spinner} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {GameboardItem} from "../../../IsaacApiTypes";
 import {
     closeActiveModal,
     createGameboard,
@@ -36,6 +36,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
 import {getFilteredExamBoardOptions} from "../../services/userContext";
+import {ContentSummary} from "../../../IsaacAppTypes";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -51,7 +52,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
     const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>( []);
-    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
@@ -59,7 +60,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         if (baseGameboard) {
             setGameboardTitle(`${baseGameboard.title} (Copy)`);
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
-            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
+            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummary>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
             logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
         }
@@ -180,7 +181,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                             provided={provided} key={`gameboard-builder-row-${question.id}`}
                                                             question={question} selectedQuestions={selectedQuestions}
                                                             setSelectedQuestions={setSelectedQuestions} questionOrder={questionOrder}
-                                                            setQuestionOrder={setQuestionOrder}
+                                                            setQuestionOrder={setQuestionOrder} creationContext={question.creationContext}
                                                         />)}
                                                 </Draggable>
                                             })}

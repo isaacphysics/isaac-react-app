@@ -2,12 +2,14 @@ import React, {ReactElement} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
+    AudienceContext,
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem, OldExamBoard,
+    GameboardItem,
+    OldExamBoard,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
@@ -823,6 +825,10 @@ export interface QuestionSearchQuery {
 
 export interface QuestionSearchResponse {
     results: ApiTypes.ContentSummaryDTO[];
+}
+
+export interface ContentSummary extends ContentSummaryDTO {
+    creationContext?: AudienceContext;
 }
 
 export interface StreakRecord {

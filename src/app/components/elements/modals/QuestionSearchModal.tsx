@@ -14,13 +14,14 @@ import {
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {DIFFICULTY_ITEM_OPTIONS, SortOrder, STAGE,} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {ContentSummary} from "../../../../IsaacAppTypes";
+import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -28,8 +29,8 @@ const selectStyle = {
 }
 
 interface QuestionSearchModalProps {
-    originalSelectedQuestions: Map<string, ContentSummaryDTO>;
-    setOriginalSelectedQuestions: (m: Map<string, ContentSummaryDTO>) => void;
+    originalSelectedQuestions: Map<string, ContentSummary>;
+    setOriginalSelectedQuestions: (m: Map<string, ContentSummary>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
     eventLog: object[];
@@ -40,18 +41,24 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
     const [searchQuestionName, setSearchQuestionName] = useState("");
-    const [searchLevels, setSearchLevels] = useState<string[]>([]);
-    const [searchExamBoards, setSearchExamBoards] = useState<string[]>([]);
+    const [searchLevels,] = useState<string[]>([]);
+    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     const [searchStages, setSearchStages] = useState<STAGE[]>([]);
-    const [searchDifficulties, setSearchDifficulties] = useState<string[]>([]);
+    const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
 
+    const creationContext: AudienceContext = !isBookSearch ? {
+        stage: searchStages.length > 0 ? searchStages : undefined,
+        difficulty: searchDifficulties.length > 0 ? searchDifficulties : undefined,
+        examBoard: searchExamBoards.length > 0 ? searchExamBoards : undefined,
+    } : {};
+
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
     const [questionsSort, setQuestionsSort] = useState({});
-    const [selectedQuestions, setSelectedQuestions] = useState(new Map(originalSelectedQuestions));
+    const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
     const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
@@ -143,15 +150,15 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     ]}
                 />
             </RS.Col>}
-            {!isBookSearch && <RS.Col lg={SITE_SUBJECT === SITE.CS ? 12 : 9} className="text-wrap mt-2">
+            <RS.Col lg={SITE_SUBJECT === SITE.CS ? 12 : 9} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
                     options={tagOptions} onChange={multiSelectOnChange(setSearchTopics)}
                 />
-            </RS.Col>}
+            </RS.Col>
         </RS.Row>
-        {!isBookSearch && <RS.Row>
+        <RS.Row className={isBookSearch ? "d-none" : ""}>
             <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
                 <Select
@@ -159,7 +166,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     options={getFilteredStageOptions()} onChange={multiSelectOnChange(setSearchStages)}
                 />
             </RS.Col>
-            {SITE_SUBJECT === SITE.PHY && !isBookSearch && <RS.Col lg={6} className={`text-wrap my-2`}>
+            {SITE_SUBJECT === SITE.PHY && <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -174,7 +181,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
             </RS.Col>}
-        </RS.Row>}
+        </RS.Row>
         <RS.Row>
             {SITE_SUBJECT === SITE.PHY && isStaff(user) && <RS.Col className="text-wrap mb-2">
                 <RS.Form>
@@ -228,7 +235,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}
                             selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder}
+                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} creationContext={creationContext}
                         />
                     )
                 }

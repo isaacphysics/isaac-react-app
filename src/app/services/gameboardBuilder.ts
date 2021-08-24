@@ -4,7 +4,7 @@ import tags from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {Dispatch, SetStateAction} from "react";
 import {ValueType} from "react-select/src/types";
-import {Tag} from "../../IsaacAppTypes";
+import {ContentSummary, Tag} from "../../IsaacAppTypes";
 
 const bookSort = (a: string, b: string) => {
     const splitRegex = /(\d+)/;
@@ -57,7 +57,7 @@ export const sortQuestions = (sortState: { [s: string]: string }) => (questions:
     return orderBy(questions, keys, order);
 };
 
-export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO) => {
+export const convertContentSummaryToGameboardItem = (question: ContentSummary) => {
     const newQuestion = {...question};
     delete newQuestion.type;
     delete newQuestion.url;
@@ -123,7 +123,7 @@ export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
     return gameboard.contents && gameboard.contents.map(convertGameboardItemToContentSummary).reduce((map, question) => {
         question.id && map.set(question.id, question);
         return map;
-    }, new Map<string, ContentSummaryDTO>());
+    }, new Map<string, ContentSummary>());
 };
 
 export const logEvent = (eventsLog: any[], event: string, params: any) => {

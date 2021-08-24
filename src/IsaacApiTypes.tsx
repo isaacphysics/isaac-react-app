@@ -347,6 +347,7 @@ export interface ContentSummaryDTO {
     correct?: boolean;
     supersededBy?: string;
     difficulty?: string;
+    audience?: AudienceContext[];
 }
 
 export interface EmailTemplateDTO extends ContentDTO {

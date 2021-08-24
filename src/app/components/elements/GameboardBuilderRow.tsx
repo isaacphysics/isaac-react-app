@@ -2,24 +2,28 @@ import classnames from "classnames";
 import * as RS from "reactstrap";
 import {examBoardTagMap, TAG_ID, TAG_LEVEL, tagExamBoardMap} from "../../services/constants";
 import React from "react";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {AudienceContext, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
 import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
 import tags from "../../services/tags";
 import {Question} from "../pages/Question";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {ContentSummary} from "../../../IsaacAppTypes";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
     question: ContentSummaryDTO;
-    selectedQuestions: Map<string, ContentSummaryDTO>;
-    setSelectedQuestions: (m: Map<string, ContentSummaryDTO>) => void;
+    selectedQuestions: Map<string, ContentSummary>;
+    setSelectedQuestions: (m: Map<string, ContentSummary>) => void;
     questionOrder: string[];
     setQuestionOrder: (a: string[]) => void;
+    creationContext?: AudienceContext;
 }
 
-export const GameboardBuilderRow = ({provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder}: GameboardBuilderRowInterface) => {
+export const GameboardBuilderRow = (
+    {provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
+) => {
     const dispatch = useDispatch();
 
     const topicTag = () => {
@@ -57,7 +61,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                             newSelectedQuestions.delete(question.id);
                             newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
                         } else {
-                            newSelectedQuestions.set(question.id, question);
+                            newSelectedQuestions.set(question.id, {...question, creationContext});
                             newQuestionOrder.push(question.id);
                         }
                         setSelectedQuestions(newSelectedQuestions);
