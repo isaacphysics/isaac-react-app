@@ -8,8 +8,6 @@ import {
     PROGRAMMING_LANGUAGE,
     STAGE,
     STAGE_NULL_OPTIONS,
-    STAGES_CS,
-    STAGES_PHY
 } from "./constants";
 import {ContentBaseDTO, ContentSummaryDTO, Role, UserContext} from "../../IsaacApiTypes";
 import {useLocation} from "react-router-dom";
@@ -23,6 +21,7 @@ import {history} from "./history";
 import queryString from "query-string";
 import {useEffect} from "react";
 import {useQueryParams} from "./reactRouterExtension";
+import siteSpecific from "../components/site/siteSpecific";
 
 interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -46,7 +45,7 @@ export function useUserContext(): UseUserContextReturnType {
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
     } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard as EXAM_BOARD)) {
-        examBoard = qParams.examBoard.toUpperCase() as EXAM_BOARD;
+        examBoard = qParams.examBoard as EXAM_BOARD;
     } else if (isDefined(transientUserContext?.examBoard)) {
         examBoard = transientUserContext?.examBoard;
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
@@ -101,36 +100,35 @@ interface ExamBoardFilterOptions {
     includeNullOptions?: boolean;
 }
 export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
-    if (!filter) {return  _EXAM_BOARD_ITEM_OPTIONS;}
     return _EXAM_BOARD_ITEM_OPTIONS
         // by stage
         .filter(i =>
-            !isDefined(filter.byStages) || // ignore if not set
+            !isDefined(filter?.byStages) || // ignore if not set
             i.value === EXAM_BOARD.NONE || // none does not get filtered by stage
-            filter.byStages.length === 0 || // if there are no stages to filter by all pass
-            filter.byStages.includes(STAGE.NONE) || // none in the stage level allows for all exam boards
-            (filter.byStages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) || // if there is gcse in stages allow GCSE boards
-            (filter.byStages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value)) // if there is a_level in stage allow A Level boards
+            filter?.byStages.length === 0 || // if there are no stages to filter by all pass
+            filter?.byStages.includes(STAGE.NONE) || // none in the stage level allows for all exam boards
+            (filter?.byStages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) || // if there is gcse in stages allow GCSE boards
+            (filter?.byStages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value)) // if there is a_level in stage allow A Level boards
         )
         // includeNullOptions flag
-        .filter(i => filter.includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
+        .filter(i => filter?.includeNullOptions || !EXAM_BOARD_NULL_OPTIONS.has(i.value))
         // by user account settings
         .filter(i =>
             // skip if null or logged out user
-            !isLoggedIn(filter.byUser) ||
+            !isLoggedIn(filter?.byUser) ||
             // user has a null option selected
-            filter.byUser.registeredContexts
+            filter?.byUser.registeredContexts
                 ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE))
                 .some(rc => EXAM_BOARD_NULL_OPTIONS.has(rc.examBoard as EXAM_BOARD)) ||
             // stage is one of registered context selections
-            filter.byUser.registeredContexts
+            filter?.byUser.registeredContexts
                 ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE))
                 .map(rc => rc.examBoard).includes(i.value)
         )
         // Restrict by existing user context selections
         .filter(i =>
-            !isDefined(filter.byUserContexts) ||
-            !filter.byUserContexts
+            !isDefined(filter?.byUserContexts) ||
+            !filter?.byUserContexts
                 .filter(uc => !filter.byStages || filter.byStages.includes(uc.stage as STAGE))
                 .map(uc => uc.examBoard).includes(i.value));
 }
@@ -148,24 +146,23 @@ interface StageFilterOptions {
     includeNullOptions?: boolean;
 }
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
-    if (!filter) {return _STAGE_ITEM_OPTIONS;}
     return _STAGE_ITEM_OPTIONS
         // Restrict by subject stages
-        .filter(i => ({[SITE.PHY]: STAGES_PHY, [SITE.CS]: STAGES_CS}[SITE_SUBJECT].has(i.value)))
+        .filter(i => siteSpecific.Stages.has(i.value))
         // Restrict by includeNullOptions flag
-        .filter(i => filter.includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
+        .filter(i => filter?.includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
         // Restrict by account settings
         .filter(i =>
             // skip if null or logged out user
-            !isLoggedIn(filter.byUser) ||
+            !isLoggedIn(filter?.byUser) ||
             // user has a null option selected
-            filter.byUser.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
+            filter?.byUser.registeredContexts?.some(rc => STAGE_NULL_OPTIONS.has(rc.stage as STAGE)) ||
             // stage is one of registered context selections
-            filter.byUser.registeredContexts?.map(rc => rc.stage).includes(i.value)
+            filter?.byUser.registeredContexts?.map(rc => rc.stage).includes(i.value)
         )
         // Restrict by user contexts
         .filter(i =>
-            !filter.byUserContexts ||
+            !filter?.byUserContexts ||
             // if options at stage are exhausted don't offer it
             // - physics
             (SITE_SUBJECT === SITE.PHY && !filter.byUserContexts.map(uc => uc.stage).includes(i.value)) ||

@@ -67,8 +67,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {/* If the userContext.stage is not in the user's normal list of options (following link with q. params) add it */}
                 {!filteredStages.map(s => s.value).includes(userContext.stage) &&
                     <option key={userContext.stage} value={userContext.stage}>
+                        {"*"}
                         {getFilteredStageOptions().filter(o => o.value === userContext.stage)[0]?.label}
-                        {" (URL)"}
+                        {"*"}
                     </option>
                 }
             </Input>
@@ -92,8 +93,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
                 {!filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard) &&
                     <option key={userContext.examBoard} value={userContext.examBoard}>
+                        {"*"}
                         {getFilteredExamBoardOptions().filter(o => o.value === userContext.examBoard)[0]?.label}
-                        {" (URL)"}
+                        {"*"}
                     </option>
                 }
             </Input>

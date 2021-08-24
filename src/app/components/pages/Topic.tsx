@@ -38,12 +38,12 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
             <Row className="pb-3">
                 <Col md={{size: 8, offset: 2}} className="py-3">
-                    {topicPage.children && topicPage.children.map((child, index) =>
-                        <IsaacContent key={index} doc={child}/>)
-                    }
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
+                    {topicPage.children && topicPage.children.map((child, index) =>
+                        <IsaacContent key={index} doc={child}/>)
+                    }
                     {relatedConcepts && atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
                     }
