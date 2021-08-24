@@ -4,8 +4,8 @@ import {getAdminContentErrors} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useDispatch, useSelector} from "react-redux";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
-import {EDITOR_URL, sortIcon} from "../../services/constants";
-import {BoardOrder, ContentErrorItem} from "../../../IsaacAppTypes";
+import {EDITOR_URL} from "../../services/constants";
+import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
