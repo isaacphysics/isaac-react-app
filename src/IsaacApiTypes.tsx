@@ -319,8 +319,8 @@ export interface ContentBaseDTO {
     type?: string;
     tags?: string[];
     version?: string;
-    audience?: {[contextProperty: string]: string[]}[];
-    display?: {[intendedAudienceOrNot: string]: string[]};
+    audience?: AudienceContext[];
+    display?: { [index: string]: string[] };
 }
 
 export interface ContentDTO extends ContentBaseDTO {
@@ -463,11 +463,16 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
+export type OldExamBoard = "AQA" | "OCR" | "OTHER";
+
 export type Stage = "gcse" | "a_level" | "further_a" | "university" | "none";
 
-export type ExamBoard = "AQA" | "OCR" | "CIE" | "EDEXCEL" | "EDUQAS" | "WJEC" | "OTHER" | "NONE";
+export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "none";
 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
+
+export type RoleRequirement = "logged_in" | "teacher";
+
 
 export interface UserContext {
     stage?: Stage;
@@ -478,6 +483,7 @@ export interface AudienceContext {
     stage?: Stage[];
     examBoard?: ExamBoard[];
     difficulty?: Difficulty[];
+    role?: RoleRequirement[];
 }
 
 export interface RegisteredUserDTO extends AbstractSegueUserDTO {
@@ -490,7 +496,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     schoolId?: string;
     role?: Role;
     schoolOther?: string;
-    examBoard?: EXAM_BOARD;
+    examBoard?: OldExamBoard;
     registeredContexts?: UserContext[];
     registeredContextsLastConfirmed?: Date;
     firstLogin?: boolean;
@@ -519,7 +525,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     role?: Role;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
-    examBoard?: EXAM_BOARD;
+    examBoard?: OldExamBoard;
     id?: number;
 }
 
@@ -615,7 +621,10 @@ export interface ContentBase {
     tags?: string[];
     canonicalSourceFile?: string;
     version?: string;
+    audience?: AudienceContext[];
+    display?: { [index: string]: string[] };
 }
+
 
 export interface Content extends ContentBase {
     title?: string;

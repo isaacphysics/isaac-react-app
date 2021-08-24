@@ -43,7 +43,7 @@ export function useUserContext(): UseUserContextReturnType {
     let examBoard: EXAM_BOARD;
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.NONE;
-    } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard.toUpperCase() as EXAM_BOARD)) {
+    } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard as EXAM_BOARD)) {
         examBoard = qParams.examBoard.toUpperCase() as EXAM_BOARD;
     } else if (isDefined(transientUserContext?.examBoard)) {
         examBoard = transientUserContext?.examBoard;
@@ -71,9 +71,9 @@ export function useUserContext(): UseUserContextReturnType {
     useEffect(() => {
         if (
             (stage !== qParams.stage && !STAGE_NULL_OPTIONS.has(stage)) ||
-            (examBoard !== qParams.examBoard?.toUpperCase() && !EXAM_BOARD_NULL_OPTIONS.has(examBoard))
+            (examBoard !== qParams.examBoard && !EXAM_BOARD_NULL_OPTIONS.has(examBoard))
         ) {
-            const newParams = {...qParams, stage, examBoard: examBoard.toLowerCase()};
+            const newParams = {...qParams, stage, examBoard};
             if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;} /* TODO MT people might want to share none view */
             if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;} /* TODO MT people might want to share none view */
             history.push({search: queryString.stringify(newParams, {encode: false})});
@@ -208,7 +208,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         if (audienceClause.examBoard) {
             const userExamBoard = userContext.examBoard;
             const satisfiesExamBoardCriteria =
-                userExamBoard === EXAM_BOARD.NONE || audienceClause.examBoard.includes(userExamBoard.toLowerCase());
+                userExamBoard === EXAM_BOARD.NONE || audienceClause.examBoard.includes(userExamBoard);
             if (!satisfiesExamBoardCriteria) {
                 return false;
             }

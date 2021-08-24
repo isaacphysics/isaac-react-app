@@ -95,9 +95,9 @@ export const AllTopics = () => {
                             </>
                         },
                         ...stageExamBoards.map(examBoard => ({
-                            [examBoard]: <Row>
+                            [examBoard.toUpperCase()]: <Row>
                                 <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4">
-                                    <PageFragment fragmentId={`${stage}_specification_${examBoard.toLowerCase()}`} />
+                                    <PageFragment fragmentId={`${stage}_specification_${examBoard}`} />
                                 </Col>
                             </Row>
                         }))

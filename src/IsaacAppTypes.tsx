@@ -7,7 +7,7 @@ import {
     ContentBase,
     ContentSummaryDTO,
     GameboardDTO,
-    GameboardItem,
+    GameboardItem, OldExamBoard,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
@@ -585,7 +585,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
-export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean; examBoard?: EXAM_BOARD};
+export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean; examBoard?: OldExamBoard};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;

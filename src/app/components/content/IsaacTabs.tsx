@@ -35,7 +35,7 @@ export const IsaacTabs = (props: any) => {
     const {examBoard} = useUserContext();
     const tabTitles = Object.keys(tabTitlesToContent);
     const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;
-    if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab && [EXAM_BOARD.AQA, EXAM_BOARD.OCR].includes(examBoard)) {
+    if (SITE_SUBJECT === SITE.CS && specialCaseExamBoardTab && [EXAM_BOARD.AQA, EXAM_BOARD.OCR].includes(examBoard.toLowerCase() as EXAM_BOARD)) {
         return <div className="examboard-special-tabs">
             <button className="expand-button" onClick={() => expandToModal(tabTitlesToContent[examBoard])}>+</button>
             {tabTitlesToContent[examBoard]}

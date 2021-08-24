@@ -1,7 +1,7 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
-import {BookingStatus} from "../../IsaacApiTypes";
+import {BookingStatus, Difficulty} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 // Temporary Feature Flags
@@ -561,16 +561,15 @@ export const programmingLanguagesMap: {[language: string]: string} = {
 
 // EXAM BOARDS
 export enum EXAM_BOARD {
-    AQA = "AQA",
-    OCR = "OCR",
-    CIE = "CIE",
-    EDEXCEL = "EDEXCEL",
-    EDUQAS = "EDUQAS",
-    WJEC = "WJEC",
-    OTHER = "OTHER",
-    NONE = "NONE",
+    AQA = "aqa",
+    OCR = "ocr",
+    CIE = "cie",
+    EDEXCEL = "edexcel",
+    EDUQAS = "eduqas",
+    WJEC = "wjec",
+    NONE = "none",
 }
-export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.OTHER, EXAM_BOARD.NONE]);
+export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.NONE]);
 export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 export const examBoardTagMap: {[examBoard: string]: string} = {
@@ -602,7 +601,7 @@ export const STAGES_PHY = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL, STAGE.
 export const STAGES_CS = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL]);
 
 // DIFFICULTIES
-export const DIFFICULTY_ITEM_OPTIONS = [
+export const DIFFICULTY_ITEM_OPTIONS: {label: string, value: Difficulty}[] = [
     {label: "Practice (P1)", value: "practice_1"},
     {label: "Practice (P2)", value: "practice_2"},
     {label: "Practice (P3)", value: "practice_3"},
