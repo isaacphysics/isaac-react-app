@@ -5,6 +5,7 @@ import {Item} from "../../../services/select";
 import {generateSquareProportions, Rectangle} from "./Rectangle";
 import {Diamond, generateDiamondProportions} from "./Diamond";
 import {calculateOctagonProportions, Octagon} from "./Octagon";
+import {Container} from "reactstrap";
 
 interface ConcentricHexagonProps<T> extends HexagonProps<T> {
     active?: boolean,
@@ -59,44 +60,13 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
 
     const demoShape : string = "square"
 
-    return <svg width="100%" height={`${2 * focusPadding + 4 * hexagon.quarterHeight + hexagon.padding + diamond.padding + 2 * diamond.halfHeight}px`}>
-        <title>Difficulties filter selector</title>
-        <g transform={`translate(${focusPadding},${focusPadding})`}>
-            <g>
-                {practiceOptionsRow.map((difficultyOption, j) => {
-                    const isSelected = difficulties.map(l => l.value).includes(difficultyOption.value);
-                    function selectValue() {
-                        setDifficulties(isSelected ?
-                            difficulties.filter(d => d.value !== difficultyOption.value) : // remove
-                            [...difficulties, difficultyOption] // add
-                        );
-                    }
-                    return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`} >
-                        {/*<ConcentricHexagon {...hexagon} active={isSelected} ringSize={3} className="hex practice difficulty" />*/}
-                        <Hexagon {...hexagon} className={`hex practice difficulty ${isSelected ? "active" : ""}`} />
-                        <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
-                            <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
-                                {getAbbreviation(difficultyOption.label)}
-                            </div>
-                        </foreignObject>
-                        <Hexagon
-                            {...hexagon} className="hex none clickable" properties={{clickable: true}} role="button"
-                            tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
-                        >
-                            <title>
-                                {`${isSelected ? "Remove" : "Add"} level ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
-                            </title>
-                        </Hexagon>
-                        {[1, 0, -1].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
-                            <g transform={`translate(${2 * hexagon.halfWidth - (hexagon.padding + 2 * miniHexagon.halfWidth + miniHexagon.padding)}, ${2 * hexagon.quarterHeight - 2 * miniHexagon.quarterHeight + n * (4 * miniHexagon.quarterHeight + miniHexagon.padding)})`}>
-                                <Hexagon {...miniHexagon} className={`hex practice difficulty mini ${isSelected ? "" : "active"}`} />
-                            </g>
-                        )}
-                    </g>;})}
-            </g>
-            {demoShape == "square" ?
-                <g transform={`translate(0, ${4 * hexagon.quarterHeight + square.padding + hexagon.padding})`}>
-                    {challengeOptionsRow.map((difficultyOption, j) => {
+    return <Container className="ml-0 pl-0 text-center" style={{width: 2 * focusPadding + 6 * (hexagon.halfWidth + 2 * hexagon.padding)}}>
+        <span>Practice</span>
+        <svg width={`${2 * focusPadding + 6 * (hexagon.halfWidth + hexagon.padding)}`} height={`${2 * focusPadding + 4 * hexagon.quarterHeight + 2 * hexagon.padding}px`}>
+            <title>Difficulties filter selector</title>
+            <g transform={`translate(${focusPadding + hexagon.padding},${focusPadding})`}>
+                <g>
+                    {practiceOptionsRow.map((difficultyOption, j) => {
                         const isSelected = difficulties.map(l => l.value).includes(difficultyOption.value);
                         function selectValue() {
                             setDifficulties(isSelected ?
@@ -104,32 +74,35 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                 [...difficulties, difficultyOption] // add
                             );
                         }
-                        return <g transform={`translate(${j * (square.width + 2 * square.padding)}, 0)`} >
-                            <Rectangle {...square} className={`square challenge difficulty ${isSelected ? "active" : ""}`} />
-                            <foreignObject width={square.width} height={square.height}>
+                        return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`} >
+                            {/*<ConcentricHexagon {...hexagon} active={isSelected} ringSize={3} className="hex practice difficulty" />*/}
+                            <Hexagon {...hexagon} className={`hex practice difficulty ${isSelected ? "active" : ""}`} />
+                            <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
                                 <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
                                     {getAbbreviation(difficultyOption.label)}
                                 </div>
                             </foreignObject>
-                            <Rectangle
-                                {...square} className="square none clickable" properties={{clickable: true}} role="button"
+                            <Hexagon
+                                {...hexagon} className="hex none clickable" properties={{clickable: true}} role="button"
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                             >
                                 <title>
                                     {`${isSelected ? "Remove" : "Add"} level ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
                                 </title>
-                            </Rectangle>
-                            {[0, 1, 2].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
-                                <g transform={`translate(${square.width - (square.padding + miniSquare.width + miniSquare.padding)}, ${(square.height + square.padding - miniSquare.padding) - (n + 1) * (miniSquare.height + 2 * miniSquare.padding) })`}>
-                                    <Rectangle {...miniSquare} className={`square challenge difficulty mini ${isSelected ? "" : "active"}`} />
+                            </Hexagon>
+                            {[1, 0, -1].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
+                                <g transform={`translate(${2 * hexagon.halfWidth - (hexagon.padding + 2 * miniHexagon.halfWidth + miniHexagon.padding)}, ${2 * hexagon.quarterHeight - 2 * miniHexagon.quarterHeight + n * (4 * miniHexagon.quarterHeight + miniHexagon.padding)})`}>
+                                    <Hexagon {...miniHexagon} className={`hex practice difficulty mini ${isSelected ? "" : "active"}`} />
                                 </g>
                             )}
                         </g>;})}
                 </g>
-                :
-                // BEYOND HERE LIES FUN (haven't made mini difficulty indicators yet)
-                demoShape == "diamond" ?
-                    <g transform={`translate(0, ${4 * hexagon.quarterHeight + diamond.padding + hexagon.padding})`}>
+            </g>
+        </svg>
+        <span>Challenge</span>
+        <svg width={`${2 * focusPadding + 3 * (square.width + 2 * square.padding)}`} height={`${2 * focusPadding + square.height + 2 * square.padding}px`}>
+                {demoShape == "square" ?
+                    <g transform={`translate(${focusPadding + square.padding},${focusPadding})`}>
                         {challengeOptionsRow.map((difficultyOption, j) => {
                             const isSelected = difficulties.map(l => l.value).includes(difficultyOption.value);
                             function selectValue() {
@@ -138,26 +111,32 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                     [...difficulties, difficultyOption] // add
                                 );
                             }
-                            return <g transform={`translate(${j * (2 * diamond.halfWidth + 2 * diamond.padding)}, 0)`} >
-                                <Diamond {...diamond} className={`diamond challenge difficulty ${isSelected ? "active" : ""}`} />
-                                <foreignObject width={2 * diamond.halfWidth} height={2 * diamond.halfHeight}>
+                            return <g transform={`translate(${j * (square.width + 2 * square.padding)}, 0)`} >
+                                <Rectangle {...square} className={`square challenge difficulty ${isSelected ? "active" : ""}`} />
+                                <foreignObject width={square.width} height={square.height}>
                                     <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
                                         {getAbbreviation(difficultyOption.label)}
                                     </div>
                                 </foreignObject>
-                                <Diamond
-                                    {...diamond} className="diamond none clickable" properties={{clickable: true}} role="button"
+                                <Rectangle
+                                    {...square} className="square none clickable" properties={{clickable: true}} role="button"
                                     tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                                 >
                                     <title>
                                         {`${isSelected ? "Remove" : "Add"} level ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
                                     </title>
-                                </Diamond>
+                                </Rectangle>
+                                {[0, 1, 2].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
+                                    <g transform={`translate(${square.width - (square.padding + miniSquare.width + miniSquare.padding)}, ${(square.height + square.padding - miniSquare.padding) - (n + 1) * (miniSquare.height + 2 * miniSquare.padding) })`}>
+                                        <Rectangle {...miniSquare} className={`square challenge difficulty mini ${isSelected ? "" : "active"}`} />
+                                    </g>
+                                )}
                             </g>;})}
                     </g>
                     :
-                    demoShape == "octagon" ?
-                        <g transform={`translate(0, ${4 * hexagon.quarterHeight + octagon.padding + hexagon.padding})`}>
+                    // BEYOND HERE LIES FUN (haven't made mini difficulty indicators yet)
+                    demoShape == "diamond" ?
+                        <g transform={`translate(0, ${4 * hexagon.quarterHeight + diamond.padding + hexagon.padding})`}>
                             {challengeOptionsRow.map((difficultyOption, j) => {
                                 const isSelected = difficulties.map(l => l.value).includes(difficultyOption.value);
                                 function selectValue() {
@@ -166,26 +145,54 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                         [...difficulties, difficultyOption] // add
                                     );
                                 }
-                                return <g transform={`translate(${j * (2 * octagon.halfWidth + 2 * octagon.padding)}, 0)`} >
-                                    <Octagon {...octagon} className={`octagon challenge difficulty ${isSelected ? "active" : ""}`} />
-                                    <foreignObject width={2 * octagon.halfWidth} height={2 * octagon.halfHeight}>
+                                return <g transform={`translate(${j * (2 * diamond.halfWidth + 2 * diamond.padding)}, 0)`} >
+                                    <Diamond {...diamond} className={`diamond challenge difficulty ${isSelected ? "active" : ""}`} />
+                                    <foreignObject width={2 * diamond.halfWidth} height={2 * diamond.halfHeight}>
                                         <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
                                             {getAbbreviation(difficultyOption.label)}
                                         </div>
                                     </foreignObject>
-                                    <Octagon
-                                        {...octagon} className="octagon none clickable" properties={{clickable: true}} role="button"
+                                    <Diamond
+                                        {...diamond} className="diamond none clickable" properties={{clickable: true}} role="button"
                                         tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                                     >
                                         <title>
                                             {`${isSelected ? "Remove" : "Add"} level ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
                                         </title>
-                                    </Octagon>
+                                    </Diamond>
                                 </g>;})}
                         </g>
                         :
-                        <g/>
-            }
-        </g>
-    </svg>
+                        demoShape == "octagon" ?
+                            <g transform={`translate(0, ${4 * hexagon.quarterHeight + octagon.padding + hexagon.padding})`}>
+                                {challengeOptionsRow.map((difficultyOption, j) => {
+                                    const isSelected = difficulties.map(l => l.value).includes(difficultyOption.value);
+                                    function selectValue() {
+                                        setDifficulties(isSelected ?
+                                            difficulties.filter(d => d.value !== difficultyOption.value) : // remove
+                                            [...difficulties, difficultyOption] // add
+                                        );
+                                    }
+                                    return <g transform={`translate(${j * (2 * octagon.halfWidth + 2 * octagon.padding)}, 0)`} >
+                                        <Octagon {...octagon} className={`octagon challenge difficulty ${isSelected ? "active" : ""}`} />
+                                        <foreignObject width={2 * octagon.halfWidth} height={2 * octagon.halfHeight}>
+                                            <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
+                                                {getAbbreviation(difficultyOption.label)}
+                                            </div>
+                                        </foreignObject>
+                                        <Octagon
+                                            {...octagon} className="octagon none clickable" properties={{clickable: true}} role="button"
+                                            tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
+                                        >
+                                            <title>
+                                                {`${isSelected ? "Remove" : "Add"} level ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                            </title>
+                                        </Octagon>
+                                    </g>;})}
+                            </g>
+                            :
+                            <g/>
+                }
+            </svg>
+    </Container>
 }
