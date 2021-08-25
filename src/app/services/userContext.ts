@@ -7,14 +7,14 @@ import {
     examBoardTagMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
-    STAGE_NULL_OPTIONS,
+    STAGE_NULL_OPTIONS, stagesOrdered,
 } from "./constants";
-import {ContentBaseDTO, ContentSummaryDTO, Role, UserContext} from "../../IsaacApiTypes";
+import {AudienceContext, ContentBaseDTO, ContentSummaryDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import {PotentialUser, ProgrammingLanguage} from "../../IsaacAppTypes";
+import {PotentialUser, ProgrammingLanguage, ViewingContext} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {isDefined} from "./miscUtils";
 import {history} from "./history";
@@ -186,6 +186,55 @@ export const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM
             content.tags?.includes(examBoardTagMap[examBoard])
     });
 };
+
+function produceAudienceViewingCombinations(audience: AudienceContext): ViewingContext[] {
+    const keys: (keyof AudienceContext)[] = ["stage", "examBoard", "difficulty"];
+    let audienceOptions: ViewingContext[] = [];
+    keys.forEach(key => {
+        const values = audience[key];
+        if (!values || values.length === 0) {return; /* early */}
+
+        const nextIterationOfAudienceOptions: ViewingContext[] = [];
+        values.forEach((value: string) => {
+            (audienceOptions.length ? audienceOptions : [{}]).forEach(option => {
+                nextIterationOfAudienceOptions.push({...option, [key]: value});
+            });
+        });
+
+        audienceOptions = nextIterationOfAudienceOptions;
+    });
+    return audienceOptions;
+}
+
+export function determineAudienceViews(audience?: AudienceContext[], creationContext?: AudienceContext): ViewingContext[] {
+    if (audience === undefined) {return [];}
+
+    let viewingContexts: ViewingContext[] = [];
+
+    // Create a list of all intended viewing context combinations from the audience
+    audience.forEach(audienceContext => {
+        viewingContexts.push(...produceAudienceViewingCombinations(audienceContext));
+    });
+
+    // Restrict by creation context options, if defined
+    if (creationContext) {
+        viewingContexts = viewingContexts.filter(viewingContext => {
+            let viableView = true;
+            if (creationContext.stage && viewingContext.stage) {
+                viableView = viableView && creationContext.stage.includes(viewingContext.stage);
+            }
+            if (creationContext.examBoard && viewingContext.examBoard) {
+                viableView = viableView && creationContext.examBoard.includes(viewingContext.examBoard);
+            }
+            if (creationContext.difficulty && viewingContext.difficulty) {
+                viableView = viableView && creationContext.difficulty.includes(viewingContext.difficulty);
+            }
+            return viableView;
+        })
+    }
+
+    return viewingContexts;
+}
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {
     // If no audience is specified, we default to true

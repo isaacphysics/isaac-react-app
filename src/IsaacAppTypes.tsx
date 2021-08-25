@@ -6,7 +6,7 @@ import {
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
-    ContentSummaryDTO,
+    ContentSummaryDTO, Difficulty,
     GameboardDTO,
     GameboardItem,
     OldExamBoard,
@@ -14,7 +14,7 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO,
+    TOTPSharedSecretDTO, UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
@@ -829,6 +829,10 @@ export interface QuestionSearchResponse {
 
 export interface ContentSummary extends ContentSummaryDTO {
     creationContext?: AudienceContext;
+}
+
+export interface ViewingContext extends UserContext {
+    difficulty?: Difficulty;
 }
 
 export interface StreakRecord {

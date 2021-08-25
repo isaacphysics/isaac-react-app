@@ -1,7 +1,7 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
-import {BookingStatus, Difficulty} from "../../IsaacApiTypes";
+import {BookingStatus, Difficulty, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 // Temporary Feature Flags
@@ -590,6 +590,9 @@ export enum BOOLEAN_NOTATION {
 
 // STAGES
 export enum STAGE {
+    YEAR_7 = "year_7",
+    YEAR_8 = "year_8",
+    YEAR_9 = "year_9",
     GCSE = "gcse",
     A_LEVEL = "a_level",
     FURTHER_A = "further_a",
@@ -599,16 +602,39 @@ export enum STAGE {
 export const STAGE_NULL_OPTIONS = new Set([STAGE.NONE]);
 export const STAGES_PHY = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
 export const STAGES_CS = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL]);
+export const stagesOrdered: Stage[] = ["year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "none"];
+export const stageLabelMap: {[stage in Stage]: string} = {
+    year_7: "Year 7",
+    year_8: "Year 8",
+    year_9: "Year 9",
+    gcse: "GCSE",
+    a_level: "A Level",
+    further_a: "Further A",
+    university: "University",
+    none: "",
+}
 
 // DIFFICULTIES
-export const DIFFICULTY_ITEM_OPTIONS: {label: string, value: Difficulty}[] = [
-    {label: "Practice (P1)", value: "practice_1"},
-    {label: "Practice (P2)", value: "practice_2"},
-    {label: "Practice (P3)", value: "practice_3"},
-    {label: "Challenge (C1)", value: "challenge_1"},
-    {label: "Challenge (C2)", value: "challenge_2"},
-    {label: "Challenge (C3)", value: "challenge_3"}
-];
+export const difficultyShortLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "P1",
+    practice_2: "P2",
+    practice_3: "P3",
+    challenge_1: "C1",
+    challenge_2: "C2",
+    challenge_3: "C3",
+}
+export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice (P1)",
+    practice_2: "Practice (P2)",
+    practice_3: "Practice (P3)",
+    challenge_1: "Challenge (C1)",
+    challenge_2: "Challenge (C2)",
+    challenge_3: "Challenge (C3)",
+}
+export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
+export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: difficultyLabelMap[d]}
+));
 
 // QUESTION CATEGORIES
 export enum QUESTION_CATEGORY {

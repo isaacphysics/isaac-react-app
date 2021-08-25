@@ -22,11 +22,16 @@ import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards} from "../../../Isaac
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {sortIcon} from "../../services/constants";
 import {
+    difficultiesOrdered,
+    difficultyShortLabelMap,
+    sortIcon,
+    stageLabelMap,
+    stagesOrdered
+} from "../../services/constants";
+import {
+    allPropertiesFromAGameboard,
     boardCompletionSelection,
-    boardLevelsSelection,
-    determineGameboardLevels,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons
@@ -36,8 +41,6 @@ import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import Select from "react-select";
-import {multiSelectOnChange} from "../../services/gameboardBuilder";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -106,7 +109,8 @@ const Board = (props: BoardTableProps) => {
     }
 
     const boardSubjects = determineGameboardSubjects(board);
-    const boardLevels = determineGameboardLevels(board);
+    const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
+    const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
     return boardView == boardViews.table ?
         <tr key={board.id} className="board-card">
@@ -121,7 +125,8 @@ const Board = (props: BoardTableProps) => {
                 </div>
             </td>
             <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
-            {SITE_SUBJECT == SITE.PHY && <td className="text-center align-middle">{boardLevels.join(', ')}</td>}
+            <td className="text-center align-middle">{boardStages.map(s => stageLabelMap[s]).join(', ')}</td>
+            {SITE_SUBJECT == SITE.PHY && <td className="text-center align-middle">{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</td>}
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
@@ -150,8 +155,11 @@ const Board = (props: BoardTableProps) => {
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                    <CardSubtitle>
+                        {`Stage${boardStages.length !== 1 ? "s" : ""}: `}<strong>{boardStages.map(s => stageLabelMap[s]).join(', ') || "N/A"}</strong>
+                    </CardSubtitle>
                     {SITE_SUBJECT == SITE.PHY && <CardSubtitle>
-                        {`Level${boardLevels.length !== 1 ? "s" : ""}: `}<strong>{boardLevels.join(', ') || "N/A"}</strong>
+                        {`Difficult${boardStages.length !== 1 ? "ies" : "y"}: `}<strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ') || "N/A"}</strong>
                     </CardSubtitle>}
                 </aside>
 
@@ -334,8 +342,8 @@ export const MyGameboards = () => {
                             <div>
                                 <Row>
                                     <Col sm={6} lg={3} xl={2}>
-                                        <Label className="w-100">
-                                            Display in <Input type="select" value={boardView} onChange={e => switchView(e)}>
+                                        <Label inline className="w-100">
+                                            Display in <Input type="select" value={boardView} onChange={e => switchView(e)} className="p-2">
                                                 {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                             </Input>
                                         </Label>
@@ -349,27 +357,28 @@ export const MyGameboards = () => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>
-                                                <Label className="w-100">Levels
-                                                    <Select inputId="levels-select"
-                                                        isMulti
-                                                        options={[
-                                                            {value: '1', label: '1'},
-                                                            {value: '2', label: '2'},
-                                                            {value: '3', label: '3'},
-                                                            {value: '4', label: '4'},
-                                                            {value: '5', label: '5'},
-                                                            {value: '6', label: '6'},
-                                                        ]}
-                                                        className="basic-multi-select"
-                                                        classNamePrefix="select"
-                                                        placeholder="None"
-                                                        onChange={multiSelectOnChange(setLevels)}
-                                                    />
-                                                </Label>
-                                            </Col>
-                                            }
-                                            <Col sm={6} lg={SITE_SUBJECT == SITE.PHY ? 2 : {size: 2, offset: 4}}>
+                                            {/* TODO MT add stage selector */}
+                                            {/*{SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>*/}
+                                            {/*    <Label className="w-100">Levels*/}
+                                            {/*        <Select inputId="levels-select"*/}
+                                            {/*            isMulti*/}
+                                            {/*            options={[*/}
+                                            {/*                {value: '1', label: '1'},*/}
+                                            {/*                {value: '2', label: '2'},*/}
+                                            {/*                {value: '3', label: '3'},*/}
+                                            {/*                {value: '4', label: '4'},*/}
+                                            {/*                {value: '5', label: '5'},*/}
+                                            {/*                {value: '6', label: '6'},*/}
+                                            {/*            ]}*/}
+                                            {/*            className="basic-multi-select"*/}
+                                            {/*            classNamePrefix="select"*/}
+                                            {/*            placeholder="None"*/}
+                                            {/*            onChange={multiSelectOnChange(setLevels)}*/}
+                                            {/*        />*/}
+                                            {/*    </Label>*/}
+                                            {/*</Col>*/}
+                                            {/*}*/}
+                                            <Col sm={6} lg={{size: 2, offset: 4}}>
                                                 <Label className="w-100">
                                                     Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
                                                         {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
@@ -399,7 +408,8 @@ export const MyGameboards = () => {
                                                                 Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                             </button>
                                                         </th>
-                                                        {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle">Levels</th>}
+                                                        <th className="text-center align-middle">Stages</th>
+                                                        {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle">Difficulties</th>}
                                                         <th className="text-center align-middle">Creator</th>
                                                         <th className="text-center align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
@@ -424,8 +434,7 @@ export const MyGameboards = () => {
                                                     {boards.boards
                                                         .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
                                                         && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                                        && (boardCompletionSelection(board, boardCompletion))
-                                                        && (boardLevelsSelection(board, levels)))
+                                                        && (boardCompletionSelection(board, boardCompletion)))
                                                         .map(board =>
                                                             <Board
                                                                 key={board.id}

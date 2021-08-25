@@ -5,6 +5,8 @@ import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {CurrentGameboardState} from "../state/reducers/gameboardsState";
+import {determineAudienceViews} from "./userContext";
+import {ViewingContext} from "../../IsaacAppTypes";
 
 enum boardCompletions {
     "any" = "Any",
@@ -111,20 +113,25 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
         .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
 };
 
-export const determineGameboardLevels = (board: GameboardDTO) => {
-    // TODO alter functionality for CS when required
-    let allLevels: string[] = [];
-    board.contents?.map((item) => {
-        item.level && allLevels.push(item.level.toString());
-    });
-    allLevels.sort();
-    return Array.from(new Set(allLevels));
-};
-
-export const boardLevelsSelection = (board: GameboardDTO, levels: string[]) => {
-    // TODO alter functionality for CS when required
-    if (levels == []) {
-        return true;
+export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
+    return function comparator(a?: T, b?: T) {
+        // Ignoring undefined with ! - if it is undefined, so be it, it will return -1
+        return orderedPropertyValues.indexOf(a!) - orderedPropertyValues.indexOf(b!);
     }
-    return levels.every(level => determineGameboardLevels(board).includes(level));
-};
+}
+
+export function allPropertiesFromAGameboard<T extends keyof ViewingContext>(
+    gameboard: GameboardDTO | undefined, property: T, orderedPropertyValues?: ViewingContext[T][]
+): NonNullable<ViewingContext[T]>[] {
+    if (!gameboard) {return [];}
+    return Array.from((gameboard?.contents || [])
+        .reduce((aggregator, gameboardItem) => {
+            determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext).forEach(v => {
+                if (v[property]) {
+                    aggregator.add(v[property]!); // need "!" to tell TS that it's not undefined even though we check that
+                }
+            });
+            return aggregator;
+        }, new Set<NonNullable<ViewingContext[T]>>()))
+        .sort(orderedPropertyValues ? comparatorFromOrderedValues(orderedPropertyValues) : () => 0);
+}

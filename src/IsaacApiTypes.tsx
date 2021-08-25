@@ -466,7 +466,7 @@ export interface GroupMembershipDTO {
 
 export type OldExamBoard = "AQA" | "OCR" | "OTHER";
 
-export type Stage = "gcse" | "a_level" | "further_a" | "university" | "none";
+export type Stage = "year_7" | "year_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "none";
 
 export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "none";
 
@@ -563,8 +563,6 @@ export interface GameboardItem {
     tags?: string[];
     audience?: AudienceContext[];
     creationContext?: AudienceContext;
-    level?: number;
-    difficulty?: number;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;

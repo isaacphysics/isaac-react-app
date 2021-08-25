@@ -7,14 +7,23 @@ import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
+import {
+    difficultyShortLabelMap,
+    NOT_FOUND,
+    stagesOrdered,
+    STAGE,
+    stageLabelMap,
+    TAG_ID,
+    TAG_LEVEL
+} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
-import {showWildcard} from "../../services/gameboards";
+import {comparatorFromOrderedValues, showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
+import {determineAudienceViews} from "../../services/userContext";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -80,9 +89,19 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
-            {/*TODO CS Level*/}
-            {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
-                <span className="gameboard-tags">Level {question.level}</span>}
+            {question.audience && <div>
+                {determineAudienceViews(question.audience, question.creationContext)
+                    .sort((a, b) => comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage))
+                    .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
+                        {view.stage && view.stage !== STAGE.NONE && <span className="gameboard-tags">
+                            {stageLabelMap[view.stage]}
+                        </span>} {" "}
+                        {view.difficulty && <span className="gameboard-tags">
+                            ({difficultyShortLabelMap[view.difficulty]})
+                        </span>}
+                    </div>
+                )}
+            </div>}
         </Link>
     </RS.ListGroupItem>;
 };

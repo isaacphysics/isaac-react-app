@@ -61,10 +61,7 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary) =
     const newQuestion = {...question};
     delete newQuestion.type;
     delete newQuestion.url;
-
-    const gameboardItem = newQuestion as GameboardItem;
-    gameboardItem.level = newQuestion.level ? parseInt(newQuestion.level) : 0;
-    return gameboardItem;
+    return newQuestion as GameboardItem;
 };
 
 export const convertGameboardItemToContentSummary = (question: GameboardItem) => {
