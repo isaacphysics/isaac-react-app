@@ -233,7 +233,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='logic'
-                logicSyntax={examBoard === EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                logicSyntax={props.examBoard === EXAM_BOARD.OCR ? 'logic' : 'binary'}
                 questionDoc={doc}
             />}
             {!readonly && isStaff(user) && <div className="eqn-editor-input">
