@@ -11,7 +11,6 @@ import {clearEventsList, getEventMapData, getEventsList} from "../../state/actio
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 
