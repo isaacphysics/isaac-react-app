@@ -9,17 +9,15 @@ import katex from "katex";
 import {EXAM_BOARD} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
-import { sanitiseInequalityState } from '../../services/questions';
+import {sanitiseInequalityState, selectQuestionPart} from '../../services/questions';
 import _flattenDeep from 'lodash/flattenDeep';
-import {useUserContext} from "../../services/userContext";
-import {selectQuestionPart} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
-import { Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip } from 'reactstrap';
+import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
 import uuid from "uuid";
-import { Inequality, makeInequality } from 'inequality';
-import { parseBooleanExpression, ParsingError } from 'inequality-grammar';
-import { isDefined } from '../../services/miscUtils';
-import { isStaff } from '../../services/user';
+import {Inequality, makeInequality} from 'inequality';
+import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
+import {isDefined} from '../../services/miscUtils';
+import {isStaff} from '../../services/user';
 
 // Magic starts here
 interface ChildrenMap {
@@ -69,7 +67,6 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
-    const {examBoard} = useUserContext();
     const [textInput, setTextInput] = useState('');
     const user = useSelector(selectors.user.orNull);
 

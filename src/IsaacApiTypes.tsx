@@ -464,8 +464,6 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
-export type OldExamBoard = "AQA" | "OCR" | "OTHER";
-
 export type Stage = "year_7" | "year_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "none";
 
 export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "none";
@@ -497,7 +495,6 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     schoolId?: string;
     role?: Role;
     schoolOther?: string;
-    examBoard?: OldExamBoard;
     registeredContexts?: UserContext[];
     registeredContextsLastConfirmed?: Date;
     firstLogin?: boolean;
@@ -526,7 +523,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     role?: Role;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
-    examBoard?: OldExamBoard;
+    registeredContexts?: UserContext[];
     id?: number;
 }
 

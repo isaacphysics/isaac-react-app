@@ -1,7 +1,7 @@
 import Remarkable from "remarkable";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {invert} from "lodash";
-import {BookingStatus, Difficulty, Stage} from "../../IsaacApiTypes";
+import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 // Temporary Feature Flags
@@ -569,6 +569,15 @@ export enum EXAM_BOARD {
     WJEC = "wjec",
     NONE = "none",
 }
+export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
+    [EXAM_BOARD.AQA]: "AQA",
+    [EXAM_BOARD.OCR]: "OCR",
+    [EXAM_BOARD.CIE]: "CIE",
+    [EXAM_BOARD.EDEXCEL]: "EDEXCEL",
+    [EXAM_BOARD.EDUQAS]: "EDUQAS",
+    [EXAM_BOARD.WJEC]: "WJEC",
+    [EXAM_BOARD.NONE]: "All exam boards",
+}
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.NONE]);
 export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
@@ -611,7 +620,7 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     a_level: "A Level",
     further_a: "Further A",
     university: "University",
-    none: "",
+    none: "All stages",
 }
 
 // DIFFICULTIES

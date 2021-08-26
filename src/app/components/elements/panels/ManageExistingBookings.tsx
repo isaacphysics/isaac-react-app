@@ -18,7 +18,7 @@ import {isAdmin, isEventLeader} from "../../../services/user";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
-import {API_PATH, bookingStatusMap} from "../../../services/constants";
+import {API_PATH, bookingStatusMap, examBoardLabelMap, stageLabelMap} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 
@@ -108,6 +108,9 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                                     Booking updated
                                 </RS.Button>
                             </th>
+                            <th className="align-middle">
+                                Stage
+                            </th>
                             {SITE_SUBJECT == SITE.CS && <th className="align-middle">
                                 Exam board
                             </th>}
@@ -172,7 +175,12 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                                     <td className="align-middle">{booking.bookingStatus}</td>
                                     <td className="align-middle"><DateString>{booking.bookingDate}</DateString></td>
                                     <td className="align-middle"><DateString>{booking.updated}</DateString></td>
-                                    {SITE_SUBJECT == SITE.CS && <td className="align-middle">{booking.userBooked && booking.userBooked.examBoard}</td>}
+                                    <td className="align-middle">
+                                        {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ")}
+                                    </td>
+                                    {SITE_SUBJECT == SITE.CS && <td className="align-middle">
+                                        {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => examBoardLabelMap[rc.examBoard!]))).join(", ")}
+                                    </td>}
                                     <td className="align-middle text-center">{booking.reservedById || "-"}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.experienceLevel}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}</td>
