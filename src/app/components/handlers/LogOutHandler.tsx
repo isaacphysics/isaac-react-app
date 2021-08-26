@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useDispatch} from "react-redux";
 import {logOutUser} from "../../state/actions";
-import {Spinner} from "reactstrap";
+import {IsaacSpinner} from "./IsaacSpinner";
 
 export const LogOutHandler = () => {
     const dispatch = useDispatch();
@@ -11,7 +11,7 @@ export const LogOutHandler = () => {
             <h2 className="pt-5 pb-2">
                 Logging out...
             </h2>
-            <Spinner color="primary" />
+            <IsaacSpinner />
         </div>
     </React.Fragment>
 };

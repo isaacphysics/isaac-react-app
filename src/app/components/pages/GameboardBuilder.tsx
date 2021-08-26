@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
-import {Spinner} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem} from "../../../IsaacApiTypes";
 import {
@@ -37,6 +36,7 @@ import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
 import {getFilteredExamBoardOptions} from "../../services/userContext";
 import {ContentSummary} from "../../../IsaacAppTypes";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -191,7 +191,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                 <td colSpan={5}>
                                                     <div className="img-center">
                                                         <ShowLoading
-                                                            placeholder={<div className="text-center"><Spinner color="primary" /></div>}
+                                                            placeholder={<div className="text-center"><IsaacSpinner /></div>}
                                                             until={!baseGameboardId || baseGameboard}
                                                         >
                                                             <RS.Button

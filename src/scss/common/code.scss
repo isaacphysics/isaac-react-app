@@ -14,6 +14,8 @@ $code-indent: 3.8em;  // Want ~1em per character, so this is good for 999 lines!
   pre.line-numbers > code {
     position: relative;
     white-space: inherit;
+    overflow-x: initial;
+    padding: 0;
   }
 
   .line-numbers .line-numbers-rows {

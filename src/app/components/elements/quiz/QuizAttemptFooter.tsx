@@ -6,6 +6,7 @@ import {markQuizAttemptAsComplete} from "../../../state/actions/quizzes";
 import {showToast} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {Spacer} from "../Spacer";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -54,7 +55,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
 
         const primaryButton = anyAnswered ? "Continue" : "Start";
         const primaryDescription = anyAnswered ? "resume" : "begin";
-        const submitButton = submitting ? <RS.Spinner/> : allCompleted ? "Submit" : "Submit anyway";
+        const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : "Submit anyway";
 
         if (allCompleted) {
             controls = <>
