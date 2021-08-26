@@ -7,7 +7,7 @@ import {
     examBoardTagMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
-    STAGE_NULL_OPTIONS,
+    STAGE_NULL_OPTIONS, STAGES_CS, STAGES_PHY,
     stagesOrdered,
 } from "./constants";
 import {AudienceContext, ContentBaseDTO, ContentSummaryDTO, Role, UserContext} from "../../IsaacApiTypes";
@@ -22,7 +22,6 @@ import {history} from "./history";
 import queryString from "query-string";
 import {useEffect} from "react";
 import {useQueryParams} from "./reactRouterExtension";
-import siteSpecific from "../components/site/siteSpecific";
 import {comparatorFromOrderedValues} from "./gameboards";
 import {selectors} from "../state/selectors";
 
@@ -178,7 +177,7 @@ interface StageFilterOptions {
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
     return _STAGE_ITEM_OPTIONS
         // Restrict by subject stages
-        .filter(i => siteSpecific.Stages.has(i.value))
+        .filter(i => ({[SITE.CS]: STAGES_CS, [SITE.PHY]: STAGES_PHY}[SITE_SUBJECT].has(i.value)))
         // Restrict by includeNullOptions flag
         .filter(i => filter?.includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
         // Restrict by account settings
