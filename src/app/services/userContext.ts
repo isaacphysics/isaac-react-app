@@ -7,10 +7,11 @@ import {
     examBoardTagMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
-    STAGE_NULL_OPTIONS, stagesOrdered,
+    STAGE_NULL_OPTIONS,
+    stagesOrdered,
 } from "./constants";
-import {AudienceContext, ContentBaseDTO, ContentSummaryDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
-import {useLocation} from "react-router-dom";
+import {AudienceContext, ContentBaseDTO, ContentSummaryDTO, Role, UserContext} from "../../IsaacApiTypes";
+import {useLocation, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
@@ -23,6 +24,7 @@ import {useEffect} from "react";
 import {useQueryParams} from "./reactRouterExtension";
 import siteSpecific from "../components/site/siteSpecific";
 import {comparatorFromOrderedValues} from "./gameboards";
+import {selectors} from "../state/selectors";
 
 interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -37,9 +39,23 @@ export function useUserContext(): UseUserContextReturnType {
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
     const {PROGRAMMING_LANGUAGE: programmingLanguage} = useSelector((state: AppState) => state?.userPreferences) || {};
+    const {questionId} = useParams();
+    const currentGameboard = useSelector(selectors.board.currentGameboard);
 
     // Programming Language
     const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
+
+    // Stage
+    let stage: STAGE;
+    if (qParams.stage && Object.values(STAGE).includes(qParams.stage as STAGE)) {
+        stage = qParams.stage as STAGE;
+    } else if (isDefined(transientUserContext.stage)) {
+        stage = transientUserContext.stage;
+    } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
+        stage = user.registeredContexts[0].stage as STAGE;
+    } else {
+        stage = STAGE.NONE;
+    }
 
     // Exam Board
     let examBoard: EXAM_BOARD;
@@ -55,16 +71,29 @@ export function useUserContext(): UseUserContextReturnType {
         examBoard = EXAM_BOARD.NONE;
     }
 
-    // Stage
-    let stage: STAGE;
-    if (qParams.stage && Object.values(STAGE).includes(qParams.stage as STAGE)) {
-        stage = qParams.stage as STAGE;
-    } else if (isDefined(transientUserContext.stage)) {
-        stage = transientUserContext.stage;
-    } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
-        stage = user.registeredContexts[0].stage as STAGE;
-    } else {
-        stage = STAGE.NONE;
+    // Gameboard views overrides all context options
+    if (questionId && qParams.board && currentGameboard && currentGameboard.id === qParams.board) {
+        const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];
+        if (gameboardItem) {
+            const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext);
+            // If user's stage selection is not one specified by the gameboard change it
+            if (gameboardDeterminedViews.length > 0) {
+                if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.has(stage)) {
+                    if (gameboardDeterminedViews.length === 1) {
+                        stage = gameboardDeterminedViews[0].stage as STAGE;
+                    } else {
+                        stage = STAGE.NONE;
+                    }
+                }
+                if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {
+                    if (gameboardDeterminedViews.length === 1) {
+                        examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
+                    } else {
+                        examBoard = EXAM_BOARD.NONE;
+                    }
+                }
+            }
+        }
     }
 
     const showOtherContent = transientUserContext?.showOtherContent ?? true;
