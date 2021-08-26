@@ -2,12 +2,12 @@ import React, {ReactNode} from "react";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
+import {difficultyShortLabelMap, DOCUMENT_TYPE, documentTypePathPrefix, stageLabelMap} from "../../services/constants";
 import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
-import {filterOnExamBoard, useUserContext} from "../../services/userContext";
+import {determineAudienceViews, filterOnExamBoard, useUserContext} from "../../services/userContext";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -138,19 +138,29 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const questions = sortedContent
         .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION);
 
-    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => (
-        <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
+    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => {
+        const audienceViews = determineAudienceViews(contentSummary.audience);
+        return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link
                 to={getURLForContent(contentSummary)}
-                onClick={() => {dispatch(logAction(getEventDetails(contentSummary, parentPage)))}}
+                onClick={() => {
+                    dispatch(logAction(getEventDetails(contentSummary, parentPage)))
+                }}
                 target={openInNewTab ? "_blank" : undefined}
             >
                 {contentSummary.title}
-                {/*TODO CS Level*/}
-                {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' && " (Level " + contentSummary.level + ")"}
+                {audienceViews && " ("}
+                {audienceViews.map(av => {
+                    let result = "";
+                    if (av.stage) {result += stageLabelMap[av.stage]}
+                    if (av.stage && av.difficulty) {result += " - "}
+                    if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
+                    return result;
+                }).join(", ")}
+                {audienceViews && ")"}
             </Link>
         </ListGroupItem>
-    );
+    };
 
     return {
         [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem),

@@ -1,8 +1,16 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
-import {examBoardTagMap, TAG_ID, TAG_LEVEL, tagExamBoardMap} from "../../services/constants";
+import {
+    difficultyLabelMap,
+    examBoardTagMap,
+    STAGE,
+    stageLabelMap,
+    TAG_ID,
+    TAG_LEVEL,
+    tagExamBoardMap
+} from "../../services/constants";
 import React from "react";
-import {AudienceContext, ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
 import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
@@ -10,10 +18,11 @@ import tags from "../../services/tags";
 import {Question} from "../pages/Question";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {ContentSummary} from "../../../IsaacAppTypes";
+import {determineAudienceViews} from "../../services/userContext";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
-    question: ContentSummaryDTO;
+    question: ContentSummary;
     selectedQuestions: Map<string, ContentSummary>;
     setSelectedQuestions: (m: Map<string, ContentSummary>) => void;
     questionOrder: string[];
@@ -83,8 +92,23 @@ export const GameboardBuilderRow = (
         <td className="w-25">
             {topicTag()}
         </td>
+        <td className="w-15">
+            {determineAudienceViews(question.audience, question.creationContext || creationContext)
+                .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
+                    {view.stage && view.stage !== STAGE.NONE && <span className="gameboard-tags">
+                        {stageLabelMap[view.stage]}
+                    </span>}
+                </div>)
+            }
+        </td>
         {SITE_SUBJECT === SITE.PHY && <td className="w-15">
-            {question.level}
+            {determineAudienceViews(question.audience, question.creationContext || creationContext)
+                .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
+                    {view.difficulty && <span className="gameboard-tags">
+                        {difficultyLabelMap[view.difficulty]}
+                    </span>}
+                </div>)
+            }
         </td>}
         {SITE_SUBJECT === SITE.CS && <td className="w-15">
             {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamBoardMap[tag]))}

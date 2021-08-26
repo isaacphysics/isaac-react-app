@@ -91,7 +91,6 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             </div>
             {question.audience && <div>
                 {determineAudienceViews(question.audience, question.creationContext)
-                    .sort((a, b) => comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage))
                     .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
                         {view.stage && view.stage !== STAGE.NONE && <span className="gameboard-tags">
                             {stageLabelMap[view.stage]}

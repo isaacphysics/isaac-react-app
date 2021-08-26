@@ -14,7 +14,7 @@ import {
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {DIFFICULTY_ITEM_OPTIONS, SortOrder, STAGE,} from "../../../services/constants";
+import {DIFFICULTY_ITEM_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
@@ -41,7 +41,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
 
     const [searchQuestionName, setSearchQuestionName] = useState("");
-    const [searchLevels,] = useState<string[]>([]);
     const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     const [searchStages, setSearchStages] = useState<STAGE[]>([]);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
@@ -65,9 +64,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const user = useSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
-        debounce((searchString: string, topics: string[], levels: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
+        debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
             const isBookSearch = book.length > 0; // Tasty.
-            if ([searchString, topics, levels, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
+            if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
                 dispatch(clearQuestionSearch);
                 return;
@@ -78,8 +77,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
             dispatch(searchQuestions({
                 searchString: searchString,
-                // N.B. This endpoint claims to support multiple levels, but it doesn't seem to work, so we restrict the select below to only pick one level.
-                levels: !isBookSearch && levels.length > 0 ? levels.join(",") : undefined,
                 tags,
                 stages: stages.join(",") || undefined,
                 difficulties: difficulties.join(",") || undefined,
@@ -89,7 +86,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 limit: -1
             }));
 
-            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, levels, examBoards, book, stages, difficulties, fasttrack, startIndex});
+            logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
         }, 250),
         []
     );
@@ -104,8 +101,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         tags.allSubcategoryTags.map(groupTagSelectionsByParent);
 
     useEffect(() => {
-        searchDebounce(searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
-    },[searchDebounce, searchQuestionName, searchTopics, searchLevels, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
+        searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
+    },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
 
     const addSelectionsRow = <div className="d-lg-flex align-items-baseline">
         <div className="flex-grow-1 mb-1">
@@ -214,11 +211,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         enabled={!isBookSearch}
                     />
                     <th className="w-25">Topic</th>
-                    {SITE_SUBJECT === SITE.PHY && <SortableTableHeader
-                        className="w-15" title="Level"
-                        updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "level")}
-                        enabled={!isBookSearch}
-                    />}
+                    <th className="w-15">Stage</th>
+                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Difficulty</th>}
                     {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
                 </tr>
             </thead>
@@ -227,10 +221,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     questions && sortQuestions(searchBook.length === 0 ? questionsSort : {title: SortOrder.ASC})(questions.filter((question) => {
                         let qIsPublic = searchResultIsPublic(question, user);
                         if (isBookSearch) return qIsPublic;
-                        let qLevelsMatch = (searchLevels.length == 0 || (question.level && searchLevels.includes(question.level.toString())));
                         let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
 
-                        return qIsPublic && qLevelsMatch && qTopicsMatch;
+                        return qIsPublic && qTopicsMatch;
                     })).map((question) =>
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}

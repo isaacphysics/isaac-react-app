@@ -342,7 +342,7 @@ export const MyGameboards = () => {
                             <div>
                                 <Row>
                                     <Col sm={6} lg={3} xl={2}>
-                                        <Label inline className="w-100">
+                                        <Label className="w-100">
                                             Display in <Input type="select" value={boardView} onChange={e => switchView(e)} className="p-2">
                                                 {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                             </Input>

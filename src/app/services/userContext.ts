@@ -22,6 +22,7 @@ import queryString from "query-string";
 import {useEffect} from "react";
 import {useQueryParams} from "./reactRouterExtension";
 import siteSpecific from "../components/site/siteSpecific";
+import {comparatorFromOrderedValues} from "./gameboards";
 
 interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -233,7 +234,8 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
         })
     }
 
-    return viewingContexts;
+    return viewingContexts
+        .sort((a, b) => comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {
