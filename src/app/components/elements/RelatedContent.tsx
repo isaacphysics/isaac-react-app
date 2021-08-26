@@ -149,7 +149,7 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
                 target={openInNewTab ? "_blank" : undefined}
             >
                 {contentSummary.title}
-                {audienceViews && " ("}
+                {audienceViews.length > 0 && " ("}
                 {audienceViews.map(av => {
                     let result = "";
                     if (av.stage) {result += stageLabelMap[av.stage]}
@@ -157,7 +157,7 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
                     if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
                     return result;
                 }).join(", ")}
-                {audienceViews && ")"}
+                {audienceViews.length > 0 && ")"}
             </Link>
         </ListGroupItem>
     };

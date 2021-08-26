@@ -10,7 +10,6 @@ import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../servi
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
-import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
@@ -26,6 +25,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
+import {determineAudienceViews} from "../../services/userContext";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -83,7 +83,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     currentPageTitle={title}
                     intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                     collectionType={navigation.collectionType}
-                    level={doc.level}
+                    audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
                 >
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>

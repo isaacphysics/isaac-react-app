@@ -113,6 +113,13 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
         .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
 };
 
+export const determineCurrentCreationContext = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
+   if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+        return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
+   }
+};
+
+
 export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
     return function comparator(a?: T, b?: T) {
         // Ignoring undefined with ! - if it is undefined, so be it, it will return -1
