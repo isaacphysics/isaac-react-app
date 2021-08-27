@@ -1,14 +1,28 @@
 import React from "react";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {ContentDTO, Stage} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
-import {isIntendedAudience, mergeDisplayOptions, useUserContext} from "../../services/userContext";
+import {
+    isIntendedAudience,
+    mergeDisplayOptions,
+    useUserContext,
+    UseUserContextReturnType
+} from "../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {resourceFound} from "../../services/validation";
-import {DOCUMENT_TYPE} from "../../services/constants";
+import {
+    DOCUMENT_TYPE,
+    STAGE,
+    STAGE_NULL_OPTIONS,
+    stageLabelMap,
+    STAGES_CS,
+    STAGES_PHY,
+    stagesOrdered
+} from "../../services/constants";
+import {comparatorFromOrderedValues} from "../../services/gameboards";
 
 const defaultConceptDisplay = {
     [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -16,9 +30,24 @@ const defaultConceptDisplay = {
 }[SITE_SUBJECT];
 const defaultQuestionDisplay = {audience: [], nonAudience: []};
 
-function stringifyAudience(audience: ContentDTO["audience"]): string {
-    // return audience?.map(audienceObject => Object.values(audienceObject).map(values => values.join(", ")).join(" AND ")).join(" OR ") || "All"
-    return audience?.map(audienceObject => audienceObject.stage?.join(", ")).join(" OR ") || "All"; // Stage only
+function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType): string {
+    let stagesSet: Set<Stage>;
+    if (!audience) {
+        stagesSet = {
+            [SITE.PHY]: new Set<Stage>([STAGE.NONE]),
+            [SITE.CS]: new Set<Stage>(Array.from(STAGES_CS).filter(s => !STAGE_NULL_OPTIONS.has(s)))
+        }[SITE_SUBJECT];
+    } else {
+        stagesSet = new Set<Stage>(...audience.map(ac => ac.stage));
+    }
+    // order stages
+    const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
+    // if you are one of the options - only show that option
+    const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
+    const stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
+    // If common, could find substrings and report ranges i.e, GCSE to University
+
+    return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
 }
 
 interface SectionWithDisplaySettings extends ContentDTO {
@@ -61,7 +90,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                 return section;
             })
 
-            // If cs have show other content set to false hide non-audience content
+            // If cs have "show other content" set to false hide non-audience content
             .map(section => {
                 if (
                     SITE_SUBJECT === SITE.CS && userContext.showOtherContent === false &&
@@ -79,7 +108,8 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                 <Accordion
                     key={`${section.sectionIndex} ${index}`} id={section.id} index={index}
                     startOpen={section.startOpen} deEmphasised={section.deEmphasised}
-                    trustedTitle={section?.title || ""} audienceString={stringifyAudience(section.audience)}
+                    trustedTitle={section?.title || ""}
+                    audienceString={stringifyAudience(section.audience, userContext)}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>

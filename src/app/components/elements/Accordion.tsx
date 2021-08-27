@@ -119,15 +119,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         if (allValidated && allWrong) accordionIcon = "cross";
     }
 
-
-    const isConceptPage = page && page != NOT_FOUND && page.type === "isaacConceptPage";
-    let level = null;
-    if (isConceptPage && children) {
-        level = children?.props?.doc?.level;
-        if (level === 0) {
-            level = null;
-        }
-    }
+    const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 
     return <div className="accordion">
         <div className="accordion-header">
