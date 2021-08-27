@@ -3,7 +3,6 @@ import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "..
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
-import {QUIZ_FEATURE} from "../../../services/constants";
 import {Badge} from "reactstrap";
 
 export const NavigationBarCS = () => {
@@ -15,7 +14,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            {QUIZ_FEATURE && <LinkItem to="/quizzes">My quizzes</LinkItem>}
+            <LinkItem to="/quizzes">My quizzes</LinkItem>
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
@@ -24,7 +23,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
-            {QUIZ_FEATURE && <LinkItem to="/set_quizzes">Set quizzes</LinkItem>}
+            <LinkItem to="/set_quizzes">Set quizzes</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">

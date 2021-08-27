@@ -4,9 +4,6 @@ import {invert} from "lodash";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
-// Temporary Feature Flags
-export const QUIZ_FEATURE = ENV_QUIZ_FEATURE_FLAG || false;
-
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
