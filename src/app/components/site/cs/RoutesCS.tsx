@@ -14,12 +14,16 @@ import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {GroupProgress} from "../../pages/GroupProgress";
 import { Glossary } from "../../pages/Glossary";
+import {GameboardFromConcept} from "../../pages/GameboardFromConcept";
 
 let key = 0;
 export const RoutesCS = [
     // Student and teacher
     <TrackedRoute key={key++} exact path="/students" component={Students} />,
     <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
+
+    // Gameboard generated from concept page
+    <TrackedRoute key={key++} exact path="/gameboards/from_concept" component={GameboardFromConcept} />,
 
     // Assignments
     <TrackedRoute key={key++} exact path="/my_markbook" component={AssignmentProgress} />,
