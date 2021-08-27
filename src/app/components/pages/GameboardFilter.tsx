@@ -16,20 +16,13 @@ import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../element
 import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select from "react-select";
-import {getFilteredStageOptions} from "../../services/userContext";
-
-const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
+import {getFilteredStageOptions, useUserContext} from "../../services/userContext";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
 }
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title}
-}
-function itemiseLevels(possibleLevels: string[]) {
-    return possibleLevels
-        .filter(possibleLevels => !isNaN(parseInt(possibleLevels)))
-        .map(level => ({label: level, value: parseInt(level)}));
 }
 function toCSV<T>(items: Item<T>[]) {
     return items.map(item => item.value).join(",");
@@ -44,24 +37,14 @@ function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefi
 }
 
 interface QueryStringResponse {
-    queryLevels: Item<number>[];
     querySelections: Item<TAG_ID>[][];
     queryStages: Item<string>[];
     queryDifficulties: Item<string>[];
     queryQuestionCategories: Item<string>[];
 }
 function processQueryString(query: string): QueryStringResponse {
-    const {levels, subjects, fields, topics, stages, difficulties, questionCategories} = queryString.parse(query);
+    const {subjects, fields, topics, stages, difficulties, questionCategories} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
-
-    let levelItems: Item<number>[] = [];
-    if (levels) {
-        const levelArray = levels instanceof Array ? levels : levels.split(",");
-        // Start with an empty list if all levels are selected - nicer for most common usage of specifying 1 or 2 levels
-        levelItems = levelArray.length === levelOptions.length && levelArray.every((l, i) => l === levelOptions[i]?.label) ?
-            [] :
-            itemiseLevels(levelArray);
-    }
 
     const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStageOptions());
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
@@ -80,12 +63,11 @@ function processQueryString(query: string): QueryStringResponse {
     });
 
     return {
-        queryLevels: levelItems, querySelections: selectionItems,
-        queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems
+        querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems
     }
 }
 
-function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[]) {
+function generateBoardName(selections: Item<TAG_ID>[][]) {
     let boardName = "Physics, Maths & Chemistry";
     let selectionIndex = selections.length;
     while(selectionIndex-- > 0) {
@@ -94,17 +76,13 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
             break;
         }
     }
-    if (levels.length === 1) {
-        boardName += ", Level " + levels[0].label;
-    }
     return boardName;
 }
 
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
-    const {queryLevels, querySelections, queryStages, queryDifficulties, queryQuestionCategories} =
-        processQueryString(location.search);
+    const {querySelections, queryStages, queryDifficulties, queryQuestionCategories} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
@@ -140,15 +118,15 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         {id: "topics", name: "Topic"},
     ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
-    const [levels, setLevels] = useState<Item<number>[]>(queryLevels);
-
-    const [stages, setStages] = useState<Item<string>[]>(queryStages);
+    const userContext = useUserContext();
+    const [stages, setStages] = useState<Item<string>[]>(
+        queryStages.length > 0 ? queryStages :  itemiseByValue([userContext.stage], getFilteredStageOptions()));
 
     const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
 
     const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
-    const boardName = generateBoardName(selections, levels);
+    const boardName = generateBoardName(selections);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
 
@@ -178,7 +156,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             setBoardStack([]);
             loadNewGameboard();
         }
-    }, [selections, levels, stages, difficulties, questionCategories]);
+    }, [selections, stages, difficulties, questionCategories]);
 
     function refresh() {
         if (gameboard) {
@@ -197,7 +175,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     const pageHelp = <span>
-        You can build a gameboard by selecting the areas of interest and levels.
+        You can build a gameboard by selecting the areas of interest, stage and difficulties.
         <br />
         You can select more than one entry in each area.
     </span>;
