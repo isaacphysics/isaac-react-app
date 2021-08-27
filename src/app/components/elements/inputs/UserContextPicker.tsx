@@ -55,7 +55,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     if (STAGE_NULL_OPTIONS.has(e.target.value as STAGE)) {delete newParams.stage;}
                     if (SITE_SUBJECT === SITE.CS) {
                         // drive exam board selection so that it is a valid option
-                        const examBoard = getFilteredExamBoardOptions({byUser: user, byStages: [e.target.value as STAGE]})[0].value || EXAM_BOARD.NONE;
+                        const examBoard = getFilteredExamBoardOptions({byUser: user, byStages: [e.target.value as STAGE]})[0]?.value || EXAM_BOARD.NONE;
                         if (!EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {newParams.examBoard = examBoard;}
                         dispatch(setTransientExamBoardPreference(examBoard));
                     }

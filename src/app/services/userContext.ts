@@ -141,7 +141,7 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
             !isDefined(filter?.byStages) || // ignore if not set
             i.value === EXAM_BOARD.NONE || // none does not get filtered by stage
             filter?.byStages.length === 0 || // if there are no stages to filter by all pass
-            filter?.byStages.includes(STAGE.NONE) || // none in the stage level allows for all exam boards
+            filter?.byStages.some(s => STAGE_NULL_OPTIONS.has(s)) || // none in the stage level allows for all exam boards
             (filter?.byStages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) || // if there is gcse in stages allow GCSE boards
             (filter?.byStages.includes(STAGE.A_LEVEL) && EXAM_BOARDS_CS_A_LEVEL.has(i.value)) // if there is a_level in stage allow A Level boards
         )
@@ -153,11 +153,11 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
             !isLoggedIn(filter?.byUser) ||
             // user has a null option selected
             filter?.byUser.registeredContexts
-                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE))
+                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE) || STAGE_NULL_OPTIONS.has(rc.stage as STAGE))
                 .some(rc => EXAM_BOARD_NULL_OPTIONS.has(rc.examBoard as EXAM_BOARD)) ||
             // stage is one of registered context selections
             filter?.byUser.registeredContexts
-                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE))
+                ?.filter(rc => !filter.byStages || filter.byStages.length === 0 || filter.byStages.includes(rc.stage as STAGE) || STAGE_NULL_OPTIONS.has(rc.stage as STAGE))
                 .map(rc => rc.examBoard).includes(i.value)
         )
         // Restrict by existing user context selections
