@@ -15,8 +15,18 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     // If there is a possible audience view that is correct for our user context, show that specific one
     const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
 
+    const filteredViews: ViewingContext[] = [];
+    const viewed = new Set();
+    viewsToUse.forEach(v => {
+        const displayedValue = `${v.stage} ${v.difficulty}`;
+        if (!viewed.has(displayedValue)) {
+            filteredViews.push(v);
+            viewed.add(displayedValue);
+        }
+    });
+
     return <span className="float-right h-subtitle">
-        {viewsToUse.map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
+        {filteredViews.map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
             {view.stage && view.stage !== STAGE.NONE && <span>
                 {stageLabelMap[view.stage]}
             </span>}

@@ -152,13 +152,13 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
             >
                 {contentSummary.title}
                 {audienceViews.length > 0 && " ("}
-                {audienceViews.map(av => {
+                {Array.from(new Set(audienceViews.map(av => {
                     let result = "";
                     if (av.stage) {result += stageLabelMap[av.stage]}
                     if (av.stage && av.difficulty) {result += " - "}
                     if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
                     return result;
-                }).join(", ")}
+                }))).join(", ")}
                 {audienceViews.length > 0 && ")"}
             </Link>
         </ListGroupItem>
