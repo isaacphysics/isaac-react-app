@@ -18,6 +18,7 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {isDefined} from '../../services/miscUtils';
 import {isStaff} from '../../services/user';
+import {useUserContext} from "../../services/userContext";
 
 // Magic starts here
 interface ChildrenMap {
@@ -67,6 +68,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
+    const {preferredBooleanNotation} = useUserContext();
     const [textInput, setTextInput] = useState('');
     const user = useSelector(selectors.user.orNull);
 
@@ -230,7 +232,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='logic'
-                logicSyntax={props.examBoard === EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 questionDoc={doc}
             />}
             {!readonly && isStaff(user) && <div className="eqn-editor-input">

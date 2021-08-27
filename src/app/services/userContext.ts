@@ -1,4 +1,5 @@
 import {
+    BOOLEAN_NOTATION,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
@@ -15,7 +16,7 @@ import {useLocation, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import {PotentialUser, ProgrammingLanguage, ViewingContext} from "../../IsaacAppTypes";
+import {BooleanNotation, PotentialUser, ProgrammingLanguage, ViewingContext} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {isDefined} from "./miscUtils";
 import {history} from "./history";
@@ -30,6 +31,7 @@ export interface UseUserContextReturnType {
     stage: STAGE;
     showOtherContent?: boolean;
     preferredProgrammingLanguage?: string;
+    preferredBooleanNotation?: string;
 }
 
 export function useUserContext(): UseUserContextReturnType {
@@ -38,11 +40,15 @@ export function useUserContext(): UseUserContextReturnType {
     const user = useSelector((state: AppState) => state && state.user);
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
     const {PROGRAMMING_LANGUAGE: programmingLanguage} = useSelector((state: AppState) => state?.userPreferences) || {};
+    const {BOOLEAN_NOTATION: booleanNotation} = useSelector((state: AppState) => state?.userPreferences) || {};
     const {questionId} = useParams();
     const currentGameboard = useSelector(selectors.board.currentGameboard);
 
     // Programming Language
     const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
+
+    // Boolean notation preference
+    const preferredBooleanNotation = booleanNotation && Object.keys(BOOLEAN_NOTATION).reduce((val: string | undefined, key) => booleanNotation[key as keyof BooleanNotation] === true ? key as BOOLEAN_NOTATION : val, undefined);
 
     // Stage
     let stage: STAGE;
@@ -110,7 +116,7 @@ export function useUserContext(): UseUserContextReturnType {
         }
     }, []);
 
-    return {examBoard, stage, showOtherContent, preferredProgrammingLanguage};
+    return {examBoard, stage, showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation};
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
