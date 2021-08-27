@@ -1,6 +1,5 @@
 import Remarkable from "remarkable";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {invert} from "lodash";
+import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
@@ -585,7 +584,9 @@ export enum BOOLEAN_NOTATION {
     MATH = "MATH",
     NONE = "NONE"
 }
-
+export const FALSE_BOOLEAN_NOTATION_RECORD: {[bn in BOOLEAN_NOTATION]: false} & BooleanNotation = {
+    [BOOLEAN_NOTATION.ENG]: false, [BOOLEAN_NOTATION.MATH]: false, [BOOLEAN_NOTATION.NONE]: false
+}
 // STAGES
 export enum STAGE {
     YEAR_7 = "year_7",

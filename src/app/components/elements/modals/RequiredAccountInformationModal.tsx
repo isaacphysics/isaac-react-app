@@ -2,7 +2,7 @@ import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
-import {UserEmailPreferences} from "../../../../IsaacAppTypes";
+import {BooleanNotation, UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {
@@ -38,7 +38,9 @@ const RequiredAccountInfoBody = () => {
     const initialUserContexts = user?.loggedIn ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
-    const userPreferencesToUpdate = {EMAIL_PREFERENCE: emailPreferences,};
+    const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
+
+    const userPreferencesToUpdate = {EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation};
 
     // Form submission
     function formSubmission(event: React.FormEvent<HTMLFormElement>) {
@@ -75,16 +77,17 @@ const RequiredAccountInfoBody = () => {
                     </div>}
                     {!validateUserContexts(initialUserContexts) && <div>
                         <UserContextAccountInput
-                            user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted}
+                            user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                            setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                         />
                     </div>}
                 </RS.Col>}
                 {!validateUserSchool(initialUserValue) && <RS.Col>
-                        <SchoolInput
-                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                            submissionAttempted={submissionAttempted} idPrefix="modal"
-                            required
-                        />
+                    <SchoolInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required
+                    />
                 </RS.Col>}
             </RS.Row>
         </RS.CardBody>}

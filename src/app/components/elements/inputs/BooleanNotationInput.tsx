@@ -1,5 +1,5 @@
 import {FormGroup, Input, Label} from "reactstrap";
-import {BOOLEAN_NOTATION} from "../../../services/constants";
+import {BOOLEAN_NOTATION, FALSE_BOOLEAN_NOTATION_RECORD} from "../../../services/constants";
 import {BooleanNotation} from "../../../../IsaacAppTypes";
 import React, {ChangeEvent} from "react";
 
@@ -24,11 +24,11 @@ export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isReq
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     // Makes a new object, with all the boolean notation flags being false apart
                     // from those that are set in the newBooleanNotation parameter
-                    const newBooleanNotation = {ENG: false, MATH: false}
+                    const newBooleanNotation: BooleanNotation = {...FALSE_BOOLEAN_NOTATION_RECORD};
                     if (event.target.value !== BOOLEAN_NOTATION.NONE) {
                         newBooleanNotation[event.target.value as keyof BooleanNotation] = true;
                     }
-                    setBooleanNotation(Object.assign({}, newBooleanNotation));
+                    setBooleanNotation(newBooleanNotation);
                 }
             }
             required={isRequired}

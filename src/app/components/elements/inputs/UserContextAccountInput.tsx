@@ -1,13 +1,13 @@
 import React from "react";
-import {ValidationUser} from "../../../../IsaacAppTypes";
+import {BooleanNotation, ValidationUser} from "../../../../IsaacAppTypes";
 import {isTeacher} from "../../../services/user";
 import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
-import {EXAM_BOARD, STAGE} from "../../../services/constants";
+import {BOOLEAN_NOTATION, EXAM_BOARD, FALSE_BOOLEAN_NOTATION_RECORD, STAGE} from "../../../services/constants";
 import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
-import {UserContext} from "../../../../IsaacApiTypes";
+import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -15,8 +15,20 @@ interface UserContextRowProps {
     showNullStageOption: boolean;
     submissionAttempted: boolean;
     existingUserContexts: UserContext[];
+    setBooleanNotation: (bn: BooleanNotation) => void;
 }
-function UserContextRow({userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts}: UserContextRowProps) {
+
+const examBoardBooleanNotation: {[examBoard in ExamBoard]: BOOLEAN_NOTATION} = {
+    [EXAM_BOARD.AQA]: BOOLEAN_NOTATION.ENG,
+    [EXAM_BOARD.EDUQAS]: BOOLEAN_NOTATION.ENG,
+    [EXAM_BOARD.WJEC]: BOOLEAN_NOTATION.ENG,
+    [EXAM_BOARD.OCR]: BOOLEAN_NOTATION.MATH,
+    [EXAM_BOARD.EDEXCEL]: BOOLEAN_NOTATION.MATH,
+    [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.MATH,
+    [EXAM_BOARD.NONE]: BOOLEAN_NOTATION.MATH,
+}
+
+function UserContextRow({userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation}: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
     return <React.Fragment>
         {/* Stage Selector */}
@@ -33,6 +45,7 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
                     examBoard = getFilteredExamBoardOptions({
                         byStages: [e.target.value as STAGE || STAGE.NONE], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
                     })[0]?.value || EXAM_BOARD.NONE;
+                    setBooleanNotation({...FALSE_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[examBoard]]: true});
                 }
                 setUserContext({...userContext, stage, examBoard});
             }}
@@ -52,7 +65,12 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
             aria-label="Exam Board"
             value={userContext.examBoard || ""}
             invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
-            onChange={e => setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD})}
+            onChange={e => {
+                setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD});
+                if (e.target.value) {
+                    setBooleanNotation({...FALSE_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[e.target.value as EXAM_BOARD]]: true});
+                }
+            }}
         >
             <option value=""></option>
             {getFilteredExamBoardOptions({
@@ -72,9 +90,10 @@ interface UserContextAccountInputProps {
     user: ValidationUser;
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
+    setBooleanNotation: (bn: BooleanNotation) => void;
     submissionAttempted: boolean;
 }
-export function UserContextAccountInput({user, userContexts, setUserContexts, submissionAttempted}: UserContextAccountInputProps) {
+export function UserContextAccountInput({user, userContexts, setUserContexts, setBooleanNotation, submissionAttempted}: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
 
     return <div>
@@ -93,7 +112,7 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, su
                     <UserContextRow
                         userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
-                        existingUserContexts={userContexts}
+                        existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation}
                     />
 
                     {teacher && userContexts.length > 1 && <button

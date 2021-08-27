@@ -117,7 +117,10 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted} />
+                <UserContextAccountInput
+                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
+                />
             </Col>
         </Row>
         {SITE_SUBJECT === SITE.CS && <Row>
