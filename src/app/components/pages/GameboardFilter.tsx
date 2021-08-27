@@ -33,6 +33,14 @@ function itemiseLevels(possibleLevels: string[]) {
         .filter(possibleLevels => !isNaN(parseInt(possibleLevels)))
         .map(level => ({label: level, value: parseInt(level)}));
 }
+
+function itemiseConcepts(concepts: string[] | string) {
+    const conceptsList = Array.isArray(concepts) ? concepts : [concepts]
+    return conceptsList
+        .filter(concept => concept !== "")
+        .map(concept => ({label: concept, value: concept}));
+}
+
 function toCSV<T>(items: Item<T>[]) {
     return items.map(item => item.value).join(",");
 }
@@ -51,9 +59,10 @@ interface QueryStringResponse {
     queryStages: Item<string>[];
     queryDifficulties: Item<string>[];
     queryQuestionCategories: Item<string>[];
+    queryConcepts: Item<string>[];
 }
 function processQueryString(query: string): QueryStringResponse {
-    const {levels, subjects, fields, topics, stages, difficulties, questionCategories} = queryString.parse(query);
+    const {levels, subjects, fields, topics, stages, difficulties, questionCategories, concepts} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
     let levelItems: Item<number>[] = [];
@@ -69,6 +78,8 @@ function processQueryString(query: string): QueryStringResponse {
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
 
+    const conceptItems = concepts ? itemiseConcepts(concepts) : []
+
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;
     [subjects, fields, topics].forEach((tier, index) => {
@@ -83,7 +94,8 @@ function processQueryString(query: string): QueryStringResponse {
 
     return {
         queryLevels: levelItems, querySelections: selectionItems,
-        queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems
+        queryStages: stageItems, queryDifficulties: difficultyItems,
+        queryQuestionCategories: questionCategoryItems, queryConcepts: conceptItems
     }
 }
 
@@ -106,7 +118,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
     const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
-    const {queryLevels, querySelections, queryStages, queryDifficulties, queryQuestionCategories} =
+    const {queryLevels, querySelections, queryStages, queryDifficulties, queryQuestionCategories, queryConcepts} =
         processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
@@ -151,6 +163,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
+    const [concepts, ] = useState<Item<string>[]>(queryConcepts);
+
     const boardName = generateBoardName(selections, levels);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
@@ -166,6 +180,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             if (difficulties.length) params.difficulties = toCSV(difficulties);
             if (questionCategories.length) params.questionCategories = toCSV(questionCategories);
         }
+        if (concepts.length) params.concepts = toCSV(concepts);
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
@@ -186,7 +201,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             setBoardStack([]);
             loadNewGameboard();
         }
-    }, [selections, levels, stages, difficulties, questionCategories, betaFeature?.AUDIENCE_CONTEXT]);
+    }, [selections, levels, stages, difficulties, questionCategories, concepts , betaFeature?.AUDIENCE_CONTEXT]);
 
     function refresh() {
         if (gameboard) {
