@@ -8,6 +8,7 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
+import { IsaacCodeSnippet } from '../../content/IsaacCodeSnippet';
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
@@ -67,7 +68,35 @@ export const HomepageCS = () => {
             </Container>
         </section>
 
+        <Container>
+            <h2>Code Demo:</h2>
+            <IsaacCodeSnippet doc={{
+                language: "python",
+                code: [
+                    `# Isaac Computer Science`,
+                    `# Usage licensed under the Open Government Licence v3.0`,
+                    ``,
+                    `def gcd(x, y):`,
+                    `    """Euclidian algorithm to find and return the greatest common denominator of two numbers"""`,
+                    `    if y == 0:`,
+                    `        return x`,
+                    `    else:`,
+                    `        return gcd(y, x%y)`,
+                    ``,
+                    `if __name__ == '__main__':`,
+                    `    x = 259`,
+                    `    y = 111`,
+                    `    answer = gcd(x, y)`,
+                    `    print(f"The lowest common denominator of {x} and {y} is {answer}")`,
+                    ``,
+                    ``,
+                ].join("\n"),
+                url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
+            }} />
+        </Container>
+
         {!(user && user.loggedIn) && <Container><hr /></Container>}
+
 
         {!(user && user.loggedIn) && <section id="why-sign-up" className="row sign-up-tabs">
             <Container>
