@@ -42,7 +42,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
 
     const currentGameboard = useSelector(selectors.board.currentGameboard);
     const currentTopic = useSelector(selectors.topic.currentTopic);
-    const {examBoard} = useUserContext();
+    const user = useSelector(selectors.user.orNull);
+    const userContext = useUserContext();
 
     if (doc === null || doc === NOT_FOUND) {
         return defaultPageNavigation;
@@ -89,7 +90,7 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             collectionType: "Topic",
             breadcrumbHistory: topicHistory,
             backToCollection: topicHistory.slice(-1)[0],
-            nextItem: determineNextTopicContentLink(currentTopic, currentDocId, examBoard),
+            nextItem: determineNextTopicContentLink(currentTopic, currentDocId, userContext, user),
             queryParams: history.location.search,
         }
     }

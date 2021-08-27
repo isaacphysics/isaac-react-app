@@ -581,14 +581,6 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.NONE]);
 export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
-export const examBoardTagMap: {[examBoard: string]: string} = {
-    [EXAM_BOARD.AQA]: "examboard_aqa",
-    [EXAM_BOARD.OCR]: "examboard_ocr",
-    [EXAM_BOARD.CIE]: "examboard_cie",
-    [EXAM_BOARD.EDEXCEL]: "examboard_edexcel",
-    [EXAM_BOARD.EDUQAS]: "examboard_eduqas",
-    [EXAM_BOARD.WJEC]: "examboard_wjec",
-};
 
 // BOOLEAN LOGIC NOTATION OPTIONS
 export enum BOOLEAN_NOTATION {
@@ -674,8 +666,6 @@ export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
 ];
-
-export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
     // CS ----

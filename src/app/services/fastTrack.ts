@@ -2,12 +2,14 @@ import {getRelatedConcepts} from "./topics";
 import {history} from "./history";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, IsaacQuestionBaseDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, EXAM_BOARD, NOT_FOUND} from "./constants";
-import {useUserContext} from "./userContext";
+import {DOCUMENT_TYPE, NOT_FOUND} from "./constants";
+import {useUserContext, UseUserContextReturnType} from "./userContext";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import queryString from "query-string";
 import {Location} from "history";
+import {PotentialUser} from "../../IsaacAppTypes";
+import {selectors} from "../state/selectors";
 
 export function makeUrl(url: string, queryParams?: { [p: string]: string | undefined }) {
     function valueIsNotUndefined(v: [string, string | undefined]): v is [string, string] {
@@ -120,7 +122,8 @@ interface FastTrackPageProperties {
     pageCompleted: boolean;
     questionHistory: string[];
     board: string | undefined;
-    examBoard: EXAM_BOARD;
+    userContext: UseUserContextReturnType;
+    user: PotentialUser | null;
     canSubmit: boolean;
 }
 
@@ -134,9 +137,10 @@ export function useFastTrackInformation(
     const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
     const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
     const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
-    const {examBoard} = useUserContext();
+    const userContext = useUserContext();
+    const user = useSelector(selectors.user.orNull);
 
-    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, examBoard, canSubmit}
+    return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userContext, user, canSubmit}
 }
 
 export function determineFastTrackPrimaryAction(questionPart: FastTrackPageProperties) {
@@ -183,7 +187,7 @@ export function determineFastTrackSecondaryAction(questionPart: FastTrackPagePro
         }
     }
     if (questionPart.doc.relatedContent && questionPart.doc.relatedContent.length) {
-        const relatedConcepts = getRelatedConcepts(questionPart.doc, questionPart.examBoard);
+        const relatedConcepts = getRelatedConcepts(questionPart.doc, questionPart.userContext, questionPart.user);
         if (relatedConcepts && relatedConcepts.length > 0) {
             return showRelatedConceptPage(relatedConcepts[0]);
         }

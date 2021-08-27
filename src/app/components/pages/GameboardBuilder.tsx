@@ -25,7 +25,6 @@ import {
     multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {examBoardTagMap} from "../../services/constants";
 import {history} from "../../services/history"
 import Select from "react-select";
 import {withRouter} from "react-router-dom";
@@ -34,7 +33,6 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
-import {getFilteredExamBoardOptions} from "../../services/userContext";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
@@ -120,10 +118,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
                         <Select inputId="question-search-level"
                             isMulti
-                            options={
-                                [{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }].concat(
-                                    getFilteredExamBoardOptions().map(i => ({value: examBoardTagMap[i.value], label: i.label})))
-                            }
+                            options={[{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
                             name="colors"
                             className="basic-multi-select"
                             classNamePrefix="select"

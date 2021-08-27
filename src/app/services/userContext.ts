@@ -1,16 +1,16 @@
 import {
-    DOCUMENT_TYPE,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
-    examBoardTagMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
-    STAGE_NULL_OPTIONS, STAGES_CS, STAGES_PHY,
+    STAGE_NULL_OPTIONS,
+    STAGES_CS,
+    STAGES_PHY,
     stagesOrdered,
 } from "./constants";
-import {AudienceContext, ContentBaseDTO, ContentSummaryDTO, Role, UserContext} from "../../IsaacApiTypes";
+import {AudienceContext, ContentBaseDTO, Role, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
@@ -25,7 +25,7 @@ import {useQueryParams} from "./reactRouterExtension";
 import {comparatorFromOrderedValues} from "./gameboards";
 import {selectors} from "../state/selectors";
 
-interface UseUserContextReturnType {
+export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
@@ -204,17 +204,6 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
             ))
         );
 }
-
-const contentTypesToFilter = [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.CONCEPT];
-export const filterOnExamBoard = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {
-    if (examBoard === EXAM_BOARD.NONE) {
-        return contents;
-    }
-    return contents.filter(content => {
-        return !contentTypesToFilter.includes(content.type as DOCUMENT_TYPE) ||
-            content.tags?.includes(examBoardTagMap[examBoard])
-    });
-};
 
 function produceAudienceViewingCombinations(audience: AudienceContext): ViewingContext[] {
     const keys: (keyof AudienceContext)[] = ["stage", "examBoard", "difficulty"];

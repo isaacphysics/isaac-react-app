@@ -2,12 +2,12 @@ import classnames from "classnames";
 import * as RS from "reactstrap";
 import {
     difficultyLabelMap,
-    examBoardTagMap,
+    EXAM_BOARD,
+    examBoardLabelMap,
     STAGE,
     stageLabelMap,
     TAG_ID,
-    TAG_LEVEL,
-    tagExamBoardMap
+    TAG_LEVEL
 } from "../../services/constants";
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
@@ -93,25 +93,25 @@ export const GameboardBuilderRow = (
             {topicTag()}
         </td>
         <td className="w-15">
-            {determineAudienceViews(question.audience, question.creationContext || creationContext)
-                .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-                    {view.stage && view.stage !== STAGE.NONE && <span className="gameboard-tags">
-                        {stageLabelMap[view.stage]}
-                    </span>}
+            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.stage)))
+                .map(stage => <div key={stage}>
+                    {stage && <span>{stageLabelMap[stage]}</span>}
                 </div>)
             }
         </td>
         {SITE_SUBJECT === SITE.PHY && <td className="w-15">
-            {determineAudienceViews(question.audience, question.creationContext || creationContext)
-                .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-                    {view.difficulty && <span className="gameboard-tags">
-                        {difficultyLabelMap[view.difficulty]}
-                    </span>}
+            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.difficulty)))
+                .map(difficulty => <div key={difficulty}>
+                    {difficulty && <span>{difficultyLabelMap[difficulty]}</span>}
                 </div>)
             }
         </td>}
         {SITE_SUBJECT === SITE.CS && <td className="w-15">
-            {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamBoardMap[tag]))}
+            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.examBoard)))
+                .map(examBoard => <div key={examBoard}>
+                    {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
+                </div>)
+            }
         </td>}
     </tr>
 };

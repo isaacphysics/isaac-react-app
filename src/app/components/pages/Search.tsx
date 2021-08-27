@@ -15,7 +15,7 @@ import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
-import {filterOnExamBoard, useUserContext} from "../../services/userContext";
+import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
@@ -61,7 +61,7 @@ export const Search = withRouter((props: {history: History; location: Location})
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);
     const user = useSelector(selectors.user.orNull);
-    const {examBoard} = useUserContext();
+    const userContext = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(urlFilters.map(itemise))
@@ -93,8 +93,9 @@ export const Search = withRouter((props: {history: History; location: Location})
     }, [filtersState]);
 
     // Process results and add shortcut responses
-    const filteredSearchResults = searchResults?.results &&
-        filterOnExamBoard(searchResults.results.filter(result => searchResultIsPublic(result, user)), examBoard);
+    const filteredSearchResults = searchResults?.results && searchResults.results
+        .filter(result => searchResultIsPublic(result, user))
+        .filter(result => SITE_SUBJECT === SITE.PHY || isIntendedAudience(result.audience, userContext, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as (ContentSummaryDTO | ShortcutResponse)[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
 

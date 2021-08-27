@@ -1,4 +1,4 @@
-import {SortOrder, tagExamBoardMap} from "./constants";
+import {SortOrder} from "./constants";
 import {orderBy} from "lodash";
 import tags from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
@@ -82,10 +82,6 @@ export const groupTagSelectionsByParent = (parent: Tag) => {
         label: parent.title,
         options: tags.getChildren(parent.id).map(convertTagToSelectionOption).filter(tag => !tag.isHidden)
     };
-};
-
-export const convertExamBoardToOption = (examBoard: string) => {
-    return {value: examBoard, label: tagExamBoardMap[examBoard]};
 };
 
 // TODO REMOVE AUDIENCE_CONTEXT Let's move from multiSelectOnChange and selectOnChange to select.ts.unwrapValue(...) for types and consistency

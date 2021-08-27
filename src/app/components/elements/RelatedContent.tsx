@@ -3,11 +3,12 @@ import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {difficultyShortLabelMap, DOCUMENT_TYPE, documentTypePathPrefix, stageLabelMap} from "../../services/constants";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
-import {determineAudienceViews, filterOnExamBoard, useUserContext} from "../../services/userContext";
+import {determineAudienceViews, isIntendedAudience, useUserContext} from "../../services/userContext";
+import {selectors} from "../../state/selectors";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -124,19 +125,20 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
 
 export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const dispatch = useDispatch();
-    const {examBoard} = useUserContext();
-    const examBoardFilteredContent = filterOnExamBoard(content, examBoard);
+    const user = useSelector(selectors.user.orNull);
+    const userContext = useUserContext();
+    const audienceFilteredContent = content.filter(c => SITE_SUBJECT === SITE.PHY || isIntendedAudience(c.audience, userContext, user));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
-    const sortedContent = examBoardFilteredContent
+    const sortedContent = audienceFilteredContent
         .sort(sortByStringValue("title"))
         .sort(sortByNumberStringValue("difficulty"))
         .sort(sortByNumberStringValue("level"));
 
     const concepts = sortedContent
-        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
+        .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
     const questions = sortedContent
-        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION);
+        .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.QUESTION);
 
     const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => {
         const audienceViews = determineAudienceViews(contentSummary.audience);

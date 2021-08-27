@@ -8,7 +8,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
-import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {ALL_TOPICS_CRUMB, NOT_FOUND, TAG_ID} from "../../services/constants";
 import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
@@ -19,19 +19,16 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const dispatch = useDispatch();
     const topicPage = useSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useSelector(selectors.user.orNull);
+    const userContext = useUserContext();
     let {examBoard} = useUserContext();
 
-    useEffect(
-        () => {dispatch(fetchTopicSummary(topicName))},
-        [dispatch, topicName]
-    );
+    useEffect(() => {dispatch(fetchTopicSummary(topicName))}, [dispatch, topicName]);
 
-    let [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, examBoard);
+    let [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, userContext, user);
 
     const searchQuery = `?topic=${topicName}`;
-    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards.filter((gameboard) => {
-        return gameboard.tags && gameboard.tags.includes(examBoardTagMap[examBoard]);
-    });
+    // TODO REMOVE AUDIENCE_CONTEXT - maybe we don't need to bother with this now
+    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
