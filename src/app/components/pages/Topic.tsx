@@ -50,7 +50,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) &&
                         (!relatedConcepts || !atLeastOne(relatedConcepts.length)) && <div className='text-center py-3'>
                         <div className='alert alert-warning'>
-                            There is no material in this topic for the {examBoard} exam board.
+                            There is no material in this topic for the {examBoard.toUpperCase()} exam board.
                         </div>
                     </div>
                     }
