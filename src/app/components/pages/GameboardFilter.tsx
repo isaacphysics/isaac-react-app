@@ -82,6 +82,7 @@ function generateBoardName(selections: Item<TAG_ID>[][]) {
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
+    const userContext = useUserContext();
     const {querySelections, queryStages, queryDifficulties, queryQuestionCategories} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
@@ -118,9 +119,11 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         {id: "topics", name: "Topic"},
     ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
-    const userContext = useUserContext();
     const [stages, setStages] = useState<Item<string>[]>(
-        queryStages.length > 0 ? queryStages :  itemiseByValue([userContext.stage], getFilteredStageOptions()));
+        queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
+    useEffect(function keepStagesInSyncWithUserContext() {
+        if (stages.length === 0) setStages(itemiseByValue([userContext.stage], getFilteredStageOptions()));
+    }, [userContext.stage]);
 
     const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
 
@@ -132,7 +135,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     function loadNewGameboard() {
         // Load a gameboard
-        const params: { [key: string]: string } = {};
+        const params: {[key: string]: string} = {};
         if (stages.length) params.stages = toCSV(stages);
         if (difficulties.length) params.difficulties = toCSV(difficulties);
         if (questionCategories.length) params.questionCategories = toCSV(questionCategories);
@@ -227,7 +230,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                             I am interested in stage...
                         </RS.Label>
-                        <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                        <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
                     </div>
                     <div>
                         <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
