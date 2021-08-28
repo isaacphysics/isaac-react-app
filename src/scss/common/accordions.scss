@@ -7,10 +7,10 @@
   }
 }
 
-.accordion-level {
+.accordion-label {
   font-family: $secondary-font;
   padding: 1rem;
-  min-width: 110px;
+  min-width: 130px;
   text-align: center;
 }
 
@@ -74,12 +74,22 @@
         width: 20px;
         height: 10px;
         margin-right: 1rem;
+        margin-top: auto;
+        margin-bottom: auto;
       }
 
       &.active {
         border-bottom: 1px solid $shadow-08;
         &:after {
           background-image: url('/assets/chevron_up.svg');
+        }
+      }
+
+      &.de-emphasised {
+        background: darken($gray-103, 15%);
+        color: lighten(black, 10%);
+        .accordion-label {
+          background: lighten($dark, 5%);
         }
       }
 

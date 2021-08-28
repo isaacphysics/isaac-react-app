@@ -125,7 +125,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={`${open ? 'active' : ''} ${deEmphasised ? 'text-light bg-dark' : ""}`}
+                className={`${open ? 'active' : ''} ${deEmphasised ? 'de-emphasised' : ""} d-flex align-items-stretch`}
                 onClick={(event: any) => {
                     pauseAllVideos();
                     const nextState = !open;
@@ -137,10 +137,14 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className="accordion-level badge-secondary">{audienceString}</span>}
+                {isConceptPage && audienceString && <span className="accordion-label badge-secondary d-flex align-items-center">
+                    {audienceString}
+                </span>}
                 <div className="accordion-title pl-3">
-                    <RS.Row><span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
-                        {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}</RS.Row>
+                    <RS.Row>
+                        <span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                        {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}
+                    </RS.Row>
                 </div>
 
                 {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordionIcon}>

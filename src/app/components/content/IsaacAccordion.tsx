@@ -19,13 +19,12 @@ import {
     STAGE_NULL_OPTIONS,
     stageLabelMap,
     STAGES_CS,
-    STAGES_PHY,
     stagesOrdered
 } from "../../services/constants";
 import {comparatorFromOrderedValues} from "../../services/gameboards";
 
 const defaultConceptDisplay = {
-    [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
+    [SITE.PHY]: {audience: ["closed"], nonAudience: ["closed"]},
     [SITE.CS]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
 }[SITE_SUBJECT];
 const defaultQuestionDisplay = {audience: [], nonAudience: []};
@@ -38,7 +37,8 @@ function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUse
             [SITE.CS]: new Set<Stage>(Array.from(STAGES_CS).filter(s => !STAGE_NULL_OPTIONS.has(s)))
         }[SITE_SUBJECT];
     } else {
-        stagesSet = new Set<Stage>(...audience.map(ac => ac.stage));
+        stagesSet = new Set<Stage>();
+        audience.forEach(audienceRecord => audienceRecord.stage?.forEach(stage => stagesSet.add(stage)));
     }
     // order stages
     const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
