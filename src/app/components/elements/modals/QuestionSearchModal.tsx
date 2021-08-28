@@ -14,11 +14,17 @@ import {
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {DIFFICULTY_ITEM_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
+import {
+    DIFFICULTY_ITEM_OPTIONS,
+    EXAM_BOARD_NULL_OPTIONS,
+    examBoardLabelMap,
+    SortOrder,
+    STAGE
+} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
-import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
+import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
-import {isStaff} from "../../../services/user";
+import {isLoggedIn, isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -37,13 +43,16 @@ interface QuestionSearchModalProps {
 }
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useDispatch();
+    const userContext = useUserContext();
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
-
     const [searchQuestionName, setSearchQuestionName] = useState("");
-    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
     const [searchStages, setSearchStages] = useState<STAGE[]>([]);
     const [searchDifficulties, setSearchDifficulties] = useState<Difficulty[]>([]);
+    const [searchExamBoards, setSearchExamBoards] = useState<ExamBoard[]>([]);
+    useEffect(function populateExamBoardFromUserContext() {
+        if (!EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) setSearchExamBoards([userContext.examBoard]);
+    }, [userContext.examBoard]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);
     const isBookSearch = searchBook.length > 0;
@@ -174,6 +183,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
+                    value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
                     onChange={multiSelectOnChange(setSearchExamBoards)}
                 />
