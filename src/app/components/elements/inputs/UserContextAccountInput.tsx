@@ -38,7 +38,7 @@ function UserContextRow({
     return <React.Fragment>
         {/* Stage Selector */}
         <Input
-            className="form-control w-auto d-inline-block pl-1 pr-0" type="select"
+            className="form-control w-auto d-inline-block pl-1 pr-0 mt-1 mt-sm-0" type="select"
             aria-label="Stage"
             value={userContext.stage || ""}
             invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
@@ -74,7 +74,7 @@ function UserContextRow({
 
         {/* Exam Board Selector */}
         {SITE_SUBJECT === SITE.CS && <Input
-            className="form-control w-auto d-inline-block pl-1 pr-0 ml-2" type="select"
+            className="form-control w-auto d-inline-block pl-1 pr-0 ml-sm-2 mt-1 mt-sm-0" type="select"
             aria-label="Exam Board"
             value={userContext.examBoard || ""}
             invalid={submissionAttempted && !Object.values(EXAM_BOARD).includes(userContext.examBoard as EXAM_BOARD)}
@@ -123,14 +123,14 @@ export function UserContextAccountInput({
             <span id={`show-me-content-${componentId}`} className="icon-help" />
             <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
                 {teacher ?
-                    "Add a stage and examination board for each qualification you are teaching. On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching." :
-                    "Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen."
+                    <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
+                    <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
                 }
             </RS.UncontrolledTooltip>
         </React.Fragment>}
 
         {!teacher && <span className="float-right mt-1"><Link to={TEACHER_REQUEST_ROUTE} target="_blank">I am a teacher</Link></span>}
-        <RS.FormGroup id="user-context-selector" className={SITE_SUBJECT === SITE.PHY ? "d-flex flex-wrap" : ""}>
+        <div id="user-context-selector" className={SITE_SUBJECT === SITE.PHY ? "d-flex flex-wrap" : ""}>
             {userContexts.map((userContext, index) => {
                 const showPlusOption = teacher &&
                     index === userContexts.length - 1 &&
@@ -162,23 +162,22 @@ export function UserContextAccountInput({
                         {SITE_SUBJECT === SITE.CS && <span className="ml-1">add stage</span>}
                     </RS.Label>}
 
+                    {SITE_SUBJECT === SITE.CS && index === userContexts.length - 1 && <RS.Label className="mt-2">
+                        <CustomInput
+                            type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
+                            checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
+                            onChange={e => setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: !e.target.checked})}
+                        />{" "}
+                        <span>Show other content that is not relevant to me. <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
+                        <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
+                            {teacher ?
+                                "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content in your GCSE view)." :
+                                "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content if you are studying GCSE)."
+                            }
+                        </RS.UncontrolledTooltip>
+                    </RS.Label>}
                 </RS.FormGroup>
             })}
-            {SITE_SUBJECT === SITE.CS && <RS.Label>
-                <CustomInput
-                    type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
-                    checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
-                    onChange={e => setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: !e.target.checked})}
-                />{" "}
-                <span>Show other content that is not relevant to me. <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
-                <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
-                    {teacher ?
-                        "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content in your GCSE view)." :
-                        "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content if you are studying GCSE)."
-                    }
-                </RS.UncontrolledTooltip>
-            </RS.Label>}
-        </RS.FormGroup>
-
+        </div>
     </div>
 }
