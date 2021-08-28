@@ -119,7 +119,7 @@ export function useUserContext(): UseUserContextReturnType {
             const newParams = {...qParams, stage, examBoard};
             if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;} /* TODO MT people might want to share none view */
             if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;} /* TODO MT people might want to share none view */
-            history.push({...existingLocation, search: queryString.stringify(newParams, {encode: false})});
+            history.replace({...existingLocation, search: queryString.stringify(newParams, {encode: false})});
         }
     }, []);
 
