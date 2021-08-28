@@ -280,7 +280,12 @@ export const MyGameboards = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My gameboards" help={pageHelp} />
         {boards && boards.totalResults == 0 ?
-            <h3 className="text-center mt-4 mb-5">You have no gameboards to view.</h3>
+            <React.Fragment>
+                <h3 className="text-center mt-4">You have no gameboards to view.</h3>
+                {SITE_SUBJECT === SITE.PHY && <div className="text-center mt-3 mb-5">
+                    <Button color="secondary" tag={Link} to="/gameboards/new">Create a gameboard</Button>
+                </div>}
+            </React.Fragment>
             :
             <React.Fragment>
                 <div className="mt-4 mb-2">

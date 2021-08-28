@@ -8,7 +8,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
-import {ALL_TOPICS_CRUMB, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {ALL_TOPICS_CRUMB, examBoardLabelMap, NOT_FOUND, stageLabelMap, TAG_ID} from "../../services/constants";
 import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
@@ -20,7 +20,6 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const topicPage = useSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    let {examBoard} = useUserContext();
 
     useEffect(() => {dispatch(fetchTopicSummary(topicName))}, [dispatch, topicName]);
 
@@ -47,12 +46,12 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {relatedQuestions && atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
                     }
-                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) &&
-                        (!relatedConcepts || !atLeastOne(relatedConcepts.length)) && <div className='text-center py-3'>
-                        <div className='alert alert-warning'>
-                            There is no material in this topic for the {examBoard.toUpperCase()} exam board.
+                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) && (!relatedConcepts || !atLeastOne(relatedConcepts.length)) &&
+                        <div className='text-center py-3'>
+                            <div className='alert alert-warning'>
+                                {`There is no material in this topic for ${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}.`}
+                            </div>
                         </div>
-                    </div>
                     }
                 </Col>
             </Row>

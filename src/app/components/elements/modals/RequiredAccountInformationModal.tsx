@@ -58,16 +58,12 @@ const RequiredAccountInfoBody = () => {
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
-            <div className="text-muted small pb-2">
-                Providing a few extra pieces of information helps us understand the usage of Isaac Computer Science across the UK and beyond.
-                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
-            </div>
             <div className="text-right text-muted required-before">
                 Required
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {(!validateUserGender(initialUserValue) || !validateUserContexts(initialUserContexts)) && <RS.Col>
+                {(!validateUserGender(initialUserValue) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
                     {!validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
@@ -90,6 +86,10 @@ const RequiredAccountInfoBody = () => {
                     />
                 </RS.Col>}
             </RS.Row>
+            <div className="text-muted small pb-2">
+                Providing a few extra pieces of information helps us understand the usage of Isaac Computer Science across the UK and beyond.
+                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
+            </div>
         </RS.CardBody>}
 
         {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>

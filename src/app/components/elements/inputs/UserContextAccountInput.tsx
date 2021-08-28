@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import {BooleanNotation, ValidationUser} from "../../../../IsaacAppTypes";
 import {isTeacher} from "../../../services/user";
 import * as RS from "reactstrap";
@@ -8,6 +8,7 @@ import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../ser
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
+import uuid from "uuid";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -95,11 +96,23 @@ interface UserContextAccountInputProps {
 }
 export function UserContextAccountInput({user, userContexts, setUserContexts, setBooleanNotation, submissionAttempted}: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
+    const componentId = useRef(uuid.v4().slice(0, 4)).current;
 
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">
-            {teacher ? "Highlight content I am teaching" : "Highlight content I am studying"}
+            {SITE.CS === SITE_SUBJECT && <span>Show me content for:</span>}
+            {SITE.PHY === SITE_SUBJECT && <span>{teacher ? "I am teaching:" : "I am studying:"}</span>}
         </RS.Label>
+        {SITE.CS === SITE_SUBJECT && <React.Fragment>
+            <span id={`show-me-content-${componentId}`} className="icon-help" />
+            <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
+                {teacher ?
+                    "Add a stage and examination board for each qualification you are teaching. On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching." :
+                    "Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen."
+                }
+            </RS.UncontrolledTooltip>
+        </React.Fragment>}
+
         {!teacher && <span className="float-right mt-1"><Link to={TEACHER_REQUEST_ROUTE} target="_blank">I am a teacher</Link></span>}
         <RS.FormGroup id="user-context-selector" className={SITE_SUBJECT === SITE.PHY ? "d-flex flex-wrap" : ""}>
             {userContexts.map((userContext, index) => {
@@ -137,7 +150,13 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, se
             })}
             {SITE_SUBJECT === SITE.CS && <RS.Label>
                 <CustomInput type="checkbox" className="d-inline-block"/>{" "}
-                Hide all other content (NOTE: Switch needs wiring)
+                <span>Show other content that is not relevant to me. <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
+                <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
+                    {teacher ?
+                        "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content in your GCSE view)." :
+                        "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content if you are studying GCSE)."
+                    }
+                </RS.UncontrolledTooltip>
             </RS.Label>}
         </RS.FormGroup>
 

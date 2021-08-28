@@ -5,7 +5,7 @@ import {ContentBaseDTO} from "../../../IsaacApiTypes";
 import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
-import {DOCUMENT_TYPE} from "../../services/constants";
+import {examBoardLabelMap, stageLabelMap} from "../../services/constants";
 
 export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
     const user = useSelector(selectors.user.orNull);
@@ -18,7 +18,8 @@ export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
 
     return <RS.Alert color="warning">
         <strong>Note: </strong>
-        {`This ${doc.type === DOCUMENT_TYPE.QUESTION ? "question" : doc.type === DOCUMENT_TYPE.CONCEPT ? "concept" : "content"} `}
-        {`is not intended for your selected stage${SITE_SUBJECT === SITE.CS ? " or exam board" : ""}.`}
+        {`This page is not relevant for `}
+        {SITE.PHY === SITE_SUBJECT && `${stageLabelMap[userContext.stage]}.`}
+        {SITE.CS === SITE_SUBJECT && `${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}.`}
     </RS.Alert>
 }
