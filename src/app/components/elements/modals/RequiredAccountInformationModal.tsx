@@ -2,7 +2,7 @@ import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
-import {BooleanNotation, UserEmailPreferences} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {
@@ -39,8 +39,11 @@ const RequiredAccountInfoBody = () => {
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
+    const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
 
-    const userPreferencesToUpdate = {EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation};
+    const userPreferencesToUpdate = {
+        EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
+    };
 
     // Form submission
     function formSubmission(event: React.FormEvent<HTMLFormElement>) {
@@ -74,6 +77,7 @@ const RequiredAccountInfoBody = () => {
                     {!validateUserContexts(initialUserContexts) && <div>
                         <UserContextAccountInput
                             user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                            displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                             setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                         />
                     </div>}

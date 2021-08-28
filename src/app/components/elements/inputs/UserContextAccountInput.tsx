@@ -1,14 +1,15 @@
 import React, {useRef} from "react";
-import {BooleanNotation, ValidationUser} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {isTeacher} from "../../../services/user";
 import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
-import {BOOLEAN_NOTATION, EXAM_BOARD, FALSE_BOOLEAN_NOTATION_RECORD, STAGE} from "../../../services/constants";
+import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD, EXAM_BOARD, STAGE} from "../../../services/constants";
 import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
 import uuid from "uuid";
+import {isDefined} from "../../../services/miscUtils";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -17,6 +18,7 @@ interface UserContextRowProps {
     submissionAttempted: boolean;
     existingUserContexts: UserContext[];
     setBooleanNotation: (bn: BooleanNotation) => void;
+    setDisplaySettings: (ds: DisplaySettings) => void;
 }
 
 const examBoardBooleanNotation: {[examBoard in ExamBoard]: BOOLEAN_NOTATION} = {
@@ -29,7 +31,9 @@ const examBoardBooleanNotation: {[examBoard in ExamBoard]: BOOLEAN_NOTATION} = {
     [EXAM_BOARD.NONE]: BOOLEAN_NOTATION.MATH,
 }
 
-function UserContextRow({userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation}: UserContextRowProps) {
+function UserContextRow({
+    userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings
+}: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
     return <React.Fragment>
         {/* Stage Selector */}
@@ -42,11 +46,19 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
                 const stage = e.target.value as STAGE;
                 let examBoard;
                 if (SITE_SUBJECT === SITE.CS) {
-                    const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1
-                    examBoard = getFilteredExamBoardOptions({
-                        byStages: [e.target.value as STAGE || STAGE.NONE], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
+                    // Set exam board to something sensible
+                    const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
+                    examBoard = getFilteredExamBoardOptions(
+                        {byStages: [stage || STAGE.NONE], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
                     })[0]?.value || EXAM_BOARD.NONE;
-                    setBooleanNotation({...FALSE_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[examBoard]]: true});
+                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[examBoard]]: true});
+
+                    // Set display settings default values
+                    if (stage === STAGE.A_LEVEL) {
+                        setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: false});
+                    } else if (stage === STAGE.GCSE) {
+                        setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: true});
+                    }
                 }
                 setUserContext({...userContext, stage, examBoard});
             }}
@@ -69,7 +81,7 @@ function UserContextRow({userContext, setUserContext, showNullStageOption, submi
             onChange={e => {
                 setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD});
                 if (e.target.value) {
-                    setBooleanNotation({...FALSE_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[e.target.value as EXAM_BOARD]]: true});
+                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[e.target.value as EXAM_BOARD]]: true});
                 }
             }}
         >
@@ -92,9 +104,13 @@ interface UserContextAccountInputProps {
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
+    displaySettings: DisplaySettings;
+    setDisplaySettings: (ds: DisplaySettings) => void;
     submissionAttempted: boolean;
 }
-export function UserContextAccountInput({user, userContexts, setUserContexts, setBooleanNotation, submissionAttempted}: UserContextAccountInputProps) {
+export function UserContextAccountInput({
+    user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
+}: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
     const componentId = useRef(uuid.v4().slice(0, 4)).current;
 
@@ -125,7 +141,7 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, se
                     <UserContextRow
                         userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
-                        existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation}
+                        existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
                     />
 
                     {teacher && userContexts.length > 1 && <button
@@ -149,7 +165,11 @@ export function UserContextAccountInput({user, userContexts, setUserContexts, se
                 </RS.FormGroup>
             })}
             {SITE_SUBJECT === SITE.CS && <RS.Label>
-                <CustomInput type="checkbox" className="d-inline-block"/>{" "}
+                <CustomInput
+                    type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
+                    checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
+                    onChange={e => setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: !e.target.checked})}
+                />{" "}
                 <span>Show other content that is not relevant to me. <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
                     {teacher ?

@@ -2,7 +2,13 @@ import React, {ChangeEvent} from "react";
 import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
 import {allRequiredInformationIsPresent, validateEmail} from "../../../services/validation";
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {BooleanNotation, ProgrammingLanguage, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
+import {
+    BooleanNotation,
+    DisplaySettings,
+    ProgrammingLanguage,
+    SubjectInterests,
+    ValidationUser
+} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
@@ -24,6 +30,8 @@ interface UserDetailsProps {
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
     booleanNotation: BooleanNotation;
     setBooleanNotation: (bn: BooleanNotation) => void;
+    displaySettings: DisplaySettings;
+    setDisplaySettings: (ds: DisplaySettings) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -36,6 +44,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         userContexts, setUserContexts,
         programmingLanguage, setProgrammingLanguage,
         booleanNotation, setBooleanNotation,
+        displaySettings, setDisplaySettings,
         submissionAttempted, editingOtherUser
     } = props;
 
@@ -119,6 +128,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <UserContextAccountInput
                     user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                    displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                     setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                 />
             </Col>

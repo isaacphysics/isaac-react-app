@@ -20,6 +20,7 @@ import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     BooleanNotation,
+    DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
     SubjectInterests,
@@ -146,11 +147,13 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         const currentSubjectInterests = (userPreferences?.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentProgrammingLanguage = (userPreferences?.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
         const currentBooleanNotation = (userPreferences?.BOOLEAN_NOTATION) ? userPreferences.BOOLEAN_NOTATION: {};
-        const currentUserPreferences = {
+        const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
+        const currentUserPreferences: UserPreferencesDTO = {
             EMAIL_PREFERENCE: currentEmailPreferences,
             SUBJECT_INTEREST: currentSubjectInterests,
             PROGRAMMING_LANGUAGE: currentProgrammingLanguage,
             BOOLEAN_NOTATION: currentBooleanNotation,
+            DISPLAY_SETTING: currentDisplaySettings,
         };
 
         setEmailPreferences(currentEmailPreferences);
@@ -187,6 +190,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setBooleanNotation(newBooleanNotation: BooleanNotation) {
         setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: newBooleanNotation});
+    }
+
+    function setDisplaySettings(newDisplaySettings: DisplaySettings) {
+        setMyUserPreferences({...myUserPreferences, DISPLAY_SETTING: newDisplaySettings});
     }
 
     // Form's submission method
@@ -283,6 +290,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}} setProgrammingLanguage={setProgrammingLanguage}
                                     booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences.DISPLAY_SETTING || {}} setDisplaySettings={setDisplaySettings}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

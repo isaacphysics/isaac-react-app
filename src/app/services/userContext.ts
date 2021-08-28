@@ -38,9 +38,9 @@ export function useUserContext(): UseUserContextReturnType {
     const qParams = useQueryParams(true);
     const existingLocation = useLocation();
     const user = useSelector((state: AppState) => state && state.user);
+    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
+        useSelector((state: AppState) => state?.userPreferences) || {};
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
-    const {PROGRAMMING_LANGUAGE: programmingLanguage} = useSelector((state: AppState) => state?.userPreferences) || {};
-    const {BOOLEAN_NOTATION: booleanNotation} = useSelector((state: AppState) => state?.userPreferences) || {};
     const {questionId} = useParams();
     const currentGameboard = useSelector(selectors.board.currentGameboard);
 
@@ -101,7 +101,14 @@ export function useUserContext(): UseUserContextReturnType {
         }
     }
 
-    const showOtherContent = transientUserContext?.showOtherContent ?? true;
+    let showOtherContent;
+    if (isDefined(transientUserContext?.showOtherContent)) {
+        showOtherContent = transientUserContext?.showOtherContent;
+    } else if (isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT)) {
+        showOtherContent = !displaySettings?.HIDE_NON_AUDIENCE_CONTENT;
+    } else {
+        showOtherContent = true;
+    }
 
     // Update query params
     useEffect(() => {

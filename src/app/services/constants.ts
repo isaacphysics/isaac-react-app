@@ -584,7 +584,7 @@ export enum BOOLEAN_NOTATION {
     MATH = "MATH",
     NONE = "NONE"
 }
-export const FALSE_BOOLEAN_NOTATION_RECORD: {[bn in BOOLEAN_NOTATION]: false} & BooleanNotation = {
+export const EMPTY_BOOLEAN_NOTATION_RECORD: {[bn in BOOLEAN_NOTATION]: false} & BooleanNotation = {
     [BOOLEAN_NOTATION.ENG]: false, [BOOLEAN_NOTATION.MATH]: false, [BOOLEAN_NOTATION.NONE]: false
 }
 // STAGES
@@ -651,7 +651,6 @@ export const QUESTION_CATEGORY_ITEM_OPTIONS = [
     // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
     // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
 ];
-
 
 export enum SUBJECTS {
     PHYSICS = 'physics',

@@ -6,14 +6,16 @@ import {
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
-    ContentSummaryDTO, Difficulty,
+    ContentSummaryDTO,
+    Difficulty,
     GameboardDTO,
     GameboardItem,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO, UserContext,
+    TOTPSharedSecretDTO,
+    UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
@@ -564,8 +566,12 @@ export interface SubjectInterests {
 export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
 
 export interface BooleanNotation {
-    ENG?: boolean,
-    MATH?: boolean
+    ENG?: boolean;
+    MATH?: boolean;
+}
+
+export interface DisplaySettings {
+    HIDE_NON_AUDIENCE_CONTENT?: boolean;
 }
 
 export interface UserPreferencesDTO {
@@ -574,6 +580,7 @@ export interface UserPreferencesDTO {
     SUBJECT_INTEREST?: SubjectInterests;
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
     BOOLEAN_NOTATION?: BooleanNotation;
+    DISPLAY_SETTING?: DisplaySettings;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
