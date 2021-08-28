@@ -66,7 +66,7 @@ export const HomepageCS = () => {
                             <Row>
                                 <Col>
                                     <h1>
-                                        Computer Science learning
+                                        Computer science learning
                                     </h1>
                                     <p className="mt-4">
                                         Welcome to Isaac Computer Science, the free online platform for students and
@@ -78,9 +78,12 @@ export const HomepageCS = () => {
                                         <li>Use it for <strong>revision</strong></li>
                                     </ul>
 
-                                    <p>
-                                        Isaac Computer Science is part of the <ExternalLink href="https://teachcomputing.org/">NCCE</ExternalLink>,<br />
-                                        a <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> funded project.
+                                    <p className="mr-lg-n1">
+                                        {"We also offer free "}
+                                        <Link to="/events?types=teacher">teacher CPD events</Link>{" and "}
+                                        <Link to="/events?types=student">student workshops</Link>.<br />
+                                        {"Isaac Computer Science is proud to be part of the Department for Education's "}
+                                        <ExternalLink href="https://teachcomputing.org/">National Centre for Computing Education</ExternalLink>.
                                     </p>
                                 </Col>
                             </Row>
