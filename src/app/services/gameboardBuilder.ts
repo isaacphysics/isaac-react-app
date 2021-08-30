@@ -57,11 +57,11 @@ export const sortQuestions = (sortState: { [s: string]: string }) => (questions:
     return orderBy(questions, keys, order);
 };
 
-export const convertContentSummaryToGameboardItem = (question: ContentSummary) => {
-    const newQuestion = {...question};
+export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
+    const newQuestion = {...question, contentType: question.type};
     delete newQuestion.type;
     delete newQuestion.url;
-    return newQuestion as GameboardItem;
+    return newQuestion;
 };
 
 export const convertGameboardItemToContentSummary = (question: GameboardItem) => {
