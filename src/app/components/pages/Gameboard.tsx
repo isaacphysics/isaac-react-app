@@ -7,21 +7,13 @@ import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {
-    difficultyShortLabelMap,
-    NOT_FOUND,
-    stagesOrdered,
-    STAGE,
-    stageLabelMap,
-    TAG_ID,
-    TAG_LEVEL
-} from "../../services/constants";
+import {difficultyShortLabelMap, NOT_FOUND, STAGE, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
-import {comparatorFromOrderedValues, showWildcard} from "../../services/gameboards";
+import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
 import {determineAudienceViews} from "../../services/userContext";
 
@@ -174,13 +166,15 @@ export const Gameboard = withRouter(({location}: {location: Location}) => {
             </RS.Col>
         </RS.Row>
         :
-        <RS.Row>
-            <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
-                </RS.Button>
-            </RS.Col>
-        </RS.Row>;
+        <React.Fragment>
+            {gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
+                <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
+                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                        {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
+                    </RS.Button>
+                </RS.Col>
+            </RS.Row>}
+        </React.Fragment>
 
     const notFoundComponent = <Container>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
