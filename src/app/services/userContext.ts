@@ -240,16 +240,17 @@ function produceAudienceViewingCombinations(audience: AudienceContext): ViewingC
 export function determineAudienceViews(audience?: AudienceContext[], creationContext?: AudienceContext): ViewingContext[] {
     if (audience === undefined) {return [];}
 
-    let viewingContexts: ViewingContext[] = [];
+    const allViews: ViewingContext[] = [];
+    let viewsFilteredByCreationContext: ViewingContext[]  = [];
 
     // Create a list of all intended viewing context combinations from the audience
     audience.forEach(audienceContext => {
-        viewingContexts.push(...produceAudienceViewingCombinations(audienceContext));
+        allViews.push(...produceAudienceViewingCombinations(audienceContext));
     });
 
     // Restrict by creation context options, if defined
     if (creationContext) {
-        viewingContexts = viewingContexts.filter(viewingContext => {
+        viewsFilteredByCreationContext = allViews.filter(viewingContext => {
             let viableView = true;
             if (creationContext.stage && viewingContext.stage) {
                 viableView = viableView && creationContext.stage.includes(viewingContext.stage);
@@ -264,8 +265,10 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
         })
     }
 
-    return viewingContexts
-        .sort((a, b) => comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
+    const viewsToDisplay = viewsFilteredByCreationContext.length > 0 ? viewsFilteredByCreationContext : allViews;
+
+    return viewsToDisplay.sort((a, b) =>
+        comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {
