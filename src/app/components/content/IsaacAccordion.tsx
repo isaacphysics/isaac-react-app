@@ -24,7 +24,7 @@ import {
 import {comparatorFromOrderedValues} from "../../services/gameboards";
 
 const defaultConceptDisplay = {
-    [SITE.PHY]: {audience: ["closed"], nonAudience: ["closed"]},
+    [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
     [SITE.CS]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
 }[SITE_SUBJECT];
 const defaultQuestionDisplay = {audience: [], nonAudience: []};

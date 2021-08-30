@@ -137,7 +137,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className="accordion-label badge-secondary d-flex align-items-center">
+                {isConceptPage && audienceString && <span className="accordion-label badge-secondary d-flex align-items-center justify-content-center">
                     {audienceString}
                 </span>}
                 <div className="accordion-title pl-3">
