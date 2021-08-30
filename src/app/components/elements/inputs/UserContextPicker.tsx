@@ -52,11 +52,9 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.stage}
                 onChange={e => {
                     const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
-                    if (STAGE_NULL_OPTIONS.has(e.target.value as STAGE)) {delete newParams.stage;}
                     if (SITE_SUBJECT === SITE.CS) {
                         // drive exam board selection so that it is a valid option
-                        const examBoard = getFilteredExamBoardOptions({byUser: user, byStages: [e.target.value as STAGE]})[0]?.value || EXAM_BOARD.NONE;
-                        if (!EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {newParams.examBoard = examBoard;}
+                        const examBoard = getFilteredExamBoardOptions({byUser: user, byStages: [e.target.value as STAGE]})[0]?.value || EXAM_BOARD.ALL;
                         dispatch(setTransientExamBoardPreference(examBoard));
                     }
                     history.push({search: queryString.stringify(newParams, {encode: false})});
@@ -83,9 +81,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 aria-label={hideLabels ? "Exam Board" : undefined}
                 value={userContext.examBoard}
                 onChange={e => {
-                    const newParams = {...qParams, examBoard: e.target.value};
-                    if (EXAM_BOARD_NULL_OPTIONS.has(e.target.value as EXAM_BOARD)) {delete newParams.examBoard;}
-                    history.push({search: queryString.stringify(newParams, {encode: false})});
+                    history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
                     dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
                 }}
             >

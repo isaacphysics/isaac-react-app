@@ -3,7 +3,9 @@ import {
     difficultyShortLabelMap,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
-    SEARCH_RESULT_TYPE, STAGE, stageLabelMap,
+    SEARCH_RESULT_TYPE,
+    STAGE,
+    stageLabelMap,
     TAG_ID,
     TAG_LEVEL
 } from "../../../services/constants";
@@ -12,7 +14,8 @@ import {Link} from "react-router-dom";
 import React from "react";
 import tags from "../../../services/tags";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {determineAudienceViews} from "../../../services/userContext";
+import {determineAudienceViews, filterAudienceViewsByProperties} from "../../../services/userContext";
+import {ViewingContext} from "../../../../IsaacAppTypes";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     let linkDestination, icon, iconLabel, audienceViews;
@@ -46,7 +49,10 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
-            audienceViews = determineAudienceViews(item.audience);
+            const propertiesToFilterBy: (keyof ViewingContext)[] = ["stage"];
+            if (SITE_SUBJECT === SITE.PHY) {propertiesToFilterBy.push("difficulty");}
+            const allAudienceViews = determineAudienceViews(item.audience);
+            audienceViews = filterAudienceViewsByProperties(allAudienceViews, propertiesToFilterBy);
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
@@ -90,7 +96,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             </span>}
             {audienceViews && displayStage && <span className="small text-muted align-self-center d-none d-md-inline">
                 {audienceViews.map((view, i, views) => <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-                        {view.stage && view.stage !== STAGE.NONE && <span className="gameboard-tags">
+                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
                         {stageLabelMap[view.stage]}
                     </span>} {" "}
                         {view.difficulty && <span className="gameboard-tags">

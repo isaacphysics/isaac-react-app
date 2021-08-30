@@ -33,7 +33,7 @@ function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUse
     let stagesSet: Set<Stage>;
     if (!audience) {
         stagesSet = {
-            [SITE.PHY]: new Set<Stage>([STAGE.NONE]),
+            [SITE.PHY]: new Set<Stage>([STAGE.ALL]),
             [SITE.CS]: new Set<Stage>(Array.from(STAGES_CS).filter(s => !STAGE_NULL_OPTIONS.has(s)))
         }[SITE_SUBJECT];
     } else {

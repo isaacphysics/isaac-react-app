@@ -28,7 +28,7 @@ const examBoardBooleanNotation: {[examBoard in ExamBoard]: BOOLEAN_NOTATION} = {
     [EXAM_BOARD.OCR]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.EDEXCEL]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.MATH,
-    [EXAM_BOARD.NONE]: BOOLEAN_NOTATION.MATH,
+    [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
 }
 
 function UserContextRow({
@@ -49,8 +49,8 @@ function UserContextRow({
                     // Set exam board to something sensible
                     const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
                     examBoard = getFilteredExamBoardOptions(
-                        {byStages: [stage || STAGE.NONE], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-                    })[0]?.value || EXAM_BOARD.NONE;
+                        {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
+                    })[0]?.value || EXAM_BOARD.ALL;
                     setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[examBoard]]: true});
 
                     // Set display settings default values
@@ -87,7 +87,7 @@ function UserContextRow({
         >
             <option value=""></option>
             {getFilteredExamBoardOptions({
-                byStages: [userContext.stage as STAGE || STAGE.NONE],
+                byStages: [userContext.stage as STAGE || STAGE.ALL],
                 includeNullOptions: onlyUCWithThisStage,
                 byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard))
             })

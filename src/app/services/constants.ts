@@ -563,7 +563,7 @@ export enum EXAM_BOARD {
     EDEXCEL = "edexcel",
     EDUQAS = "eduqas",
     WJEC = "wjec",
-    NONE = "none",
+    ALL = "all",
 }
 export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.AQA]: "AQA",
@@ -572,9 +572,9 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.EDEXCEL]: "EDEXCEL",
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
     [EXAM_BOARD.WJEC]: "WJEC",
-    [EXAM_BOARD.NONE]: "All exam boards",
+    [EXAM_BOARD.ALL]: "All exam boards",
 }
-export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.NONE]);
+export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
 export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 
@@ -596,12 +596,12 @@ export enum STAGE {
     A_LEVEL = "a_level",
     FURTHER_A = "further_a",
     UNIVERSITY = "university",
-    NONE = "none",
+    ALL = "all",
 }
-export const STAGE_NULL_OPTIONS = new Set([STAGE.NONE]);
-export const STAGES_PHY = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
-export const STAGES_CS = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL]);
-export const stagesOrdered: Stage[] = ["year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "none"];
+export const STAGE_NULL_OPTIONS = new Set([STAGE.ALL]);
+export const STAGES_PHY = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
+export const STAGES_CS = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL]);
+export const stagesOrdered: Stage[] = ["year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
 export const stageLabelMap: {[stage in Stage]: string} = {
     year_7: "Year 7",
     year_8: "Year 8",
@@ -610,7 +610,7 @@ export const stageLabelMap: {[stage in Stage]: string} = {
     a_level: "A Level",
     further_a: "Further A",
     university: "University",
-    none: "All stages",
+    all: "All stages",
 }
 
 // DIFFICULTIES

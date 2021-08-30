@@ -84,7 +84,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             {question.audience && <div>
                 {determineAudienceViews(question.audience, question.creationContext)
                     .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-                        {view.stage && view.stage !== STAGE.NONE && <span className="gameboard-tags">
+                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
                             {stageLabelMap[view.stage]}
                         </span>} {" "}
                         {view.difficulty && <span className="gameboard-tags">

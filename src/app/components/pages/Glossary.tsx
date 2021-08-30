@@ -175,7 +175,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                         <Col>
                             {searchText !== "" && <span className="pr-4">Search: <strong>{searchText}</strong></span>}
                             {isDefined(filterTopic) && <span className="pr-4">Topic: <strong>{filterTopic.title}</strong></span>}
-                            {examBoard !== EXAM_BOARD.NONE && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
+                            {examBoard !== EXAM_BOARD.ALL && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
                         </Col>
                     </Row>
                 </Col>

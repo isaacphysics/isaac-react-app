@@ -35,14 +35,14 @@ export interface UseUserContextReturnType {
 }
 
 export function useUserContext(): UseUserContextReturnType {
-    const qParams = useQueryParams(true);
     const existingLocation = useLocation();
+    const queryParams = useQueryParams(true);
+
     const user = useSelector((state: AppState) => state && state.user);
     const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
         useSelector((state: AppState) => state?.userPreferences) || {};
+
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
-    const {questionId} = useParams();
-    const currentGameboard = useSelector(selectors.board.currentGameboard);
 
     // Programming Language
     const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
@@ -52,32 +52,34 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Stage
     let stage: STAGE;
-    if (qParams.stage && Object.values(STAGE).includes(qParams.stage as STAGE)) {
-        stage = qParams.stage as STAGE;
+    if (queryParams.stage && Object.values(STAGE).includes(queryParams.stage as STAGE)) {
+        stage = queryParams.stage as STAGE;
     } else if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
         stage = user.registeredContexts[0].stage as STAGE;
     } else {
-        stage = STAGE.NONE;
+        stage = STAGE.ALL;
     }
 
     // Exam Board
     let examBoard: EXAM_BOARD;
     if (SITE_SUBJECT === SITE.PHY) {
-        examBoard = EXAM_BOARD.NONE;
-    } else if (qParams.examBoard && Object.values(EXAM_BOARD).includes(qParams.examBoard as EXAM_BOARD)) {
-        examBoard = qParams.examBoard as EXAM_BOARD;
+        examBoard = EXAM_BOARD.ALL;
+    } else if (queryParams.examBoard && Object.values(EXAM_BOARD).includes(queryParams.examBoard as EXAM_BOARD)) {
+        examBoard = queryParams.examBoard as EXAM_BOARD;
     } else if (isDefined(transientUserContext?.examBoard)) {
         examBoard = transientUserContext?.examBoard;
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
         examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
     } else {
-        examBoard = EXAM_BOARD.NONE;
+        examBoard = EXAM_BOARD.ALL;
     }
 
     // Gameboard views overrides all context options
-    if (questionId && qParams.board && currentGameboard && currentGameboard.id === qParams.board) {
+    const currentGameboard = useSelector(selectors.board.currentGameboard);
+    const {questionId} = useParams();
+    if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
         const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];
         if (gameboardItem) {
             const gameboardDeterminedViews = determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext);
@@ -87,14 +89,14 @@ export function useUserContext(): UseUserContextReturnType {
                     if (gameboardDeterminedViews.length === 1) {
                         stage = gameboardDeterminedViews[0].stage as STAGE;
                     } else {
-                        stage = STAGE.NONE;
+                        stage = STAGE.ALL;
                     }
                 }
                 if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {
                     if (gameboardDeterminedViews.length === 1) {
                         examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
                     } else {
-                        examBoard = EXAM_BOARD.NONE;
+                        examBoard = EXAM_BOARD.ALL;
                     }
                 }
             }
@@ -110,16 +112,17 @@ export function useUserContext(): UseUserContextReturnType {
         showOtherContent = true;
     }
 
-    // Update query params
+    // Replace query params
     useEffect(() => {
-        if (
-            (stage !== qParams.stage && !STAGE_NULL_OPTIONS.has(stage)) ||
-            (examBoard !== qParams.examBoard && !EXAM_BOARD_NULL_OPTIONS.has(examBoard))
-        ) {
-            const newParams = {...qParams, stage, examBoard};
-            if (STAGE_NULL_OPTIONS.has(stage)) {delete newParams.stage;} /* TODO MT people might want to share none view */
-            if (EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {delete newParams.examBoard;} /* TODO MT people might want to share none view */
-            history.replace({...existingLocation, search: queryString.stringify(newParams, {encode: false})});
+        if (stage !== queryParams.stage || (SITE_SUBJECT !== SITE.PHY && examBoard !== queryParams.examBoard)) {
+            history.replace({
+                ...existingLocation,
+                search: queryString.stringify({
+                    ...queryParams,
+                    stage,
+                    examBoard: SITE_SUBJECT===SITE.CS ? examBoard : undefined,
+                }, {encode: false})
+            });
         }
     }, []);
 
@@ -133,7 +136,7 @@ const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
     {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
-    {label: "All Exam Boards", value: EXAM_BOARD.NONE},
+    {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
 interface ExamBoardFilterOptions {
     byUser?: PotentialUser | null;
@@ -146,7 +149,7 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
         // by stage
         .filter(i =>
             !isDefined(filter?.byStages) || // ignore if not set
-            i.value === EXAM_BOARD.NONE || // none does not get filtered by stage
+            i.value === EXAM_BOARD.ALL || // none does not get filtered by stage
             filter?.byStages.length === 0 || // if there are no stages to filter by all pass
             filter?.byStages.some(s => STAGE_NULL_OPTIONS.has(s)) || // none in the stage level allows for all exam boards
             (filter?.byStages.includes(STAGE.GCSE) && EXAM_BOARDS_CS_GCSE.has(i.value)) || // if there is gcse in stages allow GCSE boards
@@ -180,7 +183,7 @@ const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
     {label: "University", value: STAGE.UNIVERSITY},
-    {label: "All Stages", value: STAGE.NONE},
+    {label: "All Stages", value: STAGE.ALL},
 ];
 interface StageFilterOptions {
     byUser?: PotentialUser | null;
@@ -271,6 +274,19 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
         comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
 }
 
+export function filterAudienceViewsByProperties(views: ViewingContext[], properties: (keyof ViewingContext)[]): ViewingContext[] {
+    const filteredViews: ViewingContext[] = [];
+    const viewed = new Set();
+    views.forEach(v => {
+        const displayedValue = properties.map(p => `${v[p]}`).join(" ");
+        if (!viewed.has(displayedValue)) {
+            filteredViews.push(v);
+            viewed.add(displayedValue);
+        }
+    });
+    return filteredViews;
+}
+
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
@@ -281,7 +297,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         // If stages are specified do we have any of them in our context
         if (audienceClause.stage) {
             const userStage = userContext.stage;
-            const satisfiesStageCriteria = userStage === STAGE.NONE || audienceClause.stage.includes(userStage);
+            const satisfiesStageCriteria = userStage === STAGE.ALL || audienceClause.stage.includes(userStage);
             if (!satisfiesStageCriteria) {
                 return false;
             }
@@ -291,7 +307,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         if (audienceClause.examBoard) {
             const userExamBoard = userContext.examBoard;
             const satisfiesExamBoardCriteria =
-                userExamBoard === EXAM_BOARD.NONE || audienceClause.examBoard.includes(userExamBoard);
+                userExamBoard === EXAM_BOARD.ALL || audienceClause.examBoard.includes(userExamBoard);
             if (!satisfiesExamBoardCriteria) {
                 return false;
             }
