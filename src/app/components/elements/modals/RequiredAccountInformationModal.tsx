@@ -56,8 +56,9 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
-        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts);
+    const allUserFieldsAreValid =
+        (SITE_SUBJECT === SITE.PHY && validateUserContexts(initialUserContexts)) ||
+        (SITE_SUBJECT === SITE.CS && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
