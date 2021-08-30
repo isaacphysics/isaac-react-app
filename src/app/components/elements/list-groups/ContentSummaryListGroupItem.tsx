@@ -96,10 +96,11 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             </span>}
             {audienceViews && displayStage && <span className="small text-muted align-self-center d-none d-md-inline">
                 {audienceViews.map((view, i, views) => <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
+                    {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
                         {stageLabelMap[view.stage]}
-                    </span>} {" "}
-                        {view.difficulty && <span className="gameboard-tags">
+                    </span>}
+                    {" "}
+                    {view.difficulty && <span className="gameboard-tags">
                         ({difficultyShortLabelMap[view.difficulty]})
                         {i < views.length - 1 && ", "}
                     </span>}

@@ -14,7 +14,6 @@ import {isDefined} from "../../services/miscUtils";
 import tags from "../../services/tags";
 import {
     difficultiesOrdered,
-    difficultyLabelMap,
     difficultyShortLabelMap,
     stageLabelMap,
     stagesOrdered,

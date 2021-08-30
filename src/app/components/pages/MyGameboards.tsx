@@ -22,7 +22,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    difficultiesOrdered,
+    difficultiesOrdered, difficultyLabelMap,
     difficultyShortLabelMap,
     sortIcon,
     stageLabelMap,
@@ -41,6 +41,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import * as RS from "reactstrap";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -414,7 +415,13 @@ export const MyGameboards = () => {
                                                             </button>
                                                         </th>
                                                         <th className="text-center align-middle">Stages</th>
-                                                        {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle">Difficulties</th>}
+                                                        {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
+                                                            Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
+                                                            <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
+                                                                Practice: {difficultiesOrdered.slice(0, 3).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                                                                Challenge: {difficultiesOrdered.slice(3).map(d => difficultyShortLabelMap[d]).join(", ")}
+                                                            </RS.UncontrolledTooltip>
+                                                        </th>}
                                                         <th className="text-center align-middle">Creator</th>
                                                         <th className="text-center align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>

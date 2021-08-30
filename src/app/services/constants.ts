@@ -603,12 +603,12 @@ export const STAGES_PHY = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL, STAGE.F
 export const STAGES_CS = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL]);
 export const stagesOrdered: Stage[] = ["year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
 export const stageLabelMap: {[stage in Stage]: string} = {
-    year_7: "Year 7",
-    year_8: "Year 8",
-    year_9: "Year 9",
+    year_7: "Year\u00A07",
+    year_8: "Year\u00A08",
+    year_9: "Year\u00A09",
     gcse: "GCSE",
-    a_level: "A Level",
-    further_a: "Further A",
+    a_level: "A\u00A0Level",
+    further_a: "Further\u00A0A",
     university: "University",
     all: "All stages",
 }
@@ -623,12 +623,12 @@ export const difficultyShortLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_3: "C3",
 }
 export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
-    practice_1: "Practice (P1)",
-    practice_2: "Practice (P2)",
-    practice_3: "Practice (P3)",
-    challenge_1: "Challenge (C1)",
-    challenge_2: "Challenge (C2)",
-    challenge_3: "Challenge (C3)",
+    practice_1: "Practice\u00A0(P1)",
+    practice_2: "Practice\u00A0(P2)",
+    practice_3: "Practice\u00A0(P3)",
+    challenge_1: "Challenge\u00A0(C1)",
+    challenge_2: "Challenge\u00A0(C2)",
+    challenge_3: "Challenge\u00A0(C3)",
 }
 export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
