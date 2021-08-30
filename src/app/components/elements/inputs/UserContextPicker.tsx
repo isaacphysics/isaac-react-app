@@ -55,6 +55,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                     if (SITE_SUBJECT === SITE.CS) {
                         // drive exam board selection so that it is a valid option
                         const examBoard = getFilteredExamBoardOptions({byUser: user, byStages: [e.target.value as STAGE]})[0]?.value || EXAM_BOARD.ALL;
+                        newParams.examBoard = examBoard;
                         dispatch(setTransientExamBoardPreference(examBoard));
                     }
                     history.push({search: queryString.stringify(newParams, {encode: false})});
