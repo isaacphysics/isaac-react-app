@@ -928,7 +928,7 @@ export interface FreeTextRule extends Choice {
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;
 
 export type EnhancedGameboard = GameboardDTO & {
-    questions: (GameboardItem & { questionPartsTotal: number })[];
+    contents: (GameboardItem & { questionPartsTotal: number })[];
 };
 
 export type SingleEnhancedAssignment = AssignmentDTO & {
