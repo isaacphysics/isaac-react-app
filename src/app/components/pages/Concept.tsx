@@ -50,7 +50,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                         <UserContextPicker className="no-print text-right" />
                     </div>
                     <div className="question-actions">
-                        <ShareLink linkUrl={`/concepts/${conceptId}`} />
+                        <ShareLink linkUrl={`/concepts/${conceptId}${location.search || ""}`} />
                     </div>
                     <div className="question-actions not-mobile">
                         <PrintButton />
@@ -67,9 +67,11 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
 
                         {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
+                        {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+
                         <NavigationLinks navigation={navigation} />
 
-                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {SITE_SUBJECT === SITE.PHY && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

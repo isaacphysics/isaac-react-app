@@ -2,15 +2,14 @@ import {
     AdditionalInformation,
     AugmentedEvent,
     NOT_FOUND_TYPE,
-    SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
-import {UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
+import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, NOT_FOUND} from "./constants";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {EXAM_BOARD, NOT_FOUND, STAGE} from "./constants";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -51,19 +50,14 @@ export const validateEmailPreferences = (emailPreferences?: UserEmailPreferences
     );
 };
 
-export const validateExamBoard = (user: ValidationUser | null) => {
-    if (user && user.examBoard) {
-        return user.examBoard in EXAM_BOARD;
-    } else {
-        return false;
-    }
-};
-
-export const validateSubjectInterests = (subjectInterests?: SubjectInterests | null) => {
-    return subjectInterests &&
-        Object.values(subjectInterests).length > 0 &&
-        (subjectInterests.CS_ALEVEL === true || subjectInterests.CS_ALEVEL === false);
-};
+export function validateUserContexts(userContexts?: UserContext[]): boolean {
+    if (userContexts === undefined) {return false;}
+    if (userContexts.length === 0) {return false;}
+    return userContexts.every(uc =>
+        Object.values(STAGE).includes(uc.stage as STAGE) && //valid stage
+        (SITE_SUBJECT !== SITE.CS || Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD)) // valid exam board for cs
+    );
+}
 
 export const validateUserSchool = (user?: ValidationUser | null) => {
     return !!user && (
@@ -88,11 +82,11 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
 };
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
-export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null) {
+export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences &&
-        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user) && validateExamBoard(user))) &&
+        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user))) &&
         (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
-        (SITE_SUBJECT !== SITE.CS || validateSubjectInterests(userPreferences.SUBJECT_INTEREST));
+        validateUserContexts(userContexts);
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

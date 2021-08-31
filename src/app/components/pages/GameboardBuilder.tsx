@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ContentSummaryDTO, GameboardItem} from "../../../IsaacApiTypes";
+import {GameboardItem} from "../../../IsaacApiTypes";
 import {
     closeActiveModal,
     createGameboard,
@@ -25,7 +25,6 @@ import {
     multiSelectOnChange
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
-import {examBoardTagMap} from "../../services/constants";
 import {history} from "../../services/history"
 import Select from "react-select";
 import {withRouter} from "react-router-dom";
@@ -34,13 +33,12 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
-import {getFilteredExamBoardOptions} from "../../services/userContext";
+import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
 
     const dispatch = useDispatch();
 
@@ -52,7 +50,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
     const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>( []);
-    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
@@ -60,7 +58,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         if (baseGameboard) {
             setGameboardTitle(`${baseGameboard.title} (Copy)`);
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
-            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummaryDTO>());
+            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummary>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
             logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
         }
@@ -120,11 +118,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
                         <Select inputId="question-search-level"
                             isMulti
-                            options={
-                                [{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }].concat(
-                                    getFilteredExamBoardOptions([], false, betaFeature?.AUDIENCE_CONTEXT)
-                                        .map(i => ({value: examBoardTagMap[i.value], label: i.label})))
-                            }
+                            options={[{ value: 'ISAAC_BOARD', label: 'Created by Isaac' }]}
                             name="colors"
                             className="basic-multi-select"
                             classNamePrefix="select"
@@ -166,7 +160,8 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                     <th className="w-5" />
                                     <th className="w-40">Question title</th>
                                     <th className="w-25">Topic</th>
-                                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Level</th>}
+                                    <th className="w-15">Stage</th>
+                                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Difficulty</th>}
                                     {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
                                 </tr>
                             </thead>
@@ -182,7 +177,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                                             provided={provided} key={`gameboard-builder-row-${question.id}`}
                                                             question={question} selectedQuestions={selectedQuestions}
                                                             setSelectedQuestions={setSelectedQuestions} questionOrder={questionOrder}
-                                                            setQuestionOrder={setQuestionOrder}
+                                                            setQuestionOrder={setQuestionOrder} creationContext={question.creationContext}
                                                         />)}
                                                 </Draggable>
                                             })}
@@ -245,10 +240,9 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             } else {
                                 const definedSubjects = ["physics", "maths", "chemistry"];
                                 selectedQuestions?.forEach((item) => {
-                                        let tags = intersection(definedSubjects, item.tags || []);
-                                        tags.forEach((tag: string) => subjects.push(tag));
-                                    }
-                                );
+                                    let tags = intersection(definedSubjects, item.tags || []);
+                                    tags.forEach((tag: string) => subjects.push(tag));
+                                });
                                 // If none of the questions have a subject tag, default to physics
                                 if (subjects.length === 0) {
                                     subjects.push("physics");
@@ -259,7 +253,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             dispatch(createGameboard({
                                 id: gameboardURL,
                                 title: gameboardTitle,
-                                questions: questionOrder.map((questionId) => {
+                                contents: questionOrder.map((questionId) => {
                                     const question = selectedQuestions.get(questionId);
                                     return question && convertContentSummaryToGameboardItem(question);
                                 }).filter((question) => question !== undefined) as GameboardItem[],

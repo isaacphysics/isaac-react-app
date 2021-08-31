@@ -15,12 +15,14 @@ import {
     TabContent,
     TabPane,
 } from "reactstrap";
-import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
+import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
-    PotentialUser, ProgrammingLanguage,
-    SubjectInterests,
+    BooleanNotation,
+    DisplaySettings,
+    PotentialUser,
+    ProgrammingLanguage,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser,
@@ -53,13 +55,13 @@ const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
     return {
-        errorMessage: state ? state.error : null,
-        userAuthSettings: state ? state.userAuthSettings : null,
-        userPreferences: state ? state.userPreferences : null,
-        firstLogin: history.location && history.location.state && (history.location.state as any).firstLogin,
-        hashAnchor: (hash && hash.slice(1)) || null,
-        authToken: (searchParams && searchParams.authToken) ? (searchParams.authToken as string) : null,
-        userOfInterest: (searchParams && searchParams.userId) ? (searchParams.userId as string) : null,
+        errorMessage: state?.error ?? null,
+        userAuthSettings: state?.userAuthSettings ?? null,
+        userPreferences: state?.userPreferences ?? null,
+        firstLogin: history?.location?.state?.firstLogin,
+        hashAnchor: hash?.slice(1) ?? null,
+        authToken: searchParams?.authToken as string ?? null,
+        userOfInterest: searchParams?.userId as string ?? null,
         userToEdit: state && {...state.adminUserGet, loggedIn: true} || {loggedIn: false}
     }
 };
@@ -80,8 +82,9 @@ interface AccountPageProps {
     updateCurrentUser: (
         updatedUser: ValidationUser,
         updatedUserPreferences: UserPreferencesDTO,
+        userContexts: UserContext[] | undefined,
         passwordCurrent: string | null,
-        currentUser: PotentialUser
+        currentUser: PotentialUser,
     ) => void;
     firstLogin: boolean;
     hashAnchor: string | null;
@@ -129,16 +132,25 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
 
+    // - User Contexts
+    const [userContextsToUpdate, setUserContextsToUpdate] =
+        useState<UserContext[]>(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
+    useEffect(function keepUserContextsUpdated() {
+        setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
+    }, [userToUpdate?.registeredContexts]);
+
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
     useEffect(() => {
-        const currentEmailPreferences = (userPreferences && userPreferences.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentSubjectInterests = (userPreferences && userPreferences.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
-        const currentProgrammingLanguage = (userPreferences && userPreferences.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
-        const currentUserPreferences = {
+        const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
+        const currentProgrammingLanguage = (userPreferences?.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
+        const currentBooleanNotation = (userPreferences?.BOOLEAN_NOTATION) ? userPreferences.BOOLEAN_NOTATION: {};
+        const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
+        const currentUserPreferences: UserPreferencesDTO = {
             EMAIL_PREFERENCE: currentEmailPreferences,
-            SUBJECT_INTEREST: currentSubjectInterests,
             PROGRAMMING_LANGUAGE: currentProgrammingLanguage,
+            BOOLEAN_NOTATION: currentBooleanNotation,
+            DISPLAY_SETTING: currentDisplaySettings,
         };
 
         setEmailPreferences(currentEmailPreferences);
@@ -159,24 +171,22 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
-    function setSubjectInterests(newSubjectInterests: SubjectInterests) {
-        setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
-    }
-
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
-        const clearLanguages: {[pl in PROGRAMMING_LANGUAGE]: false} = {
-            JAVASCRIPT: false,
-            PYTHON: false,
-            PHP: false,
-            CSHARP: false,
-            PLAINTEXT: false,
-            SQL: false,
-            NONE: false,
+        const clearLanguages: { [pl in PROGRAMMING_LANGUAGE]: false } = {
+            PSEUDOCODE: false, JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, PLAINTEXT: false, SQL: false, NONE: false,
         };
 
         const fullNewProgrammingLanguage = {...clearLanguages, ...newProgrammingLanguage};
 
         setMyUserPreferences({...myUserPreferences, PROGRAMMING_LANGUAGE: fullNewProgrammingLanguage});
+    }
+
+    function setBooleanNotation(newBooleanNotation: BooleanNotation) {
+        setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: newBooleanNotation});
+    }
+
+    function setDisplaySettings(newDisplaySettings: DisplaySettings) {
+        setMyUserPreferences({...myUserPreferences, DISPLAY_SETTING: newDisplaySettings});
     }
 
     // Form's submission method
@@ -195,10 +205,18 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}) &&
+            allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
-            (!userToUpdate.password || isNewPasswordConfirmed)) {
-            updateCurrentUser(userToUpdate, editingOtherUser ? {} : myUserPreferences, currentPassword, user);
+            (!userToUpdate.password || isNewPasswordConfirmed))
+        {
+            const userContextsUpdated = JSON.stringify(userContextsToUpdate) !== JSON.stringify(userToUpdate.registeredContexts);
+            updateCurrentUser(
+                userToUpdate,
+                editingOtherUser ? {} : myUserPreferences,
+                userContextsUpdated ? userContextsToUpdate : undefined,
+                currentPassword,
+                user,
+            );
         }
     }
 
@@ -243,8 +261,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-md-none">Connections</span>
                             </NavLink>
                         </NavItem>
-                        {!editingOtherUser &&
-                        <NavItem>
+                        {!editingOtherUser && <NavItem>
                             <NavLink
                                 className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
@@ -252,8 +269,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-none d-lg-block">Email preferences</span>
                                 <span className="d-block d-lg-none">Emails</span>
                             </NavLink>
-                        </NavItem>
-                        }
+                        </NavItem>}
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
@@ -262,11 +278,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
-                                    setSubjectInterests={setSubjectInterests}
-                                    programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}}
-                                    setProgrammingLanguage={setProgrammingLanguage}
-                                    allowProgrammingLanguageOption={userPreferences?.BETA_FEATURE?.AUDIENCE_CONTEXT || false}
+                                    userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
+                                    programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}} setProgrammingLanguage={setProgrammingLanguage}
+                                    booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences.DISPLAY_SETTING || {}} setDisplaySettings={setDisplaySettings}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
@@ -307,11 +322,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                         <CardFooter className="py-4">
                             <Row>
                                 <Col size={12} md={{size: 6, offset: 3}}>
-                                    {errorMessage && errorMessage.type === "generalError" &&
-                                        <h3 role="alert" className="text-danger text-center">
-                                            {errorMessage.generalError}
-                                        </h3>
-                                    }
+                                    {errorMessage?.type === "generalError" && <h3 role="alert" className="text-danger text-center">
+                                        {errorMessage.generalError}
+                                    </h3>}
                                     {/* Teacher connections does not have a save */}
                                     <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"

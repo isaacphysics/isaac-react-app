@@ -1,8 +1,11 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
+    difficultyShortLabelMap,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
     SEARCH_RESULT_TYPE,
+    STAGE,
+    stageLabelMap,
     TAG_ID,
     TAG_LEVEL
 } from "../../../services/constants";
@@ -11,9 +14,11 @@ import {Link} from "react-router-dom";
 import React from "react";
 import tags from "../../../services/tags";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {determineAudienceViews, filterAudienceViewsByProperties} from "../../../services/userContext";
+import {ViewingContext} from "../../../../IsaacAppTypes";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
-    let linkDestination, icon, iconLabel, level;
+    let linkDestination, icon, iconLabel, audienceViews;
     let itemClasses = "p-0 bg-transparent content-summary-link ";
 
     let titleClasses = "content-summary-link-title flex-grow-1 ";
@@ -44,7 +49,10 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
-            level = item.level;
+            const propertiesToFilterBy: (keyof ViewingContext)[] = ["stage"];
+            if (SITE_SUBJECT === SITE.PHY) {propertiesToFilterBy.push("difficulty");}
+            const allAudienceViews = determineAudienceViews(item.audience);
+            audienceViews = filterAudienceViewsByProperties(allAudienceViews, propertiesToFilterBy);
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
@@ -73,7 +81,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             return null;
     }
 
-    const displayLevel = SITE_SUBJECT === SITE.PHY && level !== undefined && level !== "0";
+    const displayStage = audienceViews && audienceViews.length > 0;
 
     return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
@@ -84,9 +92,20 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             </div>
             {displayTopicTitle && topicTitle && <span className="small text-muted align-self-center d-none d-md-inline">
                 {topicTitle}
-                {displayLevel && <span>,&nbsp;</span>}
+                {displayStage && <span>,&nbsp;</span>}
             </span>}
-            {displayLevel && <span className="small text-muted align-self-center d-none d-md-inline"> Level {level}</span>}
+            {audienceViews && displayStage && <span className="small text-muted align-self-center d-none d-md-inline">
+                {audienceViews.map((view, i, views) => <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
+                    {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
+                        {stageLabelMap[view.stage]}
+                    </span>}
+                    {" "}
+                    {view.difficulty && <span className="gameboard-tags">
+                        ({difficultyShortLabelMap[view.difficulty]})
+                        {i < views.length - 1 && ", "}
+                    </span>}
+                </span>)}
+            </span>}
         </Link>
     </RS.ListGroupItem>;
 };

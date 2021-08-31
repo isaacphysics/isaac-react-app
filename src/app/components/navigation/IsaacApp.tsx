@@ -79,6 +79,7 @@ import {QuizAttemptFeedback} from "../pages/quizzes/QuizAttemptFeedback";
 import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
+import {selectors} from "../../state/selectors";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -88,7 +89,7 @@ export const IsaacApp = () => {
     const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
     const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
     const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
-    const user = useSelector((state: AppState) => state && state.user || null);
+    const user = useSelector(selectors.user.orNull);
 
     // Run once on component mount
     useEffect(() => {
@@ -109,7 +110,7 @@ export const IsaacApp = () => {
 
     useEffect(() => {
         const dateNow = new Date();
-        if (showNotification(user) && notifications && notifications.length > 0) {
+        if (isLoggedIn(user) && showNotification(user) && notifications && notifications.length > 0) {
             dispatch(openActiveModal(notificationModal(notifications[0])));
             persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString())
         }

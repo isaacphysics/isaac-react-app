@@ -35,7 +35,7 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
-    determineGameboardLevels,
+    allPropertiesFromAGameboard,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons
@@ -44,8 +44,9 @@ import {connect, useDispatch, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import { isStaff } from "../../services/user";
-import { isDefined } from "../../services/miscUtils";
+import {isStaff} from "../../services/user";
+import {isDefined} from "../../services/miscUtils";
+import {difficultiesOrdered, difficultyShortLabelMap, stageLabelMap, stagesOrdered} from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 const stateToProps = (state: AppState) => ({
@@ -164,7 +165,8 @@ const Board = (props: BoardProps) => {
     const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = determineGameboardSubjects(board);
-    const boardLevels = determineGameboardLevels(board);
+    const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
+    const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
@@ -185,7 +187,8 @@ const Board = (props: BoardProps) => {
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                {SITE_SUBJECT == SITE.PHY && <CardSubtitle>Levels: <strong>{boardLevels.join(', ')}</strong></CardSubtitle>}
+                <CardSubtitle>Stages: <strong>{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
+                {boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
             </aside>
 
             <div className="mt-1 mb-3">

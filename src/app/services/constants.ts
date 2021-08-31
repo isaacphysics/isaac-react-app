@@ -1,11 +1,7 @@
 import Remarkable from "remarkable";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {invert} from "lodash";
-import {BookingStatus} from "../../IsaacApiTypes";
+import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-
-// Temporary Feature Flags
-export const QUIZ_FEATURE = ENV_QUIZ_FEATURE_FLAG || false;
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
@@ -541,6 +537,7 @@ export enum ACTION_TYPE {
 }
 
 export enum PROGRAMMING_LANGUAGE {
+    PSEUDOCODE = "PSEUDOCODE",
     JAVASCRIPT = "JAVASCRIPT",
     PYTHON = "PYTHON",
     PHP = "PHP",
@@ -551,6 +548,7 @@ export enum PROGRAMMING_LANGUAGE {
 }
 
 export const programmingLanguagesMap: {[language: string]: string} = {
+    [PROGRAMMING_LANGUAGE.PSEUDOCODE]: "Pseudocode",
     [PROGRAMMING_LANGUAGE.JAVASCRIPT]: "Javascript",
     [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
@@ -561,49 +559,83 @@ export const programmingLanguagesMap: {[language: string]: string} = {
 
 // EXAM BOARDS
 export enum EXAM_BOARD {
-    AQA = "AQA",
-    OCR = "OCR",
-    CIE = "CIE",
-    EDEXCEL = "EDEXCEL",
-    EDUCAS = "EDUCAS",
-    WJEC = "WJEC",
-    OTHER = "OTHER",
-    NONE = "",
+    AQA = "aqa",
+    OCR = "ocr",
+    CIE = "cie",
+    EDEXCEL = "edexcel",
+    EDUQAS = "eduqas",
+    WJEC = "wjec",
+    ALL = "all",
 }
-export const EXAM_BOARDS_OLD = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.OTHER, EXAM_BOARD.NONE]);
-export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.OTHER, EXAM_BOARD.NONE]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.CIE, EXAM_BOARD.EDUCAS, EXAM_BOARD.WJEC]);
-export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUCAS, EXAM_BOARD.WJEC]);
-export const examBoardTagMap: {[examBoard: string]: string} = {
-    [EXAM_BOARD.AQA]: "examboard_aqa",
-    [EXAM_BOARD.OCR]: "examboard_ocr",
-    [EXAM_BOARD.CIE]: "examboard_cie",
-    [EXAM_BOARD.EDEXCEL]: "examboard_edexcel",
-    [EXAM_BOARD.EDUCAS]: "examboard_educas",
-    [EXAM_BOARD.WJEC]: "examboard_wjec",
-};
+export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
+    [EXAM_BOARD.AQA]: "AQA",
+    [EXAM_BOARD.OCR]: "OCR",
+    [EXAM_BOARD.CIE]: "CIE",
+    [EXAM_BOARD.EDEXCEL]: "EDEXCEL",
+    [EXAM_BOARD.EDUQAS]: "EDUQAS",
+    [EXAM_BOARD.WJEC]: "WJEC",
+    [EXAM_BOARD.ALL]: "All exam boards",
+}
+export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
+export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 
+// BOOLEAN LOGIC NOTATION OPTIONS
+export enum BOOLEAN_NOTATION {
+    ENG = "ENG",
+    MATH = "MATH",
+    NONE = "NONE"
+}
+export const EMPTY_BOOLEAN_NOTATION_RECORD: {[bn in BOOLEAN_NOTATION]: false} & BooleanNotation = {
+    [BOOLEAN_NOTATION.ENG]: false, [BOOLEAN_NOTATION.MATH]: false, [BOOLEAN_NOTATION.NONE]: false
+}
 // STAGES
 export enum STAGE {
+    YEAR_7 = "year_7",
+    YEAR_8 = "year_8",
+    YEAR_9 = "year_9",
     GCSE = "gcse",
     A_LEVEL = "a_level",
     FURTHER_A = "further_a",
     UNIVERSITY = "university",
-    NONE = "",
+    ALL = "all",
 }
-export const STAGE_NULL_OPTIONS = new Set([STAGE.NONE]);
-export const STAGES_PHY = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
-export const STAGES_CS = new Set([STAGE.NONE, STAGE.GCSE, STAGE.A_LEVEL]);
+export const STAGE_NULL_OPTIONS = new Set([STAGE.ALL]);
+export const STAGES_PHY = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
+export const STAGES_CS = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL]);
+export const stagesOrdered: Stage[] = ["year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
+export const stageLabelMap: {[stage in Stage]: string} = {
+    year_7: "Year\u00A07",
+    year_8: "Year\u00A08",
+    year_9: "Year\u00A09",
+    gcse: "GCSE",
+    a_level: "A\u00A0Level",
+    further_a: "Further\u00A0A",
+    university: "University",
+    all: "All stages",
+}
 
 // DIFFICULTIES
-export const DIFFICULTY_ITEM_OPTIONS = [
-    {label: "Practice (P1)", value: "practice_1"},
-    {label: "Practice (P2)", value: "practice_2"},
-    {label: "Practice (P3)", value: "practice_3"},
-    {label: "Challenge (C1)", value: "challenge_1"},
-    {label: "Challenge (C2)", value: "challenge_2"},
-    {label: "Challenge (C3)", value: "challenge_3"}
-];
+export const difficultyShortLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "P1",
+    practice_2: "P2",
+    practice_3: "P3",
+    challenge_1: "C1",
+    challenge_2: "C2",
+    challenge_3: "C3",
+}
+export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice\u00A0(P1)",
+    practice_2: "Practice\u00A0(P2)",
+    practice_3: "Practice\u00A0(P3)",
+    challenge_1: "Challenge\u00A0(C1)",
+    challenge_2: "Challenge\u00A0(C2)",
+    challenge_3: "Challenge\u00A0(C3)",
+}
+export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
+export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: difficultyLabelMap[d]}
+));
 
 // QUESTION CATEGORIES
 export enum QUESTION_CATEGORY {
@@ -622,7 +654,6 @@ export const QUESTION_CATEGORY_ITEM_OPTIONS = [
     // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
 ];
 
-
 export enum SUBJECTS {
     PHYSICS = 'physics',
     MATHS = 'maths',
@@ -634,8 +665,6 @@ export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
 ];
-
-export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
     // CS ----
@@ -851,7 +880,7 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
-export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT == SITE.PHY ?
+export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT === SITE.PHY ?
     {title: "Assignment Progress", to: "/assignment_progress"} :
     {title: "My markbook", to: "/my_markbook"};
 
