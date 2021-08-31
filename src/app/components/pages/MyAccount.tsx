@@ -23,7 +23,6 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
-    SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser,
@@ -144,13 +143,11 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useEffect(() => {
         const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentSubjectInterests = (userPreferences?.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
         const currentProgrammingLanguage = (userPreferences?.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
         const currentBooleanNotation = (userPreferences?.BOOLEAN_NOTATION) ? userPreferences.BOOLEAN_NOTATION: {};
         const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
         const currentUserPreferences: UserPreferencesDTO = {
             EMAIL_PREFERENCE: currentEmailPreferences,
-            SUBJECT_INTEREST: currentSubjectInterests,
             PROGRAMMING_LANGUAGE: currentProgrammingLanguage,
             BOOLEAN_NOTATION: currentBooleanNotation,
             DISPLAY_SETTING: currentDisplaySettings,
@@ -173,10 +170,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
-
-    function setSubjectInterests(newSubjectInterests: SubjectInterests) {
-        setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
-    }
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
         const clearLanguages: { [pl in PROGRAMMING_LANGUAGE]: false } = {
@@ -285,8 +278,6 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
-                                    setSubjectInterests={setSubjectInterests}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}} setProgrammingLanguage={setProgrammingLanguage}
                                     booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}} setBooleanNotation={setBooleanNotation}

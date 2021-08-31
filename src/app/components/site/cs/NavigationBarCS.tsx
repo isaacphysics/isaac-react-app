@@ -1,9 +1,8 @@
 import React from "react";
 import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "../../navigation/NavigationBar";
 import {useSelector} from "react-redux";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
-import {Badge} from "reactstrap";
 
 export const NavigationBarCS = () => {
     const user = useSelector(selectors.user.orNull);

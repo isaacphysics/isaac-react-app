@@ -14,17 +14,11 @@ import {
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {
-    DIFFICULTY_ITEM_OPTIONS,
-    EXAM_BOARD_NULL_OPTIONS,
-    examBoardLabelMap,
-    SortOrder,
-    STAGE
-} from "../../../services/constants";
+import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
-import {isLoggedIn, isStaff} from "../../../services/user";
+import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";

@@ -14,7 +14,6 @@ import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
-import {SubjectInterestTableInput} from "../inputs/SubjectInterestTableInput";
 import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
@@ -22,8 +21,6 @@ import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
-    subjectInterests: SubjectInterests;
-    setSubjectInterests: (si: SubjectInterests) => void;
     userContexts: UserContext[];
     setUserContexts: (uc: UserContext[]) => void;
     programmingLanguage: ProgrammingLanguage;
@@ -40,7 +37,6 @@ interface UserDetailsProps {
 export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
-        subjectInterests, setSubjectInterests,
         userContexts, setUserContexts,
         programmingLanguage, setProgrammingLanguage,
         booleanNotation, setBooleanNotation,
@@ -49,7 +45,7 @@ export const UserDetails = (props: UserDetailsProps) => {
     } = props;
 
     const allRequiredFieldsValid =
-        userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}, userContexts);
+        userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {EMAIL_PREFERENCE: null}, userContexts);
 
     return <CardBody className="pt-0">
         <Row>
@@ -150,9 +146,6 @@ export const UserDetails = (props: UserDetailsProps) => {
                         <option value={PROGRAMMING_LANGUAGE.PSEUDOCODE}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PSEUDOCODE]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
                         <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
-                        {/*<option value={PROGRAMMING_LANGUAGE.JAVASCRIPT}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVASCRIPT]}</option>*/}
-                        {/*<option value={PROGRAMMING_LANGUAGE.PHP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PHP]}</option>*/}
-                        {/*<option value={PROGRAMMING_LANGUAGE.SQL}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.SQL]}</option>*/}
                     </Input>
                 </FormGroup>
             </Col>

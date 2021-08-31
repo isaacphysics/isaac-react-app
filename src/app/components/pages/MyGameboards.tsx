@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
+import * as RS from 'reactstrap';
 import {
     Button,
     Card,
@@ -22,7 +23,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    difficultiesOrdered, difficultyLabelMap,
+    difficultiesOrdered,
     difficultyShortLabelMap,
     sortIcon,
     stageLabelMap,
@@ -41,7 +42,6 @@ import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import * as RS from "reactstrap";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -197,7 +197,6 @@ export const MyGameboards = () => {
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
     const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
-    const [levels, setLevels] = useState<string[]>([]);
     const [completed, setCompleted] = useState(0);
     const [inProgress, setInProgress] = useState(0);
     const [notStarted, setNotStarted] = useState(0);
