@@ -20,16 +20,17 @@ export const AllTopics = () => {
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
+        const LinkTag = topic.comingSoon ? "span" : Link;
         if (!topic.hidden) {
             return <React.Fragment>
-                <Link
+                <LinkTag
                     to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}
                     className={topic.comingSoon ? "text-muted" : ""}
                 >
                     <TextTag>
                         {topic.title}
                     </TextTag>
-                </Link>
+                </LinkTag>
                 {" "}
                 {topic.comingSoon && !topic.new &&
                 <Badge color="light" className="border bg-white">Coming {topic.comingSoon}</Badge>}
