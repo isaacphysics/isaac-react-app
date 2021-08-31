@@ -537,6 +537,7 @@ export enum ACTION_TYPE {
 }
 
 export enum PROGRAMMING_LANGUAGE {
+    PSEUDOCODE = "PSEUDOCODE",
     JAVASCRIPT = "JAVASCRIPT",
     PYTHON = "PYTHON",
     PHP = "PHP",
@@ -547,6 +548,7 @@ export enum PROGRAMMING_LANGUAGE {
 }
 
 export const programmingLanguagesMap: {[language: string]: string} = {
+    [PROGRAMMING_LANGUAGE.PSEUDOCODE]: "Pseudocode",
     [PROGRAMMING_LANGUAGE.JAVASCRIPT]: "Javascript",
     [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
