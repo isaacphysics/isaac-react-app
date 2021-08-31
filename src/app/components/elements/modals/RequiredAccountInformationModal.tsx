@@ -16,7 +16,7 @@ import {isMobile} from "../../../services/device";
 import {isLoggedIn} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 
@@ -67,8 +67,8 @@ const RequiredAccountInfoBody = () => {
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {(!validateUserGender(initialUserValue) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
-                    {!validateUserGender(initialUserValue) && <div className="mb-3">
+                {((SITE_SUBJECT === SITE.CS && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
+                    {SITE_SUBJECT === SITE.CS && !validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -83,7 +83,7 @@ const RequiredAccountInfoBody = () => {
                         />
                     </div>}
                 </RS.Col>}
-                {!validateUserSchool(initialUserValue) && <RS.Col>
+                {SITE_SUBJECT === SITE.CS && !validateUserSchool(initialUserValue) && <RS.Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -92,7 +92,7 @@ const RequiredAccountInfoBody = () => {
                 </RS.Col>}
             </RS.Row>
             <div className="text-muted small pb-2">
-                Providing a few extra pieces of information helps us understand the usage of Isaac Computer Science across the UK and beyond.
+                Providing a few extra pieces of information helps us understand the usage of Isaac {SITE_SUBJECT_TITLE} across the UK and beyond.
                 Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
             </div>
         </RS.CardBody>}
