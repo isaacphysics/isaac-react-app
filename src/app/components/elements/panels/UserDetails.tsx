@@ -2,13 +2,7 @@ import React, {ChangeEvent} from "react";
 import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
 import {allRequiredInformationIsPresent, validateEmail} from "../../../services/validation";
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {
-    BooleanNotation,
-    DisplaySettings,
-    ProgrammingLanguage,
-    SubjectInterests,
-    ValidationUser
-} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
