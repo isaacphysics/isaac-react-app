@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
@@ -23,7 +23,7 @@ export const HomepageCS = () => {
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
-                    GCSE resources
+                    GCSE resources <Badge color="icon" className="bg-none border-dark border ml-1">BETA</Badge>
                 </Button>
             </Col>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
