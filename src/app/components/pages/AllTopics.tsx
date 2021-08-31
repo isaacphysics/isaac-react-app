@@ -82,7 +82,11 @@ export const AllTopics = () => {
                     Object.assign(
                         {
                             All: <>
-                                {/* Add exposition for what 'All' tab is (in relation to other exam board pages for clarification) TODO CP */}
+                                <Row>
+                                    <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-4">
+                                        <PageFragment fragmentId={`${stage}_all_topics`} renderFragmentNotFound={false} />
+                                    </Col>
+                                </Row>
                                 <Row>
                                     <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
                                         {topicColumn(firstColTags)}
