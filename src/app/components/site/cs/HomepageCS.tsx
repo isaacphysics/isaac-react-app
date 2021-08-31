@@ -23,7 +23,7 @@ export const HomepageCS = () => {
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
-                    GCSE resources <Badge color="icon" className="bg-none border-dark border ml-1">BETA</Badge>
+                    GCSE resources <Badge color="secondary" className="ml-1 border">BETA</Badge>
                 </Button>
             </Col>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
