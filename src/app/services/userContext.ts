@@ -60,7 +60,7 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Stage
     let stage: STAGE;
-    if (queryParams.stage && Object.values(STAGE).includes(queryParams.stage as STAGE)) {
+    if (queryParams.stage && Object.values(STAGE).includes(queryParams.stage as STAGE) && !STAGE_NULL_OPTIONS.has(queryParams.stage as STAGE)) {
         stage = queryParams.stage as STAGE;
         explanation.stage = urlMessage;
     } else if (isDefined(transientUserContext.stage)) {
@@ -75,7 +75,7 @@ export function useUserContext(): UseUserContextReturnType {
     let examBoard: EXAM_BOARD;
     if (SITE_SUBJECT === SITE.PHY) {
         examBoard = EXAM_BOARD.ALL;
-    } else if (queryParams.examBoard && Object.values(EXAM_BOARD).includes(queryParams.examBoard as EXAM_BOARD)) {
+    } else if (queryParams.examBoard && Object.values(EXAM_BOARD).includes(queryParams.examBoard as EXAM_BOARD) && !EXAM_BOARD_NULL_OPTIONS.has(queryParams.examBoard as EXAM_BOARD)) {
         examBoard = queryParams.examBoard as EXAM_BOARD;
         explanation.examBoard = urlMessage;
     } else if (isDefined(transientUserContext?.examBoard)) {
@@ -136,10 +136,10 @@ export function useUserContext(): UseUserContextReturnType {
                 }, {encode: false})
             });
         }
-    }, []);
+    }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
 
     return {
-        stage, examBoard, explanation: explanation,
+        stage, examBoard, explanation,
         showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation
     };
 }
