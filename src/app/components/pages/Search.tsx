@@ -137,19 +137,18 @@ export const Search = withRouter((props: {history: History; location: Location})
                                         inputId="document-filter" isMulti
                                         placeholder="No page type filter"
                                         defaultValue={filtersState}
-                                        options={Object.values(DOCUMENT_TYPE)
-                                            .filter(documentType => documentType !== DOCUMENT_TYPE.FAST_TRACK_QUESTION)
-                                            .filter(documentType =>
-                                                !(documentType == DOCUMENT_TYPE.TOPIC_SUMMARY
-                                                    && SITE_SUBJECT == SITE.PHY))
-                                            .map(itemise)
+                                        options={
+                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
+                                                DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]
+                                                .filter(v => SITE_SUBJECT === SITE.CS || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
+                                                .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
                                         classNamePrefix="select"
                                         onChange={unwrapValue(setFiltersState)}
                                         styles={selectStyle}
                                     />
-                                    {SITE_SUBJECT === SITE.CS && <RS.Label className="mb-2 mb-md-0">
+                                    {SITE_SUBJECT === SITE.CS && <RS.Label className="mt-2 mb-2 mb-md-0">
                                         <UserContextPicker className="text-right" />
                                     </RS.Label>}
                                 </RS.Form>
