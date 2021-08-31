@@ -160,11 +160,6 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />
             </Col>
         </Row>}
-        {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
-            <Col>
-                <SubjectInterestTableInput stateObject={subjectInterests} setStateFunction={setSubjectInterests}/>
-            </Col>
-        </Row>}
 
         {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
             Required information in this form is not set

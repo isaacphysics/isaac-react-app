@@ -204,6 +204,7 @@ interface StageFilterOptions {
     byUser?: PotentialUser | null;
     byUserContexts?: UserContext[];
     includeNullOptions?: boolean;
+    hideFurtherA?: true;
 }
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
     return _STAGE_ITEM_OPTIONS
@@ -220,6 +221,8 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
             // stage is one of registered context selections
             filter?.byUser.registeredContexts?.map(rc => rc.stage).includes(i.value)
         )
+        // Hide further a option for physics
+        .filter(i => !filter?.hideFurtherA || i.value !== STAGE.FURTHER_A)
         // Restrict by user contexts
         .filter(i =>
             !filter?.byUserContexts ||

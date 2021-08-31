@@ -62,7 +62,7 @@ function UserContextRow({
             <option value=""></option>
             {getFilteredStageOptions({
                 byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard)),
-                includeNullOptions: showNullStageOption
+                includeNullOptions: showNullStageOption, hideFurtherA: true
             }).map(item =>
                 <option key={item.value} value={item.value}>{item.label}</option>
             )}
@@ -113,8 +113,16 @@ export function UserContextAccountInput({
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">
             {SITE.CS === SITE_SUBJECT && <span>Show me content for:</span>}
-            {SITE.PHY === SITE_SUBJECT && <span>{teacher ? "I am teaching:" : "I am studying:"}</span>}
+            {SITE.PHY === SITE_SUBJECT && <span>{teacher ? "I am teaching..." : "I am interested in..."}</span>}
         </RS.Label>
+        {SITE.PHY === SITE_SUBJECT && <React.Fragment>
+            <span id={`show-me-content-${componentId}`} className="icon-help" />
+            <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
+                Choose a stage here to pre-select the material that is most relevant to your interests.<br />
+                You will be able to change this preference on relevant pages.<br />
+                If you prefer to see all content by default, select "All stages".
+            </RS.UncontrolledTooltip>
+        </React.Fragment>}
         {SITE.CS === SITE_SUBJECT && <React.Fragment>
             <span id={`show-me-content-${componentId}`} className="icon-help" />
             <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
@@ -131,7 +139,7 @@ export function UserContextAccountInput({
                 const showPlusOption = teacher &&
                     index === userContexts.length - 1 &&
                     // at least one exam board for the potential stage
-                    getFilteredStageOptions({byUserContexts: userContexts}).length > 0;
+                    getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length > 0;
 
                 return <RS.FormGroup key={index}>
                     <UserContextRow
