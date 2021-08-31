@@ -41,15 +41,17 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId}: {linkUrl: st
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * 9);
     const showDuplicateAndEdit = gameboardId && isTeacher(user);
     return <React.Fragment>
-        <button className="share-link-icon btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
-        <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
-            <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
-            {showDuplicateAndEdit && <React.Fragment>
-                <hr className="text-center mt-4" />
-                <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
-                    {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
-                </a>
-            </React.Fragment>}
+        <div className="share-link-icon">
+            <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
+            <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
+                <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
+                {showDuplicateAndEdit && <React.Fragment>
+                    <hr className="text-center mt-4" />
+                    <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
+                        {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
+                    </a>
+                </React.Fragment>}
+            </div>
         </div>
     </React.Fragment>;
 };
