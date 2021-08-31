@@ -11,6 +11,8 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
+import uuid from "uuid";
+import {notRelevantMessage, useUserContext} from "../../services/userContext";
 
 interface AccordionsProps {
     id?: string;
@@ -27,6 +29,8 @@ let nextClientId = 0;
 
 export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
+    const userContext = useUserContext();
+    const componentId = useRef(uuid.v4().slice(0, 4)).current;
     const page = useSelector((state: AppState) => (state && state.doc) || null);
 
     // Toggle
@@ -144,6 +148,13 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <RS.Row>
                         <span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}
+                        {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
+                            <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
+                            <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
+                                {`This content is ${notRelevantMessage(userContext)}.`}
+                            </RS.UncontrolledTooltip>
+                        </div>}
+
                     </RS.Row>
                 </div>
 

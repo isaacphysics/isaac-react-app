@@ -4,9 +4,11 @@ import {
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
+    examBoardLabelMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
     STAGE_NULL_OPTIONS,
+    stageLabelMap,
     STAGES_CS,
     STAGES_PHY,
     stagesOrdered,
@@ -340,4 +342,18 @@ export function mergeDisplayOptions(source: ContentBaseDTO["display"], update: C
         }
     }
     return srcCopy;
+}
+
+export function notRelevantMessage(userContext: UseUserContextReturnType): string {
+    const message = [];
+    if (!STAGE_NULL_OPTIONS.has(userContext.stage)) {
+        message.push(stageLabelMap[userContext.stage]);
+    }
+    if (SITE.CS === SITE_SUBJECT && !EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
+        message.push(examBoardLabelMap[userContext.examBoard]);
+    }
+    if (message.length === 0) { // should never happen...
+        message.push("your account settings." /* "anyone!" */)
+    }
+    return `not relevant for ${message.join(" ")}`;
 }
