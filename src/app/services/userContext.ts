@@ -34,7 +34,11 @@ export interface UseUserContextReturnType {
     showOtherContent?: boolean;
     preferredProgrammingLanguage?: string;
     preferredBooleanNotation?: string;
+    explanation: {stage?: string, examBoard?: string};
 }
+
+const urlMessage = "URL query parameters";
+const gameboardMessage = "gameboard settings"
 
 export function useUserContext(): UseUserContextReturnType {
     const existingLocation = useLocation();
@@ -46,6 +50,8 @@ export function useUserContext(): UseUserContextReturnType {
 
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
 
+    const explanation: UseUserContextReturnType["explanation"] = {};
+
     // Programming Language
     const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
 
@@ -56,6 +62,7 @@ export function useUserContext(): UseUserContextReturnType {
     let stage: STAGE;
     if (queryParams.stage && Object.values(STAGE).includes(queryParams.stage as STAGE)) {
         stage = queryParams.stage as STAGE;
+        explanation.stage = urlMessage;
     } else if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].stage) {
@@ -70,6 +77,7 @@ export function useUserContext(): UseUserContextReturnType {
         examBoard = EXAM_BOARD.ALL;
     } else if (queryParams.examBoard && Object.values(EXAM_BOARD).includes(queryParams.examBoard as EXAM_BOARD)) {
         examBoard = queryParams.examBoard as EXAM_BOARD;
+        explanation.examBoard = urlMessage;
     } else if (isDefined(transientUserContext?.examBoard)) {
         examBoard = transientUserContext?.examBoard;
     } else if (isLoggedIn(user) && user.registeredContexts?.length && user.registeredContexts[0].examBoard) {
@@ -88,6 +96,7 @@ export function useUserContext(): UseUserContextReturnType {
             // If user's stage selection is not one specified by the gameboard change it
             if (gameboardDeterminedViews.length > 0) {
                 if (!gameboardDeterminedViews.map(v => v.stage).includes(stage) && !STAGE_NULL_OPTIONS.has(stage)) {
+                    explanation.stage = gameboardMessage;
                     if (gameboardDeterminedViews.length === 1) {
                         stage = gameboardDeterminedViews[0].stage as STAGE;
                     } else {
@@ -95,6 +104,7 @@ export function useUserContext(): UseUserContextReturnType {
                     }
                 }
                 if (!gameboardDeterminedViews.map(v => v.examBoard).includes(examBoard) && !EXAM_BOARD_NULL_OPTIONS.has(examBoard)) {
+                    explanation.examBoard = gameboardMessage;
                     if (gameboardDeterminedViews.length === 1) {
                         examBoard = gameboardDeterminedViews[0].examBoard as EXAM_BOARD;
                     } else {
@@ -128,7 +138,10 @@ export function useUserContext(): UseUserContextReturnType {
         }
     }, []);
 
-    return {examBoard, stage, showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation};
+    return {
+        stage, examBoard, explanation: explanation,
+        showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation
+    };
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */

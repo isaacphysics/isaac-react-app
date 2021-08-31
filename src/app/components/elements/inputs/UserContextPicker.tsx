@@ -1,11 +1,8 @@
 import React from "react";
+import * as RS from "reactstrap";
 import {CustomInput, FormGroup, Input, Label} from "reactstrap";
-import {
-    getFilteredExamBoardOptions,
-    getFilteredStageOptions,
-    useUserContext
-} from "../../../services/userContext";
-import {EXAM_BOARD, EXAM_BOARD_NULL_OPTIONS, STAGE, STAGE_NULL_OPTIONS} from "../../../services/constants";
+import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
+import {EXAM_BOARD, examBoardLabelMap, STAGE, stageLabelMap} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {
     setTransientExamBoardPreference,
@@ -25,12 +22,18 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const userContext = useUserContext();
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
 
-    const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && segueEnvironment === "DEV";
-    const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1;
-    const showExamBoardSelector = SITE_SUBJECT === SITE.CS && getFilteredExamBoardOptions({byUser: user}).length > 1;
-
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});
+
+    const unusual = {
+        stage: !filteredStages.map(s => s.value).includes(userContext.stage),
+        examBoard: SITE_SUBJECT === SITE.CS && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
+    };
+    const showUnusualContextMessage = unusual.stage || unusual.examBoard;
+    const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && segueEnvironment === "DEV";
+    const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
+    const showExamBoardSelector = SITE_SUBJECT === SITE.CS && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
+
 
     return <div className="d-flex">
         {/* Show other content Selector */}
@@ -97,5 +100,20 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 }
             </Input>
         </FormGroup>}
+
+        {showUnusualContextMessage && <div className="mt-2 ml-1">
+            <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
+            <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
+                You are seeing {stageLabelMap[userContext.stage]} {SITE_SUBJECT === SITE.CS ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
+                content, which is different to your account settings. <br />
+                {unusual.stage && unusual.examBoard && <>
+                    {userContext.explanation.stage === userContext.explanation.examBoard ?
+                        `The stage and exam board were specified by your ${userContext.explanation.stage}.` :
+                        `The stage was specified by your ${userContext.explanation.stage} and the exam board by your ${userContext.explanation.examBoard}.`}
+                </>}
+                {unusual.stage && !unusual.examBoard && `The stage was specified by your ${userContext.explanation.stage}.`}
+                {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
+            </RS.UncontrolledTooltip>
+        </div>}
     </div>;
 };
