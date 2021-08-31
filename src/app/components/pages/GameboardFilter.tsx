@@ -17,6 +17,7 @@ import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select from "react-select";
 import {getFilteredStageOptions, useUserContext} from "../../services/userContext";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -83,7 +84,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
     const userContext = useUserContext();
-    const {querySelections, queryStages, queryDifficulties, queryQuestionCategories} = processQueryString(location.search);
+    const {querySelections, queryStages, queryDifficulties} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
@@ -127,7 +128,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
 
-    const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
+    // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
     const boardName = generateBoardName(selections);
 
@@ -138,7 +139,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         const params: {[key: string]: string} = {};
         if (stages.length) params.stages = toCSV(stages);
         if (difficulties.length) params.difficulties = toCSV(difficulties);
-        if (questionCategories.length) params.questionCategories = toCSV(questionCategories);
+        if (SITE_SUBJECT === SITE.PHY) {params.questionCategories = "quick_quiz,learn_and_practice";}
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
@@ -149,6 +150,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             params[tier.id] = toCSV(selections[i]);
         });
         dispatch(generateTemporaryGameboard({...params, title: boardName}));
+        delete params.questionCategories;
         history.push({search: queryString.stringify(params, {encode: false})});
     }
 
@@ -159,7 +161,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             setBoardStack([]);
             loadNewGameboard();
         }
-    }, [selections, stages, difficulties, questionCategories]);
+    }, [selections, stages, difficulties]);
 
     function refresh() {
         if (gameboard) {
@@ -232,12 +234,12 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         </RS.Label>
                         <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
                     </div>
-                    <div>
-                        <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
-                            I would like some questions from Isaac to...
-                        </RS.Label>
-                        <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />
-                    </div>
+                    {/*<div>*/}
+                    {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
+                    {/*        I would like some questions from Isaac to...*/}
+                    {/*    </RS.Label>*/}
+                    {/*    <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
+                    {/*</div>*/}
                     <div>
                         <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
                             I would like questions for...
