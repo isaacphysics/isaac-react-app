@@ -54,11 +54,7 @@ function UserContextRow({
                     setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[examBoard]]: true});
 
                     // Set display settings default values
-                    if (stage === STAGE.A_LEVEL) {
-                        setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: false});
-                    } else if (stage === STAGE.GCSE) {
-                        setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: true});
-                    }
+                    setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: true});
                 }
                 setUserContext({...userContext, stage, examBoard});
             }}
