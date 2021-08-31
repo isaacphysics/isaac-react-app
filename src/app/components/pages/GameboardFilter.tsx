@@ -251,9 +251,11 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                             <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
                             <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                                 Practice questions let you directly apply one idea -<br />
-                                P1 covers revision of a previous stage or topics near the beginning of a course, P3 covers later topics.<br />
+                                P1 covers revision of a previous stage or topics near the beginning of a course,<br />
+                                P3 covers later topics.<br />
                                 Challenge questions are solved by combining multiple concepts and creativity.<br />
-                                C1 can be attempted near the beginning of your course, C3 require more creativity and could be attempted later in a course.
+                                C1 can be attempted near the beginning of your course,<br />
+                                C3 require more creativity and could be attempted later in a course.
                             </RS.UncontrolledTooltip>
                         </RS.Label>
                         <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
