@@ -111,7 +111,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </span>;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "Set quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "Set quizzes", [SITE.PHY]: "Manage Quizzes"}[SITE_SUBJECT]} help={pageHelp} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4">
             {{
                 [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Available Quizzes"}[SITE_SUBJECT]]:
