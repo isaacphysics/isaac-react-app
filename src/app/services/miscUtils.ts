@@ -8,6 +8,7 @@ export function isDefined<T>(stuff: T): stuff is NonNullable<T> {
 
 // Adapted from answer to stackoverflow.com/questions/32553158
 // I'm not sure what the types need to be for contains() to be happy
+// Could also look at https://github.com/airbnb/react-outside-click-handler
 export function useOutsideCallback(ref: RefObject<any>, callback : () => void, deps : React.DependencyList) {
     useEffect(() => {
         /**
