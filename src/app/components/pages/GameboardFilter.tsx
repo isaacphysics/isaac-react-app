@@ -231,6 +231,11 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     <div>
                         <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                             I am interested in stage...
+                            <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                            <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                                {"Find questions that are suitable for this stage of school learning."} <br />
+                                {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
+                            </RS.UncontrolledTooltip>
                         </RS.Label>
                         <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
                     </div>
@@ -243,6 +248,13 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     <div>
                         <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
                             I would like questions for...
+                            <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                            <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                                Practice questions let you directly apply one idea -<br />
+                                P1 covers revision of a previous stage or topics near the beginning of a course, P3 covers later topics.<br />
+                                Challenge questions are solved by combining multiple concepts and creativity.<br />
+                                C1 can be attempted near the beginning of your course, C3 require more creativity and could be attempted later in a course.
+                            </RS.UncontrolledTooltip>
                         </RS.Label>
                         <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
                     </div>
