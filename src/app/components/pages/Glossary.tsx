@@ -9,14 +9,13 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {UserContextPicker} from '../elements/inputs/UserContextPicker';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import { isDefined } from '../../services/miscUtils';
+import {isDefined} from '../../services/miscUtils';
 import tags from "../../services/tags";
-import {EXAM_BOARD, TAG_ID} from '../../services/constants';
-import { Tag } from '../../../IsaacAppTypes';
+import {TAG_ID} from '../../services/constants';
+import {Tag} from '../../../IsaacAppTypes';
 import Select from "react-select";
-import { useUserContext } from "../../services/userContext";
+import {useUserContext} from "../../services/userContext";
 
 interface GlossaryProps {
     location: { hash: string },
@@ -89,7 +88,6 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const alphabetScrollerObserver = useRef<IntersectionObserver>();
 
     const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-        console.log('thingu');
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
                 if (entry.isIntersecting) {
@@ -175,12 +173,8 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                         <Col>
                             {searchText !== "" && <span className="pr-4">Search: <strong>{searchText}</strong></span>}
                             {isDefined(filterTopic) && <span className="pr-4">Topic: <strong>{filterTopic.title}</strong></span>}
-                            {examBoard !== EXAM_BOARD.ALL && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
                         </Col>
                     </Row>
-                </Col>
-                <Col md={{size: 3}} className="py-4">
-                    <UserContextPicker className="text-right" />
                 </Col>
             </Row>
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
