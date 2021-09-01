@@ -19,7 +19,6 @@ import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {UserContextPicker} from "../inputs/UserContextPicker";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 
@@ -129,7 +128,6 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     return section ?
         <Row className="question-content-container">
             <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
-                <UserContextPicker className="no-print text-right"/>
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>
                 </WithFigureNumbering>
