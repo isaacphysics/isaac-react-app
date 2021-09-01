@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {AppState} from "../../state/reducers";
 import {getAdminContentErrors} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useDispatch, useSelector} from "react-redux";
-import {Col, Container, Row, Table} from "reactstrap";
+import {Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -35,6 +35,9 @@ export const AdminContentErrors = () => {
     useEffect(() => {dispatch(getAdminContentErrors());}, [dispatch]);
     const errors = useSelector((state: AppState) => state?.adminContentErrors || null);
 
+    const [errorFilter, setErrorFilter] = useState<string>("");
+    const errorReducer = (show: boolean, errorStr: string) => show || errorStr.toLowerCase().includes(errorFilter.toLowerCase())
+
     return <Container>
         <Row>
             <Col>
@@ -56,6 +59,13 @@ export const AdminContentErrors = () => {
                     </Col>
                 </Row>
                 <Row>
+                    <Col lg={4} className="mb-2">
+                        <Label className="w-100">
+                            Filter errors <Input type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
+                        </Label>
+                    </Col>
+                </Row>
+                <Row>
                     <Col>
                         <Table responsive bordered>
                             <tbody>
@@ -65,7 +75,8 @@ export const AdminContentErrors = () => {
                                     <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                     <th>List of Error Messages</th>
                                 </tr>
-                                {errors.errorsList.map(ContentErrorRow)}
+                                {errors.errorsList.filter((error) => error.listOfErrors.reduce(errorReducer, false))
+                                    .map(ContentErrorRow)}
                             </tbody>
                         </Table>
                     </Col>

@@ -40,8 +40,7 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
-    boardLevelsSelection,
-    determineGameboardLevels,
+    allPropertiesFromAGameboard,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons
@@ -56,6 +55,8 @@ import {isMobile} from "../../services/device";
 import Select from "react-select";
 import {multiSelectOnChange} from "../../services/gameboardBuilder";
 import {sortIcon} from "../../services/constants";
+import {difficultiesOrdered, difficultyShortLabelMap, stageLabelMap, stagesOrdered} from "../../services/constants";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 enum boardViews {
     "table" = "Table View",
@@ -136,7 +137,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             className="mt-2 mb-2"
             block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
             onClick={assign}
-            disabled={groupId === null || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+            disabled={groupId === null || groupId === -1 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
         >Assign to group</Button>
     </Container>;
 };
@@ -183,7 +184,8 @@ const Board = (props: BoardProps) => {
     const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = determineGameboardSubjects(board);
-    const boardLevels = determineGameboardLevels(board);
+    const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
+    const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
     return boardView == boardViews.table ?
         // Table view
@@ -207,7 +209,6 @@ const Board = (props: BoardProps) => {
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
-                {SITE_SUBJECT == SITE.PHY && <td className="text-center align-middle">{boardLevels.join(', ')}</td>}
                 <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
                 <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
                 <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
@@ -259,8 +260,8 @@ const Board = (props: BoardProps) => {
             <button onClick={toggleAssignCard} id={hexagonId} className="board-subject-hexagon-container">
                 {generateGameboardSubjectHexagons(boardSubjects)}
                 <span className="groups-assigned">
-                            <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
-                            group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
+                    <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
+                    group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
                     {board.assignedGroups &&
                     <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
                         "No groups have been assigned."
@@ -272,7 +273,8 @@ const Board = (props: BoardProps) => {
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                {SITE_SUBJECT == SITE.PHY && <CardSubtitle>Levels: <strong>{boardLevels.join(', ')}</strong></CardSubtitle>}
+                <CardSubtitle>Stages: <strong>{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
+                {boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
             </aside>
 
             <div className="mt-1 mb-3">
@@ -469,7 +471,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
-                {!boards && <h4>You have <Spinner size="sm" /> gameboards ready to assign...</h4>}
+                {!boards && <h4>You have <IsaacSpinner size="sm" /> gameboards ready to assign...</h4>}
                 <Row>
                     <Col sm={6} lg={3} xl={2}>
                         <Label className="w-100">
@@ -591,8 +593,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                 {boards.boards
                                                     .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
                                                         && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                                        && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase())))
-                                                        && (boardLevelsSelection(board, levels)))
+                                                        && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))))
                                                     .map(board =>
                                                         <Board
                                                             {...props}

@@ -10,6 +10,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {selectors} from "../../state/selectors";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useDispatch();
@@ -108,7 +109,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                             <RS.Alert color="info">
                                 <h4>Updating...</h4>
                                 <p>Replacing version {contentVersion.liveVersion} with {contentVersion.updatingVersion}</p>
-                                <RS.Spinner />
+                                <IsaacSpinner />
                             </RS.Alert>
                         }
                         {updateState == ContentVersionUpdatingStatus.SUCCESS &&

@@ -15,11 +15,12 @@ import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
-import {filterOnExamBoard, useUserContext} from "../../services/userContext";
+import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import Select, {Styles, ValueType} from "react-select";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 interface Item<T> {
     value: T;
@@ -60,7 +61,7 @@ export const Search = withRouter((props: {history: History; location: Location})
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);
     const user = useSelector(selectors.user.orNull);
-    const {examBoard} = useUserContext();
+    const userContext = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(urlFilters.map(itemise))
@@ -92,8 +93,9 @@ export const Search = withRouter((props: {history: History; location: Location})
     }, [filtersState]);
 
     // Process results and add shortcut responses
-    const filteredSearchResults = searchResults?.results &&
-        filterOnExamBoard(searchResults.results.filter(result => searchResultIsPublic(result, user)), examBoard);
+    const filteredSearchResults = searchResults?.results && searchResults.results
+        .filter(result => searchResultIsPublic(result, user))
+        .filter(result => SITE_SUBJECT === SITE.PHY || isIntendedAudience(result.audience, userContext, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as (ContentSummaryDTO | ShortcutResponse)[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
 
@@ -123,7 +125,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                         <RS.CardHeader className="search-header">
                             <RS.Col md={5} sm={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </RS.Col>
                             <RS.Col md={7} sm={12}>
@@ -135,19 +137,18 @@ export const Search = withRouter((props: {history: History; location: Location})
                                         inputId="document-filter" isMulti
                                         placeholder="No page type filter"
                                         defaultValue={filtersState}
-                                        options={Object.values(DOCUMENT_TYPE)
-                                            .filter(documentType => documentType !== DOCUMENT_TYPE.FAST_TRACK_QUESTION)
-                                            .filter(documentType =>
-                                                !(documentType == DOCUMENT_TYPE.TOPIC_SUMMARY
-                                                    && SITE_SUBJECT == SITE.PHY))
-                                            .map(itemise)
+                                        options={
+                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
+                                                DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]
+                                                .filter(v => SITE_SUBJECT === SITE.CS || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
+                                                .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
                                         classNamePrefix="select"
                                         onChange={unwrapValue(setFiltersState)}
                                         styles={selectStyle}
                                     />
-                                    {SITE_SUBJECT === SITE.CS && <RS.Label className="mb-2 mb-md-0">
+                                    {SITE_SUBJECT === SITE.CS && <RS.Label className="mt-2 mb-2 mb-md-0">
                                         <UserContextPicker className="text-right" />
                                     </RS.Label>}
                                 </RS.Form>

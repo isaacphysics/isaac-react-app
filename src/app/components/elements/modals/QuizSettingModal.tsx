@@ -11,6 +11,7 @@ import * as RS from "reactstrap";
 import Select from "react-select";
 import {closeActiveModal, hideToast, showToast} from "../../../state/actions";
 import {setQuiz, showQuizSettingModal} from "../../../state/actions/quizzes";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
@@ -140,7 +141,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
                            dispatch(closeActiveModal());
                        }}
             >
-                {submitting ? <RS.Spinner/> : "Set quiz"}
+                {submitting ? <IsaacSpinner /> : "Set quiz"}
             </RS.Button>
         </div>
     </div>;

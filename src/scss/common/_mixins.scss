@@ -249,6 +249,10 @@ $breakpoints: (
   }
 }
 
+.mw-auto {
+  min-width: auto !important;
+}
+
 @mixin aspect-ratio($width, $height) {
   position: relative;
   &:before {
