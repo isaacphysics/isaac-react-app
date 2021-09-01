@@ -126,7 +126,8 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Replace query params
     useEffect(() => {
-        if (stage !== queryParams.stage || (SITE_SUBJECT !== SITE.PHY && examBoard !== queryParams.examBoard)) {
+        const actualParams = queryString.parse(window.location.search);
+        if (stage !== actualParams.stage || (SITE_SUBJECT !== SITE.PHY && examBoard !== actualParams.examBoard)) {
             history.replace({
                 ...existingLocation,
                 search: queryString.stringify({
