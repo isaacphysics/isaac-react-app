@@ -50,9 +50,6 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                     <div className="mt-3 mr-sm-1 ml-auto">
                         <UserContextPicker className="no-print text-right" />
                     </div>
-                    {SITE_SUBJECT === SITE.CS && <div className="question-actions ml-1">
-                        <ConceptGameboardButton conceptId={conceptId} />
-                    </div>}
                     <div className="question-actions">
                         <ShareLink linkUrl={`/concepts/${conceptId}`} />
                     </div>
@@ -73,7 +70,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
 
                         <NavigationLinks navigation={navigation} />
 
-                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

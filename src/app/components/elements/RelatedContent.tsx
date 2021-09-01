@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import {ListGroup, ListGroupItem} from "reactstrap";
+import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
@@ -8,9 +8,12 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
 import {filterOnExamBoard, useUserContext} from "../../services/userContext";
+import {ConceptGameboardButton} from "./ConceptGameboardButton";
+import {concepts} from "../../state/reducers/contentState";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
+    conceptId?: string;
     parentPage: ContentDTO;
 }
 
@@ -51,7 +54,7 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`
 }
 
-function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
+function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string) {
     const halfWayIndex = Math.ceil(allQuestions.length / 2) - 1;
     const firstColQuestions = allQuestions.filter((q, i) => i <= halfWayIndex);
     const secondColQuestions = allQuestions.filter((q, i) => i > halfWayIndex);
@@ -60,9 +63,14 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
-                <div className="related-questions related-title">
-                    <h5 className="my-2">Related questions</h5>
-                </div>
+                <Row className="row related-questions related-title">
+                    <Col>
+                        <h5 className="my-2">Related questions</h5>
+                    </Col>
+                    {SITE_SUBJECT == SITE.CS && <Col className="vertical-center">
+                        <ConceptGameboardButton className="ml-auto" conceptId={conceptId}></ConceptGameboardButton>
+                    </Col>}
+                </Row>
                 <hr/>
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex">
@@ -122,7 +130,7 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
     </div>
 }
 
-export function RelatedContent({content, parentPage}: RelatedContentProps) {
+export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
     const dispatch = useDispatch();
     const {examBoard} = useUserContext();
     const examBoardFilteredContent = filterOnExamBoard(content, examBoard);
@@ -154,6 +162,6 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
 
     return {
         [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem),
-        [SITE.CS]: renderQuestions(questions, makeListGroupItem)
+        [SITE.CS]: renderQuestions(questions, makeListGroupItem, conceptId)
     }[SITE_SUBJECT];
 }
