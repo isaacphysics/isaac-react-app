@@ -254,54 +254,56 @@ const Board = (props: BoardProps) => {
         </>
         :
         // Card view
-        <Card className="board-card">
-        <CardBody className="pb-4 pt-4">
-            <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-            <button onClick={toggleAssignCard} id={hexagonId} className="board-subject-hexagon-container">
-                {generateGameboardSubjectHexagons(boardSubjects)}
-                <span className="groups-assigned">
-                    <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
-                    group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
-                    {board.assignedGroups &&
-                    <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
-                        "No groups have been assigned."
-                        : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
-                    </UncontrolledTooltip>
-                    }
-                </span>
-            </button>
-            <aside>
-                <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                <CardSubtitle>Stages: <strong>{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
-                {boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
-            </aside>
+        <div key={board.id}>
+            <Card className="board-card">
+                <CardBody className="pb-4 pt-4">
+                    <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
+                    <button onClick={toggleAssignCard} id={hexagonId} className="board-subject-hexagon-container">
+                        {generateGameboardSubjectHexagons(boardSubjects)}
+                        <span className="groups-assigned">
+                            <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
+                            group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
+                            {board.assignedGroups &&
+                            <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
+                                "No groups have been assigned."
+                                : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
+                            </UncontrolledTooltip>
+                            }
+                        </span>
+                    </button>
+                    <aside>
+                        <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
+                        <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                        <CardSubtitle>Stages: <strong>{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
+                        {boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
+                    </aside>
 
-            <div className="mt-1 mb-3">
-                <div className="card-share-link">
-                    <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
-                </div>
-                <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
-                <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-            </div>
-            {showAssignments && <>
-                <hr className="text-center" />
-                <AssignGroup {...props} />
-                <hr className="text-center" />
-                <div className="py-2">
-                    <Label>Board currently assigned to:</Label>
-                    {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
-                        <Row key={group.id} className="px-1">
-                            <span className="flex-grow-1">{group.groupName}</span>
-                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
-                        </Row>
-                    )}</Container>}
-                    {!hasAssignedGroups && <p>No groups.</p>}
-                </div>
-            </>}
-            <Button block color="tertiary" onClick={toggleAssignCard}>{showAssignments ? "Close" : "Assign / Unassign"}</Button>
-        </CardBody>
-    </Card>;
+                    <div className="mt-1 mb-3">
+                        <div className="card-share-link">
+                            <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
+                        </div>
+                        <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
+                        <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+                    </div>
+                    {showAssignments && <>
+                        <hr className="text-center" />
+                        <AssignGroup {...props} />
+                        <hr className="text-center" />
+                        <div className="py-2">
+                            <Label>Board currently assigned to:</Label>
+                            {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
+                                <Row key={group.id} className="px-1">
+                                    <span className="flex-grow-1">{group.groupName}</span>
+                                    <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
+                                </Row>
+                            )}</Container>}
+                            {!hasAssignedGroups && <p>No groups.</p>}
+                        </div>
+                    </>}
+                    <Button block color="tertiary" onClick={toggleAssignCard}>{showAssignments ? "Close" : "Assign / Unassign"}</Button>
+                </CardBody>
+            </Card>
+        </div>;
 };
 
 enum boardCreators {
@@ -354,7 +356,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     const [boardLimit, setBoardLimit] = useState<BoardLimit>(BoardLimit.six);
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
-    const [boardView, setBoardView] = useState(isMobile() ? boardViews.card : boardViews.table);
+    const [boardView, setBoardView] = useState(boardViews.card);
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
     const [boardSubject, setBoardSubject] = useState<boardSubjects>(boardSubjects.all);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
