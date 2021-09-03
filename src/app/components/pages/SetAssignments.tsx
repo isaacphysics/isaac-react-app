@@ -191,13 +191,15 @@ const Board = (props: BoardProps) => {
                 {boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
             </aside>
 
-            <div className="mt-1 mb-3">
-                <div className="card-share-link">
+            <Row className="mt-1 mb-3">
+                <Col xs={9} md={8} className={"pr-0"}>
+                    <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
+                    <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+                </Col>
+                <Col xs={3} md={4} className="card-share-link">
                     <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
-                </div>
-                <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
-                <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-            </div>
+                </Col>
+            </Row>
 
             {showAssignments && <React.Fragment>
                 <hr className="text-center" />

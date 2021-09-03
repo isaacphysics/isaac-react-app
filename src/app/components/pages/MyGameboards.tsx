@@ -164,13 +164,15 @@ const Board = (props: BoardTableProps) => {
                     </CardSubtitle>}
                 </aside>
 
-                <div className="mt-1 mb-2">
-                    <div className="card-share-link">
+                <Row className="mt-1 mb-2">
+                    <Col xs={9} md={8}>
+                        <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
+                        <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+                    </Col>
+                    <Col xs={3} md={4} className="card-share-link">
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink />
-                    </div>
-                    <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
-                    <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-                </div>
+                    </Col>
+                </Row>
             </CardBody>
         </Card>;
 };
