@@ -51,7 +51,6 @@ import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import { isStaff } from "../../services/user";
 import { isDefined } from "../../services/miscUtils";
-import {isMobile} from "../../services/device";
 import Select from "react-select";
 import {multiSelectOnChange} from "../../services/gameboardBuilder";
 import {sortIcon} from "../../services/constants";
