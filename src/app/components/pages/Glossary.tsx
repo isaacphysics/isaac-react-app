@@ -31,7 +31,6 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
@@ -48,13 +47,13 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
 
         if (searchText === '') {
             const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
-            return groupTerms(sortedTerms?.filter(t => t.examBoard === "" || t.examBoard === examBoard));
+            return groupTerms(sortedTerms);
         } else {
             const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
             const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
-            return groupTerms(sortedTerms?.filter(t => t.examBoard === "" || t.examBoard === examBoard));
+            return groupTerms(sortedTerms);
         }
-    }, [rawGlossaryTerms, filterTopic, searchText, examBoard]);
+    }, [rawGlossaryTerms, filterTopic, searchText]);
 
     const scrollToKey = (k: string) => {
         const element = document.getElementById(`key-${k}`);
