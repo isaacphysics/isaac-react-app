@@ -8,6 +8,7 @@ import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {studentOnlyEventMessage} from "../../services/events";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {examBoardLabelMap, stageLabelMap} from "../../services/constants";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -59,11 +60,22 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                                 }
                             </RS.FormFeedback>
                         </RS.Col>
+                        {SITE_SUBJECT === SITE.CS && <RS.Col md={6} className="d-none d-md-block" />}
+                        <RS.Col md={6}>
+                            <RS.Label htmlFor="account-stages" className="form-required">
+                                Stage
+                            </RS.Label>
+                            <RS.Input id="account-stages" type="text" disabled value={
+                                Array.from(new Set(targetUser.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ") || ""
+                            } />
+                        </RS.Col>
                         {SITE_SUBJECT == SITE.CS && <RS.Col md={6}>
                             <RS.Label htmlFor="account-examboard" className="form-required">
                                 Exam board
                             </RS.Label>
-                            <RS.Input id="account-examboard" name="examboard" type="text" disabled value={targetUser.examBoard || ""} />
+                            <RS.Input id="account-examboard" type="text" disabled value={
+                                Array.from(new Set(targetUser.registeredContexts?.map(rc => examBoardLabelMap[rc.examBoard!]))).join(", ") || ""
+                            } />
                         </RS.Col>}
                     </RS.Row>
                     <RS.Row>

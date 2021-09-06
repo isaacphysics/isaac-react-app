@@ -68,6 +68,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const page = useSelector(selectors.doc.get);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const embedSrc = src && rewrite(src);
+    const altTextToUse = `Embedded YouTube video: ${altText || src}.`
 
     const videoRef = useCallback( node => {
         const $window: any = window;
@@ -93,8 +94,8 @@ export function IsaacVideo(props: IsaacVideoProps) {
     }, [dispatch, pageId]);
 
 
-    const detailsForPrintOut = <div className="only-print">
-        Video description: {altText || "No text description available"}
+    const detailsForPrintOut = <div className="only-print py-2 mb-4">
+        {altTextToUse}
     </div>;
 
     // Exit early if a parent accordion section is closed (for the sake of pages containing many videos)
@@ -107,7 +108,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     return <div>
         <div className="no-print content-value text-center">
             { embedSrc ?
-                <div className="content-video-container"><iframe ref={videoRef} className="mw-100" title={altText} src={embedSrc} frameBorder="0" allowFullScreen/></div>
+                <div className="content-video-container"><iframe ref={videoRef} className="mw-100" title={altTextToUse} src={embedSrc} frameBorder="0" allowFullScreen/></div>
                 : altText
             }
         </div>

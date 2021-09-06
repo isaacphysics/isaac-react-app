@@ -5,6 +5,8 @@ import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {CurrentGameboardState} from "../state/reducers/gameboardsState";
+import {determineAudienceViews} from "./userContext";
+import {ViewingContext} from "../../IsaacAppTypes";
 
 enum boardCompletions {
     "any" = "Any",
@@ -47,14 +49,14 @@ export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
 
 export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.questions) {
-        currentGameboard.questions.map(question => boardQuestions.push(question.id));
+    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+        currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
-            const gameboardContentIds = currentGameboard.questions.map(q => q.id);
+            const gameboardContentIds = currentGameboard.contents.map(q => q.id);
             if (gameboardContentIds.includes(currentDocId)) {
                 const nextIndex = gameboardContentIds.indexOf(currentDocId) + 1;
                 if (nextIndex < gameboardContentIds.length) {
-                    const nextContent = currentGameboard.questions[nextIndex];
+                    const nextContent = currentGameboard.contents[nextIndex];
                     return {title: nextContent.title as string, to: `/questions/${nextContent.id}`};
                 }
             }
@@ -64,14 +66,14 @@ export const determineNextGameboardItem = (currentGameboard: CurrentGameboardSta
 
 export const determinePreviousGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.questions) {
-        currentGameboard.questions.map(question => boardQuestions.push(question.id));
+    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+        currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
-            const gameboardContentIds = currentGameboard.questions.map(q => q.id);
+            const gameboardContentIds = currentGameboard.contents.map(q => q.id);
             if (gameboardContentIds.includes(currentDocId)) {
                 const previousIndex = gameboardContentIds.indexOf(currentDocId) - 1;
                 if (previousIndex > -1) {
-                    const previousContent = currentGameboard.questions[previousIndex];
+                    const previousContent = currentGameboard.contents[previousIndex];
                     return {title: previousContent.title as string, to: `/questions/${previousContent.id}`};
                 }
             }
@@ -97,7 +99,7 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
     }
     const subjects = ["physics", "maths", "chemistry"];
     let allSubjects: string[] = [];
-    board.questions?.map((item) => {
+    board.contents?.map((item) => {
         let tags = intersection(subjects, item.tags || []);
         tags.forEach(tag => allSubjects.push(tag));
     }
@@ -111,20 +113,32 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
         .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
 };
 
-export const determineGameboardLevels = (board: GameboardDTO) => {
-    // TODO alter functionality for CS when required
-    let allLevels: string[] = [];
-    board.questions?.map((item) => {
-        item.level && allLevels.push(item.level.toString());
-    });
-    allLevels.sort();
-    return Array.from(new Set(allLevels));
+export const determineCurrentCreationContext = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
+   if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+        return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
+   }
 };
 
-export const boardLevelsSelection = (board: GameboardDTO, levels: string[]) => {
-    // TODO alter functionality for CS when required
-    if (levels == []) {
-        return true;
+
+export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
+    return function comparator(a?: T, b?: T) {
+        // Ignoring undefined with ! - if it is undefined, so be it, it will return -1
+        return orderedPropertyValues.indexOf(a!) - orderedPropertyValues.indexOf(b!);
     }
-    return levels.every(level => determineGameboardLevels(board).includes(level));
-};
+}
+
+export function allPropertiesFromAGameboard<T extends keyof ViewingContext>(
+    gameboard: GameboardDTO | undefined, property: T, orderedPropertyValues?: ViewingContext[T][]
+): NonNullable<ViewingContext[T]>[] {
+    if (!gameboard) {return [];}
+    return Array.from((gameboard?.contents || [])
+        .reduce((aggregator, gameboardItem) => {
+            determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext).forEach(v => {
+                if (v[property]) {
+                    aggregator.add(v[property]!); // need "!" to tell TS that it's not undefined even though we check that
+                }
+            });
+            return aggregator;
+        }, new Set<NonNullable<ViewingContext[T]>>()))
+        .sort(orderedPropertyValues ? comparatorFromOrderedValues(orderedPropertyValues) : () => 0);
+}

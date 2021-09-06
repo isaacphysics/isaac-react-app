@@ -13,7 +13,6 @@ import {
     Input,
     Label,
     Row,
-    Spinner,
     UncontrolledTooltip
 } from "reactstrap";
 import {Link, withRouter} from "react-router-dom";
@@ -36,7 +35,7 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
-    determineGameboardLevels,
+    allPropertiesFromAGameboard,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons
@@ -45,8 +44,10 @@ import {connect, useDispatch, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import { isStaff } from "../../services/user";
-import { isDefined } from "../../services/miscUtils";
+import {isStaff} from "../../services/user";
+import {isDefined} from "../../services/miscUtils";
+import {difficultiesOrdered, difficultyShortLabelMap, stageLabelMap, stagesOrdered} from "../../services/constants";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
@@ -121,7 +122,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             className="mt-2 mb-2"
             block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
             onClick={assign}
-            disabled={groupId === null || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+            disabled={groupId === null || groupId === -1 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
         >Assign to group</Button>
     </Container>;
 };
@@ -164,7 +165,8 @@ const Board = (props: BoardProps) => {
     const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = determineGameboardSubjects(board);
-    const boardLevels = determineGameboardLevels(board);
+    const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
+    const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
     return <Card className="board-card">
         <CardBody className="pb-4 pt-4">
@@ -172,7 +174,7 @@ const Board = (props: BoardProps) => {
             <button onClick={() => setShowAssignments(!showAssignments)} id={hexagonId} className="board-subject-hexagon-container">
                 {generateGameboardSubjectHexagons(boardSubjects)}
                 <span className="groups-assigned">
-                    <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
+                    <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
                     group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
                     {board.assignedGroups &&
                         <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
@@ -185,7 +187,8 @@ const Board = (props: BoardProps) => {
             <aside>
                 <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                 <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                {SITE_SUBJECT == SITE.PHY && <CardSubtitle>Levels: <strong>{boardLevels.join(', ')}</strong></CardSubtitle>}
+                <CardSubtitle>Stages: <strong>{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
+                {boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
             </aside>
 
             <div className="mt-1 mb-3">
@@ -351,7 +354,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <React.Fragment>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
-                {!boards && <h4>You have <Spinner size="sm" /> gameboards ready to assign...</h4>}
+                {!boards && <h4>You have <IsaacSpinner size="sm" /> gameboards ready to assign...</h4>}
                 <Row>
                     <Col>
                         <Form inline>
@@ -372,7 +375,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                         </div>
                         <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
                             <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                            {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+                            {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}
                         </div>
                     </div>}
                 </ShowLoading>

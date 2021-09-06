@@ -1,10 +1,10 @@
-import {SortOrder, tagExamBoardMap} from "./constants";
+import {SortOrder} from "./constants";
 import {orderBy} from "lodash";
 import tags from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {Dispatch, SetStateAction} from "react";
 import {ValueType} from "react-select/src/types";
-import {Tag} from "../../IsaacAppTypes";
+import {ContentSummary, Tag} from "../../IsaacAppTypes";
 
 const bookSort = (a: string, b: string) => {
     const splitRegex = /(\d+)/;
@@ -57,21 +57,15 @@ export const sortQuestions = (sortState: { [s: string]: string }) => (questions:
     return orderBy(questions, keys, order);
 };
 
-export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO) => {
-    const newQuestion = {...question};
+export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
+    const newQuestion = {...question, contentType: question.type};
     delete newQuestion.type;
     delete newQuestion.url;
-
-    const gameboardItem = newQuestion as GameboardItem;
-    gameboardItem.level = newQuestion.level ? parseInt(newQuestion.level) : 0;
-    return gameboardItem;
+    return newQuestion;
 };
 
 export const convertGameboardItemToContentSummary = (question: GameboardItem) => {
-    const newQuestion = {...question};
-    const contentSummary = newQuestion as ContentSummaryDTO;
-    contentSummary.level = contentSummary.level && contentSummary.level.toString();
-    return contentSummary;
+    return {...question} as ContentSummaryDTO;
 };
 
 export const convertTagToSelectionOption = (tag: Tag) => {
@@ -88,10 +82,6 @@ export const groupTagSelectionsByParent = (parent: Tag) => {
         label: parent.title,
         options: tags.getChildren(parent.id).map(convertTagToSelectionOption).filter(tag => !tag.isHidden)
     };
-};
-
-export const convertExamBoardToOption = (examBoard: string) => {
-    return {value: examBoard, label: tagExamBoardMap[examBoard]};
 };
 
 // TODO REMOVE AUDIENCE_CONTEXT Let's move from multiSelectOnChange and selectOnChange to select.ts.unwrapValue(...) for types and consistency
@@ -114,16 +104,16 @@ export const selectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e
 };
 
 export const loadGameboardQuestionOrder = (gameboard: GameboardDTO) => {
-    return gameboard.questions && gameboard.questions.map((question) => {
+    return gameboard.contents && gameboard.contents.map((question) => {
         return question.id;
     }).filter((id) => id) as string[];
 };
 
 export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
-    return gameboard.questions && gameboard.questions.map(convertGameboardItemToContentSummary).reduce((map, question) => {
+    return gameboard.contents && gameboard.contents.map(convertGameboardItemToContentSummary).reduce((map, question) => {
         question.id && map.set(question.id, question);
         return map;
-    }, new Map<string, ContentSummaryDTO>());
+    }, new Map<string, ContentSummary>());
 };
 
 export const logEvent = (eventsLog: any[], event: string, params: any) => {

@@ -28,7 +28,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
     const componentUuid = useRef(uuid.v4().slice(0, 8)).current;
     const store = useStore();
     const {examBoard} = useUserContext();
-    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard.toLowerCase() : "";
+    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
 

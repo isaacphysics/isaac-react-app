@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "1.4.21-SNAPSHOT",
+  "version": "1.6.2-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.9.0",
@@ -65,7 +65,7 @@
     "file-loader": "2.0.0",
     "fs-extra": "7.0.1",
     "he": "^1.2.0",
-    "highlight.js": "^11.0.0",
+    "highlight.js": "^11.2.0",
     "history": "^4.9.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
@@ -103,7 +103,7 @@
     "react-router-dom": "5.1.0",
     "react-select": "^3.0.6",
     "react-sortable-hoc": "^1.9.1",
-    "reactstrap": "^8.0.1",
+    "reactstrap": "8.3.2",
     "redux": "4.0.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",

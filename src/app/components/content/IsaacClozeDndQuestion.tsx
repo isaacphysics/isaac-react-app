@@ -95,6 +95,7 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
         }
     }
 
+    // Run after draggable is dropped into a droppable - refreshes ids
     function updateAttempt({source, destination, draggableId}: DropResult, provided: ResponderProvided) {
         if (source.droppableId === destination?.droppableId && source.index === destination?.index) {
             return; // No change
