@@ -126,7 +126,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
     const FUNCTION_DEFINITION = {
         match: [
             /FUNCTION|PROCEDURE/,
-            /\s+/,
+            / +/,
             hljsLib.UNDERSCORE_IDENT_RE,
             /(?=\()/
         ],
