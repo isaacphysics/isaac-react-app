@@ -126,17 +126,21 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Replace query params
     useEffect(() => {
-        const actualParams = queryString.parse(window.location.search);
-        if (stage !== actualParams.stage || (SITE_SUBJECT !== SITE.PHY && examBoard !== actualParams.examBoard)) {
-            history.replace({
-                ...existingLocation,
-                search: queryString.stringify({
-                    ...queryParams,
-                    stage,
-                    examBoard: SITE_SUBJECT===SITE.CS ? examBoard : undefined,
-                }, {encode: false})
-            });
-        }
+        // Set timeout is used here to add this callback to the back of the message queue, hopefully ensuring that the
+        // browser is able to update its query params from the previous render. This is not necessary in most browsers
+        // but "seems" to be necessary for older versions of Safari which some of our users use.
+        setTimeout(() => {
+            if (stage !== queryParams.stage || (SITE_SUBJECT !== SITE.PHY && examBoard !== queryParams.examBoard)) {
+                history.replace({
+                    ...existingLocation,
+                    search: queryString.stringify({
+                        ...queryParams,
+                        stage,
+                        examBoard: SITE_SUBJECT === SITE.CS ? examBoard : undefined,
+                    }, {encode: false})
+                });
+            }
+        }, 0);
     }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
 
     return {
