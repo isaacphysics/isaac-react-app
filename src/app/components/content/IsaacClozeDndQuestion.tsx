@@ -26,27 +26,26 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
     const droppableTarget = contentHolder.current?.querySelector(`#${id}`);
     if (droppableTarget) {
         return ReactDOM.createPortal(
-            <div className="mb-n1" style={{minHeight: "inherit"}}>
-                <Droppable droppableId={id} isDropDisabled={readonly}>
+            <div style={{minHeight: "inherit"}}>
+                <Droppable droppableId={id} isDropDisabled={readonly} direction="vertical" >
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
-                        className={`d-flex justify-content-center align-items-center rounded bg-grey w-100 ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                        className={`d-flex justify-content-center align-items-center bg-grey ${snapshot.draggingFromThisWith ? "" : ""} rounded w-100 ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                         style={{minHeight: "inherit"}}
                     >
                         {item && <Draggable key={item.id} draggableId={item.id || ""} index={0}>
                             {(provided, snapshot) =>
                                 <div
-                                    ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+                                    ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={`${snapshot.isDragging ? "" : ""}`}
                                 >
                                     <Item item={item}/>
                                 </div>
                             }
                         </Draggable>}
-                        {!item && "\u00A0"}
-                        {provided.placeholder}
-                        {/*<div style={{width: 0}}>*/}
-                        {/*    {provided.placeholder}*/}
-                        {/*</div>*/}
+                        {!item && "Empty\u00A0"}
+                        {provided.placeholder && <div style={{width: 0}} >
+                            {provided.placeholder}
+                        </div>}
                     </div>}
                 </Droppable>
             </div>,
