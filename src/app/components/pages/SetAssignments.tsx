@@ -218,7 +218,7 @@ const Board = (props: BoardProps) => {
                 </td>
                 <td className="text-center align-middle">
                     <div className="table-share-link">
-                        <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
+                        <ShareLink linkUrl={assignmentLink} gameboardId={board.id} />
                     </div>
                 </td>
             </tr>
@@ -277,13 +277,15 @@ const Board = (props: BoardProps) => {
                         {boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
                     </aside>
 
-                    <div className="mt-1 mb-3">
-                        <div className="card-share-link">
-                            <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
-                        </div>
-                        <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
-                        <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-                    </div>
+                    <Row className="mt-1 mb-3">
+                        <Col className={"pr-0"}>
+                            <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
+                            <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+                        </Col>
+                        <Col className="card-share-link col-auto">
+                            <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
+                        </Col>
+                    </Row>
                     {showAssignments && <>
                         <hr className="text-center" />
                         <AssignGroup {...props} />

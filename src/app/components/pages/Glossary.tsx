@@ -140,7 +140,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/glossary`}/>
+                    <ShareLink linkUrl={`/glossary`} clickAwayClose/>
                 </div>
                 <div className="question-actions mt-3 not-mobile">
                     <PrintButton/>
