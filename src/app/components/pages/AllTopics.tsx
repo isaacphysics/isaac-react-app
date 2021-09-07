@@ -77,7 +77,7 @@ export const AllTopics = () => {
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
 
-            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1}>
+            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1} refreshHash={stage}>
                 {
                     Object.assign(
                         {

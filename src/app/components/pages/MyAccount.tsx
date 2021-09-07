@@ -46,7 +46,7 @@ import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
 import {ErrorState} from "../../state/reducers/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
@@ -143,8 +143,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useEffect(() => {
         const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentProgrammingLanguage = (userPreferences?.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
-        const currentBooleanNotation = (userPreferences?.BOOLEAN_NOTATION) ? userPreferences.BOOLEAN_NOTATION: {};
+        const currentProgrammingLanguage = SITE_SUBJECT === SITE.CS ? (userPreferences?.PROGRAMMING_LANGUAGE ? userPreferences.PROGRAMMING_LANGUAGE: {}) : undefined;
+        const currentBooleanNotation = SITE_SUBJECT === SITE.CS ? (userPreferences?.BOOLEAN_NOTATION ? userPreferences.BOOLEAN_NOTATION: {}) : undefined;
         const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
         const currentUserPreferences: UserPreferencesDTO = {
             EMAIL_PREFERENCE: currentEmailPreferences,
