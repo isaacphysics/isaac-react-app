@@ -44,6 +44,9 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                         </Draggable>}
                         {!item && "\u00A0"}
                         {provided.placeholder}
+                        {/*<div style={{width: 0}}>*/}
+                        {/*    {provided.placeholder}*/}
+                        {/*</div>*/}
                     </div>}
                 </Droppable>
             </div>,
@@ -79,14 +82,18 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
     const questionContentRef = useRef<HTMLDivElement>(null);
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
+
     const [nonSelectedItems, setNonSelectedItems] = useState([...doc.items]);
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
-    const [inlineDropValues, setInlineDropValues] = useState<(ItemDTO| undefined)[]>(currentAttempt?.items || []);
-    useEffect(() => {if (currentAttempt?.items) {
-        setInlineDropValues(currentAttempt.items);
-        setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)) || []);
-    }}, [currentAttempt]);
+    const [inlineDropValues, setInlineDropValues] = useState<(ItemDTO | undefined)[]>(currentAttempt?.items || []);
+
+    useEffect(() => {
+        if (currentAttempt?.items) {
+            setInlineDropValues(currentAttempt.items);
+            setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)) || []);
+        }
+        }, [currentAttempt]);
 
     function registerInlineDropRegion(dropRegionId: string, index: number) {
         if (!registeredDropRegionIDs.includes(dropRegionId)) {
@@ -95,34 +102,61 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
         }
     }
 
-    // Run after draggable is dropped into a droppable - refreshes ids
+    // Run after a drag action ends
     function updateAttempt({source, destination, draggableId}: DropResult, provided: ResponderProvided) {
         if (source.droppableId === destination?.droppableId && source.index === destination?.index) {
             return; // No change
         }
 
-        if (destination) {
-            if (source.droppableId === itemsSection && destination.droppableId === itemsSection) {
-                const nsis = [...nonSelectedItems];
-                [nsis[source.index], nsis[destination.index]] = [nsis[destination.index], nsis[source.index]];
-                setNonSelectedItems(nsis);
-            }
-            if (destination.droppableId !== itemsSection) {
-                const destinationDropIndex = registeredDropRegionIDs.indexOf(destination.droppableId)
-                if (destinationDropIndex != -1) {
-                    const idvs = [...inlineDropValues];
-                    idvs.splice(destinationDropIndex, 1, doc.items?.filter(i => i.id === draggableId)[0] as ItemDTO);
-                    setInlineDropValues(idvs);
-
-                    const parsonsChoice: ParsonsChoiceDTO = {type: "parsonsChoice", items: idvs as ItemDTO[]};
-                    dispatch(setCurrentAttempt(questionId, parsonsChoice));
-
-                    // Filter selected items from options
-                    setNonSelectedItems(doc.items?.filter(i => !idvs.map(si => si?.id).includes(i.id)) || []);
-                }
-            }
-
+        if (!destination) {
+            return;
         }
+
+        const inlineDropIndex = (id : string) => registeredDropRegionIDs.indexOf(id)
+
+        const nsis = [...nonSelectedItems];
+        const idvs = [...inlineDropValues];
+
+        let item : ItemDTO;
+        let replaceSource : (itemToReplace: ItemDTO | undefined) => void; // a callback to put an item back into the source of the drag
+
+        if (source.droppableId === itemsSection) {
+            // Drag was from items section
+            item = nonSelectedItems[source.index];
+            nsis.splice(source.index, 1);
+            replaceSource = (itemToReplace) => itemToReplace ? nsis.splice(source.index, 0, itemToReplace) : undefined;
+        } else {
+            // Drag was from inline drop section
+            const sourceDropIndex = inlineDropIndex(source.droppableId);
+            if (sourceDropIndex !== -1) {
+                item = doc.items?.filter(i => i.id === draggableId)[0] as ItemDTO;
+                idvs.splice(sourceDropIndex, 1, undefined);
+                replaceSource = (itemToReplace) => itemToReplace ? idvs.splice(sourceDropIndex, 0, itemToReplace) : undefined;
+            } else {
+                return;
+            }
+        }
+
+        if (destination.droppableId === itemsSection) {
+            // Drop is into items section
+            nsis.splice(destination.index, 0, item);
+        } else {
+            // Drop is into inline drop section
+            const destinationDropIndex = inlineDropIndex(destination.droppableId);
+            if (destinationDropIndex !== -1) {
+                replaceSource(idvs[destinationDropIndex]);
+                idvs.splice(destinationDropIndex, 1, doc.items?.filter(i => i.id === draggableId)[0] as ItemDTO);
+            } else {
+                replaceSource(item);
+            }
+
+            // Update attempt since drop was into an inline drop zone
+            const parsonsChoice: ParsonsChoiceDTO = {type: "parsonsChoice", items: idvs as ItemDTO[]};
+            dispatch(setCurrentAttempt(questionId, parsonsChoice));
+        }
+
+        setInlineDropValues(idvs);
+        setNonSelectedItems(nsis);
     }
 
     return <div ref={questionContentRef} className="question-content">
@@ -137,7 +171,7 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
                 <Droppable droppableId={itemsSection} direction="horizontal" isDropDisabled={readonly}>
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
-                        className={`d-flex rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                        className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                     >
                         {nonSelectedItems.map((item, i) => <Draggable key={item.id} draggableId={item.id || `${i}`} index={i}>
                             {(provided) =>
