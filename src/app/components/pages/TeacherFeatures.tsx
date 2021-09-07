@@ -74,18 +74,18 @@ export const TeacherFeatures = () => {
                 subtitle: "Answers to your questions and how-to guides."}}
                        imageClassName="teacher-features"
             />
-            <IsaacCard doc={{ clickUrl: "/pages/teacher_mentoring",
+            <IsaacCard doc={{ clickUrl: "/events?types=teacher",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#use-with-class"},
-                title: "Teacher Mentoring",
+                title: "Teacher CPD",
                 verticalContent: true,
-                subtitle: isLoggedIn(user) ? "Fortnightly support for Physics teachers." : "Fortnightly support for teachers of Physics."}}
+                subtitle: "Free short courses to help you use Isaac Physics: by topic or by level of experience with Isaac."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/pages/isaac_embedded_schools",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#groups"},
                 title: "Teacher Ambassadors",
                 verticalContent: true,
-                subtitle: isLoggedIn(user) ? "Learn from real teachers how they have embedded Isaac Physics. " : "Learn from practising teachers how they have embedded Isaac Physics."}}
+                subtitle: "Learn from practising teachers how they have embedded Isaac Physics."}}
                        imageClassName="teacher-features"
             />
         </Row>
@@ -109,11 +109,11 @@ export const TeacherFeatures = () => {
                 subtitle: isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}}
                        imageClassName="teacher-features"
             />
-            <IsaacCard doc={{ clickUrl: "/events?types=teacher",
+            <IsaacCard doc={{ clickUrl: "/events?types=student",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#calendar"},
                 title: "Events",
                 verticalContent: true,
-                subtitle: "Attend FREE face-to-face or virtual CPDs."}}
+                subtitle: "Browse free events for your KS4 and KS5 students."}}
                        imageClassName="teacher-features"
             />
         </Row>
