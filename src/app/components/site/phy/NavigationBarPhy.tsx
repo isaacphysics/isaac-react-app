@@ -37,7 +37,6 @@ export const NavigationBarPhy = () => {
             {isLoggedIn(user) && <LinkItem to="/events?show_booked_only=true">My Booked Events</LinkItem>}
             <LinkItem to="/events">All Events</LinkItem>
             <LinkItem to="/pages/isaac_mentor">Student Mentoring</LinkItem>
-            <LinkItem to="/pages/teacher_mentoring">Teacher Mentoring</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Help">

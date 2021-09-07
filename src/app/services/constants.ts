@@ -583,11 +583,10 @@ export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM
 // BOOLEAN LOGIC NOTATION OPTIONS
 export enum BOOLEAN_NOTATION {
     ENG = "ENG",
-    MATH = "MATH",
-    NONE = "NONE"
+    MATH = "MATH"
 }
 export const EMPTY_BOOLEAN_NOTATION_RECORD: {[bn in BOOLEAN_NOTATION]: false} & BooleanNotation = {
-    [BOOLEAN_NOTATION.ENG]: false, [BOOLEAN_NOTATION.MATH]: false, [BOOLEAN_NOTATION.NONE]: false
+    [BOOLEAN_NOTATION.ENG]: false, [BOOLEAN_NOTATION.MATH]: false
 }
 // STAGES
 export enum STAGE {
