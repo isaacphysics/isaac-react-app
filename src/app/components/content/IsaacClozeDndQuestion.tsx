@@ -109,7 +109,7 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
         }
 
         if (!destination) {
-            return;
+            return; // Drag had no destination
         }
 
         const inlineDropIndex = (id : string) => registeredDropRegionIDs.indexOf(id)
@@ -119,22 +119,25 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
 
         let item : ItemDTO;
         let replaceSource : (itemToReplace: ItemDTO | undefined) => void; // a callback to put an item back into the source of the drag
+        let update = false;
 
         if (source.droppableId === itemsSection) {
             // Drag was from items section
             item = nonSelectedItems[source.index];
             nsis.splice(source.index, 1);
-            replaceSource = (itemToReplace) => itemToReplace ? nsis.splice(source.index, 0, itemToReplace) : undefined;
+            replaceSource = (itemToReplace) => itemToReplace && nsis.splice(source.index, 0, itemToReplace);
         } else {
             // Drag was from inline drop section
+            // When splicing inline drop values, you always need to delete and replace
             const sourceDropIndex = inlineDropIndex(source.droppableId);
             if (sourceDropIndex !== -1) {
                 item = doc.items?.filter(i => i.id === draggableId)[0] as ItemDTO;
                 idvs.splice(sourceDropIndex, 1, undefined);
-                replaceSource = (itemToReplace) => itemToReplace ? idvs.splice(sourceDropIndex, 0, itemToReplace) : undefined;
+                replaceSource = (itemToReplace) => idvs.splice(sourceDropIndex, 1, itemToReplace);
             } else {
                 return;
             }
+            update = true;
         }
 
         if (destination.droppableId === itemsSection) {
@@ -149,14 +152,17 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
             } else {
                 replaceSource(item);
             }
-
-            // Update attempt since drop was into an inline drop zone
-            const parsonsChoice: ParsonsChoiceDTO = {type: "parsonsChoice", items: idvs as ItemDTO[]};
-            dispatch(setCurrentAttempt(questionId, parsonsChoice));
+            update = true;
         }
 
         setInlineDropValues(idvs);
         setNonSelectedItems(nsis);
+
+        if (update) {
+            // Update attempt since an inline drop zone changed
+            const parsonsChoice: ParsonsChoiceDTO = {type: "parsonsChoice", items: idvs as ItemDTO[]};
+            dispatch(setCurrentAttempt(questionId, parsonsChoice));
+        }
     }
 
     return <div ref={questionContentRef} className="question-content">
@@ -180,6 +186,7 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
                                 </div>
                             }
                         </Draggable>)}
+                        {nonSelectedItems.length === 0 && "\u00A0"}
                         {provided.placeholder}
                     </div>}
                 </Droppable>
