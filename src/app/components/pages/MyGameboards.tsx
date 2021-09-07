@@ -133,7 +133,7 @@ const Board = (props: BoardTableProps) => {
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
             <td className="text-center align-middle">
                 <div className="table-share-link">
-                    <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink />
+                    <ShareLink linkUrl={boardLink} gameboardId={board.id} />
                 </div>
             </td>
             <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
@@ -165,12 +165,12 @@ const Board = (props: BoardTableProps) => {
                 </aside>
 
                 <Row className="mt-1 mb-2">
-                    <Col xs={9} md={8}>
+                    <Col>
                         <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
                         <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                     </Col>
-                    <Col xs={3} md={4} className="card-share-link">
-                        <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink />
+                    <Col className="card-share-link col-auto">
+                        <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
                     </Col>
                 </Row>
             </CardBody>

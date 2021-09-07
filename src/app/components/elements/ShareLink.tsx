@@ -6,7 +6,7 @@ import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {useOutsideCallback} from "../../services/miscUtils";
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string}) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const user = useSelector(selectors.user.orNull);
@@ -39,7 +39,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId}: {linkUrl: st
     }, [showShareLink]);
 
     const shareLinkDivRef = useRef(null)
-    useOutsideCallback(shareLinkDivRef, () => setShowShareLink(false), [setShowShareLink])
+    useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink])
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * 9);

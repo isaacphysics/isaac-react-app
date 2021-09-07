@@ -218,7 +218,7 @@ const Board = (props: BoardProps) => {
                 </td>
                 <td className="text-center align-middle">
                     <div className="table-share-link">
-                        <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
+                        <ShareLink linkUrl={assignmentLink} gameboardId={board.id} />
                     </div>
                 </td>
             </tr>
@@ -278,12 +278,12 @@ const Board = (props: BoardProps) => {
                     </aside>
 
                     <Row className="mt-1 mb-3">
-                        <Col xs={9} md={8} className={"pr-0"}>
+                        <Col className={"pr-0"}>
                             <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                             <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                         </Col>
-                        <Col xs={3} md={4} className="card-share-link">
-                            <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink />
+                        <Col className="card-share-link col-auto">
+                            <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
                         </Col>
                     </Row>
                     {showAssignments && <>
