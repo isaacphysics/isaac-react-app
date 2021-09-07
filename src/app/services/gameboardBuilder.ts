@@ -64,8 +64,8 @@ export const convertContentSummaryToGameboardItem = (question: ContentSummary): 
     return newQuestion;
 };
 
-export const convertGameboardItemToContentSummary = (question: GameboardItem) => {
-    return {...question} as ContentSummaryDTO;
+export const convertGameboardItemToContentSummary = (question: GameboardItem): ContentSummaryDTO => {
+    return {...question, type: question.contentType};
 };
 
 export const convertTagToSelectionOption = (tag: Tag) => {
