@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import {ClozeDropRegionContext} from "../../../IsaacAppTypes";
 import {setCurrentAttempt} from "../../state/actions";
 import uuid from "uuid";
+import {Item} from "../../services/select";
 
 function Item({item}: {item: ItemDTO}) {
     return <RS.Badge className="m-2 p-2">
@@ -34,7 +35,7 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                         className={`d-flex justify-content-center align-items-center bg-grey ${snapshot.draggingFromThisWith ? "" : ""} rounded w-100 ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                         style={{minHeight: "inherit"}}
                     >
-                        {item && <Draggable key={item.replacementId} draggableId={item.replacementId} index={0}>
+                        {item && <Draggable key={item.id} draggableId={item.id || ""} index={0}>
                             {(provided, snapshot) =>
                                 <div
                                     ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={`${snapshot.isDragging ? "" : ""}`}
@@ -84,10 +85,12 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(([...doc.items] as ClozeItemDTO[]).map(x => ({...x, replacementId: x.id ?? uuid.v4()})));
+    //const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(([...doc.items] as ClozeItemDTO[]).map(x => ({...x, replacementId: x.id ?? uuid.v4()})));
+
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>([...doc.items]);
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
-    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(currentAttempt?.items as ClozeItemDTO[] || []);
+    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(currentAttempt?.items || []);
 
     // unique id thing in useRef
 
@@ -95,8 +98,8 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
         if (currentAttempt?.items) {
             let idvs = currentAttempt.items as ClozeItemDTO[];
             let nsis = (withReplacement ? doc.items : doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id))) as ClozeItemDTO[] || []
-            setInlineDropValues(idvs.map(x => ({...x, replacementId: uuid.v4()})));
-            setNonSelectedItems(nsis.map(x => ({...x, replacementId: uuid.v4()})));
+            // setInlineDropValues(idvs.map(x => ({...x, replacementId: uuid.v4()})));
+            // setNonSelectedItems(nsis.map(x => ({...x, replacementId: uuid.v4()})));
         }
         }, [currentAttempt]);
 

@@ -405,7 +405,7 @@ export interface ItemDTO extends ContentDTO {
 }
 
 export interface ClozeItemDTO extends ContentDTO {
-    replacementId: string;
+    replacementId?: string;
 }
 
 export interface LogicFormulaDTO extends ChoiceDTO {
