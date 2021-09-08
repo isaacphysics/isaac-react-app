@@ -122,8 +122,8 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
         const nsis = [...nonSelectedItems];
         const idvs = [...inlineDropValues];
 
-        let item : ItemDTO;
-        let replaceSource : (itemToReplace: ItemDTO | undefined) => void; // a callback to put an item back into the source of the drag
+        let item : ClozeItemDTO;
+        let replaceSource : (itemToReplace: ClozeItemDTO | undefined) => void; // a callback to put an item back into the source of the drag
         let update = false;
 
         if (source.droppableId === itemsSection) {
@@ -136,7 +136,7 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
             // When splicing inline drop values, you always need to delete and replace
             const sourceDropIndex = inlineDropIndex(source.droppableId);
             if (sourceDropIndex !== -1) {
-                item = doc.items?.filter(i => i.id === draggableId)[0] as ItemDTO;
+                item = doc.items?.filter(i => i.id === draggableId)[0] as ClozeItemDTO;
                 idvs.splice(sourceDropIndex, 1, undefined);
                 replaceSource = (itemToReplace) => idvs.splice(sourceDropIndex, 1, itemToReplace);
             } else {
