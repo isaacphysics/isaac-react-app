@@ -83,26 +83,30 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     const dispatch = useDispatch();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const currentAttempt = questionPart?.currentAttempt as ClozeChoiceDTO;
+    const currentAttempt = questionPart?.currentAttempt as (ClozeChoiceDTO | undefined);
     const cssFriendlyQuestionPartId = questionPart?.id?.replace("|", "-") ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
     const withReplacement = doc.withReplacement ?? false;
+
+    // Nasty hack to make sure non-selected items get updated if there was an existing attempt
+    const firstAttemptOccurred = useRef(false);
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
     const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(() => ([...doc.items] as ClozeItemDTO[]).map(x => ({...x, replacementId: x.id})));
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
-    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(currentAttempt?.items || []);
+    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
 
     useEffect(() => {
         if (currentAttempt?.items) {
             const idvs = currentAttempt.items as (ClozeItemDTO | undefined)[];
             setInlineDropValues(idvs.map(x => x === undefined ? x : ({...x, replacementId: `${x.id}-${uuid.v4()}`})));
-            // If the question allows duplicates, then the items in the doc should never change
-            if (currentAttempt.updateItems === undefined || currentAttempt.updateItems) {
+            // If the question allows duplicates, then the items in the non-selected item section should never change
+            if (!firstAttemptOccurred.current || currentAttempt.updateItems === undefined || currentAttempt.updateItems) {
                 setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
             }
+            firstAttemptOccurred.current = true;
         }
         }, [currentAttempt]);
 
@@ -148,7 +152,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
             // When splicing inline drop values, you always need to delete and replace
             const sourceDropIndex = inlineDropIndex(source.droppableId);
             if (sourceDropIndex !== -1) {
-                const maybeItem = idvs[sourceDropIndex];
+                const maybeItem = idvs[sourceDropIndex]; // This nastiness is to appease typescript
                 if (maybeItem) {
                     item = maybeItem;
                     idvs.splice(sourceDropIndex, 1, undefined);
