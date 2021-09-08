@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import {useUserContext} from "../../services/userContext";
 import {selectors} from "../../state/selectors";
 import {katexify} from "./LaTeX";
-import {useClozeDropRegionsInHtml} from "../content/IsaacClozeDndQuestion";
+import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
 
 const htmlDom = document.createElement("html");
 function manipulateHtml(html: string) {

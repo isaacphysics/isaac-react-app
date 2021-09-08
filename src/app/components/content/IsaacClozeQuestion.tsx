@@ -1,7 +1,12 @@
 import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {Label} from "reactstrap";
-import {ClozeItemDTO, IsaacClozeDndQuestionDTO, ItemDTO, ParsonsChoiceDTO} from "../../../IsaacApiTypes";
+import {
+    ClozeChoiceDTO,
+    ClozeItemDTO,
+    IsaacClozeQuestionDTO,
+    ItemDTO
+} from "../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
@@ -35,7 +40,7 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                         className={`d-flex justify-content-center align-items-center bg-grey ${snapshot.draggingFromThisWith ? "" : ""} rounded w-100 ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                         style={{minHeight: "inherit"}}
                     >
-                        {item && <Draggable key={item.id} draggableId={item.id || ""} index={0}>
+                        {item && <Draggable key={item.replacementId} draggableId={item.replacementId || ""} index={0}>
                             {(provided, snapshot) =>
                                 <div
                                     ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={`${snapshot.isDragging ? "" : ""}`}
@@ -74,32 +79,30 @@ export function useClozeDropRegionsInHtml(html: string): string {
     return html;
 }
 
-export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacClozeDndQuestionDTO; questionId: string; readonly?: boolean}) {
+export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacClozeQuestionDTO; questionId: string; readonly?: boolean}) {
     const dispatch = useDispatch();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const currentAttempt = questionPart?.currentAttempt as ParsonsChoiceDTO;
+    const currentAttempt = questionPart?.currentAttempt as ClozeChoiceDTO;
     const cssFriendlyQuestionPartId = questionPart?.id?.replace("|", "-") ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
-    const withReplacement = true; // doc.withReplacement ?? false;
+    const withReplacement = doc.withReplacement ?? false;
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
-    //const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(([...doc.items] as ClozeItemDTO[]).map(x => ({...x, replacementId: x.id ?? uuid.v4()})));
-
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>([...doc.items]);
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(() => ([...doc.items] as ClozeItemDTO[]).map(x => ({...x, replacementId: x.id})));
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
     const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(currentAttempt?.items || []);
 
-    // unique id thing in useRef
-
     useEffect(() => {
         if (currentAttempt?.items) {
-            let idvs = currentAttempt.items as ClozeItemDTO[];
-            let nsis = (withReplacement ? doc.items : doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id))) as ClozeItemDTO[] || []
-            // setInlineDropValues(idvs.map(x => ({...x, replacementId: uuid.v4()})));
-            // setNonSelectedItems(nsis.map(x => ({...x, replacementId: uuid.v4()})));
+            const idvs = currentAttempt.items as (ClozeItemDTO | undefined)[];
+            setInlineDropValues(idvs.map(x => x === undefined ? x : ({...x, replacementId: `${x.id}-${uuid.v4()}`})));
+            // If the question allows duplicates, then the items in the doc should never change
+            if (currentAttempt.updateItems === undefined || currentAttempt.updateItems) {
+                setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
+            }
         }
         }, [currentAttempt]);
 
@@ -125,51 +128,69 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
         const nsis = [...nonSelectedItems];
         const idvs = [...inlineDropValues];
 
+        // The item that's being dragged (this is worked out below in each case)
         let item : ClozeItemDTO;
-        let replaceSource : (itemToReplace: ClozeItemDTO | undefined) => void; // a callback to put an item back into the source of the drag
+        // A callback to put an item back into the source of the drag (if needed)
+        let replaceSource : (itemToReplace: ClozeItemDTO | undefined) => void = () => undefined;
+        // Whether the inline drop zones were updated or not
         let update = false;
 
+        // Check source of drag:
         if (source.droppableId === itemsSection) {
             // Drag was from items section
             item = nonSelectedItems[source.index];
-            nsis.splice(source.index, 1);
-            replaceSource = (itemToReplace) => itemToReplace && nsis.splice(source.index, 0, itemToReplace);
+            if (!withReplacement || destination.droppableId === itemsSection) {
+                nsis.splice(source.index, 1);
+                replaceSource = (itemToReplace) => itemToReplace && nsis.splice(source.index, 0, itemToReplace);
+            }
         } else {
             // Drag was from inline drop section
             // When splicing inline drop values, you always need to delete and replace
             const sourceDropIndex = inlineDropIndex(source.droppableId);
             if (sourceDropIndex !== -1) {
-                item = doc.items?.filter(i => i.id === draggableId)[0] as ClozeItemDTO;
-                idvs.splice(sourceDropIndex, 1, undefined);
-                replaceSource = (itemToReplace) => idvs.splice(sourceDropIndex, 1, itemToReplace);
+                const maybeItem = idvs[sourceDropIndex];
+                if (maybeItem) {
+                    item = maybeItem;
+                    idvs.splice(sourceDropIndex, 1, undefined);
+                    replaceSource = (itemToReplace) => idvs.splice(sourceDropIndex, 1, itemToReplace);
+                    update = true;
+                } else {
+                    return;
+                }
             } else {
                 return;
             }
-            update = true;
         }
 
+        // Check destination of drag:
         if (destination.droppableId === itemsSection) {
             // Drop is into items section
-            nsis.splice(destination.index, 0, item);
+            if (!withReplacement || source.droppableId === itemsSection) {
+                nsis.splice(destination.index, 0, item);
+            } else {
+                nsis.splice(nsis.findIndex((x) => x.id === item.id), 1);
+                nsis.splice(destination.index, 0, item);
+            }
         } else {
             // Drop is into inline drop section
             const destinationDropIndex = inlineDropIndex(destination.droppableId);
             if (destinationDropIndex !== -1) {
                 replaceSource(idvs[destinationDropIndex]);
-                idvs.splice(destinationDropIndex, 1, doc.items?.filter(i => i.id === draggableId)[0] as ClozeItemDTO);
+                idvs.splice(destinationDropIndex, 1, withReplacement ? {...item, replacementId: item.id + uuid.v4()} : item);
             } else {
                 replaceSource(item);
             }
             update = true;
         }
 
+        // Update draggable lists every time a successful drag ends
         setInlineDropValues(idvs);
         setNonSelectedItems(nsis);
 
         if (update) {
             // Update attempt since an inline drop zone changed
-            const parsonsChoice: ParsonsChoiceDTO = {type: "parsonsChoice", items: idvs as ItemDTO[]};
-            dispatch(setCurrentAttempt(questionId, parsonsChoice));
+            const clozeChoice: ClozeChoiceDTO = {type: "clozeChoice", items: idvs as ClozeItemDTO[], updateItems: false};
+            dispatch(setCurrentAttempt(questionId, clozeChoice));
         }
     }
 
@@ -187,7 +208,7 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
                         ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
                         className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                     >
-                        {nonSelectedItems.map((item, i) => <Draggable key={item.id} draggableId={item.id || `${i}`} index={i}>
+                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} draggableId={item.replacementId || `${i}`} index={i}>
                             {(provided) =>
                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                     <Item item={item} />

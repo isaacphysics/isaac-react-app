@@ -134,7 +134,7 @@ export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
 }
 
-export interface IsaacClozeDndQuestionDTO extends IsaacParsonsQuestionDTO {
+export interface IsaacClozeQuestionDTO extends IsaacParsonsQuestionDTO {
     withReplacement?: boolean;
 }
 
@@ -424,6 +424,11 @@ export interface NotificationDTO extends ContentDTO {
 
 export interface ParsonsChoiceDTO extends ItemChoiceDTO {
     items?: ParsonsItemDTO[];
+}
+
+export interface ClozeChoiceDTO extends ItemChoiceDTO {
+    items?: ClozeItemDTO[];
+    updateItems?: boolean;
 }
 
 export interface ItemDTO extends ContentDTO {
