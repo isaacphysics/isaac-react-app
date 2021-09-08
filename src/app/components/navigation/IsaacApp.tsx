@@ -179,6 +179,7 @@ export const IsaacApp = () => {
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
+                    <TrackedRoute exact path="/set_quizzes/:tab" ifUser={isTeacher} component={SetQuizzes} />
                     <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />
 
                     {/* Admin */}
