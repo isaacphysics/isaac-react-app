@@ -135,6 +135,7 @@ export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
 }
 
 export interface IsaacClozeDndQuestionDTO extends IsaacParsonsQuestionDTO {
+    withReplacement?: boolean;
 }
 
 export interface IsaacPodDTO extends ContentDTO {
@@ -401,6 +402,10 @@ export interface ItemChoiceDTO extends ChoiceDTO {
 }
 
 export interface ItemDTO extends ContentDTO {
+}
+
+export interface ClozeItemDTO extends ContentDTO {
+    replacementId: string;
 }
 
 export interface LogicFormulaDTO extends ChoiceDTO {

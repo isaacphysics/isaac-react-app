@@ -1,7 +1,7 @@
 import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {Label} from "reactstrap";
-import {IsaacClozeDndQuestionDTO, ItemDTO, ParsonsChoiceDTO} from "../../../IsaacApiTypes";
+import {ClozeItemDTO, IsaacClozeDndQuestionDTO, ItemDTO, ParsonsChoiceDTO} from "../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
@@ -10,6 +10,7 @@ import {DragDropContext, Draggable, Droppable, DropResult, ResponderProvided} fr
 import ReactDOM from 'react-dom';
 import {ClozeDropRegionContext} from "../../../IsaacAppTypes";
 import {setCurrentAttempt} from "../../state/actions";
+import uuid from "uuid";
 
 function Item({item}: {item: ItemDTO}) {
     return <RS.Badge className="m-2 p-2">
@@ -20,7 +21,7 @@ function Item({item}: {item: ItemDTO}) {
 }
 
 interface InlineDropRegionProps {
-    id: string; item?: ItemDTO; contentHolder: RefObject<HTMLDivElement>; readonly?: boolean;
+    id: string; item?: ClozeItemDTO; contentHolder: RefObject<HTMLDivElement>; readonly?: boolean;
 }
 function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionProps) {
     const droppableTarget = contentHolder.current?.querySelector(`#${id}`);
@@ -33,7 +34,7 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                         className={`d-flex justify-content-center align-items-center bg-grey ${snapshot.draggingFromThisWith ? "" : ""} rounded w-100 ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                         style={{minHeight: "inherit"}}
                     >
-                        {item && <Draggable key={item.id} draggableId={item.id || ""} index={0}>
+                        {item && <Draggable key={item.replacementId} draggableId={item.replacementId} index={0}>
                             {(provided, snapshot) =>
                                 <div
                                     ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={`${snapshot.isDragging ? "" : ""}`}
@@ -79,18 +80,23 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
     const currentAttempt = questionPart?.currentAttempt as ParsonsChoiceDTO;
     const cssFriendlyQuestionPartId = questionPart?.id?.replace("|", "-") ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
+    const withReplacement = true; // doc.withReplacement ?? false;
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
-    const [nonSelectedItems, setNonSelectedItems] = useState([...doc.items]);
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(([...doc.items] as ClozeItemDTO[]).map(x => ({...x, replacementId: x.id ?? uuid.v4()})));
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
-    const [inlineDropValues, setInlineDropValues] = useState<(ItemDTO | undefined)[]>(currentAttempt?.items || []);
+    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(currentAttempt?.items as ClozeItemDTO[] || []);
+
+    // unique id thing in useRef
 
     useEffect(() => {
         if (currentAttempt?.items) {
-            setInlineDropValues(currentAttempt.items);
-            setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)) || []);
+            let idvs = currentAttempt.items as ClozeItemDTO[];
+            let nsis = (withReplacement ? doc.items : doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id))) as ClozeItemDTO[] || []
+            setInlineDropValues(idvs.map(x => ({...x, replacementId: uuid.v4()})));
+            setNonSelectedItems(nsis.map(x => ({...x, replacementId: uuid.v4()})));
         }
         }, [currentAttempt]);
 
@@ -147,7 +153,7 @@ export function IsaacClozeDndQuestion({doc, questionId, readonly}: {doc: IsaacCl
             const destinationDropIndex = inlineDropIndex(destination.droppableId);
             if (destinationDropIndex !== -1) {
                 replaceSource(idvs[destinationDropIndex]);
-                idvs.splice(destinationDropIndex, 1, doc.items?.filter(i => i.id === draggableId)[0] as ItemDTO);
+                idvs.splice(destinationDropIndex, 1, doc.items?.filter(i => i.id === draggableId)[0] as ClozeItemDTO);
             } else {
                 replaceSource(item);
             }
