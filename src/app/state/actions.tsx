@@ -457,6 +457,12 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
     try {
         await api.users.passwordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
+        dispatch(showToast({
+            color: "success",
+            title: "Password reset email sent",
+            body: `A password reset email has been sent to '${params.email}'`,
+            timeout: 5000
+        }) as any);
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Password reset failed", e));
     }
