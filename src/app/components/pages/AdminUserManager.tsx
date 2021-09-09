@@ -124,7 +124,7 @@ export const AdminUserManager = () => {
         dispatch(adminUserSearch(searchQuery));
     };
 
-    const attemptPasswordReset = async (email: string | undefined) => {
+    const attemptPasswordReset = (email: string | undefined) => {
         if (email) {
             dispatch(resetPassword({email: email}));
         }
