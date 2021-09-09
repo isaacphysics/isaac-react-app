@@ -2,9 +2,9 @@ import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {Label} from "reactstrap";
 import {
-    ClozeChoiceDTO,
     ClozeItemDTO,
     IsaacClozeQuestionDTO,
+    ItemChoiceDTO,
     ItemDTO
 } from "../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
@@ -83,17 +83,25 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     const dispatch = useDispatch();
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const currentAttempt = questionPart?.currentAttempt as (ClozeChoiceDTO | undefined);
+    const currentAttempt = questionPart?.currentAttempt as (ItemChoiceDTO | undefined);
     const cssFriendlyQuestionPartId = questionPart?.id?.replace("|", "-") ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
     const withReplacement = doc.withReplacement ?? false;
 
-    // Nasty hack to make sure non-selected items get updated if there was an existing attempt
-    const firstAttemptOccurred = useRef(false);
-
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(() => ([...doc.items] as ClozeItemDTO[]).map(x => ({...x, replacementId: x.id})));
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(() => {
+        let initNsis : ClozeItemDTO[];
+        if (!withReplacement && currentAttempt?.items && doc.items) {
+            // If replacement is disabled, items from the current attempt are filtered from the questions items
+            initNsis = doc.items.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id));
+        } else {
+            // If replacement is enabled, we still need all of the items in the nonSelectedItems list
+            initNsis = [...doc.items];
+        }
+        // In both cases, the replacementId must be set
+        return initNsis.map(x => ({...x, replacementId: x.id}));
+    });
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
     const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
@@ -102,18 +110,19 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
         if (currentAttempt?.items) {
             const idvs = currentAttempt.items as (ClozeItemDTO | undefined)[];
             setInlineDropValues(idvs.map(x => x === undefined ? x : ({...x, replacementId: `${x.id}-${uuid.v4()}`})));
+
             // If the question allows duplicates, then the items in the non-selected item section should never change
-            if (!firstAttemptOccurred.current || currentAttempt.updateItems === undefined || currentAttempt.updateItems) {
+            //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
+            if (!withReplacement) {
                 setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
             }
-            firstAttemptOccurred.current = true;
         }
         }, [currentAttempt]);
 
     function registerInlineDropRegion(dropRegionId: string, index: number) {
         if (!registeredDropRegionIDs.includes(dropRegionId)) {
             registeredDropRegionIDs.push(dropRegionId);
-            setInlineDropValues(registeredDropRegionIDs.map(s => undefined));
+            setInlineDropValues(registeredDropRegionIDs.map(() => undefined));
         }
     }
 
@@ -193,8 +202,18 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
 
         if (update) {
             // Update attempt since an inline drop zone changed
-            const clozeChoice: ClozeChoiceDTO = {type: "clozeChoice", items: idvs as ClozeItemDTO[], updateItems: false};
-            dispatch(setCurrentAttempt(questionId, clozeChoice));
+            const itemChoice: ItemChoiceDTO = {
+                type: "itemChoice",
+                items: idvs.map(x => {
+                    if (x) {
+                        const {replacementId, ...itemDto} = x;
+                        return itemDto as ItemDTO;
+                    }
+                    // Really, items should be a list of type (ItemDTO | undefined), but this is a workaround
+                    return x as unknown as ItemDTO;
+                })
+            };
+            dispatch(setCurrentAttempt(questionId, itemChoice));
         }
     }
 

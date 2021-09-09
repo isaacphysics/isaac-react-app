@@ -404,7 +404,7 @@ export interface ItemChoiceDTO extends ChoiceDTO {
 export interface ItemDTO extends ContentDTO {
 }
 
-export interface ClozeItemDTO extends ContentDTO {
+export interface ClozeItemDTO extends ItemDTO {
     replacementId?: string;
 }
 
@@ -424,11 +424,6 @@ export interface NotificationDTO extends ContentDTO {
 
 export interface ParsonsChoiceDTO extends ItemChoiceDTO {
     items?: ParsonsItemDTO[];
-}
-
-export interface ClozeChoiceDTO extends ItemChoiceDTO {
-    items?: ClozeItemDTO[];
-    updateItems?: boolean;
 }
 
 export interface ItemDTO extends ContentDTO {
