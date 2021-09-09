@@ -9,7 +9,7 @@ import {
     adminUserDelete,
     adminUserSearch,
     getUserIdSchoolLookup,
-    mergeUsers
+    mergeUsers, resetPassword
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {EmailVerificationStatus, Role} from "../../../IsaacApiTypes";
@@ -122,6 +122,12 @@ export const AdminUserManager = () => {
     const deleteUser = async (userid: number | undefined) => {
         await dispatch(adminUserDelete(userid));
         dispatch(adminUserSearch(searchQuery));
+    };
+
+    const attemptPasswordReset = async (email: string | undefined) => {
+        if (email) {
+            dispatch(resetPassword({email: email}));
+        }
     };
 
     return <RS.Container>
@@ -311,6 +317,9 @@ export const AdminUserManager = () => {
                                                     </RS.Button>
                                                     <RS.Button color="secondary btn-sm m-1" onClick={() => deleteUser(user.id)}>
                                                         Delete
+                                                    </RS.Button>
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
+                                                        Reset password
                                                     </RS.Button>
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>
