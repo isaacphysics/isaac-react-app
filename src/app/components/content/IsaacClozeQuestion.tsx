@@ -38,7 +38,7 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
                         className={`d-flex justify-content-center align-items-center bg-grey ${snapshot.draggingFromThisWith ? "" : ""} rounded w-100 ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-                        style={{minHeight: "inherit"}}
+                        style={{overflow: "hidden", minHeight: "inherit"}}
                     >
                         {item && <Draggable key={item.replacementId} draggableId={item.replacementId || ""} index={0}>
                             {(provided, snapshot) =>
@@ -49,8 +49,8 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                                 </div>
                             }
                         </Draggable>}
-                        {!item && "Empty\u00A0"}
-                        {provided.placeholder && <div style={{width: 0}} >
+                        {!item && "\u00A0"}
+                        {provided.placeholder && <div style={{width: 0, visibility: "hidden"}}>
                             {provided.placeholder}
                         </div>}
                     </div>}
