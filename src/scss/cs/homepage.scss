@@ -1,6 +1,25 @@
 #homepage {
   //section {padding: 2rem 0;}
 
+  h1#homepageName {
+    text-shadow: 0 0 4px $gray-103, 0 0 5px $gray-103, 0 0 10px $gray-103, 0 0 10px $gray-103, 0 0 20px $gray-103;
+  }
+
+  img#homepageHeroImg {
+    @include media-breakpoint-only(sm) {
+      margin-bottom: -50%;
+    }
+  }
+
+  #homepageButtons {
+    @include media-breakpoint-only(sm) {
+      padding-top: 100px;
+      padding-right: 35px;
+      width: calc(100% + 20px);
+      background-image: linear-gradient(0, rgba(248,248,248,1) 50%, rgba(0,0,0,0) 100%);
+    }
+  }
+
   section#why-sign-up {
     //h1 {padding-bottom: 2rem;}
     //.card {

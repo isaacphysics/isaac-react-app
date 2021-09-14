@@ -84,21 +84,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             }));
         }
 
-        if (SITE_SUBJECT === SITE.PHY && !isAllZero(levelColumns)) {
-            charts.push(bb.generate({
-                data: {
-                    columns: levelColumns,
-                    colors: colourPicker(levelColumns.map((column) => column[0]) as string[]),
-                    type: "donut"
-                },
-                donut: {
-                    title: "By Level",
-                    label: {format: (value, ratio, id) => `${value}`}
-                },
-                bindto: `#${subId}-levelChart`,
-                ...OPTIONS
-            }));
-        }
         flushRef.current = () => {
             charts.forEach(chart => {
                 // N.B. This no-op actually clears the text size cache, which makes this flush actually work.
@@ -116,7 +101,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         }
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, levelColumns]);
 
-    const noCharts = {[SITE.CS]: 2, [SITE.PHY]: 3}[SITE_SUBJECT];
+    const noCharts = {[SITE.CS]: 2, [SITE.PHY]: 2}[SITE_SUBJECT];
 
     return <RS.Row>
         {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={6} className="mt-4 d-flex flex-column">
@@ -151,9 +136,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         </RS.Col>
         {SITE_SUBJECT === SITE.CS && <RS.Col md={3}/>}
         {SITE_SUBJECT === SITE.PHY && <RS.Col xl={4} className="mt-4 d-flex flex-column">
-            <div className="height-40px text-flex-align mb-2">
-                Questions by level
-            </div>
             <div className="d-flex flex-grow-1">
                 <div id={`${subId}-levelChart`} className="text-center-width doughnut-binding  align-self-center">
                     <strong>{isAllZero(levelColumns) ? "No data" : ""}</strong>

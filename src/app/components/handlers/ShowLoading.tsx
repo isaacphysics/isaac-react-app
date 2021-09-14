@@ -1,11 +1,11 @@
 import React, {ReactElement, ReactNode, useEffect, useState} from "react";
-import {Spinner} from "reactstrap";
 import {NOT_FOUND} from "../../services/constants";
 import {NotFound} from "../pages/NotFound";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {isDefined} from "../../services/miscUtils";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
+import {IsaacSpinner} from "./IsaacSpinner";
 
 interface ShowLoadingProps<T> {
     until: T | NOT_FOUND_TYPE | null | undefined;
@@ -15,9 +15,9 @@ interface ShowLoadingProps<T> {
     ifNotFound?: ReactElement;
 }
 
-const defaultPlaceholder = <div className="w-100 text-center">
-    <h2 className="pt-5 pb-2">Loading...</h2>
-    <Spinner color="primary" />
+const defaultPlaceholder = <div className="w-100 text-center pb-2">
+    <h2 aria-hidden="true" className="pt-5">Loading...</h2>
+    <IsaacSpinner />
 </div>;
 
 export const ShowLoading = <T extends {}>({until, children, thenRender, placeholder=defaultPlaceholder, ifNotFound=<NotFound />}: ShowLoadingProps<T>) => {

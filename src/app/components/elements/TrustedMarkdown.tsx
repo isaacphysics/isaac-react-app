@@ -40,7 +40,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
     const {examBoard} = useUserContext();
-    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard.toLowerCase() : "";
+    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));

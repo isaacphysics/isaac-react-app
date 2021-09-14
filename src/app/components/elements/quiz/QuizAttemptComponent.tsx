@@ -19,10 +19,10 @@ import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {UserContextPicker} from "../inputs/UserContextPicker";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import { closeActiveModal, openActiveModal } from "../../../state/actions";
+import { UserContextPicker } from "../inputs/UserContextPicker";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -59,7 +59,10 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                     {Object.keys(sections).map((k, index) => {
                         const section = sections[k];
                         return <tr key={k}>
-                            <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td>
+                            {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
+                                <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td> :
+                                <td>{section.title}</td>
+                            }
                             <td>
                                 {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
                                 {" / "}

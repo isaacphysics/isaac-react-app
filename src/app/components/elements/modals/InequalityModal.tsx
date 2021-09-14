@@ -464,8 +464,9 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
             }));
             this.setState({ sketch: null });
         }
-        if (inequalityElement) {
-            inequalityElement.removeChild(inequalityElement.getElementsByTagName('canvas')[0]);
+        const canvas = inequalityElement?.getElementsByTagName('canvas')[0];
+        if (canvas) {
+            inequalityElement.removeChild(canvas);
         }
 
         document.documentElement.style.width = '';

@@ -21,6 +21,7 @@ import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -61,7 +62,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 
                 <div className="mt-4 text-right">
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
-                        {isCancelling ? <><RS.Spinner size="sm" /> Cancelling...</> : {[SITE.CS]: "Cancel quiz", [SITE.PHY]: "Cancel Quiz"}[SITE_SUBJECT]}
+                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : {[SITE.CS]: "Cancel quiz", [SITE.PHY]: "Cancel Quiz"}[SITE_SUBJECT]}
                     </RS.Button>
                     <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
                         {{[SITE.CS]: "View results", [SITE.PHY]: "View Results"}[SITE_SUBJECT]}
@@ -110,7 +111,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </span>;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "Set quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "Manage quizzes", [SITE.PHY]: "Manage Quizzes"}[SITE_SUBJECT]} help={pageHelp} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4">
             {{
                 [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Available Quizzes"}[SITE_SUBJECT]]:
