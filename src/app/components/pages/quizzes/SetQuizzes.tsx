@@ -121,7 +121,7 @@ const SetQuizzesPageComponent = ({user, match}: SetQuizzesPageProps) => {
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={defaultTab} onActiveTabChange={activeTabChanged}>
             {{
-                [{[SITE.CS]: "Set quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]]:
+                [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]]:
                 <ShowLoading until={filteredQuizzes}>
                     {filteredQuizzes && <>
                         <p>The following quizzes are available to set to your groups.</p>
@@ -151,7 +151,7 @@ const SetQuizzesPageComponent = ({user, match}: SetQuizzesPageProps) => {
                     </>}
                 </ShowLoading>,
 
-                [{[SITE.CS]: "Manage quizzes", [SITE.PHY]: "Manage Quizzes"}[SITE_SUBJECT]]:
+                [{[SITE.CS]: "Previously set quizzes", [SITE.PHY]: "Manage Quizzes"}[SITE_SUBJECT]]:
                 <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Quizzes you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
                     {quizAssignments && quizAssignments !== NOT_FOUND && <>
                         {quizAssignments.length === 0 && <p>You have not set any quizzes to your groups yet.</p>}
