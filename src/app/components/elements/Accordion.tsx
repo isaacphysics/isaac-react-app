@@ -158,7 +158,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     </RS.Row>
                 </div>
 
-                {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordionIcon}>
+                {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
                     <span className="sr-only">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>
