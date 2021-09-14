@@ -69,12 +69,7 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                 </table>;
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
-        const rubric = attempt.quiz?.rubric;
         return <div>
-            {rubric && <>
-                <h4>Instructions</h4>
-                {rubric}
-            </>}
             <h4>Quiz sections</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
@@ -118,9 +113,12 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
 function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
     const rubric = attempt.quiz?.rubric;
     return <div>
-        {rubric && <IsaacContentValueOrChildren value={rubric.value}>
+        {rubric && <div>
+            <h4>Instructions</h4>
+            <IsaacContentValueOrChildren value={rubric.value}>
             {rubric.children}
-        </IsaacContentValueOrChildren>}
+        </IsaacContentValueOrChildren>
+        </div>}
     </div>
 }
 
@@ -133,7 +131,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal())}, size: "lg",
-            title: "Quiz rubric", body: <QuizRubric attempt={attempt} />
+            title: "Quiz Instructions", body: <QuizRubric attempt={attempt} />
         }))
     };
 
