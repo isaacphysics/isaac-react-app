@@ -1,10 +1,5 @@
-import {
-    IsaacQuizDTO,
-    IsaacQuizSectionDTO,
-    QuestionDTO,
-    QuizAttemptDTO
-} from "../../../../IsaacApiTypes";
-import React, { useState } from "react";
+import {IsaacQuizDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import React from "react";
 import {isDefined} from "../../../services/miscUtils";
 import {extractTeacherName} from "../../../services/user";
 import {Spacer} from "../Spacer";
@@ -21,8 +16,8 @@ import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
-import { closeActiveModal, openActiveModal } from "../../../state/actions";
-import { UserContextPicker } from "../inputs/UserContextPicker";
+import {closeActiveModal, openActiveModal} from "../../../state/actions";
+import {UserContextPicker} from "../inputs/UserContextPicker";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
