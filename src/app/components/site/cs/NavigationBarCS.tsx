@@ -22,8 +22,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
-            <LinkItem to="/set_quizzes">Set quizzes</LinkItem>
-            <LinkItem to="/set_quizzes/2">Manage quizzes</LinkItem>
+            <LinkItem to="/set_quizzes">Manage quizzes</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">
