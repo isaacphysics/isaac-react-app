@@ -71,7 +71,12 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                 </table>;
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
+        const rubric = attempt.quiz?.rubric;
         return <div>
+            {rubric && <>
+                <h4>Instructions</h4>
+                {rubric}
+            </>}
             <h4>Quiz sections</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
@@ -139,13 +144,13 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
             <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
                 <UserContextPicker className="no-print text-right"/>
                 <Row>
-                    <Col className="text-right">
+                    {rubric && <Col className="text-right">
                         <RS.Button color="tertiary" outline className="mb-4"
-                            alt="Show rubric" title="Show rubric in a modal"
+                            alt="Show instructions" title="Show instructions in a modal"
                             onClick={() => {rubric && openQuestionModal(attempt)}}>
-                            Show rubric
+                            Show instructions
                         </RS.Button>
-                    </Col>
+                    </Col>}
                 </Row>
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>
