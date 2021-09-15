@@ -94,7 +94,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
-        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tab !== 2 ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
+        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
     }, [hashAnchor]);
 
     useEffect(() => {
