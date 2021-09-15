@@ -873,6 +873,8 @@ export enum MEMBERSHIP_STATUS {
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
+export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
+
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};

@@ -16,7 +16,7 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {loadGroups} from "../../../state/actions";
-import {NOT_FOUND} from "../../../services/constants";
+import {MANAGE_QUIZ_TAB, NOT_FOUND} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
@@ -26,7 +26,6 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
     location: {hash: string};
-    match: {params?: {tab?: string}}
 }
 
 interface QuizAssignmentProps {
@@ -74,18 +73,29 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
     </div>;
 }
 
-const SetQuizzesPageComponent = ({user, match}: SetQuizzesPageProps) => {
+const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
-    const defaultTab = match?.params?.tab ? parseInt(match?.params?.tab) : 1;
+    const hashAnchor = location.hash?.slice(1) ?? null;
     const quizzes = useSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<ContentSummaryDTO> | undefined>();
-    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (defaultTab !== 2 ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT]);
+    const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
+    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (activeTab !== 2 ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT]);
     const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     const dispatch = useDispatch();
 
     const startIndex = 0;
     const [titleFilter, setTitleFilter] = useState<string|undefined>();
+
+    // Set active tab using hash anchor
+    useEffect(() => {
+        // @ts-ignore
+        const tab: MANAGE_QUIZ_TAB =
+            (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
+            MANAGE_QUIZ_TAB.set;
+        setActiveTab(tab);
+        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tab !== 2 ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
+    }, [hashAnchor]);
 
     useEffect(() => {
         dispatch(loadGroups(false));
@@ -119,7 +129,7 @@ const SetQuizzesPageComponent = ({user, match}: SetQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={defaultTab} onActiveTabChange={activeTabChanged}>
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
             {{
                 [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]]:
                 <ShowLoading until={filteredQuizzes}>

@@ -23,7 +23,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
             <LinkItem to="/set_quizzes">Set Quizzes</LinkItem>
-            <LinkItem to="/set_quizzes/2">Manage Quizzes</LinkItem>
+            <LinkItem to="/set_quizzes#manage">Manage Quizzes</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">
