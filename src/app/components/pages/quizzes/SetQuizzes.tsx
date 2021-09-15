@@ -79,7 +79,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const quizzes = useSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<ContentSummaryDTO> | undefined>();
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
-    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (activeTab !== 2 ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT]);
+    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT]);
     const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     const dispatch = useDispatch();
@@ -118,7 +118,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }, [titleFilter, quizzes]);
 
     function activeTabChanged(tabIndex: number) {
-        setPageTitle({[SITE.CS]: "Set quizzes", [SITE.PHY]: (tabIndex !== 2 ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
+        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
     }
 
     const pageHelp = <span>
