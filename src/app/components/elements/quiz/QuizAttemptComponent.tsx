@@ -112,8 +112,9 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
 
 function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
     const rubric = attempt.quiz?.rubric;
+    const renderRubric = (rubric?.children || []).length > 0;
     return <div>
-        {rubric && <div>
+        {rubric && renderRubric && <div>
             <h4>Instructions</h4>
             <IsaacContentValueOrChildren value={rubric.value}>
             {rubric.children}
