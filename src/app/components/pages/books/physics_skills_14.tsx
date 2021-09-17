@@ -6,10 +6,14 @@ import {BookChapter} from "../../elements/BookChapter";
 
 export const PhysicsSkills14 = () => {
 
+    const pageHelp = <span>
+        This book is now deprecated.
+    </span>;
+
     return <Container>
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Mastering Essential Pre-University Physics" help="This book is now deprecated." />
+                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Mastering Essential Pre-University Physics" help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/physics_skills_14.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="physics_skills_14_intro"/>
             </div>

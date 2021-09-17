@@ -434,6 +434,10 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
+    const pageHelp = <span>
+        Click on your groups to see the assignments you have set. View your students' progress by question.
+    </span>;
+
     let sortedGroups = groups;
     if (sortedGroups) {
         switch(sortOrder) {
@@ -456,7 +460,7 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Group Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
                 subTitle="Track your group performance by assignment"
-                help="Click on your groups to see the assignments you have set. View your students' progress by question."
+                help={pageHelp}
             />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">

@@ -10,7 +10,7 @@ import {isDefined} from "../../services/miscUtils";
 
 interface PageFragmentComponentProps {
     fragmentId: string;
-    renderFragmentNotFound?: boolean | string | ReactElement;
+    renderFragmentNotFound?: ReactElement;
 }
 
 export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentComponentProps) => {
@@ -23,15 +23,13 @@ export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentC
     }, [dispatch, fragmentId]);
 
     const notFoundComponent = <div>
-        {isDefined(renderFragmentNotFound) && typeof renderFragmentNotFound !== "boolean" ?
-            <div className="my-4">{renderFragmentNotFound}</div> : <>
         <h2>Content not found</h2>
         <h3 className="my-4">
             <small>
                 {"We're sorry, page fragment not found: "}
                 <code>{fragmentId}</code>
             </small>
-        </h3></>}
+        </h3>
     </div>;
 
     return <React.Fragment>
@@ -40,7 +38,7 @@ export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentC
             thenRender={fragment => <WithFigureNumbering doc={fragment}>
                 <IsaacContent doc={fragment} />
             </WithFigureNumbering>}
-            ifNotFound={notFoundComponent}
+            ifNotFound={renderFragmentNotFound || notFoundComponent}
         />}
     </React.Fragment>;
 };

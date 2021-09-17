@@ -10,7 +10,7 @@ import {LaTeX} from "./LaTeX";
 export interface PageTitleProps {
     currentPageTitle: string;
     subTitle?: string;
-    help?: string | ReactElement;
+    help?: ReactElement;
     className?: string;
     level?: number;
     modalId?: string;
