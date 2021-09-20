@@ -83,7 +83,7 @@ export const HomepageCS = () => {
                                         <Link to="/events?types=teacher">teacher CPD events</Link>{" and "}
                                         <Link to="/events?types=student">student workshops</Link>.<br />
                                         {"Isaac Computer Science is proud to be part of the Department for Education's "}
-                                        <ExternalLink href="https://teachcomputing.org/">National Centre for Computing Education</ExternalLink>.
+                                        <Link to="/teachcomputing">National Centre for Computing Education</Link>.
                                     </p>
                                 </Col>
                             </Row>
