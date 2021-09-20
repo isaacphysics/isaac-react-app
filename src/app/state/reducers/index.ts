@@ -18,7 +18,7 @@ import {
     userPreferences,
     userSchoolLookup
 } from "./userState";
-import {error, mainContentId, printingSettings, tempExamBoard} from "./internalAppState";
+import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
 import {constants, glossaryTerms, news} from "./staticState";
 import {concepts, doc, fragments} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
@@ -30,7 +30,8 @@ import {
     adminStats,
     adminUserGet,
     adminUserSearch,
-    contentVersion, testQuestions
+    contentVersion,
+    testQuestions
 } from "./adminState";
 import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations} from "./groupsState";
 import {currentTopic} from "./topicState";
@@ -38,13 +39,13 @@ import {boards, currentGameboard, fasttrackConcepts, gameboardEditorQuestions, w
 import {search} from "./searchState";
 import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
 import {
-    quizzes,
-    quizAssignments,
     quizAssignedToMe,
-    quizAttempt,
     quizAssignment,
-    quizPreview,
+    quizAssignments,
+    quizAttempt,
     quizAttemptedFreelyByMe,
+    quizPreview,
+    quizzes,
 } from "./quizState";
 
 const appReducer = combineReducers({
@@ -59,7 +60,7 @@ const appReducer = combineReducers({
     // Internal App
     printingSettings,
     mainContentId,
-    tempExamBoard,
+    transientUserContext,
     error,
 
     // Notifiers

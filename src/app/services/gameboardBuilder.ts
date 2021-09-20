@@ -1,10 +1,10 @@
-import {SortOrder, tagExamBoardMap} from "./constants";
+import {SortOrder} from "./constants";
 import {orderBy} from "lodash";
 import tags from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {Dispatch, SetStateAction} from "react";
 import {ValueType} from "react-select/src/types";
-import {Tag} from "../../IsaacAppTypes";
+import {ContentSummary, Tag} from "../../IsaacAppTypes";
 
 const bookSort = (a: string, b: string) => {
     const splitRegex = /(\d+)/;
@@ -57,21 +57,15 @@ export const sortQuestions = (sortState: { [s: string]: string }) => (questions:
     return orderBy(questions, keys, order);
 };
 
-export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO) => {
-    const newQuestion = {...question};
+export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
+    const newQuestion = {...question, contentType: question.type};
     delete newQuestion.type;
     delete newQuestion.url;
-
-    const gameboardItem = newQuestion as GameboardItem;
-    gameboardItem.level = newQuestion.level ? parseInt(newQuestion.level) : 0;
-    return gameboardItem;
+    return newQuestion;
 };
 
-export const convertGameboardItemToContentSummary = (question: GameboardItem) => {
-    const newQuestion = {...question};
-    const contentSummary = newQuestion as ContentSummaryDTO;
-    contentSummary.level = contentSummary.level && contentSummary.level.toString();
-    return contentSummary;
+export const convertGameboardItemToContentSummary = (question: GameboardItem): ContentSummaryDTO => {
+    return {...question, type: question.contentType};
 };
 
 export const convertTagToSelectionOption = (tag: Tag) => {
@@ -90,39 +84,36 @@ export const groupTagSelectionsByParent = (parent: Tag) => {
     };
 };
 
-export const convertExamBoardToOption = (examBoard: string) => {
-    return {value: examBoard, label: tagExamBoardMap[examBoard]};
-};
-
-export const multiSelectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
-    if (e && (e as {value: string; label: string}[]).map) {
-        const arr = e as {value: string; label: string}[];
-        setValue(arr.map((item) => item.value));
+// TODO REMOVE AUDIENCE_CONTEXT Let's move from multiSelectOnChange and selectOnChange to select.ts.unwrapValue(...) for types and consistency
+export const multiSelectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
+    if (e && Array.isArray(e)) {
+        setValue(e.map((item) => item.value));
     } else {
         setValue([]);
     }
 };
-
-export const selectOnChange = (setValue: Dispatch<SetStateAction<string[]>>) => (e: ValueType<{value: string; label: string}>) => {
-    if (e && (e as {value: string; label: string}).value) {
-        const item = e as {value: string; label: string};
-        setValue([item.value]);
+export const selectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
+    if (e) {
+        const value = (e as {value: T; label: string})?.value;
+        if (value) {
+            setValue([value]);
+        }
     } else {
         setValue([]);
     }
 };
 
 export const loadGameboardQuestionOrder = (gameboard: GameboardDTO) => {
-    return gameboard.questions && gameboard.questions.map((question) => {
+    return gameboard.contents && gameboard.contents.map((question) => {
         return question.id;
     }).filter((id) => id) as string[];
 };
 
 export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
-    return gameboard.questions && gameboard.questions.map(convertGameboardItemToContentSummary).reduce((map, question) => {
+    return gameboard.contents && gameboard.contents.map(convertGameboardItemToContentSummary).reduce((map, question) => {
         question.id && map.set(question.id, question);
         return map;
-    }, new Map<string, ContentSummaryDTO>());
+    }, new Map<string, ContentSummary>());
 };
 
 export const logEvent = (eventsLog: any[], event: string, params: any) => {

@@ -9,13 +9,15 @@ import {QuizAttemptContext} from "../../content/QuizQuestion";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
+import {Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
-import {Col, Row} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {TempExamBoardPicker} from "../inputs/TempExamBoardPicker";
 import {below, useDeviceSize} from "../../../services/device";
+import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
+import {closeActiveModal, openActiveModal} from "../../../state/actions";
+import {UserContextPicker} from "../inputs/UserContextPicker";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -52,7 +54,10 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
                     {Object.keys(sections).map((k, index) => {
                         const section = sections[k];
                         return <tr key={k}>
-                            <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td>
+                            {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
+                                <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td> :
+                                <td>{section.title}</td>
+                            }
                             <td>
                                 {attempt.quiz?.individualFeedback?.sectionMarks?.[section.id as string]?.correct}
                                 {" / "}
@@ -105,13 +110,46 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
     }
 }
 
+function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
+    const rubric = attempt.quiz?.rubric;
+    const renderRubric = (rubric?.children || []).length > 0;
+    return <div>
+        {rubric && renderRubric && <div>
+            <h4>Instructions</h4>
+            <IsaacContentValueOrChildren value={rubric.value}>
+            {rubric.children}
+        </IsaacContentValueOrChildren>
+        </div>}
+    </div>
+}
+
 function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
+    const rubric = attempt.quiz?.rubric;
+    const renderRubric = (rubric?.children || []).length > 0;
+    const dispatch = useDispatch();
+
+    const openQuestionModal = (attempt: QuizAttemptDTO) => {
+        dispatch(openActiveModal({
+            closeAction: () => {dispatch(closeActiveModal())}, size: "lg",
+            title: "Quiz Instructions", body: <QuizRubric attempt={attempt} />
+        }))
+    };
+
     return section ?
         <Row className="question-content-container">
             <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
-                <TempExamBoardPicker className="no-print text-right"/>
+                <UserContextPicker className="no-print text-right"/>
+                <Row>
+                    {rubric && renderRubric && <Col className="text-right">
+                        <RS.Button color="tertiary" outline className="mb-4"
+                            alt="Show instructions" title="Show instructions in a modal"
+                            onClick={() => {rubric && openQuestionModal(attempt)}}>
+                            Show instructions
+                        </RS.Button>
+                    </Col>}
+                </Row>
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>
                 </WithFigureNumbering>
@@ -171,6 +209,7 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
         {page === null ?
             <div className="mt-4">
                 <QuizHeader {...props} />
+                <QuizRubric {...props}/>
                 <QuizContents {...props} />
             </div>
             :

@@ -11,6 +11,8 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
+import uuid from "uuid";
+import {notRelevantMessage, useUserContext} from "../../services/userContext";
 
 interface AccordionsProps {
     id?: string;
@@ -18,18 +20,26 @@ interface AccordionsProps {
     index: number;
     location: {hash: string};
     children?: React.ReactElement;
+    startOpen?: boolean;
+    deEmphasised?: boolean;
+    audienceString?: string;
 }
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
+    const userContext = useUserContext();
+    const componentId = useRef(uuid.v4().slice(0, 4)).current;
     const page = useSelector((state: AppState) => (state && state.doc) || null);
 
     // Toggle
     const isFirst = index === 0;
     const openFirst = SITE_SUBJECT === SITE.CS || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
-    const [open, setOpen] = useState(openFirst && isFirst);
+    const [open, setOpen] = useState(startOpen === undefined ? (openFirst && isFirst) : startOpen);
+
+    // If start open changes we need to update whether or not the accordion section should be open
+    useEffect(() => {if (startOpen !== undefined) {setOpen(startOpen);}}, [setOpen, startOpen]);
 
     // Hash anchoring
     let anchorId: string | null = null;
@@ -113,21 +123,13 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
         if (allValidated && allWrong) accordionIcon = "cross";
     }
 
-
-    const isConceptPage = page && page != NOT_FOUND && page.type === "isaacConceptPage";
-    let level = null;
-    if (isConceptPage && children) {
-        level = children?.props?.doc?.level;
-        if (level === 0) {
-            level = null;
-        }
-    }
+    const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={open ? 'active' : ''}
+                className={`${open ? 'active' : ''} ${deEmphasised ? 'de-emphasised' : ""} d-flex align-items-stretch`}
                 onClick={(event: any) => {
                     pauseAllVideos();
                     const nextState = !open;
@@ -139,14 +141,24 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, locatio
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                {/*TODO CS Level*/}
-                {SITE_SUBJECT === SITE.PHY && level && <span className="accordion-level badge-secondary">Level {level}</span>}
+                {isConceptPage && audienceString && <span className="accordion-label badge-secondary d-flex align-items-center justify-content-center">
+                    {audienceString}
+                </span>}
                 <div className="accordion-title pl-3">
-                    <RS.Row><span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
-                        {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}</RS.Row>
+                    <RS.Row>
+                        <span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                        {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}
+                        {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
+                            <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
+                            <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
+                                {`This content is ${notRelevantMessage(userContext)}.`}
+                            </RS.UncontrolledTooltip>
+                        </div>}
+
+                    </RS.Row>
                 </div>
 
-                {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon accordion-icon-" + accordionIcon}>
+                {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
                     <span className="sr-only">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>

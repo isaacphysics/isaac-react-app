@@ -1,9 +1,10 @@
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
-import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, EXAM_BOARD, NOT_FOUND} from "./constants";
+import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, NOT_FOUND} from "./constants";
 import {LinkInfo} from "./navigation";
-import {filterOnExamBoard} from "./examBoard";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {isIntendedAudience, UseUserContextReturnType} from "./userContext";
+import {NOT_FOUND_TYPE, PotentialUser} from "../../IsaacAppTypes";
 import {CurrentTopicState} from "../state/reducers/topicState";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
@@ -13,22 +14,22 @@ const filterForQuestions = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.QUESTION);
 };
 
-export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], examBoard: EXAM_BOARD) => {
-    const examBoardFilteredContent = filterOnExamBoard(contents, examBoard);
+export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+    const examBoardFilteredContent = contents.filter(c => SITE_SUBJECT === SITE.PHY || isIntendedAudience(c.audience, userContext, user));
     const relatedConcepts = examBoardFilteredContent && filterForConcepts(examBoardFilteredContent);
     const relatedQuestions = examBoardFilteredContent && filterForQuestions(examBoardFilteredContent);
     return [relatedConcepts, relatedQuestions];
 };
 
-export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, examBoard: EXAM_BOARD) => {
+export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
     if (doc && doc != NOT_FOUND && doc.relatedContent) {
-        return filterAndSeparateRelatedContent(doc.relatedContent, examBoard);
+        return filterAndSeparateRelatedContent(doc.relatedContent, userContext, user);
     }
     return [null, null];
 };
 
-export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, examBoard: EXAM_BOARD) => {
-    return getRelatedDocs(doc, examBoard)[0];
+export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+    return getRelatedDocs(doc, userContext, user)[0];
 };
 
 const isValidIdForTopic = (contentId: string, currentTopic: CurrentTopicState) => {
@@ -52,10 +53,11 @@ export const makeAttemptAtTopicHistory = () => {
     return [ALL_TOPICS_CRUMB]
 };
 
-export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, examBoard: EXAM_BOARD) => {
+export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
         if (isValidIdForTopic(contentId, currentTopic)) {
-            const [relatedConcepts, relatedQuestions] = filterAndSeparateRelatedContent(currentTopic.relatedContent, examBoard);
+            const [relatedConcepts, relatedQuestions] =
+                filterAndSeparateRelatedContent(currentTopic.relatedContent, userContext, user);
             const orderedRelatedContent = relatedConcepts.concat(relatedQuestions);
             const relatedContentIds = orderedRelatedContent.map((content) => content.id);
             const nextIndex = relatedContentIds.indexOf(contentId) + 1;

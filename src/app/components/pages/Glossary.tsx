@@ -9,14 +9,13 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {TempExamBoardPicker} from '../elements/inputs/TempExamBoardPicker';
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import { isDefined } from '../../services/miscUtils';
+import {isDefined} from '../../services/miscUtils';
 import tags from "../../services/tags";
-import { TAG_ID } from '../../services/constants';
-import { Tag } from '../../../IsaacAppTypes';
+import {TAG_ID} from '../../services/constants';
+import {Tag} from '../../../IsaacAppTypes';
 import Select from "react-select";
-import { useCurrentExamBoard } from "../../services/examBoard";
+import {useUserContext} from "../../services/userContext";
 
 interface GlossaryProps {
     location: { hash: string },
@@ -32,7 +31,7 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const examBoard = useCurrentExamBoard();
+    const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
@@ -89,7 +88,6 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const alphabetScrollerObserver = useRef<IntersectionObserver>();
 
     const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-        console.log('thingu');
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
                 if (entry.isIntersecting) {
@@ -142,9 +140,9 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">
-                    <ShareLink linkUrl={`/glossary`}/>
+                    <ShareLink linkUrl={`/glossary`} clickAwayClose/>
                 </div>
-                <div className="question-actions mt-3 not_mobile">
+                <div className="question-actions mt-3 not-mobile">
                     <PrintButton/>
                 </div>
             </div>
@@ -175,12 +173,8 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                         <Col>
                             {searchText !== "" && <span className="pr-4">Search: <strong>{searchText}</strong></span>}
                             {isDefined(filterTopic) && <span className="pr-4">Topic: <strong>{filterTopic.title}</strong></span>}
-                            {examBoard !== "" && <span className="pr-4">Exam board: <strong>{examBoard}</strong></span>}
                         </Col>
                     </Row>
-                </Col>
-                <Col md={{size: 3}} className="py-4">
-                    <TempExamBoardPicker className="text-right" />
                 </Col>
             </Row>
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>

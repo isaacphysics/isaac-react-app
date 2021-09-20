@@ -117,11 +117,13 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     const dispatch = useDispatch();
 
+    const startIndex = 0;
+
     useEffect(() => {
-        dispatch(loadQuizzes());
+        dispatch(loadQuizzes(startIndex));
         dispatch(loadQuizAssignedToMe());
         dispatch(loadQuizzesAttemptedFreelyByMe());
-    }, [dispatch]);
+    }, [dispatch, startIndex]);
 
     const pageHelp = <span>
         Use this page to see quizzes you need to take and your quiz results.

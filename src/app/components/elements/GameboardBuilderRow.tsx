@@ -1,25 +1,30 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
-import {examBoardTagMap, TAG_ID, TAG_LEVEL, tagExamBoardMap} from "../../services/constants";
+import {difficultyLabelMap, examBoardLabelMap, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import React from "react";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
 import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
 import tags from "../../services/tags";
 import {Question} from "../pages/Question";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {ContentSummary} from "../../../IsaacAppTypes";
+import {determineAudienceViews} from "../../services/userContext";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
-    question: ContentSummaryDTO;
-    selectedQuestions: Map<string, ContentSummaryDTO>;
-    setSelectedQuestions: (m: Map<string, ContentSummaryDTO>) => void;
+    question: ContentSummary;
+    selectedQuestions: Map<string, ContentSummary>;
+    setSelectedQuestions: (m: Map<string, ContentSummary>) => void;
     questionOrder: string[];
     setQuestionOrder: (a: string[]) => void;
+    creationContext?: AudienceContext;
 }
 
-export const GameboardBuilderRow = ({provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder}: GameboardBuilderRowInterface) => {
+export const GameboardBuilderRow = (
+    {provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
+) => {
     const dispatch = useDispatch();
 
     const topicTag = () => {
@@ -57,7 +62,7 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
                             newSelectedQuestions.delete(question.id);
                             newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
                         } else {
-                            newSelectedQuestions.set(question.id, question);
+                            newSelectedQuestions.set(question.id, {...question, creationContext});
                             newQuestionOrder.push(question.id);
                         }
                         setSelectedQuestions(newSelectedQuestions);
@@ -79,11 +84,26 @@ export const GameboardBuilderRow = ({provided, question, selectedQuestions, setS
         <td className="w-25">
             {topicTag()}
         </td>
+        <td className="w-15">
+            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.stage)))
+                .map(stage => <div key={stage}>
+                    {stage && <span>{stageLabelMap[stage]}</span>}
+                </div>)
+            }
+        </td>
         {SITE_SUBJECT === SITE.PHY && <td className="w-15">
-            {question.level}
+            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.difficulty)))
+                .map(difficulty => <div key={difficulty}>
+                    {difficulty && <span>{difficultyLabelMap[difficulty]}</span>}
+                </div>)
+            }
         </td>}
         {SITE_SUBJECT === SITE.CS && <td className="w-15">
-            {question.tags && question.tags.filter((tag) => Object.values(examBoardTagMap).includes(tag)).map((tag) => tagIcon(tagExamBoardMap[tag]))}
+            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.examBoard)))
+                .map(examBoard => <div key={examBoard}>
+                    {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
+                </div>)
+            }
         </td>}
     </tr>
 };

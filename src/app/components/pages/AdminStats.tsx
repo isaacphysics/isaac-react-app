@@ -49,10 +49,13 @@ export const AdminStats = () => {
                             <RS.Col>
                                 <strong>Users:</strong>
                                 <ul className="list-unstyled mb-5">
-                                    <li>Active Last 6 Months:&nbsp;
+                                    <li>Last 6 months:&nbsp;
                                         <strong>{(adminStats.activeUsersOverPrevious.sixMonths.TOTAL || 0).toLocaleString()}</strong>
                                     </li>
-                                    <li>Registered: <strong>{(adminStats.userGenders.TOTAL || 0).toLocaleString()}</strong></li>
+                                    <li>Last 2 years:&nbsp;
+                                        <strong>{(adminStats.activeUsersOverPrevious.twoYears.TOTAL || 0).toLocaleString()}</strong>
+                                    </li>
+                                    <li>Total accounts: <strong>{(adminStats.userGenders.TOTAL || 0).toLocaleString()}</strong></li>
                                     <li className="mt-3">
                                         <strong>Gender</strong>
                                         <ul className="list-unstyled">

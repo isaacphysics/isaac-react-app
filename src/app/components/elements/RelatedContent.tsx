@@ -2,12 +2,13 @@ import React, {ReactNode} from "react";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../services/constants";
-import {useDispatch} from "react-redux";
+import {difficultyShortLabelMap, DOCUMENT_TYPE, documentTypePathPrefix, stageLabelMap} from "../../services/constants";
+import {useDispatch, useSelector} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
-import {filterOnExamBoard, useCurrentExamBoard} from "../../services/examBoard";
+import {determineAudienceViews, isIntendedAudience, useUserContext} from "../../services/userContext";
+import {selectors} from "../../state/selectors";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -124,33 +125,44 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
 
 export function RelatedContent({content, parentPage}: RelatedContentProps) {
     const dispatch = useDispatch();
-    const currentExamBoard = useCurrentExamBoard();
-    const examBoardFilteredContent = filterOnExamBoard(content, currentExamBoard);
+    const user = useSelector(selectors.user.orNull);
+    const userContext = useUserContext();
+    const audienceFilteredContent = content.filter(c => SITE_SUBJECT === SITE.PHY || isIntendedAudience(c.audience, userContext, user));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
-    const sortedContent = examBoardFilteredContent
+    const sortedContent = audienceFilteredContent
         .sort(sortByStringValue("title"))
         .sort(sortByNumberStringValue("difficulty"))
         .sort(sortByNumberStringValue("level"));
 
     const concepts = sortedContent
-        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
+        .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
     const questions = sortedContent
-        .filter((contentSummary) => contentSummary.type == DOCUMENT_TYPE.QUESTION);
+        .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.QUESTION);
 
-    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => (
-        <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
+    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => {
+        const audienceViews = determineAudienceViews(contentSummary.audience);
+        return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link
                 to={getURLForContent(contentSummary)}
-                onClick={() => {dispatch(logAction(getEventDetails(contentSummary, parentPage)))}}
+                onClick={() => {
+                    dispatch(logAction(getEventDetails(contentSummary, parentPage)))
+                }}
                 target={openInNewTab ? "_blank" : undefined}
             >
                 {contentSummary.title}
-                {/*TODO CS Level*/}
-                {SITE_SUBJECT === SITE.PHY && contentSummary.level && contentSummary.level != '0' && " (Level " + contentSummary.level + ")"}
+                {audienceViews.length > 0 && " ("}
+                {Array.from(new Set(audienceViews.map(av => {
+                    let result = "";
+                    if (av.stage) {result += stageLabelMap[av.stage]}
+                    if (av.stage && av.difficulty) {result += " - "}
+                    if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
+                    return result;
+                }))).join(", ")}
+                {audienceViews.length > 0 && ")"}
             </Link>
         </ListGroupItem>
-    );
+    };
 
     return {
         [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem),

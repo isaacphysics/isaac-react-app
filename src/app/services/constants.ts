@@ -1,11 +1,7 @@
 import Remarkable from "remarkable";
-import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {invert} from "lodash";
-import {BookingStatus} from "../../IsaacApiTypes";
+import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-
-// Temporary Feature Flags
-export const QUIZ_FEATURE = ENV_QUIZ_FEATURE_FLAG || false;
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
@@ -107,7 +103,9 @@ export enum ACTION_TYPE {
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
 
-    EXAM_BOARD_SET_TEMP = "EXAM_BOARD_SET_TEMP",
+    TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD = "TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD",
+    TRANSIENT_USER_CONTEXT_SET_STAGE = "TRANSIENT_USER_CONTEXT_SET_STAGE",
+    TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT = "TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT",
 
     USER_PASSWORD_RESET_REQUEST= "USER_PASSWORD_RESET_REQUEST",
     USER_PASSWORD_RESET_RESPONSE_SUCCESS ="USER_PASSWORD_RESET_RESPONSE_SUCCESS",
@@ -352,6 +350,10 @@ export enum ACTION_TYPE {
     QUIZ_SUBMISSION_RESPONSE_SUCCESS = "QUIZ_SUBMISSION_RESPONSE_SUCCESS",
     QUIZ_SUBMISSION_RESPONSE_FAILURE = "QUIZ_SUBMISSION_RESPONSE_FAILURE",
 
+    QUIZ_ASSIGNMENT_RESULTS_CSV_REQUEST = "QUIZ_ASSIGNMENT_RESULTS_CSV_REQUEST",
+    QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_SUCCESS = "QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_SUCCESS",
+    QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_FAILURE = "QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_FAILURE",
+
     TEST_QUESTION_REQUEST = "TEST_QUESTION_REQUEST",
     TEST_QUESTION_RESPONSE_SUCCESS = "TEST_QUESTION_RESPONSE_SUCCESS",
     TEST_QUESTION_RESPONSE_FAILURE = "TEST_QUESTION_RESPONSE_FAILURE",
@@ -534,12 +536,122 @@ export enum ACTION_TYPE {
     QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS = "QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS",
 }
 
-export enum EXAM_BOARD {
-    AQA = "AQA",
-    OCR = "OCR",
-    OTHER = "OTHER",
-    NONE = ""
+export enum PROGRAMMING_LANGUAGE {
+    PSEUDOCODE = "PSEUDOCODE",
+    JAVASCRIPT = "JAVASCRIPT",
+    PYTHON = "PYTHON",
+    PHP = "PHP",
+    CSHARP = "CSHARP",
+    PLAINTEXT = "PLAINTEXT",
+    SQL = "SQL",
+    NONE = "NONE",
 }
+
+export const programmingLanguagesMap: {[language: string]: string} = {
+    [PROGRAMMING_LANGUAGE.PSEUDOCODE]: "Pseudocode",
+    [PROGRAMMING_LANGUAGE.JAVASCRIPT]: "Javascript",
+    [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
+    [PROGRAMMING_LANGUAGE.PHP]: "PHP",
+    [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
+    [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
+    [PROGRAMMING_LANGUAGE.SQL]: "SQL",
+};
+
+// EXAM BOARDS
+export enum EXAM_BOARD {
+    AQA = "aqa",
+    OCR = "ocr",
+    CIE = "cie",
+    EDEXCEL = "edexcel",
+    EDUQAS = "eduqas",
+    WJEC = "wjec",
+    ALL = "all",
+}
+export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
+    [EXAM_BOARD.AQA]: "AQA",
+    [EXAM_BOARD.OCR]: "OCR",
+    [EXAM_BOARD.CIE]: "CIE",
+    [EXAM_BOARD.EDEXCEL]: "EDEXCEL",
+    [EXAM_BOARD.EDUQAS]: "EDUQAS",
+    [EXAM_BOARD.WJEC]: "WJEC",
+    [EXAM_BOARD.ALL]: "All exam boards",
+}
+export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
+export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
+
+// BOOLEAN LOGIC NOTATION OPTIONS
+export enum BOOLEAN_NOTATION {
+    ENG = "ENG",
+    MATH = "MATH"
+}
+export const EMPTY_BOOLEAN_NOTATION_RECORD: {[bn in BOOLEAN_NOTATION]: false} & BooleanNotation = {
+    [BOOLEAN_NOTATION.ENG]: false, [BOOLEAN_NOTATION.MATH]: false
+}
+// STAGES
+export enum STAGE {
+    YEAR_7 = "year_7",
+    YEAR_8 = "year_8",
+    YEAR_9 = "year_9",
+    GCSE = "gcse",
+    A_LEVEL = "a_level",
+    FURTHER_A = "further_a",
+    UNIVERSITY = "university",
+    ALL = "all",
+}
+export const STAGE_NULL_OPTIONS = new Set([STAGE.ALL]);
+export const STAGES_PHY = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
+export const STAGES_CS = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL]);
+export const stagesOrdered: Stage[] = ["year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
+export const stageLabelMap: {[stage in Stage]: string} = {
+    year_7: "Year\u00A07",
+    year_8: "Year\u00A08",
+    year_9: "Year\u00A09",
+    gcse: "GCSE",
+    a_level: "A\u00A0Level",
+    further_a: "Further\u00A0A",
+    university: "University",
+    all: "All stages",
+}
+
+// DIFFICULTIES
+export const difficultyShortLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "P1",
+    practice_2: "P2",
+    practice_3: "P3",
+    challenge_1: "C1",
+    challenge_2: "C2",
+    challenge_3: "C3",
+}
+export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice\u00A0(P1)",
+    practice_2: "Practice\u00A0(P2)",
+    practice_3: "Practice\u00A0(P3)",
+    challenge_1: "Challenge\u00A0(C1)",
+    challenge_2: "Challenge\u00A0(C2)",
+    challenge_3: "Challenge\u00A0(C3)",
+}
+export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
+export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: difficultyLabelMap[d]}
+));
+
+// QUESTION CATEGORIES
+export enum QUESTION_CATEGORY {
+    LEARN_AND_PRACTICE = "learn_and_practice", /* pseudo option */
+    PROBLEM_SOLVING = "problem_solving",
+    BOOK_QUESTIONS = "book",
+    QUICK_QUIZ = "quick_quiz",
+    TOPIC_TEST = "topic_test",
+    MASTER_MATHS_AND_PHYSICS = "master_maths_and_physics",
+}
+
+export const QUESTION_CATEGORY_ITEM_OPTIONS = [
+    {label: "Learn and Practice", value: QUESTION_CATEGORY.LEARN_AND_PRACTICE},
+    {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
+    // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
+    // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
+];
 
 export enum SUBJECTS {
     PHYSICS = 'physics',
@@ -552,13 +664,6 @@ export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
 ];
-
-export const examBoardTagMap: {[examBoard: string]: string} = {
-    [EXAM_BOARD.AQA]: "examboard_aqa",
-    [EXAM_BOARD.OCR]: "examboard_ocr",
-};
-
-export const tagExamBoardMap: {[tag: string]: string} = invert(examBoardTagMap);
 
 export enum TAG_ID {
     // CS ----
@@ -768,13 +873,15 @@ export enum MEMBERSHIP_STATUS {
 
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
+export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
+
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
-export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT == SITE.PHY ?
+export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT === SITE.PHY ?
     {title: "Assignment Progress", to: "/assignment_progress"} :
     {title: "My markbook", to: "/my_markbook"};
 
@@ -875,44 +982,6 @@ for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
-
-
-export enum QUESTION_CATEGORY {
-    LEARN_AND_PRACTICE = "learn_and_practice", /* pseudo option */
-    PROBLEM_SOLVING = "problem_solving",
-    BOOK_QUESTIONS = "book",
-    QUICK_QUIZ = "quick_quiz",
-    TOPIC_TEST = "topic_test",
-    MASTER_MATHS_AND_PHYSICS = "master_maths_and_physics",
-}
-
-export const STAGE_OPTIONS = [
-    {label: "GCSE", value: "gcse"},
-    {label: "A Level", value: "a_level"},
-    {label: "Further A", value: "further_a"},
-    {label: "University", value: "university"}
-]
-
-export const DIFFICULTY_OPTIONS = [
-    {label: "Practice (P1)", value: "practice_1"},
-    {label: "Practice (P2)", value: "practice_2"},
-    {label: "Practice (P3)", value: "practice_3"},
-    {label: "Challenge (C1)", value: "challenge_1"},
-    {label: "Challenge (C2)", value: "challenge_2"},
-    {label: "Challenge (C3)", value: "challenge_3"}
-];
-
-export const QUESTION_CATEGORY_OPTIONS = [
-    {label: "Learn and Practice", value: QUESTION_CATEGORY.LEARN_AND_PRACTICE},
-    {label: "Quick Quiz", value: QUESTION_CATEGORY.QUICK_QUIZ},
-    // {label: "Topic Test", value: QUESTION_CATEGORY.TOPIC_TEST},
-    // {label: "Master Maths/Physics", value: QUESTION_CATEGORY.MASTER_MATHS_AND_PHYSICS},
-];
-
-export const EXAM_BOARD_OPTIONS = [
-    {label: "OCR", value: "ocr"},
-    {label: "AQA", value: "aqa"},
-]
 
 
 export const specificDoughnutColours: { [key: string]: string } = {

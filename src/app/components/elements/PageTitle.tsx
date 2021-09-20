@@ -6,17 +6,41 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {PageFragment} from "./PageFragment";
 import {LaTeX} from "./LaTeX";
+import {ViewingContext} from "../../../IsaacAppTypes";
+import {filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
+import {difficultyLabelMap, STAGE, stageLabelMap} from "../../services/constants";
+
+function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
+    const userContext = useUserContext();
+    const viewsWithMyStage = audienceViews.filter(vc => vc.stage === userContext.stage);
+    // If there is a possible audience view that is correct for our user context, show that specific one
+    const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
+    const propertiesToFilterBy: (keyof ViewingContext)[] = ["stage"];
+    if (SITE_SUBJECT === SITE.PHY) {propertiesToFilterBy.push("difficulty");}
+    const filteredViews = filterAudienceViewsByProperties(viewsToUse, propertiesToFilterBy);
+
+    return <span className="float-right h-subtitle">
+        {filteredViews.map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
+            {view.stage && view.stage !== STAGE.ALL && <span>
+                {stageLabelMap[view.stage]}
+            </span>}
+            {view.difficulty && " - "}
+            {view.difficulty && <span>
+                {difficultyLabelMap[view.difficulty]}
+            </span>}
+        </div>)}
+    </span>;
+}
 
 export interface PageTitleProps {
     currentPageTitle: string;
     subTitle?: string;
     help?: ReactElement;
     className?: string;
-    level?: number;
+    audienceViews?: ViewingContext[];
     modalId?: string;
 }
-
-export const PageTitle = ({currentPageTitle, subTitle, help, className, level, modalId}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, subTitle, help, className, audienceViews, modalId}: PageTitleProps) => {
     const dispatch = useDispatch();
     const openModal = useSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -51,8 +75,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, level, m
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         <LaTeX markup={currentPageTitle} />
-        {SITE_SUBJECT === SITE.PHY && level !== undefined && level !== 0 &&
-            <span className="float-right h-subtitle">Level {level}</span>}
+        {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
         {help && !showModal && <span id="title-help">Help</span>}
         {help && !showModal && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
         {modalId && showModal && <Button color="link" id="title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>}

@@ -4,7 +4,7 @@ import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
-import {EXAM_BOARD, MARKDOWN_RENDERER} from "../../services/constants";
+import {EXAM_BOARD_NULL_OPTIONS, MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
@@ -12,7 +12,7 @@ import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
-import {useCurrentExamBoard} from "../../services/examBoard";
+import {useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
@@ -39,10 +39,8 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
-    const examBoard = useCurrentExamBoard();
-    let examBoardTag = ''
-    if (examBoard === EXAM_BOARD.AQA) { examBoardTag = 'aqa' }
-    else if (examBoard === EXAM_BOARD.OCR) { examBoardTag = 'ocr' }
+    const {examBoard} = useUserContext();
+    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));

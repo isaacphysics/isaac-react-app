@@ -59,10 +59,12 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Quiz" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
-                    <h4 className="alert-heading">Error loading quiz!</h4>
-                    <p>{error}</p>
+                    <h4 className="alert-heading">{assignedQuizError ? "You have been set this quiz" : "Error loading quiz!"}</h4>
+                    {!assignedQuizError && <p>{error}</p>}
                     {assignedQuizError && <>
-                        <p>You can view your assigned quizzes <a href={"/quizzes"} target="_self" rel="noopener noreferrer">here</a>.</p>
+                        <p>Your teacher has set this quiz or test to you.  You may not practise it in advance.<br/>
+                            If you are ready to take the test or quiz, click on it in your <a href={"/quizzes"} target="_self" rel="noopener noreferrer">assigned quizzes</a> page.
+                        </p>
                     </>}
                 </RS.Alert>
             </>}

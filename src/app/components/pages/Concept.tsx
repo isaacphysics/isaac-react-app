@@ -14,12 +14,13 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {NavigationLinks} from "../elements/NavigationLinks";
-import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
+import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -42,29 +43,35 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                     collectionType={navigation.collectionType}
                 />
                 <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`/concepts/${doc.id}`}/>
+                    <div className="not-mobile">
+                        <EditContentButton doc={doc} />
                     </div>
-                    <div className="question-actions mt-3 not_mobile">
-                        <PrintButton/>
+                    <div className="mt-3 mr-sm-1 ml-auto">
+                        <UserContextPicker className="no-print text-right" />
+                    </div>
+                    <div className="question-actions">
+                        <ShareLink linkUrl={`/concepts/${conceptId}${location.search || ""}`} />
+                    </div>
+                    <div className="question-actions not-mobile">
+                        <PrintButton />
                     </div>
                 </div>
 
                 <Row className="concept-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
-                        <TempExamBoardPicker className="text-right" />
+                        <IntendedAudienceWarningBanner doc={doc} />
+
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
 
-                        {/* Superseded notice */}
-
                         {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
+
+                        {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
 
                         <NavigationLinks navigation={navigation} />
 
-                        {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {SITE_SUBJECT === SITE.PHY && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

@@ -87,10 +87,9 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         }
     }, [dispatch, gameboardMaybeNull, doc]);
 
-    if (gameboardMaybeNull === null && conceptQuestions === null) return null;
+    if (gameboardMaybeNull === null) return null;
 
-    // @ts-ignore Assert the properties we use and we know the API returns
-    const gameboard: GameboardDTO & { id: string; title: string; questions: GameboardItem[] } = gameboardMaybeNull;
+    const gameboard: GameboardDTO = gameboardMaybeNull;
 
     function getCurrentlyWorkingOn(): AugmentedQuestion {
         return {
@@ -217,13 +216,13 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         const progress: Progress = {title: '', conceptTitle: '', questions: {topTen: [], upper: [], lower: []}, connections: {topTenToUpper: [], upperToLower: []}};
 
         // Store title information for local storage retrieval
-        progress.title = gameboard.title;
+        progress.title = gameboard.title as string;
         progress.conceptTitle = currentlyWorkingOn.isConcept ? currentlyWorkingOn.title : '';
 
         const conceptQuestions = orderConceptQuestionsById(unorderedConceptQuestions);
 
         // Evaluate top ten progress
-        gameboard.questions.forEach((question: GameboardItem, index) => {
+        gameboard.contents?.forEach((question: GameboardItem, index) => {
             if (question.id === currentlyWorkingOn.id) {
                 const correctQuestionParts = pageQuestionParts?.filter(q => q.bestAttempt?.correct) || [];
                 progress.questions.topTen.push(augmentQuestion({
@@ -231,9 +230,9 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
                     questionPartsCorrect: correctQuestionParts.length || 0,
                     questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
-                }, gameboard.id, questionHistory, index));
+                }, gameboard.id as string, questionHistory, index));
             } else {
-                progress.questions.topTen.push(augmentQuestion(question, gameboard.id, questionHistory, index));
+                progress.questions.topTen.push(augmentQuestion(question, gameboard.id as string, questionHistory, index));
             }
         });
 
@@ -249,9 +248,9 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                             state: correctQuestionParts.length === pageQuestionParts?.length ? "PERFECT" : question.state,
                             questionPartsCorrect: correctQuestionParts.length || 0,
                             questionPartStates: pageQuestionParts?.map(qp => qp.bestAttempt ? qp.bestAttempt.correct ? "CORRECT" : "INCORRECT" : "NOT_ATTEMPTED") || []
-                        }, gameboard.id, questionHistory, index));
+                        }, gameboard.id as string, questionHistory, index));
                     } else {
-                        progress.questions[conceptQuestionType].push(augmentQuestion(question, gameboard.id, questionHistory, index));
+                        progress.questions[conceptQuestionType].push(augmentQuestion(question, gameboard.id as string, questionHistory, index));
                     }
                 });
             });
@@ -260,7 +259,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
         // Evaluate concept connections
         if (currentlyWorkingOn.isConcept) {
             let mostRecentTopTenQuestionId = getMostRecentQuestion(questionHistory, 'ft_top_ten') || undefined;
-            let mostRecentTopTenIndex = gameboard.questions.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId);
+            let mostRecentTopTenIndex = gameboard.contents?.map((question: GameboardItem) => question.id).indexOf(mostRecentTopTenQuestionId) || -1;
 
             let upperQuestionId = currentlyWorkingOn.fastTrackLevel === 'ft_upper' ? currentlyWorkingOn.id : getMostRecentQuestion(questionHistory, 'ft_upper');
             let upperIndex = conceptQuestions.upperLevelQuestions.map(question => question.id).indexOf(upperQuestionId as string);

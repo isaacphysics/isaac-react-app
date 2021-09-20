@@ -10,7 +10,6 @@ import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../servi
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
-import {TempExamBoardPicker} from "../elements/inputs/TempExamBoardPicker";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
@@ -25,6 +24,8 @@ import {FastTrackProgress} from "../elements/FastTrackProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import queryString from "query-string";
+import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
+import {determineAudienceViews} from "../../services/userContext";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -82,23 +83,23 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     currentPageTitle={title}
                     intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                     collectionType={navigation.collectionType}
-                    level={doc.level}
+                    audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
                 >
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
-                <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`/questions/${questionId}`}/>
+                <div className="no-print d-flex align-items-center mt-3">
+                    <div className="not-mobile">
+                        <EditContentButton doc={doc} />
                     </div>
-                    <div className="question-actions mt-3 not_mobile">
-                        <PrintButton questionPage={true}/>
+                    <div className="question-actions ml-auto">
+                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
+                    </div>
+                    <div className="question-actions not-mobile">
+                        <PrintButton questionPage />
                     </div>
                 </div>
                 <Row className="question-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
-                        <TempExamBoardPicker className="no-print text-right"/>
-
                         {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
                             {isTeacher(user) && <React.Fragment>
                                 <strong>
@@ -119,6 +120,8 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                                 this question
                             </RS.Button>.
                         </div>}
+
+                        <IntendedAudienceWarningBanner doc={doc} />
 
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc}/>

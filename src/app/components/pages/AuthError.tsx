@@ -3,14 +3,14 @@ import {Link} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as RS from "reactstrap";
 
-export const AuthError = ({location: {state: {errorMessage}}}: {location: {state: {errorMessage: string}}}) => {
+export const AuthError = ({location: {state}}: {location: {state?: {errorMessage?: string}}}) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle="Authentication error" breadcrumbTitleOverride="Authentication error" />
         <RS.Row className="pt-4">
             <RS.Col md={{size: 8, offset: 2}}>
                 <h3>
-                    {errorMessage}
+                    {state?.errorMessage || ""}
                 </h3>
                 <p>
                     An error occurred while attempting to log in.

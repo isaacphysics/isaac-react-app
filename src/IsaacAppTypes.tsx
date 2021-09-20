@@ -2,18 +2,32 @@ import React, {ReactElement} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
+    AudienceContext,
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
     ContentSummaryDTO,
+    Difficulty,
     GameboardDTO,
-    GameboardItem, QuizFeedbackMode,
+    GameboardItem,
+    QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO, UserSummaryForAdminUsersDTO
+    TOTPSharedSecretDTO,
+    UserContext,
+    UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
-import {ACTION_TYPE, DOCUMENT_TYPE, EXAM_BOARD, MEMBERSHIP_STATUS, TAG_ID, TAG_LEVEL} from "./app/services/constants";
+import {
+    ACTION_TYPE,
+    DOCUMENT_TYPE,
+    EXAM_BOARD,
+    MEMBERSHIP_STATUS,
+    PROGRAMMING_LANGUAGE,
+    STAGE,
+    TAG_ID,
+    TAG_LEVEL
+} from "./app/services/constants";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -60,7 +74,9 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPE.EXAM_BOARD_SET_TEMP; examBoard: EXAM_BOARD}
+    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE; stage: STAGE}
+    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}
+    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT; showOtherContent: boolean}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -226,6 +242,10 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE}
+
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_REQUEST; assignmentId: number}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_SUCCESS; assignmentResultsCSV: string}
+    | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
     | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
@@ -516,7 +536,6 @@ export interface ShortcutResponse {
 
 export interface UserBetaFeaturePreferences {
     SCREENREADER_HOVERTEXT?: boolean;
-    AUDIENCE_CONTEXT?: boolean;
 }
 
 export interface UserEmailPreferences {
@@ -544,10 +563,24 @@ export interface SubjectInterests {
     ENGINEERING_UNI?: boolean;
 }
 
+export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
+
+export interface BooleanNotation {
+    ENG?: boolean;
+    MATH?: boolean;
+}
+
+export interface DisplaySettings {
+    HIDE_NON_AUDIENCE_CONTENT?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
+    PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
+    BOOLEAN_NOTATION?: BooleanNotation;
+    DISPLAY_SETTING?: DisplaySettings;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -560,7 +593,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
-export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean; examBoard?: EXAM_BOARD};
+export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean;};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
@@ -800,6 +833,14 @@ export interface QuestionSearchResponse {
     results: ApiTypes.ContentSummaryDTO[];
 }
 
+export interface ContentSummary extends ContentSummaryDTO {
+    creationContext?: AudienceContext;
+}
+
+export interface ViewingContext extends UserContext {
+    difficulty?: Difficulty;
+}
+
 export interface StreakRecord {
     currentStreak?: number;
     largestStreak?: number;
@@ -831,6 +872,8 @@ export interface UserProgress {
     totalQuestionsAttemptedThisAcademicYear?: number;
     totalQuestionPartsCorrectThisAcademicYear?: number;
     totalQuestionPartsAttemptedThisAcademicYear?: number;
+    mostRecentQuestions?: ContentSummaryDTO[];
+    oldestIncompleteQuestions?: ContentSummaryDTO[];
     attemptsByType?: { [type: string]: number };
     correctByType?: { [type: string]: number };
     attemptsByTag?: { [tag: string]: number };
@@ -847,6 +890,10 @@ export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export type LevelAttempts<T> = { [level in Levels]?: T; }
 
+interface TagInstruction {
+    hidden?: boolean; comingSoon?: string; new?: boolean;
+}
+
 export interface BaseTag {
     id: TAG_ID;
     title: string;
@@ -854,6 +901,7 @@ export interface BaseTag {
     comingSoon?: string;
     new?: boolean;
     hidden?: boolean;
+    stageOverride?: {[s in STAGE]?: TagInstruction};
 }
 
 export interface Tag extends BaseTag {
@@ -880,7 +928,7 @@ export interface FreeTextRule extends Choice {
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;
 
 export type EnhancedGameboard = GameboardDTO & {
-    questions: (GameboardItem & { questionPartsTotal: number })[];
+    contents: (GameboardItem & { questionPartsTotal: number })[];
 };
 
 export type SingleEnhancedAssignment = AssignmentDTO & {
