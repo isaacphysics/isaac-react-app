@@ -5,7 +5,6 @@ import {IsaacContent} from "../content/IsaacContent";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
-import {isDefined} from "../../services/miscUtils";
 
 
 interface PageFragmentComponentProps {
