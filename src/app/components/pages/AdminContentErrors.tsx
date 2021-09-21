@@ -36,7 +36,9 @@ export const AdminContentErrors = () => {
     const errors = useSelector((state: AppState) => state?.adminContentErrors || null);
 
     const [errorFilter, setErrorFilter] = useState<string>("");
-    const errorReducer = (show: boolean, errorStr: string) => show || errorStr.toLowerCase().includes(errorFilter.toLowerCase())
+    const errorReducer = (show: boolean, errorStr: string) => show || errorStr.toLowerCase().includes(errorFilter.toLowerCase());
+
+    const [publishedFilter, setPublishedFilter] = useState<number>(2);
 
     return <Container>
         <Row>
@@ -64,6 +66,15 @@ export const AdminContentErrors = () => {
                             Filter errors <Input type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
                         </Label>
                     </Col>
+                    <Col lg={3} className="mb-2 ml-4">
+                        <Label className="w-100">
+                            <Input type="checkbox" checked={Math.abs(publishedFilter) === 2} onChange={() => setPublishedFilter(1 / publishedFilter)} /> Show published content
+                        </Label>
+                        <br/>
+                        <Label className="w-100">
+                            <Input type="checkbox" checked={publishedFilter > 0} onChange={() => setPublishedFilter(-1 * publishedFilter)} /> Show unpublished content
+                        </Label>
+                    </Col>
                 </Row>
                 <Row>
                     <Col>
@@ -75,7 +86,9 @@ export const AdminContentErrors = () => {
                                     <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                     <th>List of Error Messages</th>
                                 </tr>
-                                {errors.errorsList.filter((error) => error.listOfErrors.reduce(errorReducer, false))
+                                {errors.errorsList
+                                    .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+                                    .filter((error) => (error.partialContent.published && (Math.abs(publishedFilter) === 2)) || (!error.partialContent.published && publishedFilter > 0) )
                                     .map(ContentErrorRow)}
                             </tbody>
                         </Table>
