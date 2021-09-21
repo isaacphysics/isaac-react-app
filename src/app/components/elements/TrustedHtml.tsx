@@ -3,7 +3,6 @@ import 'katex/dist/contrib/mhchem.js';
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
-import {useUserContext} from "../../services/userContext";
 import {selectors} from "../../state/selectors";
 import {katexify} from "./LaTeX";
 
@@ -39,11 +38,10 @@ export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
-    const {examBoard} = useUserContext();
 
     const figureNumbers = useContext(FigureNumberingContext);
 
-    html = manipulateHtml(katexify(html, user, examBoard, booleanNotation, screenReaderHoverText, figureNumbers));
+    html = manipulateHtml(katexify(html, user, booleanNotation, screenReaderHoverText, figureNumbers));
 
     const ElementType = span ? "span" : "div";
     return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
