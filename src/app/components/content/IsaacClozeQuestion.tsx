@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {DragDropContext, Draggable, Droppable, DropResult, ResponderProvided} from "react-beautiful-dnd";
+import {DragDropContext, Draggable, DragUpdate, Droppable, DropResult, ResponderProvided} from "react-beautiful-dnd";
 import ReactDOM from 'react-dom';
 import {ClozeDropRegionContext} from "../../../IsaacAppTypes";
 import {setCurrentAttempt} from "../../state/actions";
@@ -126,15 +126,25 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
         }
     }
 
+    function fixInlineZones({source, destination}: DragUpdate, provided: ResponderProvided) {
+
+        if (!destination) return;
+
+        const destinationDropIndex = registeredDropRegionIDs.indexOf(destination.droppableId);
+        if (destinationDropIndex !== -1 && destination.index !== 0) {
+            // Deselect zone
+            // const inlineDrop = document.querySelector(`[data-rbd-droppable-id="${destination.droppableId}"]`);
+            // if (inlineDrop && inlineDrop.parentElement && inlineDrop.parentElement.parentElement) {
+            //     inlineDrop.parentElement.parentElement.setAttribute("style", "pointer-events: none");
+            // }
+        }
+    }
+
     // Run after a drag action ends
     function updateAttempt({source, destination, draggableId}: DropResult, provided: ResponderProvided) {
-        if (source.droppableId === destination?.droppableId && source.index === destination?.index) {
-            return; // No change
-        }
+        if (source.droppableId === destination?.droppableId && source.index === destination?.index) return; // No change
 
-        if (!destination) {
-            return; // Drag had no destination
-        }
+        if (!destination) return; // Drag had no destination
 
         const inlineDropIndex = (id : string) => registeredDropRegionIDs.indexOf(id)
 
@@ -187,7 +197,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
         } else {
             // Drop is into inline drop section
             const destinationDropIndex = inlineDropIndex(destination.droppableId);
-            if (destinationDropIndex !== -1) {
+            if (destinationDropIndex !== -1 && destination.index === 0) {
                 replaceSource(idvs[destinationDropIndex]);
                 idvs.splice(destinationDropIndex, 1, withReplacement ? {...item, replacementId: item.id + uuid.v4()} : item);
             } else {
@@ -219,7 +229,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
 
     return <div ref={questionContentRef} className="question-content">
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion}}>
-            <DragDropContext onDragEnd={updateAttempt}>
+            <DragDropContext onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
