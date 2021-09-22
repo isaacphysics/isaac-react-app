@@ -8,7 +8,7 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
-import { IsaacCodeSnippet } from '../../content/IsaacCodeSnippet';
+import {IsaacPythonEditor} from "../../content/IsaacPythonQuestion";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
@@ -70,29 +70,13 @@ export const HomepageCS = () => {
 
         <Container>
             <h2>Code Demo:</h2>
-            <IsaacCodeSnippet doc={{
+            <IsaacPythonEditor doc={{
                 language: "python",
-                code: [
-                    `# Isaac Computer Science`,
-                    `# Usage licensed under the Open Government Licence v3.0`,
-                    ``,
-                    `def gcd(x, y):`,
-                    `    """Euclidian algorithm to find and return the greatest common denominator of two numbers"""`,
-                    `    if y == 0:`,
-                    `        return x`,
-                    `    else:`,
-                    `        return gcd(y, x%y)`,
-                    ``,
-                    `if __name__ == '__main__':`,
-                    `    x = 259`,
-                    `    y = 111`,
-                    `    answer = gcd(x, y)`,
-                    `    print(f"The lowest common denominator of {x} and {y} is {answer}")`,
-                    ``,
-                    ``,
-                ].join("\n"),
+                initCode: "def square(x):\n  # Your code here",
+                test: "checkerResult = str([square(2), square(8), square(1), square(-3)])",
                 url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
-            }} />
+
+            }}  questionId={"16b7b636-fd93-496d-9724-e18ec23eedc9"}/>
         </Container>
 
         {!(user && user.loggedIn) && <Container><hr /></Container>}

@@ -1,27 +1,38 @@
 import {CodeSnippetDTO} from "../../../IsaacApiTypes";
-import React from "react";
+import React, {useEffect, useRef} from "react";
+import {Col, Row} from "reactstrap";
 
-const iframeLocation = "http://localhost:3000"
+import hljs from 'highlight.js/lib/core';
+import {addLineNumbers} from "../../services/highlightJs";
 
-interface IsaacCodeProps {doc: CodeSnippetDTO}
+interface IsaacCodeProps {
+    doc: CodeSnippetDTO;
+}
+
 export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
-    function sendPostMessage(obj: {code: string}) {
-        const sandbox = document.getElementById("code-sandbox");
-        (sandbox as HTMLIFrameElement).contentWindow?.postMessage(obj, iframeLocation);
-    }
+    const codeSnippetRef = useRef<HTMLElement>(null);
 
-    function sendQuestion() {
-        sendPostMessage({
-            code: doc.code || "",
-        });
-    }
+    useEffect(() => {
+        if (codeSnippetRef.current) {
+            hljs.highlightElement(codeSnippetRef.current);
+            addLineNumbers(codeSnippetRef.current);
+        }
+    }, [doc]);
 
-    window.addEventListener('message', e => {
-        if (e.origin !== iframeLocation)
-            return;
-
-        // calculate correct answer
-    });
-
-    return <iframe title={"Code Sandbox"} src={iframeLocation} id="code-sandbox" onLoad={sendQuestion} className={"w-100"} style={{"resize": "both", "height": "510px", "border": "none"}}/>
+    return <div>
+        <Row>
+            <Col className="code-snippet">
+                <pre className="line-numbers">
+                    <code ref={codeSnippetRef} className={doc.disableHighlighting ? 'plaintext' : doc.language}>
+                        {doc.code}
+                    </code>
+                </pre>
+            </Col>
+        </Row>
+        {doc.url && <Row>
+            <Col className="text-center mb-2">
+                <a href={doc.url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
+            </Col>
+        </Row>}
+    </div>
 };
