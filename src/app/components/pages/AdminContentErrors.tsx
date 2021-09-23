@@ -7,6 +7,8 @@ import {Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import Select from "react-select";
+import {multiSelectOnChange} from "../../services/gameboardBuilder";
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>
@@ -30,6 +32,11 @@ const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     </tr>
 };
 
+enum PUBLISHED_FILTER {
+    PUBLISHED = "Published",
+    UNPUBLISHED = "Unpublished"
+}
+
 export const AdminContentErrors = () => {
     const dispatch = useDispatch();
     useEffect(() => {dispatch(getAdminContentErrors());}, [dispatch]);
@@ -38,7 +45,7 @@ export const AdminContentErrors = () => {
     const [errorFilter, setErrorFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || errorStr.toLowerCase().includes(errorFilter.toLowerCase());
 
-    const [publishedFilter, setPublishedFilter] = useState<number>(2);
+    const [publishedFilter, setPublishedFilter] = useState<PUBLISHED_FILTER[]>([PUBLISHED_FILTER.PUBLISHED, PUBLISHED_FILTER.UNPUBLISHED]);
 
     return <Container>
         <Row>
@@ -62,18 +69,24 @@ export const AdminContentErrors = () => {
                 </Row>
                 <Row>
                     <Col lg={4} className="mb-2">
-                        <Label className="w-100">
-                            Filter errors <Input type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
+                        <Label htmlFor="error-message-filter" className="w-100">
+                            Filter by error message
                         </Label>
+                        <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
                     </Col>
-                    <Col lg={3} className="mb-2 ml-4">
-                        <Label className="w-100">
-                            <Input type="checkbox" checked={Math.abs(publishedFilter) === 2} onChange={() => setPublishedFilter(1 / publishedFilter)} /> Show published content
-                        </Label>
-                        <br/>
-                        <Label className="w-100">
-                            <Input type="checkbox" checked={publishedFilter > 0} onChange={() => setPublishedFilter(-1 * publishedFilter)} /> Show unpublished content
-                        </Label>
+                    <Col lg={6} className="mb-2">
+                        <Label htmlFor="published-filter-select">Filter by published status</Label>
+                        <Select
+                            inputId="published-filter-select"
+                            isMulti
+                            placeholder="None"
+                            value={publishedFilter.map(x => ({value: x, label: x}))}
+                            options={[
+                                {value: PUBLISHED_FILTER.PUBLISHED, label: PUBLISHED_FILTER.PUBLISHED},
+                                {value: PUBLISHED_FILTER.UNPUBLISHED, label: PUBLISHED_FILTER.UNPUBLISHED}
+                            ]}
+                            onChange={multiSelectOnChange(setPublishedFilter)}
+                            />
                     </Col>
                 </Row>
                 <Row>
@@ -88,7 +101,9 @@ export const AdminContentErrors = () => {
                                 </tr>
                                 {errors.errorsList
                                     .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                    .filter((error) => (error.partialContent.published && (Math.abs(publishedFilter) === 2)) || (!error.partialContent.published && publishedFilter > 0) )
+                                    .filter((error) =>
+                                        (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED))
+                                        || (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)) )
                                     .map(ContentErrorRow)}
                             </tbody>
                         </Table>
