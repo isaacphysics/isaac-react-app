@@ -11,7 +11,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {DragDropContext, Draggable, DragUpdate, Droppable, DropResult, ResponderProvided} from "react-beautiful-dnd";
+import {
+    DragDropContext,
+    Draggable,
+    DragStart,
+    DragUpdate,
+    Droppable,
+    DropResult,
+    ResponderProvided
+} from "react-beautiful-dnd";
 import ReactDOM from 'react-dom';
 import {ClozeDropRegionContext} from "../../../IsaacAppTypes";
 import {setCurrentAttempt} from "../../state/actions";
@@ -37,20 +45,20 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                 <Droppable droppableId={id} isDropDisabled={readonly} direction="vertical" >
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
-                        className={`d-flex justify-content-center align-items-center bg-grey ${snapshot.draggingFromThisWith ? "" : ""} rounded w-100 ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-                        style={{overflow: "hidden", minHeight: "inherit"}}
+                        className="d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden"
+                        style={{minHeight: "inherit"}}
                     >
                         {item && <Draggable key={item.replacementId} draggableId={item.replacementId || ""} index={0}>
                             {(provided, snapshot) =>
                                 <div
-                                    ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className={`${snapshot.isDragging ? "" : ""}`}
+                                    ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                                 >
                                     <Item item={item}/>
                                 </div>
                             }
                         </Draggable>}
                         {!item && "\u00A0"}
-                        {provided.placeholder && <div style={{width: 0, visibility: "hidden"}}>
+                        {provided.placeholder && <div style={{width: 0}}>
                             {provided.placeholder}
                         </div>}
                     </div>}
@@ -126,22 +134,36 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
         }
     }
 
-    function fixInlineZones({source, destination}: DragUpdate, provided: ResponderProvided) {
+    function fixInlineZoneOnStartDrag({source}: DragStart, provided: ResponderProvided) {
+        fixInlineZones({destination: source} as DragUpdate, provided);
+    }
 
-        if (!destination) return;
+    // This is run on drag update to highlight the droppable that the user is dragging over
+    //  this gives more control over when a droppable is highlighted
+    function fixInlineZones({destination}: DragUpdate, provided: ResponderProvided) {
+        registeredDropRegionIDs.map((dropid, i) => {
+            const inlineDrop = document.querySelector(`[data-rbd-droppable-id="${dropid}"]`) as HTMLElement;
+            const destinationDropIndex = destination ? registeredDropRegionIDs.indexOf(dropid) : -1;
+            const destinationDragIndex = destination?.index ?? -1;
 
-        const destinationDropIndex = registeredDropRegionIDs.indexOf(destination.droppableId);
-        if (destinationDropIndex !== -1 && destination.index !== 0) {
-            // Deselect zone
-            // const inlineDrop = document.querySelector(`[data-rbd-droppable-id="${destination.droppableId}"]`);
-            // if (inlineDrop && inlineDrop.parentElement && inlineDrop.parentElement.parentElement) {
-            //     inlineDrop.parentElement.parentElement.setAttribute("style", "pointer-events: none");
-            // }
-        }
+            if (inlineDrop) {
+                if (dropid === destination?.droppableId && destinationDropIndex !== -1 && destinationDragIndex === 0) {
+                    // Reselect zone (or make sure it's got a border)
+                    inlineDrop.className = inlineDrop.className.replace("border border-dark", "") + " border border-dark";
+                } else {
+                    // Deselect zone
+                    inlineDrop.className = inlineDrop.className.replace("border border-dark", "");
+                }
+            }
+        });
     }
 
     // Run after a drag action ends
     function updateAttempt({source, destination, draggableId}: DropResult, provided: ResponderProvided) {
+
+        // Make sure borders are removed, since drag has ended
+        fixInlineZones({destination: undefined} as DragUpdate, provided);
+
         if (source.droppableId === destination?.droppableId && source.index === destination?.index) return; // No change
 
         if (!destination) return; // Drag had no destination
@@ -199,6 +221,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
             const destinationDropIndex = inlineDropIndex(destination.droppableId);
             if (destinationDropIndex !== -1 && destination.index === 0) {
                 replaceSource(idvs[destinationDropIndex]);
+                console.log(idvs);
                 idvs.splice(destinationDropIndex, 1, withReplacement ? {...item, replacementId: item.id + uuid.v4()} : item);
             } else {
                 replaceSource(item);
@@ -229,7 +252,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
 
     return <div ref={questionContentRef} className="question-content">
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion}}>
-            <DragDropContext onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
+            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
