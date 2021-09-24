@@ -98,18 +98,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(() => {
-        let initNsis : ClozeItemDTO[];
-        if (!withReplacement && currentAttempt?.items && doc.items) {
-            // If replacement is disabled, items from the current attempt are filtered from the questions items
-            initNsis = doc.items.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id));
-        } else {
-            // If replacement is enabled, we still need all of the items in the nonSelectedItems list
-            initNsis = [...doc.items];
-        }
-        // In both cases, the replacementId must be set
-        return initNsis.map(x => ({...x, replacementId: x.id}));
-    });
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>([...doc.items]);
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
     const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
@@ -122,7 +111,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
             if (!withReplacement) {
-                setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
+                setNonSelectedItems(nonSelectedItems.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
             }
         }
         }, [currentAttempt]);
@@ -221,7 +210,6 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
             const destinationDropIndex = inlineDropIndex(destination.droppableId);
             if (destinationDropIndex !== -1 && destination.index === 0) {
                 replaceSource(idvs[destinationDropIndex]);
-                console.log(idvs);
                 idvs.splice(destinationDropIndex, 1, withReplacement ? {...item, replacementId: item.id + uuid.v4()} : item);
             } else {
                 replaceSource(item);
