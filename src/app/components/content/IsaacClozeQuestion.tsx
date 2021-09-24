@@ -117,7 +117,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     useEffect(() => {
         if (currentAttempt?.items) {
             const idvs = currentAttempt.items as (ClozeItemDTO | undefined)[];
-            setInlineDropValues(idvs.map(x => x === undefined ? x : ({...x, replacementId: `${x.id}-${uuid.v4()}`})));
+            setInlineDropValues(registeredDropRegionIDs.map((_, i) => idvs[i] ? {...idvs[i], replacementId: `${idvs[i]?.id}-${uuid.v4()}`} : undefined));
 
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
