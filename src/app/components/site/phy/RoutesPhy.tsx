@@ -20,6 +20,7 @@ import {GroupProgress} from "../../pages/GroupProgress";
 // import {SingleGroupProgress} from "../../pages/SingleGroupProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {GraphSketcherPage} from "../../pages/GraphSketcher";
+import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
 
 let key = 0;
 export const RoutesPhy = [
@@ -40,6 +41,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
     <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
     <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
+    <TrackedRoute key={key++} exact path="/books/maths_book_gcse" component={MathsBookGcse}/>,
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
