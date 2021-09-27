@@ -57,10 +57,8 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                                 </div>
                             }
                         </Draggable>}
-                        {!item && "\u00A0"}
-                        {provided.placeholder && <div style={{width: 0}}>
-                            {provided.placeholder}
-                        </div>}
+                        {!(item || snapshot.draggingFromThisWith) && "\u00A0"}
+                        {snapshot.draggingFromThisWith && provided.placeholder}
                     </div>}
                 </Droppable>
             </div>,
@@ -98,7 +96,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>([...doc.items]);
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>([...doc.items].map(x => ({...x, replacementId: x.id})));
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
     const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
