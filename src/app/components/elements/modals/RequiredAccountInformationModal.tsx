@@ -2,7 +2,7 @@ import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
-import {UserEmailPreferences} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {
@@ -16,7 +16,7 @@ import {isMobile} from "../../../services/device";
 import {isLoggedIn} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 
@@ -38,7 +38,12 @@ const RequiredAccountInfoBody = () => {
     const initialUserContexts = user?.loggedIn ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
-    const userPreferencesToUpdate = {EMAIL_PREFERENCE: emailPreferences,};
+    const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
+    const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
+
+    const userPreferencesToUpdate = {
+        EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
+    };
 
     // Form submission
     function formSubmission(event: React.FormEvent<HTMLFormElement>) {
@@ -51,22 +56,19 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = SITE_SUBJECT !== SITE.CS ||
-        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts);
+    const allUserFieldsAreValid =
+        (SITE_SUBJECT === SITE.PHY && validateUserContexts(initialUserContexts)) ||
+        (SITE_SUBJECT === SITE.CS && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
-            <div className="text-muted small pb-2">
-                Providing a few extra pieces of information helps us understand the usage of Isaac Computer Science across the UK and beyond.
-                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
-            </div>
             <div className="text-right text-muted required-before">
                 Required
             </div>
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {(!validateUserGender(initialUserValue) || !validateUserContexts(initialUserContexts)) && <RS.Col>
-                    {!validateUserGender(initialUserValue) && <div className="mb-3">
+                {((SITE_SUBJECT === SITE.CS && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
+                    {SITE_SUBJECT === SITE.CS && !validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -75,18 +77,24 @@ const RequiredAccountInfoBody = () => {
                     </div>}
                     {!validateUserContexts(initialUserContexts) && <div>
                         <UserContextAccountInput
-                            user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted}
+                            user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                            displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
+                            setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                         />
                     </div>}
                 </RS.Col>}
-                {!validateUserSchool(initialUserValue) && <RS.Col>
-                        <SchoolInput
-                            userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                            submissionAttempted={submissionAttempted} idPrefix="modal"
-                            required
-                        />
+                {SITE_SUBJECT === SITE.CS && !validateUserSchool(initialUserValue) && <RS.Col>
+                    <SchoolInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required
+                    />
                 </RS.Col>}
             </RS.Row>
+            <div className="text-muted small pb-2">
+                Providing a few extra pieces of information helps us understand the usage of Isaac {SITE_SUBJECT_TITLE} across the UK and beyond.
+                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
+            </div>
         </RS.CardBody>}
 
         {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>

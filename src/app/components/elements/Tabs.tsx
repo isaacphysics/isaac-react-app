@@ -15,6 +15,7 @@ interface TabsProps {
     activeTabOverride?: number;
     onActiveTabChange?: (tabIndex: number) => void;
     deselectable?: boolean;
+    refreshHash?: string;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string, tabIndex: number) {
@@ -23,12 +24,14 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false} = props;
+    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false, refreshHash} = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     useEffect(() => {
-        isDefined(activeTabOverride) && setActiveTab(activeTabOverride)
-    }, [activeTabOverride, children]);
+        if (isDefined(activeTabOverride)) {
+            setActiveTab(activeTabOverride);
+        }
+    }, [activeTabOverride, refreshHash]);
 
     function changeTab(tabIndex: number) {
         pauseAllVideos();

@@ -28,7 +28,8 @@ import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {isQuestion} from "../../../services/questions";
 import {API_PATH} from "../../../services/constants";
-import { getQuizAssignmentResultsSummaryCSV } from "../../../state/actions";
+import { closeActiveModal, getQuizAssignmentResultsSummaryCSV, openActiveModal } from "../../../state/actions";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 interface QuizTeacherFeedbackProps {
     match: {params: {quizAssignmentId: string}}
@@ -84,11 +85,30 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
     const returnToStudent = async () => {
+        dispatch(openActiveModal({
+            closeAction: () => {
+                dispatch(closeActiveModal())
+            },
+            title: "Allow another attempt?",
+            body: "This will allow the student to attempt the quiz again.",
+            buttons: [
+                <RS.Button key={1} color="primary" outline target="_blank" onClick={() => {dispatch(closeActiveModal())}}>
+                    Cancel
+                </RS.Button>,
+                <RS.Button key={0} color="primary" target="_blank" onClick={_returnToStudent}>
+                    Confirm
+                </RS.Button>,
+        ]
+        }));    
+    }
+
+    const _returnToStudent = async () => {
         try {
             setWorking(true);
             await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
         } finally {
             setWorking(false);
+            dispatch(closeActiveModal());
         }
     };
 
@@ -116,12 +136,12 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                             {row.user?.givenName}
                             <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
                             <span className="quiz-student-menu-icon">
-                            {working ? <RS.Spinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                            {working ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
                         </span>
                         </div>
                     </RS.Button>
                     {!working && dropdownOpen && <div className="py-2 px-3">
-                        <RS.Button size="sm" onClick={returnToStudent}>Return to student</RS.Button>
+                        <RS.Button size="sm" onClick={returnToStudent}>Allow another attempt</RS.Button>
                     </div>}
                 </>
             :   <>
@@ -229,7 +249,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                         <RS.UncontrolledDropdown className="d-inline-block">
                             <RS.DropdownToggle color="dark" outline className="px-3" caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                                 {settingFeedbackMode ?
-                                    <>Saving <RS.Spinner size="sm" className="quizFeedbackModeSpinner" /></>
+                                    <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
                                 :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
                             </RS.DropdownToggle>
                             <RS.DropdownMenu>

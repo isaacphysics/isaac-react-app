@@ -20,9 +20,9 @@ import {AppState} from "../../state/reducers";
 import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     BooleanNotation,
+    DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
-    SubjectInterests,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser,
@@ -46,7 +46,7 @@ import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
 import {ErrorState} from "../../state/reducers/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
@@ -143,14 +143,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useEffect(() => {
         const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentSubjectInterests = (userPreferences?.SUBJECT_INTEREST) ? userPreferences.SUBJECT_INTEREST: {};
-        const currentProgrammingLanguage = (userPreferences?.PROGRAMMING_LANGUAGE) ? userPreferences.PROGRAMMING_LANGUAGE: {};
-        const currentBooleanNotation = (userPreferences?.BOOLEAN_NOTATION) ? userPreferences.BOOLEAN_NOTATION: {};
-        const currentUserPreferences = {
+        const currentProgrammingLanguage = SITE_SUBJECT === SITE.CS ? (userPreferences?.PROGRAMMING_LANGUAGE ? userPreferences.PROGRAMMING_LANGUAGE: {}) : undefined;
+        const currentBooleanNotation = SITE_SUBJECT === SITE.CS ? (userPreferences?.BOOLEAN_NOTATION ? userPreferences.BOOLEAN_NOTATION: {}) : undefined;
+        const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
+        const currentUserPreferences: UserPreferencesDTO = {
             EMAIL_PREFERENCE: currentEmailPreferences,
-            SUBJECT_INTEREST: currentSubjectInterests,
             PROGRAMMING_LANGUAGE: currentProgrammingLanguage,
             BOOLEAN_NOTATION: currentBooleanNotation,
+            DISPLAY_SETTING: currentDisplaySettings,
         };
 
         setEmailPreferences(currentEmailPreferences);
@@ -171,13 +171,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     // Values derived from inputs (props and state)
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
-    function setSubjectInterests(newSubjectInterests: SubjectInterests) {
-        setMyUserPreferences({...myUserPreferences, SUBJECT_INTEREST: newSubjectInterests});
-    }
-
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
         const clearLanguages: { [pl in PROGRAMMING_LANGUAGE]: false } = {
-            JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, PLAINTEXT: false, SQL: false, NONE: false,
+            PSEUDOCODE: false, JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, PLAINTEXT: false, SQL: false, NONE: false,
         };
 
         const fullNewProgrammingLanguage = {...clearLanguages, ...newProgrammingLanguage};
@@ -187,6 +183,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setBooleanNotation(newBooleanNotation: BooleanNotation) {
         setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: newBooleanNotation});
+    }
+
+    function setDisplaySettings(newDisplaySettings: DisplaySettings) {
+        setMyUserPreferences({...myUserPreferences, DISPLAY_SETTING: newDisplaySettings});
     }
 
     // Form's submission method
@@ -278,11 +278,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                                    subjectInterests={myUserPreferences.SUBJECT_INTEREST || {}}
-                                    setSubjectInterests={setSubjectInterests}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
                                     programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}} setProgrammingLanguage={setProgrammingLanguage}
                                     booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences.DISPLAY_SETTING || {}} setDisplaySettings={setDisplaySettings}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />

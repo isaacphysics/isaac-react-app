@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
@@ -23,7 +23,7 @@ export const HomepageCS = () => {
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
-                    GCSE resources
+                    GCSE resources <Badge color="secondary" className="ml-1 border">BETA</Badge>
                 </Button>
             </Col>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
@@ -66,7 +66,7 @@ export const HomepageCS = () => {
                             <Row>
                                 <Col>
                                     <h1>
-                                        Computer Science learning
+                                        Computer science learning
                                     </h1>
                                     <p className="mt-4">
                                         Welcome to Isaac Computer Science, the free online platform for students and
@@ -78,9 +78,12 @@ export const HomepageCS = () => {
                                         <li>Use it for <strong>revision</strong></li>
                                     </ul>
 
-                                    <p>
-                                        Isaac Computer Science is part of the <ExternalLink href="https://teachcomputing.org/">NCCE</ExternalLink>,<br />
-                                        a <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> funded project.
+                                    <p className="mr-lg-n1">
+                                        {"We also offer free "}
+                                        <Link to="/events?types=teacher">teacher CPD events</Link>{" and "}
+                                        <Link to="/events?types=student">student workshops</Link>.<br />
+                                        {"Isaac Computer Science is proud to be part of the Department for Education's "}
+                                        <Link to="/teachcomputing">National Centre for Computing Education</Link>.
                                     </p>
                                 </Col>
                             </Row>

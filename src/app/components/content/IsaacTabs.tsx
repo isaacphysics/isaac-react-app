@@ -31,7 +31,7 @@ export const IsaacTabs = (props: any) => {
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
-    // EXAM BOARD Special Case
+    // EXAM BOARD Special Case // TODO AUDIENCE_CONTEXT_CLEANUP remove this case once special tab content has been removed
     const {examBoard} = useUserContext();
     const tabTitles = Object.keys(tabTitlesToContent);
     const specialCaseExamBoardTab = tabTitles.includes("AQA") && tabTitles.includes("OCR") && tabTitles.length === 2;

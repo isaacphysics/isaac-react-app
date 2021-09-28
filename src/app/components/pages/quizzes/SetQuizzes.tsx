@@ -16,11 +16,12 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {loadGroups} from "../../../state/actions";
-import {NOT_FOUND} from "../../../services/constants";
+import {MANAGE_QUIZ_TAB, NOT_FOUND} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -61,7 +62,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 
                 <div className="mt-4 text-right">
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
-                        {isCancelling ? <><RS.Spinner size="sm" /> Cancelling...</> : {[SITE.CS]: "Cancel quiz", [SITE.PHY]: "Cancel Quiz"}[SITE_SUBJECT]}
+                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : {[SITE.CS]: "Cancel quiz", [SITE.PHY]: "Cancel Quiz"}[SITE_SUBJECT]}
                     </RS.Button>
                     <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
                         {{[SITE.CS]: "View results", [SITE.PHY]: "View Results"}[SITE_SUBJECT]}
@@ -72,16 +73,29 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
     </div>;
 }
 
-const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
+const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
+    const hashAnchor = location.hash?.slice(1) ?? null;
     const quizzes = useSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<ContentSummaryDTO> | undefined>();
+    const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
+    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT]);
     const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     const dispatch = useDispatch();
 
     const startIndex = 0;
     const [titleFilter, setTitleFilter] = useState<string|undefined>();
+
+    // Set active tab using hash anchor
+    useEffect(() => {
+        // @ts-ignore
+        const tab: MANAGE_QUIZ_TAB =
+            (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
+            MANAGE_QUIZ_TAB.set;
+        setActiveTab(tab);
+        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
+    }, [hashAnchor]);
 
     useEffect(() => {
         dispatch(loadGroups(false));
@@ -103,6 +117,10 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
         setFilteredQuizzes(quizzes);
     }, [titleFilter, quizzes]);
 
+    function activeTabChanged(tabIndex: number) {
+        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
+    }
+
     const pageHelp = <span>
         Use this page to manage and set quizzes to your groups. You can assign any quiz the Isaac team have built.
         <br />
@@ -110,10 +128,10 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
     </span>;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "Set quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]} help={pageHelp} />
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4">
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
             {{
-                [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Available Quizzes"}[SITE_SUBJECT]]:
+                [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]]:
                 <ShowLoading until={filteredQuizzes}>
                     {filteredQuizzes && <>
                         <p>The following quizzes are available to set to your groups.</p>
@@ -143,7 +161,7 @@ const SetQuizzesPageComponent = ({user}: SetQuizzesPageProps) => {
                     </>}
                 </ShowLoading>,
 
-                [{[SITE.CS]: "Previously set quizzes", [SITE.PHY]: "Previously Set Quizzes"}[SITE_SUBJECT]]:
+                [{[SITE.CS]: "Previously set quizzes", [SITE.PHY]: "Manage Quizzes"}[SITE_SUBJECT]]:
                 <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Quizzes you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
                     {quizAssignments && quizAssignments !== NOT_FOUND && <>
                         {quizAssignments.length === 0 && <p>You have not set any quizzes to your groups yet.</p>}

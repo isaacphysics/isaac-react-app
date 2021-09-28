@@ -16,6 +16,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 
 export const Concepts = withRouter((props: {history: History; location: Location}) => {
@@ -105,7 +106,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
                         <RS.CardHeader className="search-header">
                             <Col md={5} xs={12}>
                                 <h3>
-                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <RS.Spinner color="primary" /> : null}
+                                    <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </Col>
                             <Col md={7} xs={12}>

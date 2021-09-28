@@ -7,7 +7,7 @@ import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
+import {difficultyShortLabelMap, NOT_FOUND, STAGE, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -15,9 +15,9 @@ import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
-import {AppState} from "../../state/reducers";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import {Rectangle} from "../elements/svg/Rectangle";
+import {determineAudienceViews} from "../../services/userContext";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -88,32 +88,19 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
-            {/*TODO CS Level*/}
-            {SITE_SUBJECT === SITE.PHY && question.level !== undefined && question.level !== 0 &&
-                <span className="gameboard-tags">
-                    Level {question.level} <span className="px-3" />
-                    <svg width={`${3 * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`} height={`${miniHexagon.quarterHeight * 4}px`} >
-                        {Array(((question.level - 1) % 3) + 1).fill(Math.ceil(question.level / 3)).map((shape, i) =>
-                            <g transform={`translate(${(2 - i) * (difficultyIconWidth + 2 * difficultyIconXPadding)}, 0)`}>
-                                {shape === 1 ?
-                                    <Hexagon {...miniHexagon} className="hex difficulty practice mini active" />
-                                    :
-                                    <Rectangle className="square difficulty challenge mini active"
-                                               width={difficultyIconWidth} height={difficultyIconWidth} />
-                                }
-                                {/* @ts-ignore */}
-                                {i === ((question.level - 1) % 3) &&
-                                    <foreignObject width={difficultyIconWidth}
-                                                   height={difficultyIconWidth + (shape === 1 ? 2 : 0)}>
-                                        <div className={`difficulty-title active difficulty-${i + 1}`}>
-                                            {shape === 1 ? "P" : "C"}
-                                        </div>
-                                    </foreignObject>
-                                }
-                            </g>
-                        )}
-                    </svg>
-                </span>}
+
+            {question.audience && <div>
+                {determineAudienceViews(question.audience, question.creationContext)
+                    .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
+                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
+                            {stageLabelMap[view.stage]}
+                        </span>} {" "}
+                        {view.difficulty && <span className="gameboard-tags">
+                            ({difficultyShortLabelMap[view.difficulty]})
+                        </span>}
+                    </div>
+                )}
+            </div>}
         </Link>
     </RS.ListGroupItem>;
 };
@@ -142,8 +129,8 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
                 {gameboard?.wildCard && showWildcard(gameboard) &&
                     <Wildcard wildcard={gameboard.wildCard} />
                 }
-                {gameboard?.questions && gameboard.questions.map(q =>
-                    <GameboardItemComponent gameboard={gameboard} question={q} />
+                {gameboard?.contents && gameboard.contents.map(q =>
+                    <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
                 )}
             </RS.ListGroup>
         </RS.Col>
@@ -187,13 +174,15 @@ export const Gameboard = withRouter(({location}: {location: Location}) => {
             </RS.Col>
         </RS.Row>
         :
-        <RS.Row>
-            <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
-                </RS.Button>
-            </RS.Col>
-        </RS.Row>;
+        <React.Fragment>
+            {gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
+                <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
+                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                        {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
+                    </RS.Button>
+                </RS.Col>
+            </RS.Row>}
+        </React.Fragment>
 
     const notFoundComponent = <Container>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />

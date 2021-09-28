@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal} from "../../../state/actions";
@@ -11,20 +11,12 @@ interface ActiveModalProps {
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const ModalBody = activeModal && activeModal.body;
     const dispatch = useDispatch();
-    const [isOpen, setIsOpen] = useState(true);
 
     const toggle = () => {
-        const isNowOpen = !isOpen;
-        setIsOpen(isNowOpen);
+        dispatch(closeActiveModal());
     };
 
-    useEffect(() => {
-        if (!isOpen) {
-            dispatch(closeActiveModal());
-        }
-    }, [dispatch, isOpen]);
-
-    return <RS.Modal toggle={toggle} isOpen={isOpen} size={(activeModal && activeModal.size) || "lg"}>
+    return <RS.Modal toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"}>
         {activeModal && <React.Fragment>
             <RS.ModalHeader
                 className="h-title pb-5 mb-4"

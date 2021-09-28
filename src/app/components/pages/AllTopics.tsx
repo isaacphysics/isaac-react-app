@@ -20,16 +20,17 @@ export const AllTopics = () => {
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
+        const LinkTag = topic.comingSoon ? "span" : Link;
         if (!topic.hidden) {
             return <React.Fragment>
-                <Link
+                <LinkTag
                     to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}
                     className={topic.comingSoon ? "text-muted" : ""}
                 >
                     <TextTag>
                         {topic.title}
                     </TextTag>
-                </Link>
+                </LinkTag>
                 {" "}
                 {topic.comingSoon && !topic.new &&
                 <Badge color="light" className="border bg-white">Coming {topic.comingSoon}</Badge>}
@@ -38,41 +39,37 @@ export const AllTopics = () => {
         }
     };
 
-    const subcategoryTags = tags.allSubcategoryTags.map(tag => {
-        if (!tag.stages || tag.stages.includes(stage)) {
-            return tag;
-        } else {
-            return {...tag, hidden: true};
-        }
-    });
+    const subcategoryTags = tags.allSubcategoryTags;
 
-    const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= "H"});
-    const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > "H"});
+    const charToCutAt = stage === STAGE.A_LEVEL ? "H" : "F";
+    const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
+    const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
 
     const topicColumn = (subTags: Tag[]) => {
         return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6}>
-            {subTags.sort((a, b) => (a.title > b.title) ? 1 : -1).map((subcategory) => {
-                const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
-                const topicTags = tags.getTopicTags(subcategoryDescendentIds);
-                const topicComponents =
-                    topicTags.map(topic => (topic.stages?.includes(stage) || stage === STAGE.A_LEVEL) ? topic : {...topic, comingSoon: "soon!"})
-                    .map(topic =>
-                        <li
-                            className="border-0 px-0 py-0 pb-1 bg-transparent"
-                            key={topic.id}
-                        >
-                            {renderTopic(topic)}
-                        </li>
-                    );
-                if (!subcategory.hidden && topicComponents.length > 0) {
-                    return <React.Fragment key={subcategory.id}>
-                        <h3>{subcategory.title}</h3>
-                        <ul className="list-unstyled mb-3 link-list">
-                            {topicComponents}
-                        </ul>
-                    </React.Fragment>
+            {subTags.sort((a, b) => (a.title > b.title) ? 1 : -1)
+                // Overwrite subcategory with stage properties
+                .map(subcategory => ({...subcategory, ...subcategory.stageOverride?.[stage]}))
+                .map(subcategory => {
+                    const subcategoryDescendentIds = tags.getDescendents(subcategory.id).map(t => t.id);
+                    const topicTags = tags.getTopicTags(subcategoryDescendentIds);
+                    const topicComponents =
+                        topicTags
+                            // Overwrite subcategory with stage properties
+                            .map(topic => ({...topic, ...topic.stageOverride?.[stage]}))
+                            .map(topic => <li className="border-0 px-0 py-0 pb-1 bg-transparent" key={topic.id}>
+                                {renderTopic(topic)}
+                            </li>);
+                    if (!subcategory.hidden && topicComponents.length > 0) {
+                        return <React.Fragment key={subcategory.id}>
+                            <h3>{subcategory.title}</h3>
+                            <ul className="list-unstyled mb-3 link-list">
+                                {topicComponents}
+                            </ul>
+                        </React.Fragment>
+                    }
                 }
-            })}
+            )}
         </Col>
     };
 
@@ -80,12 +77,16 @@ export const AllTopics = () => {
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
 
-            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1}>
+            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1} refreshHash={stage}>
                 {
                     Object.assign(
                         {
                             All: <>
-                                {/* Add exposition for what 'All' tab is (in relation to other exam board pages for clarification) TODO CP */}
+                                <Row>
+                                    <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-4">
+                                        <PageFragment fragmentId={`${stage}_all_topics`} renderFragmentNotFound={false} />
+                                    </Col>
+                                </Row>
                                 <Row>
                                     <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
                                         {topicColumn(firstColTags)}
@@ -95,9 +96,9 @@ export const AllTopics = () => {
                             </>
                         },
                         ...stageExamBoards.map(examBoard => ({
-                            [examBoard]: <Row>
+                            [examBoard.toUpperCase()]: <Row>
                                 <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4">
-                                    <PageFragment fragmentId={`${stage}_specification_${examBoard.toLowerCase()}`} />
+                                    <PageFragment fragmentId={`${stage}_specification_${examBoard}`} />
                                 </Col>
                             </Row>
                         }))

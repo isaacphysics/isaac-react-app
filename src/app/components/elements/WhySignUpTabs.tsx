@@ -23,7 +23,7 @@ export const WhySignUpTabs = () => (
                                     <li>Track your progress as you answer questions</li>
                                     <li>Work towards achieving better exam results</li>
                                     <li>Access high-quality materials written by experienced teachers</li>
-                                    <li>Learn relevant content tailored to your A level exam board</li>
+                                    <li>Learn relevant content tailored to your exam board</li>
                                 </ul>
                                 <p>
                                     Everything on Isaac Computer Science is free, funded by the Department for Education.
@@ -57,7 +57,7 @@ export const WhySignUpTabs = () => (
 
                                 <strong>Isaac Computer Science aims to provide:</strong>
                                 <ul>
-                                    <li>Complete coverage of AQA and OCR specifications</li>
+                                    <li>Complete coverage of the leading exam specifications</li>
                                     <li>High-quality materials written by experienced teachers</li>
                                 </ul>
 

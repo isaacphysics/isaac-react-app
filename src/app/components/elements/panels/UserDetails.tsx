@@ -2,13 +2,12 @@ import React, {ChangeEvent} from "react";
 import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
 import {allRequiredInformationIsPresent, validateEmail} from "../../../services/validation";
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {BooleanNotation, ProgrammingLanguage, SubjectInterests, ValidationUser} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
-import {SubjectInterestTableInput} from "../inputs/SubjectInterestTableInput";
 import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
@@ -16,14 +15,14 @@ import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
     setUserToUpdate: (user: any) => void;
-    subjectInterests: SubjectInterests;
-    setSubjectInterests: (si: SubjectInterests) => void;
     userContexts: UserContext[];
     setUserContexts: (uc: UserContext[]) => void;
     programmingLanguage: ProgrammingLanguage;
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
     booleanNotation: BooleanNotation;
     setBooleanNotation: (bn: BooleanNotation) => void;
+    displaySettings: DisplaySettings;
+    setDisplaySettings: (ds: DisplaySettings) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
@@ -32,15 +31,15 @@ interface UserDetailsProps {
 export const UserDetails = (props: UserDetailsProps) => {
     const {
         userToUpdate, setUserToUpdate,
-        subjectInterests, setSubjectInterests,
         userContexts, setUserContexts,
         programmingLanguage, setProgrammingLanguage,
         booleanNotation, setBooleanNotation,
+        displaySettings, setDisplaySettings,
         submissionAttempted, editingOtherUser
     } = props;
 
     const allRequiredFieldsValid =
-        userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {SUBJECT_INTEREST: subjectInterests, EMAIL_PREFERENCE: null}, userContexts);
+        userToUpdate?.email && allRequiredInformationIsPresent(userToUpdate, {EMAIL_PREFERENCE: null}, userContexts);
 
     return <CardBody className="pt-0">
         <Row>
@@ -117,7 +116,11 @@ export const UserDetails = (props: UserDetailsProps) => {
                 </FormGroup>
             </Col>
             <Col md={6}>
-                <UserContextAccountInput user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts} submissionAttempted={submissionAttempted} />
+                <UserContextAccountInput
+                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                    displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
+                    setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
+                />
             </Col>
         </Row>
         {SITE_SUBJECT === SITE.CS && <Row>
@@ -134,21 +137,14 @@ export const UserDetails = (props: UserDetailsProps) => {
                         }}
                     >
                         <option value=""></option>
+                        <option value={PROGRAMMING_LANGUAGE.PSEUDOCODE}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PSEUDOCODE]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
                         <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
-                        <option value={PROGRAMMING_LANGUAGE.JAVASCRIPT}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVASCRIPT]}</option>
-                        {/*<option value={PROGRAMMING_LANGUAGE.PHP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PHP]}</option>*/}
-                        {/*<option value={PROGRAMMING_LANGUAGE.SQL}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.SQL]}</option>*/}
                     </Input>
                 </FormGroup>
             </Col>
             <Col md={6}>
                 <BooleanNotationInput booleanNotation={booleanNotation} setBooleanNotation={setBooleanNotation} />
-            </Col>
-        </Row>}
-        {SITE_SUBJECT === SITE.PHY && !editingOtherUser && <Row className="mt-3">
-            <Col>
-                <SubjectInterestTableInput stateObject={subjectInterests} setStateFunction={setSubjectInterests}/>
             </Col>
         </Row>}
 
