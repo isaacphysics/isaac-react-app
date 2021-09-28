@@ -1,14 +1,9 @@
-import {calculateHexagonProportions, Hexagon, HexagonProps} from "./Hexagon";
+import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {ifKeyIsEnter} from "../../../services/navigation";
 import React from "react";
 import {Item} from "../../../services/select";
 import {generateSquareProportions, Rectangle} from "./Rectangle";
 import {Container} from "reactstrap";
-
-interface ConcentricHexagonProps<T> extends HexagonProps<T> {
-    active?: boolean,
-    ringSize?: number
-}
 
 export interface DifficultyFilterProps {
     difficultyOptions: Item<string>[];
