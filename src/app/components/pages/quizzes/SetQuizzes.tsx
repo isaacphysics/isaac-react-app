@@ -46,7 +46,7 @@ function formatAssignmentOwner(user: RegisteredUserDTO, assignment: QuizAssignme
 function QuizAssignment({user, assignment}: QuizAssignmentProps) {
     const dispatch = useDispatch();
     const cancel = () => {
-        if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the quiz or see any feedback.")) {
+        if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback.")) {
             dispatch(markQuizAsCancelled(assignment.id as number));
         }
     };
@@ -62,7 +62,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 
                 <div className="mt-4 text-right">
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
-                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : {[SITE.CS]: "Cancel quiz", [SITE.PHY]: "Cancel Quiz"}[SITE_SUBJECT]}
+                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : {[SITE.CS]: "Cancel test", [SITE.PHY]: "Cancel Test"}[SITE_SUBJECT]}
                     </RS.Button>
                     <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
                         {{[SITE.CS]: "View results", [SITE.PHY]: "View Results"}[SITE_SUBJECT]}
@@ -79,7 +79,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const quizzes = useSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<ContentSummaryDTO> | undefined>();
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
-    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT]);
+    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage tests", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT]);
     const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     const dispatch = useDispatch();
@@ -94,7 +94,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
-        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
+        setPageTitle({[SITE.CS]: "Manage tests", [SITE.PHY]: (tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT])
     }, [hashAnchor]);
 
     useEffect(() => {
@@ -118,29 +118,29 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }, [titleFilter, quizzes]);
 
     function activeTabChanged(tabIndex: number) {
-        setPageTitle({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT])
+        setPageTitle({[SITE.CS]: "Manage tests", [SITE.PHY]: (tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT])
     }
 
     const pageHelp = <span>
-        Use this page to manage and set quizzes to your groups. You can assign any quiz the Isaac team have built.
+        Use this page to manage and set tests to your groups. You can assign any test the Isaac team have built.
         <br />
-        Students in the group will be emailed when you set a new quiz.
+        Students in the group will be emailed when you set a new test.
     </span>;
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
             {{
-                [{[SITE.CS]: "Available quizzes", [SITE.PHY]: "Set Quizzes"}[SITE_SUBJECT]]:
+                [{[SITE.CS]: "Available tests", [SITE.PHY]: "Set Tests"}[SITE_SUBJECT]]:
                 <ShowLoading until={filteredQuizzes}>
                     {filteredQuizzes && <>
-                        <p>The following quizzes are available to set to your groups.</p>
+                        <p>The following tests are available to set to your groups.</p>
                         <RS.Input
                             id="available-quizzes-title-filter" type="search" className="mb-4"
                             value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
                             placeholder="Search by title" aria-label="Search by title"
                         />
-                        {filteredQuizzes.length === 0 && <p><em>There are no quizzes you can set which match your search term.</em></p>}
+                        {filteredQuizzes.length === 0 && <p><em>There are no tests you can set which match your search term.</em></p>}
                         <RS.ListGroup className="mb-2 quiz-list">
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
@@ -148,7 +148,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
                                     <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz))}>
-                                        {{[SITE.CS]: "Set quiz", [SITE.PHY]: "Set Quiz"}[SITE_SUBJECT]}
+                                        {{[SITE.CS]: "Set test", [SITE.PHY]: "Set Test"}[SITE_SUBJECT]}
                                     </RS.Button>
                                 </div>
                                 <div className="d-none d-md-flex align-items-center">
@@ -161,10 +161,10 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                     </>}
                 </ShowLoading>,
 
-                [{[SITE.CS]: "Previously set quizzes", [SITE.PHY]: "Manage Quizzes"}[SITE_SUBJECT]]:
-                <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Quizzes you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
+                [{[SITE.CS]: "Previously set tests", [SITE.PHY]: "Manage Tests"}[SITE_SUBJECT]]:
+                <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
                     {quizAssignments && quizAssignments !== NOT_FOUND && <>
-                        {quizAssignments.length === 0 && <p>You have not set any quizzes to your groups yet.</p>}
+                        {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}
                         {quizAssignments.length > 0 && <div className="block-grid-xs-1 block-grid-md-2 block-grid-xl-3 my-2">
                             {quizAssignments.map(assignment => <QuizAssignment key={assignment.id} user={user} assignment={assignment} />)}
                         </div>}

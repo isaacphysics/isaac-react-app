@@ -27,7 +27,7 @@ const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
 
 
 const pageHelp = <span>
-    Answer the questions on each section of the quiz, then mark the quiz as complete when you are finished.
+    Answer the questions on each section of the test, then mark the test as complete when you are finished.
 </span>;
 
 const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}: QuizDoAsssignmentProps) => {
@@ -55,7 +55,7 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
                 <QuizAttemptFooter {...subProps} />
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Quiz" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color="danger">
                     <h4 className="alert-heading">Error loading assignment!</h4>
                     <p>{error}</p>

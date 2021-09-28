@@ -48,7 +48,7 @@ function QuizFooter(props: QuizAttemptProps) {
 }
 
 const pageHelp = <span>
-    Preview the questions on this quiz.
+    Preview the questions on this test.
 </span>;
 
 const QuizPreviewComponent = ({match: {params: {quizId, page}}}: QuizDoAsssignmentProps) => {
@@ -80,9 +80,9 @@ const QuizPreviewComponent = ({match: {params: {quizId, page}}}: QuizDoAsssignme
                 <QuizFooter {...subProps} />
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Quiz Preview" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test Preview" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color="danger">
-                    <h4 className="alert-heading">Error loading quiz preview</h4>
+                    <h4 className="alert-heading">Error loading test preview</h4>
                     <p>{error}</p>
                 </RS.Alert>
             </>}

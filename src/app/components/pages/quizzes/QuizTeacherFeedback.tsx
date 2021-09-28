@@ -36,7 +36,7 @@ interface QuizTeacherFeedbackProps {
 }
 
 const pageHelp = <span>
-    See the feedback for your students for this quiz assignment.
+    See the feedback for your students for this test assignment.
 </span>;
 
 interface ResultsTableProps {
@@ -90,7 +90,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                 dispatch(closeActiveModal())
             },
             title: "Allow another attempt?",
-            body: "This will allow the student to attempt the quiz again.",
+            body: "This will allow the student to attempt the test again.",
             buttons: [
                 <RS.Button key={1} color="primary" outline target="_blank" onClick={() => {dispatch(closeActiveModal())}}>
                     Cancel
@@ -231,7 +231,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
 
     const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
     const error = assignmentState && 'error' in assignmentState ? assignmentState.error : null;
-    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Quiz") + " results";
+    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Test") + " results";
 
     return <RS.Container>
         <ShowLoading until={assignmentState}>
@@ -281,7 +281,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
                 <RS.Alert color="danger">
-                    <h4 className="alert-heading">Error loading quiz feedback</h4>
+                    <h4 className="alert-heading">Error loading test feedback</h4>
                     <p>{error}</p>
                 </RS.Alert>
             </>}

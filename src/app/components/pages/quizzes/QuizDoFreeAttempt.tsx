@@ -27,7 +27,7 @@ const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
 
 
 const pageHelp = <span>
-    Answer the questions on each section of the quiz, then mark the quiz as complete to see your feedback.
+    Answer the questions on each section of the test, then mark the test as complete to see your feedback.
 </span>;
 
 const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFreeAttemptProps) => {
@@ -46,7 +46,7 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
     useSectionViewLogging(attempt, pageNumber);
 
-    const assignedQuizError = error?.toString().includes("You are currently set this quiz");
+    const assignedQuizError = error?.toString().includes("You are currently set this test");
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 
@@ -57,13 +57,13 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
                 <QuizAttemptFooter {...subProps} />
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Quiz" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
-                    <h4 className="alert-heading">{assignedQuizError ? "You have been set this quiz" : "Error loading quiz!"}</h4>
+                    <h4 className="alert-heading">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</h4>
                     {!assignedQuizError && <p>{error}</p>}
                     {assignedQuizError && <>
-                        <p>Your teacher has set this quiz or test to you.  You may not practise it in advance.<br/>
-                            If you are ready to take the test or quiz, click on it in your <a href={"/quizzes"} target="_self" rel="noopener noreferrer">assigned quizzes</a> page.
+                        <p>Your teacher has set this test to you.  You may not practise it in advance.<br/>
+                            If you are ready to take the test, click on it in your <a href={"/quizzes"} target="_self" rel="noopener noreferrer">assigned tests</a> page.
                         </p>
                     </>}
                 </RS.Alert>
