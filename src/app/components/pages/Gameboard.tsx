@@ -15,8 +15,6 @@ import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
-import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
-import {Rectangle} from "../elements/svg/Rectangle";
 import {determineAudienceViews} from "../../services/userContext";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
@@ -64,11 +62,6 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     }
 
     const questionTags = getTags(question.tags);
-
-    // Difficulty icon proportions
-    const difficultyIconWidth = 25;
-    const difficultyIconXPadding = 3;
-    const miniHexagon = calculateHexagonProportions(difficultyIconWidth / 2, 0)
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
