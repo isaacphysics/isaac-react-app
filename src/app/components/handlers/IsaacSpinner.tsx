@@ -1,5 +1,4 @@
 import React from "react";
-import {Spinner} from "reactstrap";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import classNames from "classnames";
 
@@ -11,11 +10,8 @@ export interface IsaacSpinnerProps {
 
 // TODO: investigate and improve accessibility of both CS and default spinners. (The "Loading..." is copied from Bootstrap).
 export const IsaacSpinner = ({size = "md", className, color = "primary"} : IsaacSpinnerProps) => {
-    return SITE_SUBJECT === SITE.CS ?
-        <div role="status" className="pb-1">
-            <img className={classNames(`isaac-spinner-${size}`, className)} alt="" src="/assets/isaac-cs-typer-css.svg"/>
-            <span className="sr-only">Loading...</span>
-        </div>
-        :
-        <Spinner className={className} color={color} size={size}/>;
+    return <div role="status" className="pb-1">
+        <img style={SITE_SUBJECT === SITE.PHY ? {width: "auto", height: "5.5rem"} : {}} className={classNames(`isaac-spinner-${size}`, className)} alt="" src={SITE_SUBJECT === SITE.CS ? "/assets/isaac-cs-typer-css.svg" : "/assets/isaac-phy-apple-grow.svg"}/>
+        <span className="sr-only">Loading...</span>
+    </div>
 }
