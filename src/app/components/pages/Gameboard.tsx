@@ -18,6 +18,7 @@ import queryString from "query-string";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import {Rectangle} from "../elements/svg/Rectangle";
 import {determineAudienceViews} from "../../services/userContext";
+import {isMobile} from "../../services/device";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -36,6 +37,40 @@ function getTags(docTags?: string[]) {
     if (!docTags) return [];
 
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
+}
+
+const DifficultyIcons = ({difficulty} : {difficulty : string}) => {
+    // Difficulty icon proportions
+    const difficultyIconWidth = 25;
+    const difficultyIconXPadding = 3;
+    const yPadding = 2;
+    const miniHexagon = calculateHexagonProportions(difficultyIconWidth / 2, 0);
+
+    const difficultyCategory = difficulty[0];
+    const difficultyLevel = parseInt(difficulty[1]);
+
+    return <div aria-label={"Difficulty: " + difficulty}>
+        <svg width={`${difficultyLevel * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`} height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`} >
+            {Array(difficultyLevel).fill(undefined).map((_, i) =>
+                <g transform={`translate(${i * (difficultyIconWidth + 2 * difficultyIconXPadding)}, ${yPadding})`}>
+                    {difficultyCategory === "P" ?
+                        <Hexagon {...miniHexagon} className="hex difficulty practice mini active" />
+                        :
+                        <Rectangle className="square difficulty challenge mini active"
+                                   width={difficultyIconWidth} height={difficultyIconWidth} />
+                    }
+                    {i === 0 &&
+                        <foreignObject width={difficultyIconWidth}
+                                       height={difficultyIconWidth + (difficultyCategory === "P" ? 2 : 0) + yPadding}>
+                            <div className={`difficulty-title active difficulty-${i + 1}`}>
+                                {difficultyCategory}
+                            </div>
+                        </foreignObject>
+                    }
+                </g>
+            )}
+        </svg>
+    </div>
 }
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
@@ -65,11 +100,6 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
 
     const questionTags = getTags(question.tags);
 
-    // Difficulty icon proportions
-    const difficultyIconWidth = 25;
-    const difficultyIconXPadding = 3;
-    const miniHexagon = calculateHexagonProportions(difficultyIconWidth / 2, 0)
-
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
             <span>
@@ -89,14 +119,14 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 </div>}
             </div>
 
-            {question.audience && <div>
+            {question.audience && <div className="text-right d-table">
                 {determineAudienceViews(question.audience, question.creationContext)
-                    .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
+                    .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="d-table-row">
+                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags d-table-cell pr-2" style={{verticalAlign: "middle"}}>
                             {stageLabelMap[view.stage]}
-                        </span>} {" "}
-                        {view.difficulty && <span className="gameboard-tags">
-                            ({difficultyShortLabelMap[view.difficulty]})
+                        </span>}
+                        {view.difficulty && <span className="gameboard-tags d-table-cell text-left" style={{verticalAlign: "middle"}}>
+                            {isMobile() ? `(${difficultyShortLabelMap[view.difficulty]})` : <DifficultyIcons difficulty={difficultyShortLabelMap[view.difficulty]} />}
                         </span>}
                     </div>
                 )}
