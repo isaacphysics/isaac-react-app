@@ -102,9 +102,16 @@ export const AdminEmails = (props: AdminEmailsProps) => {
 
         {emailTemplateSelector && <>
             <RS.Card className="p-3 my-3">
-                <RS.CardTitle tag="h2">Subject:</RS.CardTitle>
+                <RS.CardTitle tag="h2">Details</RS.CardTitle>
                 <RS.CardBody>
-                    {emailTemplateSelector.subject}
+                    <ul>
+                        <li><b>Subject:</b> {emailTemplateSelector.subject || "no subject"}</li>
+                        {emailTemplateSelector.from && <li><b>From:</b> {emailTemplateSelector.fromName || ""} &lt;{emailTemplateSelector.from}&gt;</li>}
+                        {emailTemplateSelector.replyTo && <li><b>Reply-To:</b> {emailTemplateSelector.replyToName || ""} &lt;{emailTemplateSelector.replyTo}&gt;</li>}
+                        <li><b>Sent via:</b>&nbsp;
+                            {(emailTemplateSelector.sender && emailTemplateSelector.sender.indexOf("@mail.isaac") > 0) ? "MailGun" : "University"}
+                        </li>
+                    </ul>
                 </RS.CardBody>
             </RS.Card>
 
