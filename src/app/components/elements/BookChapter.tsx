@@ -34,7 +34,7 @@ export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapter
                     <text x="5.75" y="9.2" fontSize="7">{chapterIcon}</text>
                 </svg>
             </span>
-            {chapterTitle} <span className="chapter-subheading">{chapterSubHeading}</span>
+            {chapterTitle} <br/><span className="chapter-subheading">{chapterSubHeading}</span>
         </button>
     </RS.Container>
 };
