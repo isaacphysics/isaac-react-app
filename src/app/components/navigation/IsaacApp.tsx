@@ -160,26 +160,37 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
                     {/* Quiz pages */}
-                    <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />
-                    <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
-                    <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
-                    <TrackedRoute exact path="/quiz/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
-                    <TrackedRoute exact path="/quiz/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />
-                    <TrackedRoute exact path="/quiz/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />
-                    <TrackedRoute exact path="/quiz/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />
-                    <TrackedRoute exact path="/quiz/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
-                    <TrackedRoute exact path="/quiz/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
+                    <TrackedRoute exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />
+                    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
+                    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
+                    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
+                    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />
+                    <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />
+                    <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />
+                    <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
+                    <TrackedRoute exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
+                    <Redirect from="/quiz/assignment/:quizAssignmentId"            to="/test/assignment/:quizAssignmentId" />
+                    <Redirect from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />
+                    <Redirect from="/quiz/attempt/:quizAttemptId/feedback"         to="/test/attempt/:quizAttemptId/feedback" />
+                    <Redirect from="/quiz/attempt/:quizAttemptId/feedback/:page"   to="/test/attempt/:quizAttemptId/feedback/:page" />
+                    <Redirect from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />
+                    <Redirect from="/quiz/preview/:quizId"                         to="/test/preview/:quizId" />
+                    <Redirect from="/quiz/preview/:quizId/page/:page"              to="/test/preview/:quizId/page/:page" />
+                    <Redirect from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />
+                    <Redirect from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />
 
                     {/* Student pages */}
                     <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                     <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                     <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
-                    <TrackedRoute exact path="/quizzes" ifUser={isLoggedIn} component={MyQuizzes} />
+                    <TrackedRoute exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />
+                    <Redirect from="/quizzes" to="/tests" />
 
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
-                    <TrackedRoute exact path="/set_quizzes" ifUser={isTeacher} component={SetQuizzes} />
+                    <TrackedRoute exact path="/set_tests" ifUser={isTeacher} component={SetQuizzes} />
+                    <Redirect from="/set_quizzes" to="set_tests" />
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

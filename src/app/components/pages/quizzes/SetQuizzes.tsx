@@ -152,7 +152,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     </RS.Button>
                                 </div>
                                 <div className="d-none d-md-flex align-items-center">
-                                    <Link className="my-3 mr-2 pl-3 pr-4 quiz-list-separator" to={{pathname: `/quiz/preview/${quiz.id}`}}>
+                                    <Link className="my-3 mr-2 pl-3 pr-4 quiz-list-separator" to={{pathname: `/test/preview/${quiz.id}`}}>
                                         <span>Preview</span>
                                     </Link>
                                 </div>

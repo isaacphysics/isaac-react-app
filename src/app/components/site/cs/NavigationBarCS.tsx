@@ -13,7 +13,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            <LinkItem to="/quizzes">My tests</LinkItem>
+            <LinkItem to="/tests">My tests</LinkItem>
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
@@ -21,7 +21,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
-            <LinkItem to="/set_quizzes">Manage tests</LinkItem>
+            <LinkItem to="/set_tests">Manage tests</LinkItem>
             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
         </NavigationSection>}
 

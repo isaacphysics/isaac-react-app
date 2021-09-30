@@ -19,9 +19,9 @@ interface QuizDoFreeAttemptProps {
 
 const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
     if (page !== undefined) {
-        return `/quiz/attempt/${attempt.quizId}/page/${page}`;
+        return `/test/attempt/${attempt.quizId}/page/${page}`;
     } else {
-        return `/quiz/attempt/${attempt.quizId}`;
+        return `/test/attempt/${attempt.quizId}`;
     }
 };
 

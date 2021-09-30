@@ -24,9 +24,9 @@ interface QuizAttemptFeedbackProps {
 
 const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
     if (page !== undefined) {
-        return `/quiz/attempt/${attempt.id}/feedback/${page}`;
+        return `/test/attempt/${attempt.id}/feedback/${page}`;
     } else {
-        return `/quiz/attempt/${attempt.id}/feedback`;
+        return `/test/attempt/${attempt.id}/feedback`;
     }
 };
 

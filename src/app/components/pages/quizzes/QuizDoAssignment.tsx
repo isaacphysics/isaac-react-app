@@ -19,9 +19,9 @@ interface QuizDoAsssignmentProps {
 
 const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
     if (page !== undefined) {
-        return `/quiz/assignment/${attempt.quizAssignmentId}/page/${page}`;
+        return `/test/assignment/${attempt.quizAssignmentId}/page/${page}`;
     } else {
-        return `/quiz/assignment/${attempt.quizAssignmentId}`;
+        return `/test/assignment/${attempt.quizAssignmentId}`;
     }
 };
 

@@ -18,7 +18,7 @@ interface QuizDoAsssignmentProps {
 }
 
 const pageLink = (quizAttempt: QuizAttemptDTO, page?: number) => {
-    const url = `/quiz/preview/${quizAttempt.quizId}`;
+    const url = `/test/preview/${quizAttempt.quizId}`;
     if (page !== undefined) {
         return `${url}/page/${page}`;
     } else {

@@ -59,27 +59,27 @@ function QuizItem({item}: QuizAssignmentProps) {
 
                 <div className="text-center mt-4">
                     {assignment ? <>
-                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>
+                        {status === Status.Unstarted && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
                             {{[SITE.CS]: "Start test", [SITE.PHY]: "Start Test"}[SITE_SUBJECT]}
                         </RS.Button>}
-                        {status === Status.Started && <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}`}>
+                        {status === Status.Started && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
                             {{[SITE.CS]: "Continue test", [SITE.PHY]: "Continue Test"}[SITE_SUBJECT]}
                         </RS.Button>}
                         {status === Status.Complete && (
                             assignment.quizFeedbackMode !== "NONE" ?
-                                <RS.Button tag={Link} to={`/quiz/attempt/${assignment.attempt?.id}/feedback`}>
+                                <RS.Button tag={Link} to={`/test/attempt/${assignment.attempt?.id}/feedback`}>
                                     {{[SITE.CS]: "View feedback", [SITE.PHY]: "View Feedback"}[SITE_SUBJECT]}
                                 </RS.Button>
                                 :
                                 <strong>No feedback available</strong>
                         )}
                     </> : attempt && <>
-                        {status === Status.Started && <RS.Button tag={Link} to={`/quiz/attempt/${attempt.quizId}`}>
+                        {status === Status.Started && <RS.Button tag={Link} to={`/test/attempt/${attempt.quizId}`}>
                             {{[SITE.CS]: "Continue test", [SITE.PHY]: "Continue Test"}[SITE_SUBJECT]}
                         </RS.Button>}
                         {status === Status.Complete && (
                             attempt.feedbackMode !== "NONE" ?
-                                <RS.Button tag={Link} to={`/quiz/attempt/${attempt.id}/feedback`}>
+                                <RS.Button tag={Link} to={`/test/attempt/${attempt.id}/feedback`}>
                                     {{[SITE.CS]: "View feedback", [SITE.PHY]: "View Feedback"}[SITE_SUBJECT]}
                                 </RS.Button>
                                 :
@@ -168,7 +168,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                                         <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                         <Spacer />
-                                        <RS.Button tag={Link} to={{pathname: `/quiz/attempt/${quiz.id}`}}>
+                                        <RS.Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
                                             {{[SITE.CS]: "Take test", [SITE.PHY]: "Take Test"}[SITE_SUBJECT]}
                                         </RS.Button>
                                     </div>
