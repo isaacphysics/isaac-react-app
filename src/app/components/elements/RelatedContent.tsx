@@ -63,14 +63,12 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
-                <Row className="row related-questions related-title">
-                    <Col>
-                        <h5 className="my-2">Related questions</h5>
-                    </Col>
-                    {SITE_SUBJECT == SITE.CS && <Col className="vertical-center">
-                        <ConceptGameboardButton className="ml-auto" conceptId={conceptId}></ConceptGameboardButton>
-                    </Col>}
-                </Row>
+                <div className="row related-questions related-title">
+                    <h5 className="my-2">Related questions</h5>
+                    <p className="text-right">
+                        <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
+                    </p>
+                </div>
                 <hr/>
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex">
@@ -92,7 +90,7 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
     </div>
 }
 
-function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction) {
+function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string) {
     if (concepts.length == 0 && questions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
@@ -115,6 +113,9 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
             <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
                 <div className="related-questions related-title">
                     <h5 className="mb-2">Related Questions</h5>
+                    <p className="text-right">
+                        <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
+                    </p>
                 </div>
                 <hr/>
                 <div className="d-lg-flex">
@@ -161,7 +162,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     );
 
     return {
-        [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem),
+        [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem, conceptId),
         [SITE.CS]: renderQuestions(questions, makeListGroupItem, conceptId)
     }[SITE_SUBJECT];
 }
