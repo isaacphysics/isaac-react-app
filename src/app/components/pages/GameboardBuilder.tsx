@@ -5,11 +5,11 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem} from "../../../IsaacApiTypes";
 import {
     closeActiveModal,
-    createGameboard,
+    createGameboard, generateTemporaryGameboard,
     getWildcards,
     loadGameboard,
     logAction,
-    openActiveModal
+    openActiveModal, searchQuestions
 } from "../../state/actions";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
@@ -39,6 +39,7 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
+    const conceptIds = queryParams && queryParams.concepts as string;
 
     const dispatch = useDispatch();
 
@@ -56,11 +57,15 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     useEffect(() => {
         if (baseGameboard) {
-            setGameboardTitle(`${baseGameboard.title} (Copy)`);
+            setGameboardTitle(baseGameboard.title ? `${baseGameboard.title} (Copy)` : "");
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummary>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
-            logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
+            if (conceptIds && (!baseGameboardId)) {
+                logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", {conceptIds: conceptIds});
+            } else {
+                logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
+            }
         }
     }, [user, baseGameboard]);
 
@@ -79,6 +84,11 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
             dispatch(loadGameboard(baseGameboardId));
         }
     }, [dispatch, baseGameboardId, baseGameboard]);
+    useEffect(() => {
+        if (conceptIds && (!baseGameboardId)) {
+            dispatch(generateTemporaryGameboard({concepts: conceptIds}));
+        }
+    }, [dispatch, conceptIds])
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});

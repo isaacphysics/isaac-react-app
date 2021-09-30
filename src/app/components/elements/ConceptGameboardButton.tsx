@@ -11,7 +11,7 @@ export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboard
 
     const gameboardGenerateHref = {
         [SITE.PHY]: `/gameboards/new?concepts=${conceptId}`,
-        [SITE.CS]: `/gameboards/from_concept?concepts=${conceptId}`
+        [SITE.CS]: `/gameboard_builder?concepts=${conceptId}`
     }[SITE_SUBJECT]
 
     return <Link className={className} to={gameboardGenerateHref} >

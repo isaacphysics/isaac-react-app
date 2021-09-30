@@ -10,6 +10,7 @@ import {logAction} from "../../state/actions";
 import {determineAudienceViews, isIntendedAudience, useUserContext} from "../../services/userContext";
 import {selectors} from "../../state/selectors";
 import {ConceptGameboardButton} from "./ConceptGameboardButton";
+import {isTeacher} from "../../services/user";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -54,7 +55,7 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`
 }
 
-function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string) {
+function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
     const halfWayIndex = Math.ceil(allQuestions.length / 2) - 1;
     const firstColQuestions = allQuestions.filter((q, i) => i <= halfWayIndex);
     const secondColQuestions = allQuestions.filter((q, i) => i > halfWayIndex);
@@ -67,11 +68,9 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
                     <Col className={"col-auto"}>
                         <h5 className="my-2">Related questions</h5>
                     </Col>
-                    <Col className={"ml-auto col-auto vertical-center"}>
-                        <p className="text-right">
-                            <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
-                        </p>
-                    </Col>
+                    {showConceptGameboardButton && <Col className={"ml-auto col-auto vertical-center text-right"}>
+                        <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
+                    </Col>}
                 </Row>
                 <hr/>
                 {/* Large devices - multi column */}
@@ -94,7 +93,7 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
     </div>
 }
 
-function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string) {
+function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
     if (concepts.length == 0 && questions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
@@ -117,7 +116,7 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
             <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
                 <div className="related-questions related-title">
                     <h5 className="mb-2">Related Questions</h5>
-                    {questions.length > 0 && <p className="text-right">
+                    {showConceptGameboardButton && questions.length > 0 && <p className="text-right">
                         <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
                     </p>}
                 </div>
@@ -140,6 +139,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => SITE_SUBJECT === SITE.PHY || isIntendedAudience(c.audience, userContext, user));
+    const showConceptGameboardButton = isTeacher(useSelector(selectors.user.orNull)) || SITE_SUBJECT === SITE.PHY;
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent
@@ -177,7 +177,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     };
 
     return {
-        [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem, conceptId),
-        [SITE.CS]: renderQuestions(questions, makeListGroupItem, conceptId)
+        [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
+        [SITE.CS]: renderQuestions(questions, makeListGroupItem, conceptId, showConceptGameboardButton)
     }[SITE_SUBJECT];
 }
