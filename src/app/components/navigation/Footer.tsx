@@ -32,7 +32,7 @@ export const Footer = () => (
                             <div className="footer-links logo-text pt-3">
                                 <p>
                                     A <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> project,
-                                    part of the <ExternalLink href="https://teachcomputing.org/">National Centre for Computing Education</ExternalLink> and created by
+                                    part of the <Link to="/teachcomputing">National Centre for Computing Education</Link> and created by
                                     the <ExternalLink href="https://www.cam.ac.uk/">University of Cambridge</ExternalLink> and
                                     the <ExternalLink href="https://www.raspberrypi.org/">Raspberry Pi Foundation</ExternalLink>.
                                 </p>

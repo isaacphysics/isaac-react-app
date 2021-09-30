@@ -1,7 +1,14 @@
 import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {AuthenticationProvider, EventBookingDTO, GameboardDTO, ResultsWrapper, TestCaseDTO} from "../../IsaacApiTypes";
+import {
+    AuthenticationProvider,
+    EventBookingDTO,
+    GameboardDTO,
+    ResultsWrapper,
+    TestCaseDTO,
+    UserContext
+} from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     ActualBoardLimit,
@@ -84,8 +91,10 @@ export const api = {
         handlePasswordReset: (params: {token: string; password: string}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
-        updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null):  AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent});
+        updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
+            :  AxiosPromise<ApiTypes.RegisteredUserDTO> =>
+        {
+            return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts});
         },
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);

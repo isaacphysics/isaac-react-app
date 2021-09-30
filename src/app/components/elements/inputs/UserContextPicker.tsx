@@ -1,7 +1,8 @@
 import React from "react";
+import * as RS from "reactstrap";
 import {CustomInput, FormGroup, Input, Label} from "reactstrap";
-import {getFilteredExamBoardOptions, getFilteredStages, useUserContext} from "../../../services/userContext";
-import {EXAM_BOARD, EXAM_BOARD_NULL_OPTIONS, STAGE} from "../../../services/constants";
+import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
+import {EXAM_BOARD, examBoardLabelMap, STAGE, stageLabelMap} from "../../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {
     setTransientExamBoardPreference,
@@ -10,23 +11,29 @@ import {
 } from "../../../state/actions";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
-import {AppState} from "../../../state/reducers";
-import {isLoggedIn, isStaff} from "../../../services/user";
+import {history} from "../../../services/history";
+import queryString from "query-string";
+import {useQueryParams} from "../../../services/reactRouterExtension";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useDispatch();
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
+    const qParams = useQueryParams();
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
 
-    const showHideOtherContentSelector = betaFeature?.AUDIENCE_CONTEXT && SITE_SUBJECT === SITE.CS && isStaff(user);
-    const showStageSelector = betaFeature?.AUDIENCE_CONTEXT;
-    const showExamBoardSelector = SITE_SUBJECT === SITE.CS && (
-        betaFeature?.AUDIENCE_CONTEXT ||
-        !isLoggedIn(user) ||
-        user.examBoard === undefined ||
-        EXAM_BOARD_NULL_OPTIONS.has(user.examBoard)
-    );
+    const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
+    const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});
+
+    const unusual = {
+        stage: !filteredStages.map(s => s.value).includes(userContext.stage),
+        examBoard: SITE_SUBJECT === SITE.CS && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
+    };
+    const showUnusualContextMessage = unusual.stage || unusual.examBoard;
+    const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && segueEnvironment === "DEV";
+    const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
+    const showExamBoardSelector = SITE_SUBJECT === SITE.CS && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
+
 
     return <div className="d-flex">
         {/* Show other content Selector */}
@@ -46,11 +53,27 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-stage-select"
                 aria-label={hideLabels ? "Stage" : undefined}
                 value={userContext.stage}
-                onChange={e => dispatch(setTransientStagePreference(e.target.value as STAGE))}
+                onChange={e => {
+                    const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
+                    if (SITE_SUBJECT === SITE.CS) {
+                        // drive exam board selection so that it is a valid option
+                        const examBoard = getFilteredExamBoardOptions({byUser: user, byStages: [e.target.value as STAGE]})[0]?.value || EXAM_BOARD.ALL;
+                        newParams.examBoard = examBoard;
+                        dispatch(setTransientExamBoardPreference(examBoard));
+                    }
+                    history.push({search: queryString.stringify(newParams, {encode: false})});
+                    dispatch(setTransientStagePreference(e.target.value as STAGE));
+                }}
             >
-                {getFilteredStages(true).map(item =>
-                    <option key={item.value} value={item.value}>{item.label}</option>
-                )}
+                {filteredStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                {/* If the userContext.stage is not in the user's normal list of options (following link with q. params) add it */}
+                {!filteredStages.map(s => s.value).includes(userContext.stage) &&
+                    <option key={userContext.stage} value={userContext.stage}>
+                        {"*"}
+                        {getFilteredStageOptions().filter(o => o.value === userContext.stage)[0]?.label}
+                        {"*"}
+                    </option>
+                }
             </Input>
         </FormGroup>}
 
@@ -61,13 +84,36 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 className="w-auto d-inline-block pl-1 pr-0" type="select" id="uc-exam-board-select"
                 aria-label={hideLabels ? "Exam Board" : undefined}
                 value={userContext.examBoard}
-                onChange={e => dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))}
+                onChange={e => {
+                    history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
+                    dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
+                }}
             >
-                {betaFeature?.AUDIENCE_CONTEXT && <option value={EXAM_BOARD.NONE}>None</option>}
-                {getFilteredExamBoardOptions([userContext.stage], false, betaFeature?.AUDIENCE_CONTEXT).map(item =>
-                    <option key={item.value} value={item.value}>{item.label}</option>
-                )}
+                {filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
+                {/* If the userContext.examBoard is not in the user's normal list of options (following link with q. params) add it */}
+                {!filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard) &&
+                    <option key={userContext.examBoard} value={userContext.examBoard}>
+                        {"*"}
+                        {getFilteredExamBoardOptions().filter(o => o.value === userContext.examBoard)[0]?.label}
+                        {"*"}
+                    </option>
+                }
             </Input>
         </FormGroup>}
+
+        {showUnusualContextMessage && <div className="mt-2 ml-1">
+            <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
+            <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
+                You are seeing {stageLabelMap[userContext.stage]} {SITE_SUBJECT === SITE.CS ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
+                content, which is different to your account settings. <br />
+                {unusual.stage && unusual.examBoard && <>
+                    {userContext.explanation.stage === userContext.explanation.examBoard ?
+                        `The stage and exam board were specified by your ${userContext.explanation.stage}.` :
+                        `The stage was specified by your ${userContext.explanation.stage} and the exam board by your ${userContext.explanation.examBoard}.`}
+                </>}
+                {unusual.stage && !unusual.examBoard && `The stage was specified by your ${userContext.explanation.stage}.`}
+                {unusual.examBoard && !unusual.stage && `The exam board was specified by your ${userContext.explanation.examBoard}.`}
+            </RS.UncontrolledTooltip>
+        </div>}
     </div>;
 };

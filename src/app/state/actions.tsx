@@ -51,6 +51,7 @@ import {
     RegisteredUserDTO,
     Role,
     TestCaseDTO,
+    UserContext,
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
@@ -300,6 +301,7 @@ export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => as
 export const updateCurrentUser = (
     updatedUser: ValidationUser,
     updatedUserPreferences: UserPreferencesDTO,
+    userContexts: UserContext[] | undefined,
     passwordCurrent: string | null,
     currentUser: PotentialUser
 ) => async (dispatch: Dispatch<Action>) => {
@@ -327,7 +329,7 @@ export const updateCurrentUser = (
 
     try {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
-        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent);
+        const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
         await dispatch(requestCurrentUser() as any);
 
@@ -1620,7 +1622,7 @@ export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>,
     const state = getState();
     if (state && state.boards && state.boards.boards && state.boards.boards.boards) {
         const board = state.boards.boards.boards.find(board => board.id == boardId);
-        if (board && board.questions && board.questions.every(q => q.questionPartsTotal !== undefined)) {
+        if (board && board.contents && board.contents.every(q => q.questionPartsTotal !== undefined)) {
             // Don't load the board if it is already available and questions have been loaded
             return;
         }

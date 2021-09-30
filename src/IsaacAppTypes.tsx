@@ -2,10 +2,12 @@ import React, {ReactElement} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
+    AudienceContext,
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
     ContentSummaryDTO,
+    Difficulty,
     GameboardDTO,
     GameboardItem,
     QuizFeedbackMode,
@@ -13,6 +15,7 @@ import {
     ResultsWrapper,
     TestCaseDTO,
     TOTPSharedSecretDTO,
+    UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
@@ -533,7 +536,6 @@ export interface ShortcutResponse {
 
 export interface UserBetaFeaturePreferences {
     SCREENREADER_HOVERTEXT?: boolean;
-    AUDIENCE_CONTEXT?: boolean;
 }
 
 export interface UserEmailPreferences {
@@ -563,11 +565,22 @@ export interface SubjectInterests {
 
 export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
 
+export interface BooleanNotation {
+    ENG?: boolean;
+    MATH?: boolean;
+}
+
+export interface DisplaySettings {
+    HIDE_NON_AUDIENCE_CONTENT?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
+    BOOLEAN_NOTATION?: BooleanNotation;
+    DISPLAY_SETTING?: DisplaySettings;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -580,7 +593,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
-export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean; examBoard?: EXAM_BOARD};
+export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean;};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
@@ -820,6 +833,14 @@ export interface QuestionSearchResponse {
     results: ApiTypes.ContentSummaryDTO[];
 }
 
+export interface ContentSummary extends ContentSummaryDTO {
+    creationContext?: AudienceContext;
+}
+
+export interface ViewingContext extends UserContext {
+    difficulty?: Difficulty;
+}
+
 export interface StreakRecord {
     currentStreak?: number;
     largestStreak?: number;
@@ -869,6 +890,10 @@ export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export type LevelAttempts<T> = { [level in Levels]?: T; }
 
+interface TagInstruction {
+    hidden?: boolean; comingSoon?: string; new?: boolean;
+}
+
 export interface BaseTag {
     id: TAG_ID;
     title: string;
@@ -876,6 +901,7 @@ export interface BaseTag {
     comingSoon?: string;
     new?: boolean;
     hidden?: boolean;
+    stageOverride?: {[s in STAGE]?: TagInstruction};
 }
 
 export interface Tag extends BaseTag {
@@ -902,7 +928,7 @@ export interface FreeTextRule extends Choice {
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;
 
 export type EnhancedGameboard = GameboardDTO & {
-    questions: (GameboardItem & { questionPartsTotal: number })[];
+    contents: (GameboardItem & { questionPartsTotal: number })[];
 };
 
 export type SingleEnhancedAssignment = AssignmentDTO & {

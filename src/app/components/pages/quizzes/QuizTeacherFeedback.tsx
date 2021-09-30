@@ -28,7 +28,7 @@ import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {isQuestion} from "../../../services/questions";
 import {API_PATH} from "../../../services/constants";
-import { getQuizAssignmentResultsSummaryCSV } from "../../../state/actions";
+import { closeActiveModal, getQuizAssignmentResultsSummaryCSV, openActiveModal } from "../../../state/actions";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 interface QuizTeacherFeedbackProps {
@@ -85,11 +85,30 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
     const returnToStudent = async () => {
+        dispatch(openActiveModal({
+            closeAction: () => {
+                dispatch(closeActiveModal())
+            },
+            title: "Allow another attempt?",
+            body: "This will allow the student to attempt the quiz again.",
+            buttons: [
+                <RS.Button key={1} color="primary" outline target="_blank" onClick={() => {dispatch(closeActiveModal())}}>
+                    Cancel
+                </RS.Button>,
+                <RS.Button key={0} color="primary" target="_blank" onClick={_returnToStudent}>
+                    Confirm
+                </RS.Button>,
+        ]
+        }));    
+    }
+
+    const _returnToStudent = async () => {
         try {
             setWorking(true);
             await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
         } finally {
             setWorking(false);
+            dispatch(closeActiveModal());
         }
     };
 
@@ -122,7 +141,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                         </div>
                     </RS.Button>
                     {!working && dropdownOpen && <div className="py-2 px-3">
-                        <RS.Button size="sm" onClick={returnToStudent}>Return to student</RS.Button>
+                        <RS.Button size="sm" onClick={returnToStudent}>Allow another attempt</RS.Button>
                     </div>}
                 </>
             :   <>

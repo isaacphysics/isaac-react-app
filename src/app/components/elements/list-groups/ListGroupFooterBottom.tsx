@@ -20,6 +20,9 @@ export const ListGroupFooterBottom = () => (
                     <ExternalLink href="https://teachcomputing.org/">
                         <img src="/assets/logos/ncce.png" alt='National Centre for Computing Education website' className='logo-mr' height="57px" />
                     </ExternalLink>
+                    <ExternalLink href="https://teachcomputing.org">
+                        <img src="/assets/logos/teach-computing.svg" alt='Teach Computing website' className="logo-mr" height="57px" />
+                    </ExternalLink>
                     <ExternalLink href="https://www.raspberrypi.org/">
                         <img src="/assets/logos/raspberry-pi.png" alt='Raspberry Pi website' className='logo-mr' height="57px" />
                     </ExternalLink>

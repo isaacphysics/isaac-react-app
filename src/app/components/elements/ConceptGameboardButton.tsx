@@ -1,5 +1,6 @@
 import React from "react";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {Link} from "react-router-dom";
 
 export interface ConceptGameboardButtonProps {
     className?: string;
@@ -13,7 +14,7 @@ export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboard
         [SITE.CS]: `/gameboards/from_concept?concepts=${conceptId}`
     }[SITE_SUBJECT]
 
-    return <a className={className} href={gameboardGenerateHref} rel="noreferrer" target="_blank">
+    return <Link className={className} to={gameboardGenerateHref} >
         Generate a gameboard
-    </a>
+    </Link>
 }
