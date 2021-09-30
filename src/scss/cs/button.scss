@@ -4,10 +4,48 @@
   &.btn-secondary {
     color: $black;
   }
+  &.btn-red {
+    background-color: $cs-reddish;
+    border: 1px solid transparent;
+    color: $black;
+  }
+  &.btn-yellow {
+    background-color: yellow;
+    border: 1px solid transparent;
+    color: $black;
+  }
+  &.btn-green {
+    background-color: $green;
+    border: 1px solid transparent;
+    color: $black;
+  }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $cs-reddish;
     border: 1px solid transparent;
     color: $black;
     text-decoration: underline;
   }
+  &.btn-green:not(:disabled):not(.disabled):active {
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+  }
+  &.btn-yellow:not(:disabled):not(.disabled):active {
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+  }
+  &.btn-red:not(:disabled):not(.disabled):active {
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+  }
+}
+
+.quick-question-options {
+  //background-color: $cs-mustard;
+  background: rgba($cs-mustard, 0.5);
+  border: 1px solid transparent;
+  color: $black;
+  border-radius: 5px;
 }
