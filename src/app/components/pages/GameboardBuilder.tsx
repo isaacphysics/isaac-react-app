@@ -9,7 +9,7 @@ import {
     getWildcards,
     loadGameboard,
     logAction,
-    openActiveModal, searchQuestions
+    openActiveModal,
 } from "../../state/actions";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
