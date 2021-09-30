@@ -56,9 +56,11 @@ export const GameboardFromConcept = withRouter(({location}: {location: Location}
 
     useEffect(() => {
         loadNewGameboard();
-    }, [concepts]);
+    }, [dispatch, concepts]);
 
-    useEffect(() => {dispatch(fetchConcepts(concepts[0].label));}, [dispatch]);
+    useEffect(() => {
+        dispatch(fetchConcepts(concepts[0].label))
+    }, [dispatch, concepts]);
 
     const conceptTitle = conceptList?.[0].title;
     const boardName = conceptTitle + " gameboard" || "New gameboard"

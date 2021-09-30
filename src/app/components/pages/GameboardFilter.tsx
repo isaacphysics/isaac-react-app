@@ -216,7 +216,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                     {/* This silently assumes that the first concept in the list is the concept id of the
                         page that we linked here from, which isn't great but might be needed to provide some context
                         for where this board was generated from */}
-                    This gameboard was generated from {concepts.length > 1 && "concepts related to"} <Link to={`/concepts/${concepts[0].value}`}>this concept page</Link>.
+                    Questions shown are those related to <Link to={`/concepts/${concepts[0].value}`}>this concept</Link>.
                 </RS.Col>
                 <RS.Col className={"ml-auto col-auto"}>
                     <RS.Button size="sm" color="primary" outline onClick={() => setConcepts([])}>

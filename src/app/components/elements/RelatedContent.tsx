@@ -1,5 +1,5 @@
 import React, {ReactNode} from "react";
-import {ListGroup, ListGroupItem} from "reactstrap";
+import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {difficultyShortLabelMap, DOCUMENT_TYPE, documentTypePathPrefix, stageLabelMap} from "../../services/constants";
@@ -63,12 +63,16 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 d-flex">
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
-                <div className="row related-questions related-title">
-                    <h5 className="my-2">Related questions</h5>
-                    <p className="text-right">
-                        <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
-                    </p>
-                </div>
+                <Row className="related-questions related-title">
+                    <Col className={"col-auto"}>
+                        <h5 className="my-2">Related questions</h5>
+                    </Col>
+                    <Col className={"ml-auto col-auto vertical-center"}>
+                        <p className="text-right">
+                            <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
+                        </p>
+                    </Col>
+                </Row>
                 <hr/>
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex">
