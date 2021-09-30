@@ -113,9 +113,9 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
             <div className="flex-fill simple-card ml-lg-3 my-3 p-3 text-wrap">
                 <div className="related-questions related-title">
                     <h5 className="mb-2">Related Questions</h5>
-                    <p className="text-right">
+                    {questions.length > 0 && <p className="text-right">
                         <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
-                    </p>
+                    </p>}
                 </div>
                 <hr/>
                 <div className="d-lg-flex">
