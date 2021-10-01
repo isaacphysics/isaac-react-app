@@ -9,6 +9,7 @@ export interface DateInputProps extends InputProps {
     defaultMonth?: number | ((day: number | undefined) => number);
     yearRange?: number[];
     value?: string | string[] | number | Date;
+    noClear?: boolean;
 }
 
 const MONTHS = [
@@ -224,8 +225,8 @@ export const DateInput = (props: DateInputProps) => {
                 {values.year.get() === undefined && <option />}
                 {yearRange.map(year => <option key={year}>{year}</option>)}
             </Input>
-            <Button close {...controlProps} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />
+            {(props.noClear === undefined || !props.noClear) && <Button close {...controlProps} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
         </InputGroup>
-        <Input innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
+        <Input innerRef={hiddenRef} type="hidden" className={"hidden"} name={props.name} value={calculateHiddenValue()} {...controlProps} />
     </React.Fragment>;
 };

@@ -206,6 +206,19 @@ export const updateQuizAssignmentFeedbackMode = (quizAssignmentId: number, quizF
     }
 };
 
+export const updateQuizAssignmentDueDate = (quizAssignmentId: number, dueDate: Date) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST});
+    try {
+        const update = {dueDate};
+        await api.quizzes.updateQuizAssignment(quizAssignmentId, update);
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS, quizAssignmentId, update});
+        return true;
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Failed to update due date", e));
+        return false;
+    }
+};
+
 export const logQuizSectionView = (quizAttemptId: number, page: number) => async () => {
     // No actual dispatch
     api.quizzes.logQuizSectionView(quizAttemptId, page);
