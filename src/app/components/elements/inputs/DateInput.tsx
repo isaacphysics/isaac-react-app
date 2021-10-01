@@ -227,6 +227,6 @@ export const DateInput = (props: DateInputProps) => {
             </Input>
             {(props.noClear === undefined || !props.noClear) && <Button close {...controlProps} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
         </InputGroup>
-        <Input innerRef={hiddenRef} type="hidden" className={"hidden"} name={props.name} value={calculateHiddenValue()} {...controlProps} />
+        <Input innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
     </React.Fragment>;
 };
