@@ -389,7 +389,8 @@ export interface CodeSnippetDTO extends ContentDTO {
 }
 
 export interface PythonDTO extends CodeSnippetDTO {
-    initCode?: string,
+    initCode?: string;
+    setupCode?: string;
     test?: string;
 }
 

@@ -16,6 +16,7 @@ export const IsaacPythonEditor = ({doc, questionId}: IsaacCodeProps) => {
 		sendPostMessage({
 			type: "INIT",
 			code: doc.initCode || "# Your code here",
+			setup: doc.setupCode || "",
 			test: doc.test || "checkerResult = False"
 		});
 	}
