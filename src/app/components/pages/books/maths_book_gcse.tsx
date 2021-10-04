@@ -23,39 +23,39 @@ export const MathsBookGcse = () => {
                     <h4>Chapters:</h4>
                     <Row>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch1_boards'} chapterTitle={'Chapter 1'} chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}/>
+                            <BookChapter chapterId={'gcse_maths_ch1_boards'} chapterTitle={'Solving Maths Problems'} chapterSubHeading={'(Section 1)'} chapterIcon={'1'} chapterSubject={SUBJECTS.MATHS}/>
                         </Col>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch2_boards'} chapterTitle={'Chapter 2'} chapterIcon={'2'} chapterSubject={SUBJECTS.MATHS}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch3_boards'} chapterTitle={'Chapter 3'} chapterIcon={'3'} chapterSubject={SUBJECTS.MATHS}/>
-                        </Col>
-                        <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch4_boards'} chapterTitle={'Chapter 4'} chapterIcon={'4'} chapterSubject={SUBJECTS.MATHS}/>
+                            <BookChapter chapterId={'gcse_maths_ch2_boards'} chapterTitle={'Skills'} chapterIcon={'2'} chapterSubHeading={'(Sections 2-11)'} chapterSubject={SUBJECTS.MATHS}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch5_boards'} chapterTitle={'Chapter 5'} chapterIcon={'5'} chapterSubject={SUBJECTS.MATHS}/>
+                            <BookChapter chapterId={'gcse_maths_ch3_boards'} chapterTitle={'Algebra'} chapterIcon={'3'} chapterSubHeading={'(Sections 12-22)'} chapterSubject={SUBJECTS.MATHS}/>
                         </Col>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch6_boards'} chapterTitle={'Chapter 6'} chapterIcon={'6'} chapterSubject={SUBJECTS.MATHS}/>
+                            <BookChapter chapterId={'gcse_maths_ch4_boards'} chapterTitle={'Linear Functions'} chapterIcon={'4'} chapterSubHeading={'(Sections 23-25)'} chapterSubject={SUBJECTS.MATHS}/>
                         </Col>
                     </Row>
                     <Row>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch7_boards'} chapterTitle={'Chapter 7'} chapterIcon={'7'} chapterSubject={SUBJECTS.MATHS}/>
+                            <BookChapter chapterId={'gcse_maths_ch5_boards'} chapterTitle={'Quadratic Functions'} chapterIcon={'5'} chapterSubHeading={'(Sections 26-30)'} chapterSubject={SUBJECTS.MATHS}/>
                         </Col>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch8_boards'} chapterTitle={'Chapter 8'} chapterIcon={'8'} chapterSubject={SUBJECTS.MATHS}/>
+                            <BookChapter chapterId={'gcse_maths_ch6_boards'} chapterTitle={'Inequalities'} chapterIcon={'6'} chapterSubHeading={'(Sections 31-32)'} chapterSubject={SUBJECTS.MATHS}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6} className="p-2">
+                            <BookChapter chapterId={'gcse_maths_ch7_boards'} chapterTitle={'Graphs'} chapterIcon={'7'} chapterSubHeading={'(Sections 33-37)'} chapterSubject={SUBJECTS.MATHS}/>
+                        </Col>
+                        <Col md={6} className="p-2">
+                            <BookChapter chapterId={'gcse_maths_ch8_boards'} chapterTitle={'Geometry'} chapterIcon={'8'} chapterSubHeading={'(Sections 38-50)'} chapterSubject={SUBJECTS.MATHS}/>
                         </Col>
                     </Row>
                     <Row className="mb-4">
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'gcse_maths_ch9_boards'} chapterTitle={'Chapter 9'} chapterIcon={'9'} chapterSubject={SUBJECTS.MATHS}/>
+                            <BookChapter chapterId={'gcse_maths_ch9_boards'} chapterTitle={'Probability Statistics'} chapterIcon={'9'} chapterSubHeading={'(Sections 51-57)'} chapterSubject={SUBJECTS.MATHS}/>
                         </Col>
                     </Row>
                 </Col>
