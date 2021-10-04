@@ -44,8 +44,8 @@ export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
 
     const figureNumbers = useContext(FigureNumberingContext);
 
-    html = useClozeDropRegionsInHtml(html);
     html = manipulateHtml(katexify(html, user, examBoard, booleanNotation, screenReaderHoverText, figureNumbers));
+    html = useClozeDropRegionsInHtml(html);
 
     const ElementType = span ? "span" : "div";
     return <React.Fragment>
