@@ -236,7 +236,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
         }
     }
 
-    return <div ref={questionContentRef} className="question-content">
+    return <div ref={questionContentRef} className="question-content cloze-question">
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion}}>
             <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>

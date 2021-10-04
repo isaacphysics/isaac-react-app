@@ -300,8 +300,15 @@ button {
   padding: 1rem;
 }
 
-.cloze-draggable {
-  .katex-display {
-    display: unset;
+.cloze-question {
+  .katex {
+    overflow-y: auto !important;
+    pointer-events: none;
+  }
+  .cloze-draggable {
+    pointer-events: all;
+    .katex-display {
+      display: unset;
+    }
   }
 }
