@@ -299,3 +299,9 @@ button {
   box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   padding: 1rem;
 }
+
+.cloze-draggable {
+  .katex-display {
+    display: unset;
+  }
+}

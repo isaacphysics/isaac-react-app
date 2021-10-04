@@ -51,7 +51,7 @@ function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionP
                         {item && <Draggable key={item.replacementId} draggableId={item.replacementId || ""} index={0}>
                             {(provided, snapshot) =>
                                 <div
-                                    ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+                                    className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                                 >
                                     <Item item={item}/>
                                 </div>
@@ -252,7 +252,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
                     >
                         {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} draggableId={item.replacementId || `${i}`} index={i}>
                             {(provided) =>
-                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                     <Item item={item} />
                                 </div>
                             }
