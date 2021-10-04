@@ -303,7 +303,9 @@ button {
 .cloze-question {
   .katex {
     overflow-y: auto !important;
-    pointer-events: none;
+    * {
+      pointer-events: none;
+    }
   }
   .cloze-draggable {
     pointer-events: all;
