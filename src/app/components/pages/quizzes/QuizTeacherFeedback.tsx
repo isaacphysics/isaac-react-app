@@ -246,7 +246,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
 
     useEffect(() => {
         setDueDate(assignment?.dueDate ?? null);
-    }, [assignment?.dueDate])
+    }, [assignment?.dueDate]);
 
     const setValidDueDate = async (newDate : Date | null) => {
         if (settingDueDate || !newDate || assignment?.dueDate == newDate) {
@@ -257,6 +257,8 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                 setSettingDueDate(true);
                 if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this quiz is assigned to.")) {
                     await dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate));
+                } else {
+                    setDueDate(assignment.dueDate);
                 }
             } finally {
                 setSettingDueDate(false);
