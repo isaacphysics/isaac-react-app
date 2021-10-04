@@ -49,17 +49,17 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                             </Col>
                         </Row>
                         <Row>
-                            <Col sm="4" md="4">
+                            <Col sm="3" md="3" className="ml-auto">
                                 <Button color="red" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
                                     {isVisible ? "No" : "Low"}
                                 </Button>
                             </Col>
-                            <Col sm="4" md="4">
+                            <Col sm="3" md="3">
                                 <Button color="yellow" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Probably" : "Medium")}>
                                     {isVisible ? "Probably" : "Medium"}
                                 </Button>
                             </Col>
-                            <Col sm="4" md="4">
+                            <Col sm="3" md="3" className="mr-auto">
                                 <Button color="green" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
                                     {isVisible ? "Yes" : "High"}
                                 </Button>

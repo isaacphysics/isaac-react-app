@@ -8,16 +8,25 @@
     background-color: $cs-reddish;
     border: 1px solid transparent;
     color: $black;
+    width: 100px !important;
+    min-width: 100px !important;
+    padding: 0 !important;
   }
   &.btn-yellow {
     background-color: yellow;
     border: 1px solid transparent;
     color: $black;
+    width: 100px !important;
+    min-width: 100px !important;
+    padding: 0 !important;
   }
   &.btn-green {
     background-color: $green;
     border: 1px solid transparent;
     color: $black;
+    width: 100px !important;
+    min-width: 100px !important;
+    padding: 0 !important;
   }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $cs-reddish;
@@ -44,7 +53,7 @@
 
 .quick-question-options {
   //background-color: $cs-mustard;
-  background: rgba($cs-mustard, 0.5);
+  background: rgba(lightcoral, 0.5);
   border: 1px solid transparent;
   color: $black;
   border-radius: 5px;
