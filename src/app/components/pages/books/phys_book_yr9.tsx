@@ -8,13 +8,13 @@ import {BookChapter} from "../../elements/BookChapter";
 export const PhysBookYrNine = () => {
 
     const pageHelp = <span>
-        The Isaac Physics Year 9 Physics book
+        The Isaac Physics Step up to GCSE Physics book
     </span>;
 
     return <Container className="physics">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Year 9 Physics Book" help={pageHelp} />
+                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Step up to GCSE Physics" help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/phys_book_yr9.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="phys_book_yr9_intro"/>
             </div>
@@ -23,7 +23,7 @@ export const PhysBookYrNine = () => {
                     <h4>Chapters:</h4>
                     <Row>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'yr9_phys_ch1_boards'} chapterTitle={'Force Motion'} chapterSubHeading={'(Sections 1-15)'} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>
+                            <BookChapter chapterId={'yr9_phys_ch1_boards'} chapterTitle={'Force and Motion'} chapterSubHeading={'(Sections 1-15)'} chapterIcon={'1'} chapterSubject={SUBJECTS.PHYSICS}/>
                         </Col>
                         <Col md={6} className="p-2">
                             <BookChapter chapterId={'yr9_phys_ch2_boards'} chapterTitle={'Electricity'} chapterSubHeading={'(Sections 16-23)'} chapterIcon={'2'} chapterSubject={SUBJECTS.PHYSICS}/>
