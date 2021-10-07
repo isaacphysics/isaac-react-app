@@ -1132,7 +1132,6 @@ export const generateTemporaryGameboard = (params: {[key: string]: string}) => a
             dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
         }
     } catch (e) {
-        console.log(e)
         dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Error creating temporary gameboard", e));
     }

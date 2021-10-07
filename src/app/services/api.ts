@@ -320,13 +320,14 @@ export const api = {
             return endpoint.get(`gameboards/wildcards`);
         },
         generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
-            if (params.questionCategories) {
-                // TODO FILTER: Temporarily force physics to search for problem solving questions
-                if (SITE_SUBJECT === SITE.PHY && !Object.keys(params).includes("questionCategories")) {
+            // TODO FILTER: Temporarily force physics to search for problem solving questions
+            if (SITE_SUBJECT === SITE.PHY) {
+                if (!Object.keys(params).includes("questionCategories")) {
                     params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
                 }
                 // Swap 'learn_and_practice' to 'problem_solving' and 'books' as that is how the content is tagged
-                params.questionCategories = params.questionCategories.split(",")
+                // TODO the content should be modified with a script/change of tagging so that this is the case
+                params.questionCategories = params.questionCategories?.split(",")
                     .map(c => c === QUESTION_CATEGORY.LEARN_AND_PRACTICE ? `${QUESTION_CATEGORY.PROBLEM_SOLVING},${QUESTION_CATEGORY.BOOK_QUESTIONS}` : c)
                     .join(",")
             }
