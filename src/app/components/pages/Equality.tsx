@@ -12,7 +12,7 @@ import { Inequality, makeInequality } from 'inequality';
 import { sanitiseInequalityState } from '../../services/questions';
 import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'inequality-grammar';
 
-import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
+import { isDefined } from "../../services/miscUtils";
 import { useSelector } from 'react-redux';
 import { selectors } from '../../state/selectors';
 import { isStaff } from '../../services/user';
