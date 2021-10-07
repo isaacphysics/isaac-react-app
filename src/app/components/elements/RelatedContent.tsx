@@ -139,7 +139,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => SITE_SUBJECT === SITE.PHY || isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isTeacher(useSelector(selectors.user.orNull)) || SITE_SUBJECT === SITE.PHY;
+    const showConceptGameboardButton = isTeacher(useSelector(selectors.user.orNull)) && SITE_SUBJECT === SITE.CS;
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent

@@ -9,8 +9,9 @@ export interface ConceptGameboardButtonProps {
 // role="button" className={`btn btn-secondary ${className}`}
 export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboardButtonProps) => {
 
+    // Currently PHY doesn't use this
     const gameboardGenerateHref = {
-        [SITE.PHY]: `/gameboards/new?concepts=${conceptId}`,
+        [SITE.PHY]: `/gameboard_builder?concepts=${conceptId}`,
         [SITE.CS]: `/gameboard_builder?concepts=${conceptId}`
     }[SITE_SUBJECT]
 
