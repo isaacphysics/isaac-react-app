@@ -1,5 +1,5 @@
-import React from "react";
-import {Link, useLocation} from "react-router-dom";
+import React, {useEffect} from "react";
+import {Link, useLocation, useHistory} from "react-router-dom";
 import {Badge, Col, Container, Row} from "reactstrap";
 import "../../services/tagsPhy";
 import tags from "../../services/tags";
@@ -11,12 +11,28 @@ import {PageFragment} from "../elements/PageFragment";
 import {Tabs} from "../elements/Tabs";
 
 export const AllTopics = () => {
-    const search = useLocation().search;
-    const params = queryString.parse(search);
+    const history = useHistory();
+
+    const location = useLocation();
+    const params = queryString.parse(location.search);
 
     const stageString = (params.stage ? (Array.isArray(params.stage) ? params.stage[0] : params.stage) : "a_level").toLowerCase();
     const stage = stageString === STAGE.GCSE ? STAGE.GCSE : STAGE.A_LEVEL;
     const stageExamBoards = Array.from({[STAGE.GCSE]: EXAM_BOARDS_CS_GCSE, [STAGE.A_LEVEL]: EXAM_BOARDS_CS_A_LEVEL}[stage]);
+
+    // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards
+    const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase()) + 2 || 1;
+    const setActiveTab = (tabIndex: number) => {
+        if (tabIndex < 1 || tabIndex - 1 > stageExamBoards.length) return;
+        const hash = tabIndex > 1 ? stageExamBoards[tabIndex - 2].toString() : "all"
+        history.replace({...location, hash: `#${hash}`}) // This sets activeTab to the index corresponding to the hash
+    }
+    useEffect(() => {
+        if (!location.hash) {
+            // Make sure there is a hash on the URL
+            setActiveTab(activeTab);
+        }
+    })
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
@@ -77,7 +93,7 @@ export const AllTopics = () => {
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
 
-            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1} refreshHash={stage}>
+            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
                 {
                     Object.assign(
                         {
