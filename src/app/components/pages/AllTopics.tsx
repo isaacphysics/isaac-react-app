@@ -80,7 +80,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
 
     const subcategoryTags = tags.allSubcategoryTags;
 
-    const charToCutAt = stage === STAGE.A_LEVEL ? "H" : "F";
+    const charToCutAt = "H";
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
 
