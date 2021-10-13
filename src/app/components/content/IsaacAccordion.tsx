@@ -13,14 +13,7 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {resourceFound} from "../../services/validation";
-import {
-    DOCUMENT_TYPE,
-    STAGE,
-    STAGE_NULL_OPTIONS,
-    stageLabelMap,
-    STAGES_CS,
-    stagesOrdered
-} from "../../services/constants";
+import {DOCUMENT_TYPE, STAGE, stageLabelMap, stagesOrdered} from "../../services/constants";
 import {comparatorFromOrderedValues} from "../../services/gameboards";
 
 const defaultConceptDisplay = {
