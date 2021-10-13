@@ -14,8 +14,11 @@ import {Link} from "react-router-dom";
 import React from "react";
 import tags from "../../../services/tags";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {determineAudienceViews, filterAudienceViewsByProperties} from "../../../services/userContext";
-import {ViewingContext} from "../../../../IsaacAppTypes";
+import {
+    AUDIENCE_DISPLAY_FIELDS,
+    determineAudienceViews,
+    filterAudienceViewsByProperties
+} from "../../../services/userContext";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     let linkDestination, icon, iconLabel, audienceViews;
@@ -49,10 +52,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
-            const propertiesToFilterBy: (keyof ViewingContext)[] = ["stage"];
-            if (SITE_SUBJECT === SITE.PHY) {propertiesToFilterBy.push("difficulty");}
-            const allAudienceViews = determineAudienceViews(item.audience);
-            audienceViews = filterAudienceViewsByProperties(allAudienceViews, propertiesToFilterBy);
+            audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
