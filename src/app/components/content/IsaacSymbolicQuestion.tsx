@@ -124,14 +124,16 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
             }
         );
-        sketch.log = { initialState: [], actions: [] };
-        sketch.onNewEditorState = updateState;
-        sketch.onCloseMenus = () => undefined;
-        sketch.isUserPrivileged = () => true;
-        sketch.onNotifySymbolDrag = () => undefined;
-        sketch.isTrashActive = () => false
+        if (isDefined(sketch)) {
+            sketch.log = { initialState: [], actions: [] };
+            sketch.onNewEditorState = updateState;
+            sketch.onCloseMenus = () => undefined;
+            sketch.isUserPrivileged = () => true;
+            sketch.onNotifySymbolDrag = () => undefined;
+            sketch.isTrashActive = () => false
 
-        sketchRef.current = sketch;
+            sketchRef.current = sketch;
+        }
     }, [hiddenEditorRef.current]);
 
     const [errors, setErrors] = useState<string[]>();
