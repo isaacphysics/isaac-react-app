@@ -4,15 +4,17 @@ import * as ApiTypes from "../../../IsaacApiTypes";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {useDispatch} from "react-redux";
-import {logAction} from "../../state/actions";
+import {closeActiveModal, logAction, openActiveModal} from "../../state/actions";
 import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
 import {RouteComponentProps, withRouter} from "react-router";
 import uuid from "uuid";
+import {PageFragment} from "../elements/PageFragment";
 
 export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuickQuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
     const fastTrackInfo = useFastTrackInformation(doc, location);
     const [isVisible, setVisible] = useState(false);
+    const [hideOptions, setHideOptions] = useState(false);
     const answer: ContentDTO = doc.answer as ContentDTO;
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
     const attemptUuid = useRef(uuid.v4().slice(0, 8));
@@ -21,14 +23,38 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
         if (isVisible) {
             const eventDetails = {type: "QUICK_QUESTION_CORRECT", questionId: doc.id, attemptUuid: attemptUuid.current, correct: payload};
             dispatch(logAction(eventDetails));
+            setHideOptions(true);
             attemptUuid.current = uuid.v4().slice(0, 8);
         } else {
             const eventDetails = {type: "QUICK_QUESTION_CONFIDENCE", questionId: doc.id, attemptUuid: attemptUuid.current, confidence: payload};
             dispatch(logAction(eventDetails));
+            const isNowVisible = !isVisible;
+            setVisible(isNowVisible);
         }
-        const isNowVisible = !isVisible;
-        setVisible(isNowVisible);
     };
+
+    const hideAnswer = () => {
+        setVisible(false);
+        setHideOptions(false);
+        attemptUuid.current = uuid.v4().slice(0, 8);
+    };
+
+    function quickQuestionInformationModal() {
+        dispatch(openActiveModal({
+            closeAction: () => {dispatch(closeActiveModal())},
+            title: "Information",
+            body: <Row className="mb-3">
+                <Col>
+                    <span>
+                    We regularly review and update our resources and would like more information to help us prioritise our
+                    work and to help assess the impact of any changes we make. Data captured from these buttons will be
+                    grouped and analyse the data by criteria such as exam board and level studied so that we can identify
+                    any specific areas of interest or concern.
+                    </span>
+                </Col>
+            </Row>
+        }))
+    }
 
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">
@@ -37,15 +63,18 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                     <IsaacContentValueOrChildren {...doc} />
                 </div>
                 {!fastTrackInfo.isFastTrackPage ?
-                    <div className="quick-question-options">
+                    <div className="quick-question-options" hidden={hideOptions}>
                         <Row>
-                            <Col>
-                                <h4>{isVisible ?  "Click a button to hide the answer" : "Click a button to show the answer"}</h4>
+                            <Col md="9">
+                                <h4>{isVisible ?  "" : "Click a button to show the answer"}</h4>
+                            </Col>
+                            <Col md="3" className="text-center">
+                                <Button outline color="primary" className="numeric-help" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
                             </Col>
                         </Row>
                         <Row className="mb-2">
                             <Col>
-                                {isVisible ? "Was your own answer correct?" : "What is your level of confidence (that your own answer is correct)?"}
+                                {isVisible ? "Was your own answer correct?" : "What is your level of confidence that your own answer is correct?"}
                             </Col>
                         </Row>
                         <Row>
@@ -56,7 +85,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                             </Col>
                             <Col sm="3" md="3">
                                 <Button color="yellow" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Probably" : "Medium")}>
-                                    {isVisible ? "Probably" : "Medium"}
+                                    {isVisible ? "Partly" : "Medium"}
                                 </Button>
                             </Col>
                             <Col sm="3" md="3" className="mr-auto">
@@ -80,12 +109,20 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                     </div>
                 }
                 {isVisible && <Row>
-                    <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
+                    <Col sm="12">
                         <Alert color="secondary" className="overflow-auto">
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
                     </Col>
                 </Row>}
+                {isVisible && <Row>
+                    <Col sm="12" md={{size: 10, offset: 1}}>
+                        <Button color="secondary" block className={isVisible ? "active" : ""} onClick={hideAnswer}>
+                            Hide answer
+                        </Button>
+                    </Col>
+                </Row>
+                }
             </div>
         </div>
     </form>;
