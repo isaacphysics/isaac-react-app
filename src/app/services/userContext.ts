@@ -297,6 +297,12 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
         comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
 }
 
+const audienceFilterFieldsBySubject: {[s in SITE]: (keyof ViewingContext)[]} = {
+    [SITE.PHY]: ["stage", "difficulty"],
+    [SITE.CS]: ["stage"],
+}
+export const AUDIENCE_DISPLAY_FIELDS = audienceFilterFieldsBySubject[SITE_SUBJECT];
+
 export function filterAudienceViewsByProperties(views: ViewingContext[], properties: (keyof ViewingContext)[]): ViewingContext[] {
     const filteredViews: ViewingContext[] = [];
     const viewed = new Set();

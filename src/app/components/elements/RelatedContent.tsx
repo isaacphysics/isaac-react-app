@@ -7,7 +7,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
-import {determineAudienceViews, isIntendedAudience, useUserContext} from "../../services/userContext";
+import {
+    AUDIENCE_DISPLAY_FIELDS,
+    determineAudienceViews,
+    filterAudienceViewsByProperties,
+    isIntendedAudience,
+    useUserContext
+} from "../../services/userContext";
 import {selectors} from "../../state/selectors";
 
 interface RelatedContentProps {
@@ -141,7 +147,7 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
         .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.QUESTION);
 
     const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => {
-        const audienceViews = determineAudienceViews(contentSummary.audience);
+        const audienceViews = filterAudienceViewsByProperties(determineAudienceViews(contentSummary.audience), AUDIENCE_DISPLAY_FIELDS);
         return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link
                 to={getURLForContent(contentSummary)}
@@ -152,13 +158,13 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
             >
                 {contentSummary.title}
                 {audienceViews.length > 0 && " ("}
-                {Array.from(new Set(audienceViews.map(av => {
+                {audienceViews.map(av => {
                     let result = "";
                     if (av.stage) {result += stageLabelMap[av.stage]}
                     if (av.stage && av.difficulty) {result += " - "}
                     if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
                     return result;
-                }))).join(", ")}
+                }).join(", ")}
                 {audienceViews.length > 0 && ")"}
             </Link>
         </ListGroupItem>

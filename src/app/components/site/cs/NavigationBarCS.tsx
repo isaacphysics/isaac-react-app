@@ -26,8 +26,8 @@ export const NavigationBarCS = () => {
         </NavigationSection>}
 
         <NavigationSection title="Learn">
-            <LinkItem to="/topics?stage=gcse" badgeTitle="BETA">GCSE topics</LinkItem>
-            <LinkItem to="/topics?stage=a_level">A level topics</LinkItem>
+            <LinkItem to="/topics/gcse" badgeTitle="BETA">GCSE topics</LinkItem>
+            <LinkItem to="/topics/a_level">A level topics</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
             <LinkItem to="/glossary">Glossary</LinkItem>
             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
