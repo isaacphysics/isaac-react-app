@@ -69,7 +69,7 @@
     "history": "^4.9.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
-    "inequality": "0.9.31",
+    "inequality": "0.9.32",
     "inequality-grammar": "0.10.3",
     "isaac-graph-sketcher": "0.9.4",
     "jest": "^26.2.2",
