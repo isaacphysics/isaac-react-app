@@ -807,7 +807,6 @@ export enum TAG_ID {
     geomVectors = "geom_vectors",
     trigonometry = "trigonometry",
     shapes = "shapes",
-    planes = "planes",
     // Calculus topics
     differentiation = "differentiation",
     integration = "integration",
@@ -818,12 +817,10 @@ export enum TAG_ID {
     manipulation = "manipulation",
     series = "series",
     complex_numbers = "complex_numbers",
-    matrices = "matrices",
     // Functions topics
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",
     // Statistical topics
-    randomVars = "random_vars",
     probability = "probability",
     dataAnalysis = "data_analysis",
 }

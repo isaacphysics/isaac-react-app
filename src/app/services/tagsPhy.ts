@@ -51,7 +51,6 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.geomVectors, title: "Vectors", parent: TAG_ID.geometry},
         {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
         {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
-        {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry},
         // Calculus topics
         {id: TAG_ID.differentiation, title: `Differen${softHyphen}tiation`, parent: TAG_ID.calculus},
         {id: TAG_ID.integration, title: "Integration", parent: TAG_ID.calculus},
@@ -62,12 +61,10 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
         {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
         {id: TAG_ID.complex_numbers, title: "Complex Numbers", parent: TAG_ID.algebra},
-        {id: TAG_ID.matrices, title: "Matrices", parent: TAG_ID.algebra},
         // Functions topics
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
         // Statistical topics
-        {id: TAG_ID.randomVars, title: "Random Vars", parent: TAG_ID.statistical},
         {id: TAG_ID.probability, title: "Probability", parent: TAG_ID.statistical},
         {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistical},
 
