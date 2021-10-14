@@ -9,13 +9,12 @@ import {WithFigureNumbering} from "./WithFigureNumbering";
 
 interface PageFragmentComponentProps {
     fragmentId: string;
-    renderFragmentNotFound?: ReactElement;
+    ifNotFound?: ReactElement;
 }
 
-export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentComponentProps) => {
+export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProps) => {
     const dispatch = useDispatch();
     const fragment = useSelector((state: AppState) => state && state.fragments && state.fragments[fragmentId] || null);
-    const showFragment = typeof renderFragmentNotFound == "boolean" ? renderFragmentNotFound : true;
 
     useEffect(() => {
         dispatch(fetchFragment(fragmentId))
@@ -32,12 +31,12 @@ export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentC
     </div>;
 
     return <React.Fragment>
-        {!(fragment == 404 && !showFragment) && <ShowLoading
+        {!(fragment == 404) && <ShowLoading
             until={fragment}
             thenRender={fragment => <WithFigureNumbering doc={fragment}>
                 <IsaacContent doc={fragment} />
             </WithFigureNumbering>}
-            ifNotFound={renderFragmentNotFound || notFoundComponent}
+            ifNotFound={ifNotFound || notFoundComponent}
         />}
     </React.Fragment>;
 };

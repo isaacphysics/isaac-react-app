@@ -51,8 +51,6 @@ export const Events = withRouter(({history, location}: {history: History; locati
         Follow the links below to find out more about our FREE events.
     </span>;
 
-    const eventTypesFallback = <span/>;
-
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
@@ -131,7 +129,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 </div>
                 } />
                 <div className="mb-5">
-                    <PageFragment fragmentId="event_type_descriptions" renderFragmentNotFound={eventTypesFallback}/>
+                    <PageFragment fragmentId="event_type_descriptions" ifNotFound={<React.Fragment />}/>
                 </div>
             </div>
         </RS.Container>

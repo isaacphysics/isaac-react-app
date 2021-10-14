@@ -61,7 +61,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, audience
     }
 
     const HelpModal = (props: HelpModalProps) => {
-        return <PageFragment fragmentId={props.modalId} renderFragmentNotFound={help}/>
+        return <PageFragment fragmentId={props.modalId} ifNotFound={help}/>
     };
 
     function openHelpModal(modalId: string) {

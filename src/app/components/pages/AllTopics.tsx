@@ -45,8 +45,6 @@ export const AllTopics = () => {
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
 
-    const allTopicsFallback = <span/>;
-
     const topicColumn = (subTags: Tag[]) => {
         return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6}>
             {subTags.sort((a, b) => (a.title > b.title) ? 1 : -1)
@@ -86,7 +84,7 @@ export const AllTopics = () => {
                             All: <>
                                 <Row>
                                     <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-4">
-                                        <PageFragment fragmentId={`${stage}_all_topics`} renderFragmentNotFound={allTopicsFallback} />
+                                        <PageFragment fragmentId={`${stage}_all_topics`} ifNotFound={<React.Fragment />} />
                                     </Col>
                                 </Row>
                                 <Row>
