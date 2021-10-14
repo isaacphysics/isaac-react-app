@@ -1,22 +1,61 @@
-import React from "react";
-import {Link, useLocation} from "react-router-dom";
+import React, {useEffect} from "react";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {Badge, Col, Container, Row} from "reactstrap";
 import "../../services/tagsPhy";
 import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
-import {EXAM_BOARDS_CS_A_LEVEL, EXAM_BOARDS_CS_GCSE, STAGE, TAG_ID} from "../../services/constants";
-import queryString from "query-string";
+import {EXAM_BOARDS_CS_A_LEVEL, EXAM_BOARDS_CS_GCSE, STAGE, STAGE_NULL_OPTIONS, TAG_ID} from "../../services/constants";
 import {PageFragment} from "../elements/PageFragment";
 import {Tabs} from "../elements/Tabs";
+import {Redirect} from "react-router";
+import * as persistence from "../../services/localStorage";
+import {useQueryParams} from "../../services/reactRouterExtension";
+import {useUserContext} from "../../services/userContext";
 
-export const AllTopics = () => {
-    const search = useLocation().search;
-    const params = queryString.parse(search);
+export function AllTopicsWithoutAStage() {
+    const mostRecentAllTopicsPath = persistence.load(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH);
+    const queryParams = useQueryParams(true);
+    const userContext = useUserContext();
 
-    const stageString = (params.stage ? (Array.isArray(params.stage) ? params.stage[0] : params.stage) : "a_level").toLowerCase();
-    const stage = stageString === STAGE.GCSE ? STAGE.GCSE : STAGE.A_LEVEL;
+    // We will try our best to make links to /topics go to the expected place
+    let stage;
+    // Almost all cases use the most recent all topics path stored in local storage
+    if (mostRecentAllTopicsPath) {
+        stage = mostRecentAllTopicsPath;
+    // If they are using the old link which used the query param we use that
+    } else if (queryParams && queryParams.stage && !STAGE_NULL_OPTIONS.has(queryParams.stage as STAGE)) {
+        stage = queryParams.stage;
+    // The viewing context's stage seems a sensible next option
+    } else if (userContext.stage && !STAGE_NULL_OPTIONS.has(userContext.stage)) {
+        stage = userContext.stage;
+    // Default to A Level
+    } else {
+        stage = STAGE.A_LEVEL;
+    }
+
+    return <Redirect to={`/topics/${stage}`} />;
+}
+
+export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
+    const history = useHistory();
+    const location = useLocation();
+
     const stageExamBoards = Array.from({[STAGE.GCSE]: EXAM_BOARDS_CS_GCSE, [STAGE.A_LEVEL]: EXAM_BOARDS_CS_A_LEVEL}[stage]);
+
+    useEffect(function recordMostRecentAllTopicsStage() {
+        // We use local storage to try to do the right thing when user view topics on multiple tabs
+        persistence.save(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH, stage);
+    }, [stage]);
+
+    // // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards
+    // const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase()) + 2 || 1;
+    // function setActiveTab(tabIndex: number) {
+    //     if (tabIndex < 1 || tabIndex - 1 > stageExamBoards.length) return;
+    //     const hash = tabIndex > 1 ? stageExamBoards[tabIndex - 2].toString() : "all"
+    //     history.replace({...location, hash: `#${hash}`}) // This sets activeTab to the index corresponding to the hash
+    // }
+    // useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
@@ -41,7 +80,7 @@ export const AllTopics = () => {
 
     const subcategoryTags = tags.allSubcategoryTags;
 
-    const charToCutAt = stage === STAGE.A_LEVEL ? "H" : "F";
+    const charToCutAt = "H";
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
 

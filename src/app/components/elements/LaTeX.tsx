@@ -2,14 +2,7 @@ import React, {useContext} from "react";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {AppState} from "../../state/reducers";
-import {useUserContext} from "../../services/userContext";
-import {
-    BooleanNotation,
-    FigureNumberingContext,
-    FigureNumbersById,
-    PotentialUser
-} from "../../../IsaacAppTypes";
-import {EXAM_BOARD} from "../../services/constants";
+import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
 import he from "he";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import katex from "katex";
@@ -230,7 +223,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: PotentialUser | null, examBoard: EXAM_BOARD | null, booleanNotation : BooleanNotation | null,  screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: PotentialUser | null, booleanNotation : BooleanNotation | null,  screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -333,11 +326,10 @@ export function LaTeX({markup}: {markup: string}) {
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
-    const {examBoard} = useUserContext();
     const figureNumbers = useContext(FigureNumberingContext);
 
     const escapedMarkup = escapeHtml(markup);
-    const katexHtml = katexify(escapedMarkup, user, examBoard, booleanNotation, screenReaderHoverText, figureNumbers);
+    const katexHtml = katexify(escapedMarkup, user, booleanNotation, screenReaderHoverText, figureNumbers);
 
     return <span dangerouslySetInnerHTML={{__html: katexHtml}} />
 }

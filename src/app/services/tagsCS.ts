@@ -51,8 +51,8 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.identificationPrevention, title: "Managing security threats", parent: TAG_ID.cyberSecurity, stageOverride: GCSE_COMING_2022},
         // Data and information topics
         {id: TAG_ID.numberRepresentation, title: "Representation of numbers", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.textRepresentation, title: "Representation of text", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.imageRepresentation, title: "Representation of images", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.textRepresentation, title: "Representation of text", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
+        {id: TAG_ID.imageRepresentation, title: "Representation of images", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
         {id: TAG_ID.soundRepresentation, title: "Representation of sound", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
@@ -102,7 +102,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.softwareProject, title: "A level programming project / NEA", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_HIDDEN},
         // Theory of computation topics
         {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_COMING_2022}
+        {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN}
 
     ];
     public getTagHierarchy() {return CsTagService.tagHierarchy;}
