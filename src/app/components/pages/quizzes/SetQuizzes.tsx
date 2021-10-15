@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {ContentSummaryDTO, QuizAssignmentDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {ContentSummaryDTO, QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {
@@ -77,7 +77,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const quizzes = useSelector(selectors.quizzes.available);
-    const [filteredQuizzes, setFilteredQuizzes] = useState<Array<ContentSummaryDTO> | undefined>();
+    const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
     const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage quizzes", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Quizzes"}[SITE_SUBJECT]);
     const quizAssignments = useSelector(selectors.quizzes.assignments);
@@ -145,6 +145,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                     <span className="mb-2 mb-sm-0">{quiz.title}</span>
+                                    {quiz.visibleToStudents && <div className="small text-muted d-none d-md-block ml-2">visible to students</div>}
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
                                     <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz))}>
