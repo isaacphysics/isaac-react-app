@@ -6,7 +6,7 @@ import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {useOutsideCallback} from "../../services/miscUtils";
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string}) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const user = useSelector(selectors.user.orNull);
@@ -39,23 +39,21 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId}: {linkUrl: st
     }, [showShareLink]);
 
     const shareLinkDivRef = useRef(null)
-    useOutsideCallback(shareLinkDivRef, () => setShowShareLink(false), [setShowShareLink])
+    useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink])
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * 9);
     const showDuplicateAndEdit = gameboardId && isTeacher(user);
-    return <React.Fragment>
-        <div className="share-link-icon">
-            <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
-            <div ref={shareLinkDivRef} className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
-                <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
-                {showDuplicateAndEdit && <React.Fragment>
-                    <hr className="text-center mt-4" />
-                    <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
-                        {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
-                    </a>
-                </React.Fragment>}
-            </div>
+    return <div ref={shareLinkDivRef} className="share-link-icon">
+        <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
+        <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
+            <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
+            {showDuplicateAndEdit && <React.Fragment>
+                <hr className="text-center mt-4" />
+                <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
+                    {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
+                </a>
+            </React.Fragment>}
         </div>
-    </React.Fragment>;
+    </div>;
 };

@@ -1,9 +1,4 @@
-import {
-    IsaacQuizDTO,
-    IsaacQuizSectionDTO,
-    QuestionDTO,
-    QuizAttemptDTO
-} from "../../../../IsaacApiTypes";
+import {IsaacQuizDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import React from "react";
 import {isDefined} from "../../../services/miscUtils";
 import {extractTeacherName} from "../../../services/user";
@@ -21,6 +16,8 @@ import {useDispatch} from "react-redux";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
+import {closeActiveModal, openActiveModal} from "../../../state/actions";
+import {UserContextPicker} from "../inputs/UserContextPicker";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number) => string;
 
@@ -115,19 +112,44 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
 
 function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
     const rubric = attempt.quiz?.rubric;
+    const renderRubric = (rubric?.children || []).length > 0;
     return <div>
-        {rubric && <IsaacContentValueOrChildren value={rubric.value}>
+        {rubric && renderRubric && <div>
+            <h4>Instructions</h4>
+            <IsaacContentValueOrChildren value={rubric.value}>
             {rubric.children}
-        </IsaacContentValueOrChildren>}
+        </IsaacContentValueOrChildren>
+        </div>}
     </div>
 }
 
 function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
+    const rubric = attempt.quiz?.rubric;
+    const renderRubric = (rubric?.children || []).length > 0;
+    const dispatch = useDispatch();
+
+    const openQuestionModal = (attempt: QuizAttemptDTO) => {
+        dispatch(openActiveModal({
+            closeAction: () => {dispatch(closeActiveModal())}, size: "lg",
+            title: "Quiz Instructions", body: <QuizRubric attempt={attempt} />
+        }))
+    };
+
     return section ?
         <Row className="question-content-container">
             <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
+                <UserContextPicker className="no-print text-right"/>
+                <Row>
+                    {rubric && renderRubric && <Col className="text-right">
+                        <RS.Button color="tertiary" outline className="mb-4"
+                            alt="Show instructions" title="Show instructions in a modal"
+                            onClick={() => {rubric && openQuestionModal(attempt)}}>
+                            Show instructions
+                        </RS.Button>
+                    </Col>}
+                </Row>
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>
                 </WithFigureNumbering>

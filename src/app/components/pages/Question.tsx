@@ -92,7 +92,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                         <EditContentButton doc={doc} />
                     </div>
                     <div className="question-actions ml-auto">
-                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} />
+                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
                     </div>
                     <div className="question-actions not-mobile">
                         <PrintButton questionPage />

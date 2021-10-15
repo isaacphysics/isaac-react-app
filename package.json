@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "1.6.2-SNAPSHOT",
+  "version": "1.6.9-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.9.0",
@@ -69,9 +69,9 @@
     "history": "^4.9.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
-    "inequality": "0.9.30",
-    "inequality-grammar": "^0.10.3",
-    "isaac-graph-sketcher": "^0.9.3",
+    "inequality": "0.9.31",
+    "inequality-grammar": "0.10.3",
+    "isaac-graph-sketcher": "0.9.4",
     "jest": "^26.2.2",
     "jest-pnp-resolver": "^1.2.2",
     "jest-resolve": "^26.2.2",
@@ -83,6 +83,7 @@
     "node-sass": "^4.14.1",
     "npm-overlapping-marker-spiderfier": "^1.0.3",
     "optimize-css-assets-webpack-plugin": "5.0.1",
+    "p5": "^1.4.0",
     "pnp-webpack-plugin": "1.2.1",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",

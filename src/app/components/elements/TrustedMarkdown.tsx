@@ -2,7 +2,7 @@ import React from "react";
 import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
-import {Token} from "remarkable";
+import {Token} from "remarkable/lib";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {useGlossaryTermsInMarkdown} from "../../services/glossary";
 
