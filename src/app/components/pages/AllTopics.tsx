@@ -48,14 +48,14 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
         persistence.save(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH, stage);
     }, [stage]);
 
-    // // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards
-    // const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase()) + 2 || 1;
-    // function setActiveTab(tabIndex: number) {
-    //     if (tabIndex < 1 || tabIndex - 1 > stageExamBoards.length) return;
-    //     const hash = tabIndex > 1 ? stageExamBoards[tabIndex - 2].toString() : "all"
-    //     history.replace({...location, hash: `#${hash}`}) // This sets activeTab to the index corresponding to the hash
-    // }
-    // useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
+    // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards
+    const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase()) + 2 || 1;
+    function setActiveTab(tabIndex: number) {
+        if (tabIndex < 1 || tabIndex - 1 > stageExamBoards.length) return;
+        const hash = tabIndex > 1 ? stageExamBoards[tabIndex - 2].toString() : "all"
+        history.replace({...location, hash: `#${hash}`}) // This sets activeTab to the index corresponding to the hash
+    }
+    useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
@@ -116,7 +116,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
 
-            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1} refreshHash={stage}>
+            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
                 {
                     Object.assign(
                         {
