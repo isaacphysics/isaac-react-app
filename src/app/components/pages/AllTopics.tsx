@@ -14,12 +14,13 @@ import {useQueryParams} from "../../services/reactRouterExtension";
 import {useUserContext} from "../../services/userContext";
 
 export function AllTopicsWithoutAStage() {
+    const history = useHistory();
     const mostRecentAllTopicsPath = persistence.load(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH);
     const queryParams = useQueryParams(true);
     const userContext = useUserContext();
 
     // We will try our best to make links to /topics go to the expected place
-    let stage;
+    let stage: string;
     // Almost all cases use the most recent all topics path stored in local storage
     if (mostRecentAllTopicsPath) {
         stage = mostRecentAllTopicsPath;
@@ -34,6 +35,11 @@ export function AllTopicsWithoutAStage() {
         stage = STAGE.A_LEVEL;
     }
 
+    useEffect(() => {
+        // The redirect component doesn't seem to work.
+        // Perhaps it is fighting against useUserContext()'s history.replace() - will need to investigate further
+        history.push(`/topics/${stage}`);
+    })
     return <Redirect to={`/topics/${stage}`} />;
 }
 
