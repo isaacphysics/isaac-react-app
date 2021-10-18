@@ -28,7 +28,7 @@ import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {isQuestion} from "../../../services/questions";
 import {API_PATH} from "../../../services/constants";
-import { closeActiveModal, getQuizAssignmentResultsSummaryCSV, openActiveModal } from "../../../state/actions";
+import {closeActiveModal, getQuizAssignmentResultsSummaryCSV, openActiveModal, showToast} from "../../../state/actions";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import {range} from "lodash";
@@ -256,7 +256,9 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
             try {
                 setSettingDueDate(true);
                 if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this quiz is assigned to.")) {
-                    await dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate));
+                    if (await dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate))) {
+                        dispatch(showToast({color: "success", title: "Due date extended successfully", body: `The due date for this test is now: ${newDate.toDateString()}.`, timeout: 5000}));
+                    }
                 } else {
                     setDueDate(assignment.dueDate);
                 }
