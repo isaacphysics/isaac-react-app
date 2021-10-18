@@ -88,7 +88,15 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
     }, [dispatch, baseGameboardId, baseGameboard]);
     useEffect(() => {
         if (concepts && (!baseGameboardId)) {
-            dispatch(generateTemporaryGameboard({stages: userContext.stage, examBoards: userContext.examBoard, concepts: concepts}));
+            const params: {[key: string]: string} = {};
+            params.concepts = concepts;
+            if (userContext.stage !== "all") {
+                params.stages = userContext.stage;
+            }
+            if (userContext.examBoard !== "all") {
+                params.examBoards = userContext.examBoard;
+            }
+            dispatch(generateTemporaryGameboard(params));
         }
     }, [dispatch, concepts])
     useEffect(() => {
