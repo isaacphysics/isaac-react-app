@@ -255,9 +255,9 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
         if (assignment?.dueDate && newDate > assignment.dueDate) {
             try {
                 setSettingDueDate(true);
-                if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this quiz is assigned to.")) {
-                    if (await dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate))) {
-                        dispatch(showToast({color: "success", title: "Due date extended successfully", body: `The due date for this test is now: ${newDate.toDateString()}.`, timeout: 5000}));
+                if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.")) {
+                    if (dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate))) {
+                        dispatch(showToast({color: "success", title: "Due date extended successfully", body: `This test is now due ${newDate.toLocaleDateString()}.`, timeout: 5000}));
                     }
                 } else {
                     setDueDate(assignment.dueDate);
