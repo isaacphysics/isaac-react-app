@@ -77,7 +77,7 @@
     "jest-resolve": "^26.2.2",
     "jest-watch-typeahead": "^0.6.0",
     "js-cookie": "^2.2.0",
-    "katex": "^0.11.1",
+    "katex": "^0.13.18",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "0.8.0",
     "node-sass": "^4.14.1",
