@@ -117,7 +117,7 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
                 <div className="related-questions related-title">
                     <h5 className="mb-2">Related Questions</h5>
                     {showConceptGameboardButton && questions.length > 0 && <p className="text-right">
-                        <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
+                        <ConceptGameboardButton conceptId={conceptId}/>
                     </p>}
                 </div>
                 <hr/>

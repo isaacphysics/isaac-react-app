@@ -35,15 +35,17 @@ import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {useUserContext} from "../../services/userContext";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
-    const conceptIds = queryParams && queryParams.concepts as string;
+    const concepts = queryParams && queryParams.concepts as string;
 
     const dispatch = useDispatch();
 
     const user = useSelector(selectors.user.orNull);
+    const userContext = useUserContext();
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
     const baseGameboard = useSelector(selectors.board.currentGameboard);
 
@@ -61,8 +63,8 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummary>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
-            if (conceptIds && (!baseGameboardId)) {
-                logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", {conceptIds: conceptIds});
+            if (concepts && (!baseGameboardId)) {
+                logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", {concepts: concepts});
             } else {
                 logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
             }
@@ -85,10 +87,10 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         }
     }, [dispatch, baseGameboardId, baseGameboard]);
     useEffect(() => {
-        if (conceptIds && (!baseGameboardId)) {
-            dispatch(generateTemporaryGameboard({concepts: conceptIds}));
+        if (concepts && (!baseGameboardId)) {
+            dispatch(generateTemporaryGameboard({stages: userContext.stage, examBoards: userContext.examBoard, concepts: concepts}));
         }
-    }, [dispatch, conceptIds])
+    }, [dispatch, concepts])
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
