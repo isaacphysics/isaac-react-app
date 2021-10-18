@@ -777,7 +777,7 @@ export enum TAG_ID {
     calculus = "calculus",
     algebra = "algebra",
     functions = "functions",
-    statistical = "statistical",
+    statistics = "statistics",
 
     // Mechanics topics
     statics = "statics",
