@@ -3,11 +3,18 @@ import {DOCUMENT_TYPE, TAG_ID} from "./constants";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {isStaff} from "./user";
 import {PotentialUser} from "../../IsaacAppTypes";
+import queryString from "query-string";
+
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
+    const previousQuery = queryString.parse(history.location.search);
+    const newQueryOptions = {
+        query: encodeURIComponent(searchQuery),
+        types: typesFilter.join(",") || undefined,
+    };
     history.push({
         pathname: "/search",
-        search: `?query=${encodeURIComponent(searchQuery)}${typesFilter.length ? `&types=${typesFilter.join(",")}` : ""}`,
+        search: queryString.stringify({...previousQuery, ...newQueryOptions}),
     });
 };
 
