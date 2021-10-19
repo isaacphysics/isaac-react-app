@@ -23,7 +23,9 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
 
     useEffect(() => {dispatch(fetchTopicSummary(topicName))}, [dispatch, topicName]);
 
-    let [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, userContext, user);
+    const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, userContext, user);
+    const [relatedConceptsForSpecificViewingContext, relatedQuestionsForSpecificViewingContext] =
+        getRelatedDocs(topicPage, {...userContext, showOtherContent: false}, user);
 
     const searchQuery = `?topic=${topicName}`;
     // TODO REMOVE AUDIENCE_CONTEXT - maybe we don't need to bother with this now
@@ -32,7 +34,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
-            <Row className="pb-3">
+            <Row>
                 <Col md={{size: 8, offset: 2}} className="py-3">
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
@@ -40,18 +42,18 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    {relatedConcepts && atLeastOne(relatedConcepts.length) &&
-                        <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
-                    }
-                    {relatedQuestions && atLeastOne(relatedQuestions.length) &&
-                        <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
-                    }
-                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) && (!relatedConcepts || !atLeastOne(relatedConcepts.length)) &&
+                    {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
                         <div className='text-center py-3'>
                             <div className='alert alert-warning'>
                                 {`There is no material in this topic for ${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}.`}
                             </div>
                         </div>
+                    }
+                    {atLeastOne(relatedConcepts.length) &&
+                        <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
+                    }
+                    {atLeastOne(relatedQuestions.length) &&
+                        <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
                     }
                 </Col>
             </Row>
@@ -79,10 +81,9 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
 
             <Row className="pb-5">
                 <Col md={{size: 8, offset: 2}} className="py-3">
-
                     <Row>
                         <Col size={6} className="text-center">
-                            <Button tag={Link} to="/topics" color="primary" outline size="lg" className="my-4" block>
+                            <Button tag={Link} to="/topics" color="primary" outline size="lg" block>
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>
