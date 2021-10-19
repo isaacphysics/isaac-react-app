@@ -173,8 +173,8 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                 {audienceViews.map(av => {
                     let result = "";
                     if (av.stage) {result += stageLabelMap[av.stage]}
-                    if (av.stage && av.difficulty) {result += " - "}
-                    if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
+                    if (SITE_SUBJECT === SITE.PHY && av.stage && av.difficulty) {result += " - "}
+                    if (SITE_SUBJECT === SITE.PHY && av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
                     return result;
                 }).join(", ")}
                 {audienceViews.length > 0 && ")"}

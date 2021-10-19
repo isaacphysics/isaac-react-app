@@ -121,7 +121,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                         {stageLabelMap[view.stage]}
                     </span>}
                     {" "}
-                    {view.difficulty && <span className="gameboard-tags">
+                    {SITE_SUBJECT === SITE.PHY && view.difficulty && <span className="gameboard-tags">
                         ({difficultyShortLabelMap[view.difficulty]})
                         {i < views.length - 1 && ", "}
                     </span>}

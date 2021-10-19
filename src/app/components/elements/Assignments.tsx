@@ -19,6 +19,7 @@ import {
     stagesOrdered,
     TAG_ID
 } from "../../services/constants";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
@@ -75,7 +76,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                             <strong>{stages.length === 1 ? "Stage" : "Stages"}:</strong>{" "}
                             {stages.map(s => stageLabelMap[s]).join(", ")}
                         </p>}
-                        {difficulties.length > 0 && <p className="mb-0">
+                        {SITE_SUBJECT === SITE.PHY && difficulties.length > 0 && <p className="mb-0">
                             <strong>{difficulties.length === 1 ? "Difficulty" : "Difficulties"}:</strong>{" "}
                             {difficulties.map(d => difficultyShortLabelMap[d]).join(", ")}
                         </p>}
