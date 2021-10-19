@@ -5,7 +5,8 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem} from "../../../IsaacApiTypes";
 import {
     closeActiveModal,
-    createGameboard, generateTemporaryGameboard,
+    createGameboard,
+    generateTemporaryGameboard,
     getWildcards,
     loadGameboard,
     logAction,
@@ -36,6 +37,7 @@ import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
+import {EXAM_BOARD, STAGE} from "../../services/constants";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -90,10 +92,10 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         if (concepts && (!baseGameboardId)) {
             const params: {[key: string]: string} = {};
             params.concepts = concepts;
-            if (userContext.stage !== "all") {
+            if (userContext.stage !== STAGE.ALL) {
                 params.stages = userContext.stage;
             }
-            if (userContext.examBoard !== "all") {
+            if (userContext.examBoard !== EXAM_BOARD.ALL) {
                 params.examBoards = userContext.examBoard;
             }
             dispatch(generateTemporaryGameboard(params));
