@@ -546,7 +546,7 @@ export const api = {
         }
     },
     quizzes: {
-        available: (startIndex: number): AxiosPromise<ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+        available: (startIndex: number): AxiosPromise<ResultsWrapper<ApiTypes.QuizSummaryDTO>> => {
             return endpoint.get(`/quiz/available/${startIndex}`);
         },
         createQuizAssignment: (assignment: ApiTypes.QuizAssignmentDTO): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {

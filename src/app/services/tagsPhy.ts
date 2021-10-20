@@ -45,6 +45,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.calculus, title: "Calculus", parent: TAG_ID.maths},
         {id: TAG_ID.algebra, title: "Algebra", parent: TAG_ID.maths},
         {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.maths},
+        {id: TAG_ID.statistical, title: "Statistical", parent: TAG_ID.maths},
+
         // Geometry topics
         {id: TAG_ID.geomVectors, title: "Vectors", parent: TAG_ID.geometry},
         {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
@@ -62,6 +64,9 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Functions topics
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
+        // Statistical topics
+        {id: TAG_ID.probability, title: "Probability", parent: TAG_ID.statistical},
+        {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistical},
 
         // Chemistry fields
         {id: TAG_ID.chemPhysics, title: "Physical Chemistry", parent: TAG_ID.chemistry},

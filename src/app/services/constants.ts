@@ -577,7 +577,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.ALL]: "All exam boards",
 }
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 
 // BOOLEAN LOGIC NOTATION OPTIONS
@@ -777,6 +777,7 @@ export enum TAG_ID {
     calculus = "calculus",
     algebra = "algebra",
     functions = "functions",
+    statistical = "statistical",
 
     // Mechanics topics
     statics = "statics",
@@ -819,6 +820,9 @@ export enum TAG_ID {
     // Functions topics
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",
+    // Statistical topics
+    probability = "probability",
+    dataAnalysis = "data_analysis",
 }
 
 export enum TAG_LEVEL {

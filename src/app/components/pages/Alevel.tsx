@@ -18,7 +18,7 @@ export const Alevel = () => {
             <IsaacCard doc={{title: "Physics Skills Mastery Book", subtitle: "Interactive questions from our Mastering Essential Pre-University Physics book.",
                 clickUrl: "/books/physics_skills_19", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
-            <IsaacCard doc={{title: "Virtual Lessons", subtitle: "Learn and practise physics.",
+            <IsaacCard doc={{title: "A Level Physics Lessons", subtitle: "Resources for learning and consolidation",
                 clickUrl: "/pages/a_level_topic_index", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>

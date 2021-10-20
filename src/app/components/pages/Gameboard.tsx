@@ -15,7 +15,11 @@ import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
-import {determineAudienceViews} from "../../services/userContext";
+import {
+    AUDIENCE_DISPLAY_FIELDS,
+    determineAudienceViews,
+    filterAudienceViewsByProperties
+} from "../../services/userContext";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -82,7 +86,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 </div>}
             </div>
             {question.audience && <div>
-                {determineAudienceViews(question.audience, question.creationContext)
+                {filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
                     .map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
                         {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
                             {stageLabelMap[view.stage]}
