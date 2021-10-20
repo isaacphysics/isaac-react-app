@@ -1,6 +1,6 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {UncontrolledTooltip} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {setMainContentId} from "../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
@@ -21,8 +21,8 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
             {view.stage && view.stage !== STAGE.ALL && <span>
                 {stageLabelMap[view.stage]}
             </span>}
-            {view.difficulty && " - "}
-            {view.difficulty && <span>
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && " - "}
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && <span>
                 {difficultyLabelMap[view.difficulty]}
             </span>}
         </div>)}
