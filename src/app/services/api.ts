@@ -164,6 +164,9 @@ export const api = {
         sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },
+        sendContentEmailWithIds: (plaintextTemplate: string, htmlTemplate: string, subject: string, emailType: string, ids: number[]): AxiosPromise => {
+            return endpoint.post(`/email/sendcontentemailwithuserids/${emailType}`, {userIds: ids, plaintextTemplate: plaintextTemplate, htmlTemplate: htmlTemplate, emailSubject: subject});
+        },
     },
     notifications: {
         get: (): AxiosPromise => {
