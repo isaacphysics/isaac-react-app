@@ -13,6 +13,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
+import {RenderNothing} from "../elements/RenderNothing";
 
 
 interface EventsPageQueryParams {
@@ -129,7 +130,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 </div>
                 } />
                 <div className="mb-5">
-                    <PageFragment fragmentId="event_type_descriptions" ifNotFound={<React.Fragment />}/>
+                    <PageFragment fragmentId="event_type_descriptions" ifNotFound={RenderNothing}/>
                 </div>
             </div>
         </RS.Container>

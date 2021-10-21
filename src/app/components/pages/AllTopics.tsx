@@ -12,6 +12,7 @@ import {Redirect} from "react-router";
 import * as persistence from "../../services/localStorage";
 import {useQueryParams} from "../../services/reactRouterExtension";
 import {useUserContext} from "../../services/userContext";
+import {RenderNothing} from "../elements/RenderNothing";
 
 export function AllTopicsWithoutAStage() {
     const mostRecentAllTopicsPath = persistence.load(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH);
@@ -123,7 +124,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
                             All: <>
                                 <Row>
                                     <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-4">
-                                        <PageFragment fragmentId={`${stage}_all_topics`} ifNotFound={<React.Fragment />} />
+                                        <PageFragment fragmentId={`${stage}_all_topics`} ifNotFound={RenderNothing} />
                                     </Col>
                                 </Row>
                                 <Row>
