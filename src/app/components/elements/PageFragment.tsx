@@ -5,6 +5,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
+import {NOT_FOUND} from "../../services/constants";
 
 
 interface PageFragmentComponentProps {
@@ -31,7 +32,7 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
     </div>;
 
     return <React.Fragment>
-        {!(fragment == 404) && <ShowLoading
+        {fragment !== NOT_FOUND && <ShowLoading
             until={fragment}
             thenRender={fragment => <WithFigureNumbering doc={fragment}>
                 <IsaacContent doc={fragment} />
