@@ -14,6 +14,8 @@ import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
+import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 
 interface EventsPageQueryParams {
@@ -55,6 +57,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
+            {SITE_SUBJECT === SITE.CS && <CoronavirusWarningBanner />}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">

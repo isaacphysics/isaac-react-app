@@ -6,10 +6,11 @@ import {GameboardItem} from "../../../IsaacApiTypes";
 import {
     closeActiveModal,
     createGameboard,
+    generateTemporaryGameboard,
     getWildcards,
     loadGameboard,
     logAction,
-    openActiveModal
+    openActiveModal,
 } from "../../state/actions";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
@@ -35,14 +36,18 @@ import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {useUserContext} from "../../services/userContext";
+import {EXAM_BOARD, STAGE} from "../../services/constants";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
+    const concepts = queryParams && queryParams.concepts as string;
 
     const dispatch = useDispatch();
 
     const user = useSelector(selectors.user.orNull);
+    const userContext = useUserContext();
     const wildcards = useSelector((state: AppState) => state && state.wildcards);
     const baseGameboard = useSelector(selectors.board.currentGameboard);
 
@@ -56,11 +61,15 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
 
     useEffect(() => {
         if (baseGameboard) {
-            setGameboardTitle(`${baseGameboard.title} (Copy)`);
+            setGameboardTitle(baseGameboard.title ? `${baseGameboard.title} (Copy)` : "");
             setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
             setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummary>());
             setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
-            logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
+            if (concepts && (!baseGameboardId)) {
+                logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", {concepts: concepts});
+            } else {
+                logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
+            }
         }
     }, [user, baseGameboard]);
 
@@ -79,6 +88,19 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
             dispatch(loadGameboard(baseGameboardId));
         }
     }, [dispatch, baseGameboardId, baseGameboard]);
+    useEffect(() => {
+        if (concepts && (!baseGameboardId)) {
+            const params: {[key: string]: string} = {};
+            params.concepts = concepts;
+            if (userContext.stage !== STAGE.ALL) {
+                params.stages = userContext.stage;
+            }
+            if (userContext.examBoard !== EXAM_BOARD.ALL) {
+                params.examBoards = userContext.examBoard;
+            }
+            dispatch(generateTemporaryGameboard(params));
+        }
+    }, [dispatch, concepts])
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});

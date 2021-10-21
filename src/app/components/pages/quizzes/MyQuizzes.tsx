@@ -163,7 +163,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no quizzes currently available.</em></p>}
                             <RS.ListGroup className="mb-3 quiz-list">
-                                {quizzes.map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                {quizzes.map(quiz => quiz.visibleToStudents && <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                         <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}

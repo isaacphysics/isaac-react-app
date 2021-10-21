@@ -22,8 +22,8 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
             {view.stage && view.stage !== STAGE.ALL && <span>
                 {stageLabelMap[view.stage]}
             </span>}
-            {view.difficulty && " - "}
-            {view.difficulty && <span>
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && " - "}
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && <span>
                 {difficultyLabelMap[view.difficulty]}
             </span>}
         </div>)}

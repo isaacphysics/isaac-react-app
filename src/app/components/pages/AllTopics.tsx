@@ -15,12 +15,13 @@ import {useUserContext} from "../../services/userContext";
 import {RenderNothing} from "../elements/RenderNothing";
 
 export function AllTopicsWithoutAStage() {
+    const history = useHistory();
     const mostRecentAllTopicsPath = persistence.load(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH);
     const queryParams = useQueryParams(true);
     const userContext = useUserContext();
 
     // We will try our best to make links to /topics go to the expected place
-    let stage;
+    let stage: string;
     // Almost all cases use the most recent all topics path stored in local storage
     if (mostRecentAllTopicsPath) {
         stage = mostRecentAllTopicsPath;
@@ -35,6 +36,11 @@ export function AllTopicsWithoutAStage() {
         stage = STAGE.A_LEVEL;
     }
 
+    useEffect(() => {
+        // The redirect component doesn't seem to work.
+        // Perhaps it is fighting against useUserContext()'s history.replace() - will need to investigate further
+        history.push(`/topics/${stage}`);
+    })
     return <Redirect to={`/topics/${stage}`} />;
 }
 
@@ -49,14 +55,14 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
         persistence.save(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH, stage);
     }, [stage]);
 
-    // // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards
-    // const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase()) + 2 || 1;
-    // function setActiveTab(tabIndex: number) {
-    //     if (tabIndex < 1 || tabIndex - 1 > stageExamBoards.length) return;
-    //     const hash = tabIndex > 1 ? stageExamBoards[tabIndex - 2].toString() : "all"
-    //     history.replace({...location, hash: `#${hash}`}) // This sets activeTab to the index corresponding to the hash
-    // }
-    // useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
+    // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards
+    const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase()) + 2 || 1;
+    function setActiveTab(tabIndex: number) {
+        if (tabIndex < 1 || tabIndex - 1 > stageExamBoards.length) return;
+        const hash = tabIndex > 1 ? stageExamBoards[tabIndex - 2].toString() : "all"
+        history.replace({...location, hash: `#${hash}`}) // This sets activeTab to the index corresponding to the hash
+    }
+    useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoon ? "span" : "strong";
@@ -117,7 +123,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
 
-            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={1} refreshHash={stage}>
+            <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
                 {
                     Object.assign(
                         {
