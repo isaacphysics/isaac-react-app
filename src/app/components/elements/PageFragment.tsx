@@ -21,7 +21,7 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
         dispatch(fetchFragment(fragmentId))
     }, [dispatch, fragmentId]);
 
-    const notFoundComponent = <div>
+    const defaultNotFoundComponent = <div>
         <h2>Content not found</h2>
         <h3 className="my-4">
             <small>
@@ -37,7 +37,7 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
             thenRender={fragment => <WithFigureNumbering doc={fragment}>
                 <IsaacContent doc={fragment} />
             </WithFigureNumbering>}
-            ifNotFound={ifNotFound || notFoundComponent}
+            ifNotFound={ifNotFound || defaultNotFoundComponent}
         />}
     </React.Fragment>;
 };
