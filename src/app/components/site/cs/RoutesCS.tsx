@@ -15,6 +15,7 @@ import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {GroupProgress} from "../../pages/GroupProgress";
 import {Glossary} from "../../pages/Glossary";
 import {STAGE} from "../../../services/constants";
+import {GameboardFilter} from "../../pages/GameboardFilter";
 
 let key = 0;
 export const RoutesCS = [
@@ -29,6 +30,9 @@ export const RoutesCS = [
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
     <TrackedRoute key={key++} exact path="/group_progress" ifUser={isTeacher} component={GroupProgress} />,
     // <TrackedRoute key={key++} exact path="/group_progress/:groupId" ifUser={isTeacher} component={SingleGroupProgress} />,
+
+    // Question finder
+    <TrackedRoute key={key++} exact path="/gameboards/new" component={GameboardFilter} />,
 
     // Topics
     <Redirect key={key++} from="/topics/procedural_and_structured_programming" to="/topics/procedural_programming" />,
