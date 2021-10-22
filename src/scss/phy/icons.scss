@@ -2,12 +2,18 @@
 
 .icon-person-active,
 .icon-person,
-.icon-warning,
-.icon-help,
 .icon-group,
 .icon-group-table-person,
 {
   background-image: url(/assets/phy/ru.png) !important;
+}
+
+.icon-warning {
+  background-image: url(/assets/phy/exclamation-hex.svg) !important;
+}
+
+.icon-help {
+  background-image: url(/assets/phy/question-hex.svg) !important;
 }
 
 svg {
