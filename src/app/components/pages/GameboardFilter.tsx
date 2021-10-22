@@ -133,15 +133,15 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
     }
     function setCSTierSelection(topics: Item<TAG_ID>[]) {
-        let strands : Set<Item<TAG_ID>> = new Set();
+        let strands : Set<Tag> = new Set();
         topics.forEach(t => {
             const parent = tags.getById(t.value).parent;
             if (parent) {
-                strands = strands.add(itemiseTag(tags.getById(parent)));
+                strands = strands.add(tags.getById(parent));
             }
         });
         // Selections always have all 3 tiers in CS
-        setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands), topics])
+        setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
@@ -413,7 +413,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         <div className="pb-4">
             <ShowLoading
                 until={gameboardOrNotFound}
-                thenRender={gameboard  => (<GameboardViewer gameboard={gameboard}/>)}
+                thenRender={gameboard  => (<GameboardViewer gameboard={gameboard} showBreadcrumbs/>)}
                 ifNotFound={<RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>}
             />
         </div>

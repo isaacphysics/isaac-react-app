@@ -32,15 +32,16 @@ function extractFilterQueryString(gameboard: GameboardDTO): string {
 }
 
 function getTags(docTags?: string[]) {
-    if (SITE_SUBJECT !== SITE.PHY) {
-        return [];
-    }
     if (!docTags) return [];
 
-    return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
+    if (SITE_SUBJECT === SITE.PHY) {
+        return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
+    } else {
+        return tags.getByIdsAsHierarchy(docTags as TAG_ID[]).splice(1);
+    }
 }
 
-const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
+const GameboardItemComponent = ({gameboard, question, showBreadcrumbs}: {gameboard: GameboardDTO, question: GameboardItem, showBreadcrumbs?: boolean}) => {
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
@@ -81,7 +82,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
                 <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
                 {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
-                {questionTags && <div className="gameboard-tags">
+                {(showBreadcrumbs === undefined || showBreadcrumbs) && questionTags && <div className="gameboard-tags">
                     {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                 </div>}
             </div>
@@ -117,7 +118,7 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
     </RS.ListGroupItem>
 }
 
-export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
+export const GameboardViewer = ({gameboard, showBreadcrumbs, className}: {gameboard: GameboardDTO; showBreadcrumbs?: boolean; className?: string}) => {
 
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
@@ -126,7 +127,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
                     <Wildcard wildcard={gameboard.wildCard} />
                 }
                 {gameboard?.contents && gameboard.contents.map(q =>
-                    <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
+                    <GameboardItemComponent key={q.id} gameboard={gameboard} showBreadcrumbs={showBreadcrumbs} question={q} />
                 )}
             </RS.ListGroup>
         </RS.Col>
