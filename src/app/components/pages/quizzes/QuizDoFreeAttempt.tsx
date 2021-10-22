@@ -63,7 +63,7 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
                     {!assignedQuizError && <p>{error}</p>}
                     {assignedQuizError && <>
                         <p>Your teacher has set this test to you.  You may not practise it in advance.<br/>
-                            If you are ready to take the test, click on it in your <a href={"/quizzes"} target="_self" rel="noopener noreferrer">assigned tests</a> page.
+                            If you are ready to take the test, click on it in your <a href={"/tests"} target="_self" rel="noopener noreferrer">assigned tests</a> page.
                         </p>
                     </>}
                 </RS.Alert>
