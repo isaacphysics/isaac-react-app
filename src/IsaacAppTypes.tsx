@@ -807,6 +807,11 @@ export interface EmailUserRoles {
 
 export interface TemplateEmail {
     subject?: string;
+    from?: string;
+    fromName?: string;
+    replyTo?: string;
+    replyToName?: string;
+    sender?: string;
     plainText?: string;
     html?: string;
 }
