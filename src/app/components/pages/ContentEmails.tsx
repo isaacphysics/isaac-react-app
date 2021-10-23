@@ -88,6 +88,10 @@ export const ContentEmails = (props: ContentEmailsProps) => {
                 />
             </RS.CardBody>
             <RS.CardBody>
+                <RS.Label>HTML Preview (unformatted)</RS.Label>
+                <iframe title={"html preview"} srcDoc={htmlTemplate} className="email-html"/>
+            </RS.CardBody>
+            <RS.CardBody>
                 <RS.Label>Email Plaintext</RS.Label>
                 <RS.Input
                     id="email-plaintext-input"
