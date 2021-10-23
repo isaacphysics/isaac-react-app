@@ -34,10 +34,6 @@ export const ContentEmails = (props: ContentEmailsProps) => {
     const csvInputDebounce = debounce((value: string) => setCSVIDs(value.split(/[\s,]+/).map((e) => {return parseInt(e)}).filter((num) => !isNaN(num))), 250);
 
     useEffect(() => {
-        isEventManager(user) && setEmailType("EVENTS");
-    }, [user]);
-
-    useEffect(() => {
         setPlaintextTemplate(convert(htmlTemplate));
     }, [htmlTemplate]);
 
@@ -111,7 +107,6 @@ export const ContentEmails = (props: ContentEmailsProps) => {
                     not receive anything. Administrative emails cannot be opted out of and should be avoided.</p>
                 <RS.Input
                     id="email-type-input" type="select" value={emailType}
-                    disabled={isEventManager(user)}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setEmailType(e.target.value);
                     }}
