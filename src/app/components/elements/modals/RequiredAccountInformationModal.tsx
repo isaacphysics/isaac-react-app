@@ -19,6 +19,7 @@ import {GenderInput} from "../inputs/GenderInput";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
+import { isDefined } from "../../../services/miscUtils";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -35,7 +36,7 @@ const RequiredAccountInfoBody = () => {
     const initialEmailPreferencesValue = {...userPreferences?.EMAIL_PREFERENCE};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
 
-    const initialUserContexts = user?.loggedIn ? [...user.registeredContexts] : [];
+    const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();

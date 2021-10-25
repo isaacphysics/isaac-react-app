@@ -25,8 +25,8 @@ export const ServerError = () => {
                         role="button"
                         tabIndex={0}
                         href={window.location.href}
-                        onKeyPress={() => window.location.reload(true)}
-                        onClick={() => window.location.reload(true)}
+                        onKeyPress={() => window.location.reload()}
+                        onClick={() => window.location.reload()}
                     >
                         refresh this page and try again
                     </a>

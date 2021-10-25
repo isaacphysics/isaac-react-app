@@ -1,27 +1,27 @@
-import React, {useEffect} from "react";
+import React, {ReactElement, useEffect} from "react";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
+import {NOT_FOUND} from "../../services/constants";
 
 
 interface PageFragmentComponentProps {
     fragmentId: string;
-    renderFragmentNotFound?: boolean;
+    ifNotFound?: ReactElement;
 }
 
-export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentComponentProps) => {
+export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProps) => {
     const dispatch = useDispatch();
     const fragment = useSelector((state: AppState) => state && state.fragments && state.fragments[fragmentId] || null);
-    const showFragment = typeof renderFragmentNotFound == "boolean" ? renderFragmentNotFound : true;
 
     useEffect(() => {
         dispatch(fetchFragment(fragmentId))
     }, [dispatch, fragmentId]);
 
-    const notFoundComponent = <div>
+    const defaultNotFoundComponent = <div>
         <h2>Content not found</h2>
         <h3 className="my-4">
             <small>
@@ -32,12 +32,12 @@ export const PageFragment = ({fragmentId, renderFragmentNotFound}: PageFragmentC
     </div>;
 
     return <React.Fragment>
-        {!(fragment == 404 && !showFragment) && <ShowLoading
+        {fragment !== NOT_FOUND && <ShowLoading
             until={fragment}
             thenRender={fragment => <WithFigureNumbering doc={fragment}>
                 <IsaacContent doc={fragment} />
             </WithFigureNumbering>}
-            ifNotFound={notFoundComponent}
+            ifNotFound={ifNotFound || defaultNotFoundComponent}
         />}
     </React.Fragment>;
 };

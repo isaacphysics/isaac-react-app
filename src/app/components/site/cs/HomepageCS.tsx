@@ -8,7 +8,6 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
-import {ExternalLink} from "../../elements/ExternalLink";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -22,12 +21,12 @@ export const HomepageCS = () => {
         <h3>Show me</h3>
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-                <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
+                <Button size="lg" tag={Link} to={"/topics/gcse"} color="secondary" block>
                     GCSE resources <Badge color="secondary" className="ml-1 border">BETA</Badge>
                 </Button>
             </Col>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-                <Button size="lg" tag={Link} to={"/topics?stage=a_level"} color="secondary" block>
+                <Button size="lg" tag={Link} to={"/topics/a_level"} color="secondary" block>
                     A Level resources
                 </Button>
             </Col>
@@ -83,7 +82,7 @@ export const HomepageCS = () => {
                                         <Link to="/events?types=teacher">teacher CPD events</Link>{" and "}
                                         <Link to="/events?types=student">student workshops</Link>.<br />
                                         {"Isaac Computer Science is proud to be part of the Department for Education's "}
-                                        <ExternalLink href="https://teachcomputing.org/">National Centre for Computing Education</ExternalLink>.
+                                        <Link to="/teachcomputing">National Centre for Computing Education</Link>.
                                     </p>
                                 </Col>
                             </Row>
