@@ -7,7 +7,7 @@ import tags from '../../services/tags';
 import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_ITEM_OPTIONS, NOT_FOUND, QUESTION_CATEGORY_ITEM_OPTIONS, STAGE, TAG_ID} from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
-import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
+import {fetchConcepts, generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
@@ -15,10 +15,12 @@ import {history} from "../../services/history";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
 import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
-import Select from "react-select";
+import Select, {GroupedOptionsType} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
+import {AppState} from "../../state/reducers";
+import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -176,15 +178,47 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
     </RS.Row>
 }
 
+// Takes a list of "raw" concepts, and returns a map which takes a tag Item, and gives a GroupedOptionsType<Item<string>> containing itemised concepts which relate to that tag
+const itemiseAndGroupConceptsByTag = (conceptDTOs : ContentSummaryDTO[]) => ((tag : Item<TAG_ID>) => {
+    return {
+        label: tag.label,
+        options: conceptDTOs.reduce((acc : Item<string>[], dto) =>
+            (dto.tags?.includes(tag.value) && dto.id && dto.title)
+                ? [...acc, {value: dto.id, label: dto.title}]
+                : acc,
+            [])
+    }
+});
+
 interface CSFilterProps extends FilterProps {
     examBoards : Item<string>[];
     setExamBoards : React.Dispatch<React.SetStateAction<Item<string>[]>>;
+    concepts : Item<string>[];
+    setConcepts : React.Dispatch<React.SetStateAction<Item<string>[]>>;
 }
-const CSFilter = ({selections, setSelections, examBoards, setExamBoards, stages, setStages, difficulties, setDifficulties} : CSFilterProps) => {
+const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concepts, setConcepts, stages, setStages, difficulties, setDifficulties} : CSFilterProps) => {
+    const dispatch = useDispatch();
 
     const topics = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const conceptDTOs = useSelector((state: AppState) => (selections[2]?.length > 0 && state?.concepts?.results) || []);
+    const [conceptChoices, setConceptChoices] = useState<GroupedOptionsType<Item<string>>>([]);
 
-    function setCSTierSelection(topics: Item<TAG_ID>[]) {
+    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
+    useEffect(() => {
+        if (selections[2]) {
+            // Filter concepts by selected topics - this should be done on the API end preferably
+            setConceptChoices(
+                selections[2].map(itemiseAndGroupConceptsByTag(conceptDTOs))
+            )
+        } else {
+            if (concepts.length > 0) {
+                setConceptChoices([]);
+                setConcepts([]);
+            }
+        }
+    }, [conceptDTOs, selections]);
+
+    function setTierSelection(topics: Item<TAG_ID>[]) {
         let strands : Set<Tag> = new Set();
         topics.forEach(t => {
             const parent = tags.getById(t.value).parent;
@@ -192,31 +226,30 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, stages,
                 strands = strands.add(tags.getById(parent));
             }
         });
-        // Selections always have all 3 tiers in CS
+         // Selections always have all 3 tiers in CS
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
     return <>
-        <RS.Row className={"mb-1 mb-lg-3"}>
-            <RS.Col lg={12} className={"mt-2"}>
+        <RS.Row className={"mb-1 mt-2"}>
+            <RS.Col lg={12}>
                 <RS.Label htmlFor="question-search-topic">Topics</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
-                    options={topics} onChange={unwrapValue(setCSTierSelection)}
+                    options={topics} onChange={unwrapValue(setTierSelection)}
                 />
             </RS.Col>
         </RS.Row>
-        {/*<RS.Row>*/}
-        {/*    <RS.Col lg={12} className={"mb-1 mb-lg-3 mt-2"}>*/}
-        {/*        <RS.Label htmlFor="concepts">Concepts</RS.Label>*/}
-        {/*        <Select*/}
-        {/*            inputId="concepts" isClearable placeholder="Any"*/}
-        {/*            value={concepts}*/}
-        {/*            options={[]}*/}
-        {/*            onChange={unwrapValue(setConcepts)}*/}
-        {/*        />*/}
-        {/*    </RS.Col>*/}
-        {/*</RS.Row>*/}
+        <RS.Row>
+            <RS.Col lg={12} className={"mb-1 mb-lg-3 mt-2"}>
+                <RS.Label htmlFor="concepts">Concepts</RS.Label>
+                <Select
+                    inputId="concepts" isMulti isClearable isDisabled={!(selections[2] && selections[2].length > 0)}
+                    placeholder={selections[2]?.length > 0 ? "Any" : "Please select a topic above"}
+                    value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
+                />
+            </RS.Col>
+        </RS.Row>
         <RS.Row className="mb-sm-4">
             <RS.Col lg={4}>
                 <div>
@@ -430,7 +463,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             {/* Filter */}
             {filterExpanded && ({
                 [SITE.PHY]: <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
-                [SITE.CS]:  <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards}/>
+                [SITE.CS]:  <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
             }[SITE_SUBJECT])}
 
             {/* Buttons */}
