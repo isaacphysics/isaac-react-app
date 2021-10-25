@@ -135,6 +135,8 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
             }
         );
+        if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
+        
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
         sketch.onCloseMenus = () => undefined;

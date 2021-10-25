@@ -9,7 +9,7 @@ import queryString from "query-string";
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     const previousQuery = queryString.parse(history.location.search);
     const newQueryOptions = {
-        query: encodeURIComponent(searchQuery),
+        query: searchQuery,
         types: typesFilter.join(",") || undefined,
     };
     history.push({

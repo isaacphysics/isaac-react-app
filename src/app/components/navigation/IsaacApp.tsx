@@ -190,7 +190,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
                     <TrackedRoute exact path="/set_tests" ifUser={isTeacher} component={SetQuizzes} />
-                    <Redirect from="/set_quizzes" to="set_tests" />
+                    <Redirect from="/set_quizzes" to="/set_tests" />
 
                     {/* Admin */}
                     <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

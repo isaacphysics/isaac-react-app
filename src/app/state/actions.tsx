@@ -160,7 +160,7 @@ export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
     try {
         const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
@@ -170,7 +170,7 @@ export const getChosenUserAuthSettings = (userId: number) => async (dispatch: Di
     try {
         const authenticationSettings = await api.authentication.getSelectedUserAuthSettings(userId);
         dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS, selectedUserAuthSettings: authenticationSettings.data});
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
@@ -182,7 +182,7 @@ export const linkAccount = (provider: AuthenticationProvider) => async (dispatch
         const redirectUrl = redirectResponse.data.redirectUrl;
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS, provider, redirectUrl: redirectUrl});
         window.location.href = redirectUrl;
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showErrorToastIfNeeded("Failed to link account", e));
     }
@@ -203,7 +203,7 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
             timeout: 5000,
             closable: false,
         }) as any);
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showErrorToastIfNeeded("Failed to unlink account", e));
     }
@@ -214,7 +214,7 @@ export const getNewTotpSecret = () => async (dispatch: Dispatch<Action>) => {
     try {
         const mfaSetupResponse = await api.authentication.getNewMFASecret();
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS, totpSharedSecretDTO: mfaSetupResponse.data});
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
     }
@@ -227,7 +227,7 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS});
         dispatch(showToast({
             color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}) as any);
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
     }
@@ -246,7 +246,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
 
         history.push(afterAuthPath);
 
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showErrorToastIfNeeded("Error with verification code.", e));
     }
@@ -260,7 +260,7 @@ export const disableTotpForAccount = (userId: number) => async (dispatch: Dispat
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS});
         dispatch(showToast({
             color: "success", title: "2FA Disabled", body: "You have disabled 2FA on this account!"}) as any);
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
     }
@@ -271,7 +271,7 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     try {
         const userPreferenceSettings = await api.users.getPreferences();
         dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences: userPreferenceSettings.data});
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
@@ -362,7 +362,7 @@ export const updateCurrentUser = (
                 closable: false,
             }) as any);
         }
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
@@ -446,7 +446,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
 
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
     dispatch(requestCurrentUser() as any)
@@ -457,7 +457,13 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
     try {
         await api.users.passwordReset(params);
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
-    } catch (e) {
+        dispatch(showToast({
+            color: "success",
+            title: "Password reset email sent",
+            body: `A password reset email has been sent to '${params.email}'`,
+            timeout: 5000
+        }) as any);
+    } catch (e: any) {
         dispatch(showErrorToastIfNeeded("Password reset failed", e));
     }
 };
@@ -467,7 +473,7 @@ export const verifyPasswordReset = (token: string | null) => async (dispatch: Di
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST});
         await api.users.verifyPasswordReset(token);
         dispatch({type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS});
-    } catch(e) {
+    } catch(e: any) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
     }
 };
@@ -479,7 +485,7 @@ export const handlePasswordReset = (params: {token: string; password: string}) =
         dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_SUCCESS});
         history.push('/login');
         dispatch(showToast({color: "success", title: "Password reset successful", body: "Please log in with your new password.", timeout: 5000}) as any);
-    } catch(e) {
+    } catch(e: any) {
         dispatch({type:ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE, errorMessage: extractMessage(e)});
     }
 };
@@ -517,7 +523,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         } else {
             history.push(nextPage);
         }
-    } catch (error) {
+    } catch (error: any) {
         history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
@@ -541,7 +547,7 @@ export const requestEmailVerification = () => async (dispatch: any, getState: ()
                 return;
             }
             error = response.data || "Error sending request";
-        } catch (e) {
+        } catch (e: any) {
             error = e.message || "Error sending request";
         }
     } else {
@@ -567,7 +573,7 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
             timeout: 5000,
             closable: false,
         }) as any);
-    } catch(e) {
+    } catch(e: any) {
         dispatch({type:ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
@@ -590,7 +596,7 @@ export const submitMessage = (params: {firstName: string; lastName: string; emai
     try {
         await api.contactForm.send(params);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS})
-    } catch (e) {
+    } catch (e: any) {
         const errorMessage = extractMessage(e);
         dispatch({type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE, errorMessage: errorMessage});
         dispatch(showErrorToastIfNeeded(errorMessage, e));
@@ -637,7 +643,7 @@ export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAu
         //     .filter((currentAuthorisation) => (toGrantIds as number[]).includes(currentAuthorisation.id as number)));
 
         dispatch(openActiveModal(tokenVerificationModal(userId, authenticationToken, usersToGrantAccess)) as any);
-    } catch (e) {
+    } catch (e: any) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
         if (e.status == 429) {
             dispatch(showToast({
@@ -910,7 +916,7 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
                 body: "You have entered several guesses for this question; soon it will be temporarily locked."
             }) as any);
         }
-    } catch (e) {
+    } catch (e: any) {
         if (e.response && e.response.status === 429) {
             const errorMessage = e.response?.data?.errorMessage || QUESTION_ATTEMPT_THROTTLED_MESSAGE;
             const lock = new Date((new Date()).getTime() + timePeriod);
