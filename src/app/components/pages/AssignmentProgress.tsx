@@ -578,12 +578,17 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
         dispatch(loadAssignmentsOwnedByMe());
     }, [dispatch]);
 
+    const pageHelp = <span>
+        Click on your groups to see the assignments you have set. View your students' progress by question.
+    </span>;
+
     return <React.Fragment>
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
                 subTitle="Track your group performance by question"
-                help="Click on your groups to see the assignments you have set. View your students' progress by question."
+                help={pageHelp}
+                modalId="assignment_progress_help"
             />
             <Row className="align-items-center d-none d-md-flex">
                 {/*<Col>*/}

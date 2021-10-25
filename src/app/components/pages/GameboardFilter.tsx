@@ -213,7 +213,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp} modalId="gameboard_filter_help"/>
 
         {concepts.length > 0 && <RS.Card className={"mt-4 border-secondary"}>
             <RS.CardBody className="row">
