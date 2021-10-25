@@ -399,22 +399,6 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
 
-        {SITE_SUBJECT === SITE.PHY && concepts.length > 0 && <RS.Card className={"mt-4 border-secondary"}>
-            <RS.CardBody className="row">
-                <RS.Col className={"col-auto mb-2"}>
-                    {/* This silently assumes that the first concept in the list is the concept id of the
-                        page that we linked here from, which isn't great but might be needed to provide some context
-                        for where this board was generated from */}
-                    Questions shown are those related to <Link to={`/concepts/${concepts[0].value}`}>this concept</Link>.
-                </RS.Col>
-                <RS.Col className={"ml-auto col-auto"}>
-                    <RS.Button size="sm" color="primary" outline onClick={() => setConcepts([])}>
-                        Clear concept filter
-                    </RS.Button>
-                </RS.Col>
-            </RS.CardBody>
-        </RS.Card>}
-
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
             <RS.Row>
