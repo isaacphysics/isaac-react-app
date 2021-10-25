@@ -19,6 +19,7 @@ import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
 import {isAdmin} from "../../services/user";
 import {selectors} from "../../state/selectors";
+import { isDefined } from "../../services/miscUtils";
 
 export const AdminUserManager = () => {
     const dispatch = useDispatch();
@@ -59,7 +60,7 @@ export const AdminUserManager = () => {
         setSearchQuery(Object.assign({}, searchQuery, nulledUpdate))
     };
     const selectAllToggle = () => {
-        if (searchResults && searchResults.length === selectedUserIds.length) {
+        if (isDefined(searchResults) && searchResults.length === selectedUserIds.length) {
             setSelectedUserIds([]);
         } else if (searchResults) {
             setSelectedUserIds(searchResults.filter((result => !!result)).map(result => result.id as number));
@@ -73,7 +74,7 @@ export const AdminUserManager = () => {
         }
     };
     const confirmUnverifiedUserPromotions = function(){
-        if (searchResults) {
+        if (isDefined(searchResults)) {
             const unverifiedSelectedUsers = selectedUserIds
                 .map(selectedId => searchResults.filter(result => result.id === selectedId)[0])
                 .filter(result => result.emailVerificationStatus !== "VERIFIED");
@@ -125,7 +126,7 @@ export const AdminUserManager = () => {
     };
 
     const attemptPasswordReset = (email: string | undefined) => {
-        if (email) {
+        if (isDefined(email)) {
             dispatch(resetPassword({email: email}));
         }
     };
@@ -228,7 +229,7 @@ export const AdminUserManager = () => {
         {/* Result panel */}
         <RS.Card className="my-4">
             <RS.CardTitle tag="h4" className="pl-4 pt-3 mb-0">
-                Manage users ({searchResults && searchResults.length || 0})<br />
+                Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
                 Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
@@ -250,7 +251,7 @@ export const AdminUserManager = () => {
                                 )}
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
-                        {currentUser && currentUser.role === 'ADMIN' && <RS.UncontrolledButtonDropdown>
+                        {isDefined(currentUser) && currentUser.role === 'ADMIN' && <RS.UncontrolledButtonDropdown>
                             <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline className="ml-3">Email Status</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Change email verification status for users to:</RS.DropdownItem>
@@ -278,7 +279,7 @@ export const AdminUserManager = () => {
                 {/* Results */}
                 {searchRequested &&
                     <ShowLoading until={searchResults}>
-                        {searchResults && searchResults.length > 0 ?
+                        {isDefined(searchResults) && searchResults.length > 0 ?
                             <div className="overflow-auto">
                                 <RS.Table bordered>
                                     <thead>
@@ -325,7 +326,7 @@ export const AdminUserManager = () => {
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
                                                 <td>{user.role}</td>
-                                                <td>{user.id && userIdToSchoolMapping && userIdToSchoolMapping[user.id] && userIdToSchoolMapping[user.id].name}</td>
+                                                <td>{isDefined(user.id) && isDefined(userIdToSchoolMapping) && isDefined(userIdToSchoolMapping[user.id]) && (userIdToSchoolMapping[user.id].name ?? "")}</td>
                                                 <td>{user.emailVerificationStatus}</td>
                                                 <td><DateString>{user.registrationDate}</DateString></td>
                                                 <td><DateString>{user.lastSeen}</DateString></td>
