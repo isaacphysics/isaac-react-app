@@ -15,9 +15,13 @@ const filterForQuestions = (contents: ContentSummaryDTO[]) => {
 };
 
 export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], userContext: UseUserContextReturnType, user: PotentialUser | null) => {
-    const examBoardFilteredContent = contents.filter(c => SITE_SUBJECT === SITE.PHY || isIntendedAudience(c.audience, userContext, user));
-    const relatedConcepts = examBoardFilteredContent && filterForConcepts(examBoardFilteredContent);
-    const relatedQuestions = examBoardFilteredContent && filterForQuestions(examBoardFilteredContent);
+    const examBoardFilteredContent = contents.filter(c =>
+        SITE_SUBJECT === SITE.PHY ||
+        userContext.showOtherContent ||
+        isIntendedAudience(c.audience, userContext, user)
+    );
+    const relatedConcepts = filterForConcepts(examBoardFilteredContent);
+    const relatedQuestions = filterForQuestions(examBoardFilteredContent);
     return [relatedConcepts, relatedQuestions];
 };
 
@@ -25,7 +29,7 @@ export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, userCont
     if (doc && doc != NOT_FOUND && doc.relatedContent) {
         return filterAndSeparateRelatedContent(doc.relatedContent, userContext, user);
     }
-    return [null, null];
+    return [[], []];
 };
 
 export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: PotentialUser | null) => {

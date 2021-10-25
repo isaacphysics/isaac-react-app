@@ -777,6 +777,7 @@ export enum TAG_ID {
     calculus = "calculus",
     algebra = "algebra",
     functions = "functions",
+    statistics = "statistics",
 
     // Mechanics topics
     statics = "statics",
@@ -819,6 +820,9 @@ export enum TAG_ID {
     // Functions topics
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",
+    // Statistical topics
+    probability = "probability",
+    dataAnalysis = "data_analysis",
 }
 
 export enum TAG_LEVEL {

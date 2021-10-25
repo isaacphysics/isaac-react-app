@@ -350,6 +350,10 @@ export interface ContentSummaryDTO {
     audience?: AudienceContext[];
 }
 
+export interface QuizSummaryDTO extends ContentSummaryDTO {
+    visibleToStudents?: boolean
+}
+
 export interface EmailTemplateDTO extends ContentDTO {
     subject?: string;
     plainTextContent?: string;

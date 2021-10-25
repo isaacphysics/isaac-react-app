@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {LaTeX} from "./LaTeX";
 import {ViewingContext} from "../../../IsaacAppTypes";
-import {filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
+import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
 import {difficultyLabelMap, STAGE, stageLabelMap} from "../../services/constants";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
@@ -14,17 +14,15 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const viewsWithMyStage = audienceViews.filter(vc => vc.stage === userContext.stage);
     // If there is a possible audience view that is correct for our user context, show that specific one
     const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
-    const propertiesToFilterBy: (keyof ViewingContext)[] = ["stage"];
-    if (SITE_SUBJECT === SITE.PHY) {propertiesToFilterBy.push("difficulty");}
-    const filteredViews = filterAudienceViewsByProperties(viewsToUse, propertiesToFilterBy);
+    const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
 
     return <span className="float-right h-subtitle">
         {filteredViews.map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
             {view.stage && view.stage !== STAGE.ALL && <span>
                 {stageLabelMap[view.stage]}
             </span>}
-            {view.difficulty && " - "}
-            {view.difficulty && <span>
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && " - "}
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && <span>
                 {difficultyLabelMap[view.difficulty]}
             </span>}
         </div>)}
