@@ -11,7 +11,7 @@ import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
-import {history} from "../../services/history";
+import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
 import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
@@ -95,17 +95,22 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     const deviceSize = useDeviceSize();
 
     const userContext = useUserContext();
-    const {querySelections, queryStages, queryDifficulties, queryConcepts} = processQueryString(location.search);
 
+    const history = useHistory();
+    const {querySelections, queryStages, queryDifficulties, queryConcepts} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
-    if (gameboard && gameboard.id !== gameboardIdAnchor) {
-        history.push({search: location.search, hash: gameboard.id});
-    } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
-        // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
-        history.push({search: location.search});
-    }
+
+    useEffect(() => {
+        if (gameboard && gameboard.id !== gameboardIdAnchor) {
+            history.replace({search: location.search, hash: gameboard.id});
+        } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
+            // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
+            history.replace({search: location.search});
+        }
+    }, [gameboard, gameboardIdAnchor, gameboardOrNotFound])
+
     const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
     const gameboardRef = useRef<HTMLDivElement>(null);
 
@@ -167,7 +172,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         });
         dispatch(generateTemporaryGameboard({...params, title: boardName}));
         delete params.questionCategories;
-        history.push({search: queryString.stringify(params, {encode: false})});
+        history.replace({search: queryString.stringify(params, {encode: false})});
     }
 
     useEffect(() => {
@@ -208,7 +213,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp} modalId="gameboard_filter_help"/>
 
         {concepts.length > 0 && <RS.Card className={"mt-4 border-secondary"}>
             <RS.CardBody className="row">
