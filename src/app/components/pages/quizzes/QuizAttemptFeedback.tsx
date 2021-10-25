@@ -24,9 +24,9 @@ interface QuizAttemptFeedbackProps {
 
 const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
     if (page !== undefined) {
-        return `/quiz/attempt/${attempt.id}/feedback/${page}`;
+        return `/test/attempt/${attempt.id}/feedback/${page}`;
     } else {
-        return `/quiz/attempt/${attempt.id}/feedback`;
+        return `/test/attempt/${attempt.id}/feedback`;
     }
 };
 
@@ -56,7 +56,7 @@ function QuizFooter(props: QuizAttemptProps) {
 
 // TODO: Make this more specific to feedback mode.
 const pageHelp = <span>
-    See the feedback for this quiz attempt.
+    See the feedback for this test attempt.
 </span>;
 
 const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page}}}: QuizAttemptFeedbackProps) => {
@@ -84,7 +84,7 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page}}}: 
                 {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
             </>}
             {error && <>
-                <TitleAndBreadcrumb currentPageTitle="Quiz Feedback" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
                     <p>{error}</p>

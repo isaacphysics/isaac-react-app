@@ -1007,21 +1007,21 @@ export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Acti
                 }
             ));
             dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
-            dispatch(showToast({color: "success", title: "Quiz submitted", body: "Quiz submitted successfully", timeout: 3000}) as any);
+            dispatch(showToast({color: "success", title: "Test submitted", body: "Test submitted successfully", timeout: 3000}) as any);
             history.push(generatePostQuizUrl(quizId));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Error submitting quiz", e));
+        dispatch(showErrorToastIfNeeded("Error submitting test", e));
     }
 };
 
 export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal({
         closeAction: () => {dispatch(closeActiveModal() as any)},
-        title: "Quiz already submitted",
+        title: "Test already submitted",
         body: <div className="text-center my-5 pb-4">
-            <strong>A submission has already been recorded for this quiz by your account.</strong>
+            <strong>A submission has already been recorded for this test by your account.</strong>
         </div>
     }) as any);
     history.push(generatePostQuizUrl(quizId));
@@ -1034,7 +1034,7 @@ export const getQuizAssignmentResultsSummaryCSV = (assignmentId: number) => asyn
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_SUCCESS, assignmentResultsCSV: response.data});
     } catch (error) {
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Failed to load quiz assignment results csv", error) as any);
+        dispatch(showErrorToastIfNeeded("Failed to load test assignment results csv", error) as any);
     }
 };
 
