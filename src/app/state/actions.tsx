@@ -1976,10 +1976,10 @@ export const setPrintingHints = (hintsEnabled: boolean) => (dispatch: Dispatch<A
 };
 
 // Concepts
-export const fetchConcepts = (conceptIds?: string) => async (dispatch: Dispatch<Action>) => {
+export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
     try {
-        const concepts = await api.concepts.list(conceptIds);
+        const concepts = await api.concepts.list(conceptIds, tagIds);
         dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS, concepts: concepts.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE});

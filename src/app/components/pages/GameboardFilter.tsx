@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -199,16 +199,23 @@ interface CSFilterProps extends FilterProps {
 const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concepts, setConcepts, stages, setStages, difficulties, setDifficulties} : CSFilterProps) => {
     const dispatch = useDispatch();
 
-    const topics = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
-    const conceptDTOs = useSelector((state: AppState) => (selections[2]?.length > 0 && state?.concepts?.results) || []);
+    const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const conceptDTOs = useSelector((state: AppState) => selections[2]?.length > 0 ? state?.concepts?.results : undefined);
     const [conceptChoices, setConceptChoices] = useState<GroupedOptionsType<Item<string>>>([]);
 
-    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
+    const selectedTopics = selections[2];
+
     useEffect(() => {
-        if (selections[2]) {
+        if (selectedTopics) {
+            dispatch(fetchConcepts(undefined, toCSV(selectedTopics)));
+        }
+    }, [dispatch, selectedTopics]);
+    useEffect(() => {
+        console.log(conceptDTOs);
+        if (selectedTopics && conceptDTOs) {
             // Filter concepts by selected topics - this should be done on the API end preferably
             setConceptChoices(
-                selections[2].map(itemiseAndGroupConceptsByTag(conceptDTOs))
+                selectedTopics.map(itemiseAndGroupConceptsByTag(conceptDTOs))
             )
         } else {
             if (concepts.length > 0) {
@@ -216,7 +223,7 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concept
                 setConcepts([]);
             }
         }
-    }, [conceptDTOs, selections]);
+    }, [conceptDTOs]);
 
     function setTierSelection(topics: Item<TAG_ID>[]) {
         let strands : Set<Tag> = new Set();
@@ -236,7 +243,7 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concept
                 <RS.Label htmlFor="question-search-topic">Topics</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
-                    options={topics} onChange={unwrapValue(setTierSelection)}
+                    options={topicChoices} onChange={unwrapValue(setTierSelection)}
                 />
             </RS.Col>
         </RS.Row>
@@ -244,8 +251,8 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concept
             <RS.Col lg={12} className={"mb-1 mb-lg-3 mt-2"}>
                 <RS.Label htmlFor="concepts">Concepts</RS.Label>
                 <Select
-                    inputId="concepts" isMulti isClearable isDisabled={!(selections[2] && selections[2].length > 0)}
-                    placeholder={selections[2]?.length > 0 ? "Any" : "Please select a topic above"}
+                    inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
+                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select a topic above"}
                     value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
                 />
             </RS.Col>
