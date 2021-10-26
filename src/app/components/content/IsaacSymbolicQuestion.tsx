@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
+import {ChoiceDTO, FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
@@ -17,6 +17,7 @@ import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequal
 import {jsonHelper} from "../../services/json";
 import uuid from "uuid";
 import { isDefined } from '../../services/miscUtils';
+import {Action, Dispatch} from "redux";
 
 // Magic starts here
 interface ChildrenMap {
@@ -52,7 +53,11 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     }
     return r;
 };
-const dispatchToProps = {setCurrentAttempt};
+const dispatchToProps = (dispatch : Dispatch<Action>) => {
+    return {
+        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
+    }
+};
 
 interface IsaacSymbolicQuestionProps {
     doc: IsaacSymbolicQuestionDTO;
