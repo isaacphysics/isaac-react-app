@@ -149,7 +149,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
                                     <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz))}>
-                                        {{[SITE.CS]: "Set test", [SITE.PHY]: "Set Test"}[SITE_SUBJECT]}
+                                        {{[SITE.CS]: "Set test", [SITE.PHY]: "Set Test (was Quiz)"}[SITE_SUBJECT]}
                                     </RS.Button>
                                 </div>
                                 <div className="d-none d-md-flex align-items-center">
