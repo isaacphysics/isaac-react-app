@@ -158,9 +158,6 @@ export const api = {
         getTemplateEmail: (contentid: string): AxiosPromise<AppTypes.TemplateEmail> => {
             return endpoint.get(`/email/viewinbrowser/${contentid}`);
         },
-        sendAdminEmail: (contentid: string, emailType: string, roles: EmailUserRoles): AxiosPromise => {
-            return endpoint.post(`/email/sendemail/${contentid}/${emailType}`, roles);
-        },
         sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },

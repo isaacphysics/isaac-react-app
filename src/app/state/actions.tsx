@@ -1301,18 +1301,6 @@ export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch
     }
 };
 
-export const sendAdminEmail = (contentid: string, emailType: string, roles: EmailUserRoles) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_REQUEST});
-    try {
-        await api.email.sendAdminEmail(contentid, emailType, roles);
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_SUCCESS});
-        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Sending email failed", e));
-    }
-};
-
 export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_REQUEST});
     try {
