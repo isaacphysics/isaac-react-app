@@ -20,6 +20,7 @@ import {
     determineAudienceViews,
     filterAudienceViewsByProperties
 } from "../../services/userContext";
+import {TrustedHtml} from "../elements/TrustedHtml";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -79,7 +80,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 }
             </span>
             <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
-                <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
+                <TrustedHtml span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""} html={question.title ?? ""} />
                 {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
                 {questionTags && <div className="gameboard-tags">
                     {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
