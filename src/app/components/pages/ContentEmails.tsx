@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import * as RS from "reactstrap";
-import {AppState} from "../../state/reducers";
-import {getEmailTemplate, sendAdminEmailWithIds, sendContentEmailWithIds} from "../../state/actions";
+import {sendContentEmailWithIds} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {debounce} from 'lodash';
-import {isEventManager} from "../../services/user";
 import {convert} from 'html-to-text';
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface ContentEmailsProps {
     location: {
@@ -24,10 +23,10 @@ export const ContentEmails = (props: ContentEmailsProps) => {
     const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [emailSent, setEmailSent] = useState(false);
-    const user = useSelector((state: AppState) => state?.user);
     const [emailSubject, setEmailSubject] = useState("");
     const [htmlTemplate, setHtmlTemplate] = useState("");
     const [plaintextTemplate, setPlaintextTemplate] = useState("");
+    const [overrideFromAddress, setOverrideFromAddress] = useState<string|undefined>();
 
     const numberOfUsers = csvIDs.length;
     const canSubmit = emailSubject.length != 0 && htmlTemplate.length != 0 && plaintextTemplate.length != 0 && emailType != "null" && numberOfUsers > 0;
@@ -36,6 +35,8 @@ export const ContentEmails = (props: ContentEmailsProps) => {
     useEffect(() => {
         setPlaintextTemplate(convert(htmlTemplate));
     }, [htmlTemplate]);
+
+    const mailgunAddress = SITE_SUBJECT === SITE.PHY ? "no-reply@mail.isaacphysics.org" : "no-reply@mail.isaaccomputerscience.org";
 
     return <RS.Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Content email sending" />
@@ -120,6 +121,22 @@ export const ContentEmails = (props: ContentEmailsProps) => {
             </RS.CardBody>
         </RS.Card>
 
+        <RS.Card className="p-3 my-3">
+            <RS.CardTitle tag="h2">Send via</RS.CardTitle>
+            <RS.CardBody>
+                <RS.Label>The method of sending the email</RS.Label>
+                <RS.Input
+                    id="email-type-input" type="select" value={overrideFromAddress}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        setOverrideFromAddress(e.target.value);
+                    }}
+                >
+                    <option value={undefined}>Isaac</option>
+                    <option value={mailgunAddress}>Mailgun</option>
+                </RS.Input>
+            </RS.CardBody>
+        </RS.Card>
+
         <RS.Card className="mb-5">
             <RS.CardBody>
                 <div className="text-center">
@@ -135,7 +152,7 @@ export const ContentEmails = (props: ContentEmailsProps) => {
                                 onClick={() => {
                                     if (window.confirm(`Are you sure you want to send a ${emailType} email to ${numberOfUsers} user${numberOfUsers > 1 ? "s" : ""}?`)) {
                                         setEmailSent(true);
-                                        dispatch(sendContentEmailWithIds(plaintextTemplate, htmlTemplate, emailSubject, emailType, csvIDs));
+                                        dispatch(sendContentEmailWithIds(overrideFromAddress, plaintextTemplate, htmlTemplate, emailSubject, emailType, csvIDs));
                                     }
                                 }}
                             />
