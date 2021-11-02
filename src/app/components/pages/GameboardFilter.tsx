@@ -238,60 +238,58 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concept
     }
 
     return <>
-        <RS.Row className={"mb-1 mt-2"}>
-            <RS.Col lg={12}>
-                <RS.Label htmlFor="question-search-topic">Topics</RS.Label>
-                <Select
-                    inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
-                    options={topicChoices} onChange={unwrapValue(setTierSelection)}
-                />
-            </RS.Col>
-        </RS.Row>
         <RS.Row>
-            <RS.Col lg={12} className={"mb-1 mb-lg-3 mt-2"}>
-                <RS.Label htmlFor="concepts">Concepts</RS.Label>
-                <Select
-                    inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
-                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select a topic above"}
-                    value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
-                />
-            </RS.Col>
-        </RS.Row>
-        <RS.Row className="mb-sm-4">
             <RS.Col lg={4}>
-                <div>
-                    <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                        I am interested in stage...
-                        <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                        <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                            {"Find questions that are suitable for this stage of school learning."}
-                        </RS.UncontrolledTooltip>
-                    </RS.Label>
-                    <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
-                </div>
-                <div>
-                    <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                        I would like questions for...
-                        <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                        <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
-                            Practice questions let you directly apply one idea -<br />
-                            P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                            P3 covers later topics.<br />
-                            Challenge questions are solved by combining multiple concepts and creativity.<br />
-                            C1 can be attempted near the beginning of your course,<br />
-                            C3 require more creativity and could be attempted later in a course.
-                        </RS.UncontrolledTooltip>
-                    </RS.Label>
-                    <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
-                </div>
+                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                    I am interested in stage...
+                    <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                    <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                        {"Find questions that are suitable for this stage of school learning."}
+                    </RS.UncontrolledTooltip>
+                </RS.Label>
+                <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
             </RS.Col>
-            <RS.Col lg={4} className={"ml-auto mt-lg-0 mt-2"}>
-                <RS.Label htmlFor="exam-boards">Exam Board</RS.Label>
+            <RS.Col lg={4}>
+                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
+                    and exam board...
+                </RS.Label>
                 <Select
                     inputId="exam-boards" isClearable placeholder="Any"
                     value={examBoards}
                     options={getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})}
                     onChange={unwrapValue(setExamBoards)}
+                />
+            </RS.Col>
+            <RS.Col lg={4}>
+                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
+                    I would like questions for...
+                    <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                    <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                        Practice questions let you directly apply one idea -<br />
+                        P1 covers revision of a previous stage or topics near the beginning of a course,<br />
+                        P3 covers later topics.<br />
+                        Challenge questions are solved by combining multiple concepts and creativity.<br />
+                        C1 can be attempted near the beginning of your course,<br />
+                        C3 require more creativity and could be attempted later in a course.
+                    </RS.UncontrolledTooltip>
+                </RS.Label>
+                <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
+            </RS.Col>
+        </RS.Row>
+        <RS.Row className="mt-lg-3 mb-sm-3">
+            <RS.Col lg={6}>
+                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">Topics:</RS.Label>
+                <Select
+                    inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
+                    options={topicChoices} onChange={unwrapValue(setTierSelection)}
+                />
+            </RS.Col>
+            <RS.Col lg={6}>
+                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">Concepts:</RS.Label>
+                <Select
+                    inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
+                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select a topic above"}
+                    value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
                 />
             </RS.Col>
         </RS.Row>
