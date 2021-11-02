@@ -46,7 +46,7 @@ function formatAssignmentOwner(user: RegisteredUserDTO, assignment: QuizAssignme
 function QuizAssignment({user, assignment}: QuizAssignmentProps) {
     const dispatch = useDispatch();
     const cancel = () => {
-        if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback.")) {
+        if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.")) {
             dispatch(markQuizAsCancelled(assignment.id as number));
         }
     };
