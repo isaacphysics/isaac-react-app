@@ -45,7 +45,7 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) =
             }
         });
         myAssignments.inProgressRecent = orderBy(myAssignments.inProgressRecent, ["dueDate", "creationDate"], ["asc", "desc"]);
-        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["dueDate", "creationDate"], ["asc", "desc"]);
+        myAssignments.inProgressOld = orderBy(myAssignments.inProgressOld, ["creationDate"], ["desc"]);
         myAssignments.completed = orderBy(myAssignments.completed, ["creationDate"], ["desc"]);
     }
 
