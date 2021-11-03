@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
-import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_ITEM_OPTIONS, NOT_FOUND, QUESTION_CATEGORY_ITEM_OPTIONS, STAGE, TAG_ID} from '../../services/constants';
+import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_ITEM_OPTIONS, NOT_FOUND, QUESTION_CATEGORY_ITEM_OPTIONS, STAGE, TAG_ID, QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER} from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {fetchConcepts, generateTemporaryGameboard, loadGameboard} from '../../state/actions';
@@ -13,7 +13,7 @@ import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {Item, unwrapValue} from "../../services/select";
+import {Item, unwrapValue, isItemEqual} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select, {GroupedOptionsType} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
@@ -21,6 +21,10 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
 import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {debounce} from "lodash";
+import {History} from "history";
+import {Dispatch} from "redux";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -29,11 +33,10 @@ function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title}
 }
 
-function itemiseConcepts(concepts: string[] | string) {
-    const conceptsList = Array.isArray(concepts) ? concepts : [concepts]
-    return conceptsList
+function itemiseConcepts(concepts: string[]): Item<string>[] {
+    return concepts
         .filter(concept => concept !== "")
-        .map(concept => ({label: concept, value: concept}));
+        .map(concept => ({label: "<!LOADING!>", value: concept}));
 }
 
 function toCSV<T>(items: Item<T>[]) {
@@ -64,7 +67,7 @@ function processQueryString(query: string): QueryStringResponse {
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
     const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards), EXAM_BOARD_ITEM_OPTIONS);
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
-    const conceptItems = concepts ? itemiseConcepts(concepts) : []
+    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts))
 
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;
@@ -169,12 +172,12 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                 <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
             </div>
         </RS.Col>
-        {SITE_SUBJECT === SITE.PHY && <RS.Col lg={8}>
+        <RS.Col lg={8}>
             <RS.Label className={`mt-4 mt-lg-0`}>
                 Topics:
             </RS.Label>
             <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
-        </RS.Col>}
+        </RS.Col>
     </RS.Row>
 }
 
@@ -189,14 +192,13 @@ const itemiseAndGroupConceptsByTag = (conceptDTOs : ContentSummaryDTO[]) => ((ta
             [])
     }
 });
-
 interface CSFilterProps extends FilterProps {
     examBoards : Item<string>[];
     setExamBoards : React.Dispatch<React.SetStateAction<Item<string>[]>>;
     concepts : Item<string>[];
     setConcepts : React.Dispatch<React.SetStateAction<Item<string>[]>>;
 }
-const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concepts, setConcepts, stages, setStages, difficulties, setDifficulties} : CSFilterProps) => {
+const CSFilter = ({selections, setSelections, stages, setStages, difficulties, setDifficulties, examBoards, setExamBoards, concepts, setConcepts} : CSFilterProps) => {
     const dispatch = useDispatch();
 
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
@@ -204,26 +206,33 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concept
     const [conceptChoices, setConceptChoices] = useState<GroupedOptionsType<Item<string>>>([]);
 
     const selectedTopics = selections[2];
-
     useEffect(() => {
         if (selectedTopics) {
             dispatch(fetchConcepts(undefined, toCSV(selectedTopics)));
         }
     }, [dispatch, selectedTopics]);
-    useEffect(() => {
-        console.log(conceptDTOs);
-        if (selectedTopics && conceptDTOs) {
-            // Filter concepts by selected topics - this should be done on the API end preferably
-            setConceptChoices(
-                selectedTopics.map(itemiseAndGroupConceptsByTag(conceptDTOs))
-            )
-        } else {
-            if (concepts.length > 0) {
-                setConceptChoices([]);
-                setConcepts([]);
+    useEffect(function updateConceptChoices() {
+        if (selectedTopics === undefined && concepts !== undefined) {
+            setConcepts([]);
+            setTierSelection([]);
+            return;
+        }
+
+        const newChoices = selectedTopics?.map(itemiseAndGroupConceptsByTag(conceptDTOs ?? [])) ?? [];
+        setConceptChoices(newChoices);
+        const availableConcepts = newChoices.flatMap(c => c.options);
+        if (availableConcepts.length > 0) {
+            const conceptsFilteredByAvailable = concepts.filter(c => availableConcepts.find(ac => isItemEqual(Object.is, ac, c)) !== undefined);
+            if (concepts.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length > 0) {
+                setConcepts(concepts.reduce((acc: Item<string>[], c) => {
+                    const newLabel = availableConcepts.find(ac => ac.value === c.value)?.label;
+                    return newLabel ? acc.concat([{value: c.value, label: newLabel}]) : acc;
+                }, []));
+            } else if (conceptsFilteredByAvailable.length !== concepts.length) {
+                setConcepts(conceptsFilteredByAvailable);
             }
         }
-    }, [conceptDTOs]);
+    }, [conceptDTOs, concepts]);
 
     function setTierSelection(topics: Item<TAG_ID>[]) {
         let strands : Set<Tag> = new Set();
@@ -233,7 +242,7 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concept
                 strands = strands.add(tags.getById(parent));
             }
         });
-         // Selections always have all 3 tiers in CS
+        // Selections always have all 3 tiers in CS
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
@@ -281,16 +290,23 @@ const CSFilter = ({selections, setSelections, examBoards, setExamBoards, concept
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">Topics:</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
-                    options={topicChoices} onChange={unwrapValue(setTierSelection)}
+                    options={topicChoices} onChange={(v, {action}) => {
+                        if (action === "clear" && Array.isArray(v) && v.length === 0) {
+                            setConcepts([]);
+                        }
+                        return unwrapValue(setTierSelection)(v);
+                    }}
                 />
             </RS.Col>
             <RS.Col lg={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">Concepts:</RS.Label>
-                <Select
+                {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
+                    <Select
                     inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
-                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select a topic above"}
+                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select a topic"}
                     value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
-                />
+                    /> :
+                    <IsaacSpinner/>}
             </RS.Col>
         </RS.Row>
     </>
@@ -379,7 +395,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         setStages: setStages,
     }
 
-    function loadNewGameboard() {
+    function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
+                              examBoards: Item<string>[], selections: Item<TAG_ID>[][], boardName: string,
+                              history: History, dispatch: Dispatch<any>) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
         if (stages.length) params.stages = toCSV(stages);
@@ -402,12 +420,21 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         history.replace({search: queryString.stringify(params, {encode: false})});
     }
 
+    // This makes sure that chains of state changes (specifically topics changing, then concepts changing as a result)
+    // don't cause the gameboard to be updated multiple times in quick succession, when just one update would work.
+    // useCallback with no dependencies always returns the same function, so by explicitly passing in the arguments
+    // and using debounce you can stop the function from being called too often.
+    const debouncedTrailingLoadGameboard = useCallback(debounce(loadNewGameboard, 100), []);
+    // This is a leading debounced version, used with the shuffle questions button - this stops users spamming the
+    // generateTemporaryGameboard endpoint by clicking the button fast
+    const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}), []);
+
     useEffect(() => {
         if (gameboardIdAnchor && gameboardIdAnchor !== gameboard?.id) {
             dispatch(loadGameboard(gameboardIdAnchor));
         } else {
             setBoardStack([]);
-            loadNewGameboard();
+            debouncedTrailingLoadGameboard(stages, difficulties, concepts, examBoards, selections, boardName, history, dispatch);
         }
     }, [selections, stages, difficulties, concepts, examBoards]);
 
@@ -415,7 +442,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         if (gameboard) {
             boardStack.push(gameboard.id as string);
             setBoardStack(boardStack);
-            loadNewGameboard();
+            debouncedLeadingLoadGameboard(stages, difficulties, concepts, examBoards, selections, boardName, history, dispatch);
         }
     }
 
