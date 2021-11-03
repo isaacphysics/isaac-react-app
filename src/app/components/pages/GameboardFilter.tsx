@@ -539,7 +539,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         <div className="pb-4">
             <ShowLoading
                 until={gameboardOrNotFound}
-                thenRender={gameboard  => (<GameboardViewer gameboard={gameboard} showBreadcrumbs/>)}
+                thenRender={gameboard  => (<GameboardViewer gameboard={gameboard} />)}
                 ifNotFound={<RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>}
             />
         </div>
