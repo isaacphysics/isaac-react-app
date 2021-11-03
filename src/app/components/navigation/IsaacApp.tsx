@@ -80,6 +80,7 @@ import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
+import {GameboardFilter} from "../pages/GameboardFilter";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -154,6 +155,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                     <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
+                    <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />
 
                     <TrackedRoute exact path='/events' component={Events}/>
                     <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>

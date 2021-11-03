@@ -1,6 +1,5 @@
 import React from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {GameboardFilter} from "../../pages/GameboardFilter";
 import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
 import {PhysBookGcse} from "../../pages/books/phys_book_gcse";
 import {PhysicsSkills14} from "../../pages/books/physics_skills_14";
@@ -30,9 +29,6 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTeacher} component={SingleAssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/group_progress" ifUser={isTeacher} component={GroupProgress} />,
     // <TrackedRoute key={key++} exact path="/group_progress/:groupId" ifUser={isTeacher} component={SingleGroupProgress} />,
-
-    // Gameboard filter
-    <TrackedRoute key={key++} exact path="/gameboards/new" component={GameboardFilter} />,
 
     // Books
     <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
