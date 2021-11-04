@@ -212,12 +212,6 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         }
     }, [dispatch, selectedTopics]);
     useEffect(function updateConceptChoices() {
-        if (selectedTopics === undefined && concepts !== undefined) {
-            setConcepts([]);
-            setTierSelection([]);
-            return;
-        }
-
         const newChoices = selectedTopics?.map(itemiseAndGroupConceptsByTag(conceptDTOs ?? [])) ?? [];
         setConceptChoices(newChoices);
         const availableConcepts = newChoices.flatMap(c => c.options);
@@ -291,7 +285,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 <Select
                     inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
                     options={topicChoices} onChange={(v, {action}) => {
-                        if (action === "clear" && Array.isArray(v) && v.length === 0) {
+                        if ((Array.isArray(v) && v.length === 0) || v === null) {
                             setConcepts([]);
                         }
                         return unwrapValue(setTierSelection)(v);
@@ -440,8 +434,10 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     function refresh() {
         if (gameboard) {
-            boardStack.push(gameboard.id as string);
-            setBoardStack(boardStack);
+            if (!boardStack.includes(gameboard.id as string)) {
+                boardStack.push(gameboard.id as string);
+                setBoardStack(boardStack);
+            }
             debouncedLeadingLoadGameboard(stages, difficulties, concepts, examBoards, selections, boardName, history, dispatch);
         }
     }
