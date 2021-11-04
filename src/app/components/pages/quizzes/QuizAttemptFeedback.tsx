@@ -28,13 +28,13 @@ interface QuizAttemptFeedbackProps {
 
 const pageLink = (attempt: QuizAttemptDTO, page?: number, studentId?: string, assignmentId?: string) => {
     if (isDefined(studentId) && isDefined(assignmentId) && page !== undefined) {
-        return `/quiz/attempt/feedback/${assignmentId}/${studentId}/${page}`;
+        return `/test/attempt/feedback/${assignmentId}/${studentId}/${page}`;
     } else if (isDefined(studentId) && isDefined(assignmentId)) {
-        return `/quiz/attempt/feedback/${assignmentId}/${studentId}`;
+        return `/test/attempt/feedback/${assignmentId}/${studentId}`;
     } else if (page !== undefined) {
-        return `/quiz/attempt/${attempt.id}/feedback/${page}`;
+        return `/test/attempt/${attempt.id}/feedback/${page}`;
     } else {
-        return `/quiz/attempt/${attempt.id}/feedback`;
+        return `/test/attempt/${attempt.id}/feedback`;
     }
 };
 
@@ -64,7 +64,7 @@ function QuizFooter(props: QuizAttemptProps) {
 
 // TODO: Make this more specific to feedback mode.
 const pageHelp = <span>
-    See the feedback for this quiz attempt.
+    See the feedback for this test attempt.
 </span>;
 
 const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, studentId, quizAssignmentId}}}: QuizAttemptFeedbackProps) => {
@@ -102,7 +102,7 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, stu
                 {attemptToView.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
             </>}
             {errorToView && <>
-                <TitleAndBreadcrumb currentPageTitle="Quiz Feedback" intermediateCrumbs={myQuizzesCrumbs} />
+                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
                     <p>{errorToView}</p>

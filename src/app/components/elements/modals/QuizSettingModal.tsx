@@ -11,12 +11,13 @@ import * as RS from "reactstrap";
 import Select from "react-select";
 import {closeActiveModal, hideToast, showToast} from "../../../state/actions";
 import {setQuiz, showQuizSettingModal} from "../../../state/actions/quizzes";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
     NONE: "No feedback",
     OVERALL_MARK: "Overall mark",
-    SECTION_MARKS: "Mark for each quiz section",
+    SECTION_MARKS: "Mark for each test section",
     DETAILED_FEEDBACK: "Detailed feedback on each question",
 };
 
@@ -65,7 +66,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
 
     return <div className="mb-4">
-        <RS.Label className="w-100 mb-4">Set quiz to the following groups:<br/>
+        <RS.Label className="w-100 mb-4">Set test to the following groups:<br/>
             <Select
                 value={selectedGroups}
                 onChange={(s) => {
@@ -129,7 +130,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
                                setSubmitting(true);
                                await dispatch(setQuiz(assignment));
                                toastId = await dispatch(showToast({
-                                   color: "success", title: "Quiz set", body: "Quiz set to " + selectedGroups[0].label + " successfully", timeout: 7000,
+                                   color: "success", title: "Test set", body: "Test set to " + selectedGroups[0].label + " successfully", timeout: 7000,
                                    buttons: [<RS.Button key="again" onClick={again}>Set to another group</RS.Button>]
                                }));
                            } catch (e) {
@@ -140,7 +141,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
                            dispatch(closeActiveModal());
                        }}
             >
-                {submitting ? <RS.Spinner/> : "Set quiz"}
+                {submitting ? <IsaacSpinner /> : "Set test"}
             </RS.Button>
         </div>
     </div>;

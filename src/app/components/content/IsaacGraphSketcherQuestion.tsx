@@ -2,12 +2,13 @@ import React, {useState, useEffect, useRef} from "react";
 import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {AppState} from "../../state/reducers";
-import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
+import {ChoiceDTO, GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacTabbedHints} from "./IsaacHints";
 import {selectors} from "../../state/selectors";
 import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
 import {selectQuestionPart} from "../../services/questions";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
+import {Action, Dispatch} from "redux";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const pageQuestions = selectors.questions.getQuestions(state);
@@ -18,7 +19,11 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     }
     return r;
 };
-const dispatchToProps = {setCurrentAttempt};
+const dispatchToProps = (dispatch : Dispatch<Action>) => {
+    return {
+        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
+    }
+};
 
 interface IsaacGraphSketcherQuestionProps {
     doc: IsaacGraphSketcherQuestionDTO;

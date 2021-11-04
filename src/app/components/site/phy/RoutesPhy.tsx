@@ -20,6 +20,8 @@ import {GroupProgress} from "../../pages/GroupProgress";
 // import {SingleGroupProgress} from "../../pages/SingleGroupProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {GraphSketcherPage} from "../../pages/GraphSketcher";
+import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
+import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
 
 let key = 0;
 export const RoutesPhy = [
@@ -40,6 +42,8 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/chemistry_16" component={Chemistry16}/>,
     <TrackedRoute key={key++} exact path="/books/quantum_mechanics_primer" component={QuantumMechanicsPrimer}/>,
     <TrackedRoute key={key++} exact path="/books/solve_physics_problems" component={SolvingPhysProblems}/>,
+    <TrackedRoute key={key++} exact path="/books/maths_book_gcse" component={MathsBookGcse}/>,
+    <TrackedRoute key={key++} exact path="/books/phys_book_yr9" component={PhysBookYrNine}/>,
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
@@ -80,6 +84,7 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/solve_physics_problems" to="/books/solve_physics_problems" />,
     <Redirect key={key++} exact from="/answers" to="/support/student/questions#answers" />,
     <Redirect key={key++} exact from="/teachers" to="/support/teacher/general" />,
+    <Redirect key={key++} exact from="/pages/isaac_embedded_schools" to="/support/teacher/partner#embedded_schools" />,
 
     // Isaac Chemistry redirect
     // TODO: if chemistry is a separate site ever, should move to Chemistry routes.

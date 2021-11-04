@@ -11,16 +11,13 @@ import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
-import {history} from "../../services/history";
+import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
 import {Item, unwrapValue} from "../../services/select";
-import {LevelsFilterHexagonal, LevelsFilterSummary} from "../elements/svg/LevelsFilter";
 import {useDeviceSize} from "../../services/device";
-import {AppState} from "../../state/reducers";
 import Select from "react-select";
-import {getFilteredStages} from "../../services/userContext";
-
-const levelOptions = Array.from(Array(6).keys()).map(i => ({label: `${(i + 1)}`, value: i + 1}));
+import {getFilteredStageOptions, useUserContext} from "../../services/userContext";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -28,11 +25,14 @@ function itemiseByValue<R extends {value: string}>(values: string[], options: R[
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title}
 }
-function itemiseLevels(possibleLevels: string[]) {
-    return possibleLevels
-        .filter(possibleLevels => !isNaN(parseInt(possibleLevels)))
-        .map(level => ({label: level, value: parseInt(level)}));
+
+function itemiseConcepts(concepts: string[] | string) {
+    const conceptsList = Array.isArray(concepts) ? concepts : [concepts]
+    return conceptsList
+        .filter(concept => concept !== "")
+        .map(concept => ({label: concept, value: concept}));
 }
+
 function toCSV<T>(items: Item<T>[]) {
     return items.map(item => item.value).join(",");
 }
@@ -46,28 +46,20 @@ function arrayFromPossibleCsv(queryParamValue: string[] | string | null | undefi
 }
 
 interface QueryStringResponse {
-    queryLevels: Item<number>[];
     querySelections: Item<TAG_ID>[][];
     queryStages: Item<string>[];
     queryDifficulties: Item<string>[];
     queryQuestionCategories: Item<string>[];
+    queryConcepts: Item<string>[];
 }
 function processQueryString(query: string): QueryStringResponse {
-    const {levels, subjects, fields, topics, stages, difficulties, questionCategories} = queryString.parse(query);
+    const {subjects, fields, topics, stages, difficulties, questionCategories, concepts} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
-    let levelItems: Item<number>[] = [];
-    if (levels) {
-        const levelArray = levels instanceof Array ? levels : levels.split(",");
-        // Start with an empty list if all levels are selected - nicer for most common usage of specifying 1 or 2 levels
-        levelItems = levelArray.length === levelOptions.length && levelArray.every((l, i) => l === levelOptions[i]?.label) ?
-            [] :
-            itemiseLevels(levelArray);
-    }
-
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStages(false));
+    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStageOptions());
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
+    const conceptItems = concepts ? itemiseConcepts(concepts) : []
 
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;
@@ -82,12 +74,11 @@ function processQueryString(query: string): QueryStringResponse {
     });
 
     return {
-        queryLevels: levelItems, querySelections: selectionItems,
-        queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems
+        querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems, queryConcepts: conceptItems
     }
 }
 
-function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[]) {
+function generateBoardName(selections: Item<TAG_ID>[][]) {
     let boardName = "Physics, Maths & Chemistry";
     let selectionIndex = selections.length;
     while(selectionIndex-- > 0) {
@@ -96,27 +87,30 @@ function generateBoardName(selections: Item<TAG_ID>[][], levels: Item<number>[])
             break;
         }
     }
-    if (levels.length === 1) {
-        boardName += ", Level " + levels[0].label;
-    }
     return boardName;
 }
 
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
-    const {BETA_FEATURE: betaFeature} = useSelector((state: AppState) => state?.userPreferences) || {};
-    const {queryLevels, querySelections, queryStages, queryDifficulties, queryQuestionCategories} =
-        processQueryString(location.search);
+
+    const userContext = useUserContext();
+
+    const history = useHistory();
+    const {querySelections, queryStages, queryDifficulties, queryConcepts} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
-    if (gameboard && gameboard.id !== gameboardIdAnchor) {
-        history.push({search: location.search, hash: gameboard.id});
-    } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
-        // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
-        history.push({search: location.search});
-    }
+
+    useEffect(() => {
+        if (gameboard && gameboard.id !== gameboardIdAnchor) {
+            history.replace({search: location.search, hash: gameboard.id});
+        } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
+            // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
+            history.replace({search: location.search});
+        }
+    }, [gameboard, gameboardIdAnchor, gameboardOrNotFound])
+
     const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
     const gameboardRef = useRef<HTMLDivElement>(null);
 
@@ -143,29 +137,30 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         {id: "topics", name: "Topic"},
     ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
-    const [levels, setLevels] = useState<Item<number>[]>(queryLevels);
-
-    const [stages, setStages] = useState<Item<string>[]>(queryStages);
+    const [stages, setStages] = useState<Item<string>[]>(
+        queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
+    useEffect(function keepStagesInSyncWithUserContext() {
+        if (stages.length === 0) setStages(itemiseByValue([userContext.stage], getFilteredStageOptions()));
+    }, [userContext.stage]);
 
     const [difficulties, setDifficulties] = useState<Item<string>[]>(queryDifficulties);
 
-    const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
+    // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
-    const boardName = generateBoardName(selections, levels);
+    const [concepts, setConcepts] = useState<Item<string>[]>(queryConcepts);
+
+    const boardName = generateBoardName(selections);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
 
     function loadNewGameboard() {
         // Load a gameboard
-        const params: { [key: string]: string } = {};
-        if (!betaFeature?.AUDIENCE_CONTEXT) {
-            params.levels = toCSV(levels.length === 0 ? levelOptions : levels);
-        }
-        if (betaFeature?.AUDIENCE_CONTEXT) {
-            if (stages.length) params.stages = toCSV(stages);
-            if (difficulties.length) params.difficulties = toCSV(difficulties);
-            if (questionCategories.length) params.questionCategories = toCSV(questionCategories);
-        }
+        const params: {[key: string]: string} = {};
+        if (stages.length) params.stages = toCSV(stages);
+        if (difficulties.length) params.difficulties = toCSV(difficulties);
+        if (concepts.length) params.concepts = toCSV(concepts);
+        if (SITE_SUBJECT === SITE.PHY) {params.questionCategories = "quick_quiz,learn_and_practice";}
+
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
@@ -176,7 +171,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             params[tier.id] = toCSV(selections[i]);
         });
         dispatch(generateTemporaryGameboard({...params, title: boardName}));
-        history.push({search: queryString.stringify(params, {encode: false})});
+        delete params.questionCategories;
+        history.replace({search: queryString.stringify(params, {encode: false})});
     }
 
     useEffect(() => {
@@ -186,7 +182,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             setBoardStack([]);
             loadNewGameboard();
         }
-    }, [selections, levels, stages, difficulties, questionCategories, betaFeature?.AUDIENCE_CONTEXT]);
+    }, [selections, stages, difficulties, concepts]);
 
     function refresh() {
         if (gameboard) {
@@ -205,7 +201,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     const pageHelp = <span>
-        You can build a gameboard by selecting the areas of interest and levels.
+        You can build a gameboard by selecting the areas of interest, stage and difficulties.
         <br />
         You can select more than one entry in each area.
     </span>;
@@ -217,7 +213,23 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp} modalId="gameboard_filter_help"/>
+
+        {concepts.length > 0 && <RS.Card className={"mt-4 border-secondary"}>
+            <RS.CardBody className="row">
+                <RS.Col className={"col-auto mb-2"}>
+                    {/* This silently assumes that the first concept in the list is the concept id of the
+                        page that we linked here from, which isn't great but might be needed to provide some context
+                        for where this board was generated from */}
+                    Questions shown are those related to <Link to={`/concepts/${concepts[0].value}`}>this concept</Link>.
+                </RS.Col>
+                <RS.Col className={"ml-auto col-auto"}>
+                    <RS.Button size="sm" color="primary" outline onClick={() => setConcepts([])}>
+                        Clear concept filter
+                    </RS.Button>
+                </RS.Col>
+            </RS.CardBody>
+        </RS.Card>}
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
@@ -225,12 +237,6 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 <RS.Col sm={8} lg={9}>
                     <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
-                            {!betaFeature?.AUDIENCE_CONTEXT && <RS.Col lg={6}>
-                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
-                                    Levels:
-                                    <span className="ml-3"><LevelsFilterSummary {...{levelOptions, levels}} /></span>
-                                </RS.Label>
-                            </RS.Col>}
                             <RS.Col lg={6} className="mt-3 mt-lg-0">
                                 <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     <span>Topics:</span>
@@ -256,42 +262,41 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             {/* Filter */}
             {filterExpanded && <RS.Row className="mb-sm-4">
                 <RS.Col xs={12}>
-                    <div className="mb-1"><strong>
-                        {betaFeature?.AUDIENCE_CONTEXT ?
-                            "Click these buttons to choose your question gameboard" :
-                            "Select your question filters..."}
-                    </strong></div>
+                    <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
                 </RS.Col>
                 <RS.Col lg={4}>
-                    {!betaFeature?.AUDIENCE_CONTEXT && <>
-                        <RS.Label className={`mt-2 mt-lg-0`} htmlFor="level-selector">
-                            Levels:
+                    <div>
+                        <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                            I am interested in stage...
+                            <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                            <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                                {"Find questions that are suitable for this stage of school learning."} <br />
+                                {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
+                            </RS.UncontrolledTooltip>
                         </RS.Label>
-                        <LevelsFilterHexagonal id="level-selector" {...{levelOptions, levels, setLevels}} />
-                        <div className="mt-2 mt-sm-4">
-                            <img width={256} height={45} className="mb-2 mt-n3 d-none d-sm-block" alt="1 = Pre-AS, 2 and 3 = AS, 4 and 5 = A2, 6 = Post-A2" src="/assets/phy/level-guide.png" />
-                        </div>
-                    </>}
-                    {betaFeature?.AUDIENCE_CONTEXT && <>
-                        <div>
-                            <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                                I am interested in stage...
-                            </RS.Label>
-                            <Select id="stage-selector" isClearable onChange={unwrapValue(setStages)} value={stages} options={getFilteredStages(false)} />
-                        </div>
-                        <div>
-                            <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">
-                                I would like some questions from Isaac to...
-                            </RS.Label>
-                            <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />
-                        </div>
-                        <div>
-                            <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                                I would like questions for...
-                            </RS.Label>
-                            <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
-                        </div>
-                    </>}
+                        <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                    </div>
+                    {/*<div>*/}
+                    {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
+                    {/*        I would like some questions from Isaac to...*/}
+                    {/*    </RS.Label>*/}
+                    {/*    <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
+                    {/*</div>*/}
+                    <div>
+                        <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
+                            I would like questions for...
+                            <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                            <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                                Practice questions let you directly apply one idea -<br />
+                                P1 covers revision of a previous stage or topics near the beginning of a course,<br />
+                                P3 covers later topics.<br />
+                                Challenge questions are solved by combining multiple concepts and creativity.<br />
+                                C1 can be attempted near the beginning of your course,<br />
+                                C3 require more creativity and could be attempted later in a course.
+                            </RS.UncontrolledTooltip>
+                        </RS.Label>
+                        <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
+                    </div>
                 </RS.Col>
                 <RS.Col lg={8}>
                     <RS.Label className={`mt-4 mt-lg-0`}>

@@ -26,27 +26,28 @@ export const Gcse = () => {
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
-            <IsaacCard doc={{title: "Virtual Lessons", subtitle: "Learn and practise physics.",
+            <IsaacCard doc={{title: "GCSE Physics Lessons", subtitle: "Packages of questions, recorded explanations and tutorials",
                 clickUrl: "/pages/gcse_topic_index", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
-            <IsaacCard doc={{title: "Quick Quizzes", subtitle: "Revise the equations needed at GCSE with our quick quizzes.",
-                clickUrl: "/pages/gcse_quizzes", image: {src: "/assets/phy/key_stage_sprite.svg#lightning"}
+            <IsaacCard doc={{title: "Consolidation Programme", subtitle: "Topic based learning plan",
+                clickUrl: "/pages/summer_programmes_2021", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
             <IsaacCard doc={{title: "Preparation for A Level", subtitle: "Questions to smooth your transition to A Level or equivalent.",
                 clickUrl: "/pages/pre_made_gameboards#gcse_to_alevel", image: {src: "/assets/phy/key_stage_sprite.svg#question"}
             }}/>
-            <IsaacCard doc={{title: "Mentoring Scheme", subtitle: "Weekly gameboards guided by an experienced teacher.",
-                clickUrl: "/pages/isaac_mentor", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            <IsaacCard doc={{title: "Quick Quizzes", subtitle: "Revise the equations needed at GCSE with our quick quizzes.",
+                clickUrl: "/pages/gcse_quizzes", image: {src: "/assets/phy/key_stage_sprite.svg#lightning"}
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-3">
             <IsaacCard doc={{title: "Events", subtitle: "Find one of our face-to-face or virtual workshops.",
                 clickUrl: "/events?types=student", image: {src: "/assets/phy/teacher_features_sprite.svg#calendar"}
             }}/>
-            {/* FIXME: Empty Col below stops single card filling full row, makes it half width to match */}
-            <Col md={6}/>
+            <IsaacCard doc={{title: "Mentoring Scheme", subtitle: "Weekly gameboards guided by an experienced teacher.",
+                clickUrl: "/pages/isaac_mentor", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            }}/>
         </Row>
     </Container>
 };

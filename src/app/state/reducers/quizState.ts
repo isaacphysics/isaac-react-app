@@ -5,14 +5,16 @@ import {
     IsaacQuizDTO,
     QuizAssignmentDTO,
     QuizAttemptDTO,
-    QuizAttemptFeedbackDTO
+    QuizAttemptFeedbackDTO,
+    QuizSummaryDTO
 } from "../../../IsaacApiTypes";
+import { isDefined } from "../../services/miscUtils";
 
-type QuizState = {quizzes: ContentSummaryDTO[]; total: number} | null;
+type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS:
-            return {quizzes: action.quizzes.results as ContentSummaryDTO[], total: action.quizzes.totalResults as number};
+            return {quizzes: action.quizzes.results as QuizSummaryDTO[], total: action.quizzes.totalResults as number};
         default:
             return quizzes;
     }
@@ -28,7 +30,11 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
         case ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE:
             return NOT_FOUND;
         case ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS:
-            return [...quizAssignments ?? [], action.newAssignment];
+            if (!isDefined(quizAssignments) || quizAssignments == NOT_FOUND) {
+                return []
+            } else {
+                return [...quizAssignments, action.newAssignment];
+            }
         case ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_REQUEST:
             return quizAssignments !== null && quizAssignments !== NOT_FOUND ? quizAssignments.map(assignment => {
                 if (assignment.id === action.quizAssignmentId) {

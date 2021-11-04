@@ -3,7 +3,6 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
-import {QUIZ_FEATURE} from "../../../services/constants";
 
 export const NavigationBarPhy = () => {
     const user = useSelector(selectors.user.orNull);
@@ -15,7 +14,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/my_gameboards" muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
             <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
-            {QUIZ_FEATURE && <LinkItem to="/quizzes" muted={!isLoggedIn(user)}>My Quizzes</LinkItem>}
+            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests (was Quizzes)</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
@@ -23,7 +22,8 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
-            {QUIZ_FEATURE && <LinkItem to="/set_quizzes">Set quizzes</LinkItem>}
+            <LinkItem to="/set_tests">Set Tests (was Quizzes)</LinkItem>
+            <LinkItem to="/set_tests#manage">Manage Tests (was Quizzes)</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">
@@ -38,7 +38,6 @@ export const NavigationBarPhy = () => {
             {isLoggedIn(user) && <LinkItem to="/events?show_booked_only=true">My Booked Events</LinkItem>}
             <LinkItem to="/events">All Events</LinkItem>
             <LinkItem to="/pages/isaac_mentor">Student Mentoring</LinkItem>
-            <LinkItem to="/pages/teacher_mentoring">Teacher Mentoring</LinkItem>
         </NavigationSection>
 
         <NavigationSection title="Help">

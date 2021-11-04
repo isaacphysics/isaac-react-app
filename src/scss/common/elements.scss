@@ -12,8 +12,13 @@
   width: 24px;
 }
 
-.content-summary-link a {
-  text-decoration: none;
+.content-summary-link {
+  a {
+    text-decoration: none;
+  }
+  &.de-emphasised {
+    background: rgba($gray-160, 0.09);
+  }
 }
 
 .content-video-container {
@@ -29,11 +34,6 @@
     border: 0;
     margin-bottom: 2rem;
   }
-}
-
-.spinner-lg {
-  width: 3rem;
-  height: 3rem;
 }
 
 .email-preview-frame {
@@ -185,41 +185,50 @@ button.btn.btn-link.login-b,
 }
 
 .share-link-icon {
-  background-image: url(/assets/share.svg);
-  width: 50px;
-  height: 58px;
-  background-repeat: no-repeat;
-  z-index: 1;
-  float: right;
-  position: relative;
+
   margin-right: 5px;
   margin-left: 10px;
-  background-color: transparent;
-}
-.share-link {
-  font-family: $secondary-font !important;
-  display: none;
-  position: relative;
-  padding: 4px 8px;
-  padding-right: 32px;
-  border: 1px solid gray;
-  right: 30px;
-  background: #fff;
+  width: 50px;
   height: 58px;
-  input {
-    position: relative;
-    top: -45px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    user-select: all;
-    -webkit-user-select: all;
-    -moz-user-select: all;
-    -ms-user-select: all;
+
+  button {
+    background-image: url(/assets/share.svg);
+    background-repeat: no-repeat;
+    z-index: 1;
     width: 100%;
-    padding-left: 2px;
+    height: 100%;
+    position: relative;
+    background-color: transparent;
   }
-  &.double-height {
-    height: 118px;
+
+  .share-link {
+    font-family: $secondary-font !important;
+    display: none;
+    position: absolute;
+    padding: 4px 32px 4px 8px;
+    border: 1px solid gray;
+    transform: translate(calc(25px - 100%), -64px);
+    background: #fff;
+    height: 58px;
+    width: 70%;
+
+    input {
+      position: relative;
+      top: 9px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      user-select: all;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      -ms-user-select: all;
+      width: 100%;
+      padding-left: 2px;
+      border-width: 1px;
+    }
+
+    &.double-height {
+      height: 118px;
+    }
   }
 }
 

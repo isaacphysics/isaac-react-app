@@ -11,9 +11,11 @@ import {clearEventsList, getEventMapData, getEventsList} from "../../state/actio
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
+import {RenderNothing} from "../elements/RenderNothing";
+import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 
 interface EventsPageQueryParams {
@@ -48,18 +50,14 @@ export const Events = withRouter(({history, location}: {history: History; locati
         dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter));
     }, [dispatch, typeFilter, statusFilter]);
 
+    const pageHelp = <span>
+        Follow the links below to find out more about our FREE events.
+    </span>;
+
     return <div>
         <RS.Container>
-            <TitleAndBreadcrumb currentPageTitle={"Events"} help="Follow the links below to find out more about our FREE events." />
-            {SITE_SUBJECT === SITE.CS &&
-                <RS.Alert color="warning" className="mb-0">
-                    <RS.Container className="text-center">
-                        Our events facilitators are taking a summer break after a very busy and challenging year in
-                        2020/2021. Events will resume at the end of August. Until then, please check out the 40+ online
-                        topics for self-directed learning. Thank you!
-                    </RS.Container>
-                </RS.Alert>
-            }
+            <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
+            {SITE_SUBJECT === SITE.CS && <CoronavirusWarningBanner />}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
@@ -135,7 +133,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
                 </div>
                 } />
                 <div className="mb-5">
-                    <PageFragment fragmentId="event_type_descriptions" renderFragmentNotFound={false}/>
+                    <PageFragment fragmentId="event_type_descriptions" ifNotFound={RenderNothing}/>
                 </div>
             </div>
         </RS.Container>

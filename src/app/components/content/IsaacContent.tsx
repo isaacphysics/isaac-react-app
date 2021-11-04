@@ -19,6 +19,7 @@ import {IsaacCardDeck} from "./IsaacCardDeck";
 import {IsaacCodeSnippet} from "./IsaacCodeSnippet";
 import {QuizQuestion} from "./QuizQuestion";
 import {isQuestion} from "../../services/questions";
+import {IsaacCodeTabs} from "./IsaacCodeTabs";
 
 const classBasedLayouts = {
     left: "align-left",
@@ -32,7 +33,8 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
     let selectedComponent;
     let tempSelectedComponent;
     if (isQuestion(props.doc)) {
-        if (match.path.startsWith("/quiz/")) {
+        // FIXME: Someday someone will remove /quiz/ and this comment too.
+        if (match.path.startsWith("/quiz/") || match.path.startsWith("/test/")) {
             tempSelectedComponent = <QuizQuestion {...props} />;
         } else {
             tempSelectedComponent = <IsaacQuestion {...props} />;
@@ -50,6 +52,7 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
             case "anvilApp": selectedComponent = <AnvilApp {...props} />; break;
             case "isaacCard": selectedComponent = <IsaacCard {...props} />; break;
             case "isaacCardDeck": selectedComponent = <IsaacCardDeck {...props} />; break;
+            case "codeTabs": selectedComponent = <IsaacCodeTabs {...props} />; break;
             default:
                 switch (layout) {
                     case "tabs": selectedComponent = <IsaacTabs {...props} />; break;

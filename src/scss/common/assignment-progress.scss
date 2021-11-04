@@ -53,8 +53,12 @@
   }
 }
 
-.active .accordion-arrow {
+.accordion-arrow {
   transform: rotate(180deg);
+}
+
+.active .accordion-arrow {
+  transform: rotate(0deg);
 }
 
 .assignment-progress-details {

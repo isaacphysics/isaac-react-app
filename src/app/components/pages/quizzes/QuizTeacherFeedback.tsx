@@ -6,7 +6,7 @@ import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
     loadQuizAssignmentFeedback,
-    returnQuizToStudent,
+    returnQuizToStudent, updateQuizAssignmentDueDate,
     updateQuizAssignmentFeedbackMode
 } from "../../../state/actions/quizzes";
 import {selectors} from "../../../state/selectors";
@@ -28,14 +28,17 @@ import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {isQuestion} from "../../../services/questions";
 import {API_PATH} from "../../../services/constants";
-import {getQuizAssignmentResultsSummaryCSV} from "../../../state/actions";
+import {closeActiveModal, getQuizAssignmentResultsSummaryCSV, openActiveModal, showToast} from "../../../state/actions";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {currentYear, DateInput} from "../../elements/inputs/DateInput";
+import {range} from "lodash";
 
 interface QuizTeacherFeedbackProps {
     match: {params: {quizAssignmentId: string}}
 }
 
 const pageHelp = <span>
-    See the feedback for your students for this quiz assignment.
+    See the feedback for your students for this test assignment.
 </span>;
 
 interface ResultsTableProps {
@@ -88,11 +91,30 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
     const returnToStudent = async () => {
+        dispatch(openActiveModal({
+            closeAction: () => {
+                dispatch(closeActiveModal())
+            },
+            title: "Allow another attempt?",
+            body: "This will allow the student to attempt the test again.",
+            buttons: [
+                <RS.Button key={1} color="primary" outline target="_blank" onClick={() => {dispatch(closeActiveModal())}}>
+                    Cancel
+                </RS.Button>,
+                <RS.Button key={0} color="primary" target="_blank" onClick={_returnToStudent}>
+                    Confirm
+                </RS.Button>,
+        ]
+        }));
+    }
+
+    const _returnToStudent = async () => {
         try {
             setWorking(true);
             await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
         } finally {
             setWorking(false);
+            dispatch(closeActiveModal());
         }
     };
 
@@ -120,12 +142,12 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                             {row.user?.givenName}
                             <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
                             <span className="quiz-student-menu-icon">
-                            {working ? <RS.Spinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                            {working ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
                         </span>
                         </div>
                     </RS.Button>
                     {!working && dropdownOpen && <div className="py-2 px-3">
-                        <RS.Button size="sm" onClick={returnToStudent}>Return to student</RS.Button>
+                        <RS.Button size="sm" onClick={returnToStudent}>Allow another attempt</RS.Button>
                     </div>}
                     {!working && dropdownOpen && <div className="py-2 px-3">
                         <RS.Button size="sm" onClick={() => openStudentFeedback(assignment, row.user?.id)}>View attempt</RS.Button>
@@ -218,7 +240,40 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
 
     const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
     const error = assignmentState && 'error' in assignmentState ? assignmentState.error : null;
-    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Quiz") + " results";
+    const quizTitle = (assignment?.quiz?.title || assignment?.quiz?.id || "Test") + " results";
+
+    // Date input variables
+    const yearRange = range(currentYear, currentYear + 5);
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+
+    const [settingDueDate, setSettingDueDate] = useState<boolean>(false);
+    const [dueDate, setDueDate] = useState<Date | null>( null);
+
+    useEffect(() => {
+        setDueDate(assignment?.dueDate ?? null);
+    }, [assignment?.dueDate]);
+
+    const setValidDueDate = async (newDate : Date | null) => {
+        if (settingDueDate || !newDate || assignment?.dueDate == newDate) {
+            return;
+        }
+        if (assignment?.dueDate && newDate > assignment.dueDate) {
+            try {
+                setSettingDueDate(true);
+                if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.")) {
+                    if (dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate))) {
+                        dispatch(showToast({color: "success", title: "Due date extended successfully", body: `This test is now due ${newDate.toLocaleDateString()}.`, timeout: 5000}));
+                    }
+                } else {
+                    setDueDate(assignment.dueDate);
+                }
+            } finally {
+                setSettingDueDate(false);
+            }
+        }
+    }
 
     return <RS.Container>
         <ShowLoading until={assignmentState}>
@@ -231,12 +286,27 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                     {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
                 </p>
                 <RS.Row>
+                    {assignment.dueDate && <RS.Col xs={12} sm={6} md={4}>
+                        <RS.Label for="dueDate" className="pr-1">Extend the due date:</RS.Label>
+                        <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined} yearRange={yearRange} defaultYear={currentYear} noClear
+                                   defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                        <div className={"mt-2 w-100 text-center mb-2"}>
+                            {dueDate && (dueDate > assignment.dueDate) && <RS.Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
+                                {settingDueDate ? <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></> : "Extend due date"}
+                            </RS.Button>}
+                            {dueDate && (dueDate < assignment.dueDate) && <RS.Card className={"text-left border bg-transparent border-danger"}>
+                                <RS.CardBody className={"p-2 pl-3"}>
+                                    Extended due date must be after the current due date!
+                                </RS.CardBody>
+                            </RS.Card>}
+                        </div>
+                    </RS.Col>}
                     <RS.Col>
-                        <RS.Label for="feedbackMode" className="pr-1">Feedback mode:</RS.Label>
+                        <RS.Label for="feedbackMode" className="pr-1">Feedback mode:</RS.Label><br/>
                         <RS.UncontrolledDropdown className="d-inline-block">
-                            <RS.DropdownToggle color="dark" outline className="px-3" caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                            <RS.DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                                 {settingFeedbackMode ?
-                                    <>Saving <RS.Spinner size="sm" className="quizFeedbackModeSpinner" /></>
+                                    <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
                                 :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
                             </RS.DropdownToggle>
                             <RS.DropdownMenu>
@@ -250,10 +320,10 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                             </RS.DropdownMenu>
                         </RS.UncontrolledDropdown>
                     </RS.Col>
-                    <RS.Col md={3} className="text-right">
+                    <RS.Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
                         <RS.Button
-                            color="primary" outline className="btn-md mt-1"
-                            href={`${API_PATH}/quiz/assignment/${assignment.id}/download`}
+                            color="primary" outline className="btn-md mt-1 text-nowrap"
+                            href={`${API_PATH}/test/assignment/${assignment.id}/download`}
                             onClick={() => dispatch(getQuizAssignmentResultsSummaryCSV(assignment?.id || -1))}
                         >
                             Export as CSV
@@ -268,7 +338,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
                 <RS.Alert color="danger">
-                    <h4 className="alert-heading">Error loading quiz feedback</h4>
+                    <h4 className="alert-heading">Error loading test feedback</h4>
                     <p>{error}</p>
                 </RS.Alert>
             </>}

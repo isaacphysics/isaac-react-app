@@ -9,7 +9,6 @@ import {
     DropdownToggle,
     Label,
     Row,
-    Spinner,
     UncontrolledButtonDropdown
 } from "reactstrap"
 import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
@@ -31,6 +30,7 @@ import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreat
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isDefined} from '../../services/miscUtils';
 import {formatDate} from "../elements/DateString";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 function selectGroups(state: AppState) {
     if (state != null) {
@@ -331,7 +331,7 @@ const GroupSummary = (props: GroupSummaryProps) => {
 
     const selectedGameboard = groupProgress?.[0]?.progress?.[selectedGameboardNumber];
 
-    return <ShowLoading until={groupProgress} placeholder={<div className="w-100 text-center"><Spinner color="secondary" /></div>}>
+    return <ShowLoading until={groupProgress} placeholder={<div className="w-100 text-center"><IsaacSpinner color="secondary" /></div>}>
         <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <GroupProgressLegend pageSettings={pageSettings}/>
 
@@ -434,6 +434,10 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
+    const pageHelp = <span>
+        Click on your groups to see the assignments you have set. View your students' progress by question.
+    </span>;
+
     let sortedGroups = groups;
     if (sortedGroups) {
         switch(sortOrder) {
@@ -456,7 +460,7 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Group Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
                 subTitle="Track your group performance by assignment"
-                help="Click on your groups to see the assignments you have set. View your students' progress by question."
+                help={pageHelp}
             />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">

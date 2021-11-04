@@ -8,7 +8,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
-import {ALL_TOPICS_CRUMB, examBoardTagMap, NOT_FOUND, TAG_ID} from "../../services/constants";
+import {ALL_TOPICS_CRUMB, examBoardLabelMap, NOT_FOUND, stageLabelMap, TAG_ID} from "../../services/constants";
 import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
@@ -19,42 +19,41 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const dispatch = useDispatch();
     const topicPage = useSelector((state: AppState) => state ? state.currentTopic : null);
     const user = useSelector(selectors.user.orNull);
-    let {examBoard} = useUserContext();
+    const userContext = useUserContext();
 
-    useEffect(
-        () => {dispatch(fetchTopicSummary(topicName))},
-        [dispatch, topicName]
-    );
+    useEffect(() => {dispatch(fetchTopicSummary(topicName))}, [dispatch, topicName]);
 
-    let [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, examBoard);
+    const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, userContext, user);
+    const [relatedConceptsForSpecificViewingContext, relatedQuestionsForSpecificViewingContext] =
+        getRelatedDocs(topicPage, {...userContext, showOtherContent: false}, user);
 
     const searchQuery = `?topic=${topicName}`;
-    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards.filter((gameboard) => {
-        return gameboard.tags && gameboard.tags.includes(examBoardTagMap[examBoard]);
-    });
+    // TODO REMOVE AUDIENCE_CONTEXT - maybe we don't need to bother with this now
+    const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
-            <Row className="pb-3">
+            <Row>
                 <Col md={{size: 8, offset: 2}} className="py-3">
+                    <div className="d-flex justify-content-end">
+                        <UserContextPicker />
+                    </div>
                     {topicPage.children && topicPage.children.map((child, index) =>
                         <IsaacContent key={index} doc={child}/>)
                     }
-                    <UserContextPicker className="text-right" />
-
-                    {relatedConcepts && atLeastOne(relatedConcepts.length) &&
+                    {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
+                        <div className='text-center py-3'>
+                            <div className='alert alert-warning'>
+                                {`There is no material in this topic for ${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}.`}
+                            </div>
+                        </div>
+                    }
+                    {atLeastOne(relatedConcepts.length) &&
                         <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
                     }
-                    {relatedQuestions && atLeastOne(relatedQuestions.length) &&
+                    {atLeastOne(relatedQuestions.length) &&
                         <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
-                    }
-                    {(!relatedQuestions || !atLeastOne(relatedQuestions.length)) &&
-                        (!relatedConcepts || !atLeastOne(relatedConcepts.length)) && <div className='text-center py-3'>
-                        <div className='alert alert-warning'>
-                            There is no material in this topic for the {examBoard} exam board.
-                        </div>
-                    </div>
                     }
                 </Col>
             </Row>
@@ -82,10 +81,9 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
 
             <Row className="pb-5">
                 <Col md={{size: 8, offset: 2}} className="py-3">
-
                     <Row>
                         <Col size={6} className="text-center">
-                            <Button tag={Link} to="/topics" color="primary" outline size="lg" className="my-4" block>
+                            <Button tag={Link} to="/topics" color="primary" outline size="lg" block>
                                 <span className="d-none d-md-inline">Back to</span> {" "} All topics
                             </Button>
                         </Col>

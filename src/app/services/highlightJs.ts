@@ -5,7 +5,7 @@ import php from 'highlight.js/lib/languages/php'
 import csharp from 'highlight.js/lib/languages/csharp'
 import plaintext from 'highlight.js/lib/languages/plaintext'
 import sql from 'highlight.js/lib/languages/sql'
-import {Language, LanguageFn} from "highlight.js";
+import {LanguageFn} from "highlight.js";
 
 export function registerLanguages() {
     hljs.registerLanguage('javascript', javascript);
@@ -53,10 +53,7 @@ export function addLineNumbers(code: Element) {
     code.appendChild(lineNumbersWrapper);
 }
 
-// FIXME: remove the ts-ignore when highlight.js fixes "match" to be allowed to be an array of regexes.
-// @ts-ignore
 const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
-    if (!hljsLib) return {} as Language;  // FIXME: nasty hack to ensure 'hljsLib' has correct type below, remove if types fixed.
 
     const KEYWORDS = [
         "GLOBAL",
@@ -129,7 +126,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
     const FUNCTION_DEFINITION = {
         match: [
             /FUNCTION|PROCEDURE/,
-            /\s+/,
+            / +/,
             hljsLib.UNDERSCORE_IDENT_RE,
             /(?=\()/
         ],
