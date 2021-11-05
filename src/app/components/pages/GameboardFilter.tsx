@@ -36,7 +36,7 @@ function itemiseTag(tag: Tag) {
 function itemiseConcepts(concepts: string[]): Item<string>[] {
     return concepts
         .filter(concept => concept !== "")
-        .map(concept => ({label: "<!LOADING!>", value: concept}));
+        .map(concept => ({label: QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER, value: concept}));
 }
 
 function toCSV<T>(items: Item<T>[]) {
