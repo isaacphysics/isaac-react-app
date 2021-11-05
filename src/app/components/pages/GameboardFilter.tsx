@@ -263,6 +263,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     onChange={unwrapValue(setExamBoards)}
                 />
             </RS.Col>
+        </RS.Row>
+        <RS.Row className="mt-lg-3 mb-sm-3">
             <RS.Col lg={4}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
                     I would like questions for...
@@ -278,10 +280,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 </RS.Label>
                 <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
             </RS.Col>
-        </RS.Row>
-        <RS.Row className="mt-lg-3 mb-sm-3">
-            <RS.Col lg={6}>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">Topics:</RS.Label>
+            <RS.Col lg={4}>
+                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
                     options={topicChoices} onChange={(v, {action}) => {
@@ -292,8 +292,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     }}
                 />
             </RS.Col>
-            <RS.Col lg={6}>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">Concepts:</RS.Label>
+            <RS.Col lg={4}>
+                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</RS.Label>
                 {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
                     <Select
                     inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
