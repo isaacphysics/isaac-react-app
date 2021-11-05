@@ -127,7 +127,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     } else if (!row.feedback?.complete) {
         message = "Not completed";
     }
-    const valid = message === undefined;
+    const valid = isDefined(message);
     return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
         <th className="student-name">
             {valid ?

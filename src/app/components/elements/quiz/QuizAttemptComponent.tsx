@@ -219,7 +219,7 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
         <QuizTitle {...props} />
         {page === null ?
             <div className="mt-4">
-                {!props.studentId && <QuizHeader {...props} />}
+                {!isDefined(props.studentId) && <QuizHeader {...props} />}
                 <QuizRubric {...props}/>
                 <QuizContents {...props} />
             </div>

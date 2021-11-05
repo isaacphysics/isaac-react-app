@@ -31,7 +31,7 @@ const pageLink = (attempt: QuizAttemptDTO, page?: number, studentId?: string, as
         return `/test/attempt/feedback/${assignmentId}/${studentId}/${page}`;
     } else if (isDefined(studentId) && isDefined(assignmentId)) {
         return `/test/attempt/feedback/${assignmentId}/${studentId}`;
-    } else if (page !== undefined) {
+    } else if (isDefined(page)) {
         return `/test/attempt/${attempt.id}/feedback/${page}`;
     } else {
         return `/test/attempt/${attempt.id}/feedback`;
@@ -97,11 +97,11 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, stu
 
     return <RS.Container className="mb-5">
         <ShowLoading until={attemptToView}>
-            {attemptToView && <>
+            {isDefined(attemptToView) && <>
                 <QuizAttemptComponent {...subProps} />
                 {attemptToView.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
             </>}
-            {errorToView && <>
+            {isDefined(errorToView) && <>
                 <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} />
                 <RS.Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
