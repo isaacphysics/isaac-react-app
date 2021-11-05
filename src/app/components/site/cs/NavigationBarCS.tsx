@@ -13,7 +13,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            <LinkItem to="/quizzes">My quizzes</LinkItem>
+            <LinkItem to="/tests">My tests</LinkItem>
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
@@ -21,13 +21,13 @@ export const NavigationBarCS = () => {
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/assignment_progress">Markbook</LinkItem>
-            <LinkItem to="/set_quizzes">Manage quizzes</LinkItem>
+            <LinkItem to="/set_tests">Manage tests</LinkItem>
             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">
-            <LinkItem to="/topics?stage=gcse" badgeTitle="BETA">GCSE topics</LinkItem>
-            <LinkItem to="/topics?stage=a_level">A level topics</LinkItem>
+            <LinkItem to="/topics/gcse" badgeTitle="BETA">GCSE topics</LinkItem>
+            <LinkItem to="/topics/a_level">A level topics</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
             <LinkItem to="/glossary">Glossary</LinkItem>
             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>

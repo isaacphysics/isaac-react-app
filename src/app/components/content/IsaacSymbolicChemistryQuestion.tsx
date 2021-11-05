@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
+import {ChemicalFormulaDTO, ChoiceDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
@@ -13,6 +13,7 @@ import _flattenDeep from 'lodash/flattenDeep';
 import {selectQuestionPart} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
 import { isDefined } from '../../services/miscUtils';
+import {Action, Dispatch} from "redux";
 
 const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const pageQuestions = selectors.questions.getQuestions(state);
@@ -23,7 +24,11 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     }
     return r;
 };
-const dispatchToProps = {setCurrentAttempt};
+const dispatchToProps = (dispatch : Dispatch<Action>) => {
+    return {
+        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
+    }
+};
 
 interface IsaacSymbolicChemistryQuestionProps {
     doc: IsaacSymbolicChemistryQuestionDTO;

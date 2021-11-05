@@ -12,7 +12,7 @@ import { Inequality, makeInequality } from 'inequality';
 import { sanitiseInequalityState } from '../../services/questions';
 import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'inequality-grammar';
 
-import { isDefined } from "isaac-graph-sketcher/dist/src/GraphUtils";
+import { isDefined } from "../../services/miscUtils";
 import { useSelector } from 'react-redux';
 import { selectors } from '../../state/selectors';
 import { isStaff } from '../../services/user';
@@ -32,7 +32,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
 
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
-    const sketchRef = useRef<Inequality>();
+    const sketchRef = useRef<Inequality|null|undefined>();
     const debounceTimer = useRef<number|null>(null);
     const [inputState, setInputState] = useState(() => ({pythonExpression: '', userInput: '', valid: true}));
 
@@ -174,6 +174,8 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
             }
         );
+        if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
+        
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
         sketch.onCloseMenus = () => { void 0 };
