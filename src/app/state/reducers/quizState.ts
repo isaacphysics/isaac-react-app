@@ -1,7 +1,6 @@
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
 import {
-    ContentSummaryDTO,
     IsaacQuizDTO,
     QuizAssignmentDTO,
     QuizAttemptDTO,
