@@ -413,14 +413,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         delete params.questionCategories;
         history.replace({search: queryString.stringify(params, {encode: false})});
     }
-
-    // This makes sure that chains of state changes (specifically topics changing, then concepts changing as a result)
-    // don't cause the gameboard to be updated multiple times in quick succession, when just one update would work.
-    // useCallback with no dependencies always returns the same function, so by explicitly passing in the arguments
-    // and using debounce you can stop the function from being called too often.
-    const debouncedTrailingLoadGameboard = useCallback(debounce(loadNewGameboard, 100), []);
-    // This is a leading debounced version, used with the shuffle questions button - this stops users spamming the
-    // generateTemporaryGameboard endpoint by clicking the button fast
+    
+    // This is a leading debounced version of loadNewGameboard, used with the shuffle questions button - this stops
+    // users from spamming the generateTemporaryGameboard endpoint by clicking the button fast
     const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}), []);
 
     useEffect(() => {
@@ -428,7 +423,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             dispatch(loadGameboard(gameboardIdAnchor));
         } else {
             setBoardStack([]);
-            debouncedTrailingLoadGameboard(stages, difficulties, concepts, examBoards, selections, boardName, history, dispatch);
+            loadNewGameboard(stages, difficulties, concepts, examBoards, selections, boardName, history, dispatch)
         }
     }, [selections, stages, difficulties, concepts, examBoards]);
 
