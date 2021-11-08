@@ -165,7 +165,7 @@ export const api = {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },
         sendContentEmailWithIds: (sendingMethod: string | undefined, plaintextTemplate: string, htmlTemplate: string, subject: string, emailType: string, ids: number[]): AxiosPromise => {
-            return endpoint.post(`/email/sendcontentemailwithuserids/${emailType}`, {userIds: ids, overrideFromAddress: sendingMethod, plaintextTemplate: plaintextTemplate, htmlTemplate: htmlTemplate, emailSubject: subject});
+            return endpoint.post(`/email/sendcontentemailwithuserids/${emailType}`, {userIds: ids, overrideFromAddress: sendingMethod, plainTextContent: plaintextTemplate, htmlContent: htmlTemplate, subject: subject});
         },
     },
     notifications: {
