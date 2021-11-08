@@ -66,15 +66,11 @@ export const Search = withRouter((props: {history: History; location: Location})
     const [queryState, setQueryState] = useState(urlQuery);
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(urlFilters.map(itemise))
 
-    // On search URL change trigger search action
-    useEffect(
-        () => {
-            setQueryState(urlQuery);
-            setFiltersState(urlFilters.map(itemise));
-            dispatch(fetchSearch(urlQuery, urlFilters.length ? urlFilters.join(",") : undefined));
-        },
-        [dispatch, location.search]
-    );
+    useEffect(function triggerSearchOnUrlChange() {
+        setQueryState(urlQuery);
+        setFiltersState(urlFilters.map(itemise));
+        dispatch(fetchSearch(urlQuery, urlFilters.length ? urlFilters.join(",") : undefined));
+    }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
         if (e) {e.preventDefault();}

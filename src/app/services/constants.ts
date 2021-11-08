@@ -854,7 +854,7 @@ export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
-    [DOCUMENT_TYPE.QUIZ]: "Quizzes",
+    [DOCUMENT_TYPE.QUIZ]: "Tests",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {

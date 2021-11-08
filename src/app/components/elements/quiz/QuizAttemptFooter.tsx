@@ -23,7 +23,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
         try {
             setSubmitting(true);
             if (await dispatch(markQuizAttemptAsComplete(attempt.id as number))) {
-                dispatch(showToast({color: "success", title: "Quiz submitted successfully", body: "Your answers have been submitted successfully.", timeout: 5000}));
+                dispatch(showToast({color: "success", title: "Test submitted successfully", body: "Your answers have been submitted successfully.", timeout: 5000}));
                 history.goBack();
             }
         } finally {
@@ -66,7 +66,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
                 <RS.Button color="primary" onClick={submitQuiz}>{submitButton}</RS.Button>
             </>;
         } else {
-            prequel = <p>Click &lsquo;{primaryButton}&rsquo; when you are ready to {primaryDescription} the quiz.</p>;
+            prequel = <p>Click &lsquo;{primaryButton}&rsquo; when you are ready to {primaryDescription} the test.</p>;
             if (anyAnswered) {
                 controls = <>
                     <div className="text-center">

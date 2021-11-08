@@ -4,6 +4,7 @@ import {ContentBaseDTO} from "../../../IsaacApiTypes";
 import {isIntendedAudience, notRelevantMessage, useUserContext} from "../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
+import {RenderNothing} from "../elements/RenderNothing";
 
 export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
     const user = useSelector(selectors.user.orNull);
@@ -11,7 +12,7 @@ export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
 
     // If this page is intended for this user's context no need to show a warning banner
     if (isIntendedAudience(doc.audience, userContext, user)) {
-        return <React.Fragment />;
+        return RenderNothing;
     }
 
     return <RS.Alert color="warning">

@@ -25,6 +25,7 @@ import {
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import uuid from "uuid";
+import {LaTeX} from "../LaTeX";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid.v4().slice(0, 4)).current;
@@ -102,7 +103,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className={titleClasses}>
-                <span className={titleTextClass}>{item.title}</span>
+                <LaTeX className={titleTextClass} markup={item.title ?? ""} />
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
             {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
