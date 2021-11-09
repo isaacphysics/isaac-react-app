@@ -35,32 +35,42 @@ function Item({item}: {item: ItemDTO}) {
 }
 
 interface InlineDropRegionProps {
-    id: string; item?: ClozeItemDTO; contentHolder: RefObject<HTMLDivElement>; readonly?: boolean;
+    id: string; item?: ClozeItemDTO; contentHolder: RefObject<HTMLDivElement>; readonly?: boolean; updateAttempt: (dropResult : DropResult) => void;
 }
-function InlineDropRegion({id, item, contentHolder, readonly}: InlineDropRegionProps) {
+function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt}: InlineDropRegionProps) {
+
+    function clearInlineDropZone() {
+        updateAttempt({source: {droppableId: id, index: 0}, draggableId: (item?.replacementId as string)} as DropResult);
+    }
+
     const droppableTarget = contentHolder.current?.querySelector(`#${id}`);
     if (droppableTarget) {
         return ReactDOM.createPortal(
-            <div style={{minHeight: "inherit"}}>
+            <div style={{minHeight: "inherit", position: "relative"}}>
                 <Droppable droppableId={id} isDropDisabled={readonly} direction="vertical" >
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
                         className="d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden"
                         style={{minHeight: "inherit"}}
                     >
-                        {item && <Draggable key={item.replacementId} draggableId={item.replacementId || ""} index={0}>
+                        {item && <Draggable key={item.replacementId} draggableId={item?.replacementId as string} index={0} isDragDisabled={true}>
                             {(provided, snapshot) =>
                                 <div
-                                    className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+                                    className={"cloze-draggable mr-4"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                                 >
                                     <Item item={item}/>
                                 </div>
                             }
                         </Draggable>}
-                        {!(item || snapshot.draggingFromThisWith) && "\u00A0"}
-                        {snapshot.draggingFromThisWith && provided.placeholder}
+                        {!item && "\u00A0"}
                     </div>}
                 </Droppable>
+                {item && <button className={"cloze-inline-clear"} onClick={clearInlineDropZone}>
+                    <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"
+                         className="cloze-clear-cross">
+                        <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"/>
+                    </svg>
+                </button>}
             </div>,
             droppableTarget);
     }
@@ -114,7 +124,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
         }
         }, [currentAttempt]);
 
-    function registerInlineDropRegion(dropRegionId: string, index: number) {
+    function registerInlineDropRegion(dropRegionId: string) {
         if (!registeredDropRegionIDs.includes(dropRegionId)) {
             registeredDropRegionIDs.push(dropRegionId);
             setInlineDropValues(registeredDropRegionIDs.map(() => undefined));
@@ -266,7 +276,9 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
                 {registeredDropRegionIDs.map((dropRegionId, index) =>
                     <InlineDropRegion
                         key={dropRegionId} contentHolder={questionContentRef} readonly={readonly}
-                        id={dropRegionId} item={inlineDropValues[index]}
+                        id={dropRegionId} item={inlineDropValues[index]} updateAttempt={(dropResult) => {
+                            updateAttempt({...dropResult, destination: {droppableId: itemsSection, index: nonSelectedItems.length}},{announce: (_) => {return;}});
+                        }}
                     />
                 )}
             </DragDropContext>
