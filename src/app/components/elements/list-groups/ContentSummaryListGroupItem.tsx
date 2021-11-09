@@ -83,8 +83,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
 
     const displayStage = audienceViews && audienceViews.length > 0;
 
-    return <RS.ListGroupItem className={itemClasses} key={linkDestination}>
-        <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
+    return <RS.ListGroupItem className={`p-3 ${itemClasses}`} key={linkDestination}>
+        <Link to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className={titleClasses}>
                 <span className={titleTextClass}>{item.title}</span>
