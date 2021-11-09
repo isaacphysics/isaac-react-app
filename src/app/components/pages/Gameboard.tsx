@@ -5,7 +5,7 @@ import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
-import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
+import {Difficulty, GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {difficultyShortLabelMap, NOT_FOUND, STAGE, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
@@ -39,34 +39,35 @@ function getTags(docTags?: string[]) {
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
 }
 
-const DifficultyIcons = ({difficulty} : {difficulty : string}) => {
+const DifficultyIcons = ({difficulty} : {difficulty : Difficulty}) => {
     // Difficulty icon proportions
     const difficultyIconWidth = 25;
-    const difficultyIconXPadding = 1;
+    const difficultyIconXPadding = 1.5;
     const yPadding = 2;
     const miniHexagon = calculateHexagonProportions(difficultyIconWidth / 2, 0);
+    const miniSquare = {width: difficultyIconWidth, height: difficultyIconWidth};
 
-    const difficultyCategory = difficulty[0];
-    const difficultyLevel = parseInt(difficulty[1]);
+    const difficultyLabel = difficultyShortLabelMap[difficulty];
+    const difficultyCategory = difficultyLabel[0];
+    const numberOfLevelsForDifficultyCategory = 3;
+    const difficultyLevel = parseInt(difficultyLabel[1]);
 
-    return <div aria-label={"Difficulty: " + difficulty}>
-        <svg width={`${difficultyLevel * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`} height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`} >
-            {Array(difficultyLevel).fill(undefined).map((_, i) =>
-                <g transform={`translate(${i * (difficultyIconWidth + 2 * difficultyIconXPadding)}, ${yPadding})`}>
+    return <div aria-label={"Difficulty: " + difficultyLabel}>
+        <svg width={`${numberOfLevelsForDifficultyCategory * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`} height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`} >
+            {Array(numberOfLevelsForDifficultyCategory).fill(undefined).map((_, i) => {
+                const active = i < difficultyLevel;
+                return <g key={i} transform={`translate(${i * (difficultyIconWidth + 2 * difficultyIconXPadding)}, ${yPadding + (difficultyCategory === "P" ? 0 : 2)})`}>
                     {difficultyCategory === "P" ?
-                        <Hexagon {...miniHexagon} className="hex difficulty practice mini active" />
-                        :
-                        <Rectangle className="square difficulty challenge mini active"
-                                   width={difficultyIconWidth} height={difficultyIconWidth} />
+                        <Hexagon {...miniHexagon} className={"hex difficulty practice " + classnames({active})} /> :
+                        <Rectangle {...miniSquare} className={"square difficulty challenge " + classnames({active})} />
                     }
-                    {<foreignObject width={difficultyIconWidth}
-                                       height={difficultyIconWidth + (difficultyCategory === "P" ? 2 : 0) + yPadding}>
-                        <div className={`difficulty-title active difficulty-${i + 1}`}>
+                    {<foreignObject width={difficultyIconWidth} height={difficultyIconWidth + (difficultyCategory === "P" ? yPadding + 2 : 0)}>
+                        <div className={`difficulty-title ${classnames({active})} difficulty-${i + 1}`}>
                             {difficultyCategory}
                         </div>
                     </foreignObject>}
-                </g>
-            )}
+                </g>;
+            })}
         </svg>
     </div>
 }
@@ -103,9 +104,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             <span>
                 {/* TODO bh412 come up with a nicer way of differentiating site icons and also above */}
                 {SITE_SUBJECT === SITE.PHY ?
-                    <svg className={iconClasses}>
-                        <use href={iconHref} xlinkHref={iconHref}/>
-                    </svg> :
+                    <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg> :
                     <img src={iconHref} alt=""/>
                 }
             </span>
@@ -117,14 +116,14 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                         {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
-                {question.audience && <div className="d-sm-flex mt-1 mt-sm-0">
+                {question.audience && <div className="d-sm-flex mt-1 mt-md-0">
                     {determineAudienceViews(question.audience, question.creationContext).map((view, i) =>
-                        <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classnames({"d-flex d-md-block": true, "ml-sm-3" : i !== 0})}>
+                        <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classnames({"d-flex d-md-block": true, "ml-sm-3 ml-md-2" : i !== 0})}>
                             {view.stage && view.stage !== STAGE.ALL && <div className="gameboard-tags text-center">
                                 {stageLabelMap[view.stage]}
                             </div>}
                             {view.difficulty && <div className="gameboard-tags text-center ml-2 ml-md-0">
-                                <DifficultyIcons difficulty={difficultyShortLabelMap[view.difficulty]} />
+                                <DifficultyIcons difficulty={view.difficulty} />
                             </div>}
                         </div>
                     )}
