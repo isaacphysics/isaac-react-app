@@ -8,7 +8,9 @@ import {PageFragment} from "./PageFragment";
 import {LaTeX} from "./LaTeX";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
-import {difficultyLabelMap, STAGE, stageLabelMap} from "../../services/constants";
+import {STAGE, stageLabelMap} from "../../services/constants";
+import {DifficultyIcons} from "./svg/DifficultyIcons";
+import classnames from "classnames";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserContext();
@@ -17,17 +19,16 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const viewsToUse = viewsWithMyStage.length > 0 ? viewsWithMyStage.slice(0, 1) : audienceViews;
     const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
 
-    return <span className="float-right h-subtitle">
-        {filteredViews.map(view => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-            {view.stage && view.stage !== STAGE.ALL && <span>
+    return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
+        {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={"d-flex d-sm-block"}>
+            {view.stage && view.stage !== STAGE.ALL && <div className="text-center align-self-center">
                 {stageLabelMap[view.stage]}
-            </span>}
-            {SITE_SUBJECT === SITE.PHY && view.difficulty && " - "}
-            {SITE_SUBJECT === SITE.PHY && view.difficulty && <span>
-                {difficultyLabelMap[view.difficulty]}
-            </span>}
+            </div>}
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && <div className={"ml-2 ml-sm-0" + classnames({"mr-2": i !== 0})}>
+                <DifficultyIcons difficulty={view.difficulty} />
+            </div>}
         </div>)}
-    </span>;
+    </div>;
 }
 
 export interface PageTitleProps {
@@ -71,12 +72,18 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, audience
         }))
     }
 
-    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
-        <LaTeX markup={currentPageTitle} />
+    return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
+        <div className="mr-auto">
+            <LaTeX markup={currentPageTitle} />
+            {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+        </div>
         {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {help && !showModal && <span id="title-help">Help</span>}
-        {help && !showModal && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
-        {modalId && showModal && <Button color="link" id="title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>}
-        {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
+        {help && !showModal && <React.Fragment>
+            <div id="title-help" className="title-help">Help</div>
+            <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
+        </React.Fragment>}
+        {modalId && showModal && <React.Fragment>
+            <Button color="link" className="title-help title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>
+        </React.Fragment>}
     </h1>
 };
