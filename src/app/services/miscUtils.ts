@@ -2,8 +2,8 @@ import React, {RefObject, useEffect} from "react";
 
 // undefined|null checker and type guard all-in-wonder.
 // Why is this not in Typescript?
-export function isDefined<T>(stuff: T): stuff is NonNullable<T> {
-    return stuff !== undefined && stuff !== null
+export function isDefined<T>(value: T | undefined | null): value is T {
+    return <T>value !== undefined && <T>value !== null;
 }
 
 // Adapted from answer to stackoverflow.com/questions/32553158

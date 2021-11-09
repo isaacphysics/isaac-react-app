@@ -321,7 +321,7 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
     return output;
 }
 
-export function LaTeX({markup}: {markup: string}) {
+export function LaTeX({markup, className}: {markup: string, className?: string}) {
     const user = useSelector(selectors.user.orNull);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
@@ -331,5 +331,5 @@ export function LaTeX({markup}: {markup: string}) {
     const escapedMarkup = escapeHtml(markup);
     const katexHtml = katexify(escapedMarkup, user, booleanNotation, screenReaderHoverText, figureNumbers);
 
-    return <span dangerouslySetInnerHTML={{__html: katexHtml}} />
+    return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
 }

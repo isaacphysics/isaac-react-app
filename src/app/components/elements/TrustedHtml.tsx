@@ -34,7 +34,7 @@ function manipulateHtml(html: string) {
     return htmlDom.innerHTML;
 }
 
-export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
+export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string}) => {
     const user = useSelector(selectors.user.orNull);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
@@ -46,7 +46,5 @@ export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
     html = useClozeDropRegionsInHtml(html);
 
     const ElementType = span ? "span" : "div";
-    return <React.Fragment>
-        <ElementType dangerouslySetInnerHTML={{__html: html}} />
-    </React.Fragment>;
+    return <ElementType className={className} dangerouslySetInnerHTML={{__html: html}} />;
 };

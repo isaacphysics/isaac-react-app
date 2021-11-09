@@ -11,18 +11,31 @@ import {
 } from "../../../services/constants";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
-import React from "react";
+import React, {useRef} from "react";
 import tags from "../../../services/tags";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
-    filterAudienceViewsByProperties
+    filterAudienceViewsByProperties,
+    isIntendedAudience,
+    notRelevantMessage,
+    useUserContext
 } from "../../../services/userContext";
+import {useSelector} from "react-redux";
+import {selectors} from "../../../state/selectors";
+import uuid from "uuid";
+import {LaTeX} from "../LaTeX";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
+    const componentId = useRef(uuid.v4().slice(0, 4)).current;
+    const userContext = useUserContext();
+    const user = useSelector(selectors.user.orNull);
+    const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
+
     let linkDestination, icon, iconLabel, audienceViews;
-    let itemClasses = "p-0 bg-transparent content-summary-link ";
+    let itemClasses = "p-0 content-summary-link ";
+    itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
 
     let titleClasses = "content-summary-link-title flex-grow-1 ";
     let titleTextClass = SITE_SUBJECT == SITE.PHY ? "text-secondary" : undefined;
@@ -36,8 +49,11 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     let topicTitle = itemTopic ? itemTopic.title : null;
 
     const questionIcon = {
-        [SITE.CS]: item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>,
-        [SITE.PHY]: item.correct ? <svg className={iconClasses}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
+        [SITE.CS]: item.correct ?
+            <img src="/assets/tick-rp.svg" alt=""/> :
+            <img src="/assets/question.svg" alt="Question page"/>,
+        [SITE.PHY]: item.correct ?
+            <svg className={iconClasses}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
             <svg className={iconClasses}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>
     }[SITE_SUBJECT];
 
@@ -87,9 +103,15 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className={titleClasses}>
-                <span className={titleTextClass}>{item.title}</span>
+                <LaTeX className={titleTextClass} markup={item.title ?? ""} />
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
+            {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
+                <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
+                <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
+                    {`This content is ${notRelevantMessage(userContext)}.`}
+                </RS.UncontrolledTooltip>
+            </div>}
             {displayTopicTitle && topicTitle && <span className="small text-muted align-self-center d-none d-md-inline">
                 {topicTitle}
                 {displayStage && <span>,&nbsp;</span>}
@@ -100,7 +122,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                         {stageLabelMap[view.stage]}
                     </span>}
                     {" "}
-                    {view.difficulty && <span className="gameboard-tags">
+                    {SITE_SUBJECT === SITE.PHY && view.difficulty && <span className="gameboard-tags">
                         ({difficultyShortLabelMap[view.difficulty]})
                         {i < views.length - 1 && ", "}
                     </span>}

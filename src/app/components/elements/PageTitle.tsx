@@ -1,9 +1,10 @@
 import React, {ReactElement, useEffect, useRef} from "react";
-import {UncontrolledTooltip} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {setMainContentId} from "../../state/actions";
+import {Button, UncontrolledTooltip} from "reactstrap";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {closeActiveModal, openActiveModal, setMainContentId} from "../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
+import {PageFragment} from "./PageFragment";
 import {LaTeX} from "./LaTeX";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
@@ -21,8 +22,8 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
             {view.stage && view.stage !== STAGE.ALL && <span>
                 {stageLabelMap[view.stage]}
             </span>}
-            {view.difficulty && " - "}
-            {view.difficulty && <span>
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && " - "}
+            {SITE_SUBJECT === SITE.PHY && view.difficulty && <span>
                 {difficultyLabelMap[view.difficulty]}
             </span>}
         </div>)}
@@ -32,14 +33,17 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
 export interface PageTitleProps {
     currentPageTitle: string;
     subTitle?: string;
-    help?: string | ReactElement;
+    help?: ReactElement;
     className?: string;
     audienceViews?: ViewingContext[];
+    modalId?: string;
 }
-export const PageTitle = ({currentPageTitle, subTitle, help, className, audienceViews}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, subTitle, help, className, audienceViews, modalId}: PageTitleProps) => {
     const dispatch = useDispatch();
     const openModal = useSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
+
+    const showModal = modalId && SITE_SUBJECT === SITE.PHY;
 
     useEffect(() => {dispatch(setMainContentId("main-heading"));}, []);
     useEffect(() => {
@@ -50,11 +54,29 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, audience
         }
     }, [currentPageTitle]);
 
+    interface HelpModalProps {
+        modalId: string;
+    }
+
+    const HelpModal = (props: HelpModalProps) => {
+        return <PageFragment fragmentId={props.modalId} ifNotFound={help}/>
+    };
+
+    function openHelpModal(modalId: string) {
+        dispatch(openActiveModal({
+            closeAction: () => {dispatch(closeActiveModal())},
+            size: "xl",
+            title: "Help",
+            body: <HelpModal modalId={modalId}/>
+        }))
+    }
+
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary${className ? ` ${className}` : ""}`}>
         <LaTeX markup={currentPageTitle} />
         {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {help && <span id="title-help">Help</span>}
-        {help && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
+        {help && !showModal && <span id="title-help">Help</span>}
+        {help && !showModal && <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>}
+        {modalId && showModal && <Button color="link" id="title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>}
         {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
     </h1>
 };
