@@ -70,7 +70,7 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
     } else {
         const anyStarted = questions.some(q => q.bestAttempt !== undefined);
         return <div>
-            <h4>Quiz sections</h4>
+            <h4>Test sections</h4>
             <ul>
                 {Object.keys(sections).map((k, index) => {
                     const section = sections[k];
@@ -93,9 +93,9 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
     const assignment = attempt.quizAssignment;
     if (preview) {
         return <p className="d-flex">
-            <span>You are previewing this quiz.</span>
+            <span>You are previewing this test.</span>
             <Spacer />
-            <RS.Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Quiz</RS.Button>
+            <RS.Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</RS.Button>
         </p>;
     } else if (isDefined(assignment)) {
         return <p className="d-flex">
@@ -106,7 +106,7 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
             {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
         </p>;
     } else {
-        return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this quiz.</p>
+        return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>
     }
 }
 
@@ -133,7 +133,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal())}, size: "lg",
-            title: "Quiz Instructions", body: <QuizRubric attempt={attempt} />
+            title: "Test Instructions", body: <QuizRubric attempt={attempt} />
         }))
     };
 
@@ -156,14 +156,14 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
             </Col>
         </Row>
     :
-        <RS.Alert color="danger">Quiz section {page} not found</RS.Alert>
+        <RS.Alert color="danger">Test section {page} not found</RS.Alert>
     ;
 }
 
-export const myQuizzesCrumbs = [{title: "My quizzes", to: `/quizzes`}];
-export const teacherQuizzesCrumbs = [{title: "Set quizzes", to: `/set_quizzes`}];
+export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
+export const teacherQuizzesCrumbs = [{title: "Set tests", to: `/set_tests`}];
 const QuizTitle = ({attempt, page, pageLink, pageHelp, preview}: QuizAttemptProps) => {
-    let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Quiz";
+    let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
     }

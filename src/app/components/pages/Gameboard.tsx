@@ -15,9 +15,14 @@ import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
-import {determineAudienceViews} from "../../services/userContext";
 import classnames from "classnames";
 import {DifficultyIcons} from "../elements/svg/DifficultyIcons";
+import {
+    AUDIENCE_DISPLAY_FIELDS,
+    determineAudienceViews,
+    filterAudienceViewsByProperties
+} from "../../services/userContext";
+import {LaTeX} from "../elements/LaTeX";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -75,24 +80,28 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 }
             </span>
             <div className={`d-md-flex flex-fill`}>
+
                 <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
-                    <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
+                    <LaTeX className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""} markup={question.title ?? ""} />
                     {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
                     {questionTags && <div className="gameboard-tags">
                         {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
+
                 {question.audience && <div className="d-sm-flex mt-1 mt-md-0">
-                    {determineAudienceViews(question.audience, question.creationContext).map((view, i) =>
-                        <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classnames({"d-flex d-md-block": true, "ml-sm-3 ml-md-2" : i !== 0})}>
-                            {view.stage && view.stage !== STAGE.ALL && <div className="gameboard-tags text-center">
-                                {stageLabelMap[view.stage]}
-                            </div>}
-                            {view.difficulty && <div className="gameboard-tags text-center ml-2 ml-md-0">
-                                <DifficultyIcons difficulty={view.difficulty} />
-                            </div>}
-                        </div>
-                    )}
+                    {filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
+                        .map((view, i) =>
+                            <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classnames({"d-flex d-md-block": true, "ml-sm-3 ml-md-2" : i !== 0})}>
+                                {view.stage && view.stage !== STAGE.ALL && <div className="gameboard-tags text-center">
+                                    {stageLabelMap[view.stage]}
+                                </div>}
+                                {SITE_SUBJECT === SITE.PHY && view.difficulty && <div className="gameboard-tags text-center ml-2 ml-md-0">
+                                    <DifficultyIcons difficulty={view.difficulty} />
+                                </div>}
+                            </div>
+                        )
+                    }
                 </div>}
             </div>
         </Link>

@@ -11,7 +11,7 @@ import {generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
-import {history} from "../../services/history";
+import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
 import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
@@ -26,6 +26,14 @@ function itemiseByValue<R extends {value: string}>(values: string[], options: R[
 function itemiseTag(tag: Tag) {
     return {value: tag.id, label: tag.title}
 }
+
+function itemiseConcepts(concepts: string[] | string) {
+    const conceptsList = Array.isArray(concepts) ? concepts : [concepts]
+    return conceptsList
+        .filter(concept => concept !== "")
+        .map(concept => ({label: concept, value: concept}));
+}
+
 function toCSV<T>(items: Item<T>[]) {
     return items.map(item => item.value).join(",");
 }
@@ -43,14 +51,16 @@ interface QueryStringResponse {
     queryStages: Item<string>[];
     queryDifficulties: Item<string>[];
     queryQuestionCategories: Item<string>[];
+    queryConcepts: Item<string>[];
 }
 function processQueryString(query: string): QueryStringResponse {
-    const {subjects, fields, topics, stages, difficulties, questionCategories} = queryString.parse(query);
+    const {subjects, fields, topics, stages, difficulties, questionCategories, concepts} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
     const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStageOptions());
     const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
+    const conceptItems = concepts ? itemiseConcepts(concepts) : []
 
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;
@@ -65,7 +75,7 @@ function processQueryString(query: string): QueryStringResponse {
     });
 
     return {
-        querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems
+        querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems, queryConcepts: conceptItems
     }
 }
 
@@ -84,17 +94,24 @@ function generateBoardName(selections: Item<TAG_ID>[][]) {
 export const GameboardFilter = withRouter(({location}: {location: Location}) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
+
     const userContext = useUserContext();
-    const {querySelections, queryStages, queryDifficulties} = processQueryString(location.search);
+
+    const history = useHistory();
+    const {querySelections, queryStages, queryDifficulties, queryConcepts} = processQueryString(location.search);
     const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
     const gameboard = useSelector(selectors.board.currentGameboard);
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
-    if (gameboard && gameboard.id !== gameboardIdAnchor) {
-        history.push({search: location.search, hash: gameboard.id});
-    } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
-        // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
-        history.push({search: location.search});
-    }
+
+    useEffect(() => {
+        if (gameboard && gameboard.id !== gameboardIdAnchor) {
+            history.replace({search: location.search, hash: gameboard.id});
+        } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
+            // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
+            history.replace({search: location.search});
+        }
+    }, [gameboard, gameboardIdAnchor, gameboardOrNotFound])
+
     const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
     const gameboardRef = useRef<HTMLDivElement>(null);
 
@@ -131,6 +148,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
+    const [concepts, setConcepts] = useState<Item<string>[]>(queryConcepts);
+
     const boardName = generateBoardName(selections);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
@@ -140,7 +159,9 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         const params: {[key: string]: string} = {};
         if (stages.length) params.stages = toCSV(stages);
         if (difficulties.length) params.difficulties = toCSV(difficulties);
+        if (concepts.length) params.concepts = toCSV(concepts);
         if (SITE_SUBJECT === SITE.PHY) {params.questionCategories = "quick_quiz,learn_and_practice";}
+
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
@@ -152,7 +173,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         });
         dispatch(generateTemporaryGameboard({...params, title: boardName}));
         delete params.questionCategories;
-        history.push({search: queryString.stringify(params, {encode: false})});
+        history.replace({search: queryString.stringify(params, {encode: false})});
     }
 
     useEffect(() => {
@@ -162,7 +183,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             setBoardStack([]);
             loadNewGameboard();
         }
-    }, [selections, stages, difficulties]);
+    }, [selections, stages, difficulties, concepts]);
 
     function refresh() {
         if (gameboard) {
@@ -193,7 +214,23 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp} modalId="gameboard_filter_help"/>
+
+        {concepts.length > 0 && <RS.Card className={"mt-4 border-secondary"}>
+            <RS.CardBody className="row">
+                <RS.Col className={"col-auto mb-2"}>
+                    {/* This silently assumes that the first concept in the list is the concept id of the
+                        page that we linked here from, which isn't great but might be needed to provide some context
+                        for where this board was generated from */}
+                    Questions shown are those related to <Link to={`/concepts/${concepts[0].value}`}>this concept</Link>.
+                </RS.Col>
+                <RS.Col className={"ml-auto col-auto"}>
+                    <RS.Button size="sm" color="primary" outline onClick={() => setConcepts([])}>
+                        Clear concept filter
+                    </RS.Button>
+                </RS.Col>
+            </RS.CardBody>
+        </RS.Card>}
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}

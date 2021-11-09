@@ -23,7 +23,7 @@ export function DifficultyIcons({difficulty} : {difficulty : Difficulty}) {
             width={`${numberOfLevelsForDifficultyCategory * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`}
             height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
         >
-            {Array(numberOfLevelsForDifficultyCategory).map((_, i) => {
+            {Array(numberOfLevelsForDifficultyCategory).fill(undefined).map((_, i) => {
                 const active = i < difficultyLevel;
                 return <g key={i} transform={`translate(${i * (difficultyIconWidth + 2 * difficultyIconXPadding)}, ${yPadding + (difficultyCategory === "P" ? 0 : 2)})`}>
                     {difficultyCategory === "P" ?
