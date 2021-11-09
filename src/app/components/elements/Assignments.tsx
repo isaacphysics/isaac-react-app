@@ -20,6 +20,8 @@ import {
     TAG_ID
 } from "../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {aggregateDifficulties, DifficultyIcons} from "./svg/DifficultyIcons";
+import classnames from "classnames";
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
@@ -78,7 +80,11 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         </p>}
                         {SITE_SUBJECT === SITE.PHY && difficulties.length > 0 && <p className="mb-0">
                             <strong>{difficulties.length === 1 ? "Difficulty" : "Difficulties"}:</strong>{" "}
-                            {difficulties.map(d => difficultyShortLabelMap[d]).join(", ")}
+                            <div className="d-inline-flex">
+                                {aggregateDifficulties(difficulties).map((d, i) => <div key={d} className={classnames({"ml-1": i !== 0})}>
+                                    <DifficultyIcons difficulty={d} />
+                                </div>)}
+                            </div>
                         </p>}
                         {isDefined(topics) && topics.length > 0 && <p className="mb-0">
                             <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}

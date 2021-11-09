@@ -4,6 +4,26 @@ import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {difficultyShortLabelMap} from "../../../services/constants";
 import classnames from "classnames";
 import {Rectangle} from "./Rectangle";
+import {isDefined} from "../../../services/miscUtils";
+
+export function aggregateDifficulties(difficulties: Difficulty[]): Difficulty[] {
+    const highestLevels: Record<string, number> = {};
+    difficulties.forEach(difficulty => {
+        const difficultyLabel = difficultyShortLabelMap[difficulty];
+        const difficultyCategory = difficultyLabel[0];
+        const difficultyLevel = parseInt(difficultyLabel[1]);
+        if (!isDefined(highestLevels[difficultyCategory]) || difficultyLevel > highestLevels[difficultyCategory]) {
+            highestLevels[difficultyCategory] = difficultyLevel;
+        }
+    });
+    const aggregateDifficulties: Difficulty[] = [];
+    ["P", "C"].forEach(difficultyCategory => {
+        if (isDefined(highestLevels[difficultyCategory])) {
+            aggregateDifficulties.push(`${{P: "practice_", C: "challenge_"}[difficultyCategory]}${highestLevels[difficultyCategory]}` as Difficulty);
+        }
+    })
+    return aggregateDifficulties;
+}
 
 export function DifficultyIcons({difficulty} : {difficulty : Difficulty}) {
     // Difficulty icon proportions
