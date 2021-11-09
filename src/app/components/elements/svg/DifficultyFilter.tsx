@@ -43,7 +43,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                 [...difficulties, difficultyOption] // add
                             );
                         }
-                        return <g transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`} >
+                        return <g key={difficultyOption.value} transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`} >
                             <Hexagon {...hexagon} className={`hex practice difficulty ${isSelected ? "active" : ""}`} />
                             <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
                                 <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
@@ -59,7 +59,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                 </title>
                             </Hexagon>
                             {[1, 0, -1].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
-                                <g transform={`translate(${2 * hexagon.halfWidth - (hexagon.padding + 2 * miniHexagon.halfWidth + miniHexagon.padding)}, ${2 * hexagon.quarterHeight - 2 * miniHexagon.quarterHeight + n * (4 * miniHexagon.quarterHeight + miniHexagon.padding)})`}>
+                                <g key={difficultyOption.value} transform={`translate(${2 * hexagon.halfWidth - (hexagon.padding + 2 * miniHexagon.halfWidth + miniHexagon.padding)}, ${2 * hexagon.quarterHeight - 2 * miniHexagon.quarterHeight + n * (4 * miniHexagon.quarterHeight + miniHexagon.padding)})`}>
                                     <Hexagon {...miniHexagon} className={`hex practice difficulty mini ${isSelected ? "" : "active"}`} />
                                 </g>
                             )}
@@ -78,7 +78,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                             [...difficulties, difficultyOption] // add
                         );
                     }
-                    return <g transform={`translate(${j * (square.width + 2 * square.padding)}, 0)`} >
+                    return <g key={difficultyOption.value} transform={`translate(${j * (square.width + 2 * square.padding)}, 0)`} >
                         <Rectangle {...square} className={`square challenge difficulty ${isSelected ? "active" : ""}`} />
                         <foreignObject width={square.width} height={square.height}>
                             <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
@@ -94,7 +94,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                             </title>
                         </Rectangle>
                         {[0, 1, 2].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
-                            <g transform={`translate(${square.width - (square.padding + miniSquare.width + miniSquare.padding)}, ${(square.height + square.padding - miniSquare.padding) - (n + 1) * (miniSquare.height + 2 * miniSquare.padding) })`}>
+                            <g key={difficultyOption.value} transform={`translate(${square.width - (square.padding + miniSquare.width + miniSquare.padding)}, ${(square.height + square.padding - miniSquare.padding) - (n + 1) * (miniSquare.height + 2 * miniSquare.padding) })`}>
                                 <Rectangle {...miniSquare} className={`square challenge difficulty mini ${isSelected ? "" : "active"}`} />
                             </g>
                         )}
