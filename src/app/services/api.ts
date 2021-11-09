@@ -2,7 +2,7 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
-    AuthenticationProvider,
+    AuthenticationProvider, EmailTemplateDTO,
     EventBookingDTO,
     GameboardDTO,
     ResultsWrapper,
@@ -164,8 +164,8 @@ export const api = {
         sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
         },
-        sendContentEmailWithIds: (sendingMethod: string | undefined, plaintextTemplate: string, htmlTemplate: string, subject: string, emailType: string, ids: number[]): AxiosPromise => {
-            return endpoint.post(`/email/sendcontentemailwithuserids/${emailType}`, {userIds: ids, overrideFromAddress: sendingMethod, plainTextContent: plaintextTemplate, htmlContent: htmlTemplate, subject: subject});
+        sendProvidedEmailWithUserIds: (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]): AxiosPromise => {
+            return endpoint.post(`/email/sendprovidedemailwithuserids/${emailType}`, {userIds: ids, emailTemplate: emailTemplate});
         },
     },
     notifications: {

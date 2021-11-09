@@ -41,7 +41,7 @@ import {
 import {
     AssignmentDTO,
     AuthenticationProvider,
-    ChoiceDTO,
+    ChoiceDTO, EmailTemplateDTO,
     EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
@@ -1325,10 +1325,10 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
     }
 };
 
-export const sendContentEmailWithIds = (sendingMethod: string | undefined, plaintextTemplate: string, htmlTemplate: string, subject: string, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
+export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_REQUEST});
     try {
-        await api.email.sendContentEmailWithIds(sendingMethod, plaintextTemplate, htmlTemplate, subject, emailType, ids);
+        await api.email.sendProvidedEmailWithUserIds(emailTemplate, emailType, ids);
         dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
         dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
     } catch (e) {
