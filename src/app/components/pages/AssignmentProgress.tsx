@@ -26,33 +26,37 @@ import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH} from "../../services/constants";
+import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
 import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import { loadQuizAssignments } from "../../state/actions/quizzes";
+import { Tabs } from "../elements/Tabs";
+import { isDefined } from "../../services/miscUtils";
+import { resourceFound } from "../../services/validation";
 
 function selectGroups(state: AppState) {
-    if (state != null) {
+    if (isDefined(state)) {
         const gameboards: {[id: string]: GameboardDTO} = {};
-        if (state.boards && state.boards.boards) {
-            state.boards.boards.boards.forEach(board => {
+        if (isDefined(state.boards) && isDefined(state.boards.boards)) {
+            for (const board of state.boards.boards.boards) {
                 gameboards[board.id as string] = board;
-            });
+            };
         }
 
-        const progress = selectors.assignments.progress(state);
+        const assignmentsProgress = selectors.assignments.progress(state);
         const assignments: { [id: number]: EnhancedAssignment[] } = {};
-        if (state.assignmentsByMe) {
-            state.assignmentsByMe.forEach(assignment => {
+        if (isDefined(state.assignmentsByMe)) {
+            for (const assignment of state.assignmentsByMe) {
                 const assignmentId = assignment._id as number;
                 const enhancedAssignment: EnhancedAssignment = {
                     ...assignment,
                     _id: assignmentId,
                     gameboard: (assignment.gameboard || gameboards[assignment.gameboardId as string]) as EnhancedGameboard,
-                    progress: progress && progress[assignmentId] || undefined,
+                    progress: assignmentsProgress && assignmentsProgress[assignmentId] || undefined,
                 };
                 const groupId = assignment.groupId as number;
                 if (groupId in assignments) {
@@ -60,7 +64,14 @@ function selectGroups(state: AppState) {
                 } else {
                     assignments[groupId] = [enhancedAssignment];
                 }
-            });
+            };
+        }
+
+        // TODO Retrieve progress
+        if (resourceFound(state.quizAssignments)) { // assigned by me
+            for (const quizAssignment of state.quizAssignments) {
+                // TODO Organise progress
+            }
         }
 
         const activeGroups = selectors.groups.active(state);
@@ -506,6 +517,7 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
 const GroupDetails = (props: GroupDetailsProps) => {
     const dispatch = useDispatch();
     const {group, pageSettings} = props;
+    const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
 
     const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
     const joinedGameboardIds = gameboardIs.join(",");
@@ -513,12 +525,28 @@ const GroupDetails = (props: GroupDetailsProps) => {
         gameboardIs.forEach(gameboardId => dispatch(loadBoard(gameboardId)));
     }, [joinedGameboardIds]);
 
+    function activeTabChanged(tabIndex: number) {
+        // setPageTitle({[SITE.CS]: "Manage tests", [SITE.PHY]: (tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT])
+    }
+
     const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
+
+    let groupAssignments: JSX.Element | JSX.Element[] = <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
+    if (gameboardsLoaded) {
+        if (group.assignments.length > 0) {
+            groupAssignments = group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>).filter(e => e) as JSX.Element[];
+        } else {
+            groupAssignments = <div className="p-4 text-center">There are no assignments for this group.</div>
+        }
+    }
+    let groupTests;
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend pageSettings={pageSettings}/>
-        {gameboardsLoaded ? group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>)
-            : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>}
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>{{
+            "Assignments": groupAssignments,
+            "Tests": groupTests
+        }}</Tabs>
     </div>;
 };
 
@@ -529,7 +557,7 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     const dispatch = useDispatch();
     const {group} = props;
-    const [isExpanded, setExpanded] = useState(false);
+    const [isExpanded, setExpanded] = useState(true);
 
     const assignmentCount = group.assignments.length;
 
@@ -561,6 +589,10 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
+    // const quizzes = useSelector(selectors.quizzes.available);
+    // const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
+    const quizAssignments = useSelector(selectors.quizzes.assignments);
+
     let data = groups;
     if (data) {
         switch(sortOrder) {
@@ -576,6 +608,7 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
     useEffect(() => {
         dispatch(loadGroups(false));
         dispatch(loadAssignmentsOwnedByMe());
+        dispatch(loadQuizAssignments());
     }, [dispatch]);
 
     const pageHelp = <span>
@@ -591,11 +624,6 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
                 modalId="assignment_progress_help"
             />
             <Row className="align-items-center d-none d-md-flex">
-                {/*<Col>*/}
-                {/*    <a href="/group_progress">*/}
-                {/*        View group progress summary*/}
-                {/*    </a>*/}
-                {/*</Col>*/}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">

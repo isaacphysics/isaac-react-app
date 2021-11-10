@@ -878,6 +878,7 @@ export enum MEMBERSHIP_STATUS {
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
+export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
