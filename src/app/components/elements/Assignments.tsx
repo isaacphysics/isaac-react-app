@@ -12,16 +12,9 @@ import {
 } from "../../services/gameboards";
 import {isDefined} from "../../services/miscUtils";
 import tags from "../../services/tags";
-import {
-    difficultiesOrdered,
-    difficultyShortLabelMap,
-    stageLabelMap,
-    stagesOrdered,
-    TAG_ID
-} from "../../services/constants";
+import {difficultiesOrdered, stageLabelMap, stagesOrdered, TAG_ID} from "../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {aggregateDifficulties, DifficultyIcons} from "./svg/DifficultyIcons";
-import classnames from "classnames";
+import {AggregateDifficultyIcons} from "./svg/DifficultyIcons";
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
@@ -74,6 +67,10 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                     </Col>
                     <Col xs={7} md={5} className="mt-sm-2">
                         <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.contents?.length || "0"}</p>
+                        {isDefined(topics) && topics.length > 0 && <p className="mb-0">
+                            <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
+                            {topics.join(", ")}
+                        </p>}
                         {stages.length > 0 && <p className="mb-0">
                             <strong>{stages.length === 1 ? "Stage" : "Stages"}:</strong>{" "}
                             {stages.map(s => stageLabelMap[s]).join(", ")}
@@ -81,14 +78,8 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         {SITE_SUBJECT === SITE.PHY && difficulties.length > 0 && <p className="mb-0">
                             <strong>{difficulties.length === 1 ? "Difficulty" : "Difficulties"}:</strong>{" "}
                             <div className="d-inline-flex">
-                                {aggregateDifficulties(difficulties).map((d, i) => <div key={d} className={classnames({"ml-1": i !== 0})}>
-                                    <DifficultyIcons difficulty={d} />
-                                </div>)}
+                                {<AggregateDifficultyIcons difficulties={difficulties} />}
                             </div>
-                        </p>}
-                        {isDefined(topics) && topics.length > 0 && <p className="mb-0">
-                            <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
-                            {topics.join(", ")}
                         </p>}
                         {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
                     </Col>

@@ -92,7 +92,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 {question.audience && <div className="d-sm-flex mt-1 mt-md-0">
                     {filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
                         .map((view, i) =>
-                            <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classnames({"d-flex d-md-block": true, "ml-sm-3 ml-md-2" : i !== 0})}>
+                            <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classnames({"d-flex d-md-block": true, "ml-sm-3 ml-md-2" : i > 0})}>
                                 {view.stage && view.stage !== STAGE.ALL && <div className="gameboard-tags text-center">
                                     {stageLabelMap[view.stage]}
                                 </div>}
