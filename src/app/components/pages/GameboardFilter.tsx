@@ -242,7 +242,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
 
     return <>
         <RS.Row>
-            <RS.Col lg={4}>
+            <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                     I am interested in stage...
                     <span id={`stage-help-tooltip`} className="icon-help ml-1" />
@@ -252,7 +252,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 </RS.Label>
                 <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
             </RS.Col>
-            <RS.Col lg={4}>
+            <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
                     and exam board...
                 </RS.Label>
@@ -265,7 +265,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
             </RS.Col>
         </RS.Row>
         <RS.Row className="mt-lg-3 mb-sm-3">
-            <RS.Col lg={4}>
+            {SITE_SUBJECT !== SITE.CS /* wait until difficulty is released */ && <RS.Col md={4}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
                     I would like questions for...
                     <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
@@ -279,8 +279,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     </RS.UncontrolledTooltip>
                 </RS.Label>
                 <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
-            </RS.Col>
-            <RS.Col lg={4}>
+            </RS.Col>}
+            <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
@@ -292,7 +292,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     }}
                 />
             </RS.Col>
-            <RS.Col lg={4}>
+            <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</RS.Label>
                 {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
                     <Select
@@ -413,7 +413,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         delete params.questionCategories;
         history.replace({search: queryString.stringify(params, {encode: false})});
     }
-    
+
     // This is a leading debounced version of loadNewGameboard, used with the shuffle questions button - this stops
     // users from spamming the generateTemporaryGameboard endpoint by clicking the button fast
     const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}), []);
