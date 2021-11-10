@@ -51,12 +51,10 @@ import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
-import Select from "react-select";
-import {multiSelectOnChange} from "../../services/gameboardBuilder";
 import {difficultiesOrdered, sortIcon, stageLabelMap, stagesOrdered} from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
-import {above, useDeviceSize} from "../../services/device";
+import {above, below, useDeviceSize} from "../../services/device";
 
 enum boardViews {
     "table" = "Table View",
@@ -279,7 +277,7 @@ const Board = (props: BoardProps) => {
                         <CardSubtitle>Stages: <strong className="d-inline-flex">{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
                         {SITE_SUBJECT === SITE.PHY && boardDifficulties.length > 1 && <CardSubtitle>
                             {"Difficulties: "}
-                            <AggregateDifficultyIcons stacked={above["lg"](deviceSize)} difficulties={boardDifficulties} />
+                            <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
                         </CardSubtitle>}
                     </aside>
 
