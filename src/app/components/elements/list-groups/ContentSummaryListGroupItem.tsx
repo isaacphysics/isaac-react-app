@@ -1,6 +1,5 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
-    difficultyShortLabelMap,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
     SEARCH_RESULT_TYPE,
@@ -26,6 +25,8 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import uuid from "uuid";
 import {LaTeX} from "../LaTeX";
+import classnames from "classnames";
+import {DifficultyIcons} from "../svg/DifficultyIcons";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid.v4().slice(0, 4)).current;
@@ -102,7 +103,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     return <RS.ListGroupItem className={`p-3 ${itemClasses}`} key={linkDestination}>
         <Link to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
-            <div className={titleClasses}>
+            <div className={"align-self-center " + titleClasses}>
                 <LaTeX className={titleTextClass} markup={item.title ?? ""} />
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
@@ -112,21 +113,22 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                     {`This content is ${notRelevantMessage(userContext)}.`}
                 </RS.UncontrolledTooltip>
             </div>}
-            {displayTopicTitle && topicTitle && <span className="small text-muted align-self-center d-none d-md-inline">
+            {displayTopicTitle && topicTitle && <span className={"small text-muted align-self-center d-none d-md-inline " + classnames({"mr-3": displayStage})}>
                 {topicTitle}
-                {displayStage && <span>,&nbsp;</span>}
             </span>}
+
             {audienceViews && displayStage && <span className="small text-muted align-self-center d-none d-md-inline">
-                {audienceViews.map((view, i, views) => <span key={`${view.stage} ${view.difficulty} ${view.examBoard}`}>
-                    {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
-                        {stageLabelMap[view.stage]}
-                    </span>}
-                    {" "}
-                    {SITE_SUBJECT === SITE.PHY && view.difficulty && <span className="gameboard-tags">
-                        ({difficultyShortLabelMap[view.difficulty]})
-                        {i < views.length - 1 && ", "}
-                    </span>}
-                </span>)}
+                {audienceViews.map((view, i, views) =>
+                    <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="text-center d-flex d-md-block">
+                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
+                            {stageLabelMap[view.stage]}
+                        </span>}
+                        {" "}
+                        {SITE_SUBJECT === SITE.PHY && view.difficulty && <div className="gameboard-tags text-center ml-2 ml-md-0">
+                            <DifficultyIcons difficulty={view.difficulty} />
+                        </div>}
+                    </div>
+                )}
             </span>}
         </Link>
     </RS.ListGroupItem>;
