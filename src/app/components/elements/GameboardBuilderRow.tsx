@@ -11,6 +11,7 @@ import {Question} from "../pages/Question";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {determineAudienceViews} from "../../services/userContext";
+import {DifficultyIcons} from "./svg/DifficultyIcons";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -93,8 +94,8 @@ export const GameboardBuilderRow = (
         </td>
         {SITE_SUBJECT === SITE.PHY && <td className="w-15">
             {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.difficulty)))
-                .map(difficulty => <div key={difficulty}>
-                    {difficulty && <span>{difficultyLabelMap[difficulty]}</span>}
+                .map((difficulty, i) => <div key={`${difficulty} ${i}`}>
+                    {difficulty && <DifficultyIcons difficulty={difficulty} />}
                 </div>)
             }
         </td>}

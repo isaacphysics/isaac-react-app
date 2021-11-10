@@ -43,7 +43,7 @@ export function DifficultyIcons({difficulty} : {difficulty : Difficulty}) {
             {difficultyCategoryLevels.map(difficultyCategoryLevel => {
                 const active = difficultyCategoryLevel <= difficultyLevel;
                 return <SingleDifficultyIconShape
-                    key={difficultyLabel}
+                    key={`${difficultyLabel} ${difficultyCategoryLevel}`}
                     {...{difficultyCategory, difficultyCategoryLevel, active, difficultyIconWidth, difficultyIconXPadding, yPadding}}
                 />;
             })}
