@@ -55,7 +55,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                             >
                                 <title>
-                                    {`${isSelected ? "Remove" : "Add"} level ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                    {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
                                 </title>
                             </Hexagon>
                             {[1, 0, -1].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
@@ -90,7 +90,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                             tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                         >
                             <title>
-                                {`${isSelected ? "Remove" : "Add"} level ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
                             </title>
                         </Rectangle>
                         {[0, 1, 2].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
