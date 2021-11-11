@@ -33,7 +33,7 @@ interface QuestionPageProps {
     location: {search: string};
 }
 
-function fastTrackConceptEnumerator(questionId: string) {
+export function fastTrackConceptEnumerator(questionId: string) {
     // Magic, unfortunately
     return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
 }
@@ -68,10 +68,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
         // FastTrack title renaming
         if (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower')) {
-            title += " " + fastTrackConceptEnumerator(questionId);
-            if (doc.tags.includes('ft_lower')) {
-                title += " (Easier)";
-            }
+            title += " " + fastTrackConceptEnumerator(questionId) + (doc.tags.includes('ft_lower') ? "ii" : "i");
         }
 
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;

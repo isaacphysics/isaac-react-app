@@ -21,6 +21,7 @@ import {
     filterAudienceViewsByProperties
 } from "../../services/userContext";
 import {LaTeX} from "../elements/LaTeX";
+import {fastTrackConceptEnumerator} from "./Question";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -39,6 +40,18 @@ function getTags(docTags?: string[]) {
     if (!docTags) return [];
 
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
+}
+
+function generateQuestionTitle(question : GameboardItem) {
+    if (question.title) {
+        // FastTrack title renaming - here for consistency with how questions are named on FastTrack boards
+        if (question.tags?.includes('ft_upper') || question.tags?.includes('ft_lower')) {
+            return question.title + " " + fastTrackConceptEnumerator(question.id as string) + (question.tags.includes('ft_lower') ? "ii" : "i");
+        } else {
+            return question.title;
+        }
+    }
+    return "";
 }
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
@@ -80,7 +93,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 }
             </span>
             <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
-                <LaTeX className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""} markup={question.title ?? ""} />
+                <LaTeX className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""} markup={generateQuestionTitle(question)} />
                 {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
                 {questionTags && <div className="gameboard-tags">
                     {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
