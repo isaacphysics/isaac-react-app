@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
-import {difficultyLabelMap, examBoardLabelMap, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
+import {examBoardLabelMap, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
