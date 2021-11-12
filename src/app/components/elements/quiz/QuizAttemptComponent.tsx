@@ -63,7 +63,7 @@ function QuizContents({attempt, sections, questions, pageLink, studentId, quizAs
                         const section = sections[k];
                         return <tr key={k}>
                             {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
-                                <td><Link replace to={pageLink(attempt, index + 1)}>{section.title}</Link></td> :
+                                <td><Link replace to={pageLink(attempt, index + 1, studentId, quizAssignmentId)}>{section.title}</Link></td> :
                                 <td>{section.title}</td>
                             }
                             <td>

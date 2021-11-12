@@ -149,9 +149,6 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                     {!working && dropdownOpen && <div className="py-2 px-3">
                         <RS.Button size="sm" onClick={returnToStudent}>Allow another attempt</RS.Button>
                     </div>}
-                    {!working && dropdownOpen && <div className="py-2 px-3">
-                        <RS.Button size="sm" onClick={() => openStudentFeedback(assignment, row.user?.id)}>View attempt</RS.Button>
-                    </div>}
                 </>
             :   <>
                     {row.user?.givenName}
@@ -176,7 +173,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                 }).flat()
             })}
             <td className="total-column">
-                {formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}
+                <RS.Button size="sm" onClick={() => openStudentFeedback(assignment, row.user?.id)}>{formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}</RS.Button>
             </td>
         </>}
     </tr>;
@@ -302,7 +299,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                         </div>
                     </RS.Col>}
                     <RS.Col>
-                        <RS.Label for="feedbackMode" className="pr-1">Feedback mode:</RS.Label><br/>
+                        <RS.Label for="feedbackMode" className="pr-1">Student feedback mode:</RS.Label><br/>
                         <RS.UncontrolledDropdown className="d-inline-block">
                             <RS.DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                                 {settingFeedbackMode ?
