@@ -24,7 +24,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
+import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, QuizAssignmentDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
@@ -37,6 +37,7 @@ import { loadQuizAssignments } from "../../state/actions/quizzes";
 import { Tabs } from "../elements/Tabs";
 import { isDefined } from "../../services/miscUtils";
 import { resourceFound } from "../../services/validation";
+import { quizAssignments } from "../../state/reducers/quizState";
 
 function selectGroups(state: AppState) {
     if (isDefined(state)) {
@@ -67,19 +68,29 @@ function selectGroups(state: AppState) {
             };
         }
 
-        // TODO Retrieve progress
+        const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
         if (resourceFound(state.quizAssignments)) { // assigned by me
-            for (const quizAssignment of state.quizAssignments) {
-                // TODO Organise progress
+            // quizAssignments = state.quizAssignments.map((qa: QuizAssignmentDTO) => ({ id: qa.id, title: qa.quizSummary?.title || "", groupId: qa.groupId }));
+            for (const qa of state.quizAssignments) {
+                if (isDefined(quizAssignments[qa.groupId || -1])) {
+                    quizAssignments[qa.groupId || -1].push(qa);
+                } else {
+                    quizAssignments[qa.groupId || -1] = [qa];
+                }
             }
+            // for (const quizAssignment of state.quizAssignments) {
+            //     state?.quizAssignments.map(qa => ({  }))
+            // }
         }
+        // console.log(quizAssignments);
 
         const activeGroups = selectors.groups.active(state);
         if (activeGroups) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
                 return {
                     ...g,
-                    assignments: assignments[g.id as number] || []
+                    assignments: assignments[g.id as number] || [],
+                    quizAssignments: quizAssignments[g.id as number] || []
                 };
             });
             return {
@@ -98,7 +109,7 @@ type EnhancedAssignment = AssignmentDTO & {
     progress?: AppAssignmentProgress[];
 };
 
-type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
+type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[], quizAssignments: any};
 
 interface AssignmentProgressPageProps {
     groups: AppGroupWithAssignments[] | null;
@@ -514,10 +525,50 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
     </div></div>
 };
 
+const QuizDetails = (props: any) => {
+    const {quizAssignment} = props;
+    const dispatch = useDispatch();
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const assignmentPath = SITE_SUBJECT == SITE.PHY ? "assignment_progress" : "my_markbook";
+
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+    }
+
+    function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        window.open(event.currentTarget.href, '_blank');
+    }
+
+    return <div className="assignment-progress-gameboard" key={quizAssignment.id}>
+        <pre>{JSON.stringify(quizAssignment)}</pre>
+    </div>
+
+    // return <div className="assignment-progress-gameboard" key={quizAssignment.id}>
+    //     <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
+    //         <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
+    //             <span>{quizAssignment.gameboard.title}{quizAssignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
+    //         </Button>
+    //         <div className="gameboard-links align-items-center">
+    //             <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
+    //             <span className="d-none d-md-inline">,</span>
+    //             <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(quizAssignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+    //             <span className="d-none d-md-inline">or</span>
+    //             < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + quizAssignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
+    //         </div>
+    //     </div>
+    //     {isExpanded && <ProgressLoader {...props} />}
+    // </div>
+};
+
 const GroupDetails = (props: GroupDetailsProps) => {
     const dispatch = useDispatch();
     const {group, pageSettings} = props;
-    const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
+    const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.tests);
 
     const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
     const joinedGameboardIds = gameboardIs.join(",");
@@ -539,7 +590,12 @@ const GroupDetails = (props: GroupDetailsProps) => {
             groupAssignments = <div className="p-4 text-center">There are no assignments for this group.</div>
         }
     }
-    let groupTests;
+    let groupTests: JSX.Element | JSX.Element[] = <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
+    if (isDefined(group.quizAssignments) && Array.isArray(group.quizAssignments) && group.quizAssignments.length > 0) {
+        groupTests = group.quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} {...props} quizAssignment={quizAssignment} />);
+    } else {
+        groupTests = <div className="p-4 text-center">There are no tests assigned to this group.</div>
+    }
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend pageSettings={pageSettings}/>
