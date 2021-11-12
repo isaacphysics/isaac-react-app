@@ -42,6 +42,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
+                    subTitle={doc.subtitle as string}
                 />
                 <div className="no-print d-flex align-items-center">
                     <div className="not-mobile">
