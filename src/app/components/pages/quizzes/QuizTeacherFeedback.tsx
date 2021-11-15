@@ -79,6 +79,10 @@ interface ResultRowProps {
     assignment: QuizAssignmentDTO;
 }
 
+function openStudentFeedback(assignment: QuizAssignmentDTO, userId: number | undefined) {
+    isDefined(assignment?.id) && isDefined(userId) && window.open(`/quiz/attempt/feedback/${assignment.id}/${userId}`, '_blank')
+}
+
 function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [working, setWorking] = useState(false);
@@ -101,7 +105,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                     Confirm
                 </RS.Button>,
         ]
-        }));    
+        }));
     }
 
     const _returnToStudent = async () => {
@@ -123,7 +127,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     } else if (!row.feedback?.complete) {
         message = "Not completed";
     }
-    const valid = message === undefined;
+    const valid = !isDefined(message);
     return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
         <th className="student-name">
             {valid ?
@@ -169,7 +173,7 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                 }).flat()
             })}
             <td className="total-column">
-                {formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}
+                <RS.Button size="sm" onClick={() => openStudentFeedback(assignment, row.user?.id)}>{formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}</RS.Button>
             </td>
         </>}
     </tr>;
@@ -295,7 +299,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                         </div>
                     </RS.Col>}
                     <RS.Col>
-                        <RS.Label for="feedbackMode" className="pr-1">Feedback mode:</RS.Label><br/>
+                        <RS.Label for="feedbackMode" className="pr-1">Student feedback mode:</RS.Label><br/>
                         <RS.UncontrolledDropdown className="d-inline-block">
                             <RS.DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                                 {settingFeedbackMode ?

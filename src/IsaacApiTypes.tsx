@@ -237,6 +237,11 @@ export interface QuizUserFeedbackDTO {
     feedback?: QuizFeedbackDTO;
 }
 
+export interface QuizAttemptFeedbackDTO {
+    user?: UserSummaryDTO;
+    attempt?: QuizAttemptDTO;
+}
+
 export interface UserGameboardProgressSummaryDTO {
     user?: UserSummaryDTO;
     progress?: GameboardProgressSummaryDTO[];
