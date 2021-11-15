@@ -30,14 +30,13 @@ import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
 import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { loadQuizAssignments } from "../../state/actions/quizzes";
+import { getQuizAssignmentCSVDownloadLink, loadQuizAssignmentFeedback, loadQuizAssignments } from "../../state/actions/quizzes";
 import { Tabs } from "../elements/Tabs";
 import { isDefined } from "../../services/miscUtils";
 import { resourceFound } from "../../services/validation";
-import { quizAssignments } from "../../state/reducers/quizState";
 
 function selectGroups(state: AppState) {
     if (isDefined(state)) {
@@ -457,7 +456,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
             <div className="gameboard-links align-items-center">
                 <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
                 < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
@@ -525,6 +524,38 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
     </div></div>
 };
 
+const QuizProgressLoader = (props: any) => {
+    const pageSettings = usePageSettings();
+    const dispatch = useDispatch();
+    const {quizAssignment} = props;
+    const quizAssignmentId = quizAssignment.id;
+    const assignmentState = useSelector(selectors.quizzes.assignment);
+
+    useEffect(() => {
+        dispatch(loadQuizAssignmentFeedback(parseInt(quizAssignmentId)))
+    }, [quizAssignmentId]);
+
+    const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
+
+    return <>
+        <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
+            <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey />
+            <code>{JSON.stringify(assignment)}</code>
+            {/* <ResultsTable assignment={assignment} pageSettings={pageSettings} /> */}
+        </div>
+    </>;
+
+
+    // return /*progress*/ true ? <QuizProgressDetails {...props} progress={{}} />
+    //     : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
+};
+
+const QuizProgressDetails = (props: any) => {
+    const dispatch = useDispatch();
+
+    return <>:)</>;
+}
+
 const QuizDetails = (props: any) => {
     const {quizAssignment} = props;
     const dispatch = useDispatch();
@@ -545,7 +576,21 @@ const QuizDetails = (props: any) => {
     }
 
     return <div className="assignment-progress-gameboard" key={quizAssignment.id}>
-        <pre>{JSON.stringify(quizAssignment)}</pre>
+        <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
+            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
+                <span>{quizAssignment.quizSummary?.title || "This test has no title"}{isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
+            </Button>
+            <div className="gameboard-links align-items-center">
+                <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
+                <span className="d-none d-md-inline">,</span>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <span className="d-none d-md-inline">or</span>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + quizAssignment.id} onClick={openSingleAssignment}>View individual assignment</Button>
+
+            </div>
+        </div>
+        {(true || isExpanded) && <QuizProgressLoader {...props} />}
+        {/* {(true || isExpanded) && <pre>{JSON.stringify(quizAssignment)}</pre>} */}
     </div>
 
     // return <div className="assignment-progress-gameboard" key={quizAssignment.id}>
@@ -556,7 +601,7 @@ const QuizDetails = (props: any) => {
     //         <div className="gameboard-links align-items-center">
     //             <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
     //             <span className="d-none d-md-inline">,</span>
-    //             <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(quizAssignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+    //             <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(quizAssignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
     //             <span className="d-none d-md-inline">or</span>
     //             < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + quizAssignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
     //         </div>

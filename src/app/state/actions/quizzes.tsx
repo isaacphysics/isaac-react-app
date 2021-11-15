@@ -1,6 +1,6 @@
 import React, {Dispatch} from "react";
 import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE, API_PATH} from "../../services/constants";
 import {api} from "../../services/api";
 import {closeActiveModal, extractMessage, loadGroups, openActiveModal, showErrorToastIfNeeded} from "../actions";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
@@ -222,4 +222,8 @@ export const updateQuizAssignmentDueDate = (quizAssignmentId: number, dueDate: D
 export const logQuizSectionView = (quizAttemptId: number, page: number) => async () => {
     // No actual dispatch
     api.quizzes.logQuizSectionView(quizAttemptId, page);
+};
+
+export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
+    return `${API_PATH}/quiz/assignment/${assignmentId}/download`;
 };
