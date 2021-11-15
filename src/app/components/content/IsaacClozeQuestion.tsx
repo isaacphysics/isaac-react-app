@@ -2,7 +2,6 @@ import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {Label} from "reactstrap";
 import {
-    ClozeItemDTO,
     IsaacClozeQuestionDTO,
     ItemChoiceDTO,
     ItemDTO
@@ -21,7 +20,7 @@ import {
     ResponderProvided
 } from "react-beautiful-dnd";
 import ReactDOM from 'react-dom';
-import {ClozeDropRegionContext} from "../../../IsaacAppTypes";
+import {ClozeDropRegionContext, ClozeItemDTO} from "../../../IsaacAppTypes";
 import {setCurrentAttempt} from "../../state/actions";
 import uuid from "uuid";
 import {Item} from "../../services/select";
@@ -35,9 +34,9 @@ function Item({item}: {item: ItemDTO}) {
 }
 
 interface InlineDropRegionProps {
-    id: string; item?: ClozeItemDTO; contentHolder: RefObject<HTMLDivElement>; readonly?: boolean; updateAttempt: (dropResult : DropResult) => void;
+    id: string; item?: ClozeItemDTO; contentHolder: RefObject<HTMLDivElement>; readonly?: boolean; updateAttempt: (dropResult : DropResult) => void; showBorder: boolean;
 }
-function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt}: InlineDropRegionProps) {
+function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt, showBorder}: InlineDropRegionProps) {
 
     function clearInlineDropZone() {
         updateAttempt({source: {droppableId: id, index: 0}, draggableId: (item?.replacementId as string)} as DropResult);
@@ -46,11 +45,11 @@ function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt}: In
     const droppableTarget = contentHolder.current?.querySelector(`#${id}`);
     if (droppableTarget) {
         return ReactDOM.createPortal(
-            <div style={{minHeight: "inherit", position: "relative"}}>
+            <div style={{minHeight: "inherit", position: "relative", margin: "2px"}}>
                 <Droppable droppableId={id} isDropDisabled={readonly} direction="vertical" >
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
-                        className="d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden"
+                        className={`d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden ${showBorder && "border border-dark"}`}
                         style={{minHeight: "inherit"}}
                     >
                         {item && <Draggable key={item.replacementId} draggableId={item?.replacementId as string} index={0} isDragDisabled={true}>
@@ -111,6 +110,8 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     const registeredDropRegionIDs = useRef<string[]>([]).current;
     const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
 
+    const [borderMap, setBorderMap] = useState<{[dropId: string]: boolean}>({});
+
     useEffect(() => {
         if (currentAttempt?.items) {
             const idvs = currentAttempt.items as (ClozeItemDTO | undefined)[];
@@ -128,6 +129,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
         if (!registeredDropRegionIDs.includes(dropRegionId)) {
             registeredDropRegionIDs.push(dropRegionId);
             setInlineDropValues(registeredDropRegionIDs.map(() => undefined));
+            setBorderMap(registeredDropRegionIDs.reduce((dict: {[dropId: string]: boolean}, id) => Object.assign(dict, {[id]: false}), {}));
         }
     }
 
@@ -138,21 +140,14 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     // This is run on drag update to highlight the droppable that the user is dragging over
     //  this gives more control over when a droppable is highlighted
     function fixInlineZones({destination}: DragUpdate, provided: ResponderProvided) {
-        registeredDropRegionIDs.map((dropid, i) => {
-            const inlineDrop = document.querySelector(`[data-rbd-droppable-id="${dropid}"]`) as HTMLElement;
-            const destinationDropIndex = destination ? registeredDropRegionIDs.indexOf(dropid) : -1;
+        registeredDropRegionIDs.map((dropId, i) => {
+            const destinationDropIndex = destination ? registeredDropRegionIDs.indexOf(dropId) : -1;
             const destinationDragIndex = destination?.index ?? -1;
 
-            if (inlineDrop) {
-                if (dropid === destination?.droppableId && destinationDropIndex !== -1 && destinationDragIndex === 0) {
-                    // Reselect zone (or make sure it's got a border)
-                    inlineDrop.className = inlineDrop.className.replace("border border-dark", "") + " border border-dark";
-                } else {
-                    // Deselect zone
-                    inlineDrop.className = inlineDrop.className.replace("border border-dark", "");
-                }
-            }
+            borderMap[dropId] = (dropId === destination?.droppableId && destinationDropIndex !== -1 && destinationDragIndex === 0);
         });
+        // Tell React about the changes to borderMap
+        setBorderMap({...borderMap});
     }
 
     // Run after a drag action ends
@@ -279,6 +274,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
                         id={dropRegionId} item={inlineDropValues[index]} updateAttempt={(dropResult) => {
                             updateAttempt({...dropResult, destination: {droppableId: itemsSection, index: nonSelectedItems.length}},{announce: (_) => {return;}});
                         }}
+                        showBorder={borderMap[dropRegionId]}
                     />
                 )}
             </DragDropContext>

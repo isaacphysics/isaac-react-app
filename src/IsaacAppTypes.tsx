@@ -10,6 +10,7 @@ import {
     Difficulty,
     GameboardDTO,
     GameboardItem,
+    ItemDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
@@ -962,3 +963,7 @@ export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
 }
 
 export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];
+
+export interface ClozeItemDTO extends ItemDTO {
+    replacementId?: string;
+}
