@@ -333,6 +333,7 @@ export interface ContentDTO extends ContentBaseDTO {
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
     published?: boolean;
+    deprecated?: boolean;
     level?: number;
 }
 
