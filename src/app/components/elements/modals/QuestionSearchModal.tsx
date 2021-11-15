@@ -14,7 +14,7 @@ import {
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
+import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
@@ -170,7 +170,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
                 />
             </RS.Col>}
             {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
