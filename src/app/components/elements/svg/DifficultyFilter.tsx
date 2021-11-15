@@ -46,7 +46,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                         return <g key={difficultyOption.value} transform={`translate(${j * 2 * (hexagon.halfWidth + hexagon.padding)}, 0)`} >
                             <Hexagon {...hexagon} className={`hex practice difficulty ${isSelected ? "active" : ""}`} />
                             <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
-                                <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value}`}>
+                                <div className={`difficulty-title ${isSelected ? "active" : ""} difficulty-${difficultyOption.value} `}>
                                     {getAbbreviation(difficultyOption.label)}
                                 </div>
                             </foreignObject>

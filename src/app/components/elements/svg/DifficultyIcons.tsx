@@ -22,7 +22,7 @@ function SingleDifficultyIconShape({difficultyCategory, difficultyCategoryLevel,
             <Rectangle {...miniSquare} className={"square difficulty challenge " + classnames({active})} />
         }
         {<foreignObject width={difficultyIconWidth} height={difficultyIconWidth + (difficultyCategory === "P" ? yPadding + 2 : 0)}>
-            <div className={`difficulty-title ${classnames({active})} difficulty-${difficultyCategoryLevel}`}>
+            <div className={`difficulty-title difficulty-icon-title ${classnames({active})} difficulty-${difficultyCategoryLevel}`}>
                 {difficultyCategory}
             </div>
         </foreignObject>}
