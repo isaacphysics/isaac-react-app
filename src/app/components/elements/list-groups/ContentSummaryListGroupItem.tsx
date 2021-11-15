@@ -3,8 +3,6 @@ import {
     DOCUMENT_TYPE,
     documentTypePathPrefix,
     SEARCH_RESULT_TYPE,
-    STAGE,
-    stageLabelMap,
     TAG_ID,
     TAG_LEVEL
 } from "../../../services/constants";
@@ -25,8 +23,7 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import uuid from "uuid";
 import {LaTeX} from "../LaTeX";
-import classnames from "classnames";
-import {DifficultyIcons} from "../svg/DifficultyIcons";
+import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid.v4().slice(0, 4)).current;
@@ -45,9 +42,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         titleClasses += itemSubject.id;
     }
     const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
-
-    const itemTopic = tags.getSpecifiedTag(TAG_LEVEL.topic, item.tags as TAG_ID[]);
-    let topicTitle = itemTopic ? itemTopic.title : null;
+    const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
+        .filter((t, i) => SITE_SUBJECT !== SITE.CS || i !== 0); // CS always has Computer Science at the top level
 
     const questionIcon = {
         [SITE.CS]: item.correct ?
@@ -57,6 +53,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <svg className={iconClasses}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
             <svg className={iconClasses}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>
     }[SITE_SUBJECT];
+
+    let typeLabel;
 
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
@@ -80,12 +78,13 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
             icon = <img src="/assets/event-md.svg" alt="Event"/>;
             iconLabel = "Event page icon";
+            typeLabel = "Event";
             break;
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
             icon = <img src="/assets/work-md.svg" alt="Topic summary"/>;
             iconLabel = "Topic summary page icon";
-            topicTitle = "Topic"
+            typeLabel = "Topic"
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
@@ -100,36 +99,31 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
 
     const displayStage = audienceViews && audienceViews.length > 0;
 
-    return <RS.ListGroupItem className={`p-3 ${itemClasses}`} key={linkDestination}>
+    return <RS.ListGroupItem className={`p-3 content-summary-item d-flex flex-column justify-content-center ${itemClasses}`} key={linkDestination}>
         <Link to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className={"align-self-center " + titleClasses}>
-                <LaTeX className={titleTextClass} markup={item.title ?? ""} />
-                {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
+                <div className="d-flex">
+                    <LaTeX className={titleTextClass} markup={item.title ?? ""} />
+                    {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
+                        ({typeLabel})
+                    </span>}
+                </div>
+                {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags"}>
+                    {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
+                </div>}
+                {item.summary && <div className="small text-muted d-none d-md-block">
+                    {item.summary}
+                </div>}
             </div>
+
             {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
                 <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                 <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                     {`This content is ${notRelevantMessage(userContext)}.`}
                 </RS.UncontrolledTooltip>
             </div>}
-            {displayTopicTitle && topicTitle && <span className={"small text-muted align-self-center d-none d-md-inline " + classnames({"mr-3": displayStage})}>
-                {topicTitle}
-            </span>}
-
-            {audienceViews && displayStage && <span className="small text-muted align-self-center d-none d-md-inline">
-                {audienceViews.map((view, i, views) =>
-                    <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className="text-center d-flex d-md-block">
-                        {view.stage && view.stage !== STAGE.ALL && <span className="gameboard-tags">
-                            {stageLabelMap[view.stage]}
-                        </span>}
-                        {" "}
-                        {SITE_SUBJECT === SITE.PHY && view.difficulty && <div className="gameboard-tags text-center ml-2 ml-md-0">
-                            <DifficultyIcons difficulty={view.difficulty} />
-                        </div>}
-                    </div>
-                )}
-            </span>}
+            {audienceViews && displayStage && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
         </Link>
     </RS.ListGroupItem>;
 };

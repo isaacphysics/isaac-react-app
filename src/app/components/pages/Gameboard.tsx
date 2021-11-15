@@ -7,7 +7,7 @@ import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, STAGE, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
+import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -15,14 +15,13 @@ import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
-import classnames from "classnames";
-import {DifficultyIcons} from "../elements/svg/DifficultyIcons";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
     filterAudienceViewsByProperties
 } from "../../services/userContext";
 import {LaTeX} from "../elements/LaTeX";
+import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -32,15 +31,6 @@ function extractFilterQueryString(gameboard: GameboardDTO): string {
         });
     }
     return queryString.stringify(csvQuery, {encode: false});
-}
-
-function getTags(docTags?: string[]) {
-    if (SITE_SUBJECT !== SITE.PHY) {
-        return [];
-    }
-    if (!docTags) return [];
-
-    return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
 }
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
@@ -68,7 +58,8 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             break;
     }
 
-    const questionTags = getTags(question.tags);
+    const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
+        .filter((t, i) => SITE_SUBJECT !== SITE.CS || i !== 0); // CS always has Computer Science at the top level
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
@@ -80,29 +71,17 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 }
             </span>
             <div className={`d-md-flex flex-fill`}>
-
                 <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
                     <LaTeX className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""} markup={question.title ?? ""} />
                     {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
-                    {questionTags && <div className="gameboard-tags">
-                        {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}
+                    {questionTags && <div className="hierarchy-tags">
+                        {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
 
-                {question.audience && <div className="d-sm-flex mt-1 mt-md-0">
-                    {filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
-                        .map((view, i) =>
-                            <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classnames({"d-flex d-md-block": true, "ml-sm-3 ml-md-2" : i > 0})}>
-                                {view.stage && view.stage !== STAGE.ALL && <div className="gameboard-tags text-center">
-                                    {stageLabelMap[view.stage]}
-                                </div>}
-                                {SITE_SUBJECT === SITE.PHY && view.difficulty && <div className="gameboard-tags text-center ml-2 ml-md-0">
-                                    <DifficultyIcons difficulty={view.difficulty} />
-                                </div>}
-                            </div>
-                        )
-                    }
-                </div>}
+                {question.audience && <StageAndDifficultySummaryIcons audienceViews={
+                    filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
+                } />}
             </div>
         </Link>
     </RS.ListGroupItem>;
@@ -116,8 +95,8 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
             <span className="gameboard-item-icon">{icon}</span>
             <div className={"flex-grow-1"}>
                 <span>{wildcard.title}</span>
-                {wildcard.description && <div className="gameboard-tags">
-                    <span className="gameboard-tag">{wildcard.description}</span>
+                {wildcard.description && <div className="hierarchy-tags">
+                    <span className="hierarchy-tag">{wildcard.description}</span>
                 </div>}
             </div>
         </a>
