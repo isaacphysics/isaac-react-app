@@ -12,6 +12,7 @@ import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketch
 import {AppQuestionDTO} from "../../IsaacAppTypes";
 import {REVERSE_GREEK_LETTERS_MAP} from '../services/constants';
 import {ContentDTO} from "../../IsaacApiTypes";
+import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -26,6 +27,7 @@ export const QUESTION_TYPES = new Map([
     ["isaacFreeTextQuestion", IsaacFreeTextQuestion],
     ["isaacSymbolicLogicQuestion", IsaacSymbolicLogicQuestion],
     ["isaacGraphSketcherQuestion", IsaacGraphSketcherQuestion],
+    ["isaacClozeQuestion", IsaacClozeQuestion],
     ["default", IsaacMultiChoiceQuestion]
 ]);
 
