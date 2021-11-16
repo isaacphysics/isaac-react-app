@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
+import {ChoiceDTO, IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
 import {Col, Row} from "reactstrap";
 import {
     DragDropContext,
@@ -22,6 +22,7 @@ import _differenceBy from "lodash/differenceBy";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import {isDefined} from "../../services/miscUtils";
+import {Action, Dispatch} from "redux";
 
 interface IsaacParsonsQuestionProps {
     doc: IsaacParsonsQuestionDTO;
@@ -387,6 +388,10 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     return questionPart ? {currentAttempt: questionPart.currentAttempt} : {};
 };
-const dispatchToProps = {setCurrentAttempt};
+const dispatchToProps = (dispatch : Dispatch<Action>) => {
+    return {
+        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
+    }
+};
 
 export const IsaacParsonsQuestion = connect(stateToProps, dispatchToProps)(IsaacParsonsQuestionComponent); // Cannot remove connect as this is a class based component

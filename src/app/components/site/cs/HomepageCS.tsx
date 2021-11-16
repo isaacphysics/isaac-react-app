@@ -8,7 +8,6 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
-import {ExternalLink} from "../../elements/ExternalLink";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -22,12 +21,12 @@ export const HomepageCS = () => {
         <h3>Show me</h3>
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-                <Button size="lg" tag={Link} to={"/topics?stage=gcse"} color="secondary" block>
+                <Button size="lg" tag={Link} to={"/topics/gcse"} color="secondary" block>
                     GCSE resources <Badge color="secondary" className="ml-1 border">BETA</Badge>
                 </Button>
             </Col>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-                <Button size="lg" tag={Link} to={"/topics?stage=a_level"} color="secondary" block>
+                <Button size="lg" tag={Link} to={"/topics/a_level"} color="secondary" block>
                     A Level resources
                 </Button>
             </Col>

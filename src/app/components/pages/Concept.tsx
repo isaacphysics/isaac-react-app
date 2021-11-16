@@ -25,8 +25,9 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 interface ConceptPageProps {
     conceptIdOverride?: string;
     match: {params: {conceptId: string}};
+    location: {search: string};
 }
-export const Concept = withRouter(({match: {params}, conceptIdOverride}: ConceptPageProps) => {
+export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride}: ConceptPageProps) => {
     const dispatch = useDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
@@ -50,7 +51,7 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
                         <UserContextPicker className="no-print text-right" />
                     </div>
                     <div className="question-actions">
-                        <ShareLink linkUrl={`/concepts/${conceptId}${location.search || ""}`} />
+                        <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
                     </div>
                     <div className="question-actions not-mobile">
                         <PrintButton />
@@ -67,11 +68,11 @@ export const Concept = withRouter(({match: {params}, conceptIdOverride}: Concept
 
                         {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
 
-                        {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
                         <NavigationLinks navigation={navigation} />
 
-                        {SITE_SUBJECT === SITE.PHY && doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                        {SITE_SUBJECT === SITE.PHY && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

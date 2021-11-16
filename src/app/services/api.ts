@@ -282,9 +282,9 @@ export const api = {
         }
     },
     concepts: {
-        list: (): AxiosPromise<Concepts> => {
+        list: (conceptIds?: string): AxiosPromise<Concepts> => {
             return endpoint.get('/pages/concepts', {
-                params: { limit: 999 }
+                params: { limit: 999 , ids: conceptIds }
             });
         },
         get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
@@ -321,13 +321,16 @@ export const api = {
         },
         generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
             // TODO FILTER: Temporarily force physics to search for problem solving questions
-            if (SITE_SUBJECT === SITE.PHY && !Object.keys(params).includes("questionCategories")) {
-                params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
+            if (SITE_SUBJECT === SITE.PHY) {
+                if (!Object.keys(params).includes("questionCategories")) {
+                    params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
+                }
+                // Swap 'learn_and_practice' to 'problem_solving' and 'books' as that is how the content is tagged
+                // TODO the content should be modified with a script/change of tagging so that this is the case
+                params.questionCategories = params.questionCategories?.split(",")
+                    .map(c => c === QUESTION_CATEGORY.LEARN_AND_PRACTICE ? `${QUESTION_CATEGORY.PROBLEM_SOLVING},${QUESTION_CATEGORY.BOOK_QUESTIONS}` : c)
+                    .join(",")
             }
-            // Swap 'learn_and_practice' to 'problem_solving' and 'books' as that is how the content is tagged
-            params.questionCategories = params.questionCategories.split(",")
-                .map(c => c === QUESTION_CATEGORY.LEARN_AND_PRACTICE ? `${QUESTION_CATEGORY.PROBLEM_SOLVING},${QUESTION_CATEGORY.BOOK_QUESTIONS}` : c)
-                .join(",")
 
             return endpoint.get(`/gameboards`, {params});
         }
@@ -546,7 +549,7 @@ export const api = {
         }
     },
     quizzes: {
-        available: (startIndex: number): AxiosPromise<ResultsWrapper<ApiTypes.ContentSummaryDTO>> => {
+        available: (startIndex: number): AxiosPromise<ResultsWrapper<ApiTypes.QuizSummaryDTO>> => {
             return endpoint.get(`/quiz/available/${startIndex}`);
         },
         createQuizAssignment: (assignment: ApiTypes.QuizAssignmentDTO): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
@@ -569,6 +572,9 @@ export const api = {
         },
         loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
+        },
+        loadStudentQuizAttemptFeedback: (quizAssignmentId: number, userId: number): AxiosPromise<ApiTypes.QuizAttemptFeedbackDTO> => {
+            return endpoint.get(`/quiz/assignment/${quizAssignmentId}/attempt/${userId}`)
         },
         loadQuizAssignmentFeedback: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
             return endpoint.get(`/quiz/assignment/${quizAssignmentId}`);

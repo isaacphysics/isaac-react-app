@@ -509,6 +509,9 @@ export enum ACTION_TYPE {
     QUIZ_START_FREE_ATTEMPT_REQUEST = "QUIZ_START_FREE_ATTEMPT_REQUEST",
     QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS = "QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS",
     QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE = "QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE",
+    QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST = "QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST",
+    QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS = "QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS",
+    QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE = "QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE",
 
     QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST = "QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST",
     QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS = "QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS",
@@ -577,7 +580,7 @@ export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.ALL]: "All exam boards",
 }
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, /* EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC */]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 
 // BOOLEAN LOGIC NOTATION OPTIONS
@@ -777,6 +780,7 @@ export enum TAG_ID {
     calculus = "calculus",
     algebra = "algebra",
     functions = "functions",
+    statistics = "statistics",
 
     // Mechanics topics
     statics = "statics",
@@ -819,6 +823,9 @@ export enum TAG_ID {
     // Functions topics
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",
+    // Statistical topics
+    probability = "probability",
+    dataAnalysis = "data_analysis",
 }
 
 export enum TAG_LEVEL {
@@ -847,7 +854,7 @@ export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
     [DOCUMENT_TYPE.EVENT]: "Events",
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "Topics",
     [DOCUMENT_TYPE.GENERIC]: "Other pages",
-    [DOCUMENT_TYPE.QUIZ]: "Quizzes",
+    [DOCUMENT_TYPE.QUIZ]: "Tests",
 };
 
 export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} = {
