@@ -324,7 +324,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                     <RS.Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
                         <RS.Button
                             color="primary" outline className="btn-md mt-1 text-nowrap"
-                            href={`${API_PATH}/test/assignment/${assignment.id}/download`}
+                            href={`${API_PATH}/quiz/assignment/${assignment.id}/download`}
                             onClick={() => dispatch(getQuizAssignmentResultsSummaryCSV(assignment?.id || -1))}
                         >
                             Export as CSV
