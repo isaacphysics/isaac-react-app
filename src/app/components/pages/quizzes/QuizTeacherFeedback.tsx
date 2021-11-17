@@ -6,7 +6,8 @@ import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
     loadQuizAssignmentFeedback,
-    returnQuizToStudent, updateQuizAssignmentDueDate,
+    returnQuizToStudent,
+    updateQuizAssignmentDueDate,
     updateQuizAssignmentFeedbackMode
 } from "../../../state/actions/quizzes";
 import {selectors} from "../../../state/selectors";
@@ -173,7 +174,10 @@ function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                 }).flat()
             })}
             <td className="total-column">
-                <RS.Button size="sm" onClick={() => openStudentFeedback(assignment, row.user?.id)}>{formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}</RS.Button>
+                <RS.Button size="sm" id={`attempt-feedback-${row.user?.id}`} onClick={() => openStudentFeedback(assignment, row.user?.id)}>{formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}</RS.Button>
+                <RS.UncontrolledTooltip placement="bottom" target={`attempt-feedback-${row.user?.id}`}>
+                    View test attempt in new tab.
+                </RS.UncontrolledTooltip>
             </td>
         </>}
     </tr>;
