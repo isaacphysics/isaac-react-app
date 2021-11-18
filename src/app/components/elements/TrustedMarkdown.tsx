@@ -4,7 +4,7 @@ import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
 import {AppState} from "../../state/reducers";
-import {EXAM_BOARD_NULL_OPTIONS, MARKDOWN_RENDERER} from "../../services/constants";
+import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
@@ -12,7 +12,6 @@ import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
 import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
-import {useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
@@ -39,8 +38,6 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
-    const {examBoard} = useUserContext();
-    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard.toLowerCase() : "";
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
@@ -64,14 +61,12 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     ]));
 
     if (glossaryTerms && glossaryTerms.length > 0 && glossaryIdsInMarkdown.length > 0) {
-        const filteredTerms = glossaryTerms.filter(term => term.examBoard === "" || term.examBoard === examBoard);
-
         // Markdown can't cope with React components, so we pre-render our component to static HTML, which Markdown will then ignore.
         // This requires a bunch of stuff to be passed down along with the component.
         markdown = markdown.replace(glossaryBlockRegexp, (_match, id) => {
-            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
+            const term = getTermFromCandidateTerms(glossaryTerms.filter(term => (term.id as string) === id));
             if (term === null) {
-                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
+                console.error('No valid term for "' + id + '" found among the filtered terms: ', glossaryTerms);
                 return "";
             }
 
@@ -88,9 +83,9 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // The tooltip components can be rendered as regular react objects, so we just add them to an array,
         // and return them inside the JSX.Element that is returned as TrustedMarkdown.
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
-            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
+            const term = getTermFromCandidateTerms(glossaryTerms.filter(term => (term.id as string) === id));
             if (term === null) {
-                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
+                console.error('No valid term for "' + id + '" found among the filtered terms: ', glossaryTerms);
                 return "";
             }
 

@@ -83,7 +83,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
                         }
                     });
                 });
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Error with YouTube library: ", error, error.stack);
                 ReactGA.exception({
                     description: `youtube_error: ${error?.message || 'problem with YT library'}`,

@@ -144,7 +144,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     const {assignment, progress, pageSettings} = props;
 
     const [selectedQuestionNumber, setSelectedQuestion] = useState(0);
-    const selectedQuestion = assignment.gameboard.questions[selectedQuestionNumber];
+    const selectedQuestion = assignment.gameboard.contents[selectedQuestionNumber];
 
     type SortOrder = number | "name" | "totalQuestionPartPercentage" | "totalQuestionPercentage";
     const [sortOrder, setSortOrder] = useState<SortOrder>("name");
@@ -152,7 +152,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     const [singleQuestionSort, setSingleQuestionSort] = useState(false);
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
-    let questions = assignment.gameboard.questions;
+    let questions = assignment.gameboard.contents;
     const assignmentAverages: number[] = [];
     let assignmentTotalQuestionParts = 0;
 
@@ -343,7 +343,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
                 <div><Link
                     to={`/questions/${selectedQuestion.id}?board=${assignment.gameboardId}`}><strong>Q<span className="d-none d-md-inline">uestion</span>: </strong>{selectedQuestion.title}
                 </Link></div>
-                <Button color="tertiary" disabled={selectedQuestionNumber == assignment.gameboard.questions.length - 1}
+                <Button color="tertiary" disabled={selectedQuestionNumber == assignment.gameboard.contents.length - 1}
                     onClick={() => setSelectedQuestion(selectedQuestionNumber + 1)}>►</Button>
             </div>
             <div className="progress-table">
@@ -578,12 +578,17 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
         dispatch(loadAssignmentsOwnedByMe());
     }, [dispatch]);
 
+    const pageHelp = <span>
+        Click on your groups to see the assignments you have set. View your students' progress by question.
+    </span>;
+
     return <React.Fragment>
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
                 subTitle="Track your group performance by question"
-                help="Click on your groups to see the assignments you have set. View your students' progress by question."
+                help={pageHelp}
+                modalId="assignment_progress_help"
             />
             <Row className="align-items-center d-none d-md-flex">
                 {/*<Col>*/}

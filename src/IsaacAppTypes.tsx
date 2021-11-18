@@ -2,17 +2,21 @@ import React, {ReactElement} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
+    AudienceContext,
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
     ContentSummaryDTO,
+    Difficulty,
     GameboardDTO,
     GameboardItem,
+    ItemDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
     TOTPSharedSecretDTO,
+    UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
@@ -477,6 +481,9 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
+    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number; userId: number}
+    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS; studentAttempt: ApiTypes.QuizAttemptFeedbackDTO}
+    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE; error: string}
 
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
@@ -533,7 +540,6 @@ export interface ShortcutResponse {
 
 export interface UserBetaFeaturePreferences {
     SCREENREADER_HOVERTEXT?: boolean;
-    AUDIENCE_CONTEXT?: boolean;
 }
 
 export interface UserEmailPreferences {
@@ -563,11 +569,22 @@ export interface SubjectInterests {
 
 export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
 
+export interface BooleanNotation {
+    ENG?: boolean;
+    MATH?: boolean;
+}
+
+export interface DisplaySettings {
+    HIDE_NON_AUDIENCE_CONTENT?: boolean;
+}
+
 export interface UserPreferencesDTO {
     BETA_FEATURE?: UserBetaFeaturePreferences;
     EMAIL_PREFERENCE?: UserEmailPreferences | null;
     SUBJECT_INTEREST?: SubjectInterests;
     PROGRAMMING_LANGUAGE?: ProgrammingLanguage;
+    BOOLEAN_NOTATION?: BooleanNotation;
+    DISPLAY_SETTING?: DisplaySettings;
 }
 
 export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
@@ -580,7 +597,7 @@ export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<Api
 }
 
 export type LoggedInUser = {loggedIn: true} & ApiTypes.RegisteredUserDTO;
-export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean; examBoard?: EXAM_BOARD};
+export type PotentialUser = LoggedInUser | {loggedIn: false; requesting?: boolean;};
 
 export interface ValidationUser extends ApiTypes.RegisteredUserDTO {
     password: string | null;
@@ -686,6 +703,7 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
+export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string} | undefined>(undefined);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
@@ -794,6 +812,11 @@ export interface EmailUserRoles {
 
 export interface TemplateEmail {
     subject?: string;
+    from?: string;
+    fromName?: string;
+    replyTo?: string;
+    replyToName?: string;
+    sender?: string;
     plainText?: string;
     html?: string;
 }
@@ -818,6 +841,14 @@ export interface QuestionSearchQuery {
 
 export interface QuestionSearchResponse {
     results: ApiTypes.ContentSummaryDTO[];
+}
+
+export interface ContentSummary extends ContentSummaryDTO {
+    creationContext?: AudienceContext;
+}
+
+export interface ViewingContext extends UserContext {
+    difficulty?: Difficulty;
 }
 
 export interface StreakRecord {
@@ -869,6 +900,10 @@ export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
 export type LevelAttempts<T> = { [level in Levels]?: T; }
 
+interface TagInstruction {
+    hidden?: boolean; comingSoon?: string; new?: boolean;
+}
+
 export interface BaseTag {
     id: TAG_ID;
     title: string;
@@ -876,6 +911,7 @@ export interface BaseTag {
     comingSoon?: string;
     new?: boolean;
     hidden?: boolean;
+    stageOverride?: {[s in STAGE]?: TagInstruction};
 }
 
 export interface Tag extends BaseTag {
@@ -902,7 +938,7 @@ export interface FreeTextRule extends Choice {
 export type Concepts = ResultsWrapper<ContentSummaryDTO>;
 
 export type EnhancedGameboard = GameboardDTO & {
-    questions: (GameboardItem & { questionPartsTotal: number })[];
+    contents: (GameboardItem & { questionPartsTotal: number })[];
 };
 
 export type SingleEnhancedAssignment = AssignmentDTO & {
@@ -930,3 +966,7 @@ export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
 }
 
 export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];
+
+export interface ClozeItemDTO extends ItemDTO {
+    replacementId?: string;
+}

@@ -1,15 +1,25 @@
-import {AssignmentDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, Difficulty, Stage} from "../../../IsaacApiTypes";
 import React, {MouseEvent} from "react";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {extractTeacherName} from "../../services/user";
 import {formatDate} from "./DateString";
-import {determineGameboardSubjects, generateGameboardSubjectHexagons} from "../../services/gameboards";
-import { isDefined } from "../../services/miscUtils";
+import {
+    allPropertiesFromAGameboard,
+    determineGameboardSubjects,
+    generateGameboardSubjectHexagons
+} from "../../services/gameboards";
+import {isDefined} from "../../services/miscUtils";
 import tags from "../../services/tags";
-import { TAG_ID } from "../../services/constants";
-import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
+import {
+    difficultiesOrdered,
+    difficultyShortLabelMap,
+    stageLabelMap,
+    stagesOrdered,
+    TAG_ID
+} from "../../services/constants";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface AssignmentsProps {
     assignments: AssignmentDTO[];
@@ -21,13 +31,9 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
 
     return <ShowLoading until={assignments}>
         {isDefined(assignments) && assignments.map((assignment, index) => {
-            const levels = Array.from((assignment.gameboard?.questions || []).reduce((a, c) => {
-                if (isDefined(c.level) && c.level > 0) {
-                    a.add(c.level);
-                }
-                return a;
-            }, new Set<number>())).sort();
-            const topics = tags.getTopicTags(Array.from((assignment.gameboard?.questions || []).reduce((a, c) => {
+            const stages = allPropertiesFromAGameboard(assignment.gameboard, "stage", stagesOrdered);
+            const difficulties = allPropertiesFromAGameboard(assignment.gameboard, "difficulty", difficultiesOrdered);
+            const topics = tags.getTopicTags(Array.from((assignment.gameboard?.contents || []).reduce((a, c) => {
                 if (isDefined(c.tags) && c.tags.length > 0) {
                     return new Set([...Array.from(a), ...c.tags.map(id => id as TAG_ID)]);
                 }
@@ -65,9 +71,19 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         }
                     </Col>
                     <Col xs={7} md={5} className="mt-sm-2">
-                        <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.questions?.length || "0"}</p>
-                        {SITE_SUBJECT !== SITE.CS && isDefined(levels) && levels.length > 0 && <p className="mb-0"><strong>{levels.length === 1 ? "Level" : "Levels"}:</strong> {levels.join(", ")}</p>}
-                        {isDefined(topics) && topics.length > 0 && <p className="mb-0"><strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong> {topics.join(", ")}</p>}
+                        <p className="mb-0"><strong>Questions:</strong> {assignment.gameboard?.contents?.length || "0"}</p>
+                        {stages.length > 0 && <p className="mb-0">
+                            <strong>{stages.length === 1 ? "Stage" : "Stages"}:</strong>{" "}
+                            {stages.map(s => stageLabelMap[s]).join(", ")}
+                        </p>}
+                        {SITE_SUBJECT === SITE.PHY && difficulties.length > 0 && <p className="mb-0">
+                            <strong>{difficulties.length === 1 ? "Difficulty" : "Difficulties"}:</strong>{" "}
+                            {difficulties.map(d => difficultyShortLabelMap[d]).join(", ")}
+                        </p>}
+                        {isDefined(topics) && topics.length > 0 && <p className="mb-0">
+                            <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
+                            {topics.join(", ")}
+                        </p>}
                         {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
                     </Col>
                     <Col xs={5} md={2} className="mt-sm-2 text-right">

@@ -1,15 +1,20 @@
 import React, {useEffect} from "react";
-import {history} from "./history";
 import queryString from "query-string";
 import {fetchTopicSummary, loadGameboard} from "../state/actions";
 import {useDispatch, useSelector} from 'react-redux'
-import {determineGameboardHistory, determineNextGameboardItem, determinePreviousGameboardItem} from "./gameboards";
+import {
+    determineCurrentCreationContext,
+    determineGameboardHistory,
+    determineNextGameboardItem,
+    determinePreviousGameboardItem
+} from "./gameboards";
 import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useUserContext} from "./userContext";
-import {ContentDTO} from "../../IsaacApiTypes";
+import {AudienceContext, ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {selectors} from "../state/selectors";
+import {useLocation} from "react-router-dom";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
 export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
@@ -20,13 +25,15 @@ export interface PageNavigation {
     nextItem?: LinkInfo;
     previousItem?: LinkInfo;
     queryParams?: string;
+    creationContext?: AudienceContext;
 }
 
 const defaultPageNavigation = {breadcrumbHistory: []};
 
 export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigation => {
+    const location = useLocation();
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
-    const queryParams = queryString.parse(history.location.search);
+    const queryParams = queryString.parse(location.search);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -36,7 +43,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
 
     const currentGameboard = useSelector(selectors.board.currentGameboard);
     const currentTopic = useSelector(selectors.topic.currentTopic);
-    const {examBoard} = useUserContext();
+    const user = useSelector(selectors.user.orNull);
+    const userContext = useUserContext();
 
     if (doc === null || doc === NOT_FOUND) {
         return defaultPageNavigation;
@@ -70,7 +78,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             backToCollection: gameboardHistory.slice(-1)[0],
             nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
             previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
-            queryParams: history.location.search,
+            queryParams: location.search,
+            creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
         }
     }
 
@@ -82,8 +91,8 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             collectionType: "Topic",
             breadcrumbHistory: topicHistory,
             backToCollection: topicHistory.slice(-1)[0],
-            nextItem: determineNextTopicContentLink(currentTopic, currentDocId, examBoard),
-            queryParams: history.location.search,
+            nextItem: determineNextTopicContentLink(currentTopic, currentDocId, userContext, user),
+            queryParams: location.search,
         }
     }
 

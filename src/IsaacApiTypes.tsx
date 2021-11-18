@@ -43,7 +43,7 @@ export interface AssignmentDTO extends IAssignmentLike {
 }
 
 export interface GameboardDTO extends HasTitleOrId {
-    questions?: GameboardItem[];
+    contents?: GameboardItem[];
     wildCard?: IsaacWildcard;
     wildCardPosition?: number;
     creationDate?: Date;
@@ -132,6 +132,10 @@ export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
 
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
+}
+
+export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
+    withReplacement?: boolean;
 }
 
 export interface IsaacPodDTO extends ContentDTO {
@@ -242,6 +246,11 @@ export interface QuizUserFeedbackDTO {
     feedback?: QuizFeedbackDTO;
 }
 
+export interface QuizAttemptFeedbackDTO {
+    user?: UserSummaryDTO;
+    attempt?: QuizAttemptDTO;
+}
+
 export interface UserGameboardProgressSummaryDTO {
     user?: UserSummaryDTO;
     progress?: GameboardProgressSummaryDTO[];
@@ -324,8 +333,8 @@ export interface ContentBaseDTO {
     type?: string;
     tags?: string[];
     version?: string;
-    audience?: {[contextProperty: string]: string[]}[];
-    display?: {[intendedAudienceOrNot: string]: string[]};
+    audience?: AudienceContext[];
+    display?: { [index: string]: string[] };
 }
 
 export interface ContentDTO extends ContentBaseDTO {
@@ -352,6 +361,11 @@ export interface ContentSummaryDTO {
     correct?: boolean;
     supersededBy?: string;
     difficulty?: string;
+    audience?: AudienceContext[];
+}
+
+export interface QuizSummaryDTO extends ContentSummaryDTO {
+    visibleToStudents?: boolean
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
@@ -378,7 +392,7 @@ export interface FreeTextRuleDTO extends ChoiceDTO {
 
 export interface GlossaryTermDTO extends ContentDTO {
     explanation?: ContentDTO;
-    examBoard?: EXAM_BOARD;
+    examBoard?: EXAM_BOARD | "";
 }
 
 export interface CodeSnippetDTO extends ContentDTO {
@@ -474,6 +488,27 @@ export interface GroupMembershipDTO {
     created?: Date;
 }
 
+export type Stage = "year_7" | "year_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "all";
+
+export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "all";
+
+export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
+
+export type RoleRequirement = "logged_in" | "teacher";
+
+
+export interface UserContext {
+    stage?: Stage;
+    examBoard?: ExamBoard;
+}
+
+export interface AudienceContext {
+    stage?: Stage[];
+    examBoard?: ExamBoard[];
+    difficulty?: Difficulty[];
+    role?: RoleRequirement[];
+}
+
 export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     givenName?: string;
     familyName?: string;
@@ -484,7 +519,8 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     schoolId?: string;
     role?: Role;
     schoolOther?: string;
-    examBoard?: EXAM_BOARD;
+    registeredContexts?: UserContext[];
+    registeredContextsLastConfirmed?: Date;
     firstLogin?: boolean;
     lastUpdated?: Date;
     lastSeen?: Date;
@@ -511,7 +547,7 @@ export interface UserSummaryDTO extends AbstractSegueUserDTO {
     role?: Role;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
-    examBoard?: EXAM_BOARD;
+    registeredContexts?: UserContext[];
     id?: number;
 }
 
@@ -541,12 +577,13 @@ export interface IAssignmentLike {
 
 export interface GameboardItem {
     id?: string;
+    contentType?: string;
     title?: string;
     description?: string;
     uri?: string;
     tags?: string[];
-    level?: number;
-    difficulty?: number;
+    audience?: AudienceContext[];
+    creationContext?: AudienceContext;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;
@@ -604,7 +641,10 @@ export interface ContentBase {
     tags?: string[];
     canonicalSourceFile?: string;
     version?: string;
+    audience?: AudienceContext[];
+    display?: { [index: string]: string[] };
 }
+
 
 export interface Content extends ContentBase {
     title?: string;

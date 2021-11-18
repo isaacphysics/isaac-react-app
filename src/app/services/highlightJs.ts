@@ -5,7 +5,7 @@ import php from 'highlight.js/lib/languages/php'
 import csharp from 'highlight.js/lib/languages/csharp'
 import plaintext from 'highlight.js/lib/languages/plaintext'
 import sql from 'highlight.js/lib/languages/sql'
-import {Language, LanguageFn} from "highlight.js";
+import {LanguageFn} from "highlight.js";
 
 export function registerLanguages() {
     hljs.registerLanguage('javascript', javascript);
@@ -126,7 +126,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
     const FUNCTION_DEFINITION = {
         match: [
             /FUNCTION|PROCEDURE/,
-            /\s+/,
+            / +/,
             hljsLib.UNDERSCORE_IDENT_RE,
             /(?=\()/
         ],

@@ -42,7 +42,6 @@ tr.board-card {
   .card-title {
     font-size: 1.5rem;
     font-weight: bold;
-    padding-right: 50px;
     a {
       display: inline;
     }
@@ -170,10 +169,4 @@ tr.board-card {
 
 .table-share-link, .card-share-link {
   position: relative;
-  div.share-link {
-    position: absolute;
-    input {
-      top: 8px;
-    }
-  }
 }

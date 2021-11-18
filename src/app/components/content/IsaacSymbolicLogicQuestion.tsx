@@ -3,23 +3,23 @@ import {connect, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
-import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
+import {ChoiceDTO, IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {EXAM_BOARD} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
-import { sanitiseInequalityState } from '../../services/questions';
+import {sanitiseInequalityState, selectQuestionPart} from '../../services/questions';
 import _flattenDeep from 'lodash/flattenDeep';
-import {useUserContext} from "../../services/userContext";
-import {selectQuestionPart} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
-import { Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip } from 'reactstrap';
+import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
 import uuid from "uuid";
-import { Inequality, makeInequality } from 'inequality';
-import { parseBooleanExpression, ParsingError } from 'inequality-grammar';
-import { isDefined } from '../../services/miscUtils';
-import { isStaff } from '../../services/user';
+import {Inequality, makeInequality} from 'inequality';
+import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
+import {isDefined} from '../../services/miscUtils';
+import {isStaff} from '../../services/user';
+import {useUserContext} from "../../services/userContext";
+import {Action, Dispatch} from "redux";
 
 // Magic starts here
 interface ChildrenMap {
@@ -55,7 +55,11 @@ const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
     }
     return r;
 };
-const dispatchToProps = {setCurrentAttempt};
+const dispatchToProps = (dispatch : Dispatch<Action>) => {
+    return {
+        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
+    }
+};
 
 interface IsaacSymbolicLogicQuestionProps {
     doc: IsaacSymbolicLogicQuestionDTO;
@@ -69,7 +73,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
     const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
-    const {examBoard} = useUserContext();
+    const {preferredBooleanNotation} = useUserContext();
     const [textInput, setTextInput] = useState('');
     const user = useSelector(selectors.user.orNull);
 
@@ -136,6 +140,8 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf',
             }
         );
+        if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
+        
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
         sketch.onCloseMenus = () => undefined;
@@ -233,7 +239,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                 initialEditorSymbols={initialEditorSymbols.current}
                 visible={modalVisible}
                 editorMode='logic'
-                logicSyntax={examBoard === EXAM_BOARD.OCR ? 'logic' : 'binary'}
+                logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 questionDoc={doc}
             />}
             {!readonly && isStaff(user) && <div className="eqn-editor-input">

@@ -257,6 +257,10 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                 fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'
             }
         );
+        if (!isDefined(sketch)) {
+            throw new Error("Unable to initialize Inequality.");
+        }
+
         sketch.log = {
             initialState: [],
             actions: [{
@@ -464,8 +468,9 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
             }));
             this.setState({ sketch: null });
         }
-        if (inequalityElement) {
-            inequalityElement.removeChild(inequalityElement.getElementsByTagName('canvas')[0]);
+        const canvas = inequalityElement?.getElementsByTagName('canvas')[0];
+        if (canvas) {
+            inequalityElement.removeChild(canvas);
         }
 
         document.documentElement.style.width = '';
