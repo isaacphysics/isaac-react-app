@@ -2,6 +2,51 @@
 
 .btn, input.btn {
   //Button Secondary
+  &.btn-red {
+    background-color: $phy_orangered;
+    border: 1px solid transparent;
+    color: $black;
+    width: 100px !important;
+    min-width: 100px !important;
+    padding: 0 !important;
+    border-radius: 5px;
+  }
+  &.btn-yellow {
+    background-color: $phy_extra_force_yellow;
+    border: 1px solid transparent;
+    color: $black;
+    width: 100px !important;
+    min-width: 100px !important;
+    padding: 0 !important;
+    border-radius: 5px;
+  }
+  &.btn-green {
+    background-color: $a11y_green;
+    border: 1px solid transparent;
+    color: $black;
+    width: 100px !important;
+    min-width: 100px !important;
+    padding: 0 !important;
+    border-radius: 5px;
+  }
+  &.btn-green:not(:disabled):not(.disabled):active {
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+    border-radius: 5px;
+  }
+  &.btn-yellow:not(:disabled):not(.disabled):active {
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+    border-radius: 5px;
+  }
+  &.btn-red:not(:disabled):not(.disabled):active {
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+    border-radius: 5px;
+  }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: darken(theme-color("secondary"), 4);
     border: 1px solid transparent;
@@ -15,4 +60,12 @@
 
 .btn-green {
   @include button-variant($a11y_green, $a11y_green);
+}
+
+.quick-question-options {
+  background: rgba($secondary, 0.5);
+  border: 1px solid transparent;
+  color: $black;
+  border-radius: 5px;
+  padding: 10px !important;
 }
