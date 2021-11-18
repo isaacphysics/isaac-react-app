@@ -1,4 +1,4 @@
-import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ComponentProps, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     Button,
@@ -11,7 +11,7 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
+import {closeActiveModal, loadAssignmentsOwnedByMe, loadBoard, loadGroups, loadProgress, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
@@ -24,7 +24,7 @@ import {
 } from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, QuizAssignmentDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
@@ -33,10 +33,13 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
 import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { getQuizAssignmentCSVDownloadLink, loadQuizAssignmentFeedback, loadQuizAssignments } from "../../state/actions/quizzes";
+import { getQuizAssignmentCSVDownloadLink, loadQuizAssignmentFeedback, loadQuizAssignments, returnQuizToStudent } from "../../state/actions/quizzes";
 import { Tabs } from "../elements/Tabs";
 import { isDefined } from "../../services/miscUtils";
 import { resourceFound } from "../../services/validation";
+import { userProgress } from "../../state/reducers/progressState";
+import { isQuestion } from "../../services/questions";
+import { quizAssignment } from "../../state/reducers/quizState";
 
 function selectGroups(state: AppState) {
     if (isDefined(state)) {
@@ -525,35 +528,195 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
 };
 
 const QuizProgressLoader = (props: any) => {
-    const pageSettings = usePageSettings();
     const dispatch = useDispatch();
     const {quizAssignment} = props;
     const quizAssignmentId = quizAssignment.id;
-    const assignmentState = useSelector(selectors.quizzes.assignment);
+    const quizAssignments = useSelector(selectors.quizzes.assignments);
+    const [userFeedback, setUserFeedback] = useState<QuizUserFeedbackDTO[]>();
 
     useEffect(() => {
         dispatch(loadQuizAssignmentFeedback(parseInt(quizAssignmentId)))
     }, [quizAssignmentId]);
 
-    const assignment = assignmentState && 'assignment' in assignmentState ? assignmentState.assignment : null;
+    useEffect(() => {
+        if (resourceFound(quizAssignments)) {
+            setUserFeedback(quizAssignments.find(qa => qa.id === quizAssignmentId)?.userFeedback);
+        }
+    }, [quizAssignments])
 
-    return <>
-        <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-            <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey />
-            <code>{JSON.stringify(assignment)}</code>
-            {/* <ResultsTable assignment={assignment} pageSettings={pageSettings} /> */}
-        </div>
-    </>;
-
-
-    // return /*progress*/ true ? <QuizProgressDetails {...props} progress={{}} />
-    //     : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
+    return userFeedback ? <QuizProgressDetails {...props} userFeedback={userFeedback} />
+        : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
 };
 
 const QuizProgressDetails = (props: any) => {
-    const dispatch = useDispatch();
+    const pageSettings = usePageSettings();
+    const {quizAssignment, userFeedback} = props;
 
-    return <>:)</>;
+    interface ResultsTableProps {
+        assignment: QuizAssignmentDTO;
+        pageSettings: PageSettings;
+    }
+
+    interface ResultRowProps {
+        pageSettings: PageSettings;
+        row: QuizUserFeedbackDTO;
+        assignment: QuizAssignmentDTO;
+    }
+
+    function questionsInSection(section?: IsaacQuizSectionDTO) {
+        return section?.children?.filter(child => isQuestion(child)) || [];
+    }
+
+    const passMark = 0.75;
+    function markQuestionClasses(row: QuizUserFeedbackDTO, mark: Mark | undefined, totalOrUndefined: number | undefined) {
+        if (!row.user?.authorisedFullAccess) {
+            return "revoked";
+        }
+
+        const correct = mark?.correct as number;
+        const incorrect = mark?.incorrect as number;
+        const total = totalOrUndefined as number;
+
+        if (correct === total) {
+            return "completed";
+        } else if ((correct / total) >= passMark) {
+            return "passed";
+        } else if ((incorrect / total) > (1 - passMark)) {
+            return "failed";
+        } else if (correct > 0 || incorrect > 0) {
+            return "in-progress";
+        } else {
+            return "not-attempted";
+        }
+    }
+
+
+    function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
+        const [dropdownOpen, setDropdownOpen] = useState(false);
+        const [working, setWorking] = useState(false);
+        const dispatch = useDispatch();
+    
+        const toggle = () => setDropdownOpen(prevState => !prevState);
+    
+        const returnToStudent = async () => {
+            dispatch(openActiveModal({
+                closeAction: () => {
+                    dispatch(closeActiveModal())
+                },
+                title: "Allow another attempt?",
+                body: "This will allow the student to attempt the test again.",
+                buttons: [
+                    <Button key={1} color="primary" outline target="_blank" onClick={() => {dispatch(closeActiveModal())}}>
+                        Cancel
+                    </Button>,
+                    <Button key={0} color="primary" target="_blank" onClick={_returnToStudent}>
+                        Confirm
+                    </Button>,
+            ]
+            }));    
+        }
+    
+        const _returnToStudent = async () => {
+            try {
+                setWorking(true);
+                await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
+            } finally {
+                setWorking(false);
+                dispatch(closeActiveModal());
+            }
+        };
+    
+        const quiz = assignment?.quiz;
+        const sections: IsaacQuizSectionDTO[] = quiz?.children || [];
+    
+        let message;
+        if (!row.user?.authorisedFullAccess) {
+            message = "Not sharing";
+        } else if (!row.feedback?.complete) {
+            message = "Not completed";
+        }
+        const valid = message === undefined;
+        return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
+            <th className="student-name">
+                {valid ?
+                    <>
+                        <Button color="link" onClick={toggle} disabled={working}>
+                            <div
+                                tabIndex={0}
+                                className="btn quiz-student-menu"
+                                data-toggle="dropdown"
+                                aria-expanded={dropdownOpen}
+                            >
+                                {row.user?.givenName}
+                                <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
+                                <span className="quiz-student-menu-icon">
+                                {working ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
+                            </span>
+                            </div>
+                        </Button>
+                        {!working && dropdownOpen && <div className="py-2 px-3">
+                            <Button size="sm" onClick={returnToStudent}>Allow another attempt</Button>
+                        </div>}
+                    </>
+                :   <>
+                        {row.user?.givenName}
+                        <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
+                    </>
+                }
+            </th>
+            {!valid && <td colSpan={sections.map(questionsInSection).flat().length + 1}>{message}</td>}
+            {valid && <>
+                {sections.map(section => {
+                    const mark = row.feedback?.sectionMarks?.[section.id as string];
+                    const outOf = quiz?.sectionTotals?.[section.id as string];
+                    return questionsInSection(section).map(question => {
+                        const questionMark = row.feedback?.questionMarks?.[question.id as string] || {} as Mark;
+                        const icon =
+                            questionMark.correct === 1 ? ICON.correct :
+                            questionMark.incorrect === 1 ? ICON.incorrect :
+                            /* default */ ICON.notAttempted;
+                        return <td key={question.id} className={markQuestionClasses(row, mark, outOf)}>
+                            {icon}
+                        </td>
+                    }).flat()
+                })}
+                <td className="total-column">
+                    {formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}
+                </td>
+            </>}
+        </tr>;
+    }
+
+    function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
+        const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
+    
+        return <table className="progress-table w-100 mb-5 border">
+            <tbody>
+                <tr className="bg-white">
+                    <th>&nbsp;</th>
+                    {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
+                        {section.title}
+                    </th>)}
+                    <th rowSpan={2} className="border-bottom">Overall</th>
+                </tr>
+                <tr className="bg-white">
+                    <th className="bg-white border-bottom">&nbsp;</th>
+                    {sections.map(section => questionsInSection(section).map((question, index) => <th key={question.id} className="border">
+                        {`Q${index + 1}`}
+                    </th>)).flat()}
+                </tr>
+                {assignment.userFeedback?.map(row =>
+                    <ResultRow key={row.user?.id} pageSettings={pageSettings} row={row} assignment={assignment} />
+                )}
+            </tbody>
+        </table>;
+    }
+
+    return <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
+        {/* <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey /> */}
+        {/* <code>{JSON.stringify(userFeedback)}</code> */}
+        <ResultsTable assignment={quizAssignment} pageSettings={pageSettings} />
+    </div>
 }
 
 const QuizDetails = (props: any) => {
@@ -589,25 +752,8 @@ const QuizDetails = (props: any) => {
 
             </div>
         </div>
-        {(true || isExpanded) && <QuizProgressLoader {...props} />}
-        {/* {(true || isExpanded) && <pre>{JSON.stringify(quizAssignment)}</pre>} */}
+        {(isExpanded) && <QuizProgressLoader {...props} />}
     </div>
-
-    // return <div className="assignment-progress-gameboard" key={quizAssignment.id}>
-    //     <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
-    //         <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
-    //             <span>{quizAssignment.gameboard.title}{quizAssignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
-    //         </Button>
-    //         <div className="gameboard-links align-items-center">
-    //             <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
-    //             <span className="d-none d-md-inline">,</span>
-    //             <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(quizAssignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
-    //             <span className="d-none d-md-inline">or</span>
-    //             < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + quizAssignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
-    //         </div>
-    //     </div>
-    //     {isExpanded && <ProgressLoader {...props} />}
-    // </div>
 };
 
 const GroupDetails = (props: GroupDetailsProps) => {
