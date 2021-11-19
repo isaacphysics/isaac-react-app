@@ -454,7 +454,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
                 <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
+                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/${assignment._id}`} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
@@ -715,8 +715,6 @@ const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
     const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const assignmentPath = SITE_SUBJECT == SITE.PHY ? "assignment_progress" : "my_markbook";
-
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
@@ -739,7 +737,7 @@ const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
                 <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment?.id || -1)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + quizAssignment.id} onClick={openSingleAssignment}>View individual assignment</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual assignment</Button>
 
             </div>
         </div>
