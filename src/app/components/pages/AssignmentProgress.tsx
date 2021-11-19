@@ -527,15 +527,15 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
     </div></div>
 };
 
-const QuizProgressLoader = (props: any) => {
+const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
     const dispatch = useDispatch();
-    const {quizAssignment} = props;
-    const quizAssignmentId = quizAssignment.id;
+    const { quizAssignment } = props;
+    const quizAssignmentId = isDefined(quizAssignment.id) ? quizAssignment.id : -1;
     const quizAssignments = useSelector(selectors.quizzes.assignments);
     const [userFeedback, setUserFeedback] = useState<QuizUserFeedbackDTO[]>();
 
     useEffect(() => {
-        dispatch(loadQuizAssignmentFeedback(parseInt(quizAssignmentId)))
+        dispatch(loadQuizAssignmentFeedback(quizAssignmentId));
     }, [quizAssignmentId]);
 
     useEffect(() => {
@@ -548,7 +548,7 @@ const QuizProgressLoader = (props: any) => {
         : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
 };
 
-const QuizProgressDetails = (props: any) => {
+const QuizProgressDetails = (props: { quizAssignment: QuizAssignmentDTO, userFeedback: QuizUserFeedbackDTO[] }) => {
     const pageSettings = usePageSettings();
     const {quizAssignment, userFeedback} = props;
 
@@ -719,8 +719,8 @@ const QuizProgressDetails = (props: any) => {
     </div>
 }
 
-const QuizDetails = (props: any) => {
-    const {quizAssignment} = props;
+const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
+    const { quizAssignment } = props;
     const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -746,7 +746,7 @@ const QuizDetails = (props: any) => {
             <div className="gameboard-links align-items-center">
                 <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment?.id || -1)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + quizAssignment.id} onClick={openSingleAssignment}>View individual assignment</Button>
 
@@ -783,7 +783,7 @@ const GroupDetails = (props: GroupDetailsProps) => {
     }
     let groupTests: JSX.Element | JSX.Element[] = <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
     if (isDefined(group.quizAssignments) && Array.isArray(group.quizAssignments) && group.quizAssignments.length > 0) {
-        groupTests = group.quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} {...props} quizAssignment={quizAssignment} />);
+        groupTests = group.quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} /*{...props}*/ quizAssignment={quizAssignment} />);
     } else {
         groupTests = <div className="p-4 text-center">There are no tests assigned to this group.</div>
     }
