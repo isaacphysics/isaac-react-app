@@ -16,6 +16,16 @@
   }
 }
 
+.content-chunk > .content-value {
+  > .row {
+    margin: 0;
+    > .col {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+  }
+}
+
 .unit-dropdown button {
   min-width: auto;
 }
@@ -287,4 +297,58 @@ button {
   background-color: white;
   box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
   padding: 1rem;
+}
+
+.cloze-question {
+  // This is a work around, allowing KaTeX to be used for cloze questions.
+  //  There is no guarantee that it works all of the time, so needs to be
+  //  checked on a case by case basis.
+  .katex {
+    display: unset;
+    * {
+      pointer-events: none;
+    }
+    .cloze-inline-clear {
+      pointer-events: all;
+    }
+  }
+  .cloze-draggable {
+    pointer-events: all;
+    .katex-display {
+      display: unset;
+    }
+  }
+
+  .cloze-inline-clear {
+    position: absolute;
+    //background-color: lightgray;
+    background-color: inherit;
+    border-left: 1px solid #bababa;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    width: 26px;
+    height: calc(100% - 16px);
+    top: 0;
+    right: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    .cloze-clear-cross {
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: fill 0.2s;
+      -webkit-transition: fill 0.2s;
+      -moz-transition: fill 0.2s;
+      fill: hsl(0, 1%, 26%);
+    }
+  }
+  .cloze-inline-clear:hover {
+    .cloze-clear-cross {
+      fill: red;
+    }
+  }
 }

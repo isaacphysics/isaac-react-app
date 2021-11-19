@@ -10,6 +10,7 @@ import {
     Difficulty,
     GameboardDTO,
     GameboardItem,
+    ItemDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
@@ -480,6 +481,9 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_START_FREE_ATTEMPT_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
     | {type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE; error: string}
+    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST; quizAttemptId: number; userId: number}
+    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS; studentAttempt: ApiTypes.QuizAttemptFeedbackDTO}
+    | {type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE; error: string}
 
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST; quizAttemptId: number}
     | {type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS; attempt: ApiTypes.QuizAttemptDTO}
@@ -699,6 +703,7 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
+export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string} | undefined>(undefined);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
@@ -961,3 +966,7 @@ export interface AppQuizAssignment extends ApiTypes.QuizAssignmentDTO {
 }
 
 export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "SECTION_MARKS", "DETAILED_FEEDBACK"];
+
+export interface ClozeItemDTO extends ItemDTO {
+    replacementId?: string;
+}
