@@ -58,7 +58,7 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
             if (resourceFound(quizAssignments)) {
                 return quizAssignments.map(qa => {
                     if (qa.id === action.assignment.id) {
-                        return { ...qa, userFeedback: action.assignment.userFeedback };
+                        return { ...qa, quiz: action.assignment.quiz, userFeedback: action.assignment.userFeedback };
                     } else {
                         return qa;
                     }
