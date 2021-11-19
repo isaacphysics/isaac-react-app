@@ -564,7 +564,7 @@ const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
 const GroupDetails = (props: GroupDetailsProps) => {
     const dispatch = useDispatch();
     const {group, pageSettings} = props;
-    const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.tests);
+    const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
 
     const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
     const joinedGameboardIds = gameboardIs.join(",");
@@ -609,7 +609,7 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     const dispatch = useDispatch();
     const {group} = props;
-    const [isExpanded, setExpanded] = useState(true);
+    const [isExpanded, setExpanded] = useState(false);
 
     const assignmentCount = group.assignments.length;
 
