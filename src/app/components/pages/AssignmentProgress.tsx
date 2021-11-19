@@ -37,9 +37,7 @@ import { getQuizAssignmentCSVDownloadLink, loadQuizAssignmentFeedback, loadQuizA
 import { Tabs } from "../elements/Tabs";
 import { isDefined } from "../../services/miscUtils";
 import { resourceFound } from "../../services/validation";
-import { userProgress } from "../../state/reducers/progressState";
 import { isQuestion } from "../../services/questions";
-import { quizAssignment } from "../../state/reducers/quizState";
 
 function selectGroups(state: AppState) {
     if (isDefined(state)) {
@@ -72,7 +70,6 @@ function selectGroups(state: AppState) {
 
         const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
         if (resourceFound(state.quizAssignments)) { // assigned by me
-            // quizAssignments = state.quizAssignments.map((qa: QuizAssignmentDTO) => ({ id: qa.id, title: qa.quizSummary?.title || "", groupId: qa.groupId }));
             for (const qa of state.quizAssignments) {
                 if (isDefined(quizAssignments[qa.groupId || -1])) {
                     quizAssignments[qa.groupId || -1].push(qa);
@@ -80,11 +77,7 @@ function selectGroups(state: AppState) {
                     quizAssignments[qa.groupId || -1] = [qa];
                 }
             }
-            // for (const quizAssignment of state.quizAssignments) {
-            //     state?.quizAssignments.map(qa => ({  }))
-            // }
         }
-        // console.log(quizAssignments);
 
         const activeGroups = selectors.groups.active(state);
         if (activeGroups) {
@@ -550,7 +543,7 @@ const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
 
 const QuizProgressDetails = (props: { quizAssignment: QuizAssignmentDTO, userFeedback: QuizUserFeedbackDTO[] }) => {
     const pageSettings = usePageSettings();
-    const {quizAssignment, userFeedback} = props;
+    const { quizAssignment } = props;
 
     interface ResultsTableProps {
         assignment: QuizAssignmentDTO;
@@ -713,8 +706,6 @@ const QuizProgressDetails = (props: { quizAssignment: QuizAssignmentDTO, userFee
     }
 
     return <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-        {/* <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey /> */}
-        {/* <code>{JSON.stringify(userFeedback)}</code> */}
         <ResultsTable assignment={quizAssignment} pageSettings={pageSettings} />
     </div>
 }
@@ -768,7 +759,7 @@ const GroupDetails = (props: GroupDetailsProps) => {
     }, [joinedGameboardIds]);
 
     function activeTabChanged(tabIndex: number) {
-        // setPageTitle({[SITE.CS]: "Manage tests", [SITE.PHY]: (tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT])
+        setActiveTab(tabIndex);
     }
 
     const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
@@ -789,7 +780,7 @@ const GroupDetails = (props: GroupDetailsProps) => {
     }
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <AssignmentProgressLegend pageSettings={pageSettings}/>
+        <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>{{
             "Assignments": groupAssignments,
             "Tests": groupTests
@@ -835,10 +826,6 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
     const pageSettings = usePageSettings();
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
-
-    // const quizzes = useSelector(selectors.quizzes.available);
-    // const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
-    const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     let data = groups;
     if (data) {
