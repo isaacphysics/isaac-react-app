@@ -400,10 +400,10 @@ export interface CodeSnippetDTO extends ContentDTO {
     code?: string;
     disableHighlighting?: boolean;
     url?: string;
+    executable?: string;
 }
 
-export interface PythonDTO extends CodeSnippetDTO {
-    initCode?: string;
+export interface ExecutableCodeSnippetDTO extends CodeSnippetDTO {
     setupCode?: string;
     test?: string;
 }

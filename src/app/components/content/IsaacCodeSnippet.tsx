@@ -4,7 +4,7 @@ import {Col, Row} from "reactstrap";
 
 import hljs from 'highlight.js/lib/core';
 import {addLineNumbers} from "../../services/highlightJs";
-import {IsaacPythonEditor} from "./IsaacPythonQuestion";
+import {IsaacExecutableCodeSnippet} from "./IsaacExecutableCodeSnippet";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -21,8 +21,8 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     }, [doc]);
 
     return <div>
-        {doc.language === "python" ?
-        <IsaacPythonEditor doc={{initCode: doc.code, setupCode: "", test: ""}} questionId={doc.id!} />
+        {doc.executable ?
+        <IsaacExecutableCodeSnippet doc={{...doc, setupCode: "", test: ""}} />
             :
         <Row>
             <Col className="code-snippet">

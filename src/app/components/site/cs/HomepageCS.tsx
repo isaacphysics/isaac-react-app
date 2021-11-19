@@ -8,7 +8,7 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
-import {IsaacPythonEditor} from "../../content/IsaacPythonQuestion";
+import {IsaacExecutableCodeSnippet} from "../../content/IsaacExecutableCodeSnippet";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -105,13 +105,13 @@ export const HomepageCS = () => {
 
         <Container>
             <h2>Code Demo:</h2>
-            <IsaacPythonEditor doc={{
+            <IsaacExecutableCodeSnippet doc={{
+                id: "ajsbfjlanfknslkdnfla",
                 language: "python",
-                initCode: "def square(x):\n  # Your code here",
+                code: "for i in range(0, 100):\n  print(i)", //"def square(x):\n  # Your code here",
                 test: "checkerResult = str([square(2), square(8), square(1), square(-3)])",
                 url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
-
-            }}  questionId={"16b7b636-fd93-496d-9724-e18ec23eedc9"}/>
+            }} />
         </Container>
 
         {!(user && user.loggedIn) && <Container>

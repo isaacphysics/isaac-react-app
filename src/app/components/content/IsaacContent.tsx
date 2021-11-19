@@ -20,7 +20,6 @@ import {IsaacCodeSnippet} from "./IsaacCodeSnippet";
 import {QuizQuestion} from "./QuizQuestion";
 import {isQuestion} from "../../services/questions";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
-import {IsaacPythonEditor} from "./IsaacPythonQuestion";
 
 const classBasedLayouts = {
     left: "align-left",
