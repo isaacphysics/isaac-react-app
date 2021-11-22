@@ -206,7 +206,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
                     <TrackedRoute exact path="/admin/emails" ifUser={isAdminOrEventManager} component={AdminEmails} />
-                    <TrackedRoute exact path="/content/emails" ifUser={isAdminOrEventManager} component={ContentEmails} />
+                    <TrackedRoute exact path="/admin/direct_emails" ifUser={isAdminOrEventManager} component={ContentEmails} />
 
                     {/* Authentication */}
                     <TrackedRoute exact path="/login" component={LogIn} />
