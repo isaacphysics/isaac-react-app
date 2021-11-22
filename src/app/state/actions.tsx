@@ -42,6 +42,7 @@ import {
     AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
+    EmailTemplateDTO,
     EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,
@@ -1321,6 +1322,18 @@ export const sendAdminEmailWithIds = (contentid: string, emailType: string, ids:
         dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
+        dispatch(showErrorToastIfNeeded("Sending email with ids failed", e));
+    }
+};
+
+export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_REQUEST});
+    try {
+        await api.email.sendProvidedEmailWithUserIds(emailTemplate, emailType, ids);
+        dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS});
+        dispatch(showToast({color: "success", title: "Email sent", body: "Email sent successfully", timeout: 3000}) as any);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Sending email with ids failed", e));
     }
 };

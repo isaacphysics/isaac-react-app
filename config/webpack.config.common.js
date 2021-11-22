@@ -33,7 +33,7 @@ module.exports = (isProd) => {
 
         resolve: {
             modules: [path.resolve(__dirname), 'node_modules'],
-            extensions: ['.ts', '.tsx', '.js', '.jsx'],
+            extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
             alias: {
                 'p5': 'p5/lib/p5.min.js'
             }
@@ -43,6 +43,11 @@ module.exports = (isProd) => {
             rules: [
                 {
                     oneOf: [
+                        {
+                            test: /\.mjs$/,
+                            include: /node_modules/,
+                            type: 'javascript/auto'
+                        },
                         {
                             test: /\.[jt]sx?$/,
                             exclude: /node_modules/,
