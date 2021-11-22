@@ -108,8 +108,9 @@ export const HomepageCS = () => {
             <IsaacExecutableCodeSnippet doc={{
                 id: "ajsbfjlanfknslkdnfla",
                 language: "python",
-                code: "for i in range(0, 100):\n  print(i)", //"def square(x):\n  # Your code here",
+                code: /*"for i in range(0, 100):\n  print(i)",*/ "def square(x):\n  return x * x",
                 test: "checkerResult = str([square(2), square(8), square(1), square(-3)])",
+                expectedOutput: "[4, 64, 1, 9]",
                 url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
             }} />
         </Container>

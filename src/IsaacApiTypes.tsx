@@ -406,6 +406,7 @@ export interface CodeSnippetDTO extends ContentDTO {
 export interface ExecutableCodeSnippetDTO extends CodeSnippetDTO {
     setupCode?: string;
     test?: string;
+    expectedOutput?: string;
 }
 
 export interface GraphChoiceDTO extends ChoiceDTO {

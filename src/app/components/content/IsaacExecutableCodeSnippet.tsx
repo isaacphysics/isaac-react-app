@@ -8,7 +8,7 @@ interface IsaacExecutableCodeProps {doc: ExecutableCodeSnippetDTO}
 export const IsaacExecutableCodeSnippet = ({doc}: IsaacExecutableCodeProps) => {
     const iframeRef = useRef(null);
     const uid = useRef(doc?.id + uuid.v4().slice(0,4))
-    const {receivedData, sendMessage} = useIFrameMessages(iframeRef, uid.current);
+    const {receivedData, sendMessage} = useIFrameMessages(uid.current, iframeRef);
     const [loaded, setLoaded] = useState<boolean>(false);
 
     function sendQuestion() {
@@ -22,22 +22,32 @@ export const IsaacExecutableCodeSnippet = ({doc}: IsaacExecutableCodeProps) => {
     }
 
     useEffect(() => {
-        if (!loaded || !receivedData) return;
+        if (!loaded || undefined === receivedData) return;
 
-        console.log(receivedData);
+        if (receivedData.type === "log" || receivedData.type === "checkerFail") {
+            // Offers functionality to log receivedData.message with a proper log event
+            // Essentially log forwarding from the python editor
 
-        if (receivedData.type === "log") {
-            console.log(receivedData.message);
+            // checkerFail represents a log message for when the test code written for
+            // the question fails to compile
         }
 
-        if (receivedData.type === "checkerResult") {
-            sendMessage({
-                type: "feedback",
-                succeeded: true,
-                message: "Your code ran successfully!"
-            });
+        if (receivedData.type === "checker") {
+            if (receivedData.result === doc.expectedOutput) {
+                sendMessage({
+                    type: "feedback",
+                    succeeded: true,
+                    message: "Your code is correct!"
+                });
+            } else {
+                sendMessage({
+                    type: "feedback",
+                    succeeded: false,
+                    message: "Your code is incorrect!"
+                });
+            }
         }
     }, [receivedData]);
 
-    return <iframe title={"Code Sandbox"} src={"http://localhost:3000#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100"} style={{"resize": "none", "height": "400px", "border": "none"}}/>
+    return <iframe title={"Code Sandbox"} src={"http://localhost:3000/#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100"} style={{resize: "none", height: "400px", border: "none"}}/>
 }
