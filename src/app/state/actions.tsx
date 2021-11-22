@@ -41,7 +41,8 @@ import {
 import {
     AssignmentDTO,
     AuthenticationProvider,
-    ChoiceDTO, EmailTemplateDTO,
+    ChoiceDTO,
+    EmailTemplateDTO,
     EmailVerificationStatus,
     GameboardDTO,
     GlossaryTermDTO,

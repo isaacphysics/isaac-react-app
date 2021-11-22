@@ -2,7 +2,8 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
-    AuthenticationProvider, EmailTemplateDTO,
+    AuthenticationProvider,
+    EmailTemplateDTO,
     EventBookingDTO,
     GameboardDTO,
     ResultsWrapper,
