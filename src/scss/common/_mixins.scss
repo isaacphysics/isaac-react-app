@@ -4,6 +4,8 @@
 // $content: when playing with pseudo element, you mainly use `content: ""` (default value).
 // $position: when playing with pseudo element, you mainly use `position: absolute` (default value).
 // $display: when playing with pseudo element, you mainly use `display: block` (default value).
+@use "sass:math";
+
 @mixin pseudo-element($content: '', $position: absolute, $display: block) {
   content: $content;
   display: $display;
@@ -259,7 +261,7 @@ $breakpoints: (
     display: block;
     content: '';
     width: 100%;
-    padding-top: ($height / $width) * 100%;
+    padding-top: math.div($height, $width) * 100%;
   }
   > img {
     position: absolute;
