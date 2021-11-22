@@ -99,31 +99,33 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
 
     const displayStage = audienceViews && audienceViews.length > 0;
 
-    return <RS.ListGroupItem className={`p-3 content-summary-item d-flex flex-column justify-content-center ${itemClasses}`} key={linkDestination}>
+    return <RS.ListGroupItem className={`p-3 content-summary-item d-md-flex flex-column justify-content-center ${itemClasses}`} key={linkDestination}>
         <Link to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
-            <div className={"align-self-center " + titleClasses}>
-                <div className="d-flex">
-                    <LaTeX className={titleTextClass} markup={item.title ?? ""} />
-                    {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
-                        ({typeLabel})
-                    </span>}
+            <div className="d-md-flex flex-fill">
+                <div className={"align-self-center " + titleClasses}>
+                    <div className="d-flex">
+                        <LaTeX className={titleTextClass} markup={item.title ?? ""} />
+                        {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
+                            ({typeLabel})
+                        </span>}
+                    </div>
+                    {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags"}>
+                        {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
+                    </div>}
+                    {item.summary && <div className="small text-muted d-none d-md-block">
+                        {item.summary}
+                    </div>}
                 </div>
-                {displayTopicTitle && hierarchyTags && <div className={"hierarchy-tags"}>
-                    {hierarchyTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
-                </div>}
-                {item.summary && <div className="small text-muted d-none d-md-block">
-                    {item.summary}
-                </div>}
-            </div>
 
-            {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
-                <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
-                <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
-                    {`This content is ${notRelevantMessage(userContext)}.`}
-                </RS.UncontrolledTooltip>
-            </div>}
-            {audienceViews && displayStage && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
+                {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
+                    <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
+                    <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
+                        {`This content is ${notRelevantMessage(userContext)}.`}
+                    </RS.UncontrolledTooltip>
+                </div>}
+                {audienceViews && displayStage && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
+            </div>
         </Link>
     </RS.ListGroupItem>;
 };
