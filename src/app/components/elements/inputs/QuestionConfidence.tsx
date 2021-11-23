@@ -34,7 +34,7 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
             <Col md="9">
                 <h4>Click a button to show the answer</h4>
             </Col>
-            <Col md="3" className="text-center">
+            <Col md="3" className="text-center not-mobile">
                 <Button outline color="primary" className="numeric-help" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
             </Col>
         </Row>}
@@ -44,17 +44,17 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
             </Col>
         </Row>
         <Row>
-            <Col sm="3" md="3" className="ml-auto">
+            <Col sm="3" md="3" className="mx-auto mb-2">
                 <Button color="red" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
                     {isVisible ? "No" : "Low"}
                 </Button>
             </Col>
-            <Col sm="3" md="3">
+            <Col sm="3" md="3" className="mx-auto mb-2">
                 <Button color="yellow" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
                     {isVisible ? "Partly" : "Medium"}
                 </Button>
             </Col>
-            <Col sm="3" md="3" className="mr-auto">
+            <Col sm="3" md="3" className="mx-auto mb-2">
                 <Button color="green" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
                     {isVisible ? "Yes" : "High"}
                 </Button>
