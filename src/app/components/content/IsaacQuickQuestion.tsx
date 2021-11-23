@@ -83,7 +83,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                 }
                 {isVisible && showConfidence && !fastTrackInfo.isFastTrackPage  && <Row className="mt-3">
                     <Col sm="12" md="12">
-                        <Button color="secondary" block className={isVisible ? "active" : ""} onClick={hideAnswer}>
+                        <Button color="secondary" block className="active" onClick={hideAnswer}>
                             Hide answer
                         </Button>
                     </Col>
