@@ -59,7 +59,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
-    const [questionsSort, setQuestionsSort] = useState({});
+    const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({difficulty: SortOrder.ASC});
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
@@ -222,13 +222,18 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             </thead>
             <tbody>
                 {
-                    questions && sortQuestions(searchBook.length === 0 ? questionsSort : {title: SortOrder.ASC})(questions.filter((question) => {
-                        let qIsPublic = searchResultIsPublic(question, user);
-                        if (isBookSearch) return qIsPublic;
-                        let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
+                    questions &&
+                    sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+                        questions.filter(question => {
+                            let qIsPublic = searchResultIsPublic(question, user);
+                            if (isBookSearch) return qIsPublic;
+                            let qTopicsMatch =
+                                searchTopics.length == 0 ||
+                                (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
 
-                        return qIsPublic && qTopicsMatch;
-                    })).map((question) =>
+                            return qIsPublic && qTopicsMatch;
+                        })
+                    ).map(question =>
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}
                             selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
