@@ -105,7 +105,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].sort((a, b) => a.id && b.id ? a.id.localeCompare(b.id) : -1).map(x => ({...x, replacementId: x.id})) : []);
 
     const registeredDropRegionIDs = useRef<string[]>([]).current;
     const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
