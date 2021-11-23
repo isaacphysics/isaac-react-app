@@ -10,9 +10,9 @@ import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
 import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
 import {AppQuestionDTO} from "../../IsaacAppTypes";
-import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP} from '../services/constants';
+import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from '../services/constants';
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
-import {question} from "../state/reducers/questionState";
+import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -27,6 +27,7 @@ export const QUESTION_TYPES = new Map([
     ["isaacFreeTextQuestion", IsaacFreeTextQuestion],
     ["isaacSymbolicLogicQuestion", IsaacSymbolicLogicQuestion],
     ["isaacGraphSketcherQuestion", IsaacGraphSketcherQuestion],
+    ["isaacClozeQuestion", IsaacClozeQuestion],
     ["default", IsaacMultiChoiceQuestion]
 ]);
 

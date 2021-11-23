@@ -286,6 +286,15 @@ button.btn.btn-link.login-b,
   overflow: visible !important;
 }
 
+iframe.email-html {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 100%;
+  height: content-box;
+  background-color: #e9ecef;
+  opacity: 1;
+}
+
 // OLD NOMENSA TO ALTER INTO ISAAC
 //a, button {
 //  &.btn.btn-link.login-b {

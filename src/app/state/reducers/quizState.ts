@@ -1,6 +1,12 @@
-import { Action, NOT_FOUND_TYPE } from "../../../IsaacAppTypes";
-import { ACTION_TYPE, NOT_FOUND } from "../../services/constants";
-import { IsaacQuizDTO, QuizAssignmentDTO, QuizAttemptDTO, QuizSummaryDTO } from "../../../IsaacApiTypes";
+import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
+import {
+    IsaacQuizDTO,
+    QuizAssignmentDTO,
+    QuizAttemptDTO,
+    QuizAttemptFeedbackDTO,
+    QuizSummaryDTO
+} from "../../../IsaacApiTypes";
 import { isDefined } from "../../services/miscUtils";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
@@ -128,6 +134,18 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
                 return possibleAttempt;
             }
             return null;
+        default:
+            return possibleAttempt;
+    }
+};
+
+type StudentQuizAttemptState = {studentAttempt: QuizAttemptFeedbackDTO} | {error: string} | null;
+export const studentQuizAttempt = (possibleAttempt: StudentQuizAttemptState = null, action: Action): StudentQuizAttemptState => {
+    switch (action.type) {
+        case ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS:
+            return {studentAttempt: action.studentAttempt};
+        case ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE:
+            return {error: action.error};
         default:
             return possibleAttempt;
     }

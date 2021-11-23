@@ -134,6 +134,10 @@ export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
 }
 
+export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
+    withReplacement?: boolean;
+}
+
 export interface IsaacPodDTO extends ContentDTO {
     image?: ImageDTO;
     url?: string;
@@ -235,6 +239,11 @@ export interface QuizFeedbackDTO {
 export interface QuizUserFeedbackDTO {
     user?: UserSummaryDTO;
     feedback?: QuizFeedbackDTO;
+}
+
+export interface QuizAttemptFeedbackDTO {
+    user?: UserSummaryDTO;
+    attempt?: QuizAttemptDTO;
 }
 
 export interface UserGameboardProgressSummaryDTO {
