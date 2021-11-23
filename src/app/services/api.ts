@@ -3,6 +3,7 @@ import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID}
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
+    EmailTemplateDTO,
     EventBookingDTO,
     GameboardDTO,
     ResultsWrapper,
@@ -163,6 +164,9 @@ export const api = {
         },
         sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
+        },
+        sendProvidedEmailWithUserIds: (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]): AxiosPromise => {
+            return endpoint.post(`/email/sendprovidedemailwithuserids/${emailType}`, {userIds: ids, emailTemplate: emailTemplate});
         },
     },
     notifications: {
