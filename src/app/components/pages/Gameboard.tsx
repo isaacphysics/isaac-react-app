@@ -21,7 +21,7 @@ import {
     filterAudienceViewsByProperties
 } from "../../services/userContext";
 import {LaTeX} from "../elements/LaTeX";
-import {fastTrackConceptEnumerator} from "./Question";
+import {generateQuestionTitle} from "../../services/questions";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -40,18 +40,6 @@ function getTags(docTags?: string[]) {
     if (!docTags) return [];
 
     return tags.getByIdsAsHierarchy(docTags as TAG_ID[]);
-}
-
-function generateQuestionTitle(question : GameboardItem) {
-    if (question.title) {
-        // FastTrack title renaming - here for consistency with how questions are named on FastTrack boards
-        if (question.tags?.includes('ft_upper') || question.tags?.includes('ft_lower')) {
-            return question.title + " " + fastTrackConceptEnumerator(question.id as string) + (question.tags.includes('ft_lower') ? "ii" : "i");
-        } else {
-            return question.title;
-        }
-    }
-    return "";
 }
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {

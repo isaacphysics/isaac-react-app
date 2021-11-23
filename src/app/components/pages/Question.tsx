@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
@@ -26,6 +26,7 @@ import tags from "../../services/tags";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {determineAudienceViews} from "../../services/userContext";
+import {generateQuestionTitle} from "../../services/questions";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -33,10 +34,7 @@ interface QuestionPageProps {
     location: {search: string};
 }
 
-export function fastTrackConceptEnumerator(questionId: string) {
-    // Magic, unfortunately
-    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
-}
+
 
 function getTags(docTags?: string[]) {
     if (SITE_SUBJECT !== SITE.PHY) {
@@ -64,20 +62,13 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
 
-        let title = doc.title as string;
-
-        // FastTrack title renaming
-        if (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower')) {
-            title += " " + fastTrackConceptEnumerator(questionId) + (doc.tags.includes('ft_lower') ? "ii" : "i");
-        }
-
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
-                    currentPageTitle={title}
+                    currentPageTitle={generateQuestionTitle(doc)}
                     intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                     collectionType={navigation.collectionType}
                     audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
