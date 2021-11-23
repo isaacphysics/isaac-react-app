@@ -49,10 +49,6 @@
     border-color: $color !important;
   }
 
-  .quick-question-options {
-    background: rgba($color, 0.5);
-  }
-
   /* checkboxes and radio buttons */
   .custom-control-input {
     &:checked ~ .custom-control-label::before {
