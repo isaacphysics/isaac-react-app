@@ -22,7 +22,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
 
     return <div>
         {doc.executable ?
-        <IsaacExecutableCodeSnippet doc={{...doc, setupCode: "", test: ""}} />
+        <IsaacExecutableCodeSnippet doc={doc} />
             :
         <Row>
             <Col className="code-snippet">

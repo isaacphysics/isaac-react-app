@@ -9,6 +9,7 @@ import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
 import {IsaacExecutableCodeSnippet} from "../../content/IsaacExecutableCodeSnippet";
+import {IsaacCodeSnippet} from "../../content/IsaacCodeSnippet";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -105,6 +106,11 @@ export const HomepageCS = () => {
 
         <Container>
             <h2>Code Demo:</h2>
+            <IsaacCodeSnippet doc={{language: "python",
+                code: "for i in range(0, 100):\n  print(i)",
+                disableHighlighting: false,
+                executable: false
+            }} />
             <IsaacExecutableCodeSnippet doc={{
                 id: "ajsbfjlanfknslkdnfla",
                 language: "python",
