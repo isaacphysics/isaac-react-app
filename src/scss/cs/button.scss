@@ -4,29 +4,22 @@
   &.btn-secondary {
     color: $black;
   }
-  &.btn-red {
-    background-color: $cs-reddish;
+  &.btn-red, &.btn-yellow, &.btn-green {
     border: 1px solid transparent;
     color: $black;
     width: 100px !important;
     min-width: 100px !important;
     padding: 0 !important;
+    border-radius: 5px;
+  }
+  &.btn-red {
+    background-color: $cs-reddish;
   }
   &.btn-yellow {
     background-color: $cs-mustard;
-    border: 1px solid transparent;
-    color: $black;
-    width: 100px !important;
-    min-width: 100px !important;
-    padding: 0 !important;
   }
   &.btn-green {
     background-color: $green;
-    border: 1px solid transparent;
-    color: $black;
-    width: 100px !important;
-    min-width: 100px !important;
-    padding: 0 !important;
   }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $cs-reddish;
@@ -34,25 +27,16 @@
     color: $black;
     text-decoration: underline;
   }
+  &.btn-red:not(:disabled):not(.disabled):active, &.btn-yellow:not(:disabled):not(.disabled):active,
   &.btn-green:not(:disabled):not(.disabled):active {
     border: 1px solid transparent;
     color: $black;
     text-decoration: underline;
-  }
-  &.btn-yellow:not(:disabled):not(.disabled):active {
-    border: 1px solid transparent;
-    color: $black;
-    text-decoration: underline;
-  }
-  &.btn-red:not(:disabled):not(.disabled):active {
-    border: 1px solid transparent;
-    color: $black;
-    text-decoration: underline;
+    border-radius: 5px;
   }
 }
 
 .quick-question-options {
-  //background-color: $cs-mustard;
   background: rgba(lightcoral, 0.5);
   border: 1px solid transparent;
   color: $black;
