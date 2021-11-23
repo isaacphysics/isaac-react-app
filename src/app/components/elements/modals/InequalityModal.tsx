@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { createRef } from "react";
+import React, { createRef, FormEvent } from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
@@ -15,6 +15,7 @@ import { closeActiveModal, openActiveModal } from "../../../state/actions";
 import { connect } from "react-redux";
 import { ActiveModal } from "../../../../IsaacAppTypes";
 import { PageFragment } from "../PageFragment";
+import { Input } from "reactstrap";
 
 class MenuItem {
     public type: string;
@@ -72,6 +73,8 @@ interface InequalityModalState {
         mathsLogFunctions: MenuItem[];
         mathsDerivatives: MenuItem[];
         chemicalElements: MenuItem[];
+        // The following is for the pseudo-text-entry menu on /equality
+        parsedChemicalElements: MenuItem[];
         chemicalStates: MenuItem[];
         chemicalOperations: MenuItem[];
         // The following are reduced versions in case there are available symbols and should replace their respective sub-sub-menus.
@@ -80,7 +83,8 @@ interface InequalityModalState {
     };
     defaultMenu: boolean;
     disableLetters: boolean;
-    numberInputValue?: number;
+    numberInputValue?: Nullable<number>;
+    unparsedChemicalElements?: Nullable<string>;
 }
 
 interface InequalityHelpModalProps {
@@ -208,12 +212,14 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                 letters: [],
                 otherFunctions: [],
                 chemicalElements: [],
+                parsedChemicalElements: [],
                 chemicalStates: [],
                 chemicalOperations: [],
             },
             defaultMenu: true,
             disableLetters: props.availableSymbols?.includes('_no_alphabet') || false,
-            numberInputValue: void 0,
+            numberInputValue: null,
+            unparsedChemicalElements: null
         }
 
         this.close = () => {
@@ -327,7 +333,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
             }
         }));
 
-        if (this._availableSymbols && this._availableSymbols.length > 0) {
+        if (isDefined(this._availableSymbols) && Array.isArray(this._availableSymbols) && this._availableSymbols.length > 0) {
             // ~~~ Assuming these are only letters... might become more complicated in the future.
             // THE FUTURE IS HERE! Sorry.
             const customMenuItems = {
@@ -381,7 +387,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                         }
                     } else {
                         const item = this.makeLetterMenuItem(availableSymbol);
-                        if (item) {
+                        if (isDefined(item)) {
                             customMenuItems.letters.push(item);
                         }
                     }
@@ -781,14 +787,12 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
         }
     }
 
-    private makeChemicalElementMenuItem(symbol: string) {
+    private makeChemicalElementMenuItem(symbol: string): Nullable<MenuItem> {
         if (this._chemicalElements.includes(symbol)) {
             return new MenuItem('ChemicalElement', { element: symbol }, { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` });
         } else if (this._chemicalParticles.hasOwnProperty(symbol)) {
             return new MenuItem('Particle', this._chemicalParticles[symbol].properties, { ...this._chemicalParticles[symbol].menu, className: `chemical-particle ${symbol}` });
-        }/* else {
-            return this.makeLetterMenuItem(symbol);
-        }*/ // Is this necessary? Does chemistry allow regular letters?
+        }
     }
 
     private makeChemicalStatesMenuItems() {
@@ -1001,6 +1005,10 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
         this.setState((prevState: InequalityModalState) => ({ showQuestionReminder: !prevState.showQuestionReminder }) );
     }
 
+    private onUnparsedChemicalElementsChange = (event: FormEvent<HTMLInputElement>) => {
+        this.setState({ unparsedChemicalElements: event.currentTarget.value });
+    }
+
     public render(): JSX.Element {
         let lettersMenu: JSX.Element | null = null;
         if (!this.state.disableLetters) {
@@ -1164,7 +1172,13 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                     }</ul>}
                 </div>}
                 {this.props.editorMode === 'maths' && this.state.activeMenu === 'mathsOtherFunctions' && mathsOtherFunctionsMenu}
-                {this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
+                { this.isUserPrivileged() && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
+                    <Input type="text" value={this.state.unparsedChemicalElements || ""} onChange={this.onUnparsedChemicalElementsChange} />
+                    <ul className="sub-menu elements">
+                        {this.state.menuItems.parsedChemicalElements.map(this.menuItem)}
+                    </ul>
+                </div>}
+                {!this.isUserPrivileged() && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
                     <ul className="sub-menu elements">
                         {this.state.menuItems.chemicalElements.map(this.menuItem)}
                     </ul>
