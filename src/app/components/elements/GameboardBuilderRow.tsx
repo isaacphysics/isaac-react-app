@@ -10,7 +10,11 @@ import tags from "../../services/tags";
 import {Question} from "../pages/Question";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {ContentSummary} from "../../../IsaacAppTypes";
-import {determineAudienceViews} from "../../services/userContext";
+import {
+    AUDIENCE_DISPLAY_FIELDS,
+    determineAudienceViews,
+    filterAudienceViewsByProperties
+} from "../../services/userContext";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 
 interface GameboardBuilderRowInterface {
@@ -42,6 +46,11 @@ export const GameboardBuilderRow = (
             title: "Question preview", body: <Question questionIdOverride={urlQuestionId} />
         }))
     };
+
+    const filteredAudienceViews = filterAudienceViewsByProperties(
+        determineAudienceViews(question.audience, creationContext),
+        AUDIENCE_DISPLAY_FIELDS
+    );
 
     return <tr
         key={question.id} ref={provided && provided.innerRef}
@@ -86,25 +95,19 @@ export const GameboardBuilderRow = (
             {topicTag()}
         </td>
         <td className="w-15">
-            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.stage)))
-                .map(stage => <div key={stage}>
-                    {stage && <span>{stageLabelMap[stage]}</span>}
-                </div>)
-            }
+            {filteredAudienceViews.map(v => v.stage).map(stage => <div key={stage}>
+                {stage && <span>{stageLabelMap[stage]}</span>}
+            </div>)}
         </td>
         {SITE_SUBJECT === SITE.PHY && <td className="w-15">
-            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.difficulty)))
-                .map((difficulty, i) => <div key={`${difficulty} ${i}`}>
-                    {difficulty && <DifficultyIcons difficulty={difficulty} />}
-                </div>)
-            }
+            {filteredAudienceViews.map(v => v.difficulty).map((difficulty, i) => <div key={`${difficulty} ${i}`}>
+                {difficulty && <DifficultyIcons difficulty={difficulty} />}
+            </div>)}
         </td>}
         {SITE_SUBJECT === SITE.CS && <td className="w-15">
-            {Array.from(new Set(determineAudienceViews(question.audience, question.creationContext || creationContext).map(v => v.examBoard)))
-                .map(examBoard => <div key={examBoard}>
-                    {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
-                </div>)
-            }
+            {filteredAudienceViews.map(v => v.examBoard).map(examBoard => <div key={examBoard}>
+                {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
+            </div>)}
         </td>}
     </tr>
 };
