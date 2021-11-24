@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from "react";
-import {ExecutableCodeSnippetDTO} from "../../../IsaacApiTypes";
+import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
 import {useIFrameMessages} from "../../services/miscUtils";
 import uuid from "uuid";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 
-interface IsaacExecutableCodeProps {doc: ExecutableCodeSnippetDTO}
+interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
-export const IsaacExecutableCodeSnippet = ({doc}: IsaacExecutableCodeProps) => {
-    const iframeRef = useRef(null);
-    const uid = useRef(doc?.id + uuid.v4().slice(0,4));
+export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) => {
+    const iframeRef = useRef<HTMLIFrameElement>(null);
+    const uid = useRef((doc?.id || "") + uuid.v4().slice(0, 8));
     const {receivedData, sendMessage} = useIFrameMessages(uid.current, iframeRef);
     const [loaded, setLoaded] = useState<boolean>(false);
 
@@ -19,12 +19,12 @@ export const IsaacExecutableCodeSnippet = ({doc}: IsaacExecutableCodeProps) => {
             type: "initialise",
             code: doc.code,
             setup: doc.setupCode,
-            test: doc.test
+            test: doc.testCode
         });
     }
 
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
-    const [iFrameHeight, setIFrameHeight] = useState(400);
+    const [iFrameHeight, setIFrameHeight] = useState(100);
 
     useEffect(() => {
         if (!loaded || undefined === receivedData) return;
@@ -39,8 +39,8 @@ export const IsaacExecutableCodeSnippet = ({doc}: IsaacExecutableCodeProps) => {
                 // the question fails to compile
                 break;
             case "checker":
-                if (doc?.expectedOutput && doc?.test) {
-                    if (receivedData.result === doc.expectedOutput) {
+                if (doc?.expectedResult && doc?.testCode) {
+                    if (receivedData.result === doc.expectedResult) {
                         sendMessage({
                             type: "feedback",
                             succeeded: true,

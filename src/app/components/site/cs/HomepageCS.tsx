@@ -8,7 +8,7 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
-import {IsaacExecutableCodeSnippet} from "../../content/IsaacExecutableCodeSnippet";
+import {IsaacInteractiveCodeSnippet} from "../../content/IsaacInteractiveCodeSnippet";
 import {IsaacCodeSnippet} from "../../content/IsaacCodeSnippet";
 
 interface ShowMeButtonsProps {
@@ -109,14 +109,14 @@ export const HomepageCS = () => {
             <IsaacCodeSnippet doc={{language: "python",
                 code: "for i in range(0, 100):\n  print(i)",
                 disableHighlighting: false,
-                executable: false
+                interactive: false
             }} />
-            <IsaacExecutableCodeSnippet doc={{
+            <IsaacInteractiveCodeSnippet doc={{
                 id: "ajsbfjlanfknslkdnfla",
                 language: "python",
                 code: /*"for i in range(0, 100):\n  print(i)",*/ "def square(x):\n  return x * x",
-                test: "checkerResult = str([square(2), square(8), square(1), square(-3)])",
-                expectedOutput: "[4, 64, 1, 9]",
+                testCode: "checkerResult = str([square(2), square(8), square(1), square(-3)])",
+                expectedResult: "[4, 64, 1, 9]",
                 url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
             }} />
         </Container>

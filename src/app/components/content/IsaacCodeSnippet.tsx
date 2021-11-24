@@ -4,7 +4,7 @@ import {Col, Row} from "reactstrap";
 
 import hljs from 'highlight.js/lib/core';
 import {addLineNumbers} from "../../services/highlightJs";
-import {IsaacExecutableCodeSnippet} from "./IsaacExecutableCodeSnippet";
+import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -21,8 +21,8 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     }, [doc]);
 
     return <div>
-        {doc.executable ?
-        <IsaacExecutableCodeSnippet doc={doc} />
+        {doc.interactive ?
+        <IsaacInteractiveCodeSnippet doc={doc} />
             :
         <Row>
             <Col className="code-snippet">

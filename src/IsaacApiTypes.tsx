@@ -400,13 +400,13 @@ export interface CodeSnippetDTO extends ContentDTO {
     code?: string;
     disableHighlighting?: boolean;
     url?: string;
-    executable?: boolean;
+    interactive?: boolean;
 }
 
-export interface ExecutableCodeSnippetDTO extends CodeSnippetDTO {
+export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
     setupCode?: string;
-    test?: string;
-    expectedOutput?: string;
+    testCode?: string;
+    expectedResult?: string;
 }
 
 export interface GraphChoiceDTO extends ChoiceDTO {
