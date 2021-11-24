@@ -787,7 +787,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
         }
     }
 
-    private makeChemicalElementMenuItem(symbol: string): Nullable<MenuItem> {
+    private makeChemicalElementMenuItem = (symbol: string): Nullable<MenuItem> => {
         if (this._chemicalElements.includes(symbol)) {
             return new MenuItem('ChemicalElement', { element: symbol }, { label: `\\text{${symbol}}`, texLabel: true, className: `chemical-element ${symbol}` });
         } else if (this._chemicalParticles.hasOwnProperty(symbol)) {
@@ -833,6 +833,12 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
 
     private onMouseDown(e: MouseEvent) {
         // preventDefault here to stop selection on desktop
+        if (isDefined(e.currentTarget) && (e.currentTarget as HTMLInputElement).id === 'chem-text-entry-box') {
+            // This is better than nothing but doesn't allow the user to
+            // select the position of the cursor or select or anything else.
+            (e.currentTarget as HTMLInputElement).focus();
+            return true;
+        }
         e.preventDefault();
         if (!this.state.sketch) {
             return;
@@ -1119,6 +1125,12 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
         }
         const mathsOtherFunctionsTabLabel = '\\sin\\ \\int';
 
+        let parsedChemicalElements: Nullable<MenuItem[]>; 
+        if (isDefined(this.state.unparsedChemicalElements)) {
+            const splitChemicalElements = this.state.unparsedChemicalElements.replace(/[^a-z]+/img, ',').split(',').filter(s => this._chemicalElements.includes(s));
+            parsedChemicalElements = [... new Set(splitChemicalElements.map(this.makeChemicalElementMenuItem).filter(isDefined))];
+        }
+
         const menu: JSX.Element =
         <nav className="inequality-ui" ref={this._menuRef}>
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
@@ -1172,13 +1184,17 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                     }</ul>}
                 </div>}
                 {this.props.editorMode === 'maths' && this.state.activeMenu === 'mathsOtherFunctions' && mathsOtherFunctionsMenu}
-                { this.isUserPrivileged() && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
-                    <Input type="text" value={this.state.unparsedChemicalElements || ""} onChange={this.onUnparsedChemicalElementsChange} />
-                    <ul className="sub-menu elements">
-                        {this.state.menuItems.parsedChemicalElements.map(this.menuItem)}
-                    </ul>
+                {(!isDefined(this.props.availableSymbols) || this.props.availableSymbols.length === 0) && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements text-entry">
+                    <div className="input-box">
+                        <Input id="chem-text-entry-box" type="text" placeholder="Type chemical elements here" onMouseDown={e => this.onMouseDown(e as any)} value={this.state.unparsedChemicalElements || ""} onChange={this.onUnparsedChemicalElementsChange} />
+                    </div>
+                    <div className="items-box">
+                        <ul className="sub-menu elements">
+                            {isDefined(parsedChemicalElements) && parsedChemicalElements.map(this.menuItem)}
+                        </ul>
+                    </div>
                 </div>}
-                {!this.isUserPrivileged() && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
+                { isDefined(this.props.availableSymbols) && this.props.availableSymbols.length > 0 && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
                     <ul className="sub-menu elements">
                         {this.state.menuItems.chemicalElements.map(this.menuItem)}
                     </ul>
