@@ -35,7 +35,7 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
                 <h4>Click a button to show the answer</h4>
             </Col>
             <Col md="3" className="text-center not-mobile">
-                <Button outline color="primary" className="numeric-help" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
+                <Button outline color="primary" className="confidence-help" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
             </Col>
         </Row>}
         <Row className="mb-2">
