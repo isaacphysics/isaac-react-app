@@ -400,7 +400,6 @@ export interface CodeSnippetDTO extends ContentDTO {
     code?: string;
     disableHighlighting?: boolean;
     url?: string;
-    interactive?: boolean;
 }
 
 export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {

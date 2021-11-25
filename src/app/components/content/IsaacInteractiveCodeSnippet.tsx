@@ -37,6 +37,9 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
 
                 // checkerFail represents a log message for when the test code written for
                 // the question fails to compile
+                if (segueEnvironment === "DEV") {
+                    console.error("IsaacExecutableCodeSnippet checker error: " + receivedData.message);
+                }
                 break;
             case "checker":
                 if (doc?.expectedResult && doc?.testCode) {
