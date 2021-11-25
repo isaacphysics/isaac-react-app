@@ -76,5 +76,13 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         }
     }, [receivedData]);
 
-    return <iframe title={"Code Sandbox"} src={"http://localhost:3000/#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100 mb-1"} style={{resize: "none", height: iFrameHeight, border: "none", overflow: "hidden"}} scrolling="no"/>;
+    return <iframe title={"Code Sandbox"} src={"http://localhost:3000/#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100 mb-1"} style={
+        {
+            resize: "none",
+            height: iFrameHeight,
+            border: "none",
+            overflow: "hidden",
+            backgroundColor: "transparent"
+        }
+    } scrolling="no" allowTransparency={true} frameBorder={0} />;
 }
