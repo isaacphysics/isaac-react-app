@@ -43,20 +43,17 @@
       }
     }
 
-    &:hover {
-      .label {text-decoration: none;}
-      .title {text-decoration: underline;}
-    }
-
     .stage-label {
       font-family: $secondary-font;
       padding: 1rem;
       min-width: 130px;
       max-width: 130px;
       text-align: center;
-      &:hover {
-        text-decoration: none !important;
-      }
+    }
+
+    &:hover {
+      text-decoration: none;
+      .title {text-decoration: underline;}
     }
   }
 }
