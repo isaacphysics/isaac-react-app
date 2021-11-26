@@ -17,6 +17,7 @@ import {
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
+import {fastTrackProgressEnabledBoards} from "../../services/constants";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -53,12 +54,15 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     // Select QuestionComponent from the question part's document type (or default)
     const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
 
+    // FastTrack buttons should only show up if on a FastTrack-enabled board
+    const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
+
     // Determine Action Buttons
-    const primaryAction = fastTrackInfo.isFastTrackPage ?
+    const primaryAction = isFastTrack ?
         determineFastTrackPrimaryAction(fastTrackInfo) :
         {disabled: !canSubmit, value: "Check my answer", type: "submit"};
 
-    const secondaryAction = fastTrackInfo.isFastTrackPage ?
+    const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
         null;
 

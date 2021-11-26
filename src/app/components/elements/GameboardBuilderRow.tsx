@@ -11,6 +11,7 @@ import {Question} from "../pages/Question";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {determineAudienceViews} from "../../services/userContext";
+import {generateQuestionTitle} from "../../services/questions";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -74,7 +75,7 @@ export const GameboardBuilderRow = (
         <td className="w-40">
             {provided && <img src="/assets/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
             <a className="mr-2" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
-                {question.title}
+                {generateQuestionTitle(question)}
             </a>
             <input
                 type="image" src="/assets/new-tab.svg" alt="Preview question" title="Preview question in modal"
