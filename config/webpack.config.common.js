@@ -89,7 +89,7 @@ module.exports = (isProd) => {
                             test: /\.scss$/,
                             use: [
                                 'style-loader',
-                                isProd ? MiniCssExtractPlugin.loader : null,
+                                isProd ? { loader: MiniCssExtractPlugin.loader, options: { esModule: false } } : null,
                                 'css-loader',
                                 'sass-loader',
                             ].filter(Boolean),
