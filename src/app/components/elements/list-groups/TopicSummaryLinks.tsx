@@ -32,7 +32,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
             .map(item => {
                 const intendedAudience = isIntendedAudience(item.audience, userContext, user);
                 const showOtherContent = userContext.showOtherContent;
-                return {...item, deEmphasised: !intendedAudience, hidden: !(intendedAudience || showOtherContent)};
+                return {...item, deEmphasised: !intendedAudience, hidden: !intendedAudience && !showOtherContent};
             })
 
             // Filter-out hidden items
