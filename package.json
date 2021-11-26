@@ -197,6 +197,6 @@
     "jest-environment-enzyme": "^7.0.2",
     "jest-enzyme": "^7.0.2",
     "redux-mock-store": "^1.5.3",
-    "webpack-bundle-analyzer": "^3.3.2"
+    "webpack-bundle-analyzer": "^4.5.0"
   }
 }
