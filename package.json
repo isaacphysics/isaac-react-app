@@ -81,7 +81,7 @@
     "js-cookie": "^2.2.0",
     "katex": "^0.13.18",
     "lodash": "^4.17.21",
-    "mini-css-extract-plugin": "0.8.0",
+    "mini-css-extract-plugin": "^2.4.5",
     "npm-overlapping-marker-spiderfier": "^1.0.3",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "p5": "^1.4.0",
