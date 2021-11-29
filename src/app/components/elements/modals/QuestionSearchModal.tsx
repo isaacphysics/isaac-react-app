@@ -14,7 +14,7 @@ import {
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
+import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
@@ -59,7 +59,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
-    const [questionsSort, setQuestionsSort] = useState({});
+    const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({difficulty: SortOrder.ASC});
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
@@ -170,7 +170,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
                 />
             </RS.Col>}
             {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
@@ -222,13 +222,18 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             </thead>
             <tbody>
                 {
-                    questions && sortQuestions(searchBook.length === 0 ? questionsSort : {title: SortOrder.ASC})(questions.filter((question) => {
-                        let qIsPublic = searchResultIsPublic(question, user);
-                        if (isBookSearch) return qIsPublic;
-                        let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
+                    questions &&
+                    sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+                        questions.filter(question => {
+                            let qIsPublic = searchResultIsPublic(question, user);
+                            if (isBookSearch) return qIsPublic;
+                            let qTopicsMatch =
+                                searchTopics.length == 0 ||
+                                (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
 
-                        return qIsPublic && qTopicsMatch;
-                    })).map((question) =>
+                            return qIsPublic && qTopicsMatch;
+                        })
+                    ).map(question =>
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}
                             selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}

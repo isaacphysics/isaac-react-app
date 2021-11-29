@@ -72,7 +72,12 @@
 }
 
 .difficulty-title {
-  font-weight: 600;
-  font-size: 0.8rem;
+  font-weight: 400;
+  font-size: 0.92rem;
   &.active {color: white;}
+  &.difficulty-icon-title {
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
 }
+
