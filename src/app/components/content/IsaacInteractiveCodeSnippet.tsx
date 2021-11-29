@@ -38,7 +38,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                 // checkerFail represents a log message for when the test code written for
                 // the question fails to compile
                 if (segueEnvironment === "DEV") {
-                    console.error("IsaacExecutableCodeSnippet checker error: " + receivedData.message);
+                    console.error("IsaacInteractiveCodeSnippet checker error: " + receivedData.message);
                 }
                 break;
             case "checker":
@@ -71,7 +71,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                 break;
             default:
                 if (segueEnvironment === "DEV") {
-                    console.error("IsaacExecutableCodeSnippet received a malformed message from the editor iframe!");
+                    console.error("IsaacInteractiveCodeSnippet received a malformed message from the editor iframe!");
                 }
         }
     }, [receivedData]);
