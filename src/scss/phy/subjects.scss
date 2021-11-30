@@ -97,6 +97,10 @@
       background-color: $color !important;
     }
   }
+
+  .quick-question-options {
+    background: rgba($color, 0.5);
+  }
 }
 
 // FIXME: This is not nice at all, but does fix subject and email prefs!
