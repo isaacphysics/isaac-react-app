@@ -26,6 +26,7 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import uuid from "uuid";
 import {LaTeX} from "../LaTeX";
+import {generateQuestionTitle} from "../../../services/questions";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid.v4().slice(0, 4)).current;
@@ -37,6 +38,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     let itemClasses = "p-0 content-summary-link ";
     itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
 
+    let title = item.title;
     let titleClasses = "content-summary-link-title flex-grow-1 ";
     let titleTextClass = SITE_SUBJECT == SITE.PHY ? "text-secondary" : undefined;
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[]);
@@ -64,6 +66,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             iconLabel = "Shortcut icon";
             break;
         case (DOCUMENT_TYPE.QUESTION):
+            title = generateQuestionTitle(item);
             itemClasses += item.correct ? "bg-success" : "text-info";
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
@@ -103,7 +106,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
         <Link className="p-3 pr-4" to={{pathname: linkDestination, search: search}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className={titleClasses}>
-                <LaTeX className={titleTextClass} markup={item.title ?? ""} />
+                <LaTeX className={titleTextClass} markup={title ?? ""} />
                 {item.summary && <div className="small text-muted d-none d-md-block">{item.summary}</div>}
             </div>
             {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">

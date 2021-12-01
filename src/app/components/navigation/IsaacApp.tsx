@@ -80,6 +80,7 @@ import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
+import {ContentEmails} from "../pages/ContentEmails";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -205,6 +206,7 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
                     <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
                     <TrackedRoute exact path="/admin/emails" ifUser={isAdminOrEventManager} component={AdminEmails} />
+                    <TrackedRoute exact path="/admin/direct_emails" ifUser={isAdminOrEventManager} component={ContentEmails} />
 
                     {/* Authentication */}
                     <TrackedRoute exact path="/login" component={LogIn} />
