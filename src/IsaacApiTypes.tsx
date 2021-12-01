@@ -479,7 +479,7 @@ export interface GroupMembershipDTO {
 
 export type Stage = "year_7" | "year_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "all";
 
-export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "all";
+export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "all";
 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
 

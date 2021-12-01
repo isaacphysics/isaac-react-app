@@ -146,11 +146,11 @@ export function useUserContext(): UseUserContextReturnType {
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
+    {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
     {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
-    {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
