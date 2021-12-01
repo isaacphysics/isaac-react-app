@@ -108,7 +108,7 @@ type EnhancedAssignment = AssignmentDTO & {
     progress?: AppAssignmentProgress[];
 };
 
-type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[], quizAssignments: any};
+type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[], quizAssignments: QuizAssignmentDTO[]};
 
 interface AssignmentProgressPageProps {
     groups: AppGroupWithAssignments[] | null;
@@ -592,7 +592,7 @@ const GroupDetails = (props: GroupDetailsProps) => {
             groupAssignments = <div className="p-4 text-center">There are no assignments for this group.</div>
         }
     }
-    let groupTests: JSX.Element | JSX.Element[];
+    let groupTests: JSX.Element | JSX.Element[] = <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
     if (isDefined(group.quizAssignments) && Array.isArray(group.quizAssignments) && group.quizAssignments.length > 0) {
         groupTests = group.quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} /*{...props}*/ quizAssignment={quizAssignment} />);
     } else {
