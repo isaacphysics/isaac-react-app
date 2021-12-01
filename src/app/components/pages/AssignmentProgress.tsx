@@ -72,10 +72,13 @@ function selectGroups(state: AppState) {
         const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
         if (resourceFound(state.quizAssignments)) { // assigned by me
             for (const qa of state.quizAssignments) {
-                if (isDefined(quizAssignments[qa.groupId || -1])) {
-                    quizAssignments[qa.groupId || -1].push(qa);
+                if (!isDefined(qa.groupId)) {
+                    continue;
+                }
+                if (isDefined(quizAssignments[qa.groupId])) {
+                    quizAssignments[qa.groupId].push(qa);
                 } else {
-                    quizAssignments[qa.groupId || -1] = [qa];
+                    quizAssignments[qa.groupId] = [qa];
                 }
             }
         }
@@ -500,12 +503,14 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
 const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
     const dispatch = useDispatch();
     const { quizAssignment } = props;
-    const quizAssignmentId = isDefined(quizAssignment.id) ? quizAssignment.id : -1;
+    const quizAssignmentId = isDefined(quizAssignment.id) ? quizAssignment.id : null;
     const quizAssignments = useSelector(selectors.quizzes.assignments);
     const [userFeedback, setUserFeedback] = useState<QuizUserFeedbackDTO[]>();
 
     useEffect(() => {
-        dispatch(loadQuizAssignmentFeedback(quizAssignmentId));
+        if (isDefined(quizAssignmentId)) {
+            dispatch(loadQuizAssignmentFeedback(quizAssignmentId));
+        }
     }, [quizAssignmentId]);
 
     useEffect(() => {
@@ -544,7 +549,7 @@ const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
         window.open(event.currentTarget.href, '_blank');
     }
 
-    return <div className="assignment-progress-gameboard" key={quizAssignment.id}>
+    return isDefined(quizAssignment.id) && quizAssignment.id > 0 ? <div className="assignment-progress-gameboard" key={quizAssignment.id}>
         <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
             <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
                 <span>{quizAssignment.quizSummary?.title || "This test has no title"}{isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
@@ -552,14 +557,14 @@ const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
             <div className="gameboard-links align-items-center">
                 <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment?.id || -1)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual assignment</Button>
 
             </div>
         </div>
         {(isExpanded) && <QuizProgressLoader {...props} />}
-    </div>
+    </div> : null;
 };
 
 const GroupDetails = (props: GroupDetailsProps) => {
