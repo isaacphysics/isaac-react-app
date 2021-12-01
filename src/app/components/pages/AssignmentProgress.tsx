@@ -505,7 +505,6 @@ const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
     const { quizAssignment } = props;
     const quizAssignmentId = isDefined(quizAssignment.id) ? quizAssignment.id : null;
     const quizAssignments = useSelector(selectors.quizzes.assignments);
-    const [userFeedback, setUserFeedback] = useState<QuizUserFeedbackDTO[]>();
 
     useEffect(() => {
         if (isDefined(quizAssignmentId)) {
@@ -513,13 +512,15 @@ const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
         }
     }, [quizAssignmentId]);
 
+    let userFeedback: Nullable<QuizUserFeedbackDTO[]> = [];
     useEffect(() => {
         if (resourceFound(quizAssignments)) {
-            setUserFeedback(quizAssignments.find(qa => qa.id === quizAssignmentId)?.userFeedback);
+            userFeedback = quizAssignments.find(qa => qa.id === quizAssignmentId)?.userFeedback;
         }
     }, [quizAssignments])
 
-    return userFeedback ? <QuizProgressDetails {...props} userFeedback={userFeedback} />
+    return isDefined(userFeedback)
+        ? <QuizProgressDetails {...props} userFeedback={userFeedback} />
         : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
 };
 
