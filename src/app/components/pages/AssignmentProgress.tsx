@@ -31,9 +31,10 @@ import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreat
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {getQuizAssignmentCSVDownloadLink} from "../../services/quiz";
 import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { getQuizAssignmentCSVDownloadLink, loadQuizAssignmentFeedback, loadQuizAssignments } from "../../state/actions/quizzes";
+import { loadQuizAssignmentFeedback, loadQuizAssignments } from "../../state/actions/quizzes";
 import { Tabs } from "../elements/Tabs";
 import { isDefined } from "../../services/miscUtils";
 import { resourceFound } from "../../services/validation";
