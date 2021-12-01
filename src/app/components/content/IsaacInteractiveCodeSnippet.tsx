@@ -19,7 +19,9 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             type: "initialise",
             code: doc.code,
             setup: doc.setupCode,
-            test: doc.testCode
+            test: doc.testCode,
+            testInput: doc.testInput,
+            outputRegex: doc.outputRegex
         });
     }
 
@@ -32,13 +34,15 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         switch (receivedData.type) {
             case "log":
             case "checkerFail":
+            case "setupFail":
                 // Offers functionality to log receivedData.message with a proper log event
                 // Essentially log forwarding from the python editor
 
                 // checkerFail represents a log message for when the test code written for
-                // the question fails to compile
+                // the question fails to compile or has a runtime error
+                // setupFail represents the same but for setup code
                 if (segueEnvironment === "DEV") {
-                    console.error("IsaacInteractiveCodeSnippet checker error: " + receivedData.message);
+                    console.error(`IsaacInteractiveCodeSnippet ${receivedData.type === "setupFail" ? "setup code" : "checker"} error: ${receivedData.message}`);
                 }
                 break;
             case "checker":
@@ -84,5 +88,5 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             overflow: "hidden",
             backgroundColor: "transparent"
         }
-    } scrolling="no" allowTransparency={true} frameBorder={0} />;
+    } scrolling="no" allowTransparency={true} frameBorder={0} allow={"clipboard-read; clipboard-write"}/>;
 }

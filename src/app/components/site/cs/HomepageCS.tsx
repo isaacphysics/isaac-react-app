@@ -113,9 +113,11 @@ export const HomepageCS = () => {
             <IsaacInteractiveCodeSnippet doc={{
                 id: "ajsbfjlanfknslkdnfla",
                 language: "python",
-                code: "def square(x):\n  return x * x\nprint(input(\"Input here: \"))",
-                testCode: "checkerResult = str([square(2), square(8), square(1), square(-3)])",
-                expectedResult: "[4, 64, 1, 9]",
+                code: "def square():\n\tx = int(input(\"What do you want to square?\"))\t\n\tprint(x * x)",
+                testCode: "checkerResult = str([square(), square(), square(), square()])",
+                testInput: "2\n8\n-1\n3",
+                outputRegex: ".*4\\n.*64\\n.*1\\n.*9",
+                //expectedResult: "[4, 64, 1, 9]",
                 url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
             }} />
         </Container>
