@@ -566,25 +566,25 @@ export const programmingLanguagesMap: {[language: string]: string} = {
 // EXAM BOARDS
 export enum EXAM_BOARD {
     AQA = "aqa",
-    OCR = "ocr",
     CIE = "cie",
     EDEXCEL = "edexcel",
     EDUQAS = "eduqas",
+    OCR = "ocr",
     WJEC = "wjec",
     ALL = "all",
 }
 export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.AQA]: "AQA",
-    [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.CIE]: "CIE",
     [EXAM_BOARD.EDEXCEL]: "EDEXCEL",
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
+    [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.ALL]: "All exam boards",
 }
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
-export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
+export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC]);
 
 // BOOLEAN LOGIC NOTATION OPTIONS
 export enum BOOLEAN_NOTATION {
