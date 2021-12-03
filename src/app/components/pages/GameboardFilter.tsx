@@ -375,8 +375,6 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     const [concepts, setConcepts] = useState<Item<string>[]>(queryConcepts);
 
-    const boardName = SITE_SUBJECT === SITE.PHY ? generatePhyBoardName(selections) : generateCSBoardName(selections);
-
     const [boardStack, setBoardStack] = useState<string[]>([]);
 
     // Shared props that both PHY and CS filters use
@@ -389,8 +387,14 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         setStages: setStages,
     }
 
+    // Title changing states and logic
+    const [customBoardTitle, setCustomBoardTitle] = useState<string>();
+    const [pendingCustomBoardTitle, setPendingCustomBoardTitle] = useState<string>();
+    const defaultBoardTitle = SITE_SUBJECT === SITE.PHY ? generatePhyBoardName(selections) : generateCSBoardName(selections);
+    const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
+
     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
-                              examBoards: Item<string>[], selections: Item<TAG_ID>[][], boardName: string,
+                              examBoards: Item<string>[], selections: Item<TAG_ID>[][], boardTitle: string,
                               history: History, dispatch: Dispatch<any>) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
@@ -399,6 +403,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         if (concepts.length) params.concepts = toCSV(concepts);
         if (SITE_SUBJECT === SITE.CS && examBoards.length) params.examBoards = toCSV(examBoards);
         if (SITE_SUBJECT === SITE.PHY) {params.questionCategories = "quick_quiz,learn_and_practice";}
+        params.title = boardTitle;
 
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
@@ -409,7 +414,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             }
             params[tier.id] = toCSV(selections[i]);
         });
-        dispatch(generateTemporaryGameboard({...params, title: boardName}));
+
+        dispatch(generateTemporaryGameboard(params));
         delete params.questionCategories;
         history.replace({search: queryString.stringify(params, {encode: false})});
     }
@@ -423,7 +429,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             dispatch(loadGameboard(gameboardIdAnchor));
         } else {
             setBoardStack([]);
-            loadNewGameboard(stages, difficulties, concepts, examBoards, selections, boardName, history, dispatch)
+            loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history, dispatch)
         }
     }, [selections, stages, difficulties, concepts, examBoards]);
 
@@ -433,7 +439,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 boardStack.push(gameboard.id as string);
                 setBoardStack(boardStack);
             }
-            debouncedLeadingLoadGameboard(stages, difficulties, concepts, examBoards, selections, boardName, history, dispatch);
+            debouncedLeadingLoadGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history, dispatch);
         }
     }
 
@@ -475,7 +481,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         </RS.Row>
                     </button>
                 </RS.Col>}
-                <RS.Col sm={4} lg={3} className={`text-center mt-3 mb-4 ${SITE_SUBJECT === SITE.CS ? "ml-auto mr-auto mt-sm-0 mb-sm-3" : "m-sm-0"}`}>
+                {SITE_SUBJECT === SITE.PHY && <RS.Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
                     {filterExpanded ?
                         <RS.Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
                             Scroll to questions...
@@ -485,7 +491,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                             Edit question filters
                         </RS.Button>
                     }
-                </RS.Col>
+                </RS.Col>}
             </RS.Row>
 
             {/* Filter */}
@@ -510,22 +516,54 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
             <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
                 Go to Questions...
             </RS.Button>
-            <RS.Button
+            {<RS.Button
                 color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
                 className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
-            />
+            />}
         </RS.Card>
 
-        <div ref={gameboardRef} className="row mt-4 mb-3">
-            <RS.Col>
-                <h3>{boardName}</h3>
-            </RS.Col>
-            <RS.Col className="text-right">
-                {gameboard && <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}`}>
+        {gameboard && <div ref={gameboardRef} className="row mt-4 mb-3">
+            {SITE_SUBJECT === SITE.CS ? <>
+                <RS.Col xs={12} lg={"auto"} >
+                    {isEditingTitle
+                        ? <RS.Input defaultValue={customBoardTitle ?? gameboard?.title}
+                                    onChange={e => setPendingCustomBoardTitle(e.target.value)}
+                                    className={"mb-2 mb-lg-0"} />
+                        : <h3>{customBoardTitle ?? gameboard?.title}</h3>
+                    }
+                </RS.Col>
+                <RS.Col xs={12} sm={isEditingTitle ? 7 : 4} lg={isEditingTitle ? 4 : 2} className={"pt-0 pt-lg-1 pb-1 pb-md-0"} >
+                    {isEditingTitle ? <>
+                            <RS.Button size={"sm"} color="secondary" onClick={() => {
+                                setIsEditingTitle(false);
+                                // Only save the title if the input element changed it
+                                if (pendingCustomBoardTitle) {
+                                    setCustomBoardTitle(pendingCustomBoardTitle);
+                                }
+                            }}>
+                                Save title
+                            </RS.Button>
+                            <RS.Button size={"sm"} color="secondary" className={"ml-2"} onClick={() => setIsEditingTitle(false)}>
+                                Cancel
+                            </RS.Button>
+                        </> :
+                        <RS.Button size={"sm"} color="secondary" onClick={() => {
+                            setIsEditingTitle(true);
+                            setPendingCustomBoardTitle(undefined);
+                        }}>
+                            Edit title
+                        </RS.Button>}
+                </RS.Col>
+            </> :
+            <RS.Col xs={12} lg={"auto"} >
+                <h3>{defaultBoardTitle}</h3>
+            </RS.Col>}
+            <RS.Col xs={8} lg={"auto"} className="ml-auto text-right">
+                <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}>
                     Save to My&nbsp;Gameboards
-                </RS.Button>}
+                </RS.Button>
             </RS.Col>
-        </div>
+        </div>}
 
         <div className="pb-4">
             <ShowLoading
