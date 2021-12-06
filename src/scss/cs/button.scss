@@ -4,10 +4,27 @@
   &.btn-secondary {
     color: $black;
   }
+  &.btn-red {
+    background-color: $cs-reddish;
+  }
+  &.btn-yellow {
+    background-color: $cs-mustard;
+  }
+  &.btn-green {
+    background-color: $green;
+  }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $cs-reddish;
     border: 1px solid transparent;
     color: $black;
     text-decoration: underline;
   }
+}
+
+.quick-question-options {
+  background: rgba(lightcoral, 0.5);
+  border: 1px solid transparent;
+  color: $black;
+  border-radius: 5px;
+  padding: 10px !important;
 }
