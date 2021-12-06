@@ -19,16 +19,13 @@ import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
-import Select, {Styles, ValueType} from "react-select";
+import Select, {Styles} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import { unwrapValue } from "../../services/select";
 
 interface Item<T> {
     value: T;
     label: string;
-}
-
-function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
-    return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? [...value] : !value ? [] : [value]);
 }
 
 function itemise(document: DOCUMENT_TYPE): Item<DOCUMENT_TYPE> {

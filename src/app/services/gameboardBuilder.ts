@@ -85,14 +85,14 @@ export const groupTagSelectionsByParent = (parent: Tag) => {
 };
 
 // TODO REMOVE AUDIENCE_CONTEXT Let's move from multiSelectOnChange and selectOnChange to select.ts.unwrapValue(...) for types and consistency
-export const multiSelectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
+export const multiSelectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}, false>) => {
     if (e && Array.isArray(e)) {
         setValue(e.map((item) => item.value));
     } else {
         setValue([]);
     }
 };
-export const selectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
+export const selectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}, false>) => {
     if (e) {
         const value = (e as {value: T; label: string})?.value;
         if (value) {
