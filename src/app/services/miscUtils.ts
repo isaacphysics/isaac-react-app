@@ -1,4 +1,5 @@
 import React, {RefObject, useEffect} from "react";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 // undefined|null checker and type guard all-in-wonder.
 // Why is this not in Typescript?
@@ -27,4 +28,11 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [...deps, ref]);
+}
+
+export function siteSpecific<P, C>(phy: P, cs: C) {
+    if (SITE_SUBJECT === SITE.PHY) {
+        return phy;
+    }
+    return cs;
 }

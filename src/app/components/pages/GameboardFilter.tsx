@@ -25,6 +25,7 @@ import {debounce} from "lodash";
 import {History} from "history";
 import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {siteSpecific} from "../../services/miscUtils";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -297,7 +298,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
                     <Select
                     inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
-                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select a topic"}
+                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
                     value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
                     /> :
                     <IsaacSpinner/>}
@@ -327,7 +328,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         }
     }, [gameboard, gameboardIdAnchor, gameboardOrNotFound])
 
-    const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
+    const [filterExpanded, setFilterExpanded] = useState(siteSpecific(deviceSize != "xs", true));
     const gameboardRef = useRef<HTMLDivElement>(null);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
@@ -344,18 +345,16 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         i = 2;
     }
 
-    const tiers: Tier[] = {
-        [SITE.PHY]: [
+    const tiers: Tier[] = siteSpecific([
             {id: "subjects", name: "Subject"},
             {id: "fields", name: "Field"},
             {id: "topics", name: "Topic"},
         ],
-        [SITE.CS]: [
+        [
             {id: "subjects", name: "Category"},
             {id: "fields", name: "Strand"},
             {id: "topics", name: "Topic"},
-        ]
-    }[SITE_SUBJECT].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
+        ]).map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
 
     const [stages, setStages] = useState<Item<string>[]>(
         queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
@@ -408,7 +407,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
-                    params[tier.id] = SITE_SUBJECT === SITE.PHY ? "physics,maths,chemistry" : TAG_ID.computerScience;
+                    params[tier.id] = siteSpecific("physics,maths,chemistry", TAG_ID.computerScience);
                 }
                 return;
             }
@@ -464,12 +463,12 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle="Choose your Questions" help={pageHelp} modalId="gameboard_filter_help"/>
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
-            <RS.Row>
-                {SITE_SUBJECT === SITE.PHY && <RS.Col sm={8} lg={9}>
+            {SITE_SUBJECT === SITE.PHY && <RS.Row>
+                <RS.Col sm={8} lg={9}>
                     <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
                             <RS.Col lg={6} className="mt-3 mt-lg-0">
@@ -480,8 +479,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                             </RS.Col>
                         </RS.Row>
                     </button>
-                </RS.Col>}
-                {SITE_SUBJECT === SITE.PHY && <RS.Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
+                </RS.Col>
+                <RS.Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
                     {filterExpanded ?
                         <RS.Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
                             Scroll to questions...
@@ -491,14 +490,28 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                             Edit question filters
                         </RS.Button>
                     }
-                </RS.Col>}
-            </RS.Row>
+                </RS.Col>
+            </RS.Row>}
+
+            {SITE_SUBJECT === SITE.CS && (filterExpanded
+                ?
+                <RS.Row className={"mb-3"}>
+                    <RS.Col>
+                        <span>Specify your search criteria and we will generate a random selection of up to 10 questions for your chosen filter(s). Shuffle the questions to get a new random selection.</span>
+                    </RS.Col>
+                </RS.Row>
+                :
+                <RS.Col xs={12} className={`text-center mt-3 mb-4 m-sm-0`}>
+                    <RS.Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
+                        Edit question filters
+                    </RS.Button>
+                </RS.Col>)}
 
             {/* Filter */}
-            {filterExpanded && ({
-                [SITE.PHY]: <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
-                [SITE.CS]:  <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
-            }[SITE_SUBJECT])}
+            {filterExpanded && siteSpecific(
+                <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
+                <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
+            )}
 
             {/* Buttons */}
             <RS.Row className={filterExpanded ? "mt-4" : ""}>
@@ -514,50 +527,54 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 </RS.Col>
             </RS.Row>
             <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
-                Go to Questions...
+                {siteSpecific("Go to Questions...", "Scroll to Questions...")}
             </RS.Button>
-            {<RS.Button
+            <RS.Button
                 color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
                 className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
-            />}
+            />
         </RS.Card>
 
         {gameboard && <div ref={gameboardRef} className="row mt-4 mb-3">
-            {SITE_SUBJECT === SITE.CS ? <>
+            {siteSpecific(
+                // PHY
                 <RS.Col xs={12} lg={"auto"} >
-                    {isEditingTitle
-                        ? <RS.Input defaultValue={customBoardTitle ?? gameboard?.title}
-                                    onChange={e => setPendingCustomBoardTitle(e.target.value)}
-                                    className={"mb-2 mb-lg-0"} />
-                        : <h3>{customBoardTitle ?? gameboard?.title}</h3>
-                    }
-                </RS.Col>
-                <RS.Col xs={12} sm={isEditingTitle ? 7 : 4} lg={isEditingTitle ? 4 : 2} className={"pt-0 pt-lg-1 pb-1 pb-md-0"} >
-                    {isEditingTitle ? <>
+                    <h3>{defaultBoardTitle}</h3>
+                </RS.Col>,
+                // CS
+                <>
+                    <RS.Col xs={12} lg={"auto"} >
+                        {isEditingTitle
+                            ? <RS.Input defaultValue={customBoardTitle ?? gameboard?.title}
+                                        onChange={e => setPendingCustomBoardTitle(e.target.value)}
+                                        className={"mb-2 mb-lg-0"} />
+                            : <h3>{customBoardTitle ?? gameboard?.title}</h3>
+                        }
+                    </RS.Col>
+                    <RS.Col xs={12} sm={isEditingTitle ? 7 : 4} lg={isEditingTitle ? 4 : 2} className={"pt-0 pt-lg-1 pb-1 pb-md-0"} >
+                        {isEditingTitle ? <>
+                                <RS.Button size={"sm"} color="secondary" onClick={() => {
+                                    setIsEditingTitle(false);
+                                    // Only save the title if the input element changed it
+                                    if (pendingCustomBoardTitle) {
+                                        setCustomBoardTitle(pendingCustomBoardTitle);
+                                    }
+                                }}>
+                                    Save title
+                                </RS.Button>
+                                <RS.Button size={"sm"} color="secondary" className={"ml-2"} onClick={() => setIsEditingTitle(false)}>
+                                    Cancel
+                                </RS.Button>
+                            </> :
                             <RS.Button size={"sm"} color="secondary" onClick={() => {
-                                setIsEditingTitle(false);
-                                // Only save the title if the input element changed it
-                                if (pendingCustomBoardTitle) {
-                                    setCustomBoardTitle(pendingCustomBoardTitle);
-                                }
+                                setIsEditingTitle(true);
+                                setPendingCustomBoardTitle(undefined);
                             }}>
-                                Save title
-                            </RS.Button>
-                            <RS.Button size={"sm"} color="secondary" className={"ml-2"} onClick={() => setIsEditingTitle(false)}>
-                                Cancel
-                            </RS.Button>
-                        </> :
-                        <RS.Button size={"sm"} color="secondary" onClick={() => {
-                            setIsEditingTitle(true);
-                            setPendingCustomBoardTitle(undefined);
-                        }}>
-                            Edit title
-                        </RS.Button>}
-                </RS.Col>
-            </> :
-            <RS.Col xs={12} lg={"auto"} >
-                <h3>{defaultBoardTitle}</h3>
-            </RS.Col>}
+                                Edit title
+                            </RS.Button>}
+                    </RS.Col>
+                </>
+            )}
             <RS.Col xs={8} lg={"auto"} className="ml-auto text-right">
                 <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}>
                     Save to My&nbsp;Gameboards
