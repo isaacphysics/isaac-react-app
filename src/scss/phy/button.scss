@@ -2,20 +2,6 @@
 
 .btn, input.btn {
   //Button Secondary
-  &.btn-red, &.btn-yellow, &.btn-green {
-    border: 1px solid transparent;
-    color: $black;
-    width: 100px !important;
-    min-width: 100px !important;
-    padding: 0 !important;
-    border-radius: 5px;
-
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-black !important;
-    }
-  }
   &.btn-red {
     background-color: $phy_orangered;
   }
@@ -25,13 +11,7 @@
   &.btn-green {
     background-color: $a11y_green;
   }
-  &.btn-green:not(:disabled):not(.disabled):active, &.btn-yellow:not(:disabled):not(.disabled):active,
-  &.btn-red:not(:disabled):not(.disabled):active {
-    border: 1px solid transparent;
-    color: $black;
-    text-decoration: underline;
-    border-radius: 5px;
-  }
+
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: darken(theme-color("secondary"), 4);
     border: 1px solid transparent;
