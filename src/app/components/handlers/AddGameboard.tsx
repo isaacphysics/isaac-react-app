@@ -1,11 +1,10 @@
 import React, {useEffect} from "react";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "./ShowLoading";
-import {useDispatch, useSelector} from "react-redux";
-import {addGameboard, loadGameboard} from "../../state/actions";
+import {useDispatch} from "react-redux";
+import {addGameboard} from "../../state/actions";
 import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
-import {selectors} from "../../state/selectors";
 
 interface AddGameboardProps {
     user: PotentialUser;
