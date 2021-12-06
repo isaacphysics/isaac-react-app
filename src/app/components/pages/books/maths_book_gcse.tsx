@@ -20,9 +20,9 @@ export const MathsBookGcse = () => {
                 <PageFragment fragmentId="maths_book_gcse_intro"/>
             </div>
             <div className="book-levels">
-                <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
+                <Tabs tabTitleClass="px-3 py-1 hint-tab-title" tabContentClass="pt-2">
                     {{
-                        Ordered: <Col>
+                        'Boards for Class and Homework': <Col>
                             <h4>Chapters:</h4>
                             <Row>
                                 <Col md={6} className="p-2">
@@ -62,7 +62,7 @@ export const MathsBookGcse = () => {
                                 </Col>
                             </Row>
                         </Col>,
-                        Sequential: <Col>
+                        'Boards Containing all Questions': <Col>
                             <h4>Chapters:</h4>
                             <Row>
                                 <Col md={6} className="p-2">
