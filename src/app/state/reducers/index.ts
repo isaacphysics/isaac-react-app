@@ -45,7 +45,7 @@ import {
     quizAttempt,
     quizAttemptedFreelyByMe,
     quizPreview,
-    quizzes,
+    quizzes, studentQuizAttempt,
 } from "./quizState";
 
 const appReducer = combineReducers({
@@ -136,6 +136,7 @@ const appReducer = combineReducers({
     quizAssignments,
     quizAssignedToMe,
     quizAttempt,
+    studentQuizAttempt,
     quizAssignment,
     quizPreview,
     quizAttemptedFreelyByMe,

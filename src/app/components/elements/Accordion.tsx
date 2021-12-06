@@ -13,6 +13,7 @@ import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import uuid from "uuid";
 import {notRelevantMessage, useUserContext} from "../../services/userContext";
+import classnames from "classnames";
 
 interface AccordionsProps {
     id?: string;
@@ -129,7 +130,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={`${open ? 'active' : ''} ${deEmphasised ? 'de-emphasised' : ""} d-flex align-items-stretch`}
+                className={"d-flex align-items-stretch " + classnames({"de-emphasised": deEmphasised, "active": open})}
                 onClick={(event: any) => {
                     pauseAllVideos();
                     const nextState = !open;

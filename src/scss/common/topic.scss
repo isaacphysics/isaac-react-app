@@ -1,2 +1,59 @@
-#topic-page {
+.topic-summary-link {
+  background: white;
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  border-top: 1px solid $shadow-08 !important;
+  padding: 0;
+  &:first-of-type {border-top: 0;}
+  a {
+    border-radius: 0;
+    font-family: $secondary-font-semi-bold;
+    font-size: 1.25rem !important;
+    transition: all 0.5s ease;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    text-align: left;
+    text-decoration: none;
+
+    .title {
+      padding-right: 30px;
+      flex-grow: 1;
+    }
+
+    &:after {
+      content: "";
+      background-image: url('/assets/chevron_right.svg');
+      background-repeat: no-repeat;
+      background-position: right;
+      width: 20px;
+      height: 10px;
+      margin-right: 1rem;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    &.de-emphasised, &.de-emphasised:hover {
+      background: darken(#fff, 9%);
+      color: lighten(black, 10%);
+      .stage-label {
+        background: lighten($dark, 10%);
+        color: white;
+      }
+    }
+
+    .stage-label {
+      font-family: $secondary-font;
+      padding: 1rem;
+      min-width: 130px;
+      max-width: 130px;
+      text-align: center;
+    }
+
+    &:hover {
+      text-decoration: none;
+      .title {text-decoration: underline;}
+    }
+  }
 }

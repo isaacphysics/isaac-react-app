@@ -169,6 +169,29 @@ export const selectors = {
             }
             return quizAttempt;
         },
+        currentStudentQuizAttempt: (state: AppState) => {
+            const quizAttempt = state?.studentQuizAttempt;
+            if (!isDefined(quizAttempt)) {
+                return null;
+            }
+            if ('error' in quizAttempt) {
+                return quizAttempt;
+            }
+            if (isDefined(quizAttempt?.studentAttempt?.attempt?.quiz)) {
+                const questions = selectors.questions.getQuestions(state);
+                const answerMap = questions?.reduce((map, q) => {
+                    map[q.id as string] = q.currentAttempt;
+                    return map;
+                }, {} as {[id: string]: ChoiceDTO | undefined}) ?? {};
+                const quizQuestions = extractQuestions(quizAttempt?.studentAttempt?.attempt?.quiz);
+                quizQuestions.forEach(question => {
+                    if (answerMap[question.id as string] && (question.bestAttempt === null || question.bestAttempt?.correct === undefined)) {
+                        question.bestAttempt = {answer: answerMap[question.id as string]};
+                    }
+                });
+            }
+            return quizAttempt;
+        },
         assignment: function (state: AppState) {
             return state?.quizAssignment;
         },

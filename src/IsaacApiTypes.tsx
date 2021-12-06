@@ -134,6 +134,10 @@ export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
 }
 
+export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
+    withReplacement?: boolean;
+}
+
 export interface IsaacPodDTO extends ContentDTO {
     image?: ImageDTO;
     url?: string;
@@ -235,6 +239,11 @@ export interface QuizFeedbackDTO {
 export interface QuizUserFeedbackDTO {
     user?: UserSummaryDTO;
     feedback?: QuizFeedbackDTO;
+}
+
+export interface QuizAttemptFeedbackDTO {
+    user?: UserSummaryDTO;
+    attempt?: QuizAttemptDTO;
 }
 
 export interface UserGameboardProgressSummaryDTO {
@@ -470,7 +479,7 @@ export interface GroupMembershipDTO {
 
 export type Stage = "year_7" | "year_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "all";
 
-export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "all";
+export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "all";
 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
 

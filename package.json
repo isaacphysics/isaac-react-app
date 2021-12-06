@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "1.6.11",
+  "version": "1.6.15-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.9.0",
@@ -20,6 +20,7 @@
     "@types/enzyme": "^3.9.1",
     "@types/he": "^1.1.0",
     "@types/history": "^4.7.2",
+    "@types/html-to-text": "^8.0.1",
     "@types/jest": "^26.0.8",
     "@types/js-cookie": "^2.2.2",
     "@types/node": "11.11.0",
@@ -67,6 +68,7 @@
     "he": "^1.2.0",
     "highlight.js": "^11.2.0",
     "history": "^4.9.0",
+    "html-to-text": "^8.0.0",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
     "inequality": "0.9.33",

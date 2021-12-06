@@ -83,6 +83,10 @@ export const clearQuizAttempt = () => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: {}});
 };
 
+export const clearStudentQuizAttempt = () => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS, studentAttempt: {}});
+};
+
 export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     // Get current answer
     const state = getState();
@@ -121,6 +125,17 @@ export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatc
     } catch (e: any) {
         dispatch(showErrorToastIfNeeded("Loading quiz feedback failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
+    }
+};
+
+export const loadStudentQuizAttemptFeedback = (quizAttemptId: number, userId: number) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST, quizAttemptId, userId});
+    try {
+        const studentAttempt = await api.quizzes.loadStudentQuizAttemptFeedback(quizAttemptId, userId);
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS, studentAttempt: studentAttempt.data});
+    } catch (e: any) {
+        dispatch(showErrorToastIfNeeded("Loading student quiz feedback failed", e));
+        dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
 
@@ -202,6 +217,19 @@ export const updateQuizAssignmentFeedbackMode = (quizAssignmentId: number, quizF
         return true;
     } catch (e) {
         dispatch(showErrorToastIfNeeded("Failed to update feedback mode", e));
+        return false;
+    }
+};
+
+export const updateQuizAssignmentDueDate = (quizAssignmentId: number, dueDate: Date) => async (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_REQUEST});
+    try {
+        const update = {dueDate};
+        await api.quizzes.updateQuizAssignment(quizAssignmentId, update);
+        dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS, quizAssignmentId, update});
+        return true;
+    } catch (e) {
+        dispatch(showErrorToastIfNeeded("Failed to update due date", e));
         return false;
     }
 };

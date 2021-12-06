@@ -3,6 +3,7 @@ import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID}
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
+    EmailTemplateDTO,
     EventBookingDTO,
     GameboardDTO,
     ResultsWrapper,
@@ -163,6 +164,9 @@ export const api = {
         },
         sendAdminEmailWithIds: (contentid: string, emailType: string, ids: number[]): AxiosPromise => {
             return endpoint.post(`/email/sendemailwithuserids/${contentid}/${emailType}`, ids);
+        },
+        sendProvidedEmailWithUserIds: (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]): AxiosPromise => {
+            return endpoint.post(`/email/sendprovidedemailwithuserids/${emailType}`, {userIds: ids, emailTemplate: emailTemplate});
         },
     },
     notifications: {
@@ -576,6 +580,9 @@ export const api = {
         },
         loadQuizAttemptFeedback: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.get(`/quiz/attempt/${quizAttemptId}/feedback`);
+        },
+        loadStudentQuizAttemptFeedback: (quizAssignmentId: number, userId: number): AxiosPromise<ApiTypes.QuizAttemptFeedbackDTO> => {
+            return endpoint.get(`/quiz/assignment/${quizAssignmentId}/attempt/${userId}`)
         },
         loadQuizAssignmentFeedback: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAssignmentDTO> => {
             return endpoint.get(`/quiz/assignment/${quizAssignmentId}`);

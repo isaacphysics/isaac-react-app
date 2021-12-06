@@ -5,6 +5,7 @@ import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {katexify} from "./LaTeX";
+import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
 
 const htmlDom = document.createElement("html");
 function manipulateHtml(html: string) {
@@ -33,7 +34,7 @@ function manipulateHtml(html: string) {
     return htmlDom.innerHTML;
 }
 
-export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
+export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string}) => {
     const user = useSelector(selectors.user.orNull);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
@@ -42,7 +43,8 @@ export const TrustedHtml = ({html, span}: {html: string; span?: boolean}) => {
     const figureNumbers = useContext(FigureNumberingContext);
 
     html = manipulateHtml(katexify(html, user, booleanNotation, screenReaderHoverText, figureNumbers));
+    html = useClozeDropRegionsInHtml(html);
 
     const ElementType = span ? "span" : "div";
-    return <ElementType dangerouslySetInnerHTML={{__html: html}} />;
+    return <ElementType className={className} dangerouslySetInnerHTML={{__html: html}} />;
 };

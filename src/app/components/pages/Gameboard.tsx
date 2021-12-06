@@ -20,6 +20,8 @@ import {
     determineAudienceViews,
     filterAudienceViewsByProperties
 } from "../../services/userContext";
+import {LaTeX} from "../elements/LaTeX";
+import {generateQuestionTitle} from "../../services/questions";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -80,7 +82,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                 }
             </span>
             <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
-                <span className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>{question.title}</span>
+                <LaTeX className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""} markup={generateQuestionTitle(question)} />
                 {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
                 {questionTags && <div className="gameboard-tags">
                     {questionTags.map(tag => (<span className="gameboard-tag" key={tag.id}>{tag.title}</span>))}

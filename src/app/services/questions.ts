@@ -10,8 +10,9 @@ import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
 import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
 import {AppQuestionDTO} from "../../IsaacAppTypes";
-import {REVERSE_GREEK_LETTERS_MAP} from '../services/constants';
-import {ContentDTO} from "../../IsaacApiTypes";
+import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from '../services/constants';
+import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
+import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -26,6 +27,7 @@ export const QUESTION_TYPES = new Map([
     ["isaacFreeTextQuestion", IsaacFreeTextQuestion],
     ["isaacSymbolicLogicQuestion", IsaacSymbolicLogicQuestion],
     ["isaacGraphSketcherQuestion", IsaacGraphSketcherQuestion],
+    ["isaacClozeQuestion", IsaacClozeQuestion],
     ["default", IsaacMultiChoiceQuestion]
 ]);
 
@@ -117,4 +119,21 @@ export function sanitiseInequalityState(state: any) {
         }
     }
     return saneState;
+}
+
+function fastTrackConceptEnumerator(questionId: string) {
+    // Magic, unfortunately
+    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
+}
+
+export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
+    let title = doc.title as string;
+
+    // FastTrack title renaming
+    if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && doc.id
+        && (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower'))) {
+        title += " " + fastTrackConceptEnumerator(doc.id) + (doc.tags.includes('ft_lower') ? "ii" : "i");
+    }
+
+    return title;
 }
