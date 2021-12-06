@@ -9,7 +9,7 @@ import {GlossaryTermDTO} from "../../IsaacApiTypes";
 import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
 import {AppState} from "../state/reducers";
 import {TrustedMarkdown} from "../components/elements/TrustedMarkdown";
-import uuid from "uuid";
+import * as uuid from "uuid";
 import {useUserContext} from "./userContext";
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {

@@ -8,7 +8,7 @@ import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../ser
 import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
-import uuid from "uuid";
+import * as uuid from "uuid";
 import {isDefined} from "../../../services/miscUtils";
 
 interface UserContextRowProps {

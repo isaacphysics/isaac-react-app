@@ -11,7 +11,7 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
-import uuid from "uuid";
+import * as uuid from "uuid";
 import {notRelevantMessage, useUserContext} from "../../services/userContext";
 import classnames from "classnames";
 

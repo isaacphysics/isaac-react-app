@@ -22,7 +22,7 @@ import {
 import ReactDOM from 'react-dom';
 import {ClozeDropRegionContext, ClozeItemDTO} from "../../../IsaacAppTypes";
 import {setCurrentAttempt} from "../../state/actions";
-import uuid from "uuid";
+import * as uuid from "uuid";
 import {Item} from "../../services/select";
 
 function Item({item}: {item: ItemDTO}) {

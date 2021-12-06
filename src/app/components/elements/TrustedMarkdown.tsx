@@ -2,22 +2,21 @@ import React, {useState} from "react";
 import ReactDOMServer from "react-dom/server";
 import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
-import {Router} from "react-router-dom";
+import {Router} from "react-router-dom"
 import {AppState} from "../../state/reducers";
 import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
-import {Token} from "remarkable";
-import uuid from "uuid";
+import {Remarkable} from "remarkable";
+import * as uuid from "uuid";
 import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
-MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
-    let href = escapeHtml(tokens[idx].href || "");
+MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx/* options, env */) {
+    let href = Remarkable.utils.escapeHtml(tokens[idx].href || "");
     let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
-    let title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title || "")) + '"') : '';
+    let title = tokens[idx].title ? (' title="' + Remarkable.utils.escapeHtml(Remarkable.utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
     if (localLink) {
         return `<a href="${href}" ${title}>`;
     } else {

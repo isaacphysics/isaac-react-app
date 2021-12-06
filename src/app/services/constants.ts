@@ -1,4 +1,4 @@
-import Remarkable from "remarkable";
+import {Remarkable} from "remarkable";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";

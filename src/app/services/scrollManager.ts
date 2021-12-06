@@ -2,7 +2,7 @@ import {history} from "./history";
 import { isDefined } from './miscUtils';
 
 let previousPathname = "";
-history.listen((location, action) => {
+history.listen(({ location, action }) => {
     if (["PUSH", "REPLACE"].includes(action) && previousPathname !== location.pathname) {
         previousPathname = location.pathname;
         (window as any).followedAtLeastOneSoftLink = true;

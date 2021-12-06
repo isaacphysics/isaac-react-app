@@ -24,7 +24,7 @@ import {
 } from "../../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
-import uuid from "uuid";
+import * as uuid from "uuid";
 import {LaTeX} from "../LaTeX";
 import {generateQuestionTitle} from "../../../services/questions";
 

@@ -21,7 +21,7 @@ import {
 } from "reactstrap";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import {LaTeX} from "../elements/LaTeX";
 
 interface IsaacNumericQuestionProps {

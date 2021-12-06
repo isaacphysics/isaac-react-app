@@ -15,7 +15,7 @@ import {parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
-import uuid from "uuid";
+import * as uuid from "uuid";
 import { isDefined } from '../../services/miscUtils';
 import {Action, Dispatch} from "redux";
 

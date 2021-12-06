@@ -64,7 +64,7 @@ declare module '*.module.sass' {
 }
 
 // TODO check if correctly versioned types have been added
-declare module "react-router-dom";
+// declare module "react-router-dom";
 declare module "bootstrap";
 declare module "math-random-seed";
 

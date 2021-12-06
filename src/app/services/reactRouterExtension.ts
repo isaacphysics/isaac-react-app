@@ -1,5 +1,6 @@
 import {useLocation} from "react-router-dom";
 import * as queryString from "querystring";
+import { isDefined } from "./miscUtils";
 
 function firstIfList(value: string | string[]): string {
     if (typeof value !== "string") {
@@ -21,8 +22,8 @@ export function useQueryParams<B extends boolean>(takeFirstValue?: B):
     B extends true ? {[key: string]: string | undefined} : {[key: string]: string | string[] | undefined}
 {
     const query = queryString.parse(useLocation().search);
-    if (takeFirstValue) {
-        return Object.assign({}, ...Object.keys(query).map(key => ({[removeQuestionMark(key)]: firstIfList(query[key])})));
+    if (takeFirstValue && isDefined(query)) {
+        return Object.assign({}, ...Object.keys(query).map(key => ({[removeQuestionMark(key)]: firstIfList(query[key] as (string|string[]))})));
     } else {
         return Object.assign({}, ...Object.keys(query).map(key => ({[removeQuestionMark(key)]: query[key]})));
     }

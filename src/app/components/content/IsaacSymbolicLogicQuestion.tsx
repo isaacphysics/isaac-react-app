@@ -13,7 +13,7 @@ import {sanitiseInequalityState, selectQuestionPart} from '../../services/questi
 import _flattenDeep from 'lodash/flattenDeep';
 import {jsonHelper} from "../../services/json";
 import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
-import uuid from "uuid";
+import * as uuid from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {isDefined} from '../../services/miscUtils';

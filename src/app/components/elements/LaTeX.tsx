@@ -5,9 +5,9 @@ import {AppState} from "../../state/reducers";
 import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
 import he from "he";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import katex from "katex";
+import katex, { KatexOptions } from "katex";
 import renderA11yString from "../../services/katex-a11y";
-import {escapeHtml} from "remarkable/lib/common/utils";
+import {Remarkable} from "remarkable";
 
 type MathJaxMacro = string|[string, number];
 
@@ -273,7 +273,7 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                         const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
                         return "\\text{" + REF + reference + ENDREF + "}";
                     }};
-                let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
+                let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
                     return createReference(match, "unknown reference " + match);
@@ -328,7 +328,7 @@ export function LaTeX({markup, className}: {markup: string, className?: string})
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const figureNumbers = useContext(FigureNumberingContext);
 
-    const escapedMarkup = escapeHtml(markup);
+    const escapedMarkup = Remarkable.utils.escapeHtml(markup);
     const katexHtml = katexify(escapedMarkup, user, booleanNotation, screenReaderHoverText, figureNumbers);
 
     return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
