@@ -637,9 +637,20 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_2: "Challenge\u00A0(C2)",
     challenge_3: "Challenge\u00A0(C3)",
 }
+export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice (P1) \u2B22\u2B21\u2B21",
+    practice_2: "Practice (P2) \u2B22\u2B22\u2B21",
+    practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
+    challenge_1: "Challenge (C1) \u25A0\u25A1\u25A1",
+    challenge_2: "Challenge (C2) \u25A0\u25A0\u25A1",
+    challenge_3: "Challenge (C3) \u25A0\u25A0\u25A0",
+}
 export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyLabelMap[d]}
+));
+export const DIFFICULTY_ICON_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: difficultyIconLabelMap[d]}
 ));
 
 // QUESTION CATEGORIES
