@@ -14,6 +14,10 @@ require('dotenv').config();
 module.exports = (isProd) => {
 
     return {
+        stats: {
+            errorDetails: true
+        },
+        
         mode: isProd ? "production" : "development",
 
         devServer: {
@@ -63,13 +67,13 @@ module.exports = (isProd) => {
                                     }
                                 },
                                 {
-                                loader: 'ts-loader',
-                                options: {
-                                    compilerOptions: {
-                                        noEmit: false,
-                                        jsx: "react",
+                                    loader: 'ts-loader',
+                                    options: {
+                                        compilerOptions: {
+                                            noEmit: false,
+                                            jsx: "react",
+                                        },
                                     },
-                                },
                                 }
                             ],
                         },

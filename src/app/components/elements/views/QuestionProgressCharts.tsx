@@ -1,10 +1,10 @@
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import * as RS from "reactstrap";
 import {LevelAttempts, Levels} from "../../../../IsaacAppTypes";
-import bb, {Chart} from "billboard.js";
+import {bb, Chart} from "billboard.js";
 import tags from "../../../services/tags";
 import Select from "react-select";
-import {ValueType} from "react-select/src/types";
+import ValueType from "react-select";
 import {doughnutColours, specificDoughnutColours, TAG_ID} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
