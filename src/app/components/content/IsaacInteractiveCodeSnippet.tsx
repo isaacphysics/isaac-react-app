@@ -21,7 +21,9 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             setup: doc.setupCode,
             test: doc.testCode,
             testInput: doc.testInput,
-            outputRegex: doc.outputRegex
+            outputRegex: doc.outputRegex,
+            useAllTestInputs: doc.useAllTestInputs,
+            wrapCodeInMain: doc.wrapCodeInMain
         });
     }
 
@@ -46,7 +48,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                 }
                 break;
             case "checker":
-                if (doc?.expectedResult && doc?.testCode) {
+                if (doc?.expectedResult && doc?.testCode && receivedData.result !== "CHECKER_RESULT_UNDEFINED") {
                     if (receivedData.result === doc.expectedResult) {
                         sendMessage({
                             type: "feedback",

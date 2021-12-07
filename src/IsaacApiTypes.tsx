@@ -408,6 +408,8 @@ export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
     testInput?: string;
     outputRegex?: string;
     expectedResult?: string;
+    useAllTestInputs?: boolean;
+    wrapCodeInMain?: boolean;
 }
 
 export interface GraphChoiceDTO extends ChoiceDTO {
