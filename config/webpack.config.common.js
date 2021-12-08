@@ -94,7 +94,12 @@ module.exports = (isProd) => {
                             use: [
                                 'style-loader',
                                 isProd ? { loader: MiniCssExtractPlugin.loader, options: { esModule: false } } : null,
-                                'css-loader',
+                                {
+                                    loader: 'css-loader',
+                                    options: {
+                                        url: false
+                                    }
+                                },
                                 'sass-loader',
                             ].filter(Boolean),
                         },
@@ -106,7 +111,7 @@ module.exports = (isProd) => {
                                     name: isProd ? 'static/fonts/[name].[contenthash:8].[ext]' : 'static/fonts/[name].[ext]',
                                 },
                             },
-                        },
+                        }
                     ],
                 },
             ],
