@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {IsaacContent} from "./IsaacContent";
+import {IsaacContent, IsaacContentProps} from "./IsaacContent";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {useUserContext} from "../../services/userContext";
 import tags from "../../services/tags";
@@ -11,13 +11,13 @@ import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
 
-interface IsaacGlossaryTermProps {
+interface IsaacGlossaryTermProps extends IsaacContentProps {
     doc: GlossaryTermDTO;
-    location: {hash: string};
-    linkToGlossary: boolean;
-}
+    location: { hash: string };
+    linkToGlossary?: boolean;
+};
 
-const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = false}: IsaacGlossaryTermProps) => {
+const IsaacGlossaryTermComponent = ({ doc, location: { hash }, linkToGlossary = false }: IsaacGlossaryTermProps) => {
     let anchorId = '';
     const idRegexp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
     const parsedAnchorId = doc.id && idRegexp.exec(doc.id.split('|').slice(1).join('|'));
@@ -63,4 +63,4 @@ const IsaacGlossaryTermComponent = ({doc, location: {hash}, linkToGlossary = fal
     </React.Fragment>;
 };
 
-export const IsaacGlossaryTerm = withRouter(IsaacGlossaryTermComponent);
+export const IsaacGlossaryTerm = withRouter<IsaacGlossaryTermProps, any>(IsaacGlossaryTermComponent);

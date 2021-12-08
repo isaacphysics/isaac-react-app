@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {ContentSummaryDTO, QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import { QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO } from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {
@@ -23,7 +23,7 @@ import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
-interface SetQuizzesPageProps {
+interface SetQuizzesPageProps extends RouteComponentProps<any> {
     user: RegisteredUserDTO;
     location: {hash: string};
 }
@@ -176,4 +176,4 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     </RS.Container>;
 };
 
-export const SetQuizzes = withRouter(SetQuizzesPageComponent);
+export const SetQuizzes = withRouter<SetQuizzesPageProps, any>(SetQuizzesPageComponent);
