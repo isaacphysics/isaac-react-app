@@ -2,13 +2,13 @@
 
 .btn, input.btn {
   //Button Secondary
-  &.btn-red {
+  &.btn-negative {
     background-color: $phy_orangered;
   }
-  &.btn-yellow {
+  &.btn-neutral {
     background-color: $phy_extra_force_yellow;
   }
-  &.btn-green {
+  &.btn-positive {
     background-color: $a11y_green;
   }
 

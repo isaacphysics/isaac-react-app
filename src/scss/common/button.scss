@@ -8,7 +8,7 @@
   padding: 0.5rem 2.1rem;
   white-space: normal;
 
-  &.btn-red, &.btn-yellow, &.btn-green {
+  &.btn-negative, &.btn-neutral, &.btn-positive {
     border: 1px solid transparent;
     color: $black;
     width: 100px !important;
@@ -23,8 +23,8 @@
     }
   }
 
-  &.btn-green:not(:disabled):not(.disabled):active, &.btn-yellow:not(:disabled):not(.disabled):active,
-  &.btn-red:not(:disabled):not(.disabled):active {
+  &.btn-positive:not(:disabled):not(.disabled):active, &.btn-neutral:not(:disabled):not(.disabled):active,
+  &.btn-negative:not(:disabled):not(.disabled):active {
     border: 1px solid transparent;
     color: $black;
     text-decoration: underline;

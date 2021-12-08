@@ -4,13 +4,13 @@
   &.btn-secondary {
     color: $black;
   }
-  &.btn-red {
+  &.btn-negative {
     background-color: $cs-reddish;
   }
-  &.btn-yellow {
+  &.btn-neutral {
     background-color: $cs-mustard;
   }
-  &.btn-green {
+  &.btn-positive {
     background-color: $green;
   }
   &.btn-secondary:not(:disabled):not(.disabled):active {
