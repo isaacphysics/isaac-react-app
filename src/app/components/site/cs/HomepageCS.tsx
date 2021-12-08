@@ -113,11 +113,16 @@ export const HomepageCS = () => {
             <IsaacInteractiveCodeSnippet doc={{
                 id: "ajsbfjlanfknslkdnfla",
                 language: "python",
-                code: "def square():\n\tx = int(input(\"What do you want to square?\"))\t\n\tprint(x * x)",
-                testCode: "checkerResult = str([square(), square(), square(), square()])",
-                testInput: "2\n8\n-1\n3",
-                outputRegex: ".*4\\n.*64\\n.*1\\n.*9",
+                wrapCodeInMain: true,
+                setupCode: "startTest(['2','8','-1','3','9','18'], None)",
+                code: "age = int(input(\"Please enter an accepted age \"))\n" +
+                      "while age < 18:\n" +
+                      "    age = int(input(\"Please enter an accepted age \"))\n",
+                testCode: "main()\nendTest('Wow you did great!', 'Oops something went wrong!', True)\n"
+                + "startTest([20,18,18], None)\nmain()\nendTest('Testing the test','Testing the test', False)",
+                // outputRegex: ".*4\\n.*64\\n.*1\\n.*9",
                 //expectedResult: "[4, 64, 1, 9]",
+                useAllTestInputs: true,
                 url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
             }} />
         </Container>

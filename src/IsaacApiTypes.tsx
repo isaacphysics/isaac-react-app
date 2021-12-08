@@ -405,10 +405,7 @@ export interface CodeSnippetDTO extends ContentDTO {
 export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
     setupCode?: string;
     testCode?: string;
-    testInput?: string;
-    outputRegex?: string;
     expectedResult?: string;
-    useAllTestInputs?: boolean;
     wrapCodeInMain?: boolean;
 }
 

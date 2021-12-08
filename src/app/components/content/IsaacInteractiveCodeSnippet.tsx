@@ -20,9 +20,6 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             code: doc.code,
             setup: doc.setupCode,
             test: doc.testCode,
-            testInput: doc.testInput,
-            outputRegex: doc.outputRegex,
-            useAllTestInputs: doc.useAllTestInputs,
             wrapCodeInMain: doc.wrapCodeInMain
         });
     }
@@ -43,7 +40,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                 // checkerFail represents a log message for when the test code written for
                 // the question fails to compile or has a runtime error
                 // setupFail represents the same but for setup code
-                if (segueEnvironment === "DEV") {
+                if (segueEnvironment !== "PROD") {
                     console.error(`IsaacInteractiveCodeSnippet ${receivedData.type === "setupFail" ? "setup code" : "checker"} error: ${receivedData.message}`);
                 }
                 break;
@@ -76,11 +73,11 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                 }
                 break;
             default:
-                if (segueEnvironment === "DEV") {
+                if (segueEnvironment !== "PROD") {
                     console.error("IsaacInteractiveCodeSnippet received a malformed message from the editor iframe!");
                 }
         }
-    }, [receivedData]);
+    }, [receivedData, segueEnvironment]);
 
     return <iframe title={"Code Sandbox"} src={"http://localhost:3000/#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100 mb-1"} style={
         {
