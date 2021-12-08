@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {Component, useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -10,7 +10,7 @@ import {
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
@@ -50,11 +50,13 @@ export const siteSpecific = {
 }[SITE_SUBJECT];
 
 
-interface MyProgressProps {
+interface MyProgressProps extends RouteComponentProps<any> {
     user: PotentialUser;
-    match: {params: {userIdOfInterest: string}};
+    match: {params: {userIdOfInterest: string}} | any;
 }
-export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}}: MyProgressProps) => {
+export const MyProgress = withRouter<MyProgressProps, any>((props: MyProgressProps) => {
+    const { user, match } = props;
+    const { userIdOfInterest } = match.params;
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useDispatch();

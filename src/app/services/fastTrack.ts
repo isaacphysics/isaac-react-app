@@ -128,7 +128,7 @@ interface FastTrackPageProperties {
 }
 
 export function useFastTrackInformation(
-    doc: IsaacQuestionBaseDTO, location: Location<{} | null | undefined>,
+    doc: IsaacQuestionBaseDTO, location: Location,
     canSubmit: boolean = true, correct: boolean = false
 ): FastTrackPageProperties {
     const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);

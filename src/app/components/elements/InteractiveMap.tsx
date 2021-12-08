@@ -9,8 +9,8 @@ interface InteractiveMapProps {
 
 export const InteractiveMap = React.memo((props: InteractiveMapProps) => {
     const {getInfoWindow, locationData} = props;
-    const [markerMap, setMarkerMap] = useState<{[index: number]: Marker}>({});
-    const [mapCenter, setMapCenter] = useState({lat: 52.205, lng: 0.119});
+    const [markerMap, setMarkerMap] = useState<{[index: number]: google.maps.Marker}>({});
+    const [mapCenter] = useState({lat: 52.205, lng: 0.119});
     const [selectedMarkerID, setSelectedMarkerID] = useState<number | null>();
     const [infoOpen, setInfoOpen] = useState(false);
 
@@ -24,7 +24,7 @@ export const InteractiveMap = React.memo((props: InteractiveMapProps) => {
                 {
                     (clusterer) => locationData.map((location, index) => <Marker
                         key={index}
-                        position={{lat: location.latitude, lng: location.longitude}}
+                        position={{lat: location.latitude as number, lng: location.longitude as number}}
                         clusterer={clusterer}
                         onLoad={(marker) => {
                             setMarkerMap((prevState) => {

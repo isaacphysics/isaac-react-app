@@ -11,7 +11,7 @@ import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
@@ -27,7 +27,13 @@ const classBasedLayouts = {
     righthalf: "align-right-half"
 };
 
-export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: string}, contentIndex?: number}) => {
+interface IsaacContentProps extends RouteComponentProps<any> {
+    doc: ContentDTO,
+    match: { path: string } | any,
+    contentIndex?: number
+};
+
+export const IsaacContent = withRouter<IsaacContentProps, any>((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;
