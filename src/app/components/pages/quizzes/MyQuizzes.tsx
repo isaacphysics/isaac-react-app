@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -18,7 +18,7 @@ import {Spacer} from "../../elements/Spacer";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 
-interface MyQuizzesPageProps {
+interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
     location: {hash: string};
 }

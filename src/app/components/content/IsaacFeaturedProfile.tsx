@@ -3,6 +3,7 @@ import {IsaacFeaturedProfileDTO} from "../../../IsaacApiTypes";
 import {apiHelper} from "../../services/api";
 import {IsaacContent} from "./IsaacContent";
 import {Col, Row} from "reactstrap";
+import { isDefined } from "../../services/miscUtils";
 
 interface IsaacFeaturedProfileProps {
     doc: IsaacFeaturedProfileDTO;
@@ -31,7 +32,7 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
             </Col>
         </Row>
         <div className="profile-description">
-            <IsaacContent doc={summary} />
+            {isDefined(summary) && <IsaacContent doc={summary} />}
         </div>
         {doc.emailAddress && <a href={"mailto:" + doc.emailAddress} className="mb-4">
             <img src='/assets/phy/icon-mailto.png' alt=""/>
