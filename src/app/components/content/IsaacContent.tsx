@@ -11,7 +11,7 @@ import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
@@ -27,9 +27,9 @@ const classBasedLayouts = {
     righthalf: "align-right-half"
 };
 
-export interface IsaacContentProps extends RouteComponentProps<any> {
+export interface IsaacContentProps extends RouteComponentProps {
     doc: ContentDTO,
-    match: { path: string } | any,
+    match: match & { path: string },
     contentIndex?: number
 };
 

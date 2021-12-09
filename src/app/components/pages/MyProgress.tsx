@@ -1,4 +1,4 @@
-import React, {Component, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -10,7 +10,7 @@ import {
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
@@ -50,9 +50,9 @@ export const siteSpecific = {
 }[SITE_SUBJECT];
 
 
-interface MyProgressProps extends RouteComponentProps<any> {
+interface MyProgressProps extends RouteComponentProps {
     user: PotentialUser;
-    match: {params: {userIdOfInterest: string}} | any;
+    match: match & { params: { userIdOfInterest: string } };
 }
 export const MyProgress = withRouter<MyProgressProps, any>((props: MyProgressProps) => {
     const { user, match } = props;

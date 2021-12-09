@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
@@ -28,9 +28,9 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {determineAudienceViews} from "../../services/userContext";
 import {generateQuestionTitle} from "../../services/questions";
 
-interface QuestionPageProps {
+interface QuestionPageProps extends RouteComponentProps {
     questionIdOverride?: string;
-    match: {params: {questionId: string}};
+    match: match & { params: { questionId: string } };
     location: {search: string};
 }
 

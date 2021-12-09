@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {ALPHABET, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
@@ -15,12 +15,12 @@ import * as uuid from "uuid";
 import {notRelevantMessage, useUserContext} from "../../services/userContext";
 import classnames from "classnames";
 
-interface AccordionsProps {
+interface AccordionsProps extends RouteComponentProps {
     id?: string;
     trustedTitle?: string;
     index: number;
     location: {hash: string};
-    children?: React.ReactElement;
+    children?: React.ReactNode;
     startOpen?: boolean;
     deEmphasised?: boolean;
     audienceString?: string;
@@ -28,7 +28,7 @@ interface AccordionsProps {
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter<AccordionsProps, any>(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
     const userContext = useUserContext();
     const componentId = useRef(uuid.v4().slice(0, 4)).current;

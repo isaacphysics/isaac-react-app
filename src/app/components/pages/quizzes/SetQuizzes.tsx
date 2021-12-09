@@ -23,7 +23,7 @@ import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
-interface SetQuizzesPageProps extends RouteComponentProps<any> {
+interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
     location: {hash: string};
 }
