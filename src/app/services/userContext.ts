@@ -13,7 +13,7 @@ import {
     STAGES_PHY,
     stagesOrdered,
 } from "./constants";
-import {AudienceContext, ContentBaseDTO, Role, UserContext} from "../../IsaacApiTypes";
+import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
@@ -146,11 +146,11 @@ export function useUserContext(): UseUserContextReturnType {
 }
 
 const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
-    {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "AQA", value: EXAM_BOARD.AQA},
     {label: "CIE", value: EXAM_BOARD.CIE},
     {label: "EDEXCEL", value: EXAM_BOARD.EDEXCEL},
     {label: "EDUQAS", value: EXAM_BOARD.EDUQAS},
+    {label: "OCR", value: EXAM_BOARD.OCR},
     {label: "WJEC", value: EXAM_BOARD.WJEC},
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
@@ -379,4 +379,36 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
         message.push("your account settings." /* "anyone!" */)
     }
     return `not relevant for ${message.join(" ")}`;
+}
+
+export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType): string {
+    let stagesSet: Set<Stage>;
+    if (!audience) {
+        stagesSet = new Set<Stage>([STAGE.ALL]);
+    } else {
+        stagesSet = new Set<Stage>();
+        audience.forEach(audienceRecord => audienceRecord.stage?.forEach(stage => stagesSet.add(stage)));
+    }
+    // order stages
+    const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
+    // if you are one of the options - only show that option
+    const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
+    let stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
+    // If common, could find substrings and report ranges i.e, GCSE to University
+
+    // CS would like to show All stages instead of GCSE & A Level - that will work until we have more stages
+    if (SITE_SUBJECT === SITE.CS && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
+        stagesToView = [STAGE.ALL];
+    }
+
+    return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
+}
+
+export function makeIntendedAudienceComparator(user: PotentialUser | null, userContext: UseUserContextReturnType) {
+    // Make "relevant" sections appear first
+    return function intendedAudienceComparator(sectionA: {audience?: ContentBaseDTO['audience']}, sectionB: {audience?: ContentBaseDTO['audience']}) {
+        const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user);
+        const isAudienceB = isIntendedAudience(sectionB.audience, userContext, user);
+        return isAudienceA === isAudienceB ? 0 : isAudienceB ? 1 : -1;
+    }
 }

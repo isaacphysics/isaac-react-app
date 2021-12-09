@@ -1,29 +1,16 @@
-import React, {useState} from "react";
 import ReactDOMServer from "react-dom/server";
 import {Provider, useSelector, useStore} from "react-redux";
-import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
-import {AppState} from "../../state/reducers";
-import {MARKDOWN_RENDERER} from "../../services/constants";
-import {TrustedHtml} from "./TrustedHtml";
-import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
-import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {escapeHtml, replaceEntities} from "remarkable/lib/common/utils";
-import {Token} from "remarkable";
+import {history} from "./history";
+import {IsaacGlossaryTerm} from "../components/content/IsaacGlossaryTerm";
+import * as RS from "reactstrap";
+import React, {useRef} from "react";
+import {GlossaryTermDTO} from "../../IsaacApiTypes";
+import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
+import {AppState} from "../state/reducers";
+import {TrustedMarkdown} from "../components/elements/TrustedMarkdown";
 import uuid from "uuid";
-import {history} from "../../services/history";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-
-MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
-    let href = escapeHtml(tokens[idx].href || "");
-    let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
-    let title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title || "")) + '"') : '';
-    if (localLink) {
-        return `<a href="${href}" ${title}>`;
-    } else {
-        return `<a href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
-    }
-};
+import {useUserContext} from "./userContext";
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     if (candidateTerms.length === 0) {
@@ -36,11 +23,14 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     }
 }
 
-export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
+export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Element[]] {
+    // Create a unique id which does not change over the lifecycle of the component
+    const componentUuid = useRef(uuid.v4().slice(0, 8)).current;
     const store = useStore();
+    const {examBoard} = useUserContext();
+    const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.
@@ -61,12 +51,14 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     ]));
 
     if (glossaryTerms && glossaryTerms.length > 0 && glossaryIdsInMarkdown.length > 0) {
+        const filteredTerms = glossaryTerms.filter(term => term.examBoard === "" || term.examBoard === examBoard);
+
         // Markdown can't cope with React components, so we pre-render our component to static HTML, which Markdown will then ignore.
         // This requires a bunch of stuff to be passed down along with the component.
         markdown = markdown.replace(glossaryBlockRegexp, (_match, id) => {
-            const term = getTermFromCandidateTerms(glossaryTerms.filter(term => (term.id as string) === id));
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
             if (term === null) {
-                console.error('No valid term for "' + id + '" found among the filtered terms: ', glossaryTerms);
+                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
                 return "";
             }
 
@@ -83,9 +75,9 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         // The tooltip components can be rendered as regular react objects, so we just add them to an array,
         // and return them inside the JSX.Element that is returned as TrustedMarkdown.
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
-            const term = getTermFromCandidateTerms(glossaryTerms.filter(term => (term.id as string) === id));
+            const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
             if (term === null) {
-                console.error('No valid term for "' + id + '" found among the filtered terms: ', glossaryTerms);
+                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
                 return "";
             }
 
@@ -101,24 +93,5 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
         });
     }
 
-    // RegEx replacements to match Latex inspired Isaac Physics functionality
-    const regexRules = {
-        "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
-    };
-    if (SITE_SUBJECT === SITE.PHY) {
-        Object.assign(regexRules, {
-            "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
-            "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
-        });
-    }
-    let regexProcessedMarkdown = markdown;
-    Object.entries(regexRules).forEach(([replacement, rule]) =>
-        regexProcessedMarkdown = regexProcessedMarkdown.replace(rule, replacement)
-    );
-
-    const html = MARKDOWN_RENDERER.render(regexProcessedMarkdown);
-    return <div>
-        <TrustedHtml html={html} />
-        {tooltips}
-    </div>;
-};
+    return [markdown, tooltips];
+}

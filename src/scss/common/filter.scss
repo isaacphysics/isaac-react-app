@@ -37,7 +37,7 @@
   }
 }
 
-.hexagon-tier-title, .hexagon-level-title, .hexagon-tier-summary {
+.hexagon-tier-title, .hexagon-level-title, .hexagon-tier-summary, .difficulty-title {
   pointer-events: none;
   height: 100%;
   display: flex;
@@ -70,3 +70,14 @@
   font-size: 0.8rem;
   font-weight: 100;
 }
+
+.difficulty-title {
+  font-weight: 400;
+  font-size: 0.92rem;
+  &.active {color: white;}
+  &.difficulty-icon-title {
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+}
+

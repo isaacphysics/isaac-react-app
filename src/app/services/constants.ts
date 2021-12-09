@@ -180,6 +180,9 @@ export enum ACTION_TYPE {
     ADMIN_SEND_EMAIL_WITH_IDS_REQUEST = "ADMIN_SEND_EMAIL_WITH_IDS_REQUEST",
     ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS",
     ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE",
+    CONTENT_SEND_EMAIL_WITH_IDS_REQUEST = "CONTENT_SEND_EMAIL_WITH_IDS_REQUEST",
+    CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS = "CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS",
+    CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE = "CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE",
     ADMIN_MERGE_USERS_REQUEST = "ADMIN_MERGE_USERS_REQUEST",
     ADMIN_MERGE_USERS_RESPONSE_SUCCESS = "ADMIN_MERGE_USERS_RESPONSE_SUCCESS",
     ADMIN_MERGE_USERS_RESPONSE_FAILURE = "ADMIN_MERGE_USERS_RESPONSE_FAILURE",
@@ -509,6 +512,9 @@ export enum ACTION_TYPE {
     QUIZ_START_FREE_ATTEMPT_REQUEST = "QUIZ_START_FREE_ATTEMPT_REQUEST",
     QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS = "QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS",
     QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE = "QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE",
+    QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST = "QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_REQUEST",
+    QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS = "QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS",
+    QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE = "QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE",
 
     QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST = "QUIZ_ATTEMPT_MARK_COMPLETE_REQUEST",
     QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS = "QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS",
@@ -560,25 +566,25 @@ export const programmingLanguagesMap: {[language: string]: string} = {
 // EXAM BOARDS
 export enum EXAM_BOARD {
     AQA = "aqa",
-    OCR = "ocr",
     CIE = "cie",
     EDEXCEL = "edexcel",
     EDUQAS = "eduqas",
+    OCR = "ocr",
     WJEC = "wjec",
     ALL = "all",
 }
 export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.AQA]: "AQA",
-    [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.CIE]: "CIE",
     [EXAM_BOARD.EDEXCEL]: "EDEXCEL",
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
+    [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.ALL]: "All exam boards",
 }
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
-export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
+export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC]);
 
 // BOOLEAN LOGIC NOTATION OPTIONS
 export enum BOOLEAN_NOTATION {
@@ -631,9 +637,20 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_2: "Challenge\u00A0(C2)",
     challenge_3: "Challenge\u00A0(C3)",
 }
+export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice (P1) \u2B22\u2B21\u2B21",
+    practice_2: "Practice (P2) \u2B22\u2B22\u2B21",
+    practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
+    challenge_1: "Challenge (C1) \u25A0\u25A1\u25A1",
+    challenge_2: "Challenge (C2) \u25A0\u25A0\u25A1",
+    challenge_3: "Challenge (C3) \u25A0\u25A0\u25A0",
+}
 export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyLabelMap[d]}
+));
+export const DIFFICULTY_ICON_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: difficultyIconLabelMap[d]}
 ));
 
 // QUESTION CATEGORIES

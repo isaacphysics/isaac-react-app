@@ -2,6 +2,16 @@
 
 .btn, input.btn {
   //Button Secondary
+  &.btn-negative {
+    background-color: $phy_orangered;
+  }
+  &.btn-neutral {
+    background-color: $phy_extra_force_yellow;
+  }
+  &.btn-positive {
+    background-color: $a11y_green;
+  }
+
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: darken(theme-color("secondary"), 4);
     border: 1px solid transparent;
@@ -15,4 +25,12 @@
 
 .btn-green {
   @include button-variant($a11y_green, $a11y_green);
+}
+
+.quick-question-options {
+  background: rgba($secondary, 0.5);
+  border: 1px solid transparent;
+  color: $black;
+  border-radius: 5px;
+  padding: 10px !important;
 }
