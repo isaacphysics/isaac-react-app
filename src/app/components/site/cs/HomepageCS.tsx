@@ -114,17 +114,30 @@ export const HomepageCS = () => {
                 id: "ajsbfjlanfknslkdnfla",
                 language: "python",
                 wrapCodeInMain: true,
-                setupCode: "startTest(['2','8','-1','3','9','18'], None)",
+                setupCode: "startTest(['2','8','-1','3','9', '17', '18'], None)",
                 code: "age = int(input(\"Please enter an accepted age \"))\n" +
                       "while age < 18:\n" +
                       "    age = int(input(\"Please enter an accepted age \"))\n",
                 testCode: "main()\nendTest('Wow you did great!', 'Oops something went wrong!', True)\n"
-                + "startTest([20,18,18], None)\nmain()\nendTest('Testing the test','Testing the test', False)",
+                + "startTest([20,18,18], None)\nendTest('Testing the test','Testing the test', False)",
                 // outputRegex: ".*4\\n.*64\\n.*1\\n.*9",
                 //expectedResult: "[4, 64, 1, 9]",
-                useAllTestInputs: true,
                 url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
             }} />
+            {/*<IsaacInteractiveCodeSnippet doc={{*/}
+            {/*    id: "anotherone",*/}
+            {/*    language: "javascript",*/}
+            {/*    wrapCodeInMain: true,*/}
+            {/*    setupCode: "startTest(['2','8','-1','3','9', '17', '18'], undefined)",*/}
+            {/*    code: "let age = parseInt(prompt(\"Please enter an accepted age \"))\n" +*/}
+            {/*        "while (age < 18) {\n" +*/}
+            {/*        "    age = parseInt(prompt(\"Please enter an accepted age \"))\n}\n",*/}
+            {/*    testCode: "main()\nendTest('Wow you did great!', 'Oops something went wrong!', true)\n"*/}
+            {/*        + "startTest(['20','18','18'], undefined)\nendTest('Testing the test','Testing the test', false)",*/}
+            {/*    // outputRegex: ".*4\\n.*64\\n.*1\\n.*9",*/}
+            {/*    //expectedResult: "[4, 64, 1, 9]",*/}
+            {/*    url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",*/}
+            {/*}} />*/}
         </Container>
 
         {!(user && user.loggedIn) && <Container>

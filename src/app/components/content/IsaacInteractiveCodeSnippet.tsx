@@ -20,7 +20,8 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
             code: doc.code,
             setup: doc.setupCode,
             test: doc.testCode,
-            wrapCodeInMain: doc.wrapCodeInMain
+            wrapCodeInMain: doc.wrapCodeInMain,
+            language: doc.language
         });
     }
 
