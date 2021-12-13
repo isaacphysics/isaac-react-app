@@ -132,8 +132,6 @@ export function UserContextAccountInput({
                 }
             </RS.UncontrolledTooltip>
         </React.Fragment>}
-
-        {!teacher && <span className="float-right mt-1"><Link to={TEACHER_REQUEST_ROUTE} target="_blank">I am a teacher</Link></span>}
         <div id="user-context-selector" className={SITE_SUBJECT === SITE.PHY ? "d-flex flex-wrap" : ""}>
             {userContexts.map((userContext, index) => {
                 const showPlusOption = teacher &&
