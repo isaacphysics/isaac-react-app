@@ -892,6 +892,8 @@ export interface UserProgress {
     correctByType?: { [type: string]: number };
     attemptsByTag?: { [tag: string]: number };
     correctByTag?: { [tag: string]: number };
+    attemptsByStageAndDifficulty?: { [stage: string]: {[difficulty: string]: number} };
+    correctByStageAndDifficulty?: { [stage: string]: {[difficulty: string]: number} };
     userSnapshot?: UserSnapshot;
     userDetails?: ApiTypes.UserSummaryDTO;
 }

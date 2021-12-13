@@ -1009,7 +1009,13 @@ export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
-        "Chemistry": "#e22e25"
+        "Chemistry": "#e22e25",
+        "Practice\u00A0(P1)": "#509e2e",
+        "Practice\u00A0(P2)": "#468b28",
+        "Practice\u00A0(P3)": "#376f1e",
+        "Challenge\u00A0(C1)": "#fea100",
+        "Challenge\u00A0(C2)": "#c97f00",
+        "Challenge\u00A0(C3)": "#a46700"
     },
     [SITE.CS]: {}
 }[SITE_SUBJECT];
