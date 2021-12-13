@@ -504,8 +504,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                 </RS.Row>
                 :
                 <RS.Col xs={12} className={`text-center mt-3 mb-4 m-sm-0`}>
-                    <RS.Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
-                        Edit question filters
+                    <RS.Button size="sm" color="primary" outline onClick={() => setFilterExpanded(true)}>
+                        Edit question filters ✎
                     </RS.Button>
                 </RS.Col>)}
 
