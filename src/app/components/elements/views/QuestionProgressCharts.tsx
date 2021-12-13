@@ -55,7 +55,9 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const levelColumns = [...Array(7)].map((_, i) => [`Level ${i}`, questionsByLevel[i as Levels] || 0]);
     const difficultyColumns = stageChoice && questionsByStageAndDifficulty[stageChoice.value] ?
         Object.keys(questionsByStageAndDifficulty[stageChoice.value])
-            .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice.value][key]]) : [];
+        .sort(function(a, b){
+            return Object.keys(difficultyLabelMap).indexOf(a) - Object.keys(difficultyLabelMap).indexOf(b);
+        }).map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice.value][key]]) : [];
 
     useEffect(() => {
         const charts: Chart[] = [];
