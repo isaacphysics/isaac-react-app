@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import {LevelAttempts, Levels} from "../../../../IsaacAppTypes";
 import {bb, Chart} from "billboard.js";
 import tags from "../../../services/tags";
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
 import ValueType from "react-select";
 import {doughnutColours, specificDoughnutColours, TAG_ID} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
@@ -124,7 +124,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     classNamePrefix="select"
                     defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
                     options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title}})}
-                    onChange={(e: ValueType<{value: TAG_ID; label: string}, false>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
+                    onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                 />
                 questions
             </div>

@@ -16,7 +16,7 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
     const dispatch = useDispatch();
 
-    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
         event.preventDefault();
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));

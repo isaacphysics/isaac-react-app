@@ -18,7 +18,7 @@ import classnames from "classnames";
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
     trustedTitle?: string;
-    index: number;
+    index?: number;
     location: {hash: string};
     children?: React.ReactNode;
     startOpen?: boolean;
@@ -147,7 +147,7 @@ export const Accordion = withRouter<AccordionsProps, any>(({id, trustedTitle, in
                 </span>}
                 <div className="accordion-title pl-3">
                     <RS.Row>
-                        <span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                        <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}
                         {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FreeTextRule} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
-import {TestCaseDTO} from "../../../IsaacApiTypes";
+import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useDispatch, useSelector} from "react-redux";
 import {testQuestion} from "../../state/actions";
@@ -235,7 +235,7 @@ export const FreeTextBuilder = () => {
                                                         }}
                                                     />
                                                     :
-                                                    <IsaacContent doc={choice.explanation}/>
+                                                    <IsaacContent doc={choice.explanation as ContentBase}/>
                                                 }
                                             </RS.Label>
                                         </td>

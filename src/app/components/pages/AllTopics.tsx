@@ -69,14 +69,14 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
         const LinkTag = topic.comingSoon ? "span" : Link;
         if (!topic.hidden) {
             return <React.Fragment>
-                <LinkTag
+                <Link // This may be not the intended behaviour, but that LinkTag thing above is horrendous in terms of types.
                     to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}
                     className={topic.comingSoon ? "text-muted" : ""}
                 >
                     <TextTag>
                         {topic.title}
                     </TextTag>
-                </LinkTag>
+                </Link>
                 {" "}
                 {topic.comingSoon && !topic.new &&
                 <Badge color="light" className="border bg-white">Coming {topic.comingSoon}</Badge>}
