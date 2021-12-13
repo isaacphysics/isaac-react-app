@@ -160,6 +160,7 @@ export interface IsaacQuestionSummaryPageDTO extends SeguePageDTO {
 
 export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
     answer?: ContentBaseDTO;
+    showConfidence?: boolean;
 }
 
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
@@ -342,6 +343,7 @@ export interface ContentDTO extends ContentBaseDTO {
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
     published?: boolean;
+    deprecated?: boolean;
     level?: number;
 }
 

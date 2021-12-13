@@ -17,6 +17,7 @@ import {Item, unwrapValue, isItemEqual} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select, {GroupedOptionsType} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
+import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
 import {AppState} from "../../state/reducers";
@@ -170,7 +171,8 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                         C3 require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
+                <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
+                {/*<Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
             </div>
         </RS.Col>
         <RS.Col lg={8}>
@@ -179,7 +181,7 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
             </RS.Label>
             <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
         </RS.Col>
-    </RS.Row>
+    </RS.Row>;
 }
 
 // Takes a list of "raw" concepts, and returns a map which takes a tag Item, and gives a GroupedOptionsType<Item<string>> containing itemised concepts which relate to that tag

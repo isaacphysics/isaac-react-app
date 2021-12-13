@@ -1,4 +1,4 @@
-import React from "react"
+import {generatePolygon, SVGShapeProps} from "./SVGUtils";
 
 export interface HexagonProportions {
     halfWidth: number;
@@ -13,7 +13,6 @@ export function calculateHexagonProportions(unitLength: number, padding: number)
     }
 }
 
-
 function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
     return '' + 1 * halfWidth + ' ' + 0 * quarterHeight +
         ', ' + 2 * halfWidth + ' ' + 1 * quarterHeight +
@@ -23,57 +22,14 @@ function generateHexagonPoints(halfWidth: number, quarterHeight: number) {
         ', ' + 0 * halfWidth + ' ' + 1 * quarterHeight;
 }
 
-function calculateDashArray<T>(elements: T[] | undefined, evaluator: (t: T) => boolean, perimeterLength: number) {
-    if (elements === undefined) {
-        return null;
-    }
-    let sectionLength = perimeterLength / elements.length;
-    let recordingDash = true;
-    let lengthCollector = 0;
-    let dashArray = [];
-    for (let element of elements) {
-        let shouldRecordDash = evaluator(element);
-        if (shouldRecordDash === recordingDash) {
-            lengthCollector += sectionLength;
-        } else {
-            dashArray.push(lengthCollector);
-            recordingDash = !recordingDash;
-            lengthCollector = sectionLength;
-        }
-    }
-    dashArray.push(lengthCollector);
-    return dashArray.join(',');
-}
-
-interface HexagonProps<T> extends React.SVGProps<SVGPolygonElement> {
-    states?: T[];
-    selector?: (t: T) => boolean;
+export interface HexagonProps<T> extends SVGShapeProps<T> {
     halfWidth: number;
     quarterHeight: number;
-    children?: React.ReactNode;
-    properties?: {
-        fill?: {colour: string};
-        stroke?: { colour: string; width: number };
-        clickable?: boolean;
-    };
 }
+
 export function Hexagon<T>(props: HexagonProps<T>) {
-    const {halfWidth, quarterHeight, properties, states, selector=()=>true, children, ...rest} = props;
-    let polygonAttributes: {fill?: string; stroke?: string; strokeWidth?: number; points: string; strokeDasharray?: string; pointerEvents?: string} = {
-        points: generateHexagonPoints(halfWidth, quarterHeight),
-        stroke: properties?.stroke?.colour,
-        strokeWidth: properties?.stroke?.width,
-        fill: properties?.fill?.colour,
-    };
+    const {halfWidth, quarterHeight} = props;
+    const points = generateHexagonPoints(halfWidth, quarterHeight);
     const perimeter = 6 * 2 * (quarterHeight);
-    const dashArray = calculateDashArray(states, selector, perimeter);
-    if (dashArray) {
-        polygonAttributes.strokeDasharray = dashArray;
-    }
-    if (properties?.clickable) {
-        polygonAttributes.pointerEvents = 'visible';
-    }
-    return <polygon {...polygonAttributes} {...rest}>
-        {children}
-    </polygon>;
+    return generatePolygon(props, points, perimeter);
 }
