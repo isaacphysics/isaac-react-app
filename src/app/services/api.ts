@@ -314,12 +314,11 @@ export const api = {
         get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${gameboardId}`);
         },
-        save: (gameboardId: string, gameboardTitle?: string) => {
-            if (gameboardTitle) {
-                return endpoint.post(`gameboards/user_gameboards/${gameboardId}/${gameboardTitle}`, {});
-            } else {
-                return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
-            }
+        save: (gameboardId: string) => {
+            return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
+        },
+        renameAndSave: (gameboardId: string, newGameboardTitle: string) => {
+            return endpoint.post(`gameboards/${gameboardId}/${newGameboardTitle}`);
         },
         create: (gameboard: GameboardDTO) => {
             return endpoint.post(`gameboards`, gameboard);

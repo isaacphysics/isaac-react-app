@@ -1089,8 +1089,17 @@ export const loadGameboard = (gameboardId: string|null) => async (dispatch: Disp
 export const addGameboard = (gameboardId: string, user: PotentialUser, gameboardTitle?: string, redirectOnSuccess?: boolean) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
-        await api.gameboards.save(gameboardId, gameboardTitle);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId, gameboardTitle: gameboardTitle});
+
+        if (gameboardTitle) {
+            // If the user wants a custom title, we can use the `renameAndSaveGameboard` endpoint. This is a redesign
+            //  of the `updateGameboard` endpoint.
+            await api.gameboards.renameAndSave(gameboardId, gameboardTitle);
+            dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId, gameboardTitle: gameboardTitle});
+        } else {
+            // If the user doesn't want a custom title, we can use the `linkUserToGameboard` endpoint
+            await api.gameboards.save(gameboardId);
+            dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId});
+        }
         if (redirectOnSuccess) {
             if (isTeacher(user)) {
                 history.push(`/set_assignments#${gameboardId}`);
