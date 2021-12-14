@@ -603,8 +603,8 @@ const GroupDetails = (props: GroupDetailsProps) => {
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>{{
-            `Assignments (${groupAssignments.length || 0})`: groupAssignments,
-            `Tests (${groupTests.length || 0})`: groupTests
+            [`Assignments (${(Array.isArray(groupAssignments) && groupAssignments.length) || 0})`]: groupAssignments,
+            [`Tests (${(Array.isArray(groupTests) && groupTests.length) || 0})`]: groupTests
         }}</Tabs>
     </div>;
 };
