@@ -1011,11 +1011,11 @@ export const specificDoughnutColours: { [key: string]: string } = {
         "Maths": "#007fa9",
         "Chemistry": "#e22e25",
         "Practice\u00A0(P1)": "#509e2e",
-        "Practice\u00A0(P2)": "#468b28",
-        "Practice\u00A0(P3)": "#376f1e",
+        "Practice\u00A0(P2)": "#468629",
+        "Practice\u00A0(P3)": "#3b6e25",
         "Challenge\u00A0(C1)": "#fea100",
-        "Challenge\u00A0(C2)": "#c97f00",
-        "Challenge\u00A0(C3)": "#a46700"
+        "Challenge\u00A0(C2)": "#d6880d",
+        "Challenge\u00A0(C3)": "#af7012"
     },
     [SITE.CS]: {}
 }[SITE_SUBJECT];
