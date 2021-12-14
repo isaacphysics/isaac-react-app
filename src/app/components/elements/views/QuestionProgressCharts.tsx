@@ -98,7 +98,8 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 data: {
                     columns: difficultyColumns,
                     colors: colourPicker(difficultyColumns?.map((column) => column[0]) as string[]),
-                    type: "donut"
+                    type: "donut",
+                    order: null
                 },
                 donut: {
                     title: "By Difficulty",
