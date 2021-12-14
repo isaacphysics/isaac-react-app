@@ -318,7 +318,7 @@ export const api = {
             return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
         },
         renameAndSave: (gameboardId: string, newGameboardTitle: string) => {
-            return endpoint.post(`gameboards/${gameboardId}/${newGameboardTitle}`);
+            return endpoint.post(`gameboards/${gameboardId}`, {}, {params: {title: newGameboardTitle}});
         },
         create: (gameboard: GameboardDTO) => {
             return endpoint.post(`gameboards`, gameboard);
