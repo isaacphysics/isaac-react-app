@@ -1,12 +1,13 @@
 import React from "react";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {Link} from "react-router-dom";
+import classNames from "classnames";
 
 export interface ConceptGameboardButtonProps {
     className?: string;
     conceptId?: string;
 }
-// role="button" className={`btn btn-secondary ${className}`}
+
 export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboardButtonProps) => {
 
     // Currently PHY doesn't use this
@@ -15,7 +16,7 @@ export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboard
         [SITE.CS]: `/gameboard_builder?concepts=${conceptId}`
     }[SITE_SUBJECT]
 
-    return <Link className={className} to={gameboardGenerateHref} >
+    return <Link className={classNames(className, "btn btn-sm btn-primary")} to={gameboardGenerateHref} >
         Generate a gameboard
     </Link>
 }
