@@ -8,6 +8,29 @@
   padding: 0.5rem 2.1rem;
   white-space: normal;
 
+  &.btn-negative, &.btn-neutral, &.btn-positive {
+    border: 1px solid transparent;
+    color: $black;
+    width: 100px !important;
+    min-width: 100px !important;
+    padding: 0 !important;
+    border-radius: 5px;
+
+    &.focus,
+    &:focus,
+    &:not(:disabled):not(.disabled):active:focus {
+      box-shadow: 0 0 0 0.2rem $shadow-black !important;
+    }
+  }
+
+  &.btn-positive:not(:disabled):not(.disabled):active, &.btn-neutral:not(:disabled):not(.disabled):active,
+  &.btn-negative:not(:disabled):not(.disabled):active {
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+    border-radius: 5px;
+  }
+
   &.question-actions-link {
     font-family: $secondary-font !important;
   }

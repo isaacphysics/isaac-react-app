@@ -5,7 +5,6 @@ import {AppState} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {getRelatedDocs} from "../../services/topics";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
 import {ALL_TOPICS_CRUMB, examBoardLabelMap, NOT_FOUND, stageLabelMap, TAG_ID} from "../../services/constants";
@@ -14,6 +13,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {atLeastOne} from "../../services/validation";
 import {selectors} from '../../state/selectors';
+import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const dispatch = useDispatch();
@@ -43,22 +43,22 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                         <IsaacContent key={index} doc={child}/>)
                     }
                     {!(atLeastOne(relatedConceptsForSpecificViewingContext.length) || atLeastOne(relatedQuestionsForSpecificViewingContext.length)) &&
-                        <div className='text-center py-3'>
+                        <div className='text-center mt-3'>
                             <div className='alert alert-warning'>
                                 {`There is no material in this topic for ${stageLabelMap[userContext.stage]} ${examBoardLabelMap[userContext.examBoard]}.`}
                             </div>
                         </div>
                     }
                     {atLeastOne(relatedConcepts.length) &&
-                        <LinkToContentSummaryList items={relatedConcepts} search={searchQuery} className="my-4" />
+                        <TopicSummaryLinks items={relatedConcepts} search={searchQuery} />
                     }
                     {atLeastOne(relatedQuestions.length) &&
-                        <LinkToContentSummaryList items={relatedQuestions} search={searchQuery} className="my-4" />
+                        <TopicSummaryLinks items={relatedQuestions} search={searchQuery} />
                     }
                 </Col>
             </Row>
 
-            {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="pb-2">
+            {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="mb-3">
                 <Col md={{size: 8, offset: 2}} className="py-0">
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
@@ -79,8 +79,8 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                 </Col>
             </Row>}
 
-            <Row className="pb-5">
-                <Col md={{size: 8, offset: 2}} className="py-3">
+            <Row className="mt-3 mb-5">
+                <Col md={{size: 8, offset: 2}} className="pb-3">
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="primary" outline size="lg" block>
