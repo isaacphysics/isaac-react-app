@@ -593,7 +593,7 @@ const GroupDetails = (props: GroupDetailsProps) => {
             groupAssignments = <div className="p-4 text-center">There are no assignments for this group.</div>
         }
     }
-    let groupTests: JSX.Element | JSX.Element[] = <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
+    let groupTests: JSX.Element | JSX.Element[];
     if (isDefined(group.quizAssignments) && Array.isArray(group.quizAssignments) && group.quizAssignments.length > 0) {
         groupTests = group.quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} /*{...props}*/ quizAssignment={quizAssignment} />);
     } else {
