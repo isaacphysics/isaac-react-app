@@ -210,6 +210,10 @@
                             input {
                                 font-size: 1.5rem;
                                 padding: 12px;
+
+                                &::placeholder {
+                                    font-size: 0.8em;
+                                }
                             }
                         }
 
