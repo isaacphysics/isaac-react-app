@@ -262,7 +262,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
                 onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
                 dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
-                    previewText ? katex.renderToString(previewText) : '<small>or click to enter your answer</small>' }}
+                    previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
             />
         </div>
     );
