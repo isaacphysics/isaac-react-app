@@ -16,6 +16,7 @@ import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../element
 import {Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select from "react-select";
+import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
@@ -295,7 +296,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                                 C3 require more creativity and could be attempted later in a course.
                             </RS.UncontrolledTooltip>
                         </RS.Label>
-                        <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
+                        <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
+                        {/*<Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
                     </div>
                 </RS.Col>
                 <RS.Col lg={8}>

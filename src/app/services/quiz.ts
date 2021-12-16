@@ -5,6 +5,7 @@ import {isDefined} from "./miscUtils";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
 import {deregisterQuestion, registerQuestion} from "../state/actions";
+import { API_PATH } from "./constants";
 
 
 // FIXME - this wasn't supposed to be hardcoded here, but circular dependency issues mean we cannot import ./questions!
@@ -74,3 +75,7 @@ export function useCurrentQuizAttempt() {
 
     return {attempt, studentAttempt, studentUser, questions, sections, error, studentError};
 }
+
+export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
+    return `${API_PATH}/quiz/assignment/${assignmentId}/download`;
+};
