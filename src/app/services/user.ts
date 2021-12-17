@@ -7,27 +7,27 @@ export function isLoggedIn(user?: {loggedIn?: boolean} | null): user is LoggedIn
 }
 
 export function isStudent(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
-    return isDefined(user) && (user.role === "STUDENT") && (user?.loggedIn ?? true);
+    return isDefined(user) && (user.role === "STUDENT") && (user.loggedIn ?? true);
 }
 
 export function isTeacher(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
-    return isDefined(user) && (user.role !== "STUDENT") && (user?.loggedIn ?? true);
+    return isDefined(user) && (user.role !== "STUDENT") && (user.loggedIn ?? true);
 }
 
 export function isAdmin(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
-    return isDefined(user) && (user.role === "ADMIN") && (user?.loggedIn ?? true);
+    return isDefined(user) && (user.role === "ADMIN") && (user.loggedIn ?? true);
 }
 
 export function isEventManager(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
-    return isDefined(user) && (user.role === "EVENT_MANAGER") && (user?.loggedIn ?? true);
+    return isDefined(user) && (user.role === "EVENT_MANAGER") && (user.loggedIn ?? true);
 }
 
 export function isStaff(user?: {role?: Role, loggedIn?: boolean} | null) {
-    return isDefined(user) && (user.role === "ADMIN" || user.role === "EVENT_MANAGER" || user.role === "CONTENT_EDITOR") && (user?.loggedIn ?? true);
+    return isDefined(user) && (user.role === "ADMIN" || user.role === "EVENT_MANAGER" || user.role === "CONTENT_EDITOR") && (user.loggedIn ?? true);
 }
 
 export function isEventLeader(user?: {role?: Role, loggedIn?: boolean} | null) {
-    return isDefined(user) && (user.role === "EVENT_LEADER") && (user?.loggedIn ?? true);
+    return isDefined(user) && (user.role === "EVENT_LEADER") && (user.loggedIn ?? true);
 }
 
 export function isEventLeaderOrStaff(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
