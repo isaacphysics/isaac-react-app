@@ -1,4 +1,4 @@
-import React, {ChangeEvent, CSSProperties, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
@@ -19,9 +19,9 @@ import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
-import Select, { GroupBase, StylesConfig } from "react-select";
+import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { unwrapValue } from "../../services/select";
+import {selectOnChange} from "../../services/select";
 
 interface Item<T> {
     value: T;
@@ -49,8 +49,8 @@ function parseLocationSearch(search: string): [string, DOCUMENT_TYPE[]] {
 }
 
 const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUMENT_TYPE>>> = {
-    multiValue: (styles: CSSProperties) => ({...styles, backgroundColor: {[SITE.PHY]: "rgba(254, 161, 0, 0.9)", [SITE.CS]: "rgba(255, 181, 63, 0.9)"}[SITE_SUBJECT]}),
-    multiValueLabel: (styles: CSSProperties) => ({...styles, color: "black"}),
+    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: {[SITE.PHY]: "rgba(254, 161, 0, 0.9)", [SITE.CS]: "rgba(255, 181, 63, 0.9)"}[SITE_SUBJECT]}),
+    multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
 };
 
 export const Search = withRouter((props: {history: History; location: Location}) => {
@@ -138,7 +138,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
                                         classNamePrefix="select"
-                                        onChange={unwrapValue(setFiltersState)}
+                                        onChange={selectOnChange(setFiltersState, false)}
                                         styles={selectStyle}
                                     />
                                     {SITE_SUBJECT === SITE.CS && <RS.Label className="mt-2 mb-2 mb-md-0">

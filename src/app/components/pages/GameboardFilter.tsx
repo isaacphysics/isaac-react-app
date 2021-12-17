@@ -13,7 +13,7 @@ import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {Item, unwrapValue} from "../../services/select";
+import {Item, selectOnChange} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select from "react-select";
 import {getFilteredStageOptions, useUserContext} from "../../services/userContext";
@@ -274,7 +274,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                                 {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
                             </RS.UncontrolledTooltip>
                         </RS.Label>
-                        <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                        <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
                     </div>
                     {/*<div>*/}
                     {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
@@ -295,7 +295,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                                 C3 require more creativity and could be attempted later in a course.
                             </RS.UncontrolledTooltip>
                         </RS.Label>
-                        <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
+                        <Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
                     </div>
                 </RS.Col>
                 <RS.Col lg={8}>

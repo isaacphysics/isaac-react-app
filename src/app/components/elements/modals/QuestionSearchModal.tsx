@@ -9,12 +9,10 @@ import Select from "react-select";
 import {
     groupTagSelectionsByParent,
     logEvent,
-    multiSelectOnChange,
-    selectOnChange,
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
+import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE, TAG_ID} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
@@ -22,6 +20,8 @@ import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {Item, selectOnChange} from "../../../services/select";
+import {GroupBase} from "react-select/dist/declarations/src/types";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -100,8 +100,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         setSortState(newSortState);
     };
 
-    const tagOptions = SITE_SUBJECT === SITE.PHY ? tags.allTags.map(groupTagSelectionsByParent) :
-        tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const tagOptions: { options: Item<string>[]; label: string }[] = SITE_SUBJECT === SITE.PHY ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
 
     useEffect(() => {
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
@@ -138,7 +138,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <Select
                     inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
                     onChange={(e) => {
-                        selectOnChange(setSearchBook)(e);
+                        selectOnChange(setSearchBook, true)(e);
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
                     options={[
@@ -154,7 +154,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
-                    options={tagOptions} onChange={multiSelectOnChange(setSearchTopics)}
+                    options={groupBaseTagOptions} onChange={s => selectOnChange(setSearchTopics, true)(s.map(v => v.options).flat())}
                 />
             </RS.Col>
         </RS.Row>
@@ -163,14 +163,14 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
                 <Select
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredStageOptions()} onChange={multiSelectOnChange(setSearchStages)}
+                    options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </RS.Col>
             {SITE_SUBJECT === SITE.PHY && <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
+                    options={DIFFICULTY_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>}
             {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
@@ -179,7 +179,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                     value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
-                    onChange={multiSelectOnChange(setSearchExamBoards)}
+                    onChange={selectOnChange(setSearchExamBoards, true)}
                 />
             </RS.Col>}
         </RS.Row>

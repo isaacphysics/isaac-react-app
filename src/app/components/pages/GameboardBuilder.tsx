@@ -22,8 +22,7 @@ import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
-    logEvent,
-    multiSelectOnChange
+    logEvent
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
 import {history} from "../../services/history"
