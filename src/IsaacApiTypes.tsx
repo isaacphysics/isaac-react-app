@@ -166,6 +166,7 @@ export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
     rubric?: ContentDTO;
     visibleToStudents?: boolean;
+    hiddenFromRoles?: Role[];
     defaultFeedbackMode?: QuizFeedbackMode;
     total?: number;
     sectionTotals?: { [index: string]: number };
@@ -362,7 +363,8 @@ export interface ContentSummaryDTO {
 }
 
 export interface QuizSummaryDTO extends ContentSummaryDTO {
-    visibleToStudents?: boolean
+    visibleToStudents?: boolean;
+    hiddenFromRoles?: Role[];
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
