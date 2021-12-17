@@ -74,7 +74,7 @@ import {ThunkDispatch} from "redux-thunk";
 import {selectors} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
-import {isTeacher} from "../services/user";
+import {isAdminOrEventManager, isTeacher} from "../services/user";
 import ReactGA from "react-ga";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
@@ -1574,7 +1574,7 @@ export const deleteBoard = (board: AppGameBoard) => async (dispatch: Dispatch<Ac
         await loadGroupsForBoard(board);
         const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
         if (hasAssignedGroups) {
-            if (reduxState && reduxState.user && reduxState.user.loggedIn && (reduxState.user.role == "ADMIN" || reduxState.user.role == "EVENT_MANAGER")) {
+            if (reduxState && reduxState.user && reduxState.user.loggedIn && isAdminOrEventManager(reduxState.user)) {
                 if (!confirm(`Warning: You currently have groups assigned to ${board.title}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.`)) {
                     return;
                 }
