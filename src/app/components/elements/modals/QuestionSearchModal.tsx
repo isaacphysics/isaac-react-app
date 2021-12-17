@@ -5,7 +5,7 @@ import {SortableTableHeader} from "../SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {debounce, isEqual} from "lodash";
-import Select from "react-select";
+import Select, {MultiValue} from "react-select";
 import {
     groupTagSelectionsByParent,
     logEvent,
@@ -179,7 +179,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                     value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
-                    onChange={selectOnChange(setSearchExamBoards, true)}
+                    onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
                 />
             </RS.Col>}
         </RS.Row>
