@@ -2,6 +2,7 @@ import {Remarkable} from "remarkable";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {linkify} from "remarkable/linkify";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
@@ -41,9 +42,8 @@ export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
 
 export const MARKDOWN_RENDERER = new Remarkable({
-    linkify: true,
-    html: true,
-});
+    html: true
+}).use(linkify);
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
