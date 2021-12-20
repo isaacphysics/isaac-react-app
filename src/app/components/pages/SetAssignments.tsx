@@ -52,7 +52,6 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
 import Select from "react-select";
-import {multiSelectOnChange} from "../../services/gameboardBuilder";
 import {
     difficultiesOrdered,
     difficultyShortLabelMap,
@@ -61,6 +60,7 @@ import {
     stagesOrdered
 } from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {selectOnChange} from "../../services/select";
 
 enum boardViews {
     "table" = "Table View",
@@ -546,12 +546,12 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                                 {value: '3', label: '3'},
                                                                 {value: '4', label: '4'},
                                                                 {value: '5', label: '5'},
-                                                                {value: '6', label: '6'},
+                                                                {value: '6', label: '6'}
                                                             ]}
                                                             className="basic-multi-select"
                                                             classNamePrefix="select"
                                                             placeholder="None"
-                                                            onChange={multiSelectOnChange(setLevels)}
+                                                            onChange={selectOnChange(setLevels, true)}
                                                     />
                                                 </Label>
                                             </Col>}

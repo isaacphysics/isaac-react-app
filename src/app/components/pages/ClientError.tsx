@@ -74,7 +74,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
                             <h4>Useful information to include in your email</h4>
                             <small>
                                 {Object.entries(usefulInformation).map(([key, value]) => (
-                                    <p><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>
+                                    <p key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>
                                 ))}
                             </small>
                         </div>
