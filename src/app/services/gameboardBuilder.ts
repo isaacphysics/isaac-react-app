@@ -3,7 +3,7 @@ import {orderBy} from "lodash";
 import tags from "./tags";
 import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {Dispatch, SetStateAction} from "react";
-import { MultiValue, SingleValue } from "react-select";
+import { ActionMeta, MultiValue, SingleValue } from "react-select";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
 
 const bookSort = (a: string, b: string) => {

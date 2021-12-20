@@ -276,12 +276,6 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
                         </RS.Label>
                         <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
                     </div>
-                    {/*<div>*/}
-                    {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
-                    {/*        I would like some questions from Isaac to...*/}
-                    {/*    </RS.Label>*/}
-                    {/*    <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
-                    {/*</div>*/}
                     <div>
                         <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
                             I would like questions for...

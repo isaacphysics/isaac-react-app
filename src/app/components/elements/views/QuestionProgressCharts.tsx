@@ -4,7 +4,6 @@ import {LevelAttempts, Levels} from "../../../../IsaacAppTypes";
 import {bb, Chart} from "billboard.js";
 import tags from "../../../services/tags";
 import Select, { SingleValue } from "react-select";
-import ValueType from "react-select";
 import {doughnutColours, specificDoughnutColours, TAG_ID} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
