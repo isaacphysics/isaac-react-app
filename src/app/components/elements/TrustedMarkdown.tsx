@@ -8,15 +8,16 @@ import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {Remarkable} from "remarkable";
+// @ts-ignore
+import {Remarkable, utils} from "remarkable";
 import * as uuid from "uuid";
 import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
-MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx/* options, env */) {
-    let href = Remarkable.utils.escapeHtml(tokens[idx].href || "");
+MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
+    let href = utils.escapeHtml(tokens[idx].href || "");
     let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
-    let title = tokens[idx].title ? (' title="' + Remarkable.utils.escapeHtml(Remarkable.utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
+    let title = tokens[idx].title ? (' title="' + utils.escapeHtml(utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
     if (localLink) {
         return `<a href="${href}" ${title}>`;
     } else {

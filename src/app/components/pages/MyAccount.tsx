@@ -58,7 +58,7 @@ const stateToProps = (state: AppState, props: any) => {
         errorMessage: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
         userPreferences: state?.userPreferences ?? null,
-        firstLogin: history?.location?.state?.firstLogin,
+        firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
         userOfInterest: searchParams?.userId as string ?? null,

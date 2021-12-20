@@ -7,7 +7,8 @@ import he from "he";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import katex, { KatexOptions } from "katex";
 import renderA11yString from "../../services/katex-a11y";
-import {Remarkable} from "remarkable";
+// @ts-ignore
+import {utils} from "remarkable";
 
 type MathJaxMacro = string|[string, number];
 
@@ -328,7 +329,7 @@ export function LaTeX({markup, className}: {markup: string, className?: string})
         state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const figureNumbers = useContext(FigureNumberingContext);
 
-    const escapedMarkup = Remarkable.utils.escapeHtml(markup);
+    const escapedMarkup = utils.escapeHtml(markup); //.escapeHtml(markup);
     const katexHtml = katexify(escapedMarkup, user, booleanNotation, screenReaderHoverText, figureNumbers);
 
     return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
