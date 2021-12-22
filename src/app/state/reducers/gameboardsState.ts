@@ -14,7 +14,11 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
             return {id: action.gameboardId};
         case ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS:
             if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.id === action.gameboardId) {
-                return {...currentGameboard, savedToCurrentUser: true};
+                if (action.gameboardTitle) {
+                    return {...currentGameboard, title: action.gameboardTitle, savedToCurrentUser: true};
+                } else {
+                    return {...currentGameboard, savedToCurrentUser: true};
+                }
             } else { // It was not the currentGameboard that got added
                 return currentGameboard;
             }

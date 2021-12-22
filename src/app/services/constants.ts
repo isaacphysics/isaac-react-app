@@ -586,6 +586,8 @@ export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
 export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
 export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC]);
 
+export const EXAM_BOARD_ITEM_OPTIONS = Object.keys(EXAM_BOARD).map(s => ({value: s, label: examBoardLabelMap[s as EXAM_BOARD]}));
+
 // BOOLEAN LOGIC NOTATION OPTIONS
 export enum BOOLEAN_NOTATION {
     ENG = "ENG",
@@ -1044,3 +1046,5 @@ export const progressColour = {
 export const GRAY_120 = '#c9cad1';
 
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
+
+export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
