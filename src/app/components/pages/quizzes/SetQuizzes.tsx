@@ -79,7 +79,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const quizzes = useSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
-    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage tests", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests (was Quizzes)"}[SITE_SUBJECT]);
+    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage tests", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT]);
     const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     const dispatch = useDispatch();
