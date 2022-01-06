@@ -10,7 +10,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {loadQuizAssignedToMe, loadQuizzes, loadQuizzesAttemptedFreelyByMe} from "../../../state/actions/quizzes";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
-import {extractTeacherName, isRoleLEQ} from "../../../services/user";
+import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
 import {partition} from 'lodash';
 import {NOT_FOUND} from "../../../services/constants";
@@ -138,12 +138,13 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     const [completedQuizzes, incompleteQuizzes] = partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
 
     const showQuiz = (quiz: QuizSummaryDTO) => {
-        if (isRoleLEQ(user.role, "STUDENT")) {
-            return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents
-        } else if (isRoleLEQ(user.role, "TEACHER")) {
-            return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true
-        } else {
-            return true;
+        switch (user.role) {
+            case "STUDENT":
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents
+            case "TEACHER":
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true
+            default:
+                return true
         }
     };
 

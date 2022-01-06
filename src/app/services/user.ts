@@ -1,9 +1,9 @@
-import {LoggedInUser, School} from "../../IsaacAppTypes";
-import {Role, ROLES} from "../../IsaacApiTypes";
+import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
+import {Role} from "../../IsaacApiTypes";
 import {isDefined} from "./miscUtils";
 
-export function isLoggedIn(user?: {loggedIn?: boolean} | null): user is LoggedInUser {
-    return user?.loggedIn ? user.loggedIn : false;
+export function isLoggedIn(user?: PotentialUser | null): user is LoggedInUser {
+    return user ? user.loggedIn : false;
 }
 
 export function isStudent(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
@@ -46,11 +46,6 @@ export const roleRequirements: Record<Role, (u: {role?: Role, loggedIn?: boolean
     "EVENT_MANAGER": isEventManager,
     "ADMIN": isAdmin
 };
-
-// Returns undefined if either role is undefined
-export function isRoleLEQ(a?: Role, b?: Role): boolean | undefined {
-    return a && b && ROLES.indexOf(a) <= ROLES.indexOf(b);
-}
 
 export function extractTeacherName(teacher: {givenName?: string; familyName?: string} | null): string | null {
     if (null == teacher) {

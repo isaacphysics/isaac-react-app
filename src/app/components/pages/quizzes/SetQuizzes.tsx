@@ -22,7 +22,7 @@ import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
-import {isRoleLEQ} from "../../../services/user";
+import {isEventLeaderOrStaff} from "../../../services/user";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -106,7 +106,9 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     useEffect(() => {
         if (isDefined(titleFilter) && isDefined(quizzes)) {
-            const results = quizzes.filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()));
+            const results = quizzes
+                .filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()))
+                .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")));
 
             if (isDefined(results) && results.length > 0) {
                 setFilteredQuizzes(results);
@@ -130,11 +132,10 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     // If the user is event admin or above, and the quiz is hidden from teachers, then show that
     // Otherwise, show if the quiz is visible to students
-    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <div className="small text-muted d-none d-md-block ml-2">
-        {isRoleLEQ("EVENT_LEADER", user.role) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER")
-            ? "hidden from teachers"
-            : ((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && "visible to students"}
-    </div>;
+    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-none d-md-block ml-2">hidden from teachers</div>}
+        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-none d-md-block ml-2">visible to students</div>}
+    </>;
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
