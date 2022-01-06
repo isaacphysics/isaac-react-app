@@ -24,7 +24,14 @@ import {
 } from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../IsaacApiTypes";
+import {
+    AssignmentDTO,
+    GameboardDTO,
+    GameboardItem,
+    GameboardItemState,
+    QuizAssignmentDTO,
+    QuizUserFeedbackDTO
+} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
@@ -34,10 +41,10 @@ import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignm
 import {getQuizAssignmentCSVDownloadLink} from "../../services/quiz";
 import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { loadQuizAssignmentFeedback, loadQuizAssignments } from "../../state/actions/quizzes";
-import { Tabs } from "../elements/Tabs";
+import {loadQuizAssignmentFeedback, loadQuizAssignments} from "../../state/actions/quizzes";
+import {Tabs} from "../elements/Tabs";
 import {isDefined, isFound} from "../../services/miscUtils";
-import { formatMark, ICON, passMark, ResultsTable } from "../elements/quiz/QuizProgressCommon";
+import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 
 function selectGroups(state: AppState) {
     if (isDefined(state)) {
