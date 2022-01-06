@@ -108,7 +108,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         if (isDefined(titleFilter) && isDefined(quizzes)) {
             const results = quizzes
                 .filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()))
-                .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")));
+                .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles ? !quiz.hiddenFromRoles?.includes("TEACHER") : true));
 
             if (isDefined(results) && results.length > 0) {
                 setFilteredQuizzes(results);
