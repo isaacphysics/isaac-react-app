@@ -13,8 +13,8 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
-import {resourceFound} from "../../services/validation";
 import {DOCUMENT_TYPE} from "../../services/constants";
+import {isFound} from "../../services/miscUtils";
 
 const defaultConceptDisplay = {
     [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -33,7 +33,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const userContext = useUserContext();
 
     // Select different default display depending on page type
-    const defaultDisplay = resourceFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
+    const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
     const accordionDisplay = mergeDisplayOptions(defaultDisplay, doc.display);
 
     return <div className="isaac-accordion">

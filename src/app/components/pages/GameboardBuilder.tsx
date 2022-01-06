@@ -17,7 +17,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
-import {isValidGameboardId, resourceFound} from "../../services/validation";
+import {isValidGameboardId} from "../../services/validation";
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -38,6 +38,7 @@ import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
 import {EXAM_BOARD, STAGE} from "../../services/constants";
+import {isFound} from "../../services/miscUtils";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -167,7 +168,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setWildcardId(e.target.value);}}
                         >
                             <option value="random">Random wildcard</option>
-                            {resourceFound(wildcards) && wildcards.map((wildcard) => {
+                            {isFound(wildcards) && wildcards.map((wildcard) => {
                                 return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
                             })}
                         </RS.Input>
@@ -251,7 +252,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         onClick={() => {
                             // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                             let wildcard = undefined;
-                            if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
+                            if (wildcardId && isFound(wildcards) && wildcards.length > 0) {
                                 wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                             }
 

@@ -36,8 +36,7 @@ import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import { loadQuizAssignmentFeedback, loadQuizAssignments } from "../../state/actions/quizzes";
 import { Tabs } from "../elements/Tabs";
-import { isDefined } from "../../services/miscUtils";
-import { resourceFound } from "../../services/validation";
+import {isDefined, isFound} from "../../services/miscUtils";
 import { formatMark, ICON, passMark, ResultsTable } from "../elements/quiz/QuizProgressCommon";
 
 function selectGroups(state: AppState) {
@@ -70,7 +69,7 @@ function selectGroups(state: AppState) {
         }
 
         const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
-        if (resourceFound(state.quizAssignments)) { // assigned by me
+        if (isFound(state.quizAssignments)) { // assigned by me
             for (const qa of state.quizAssignments) {
                 if (!isDefined(qa.groupId)) {
                     continue;
@@ -514,7 +513,7 @@ const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
 
     let userFeedback: Nullable<QuizUserFeedbackDTO[]> = [];
     useEffect(() => {
-        if (resourceFound(quizAssignments)) {
+        if (isFound(quizAssignments)) {
             userFeedback = quizAssignments.find(qa => qa.id === quizAssignmentId)?.userFeedback;
         }
     }, [quizAssignments])
