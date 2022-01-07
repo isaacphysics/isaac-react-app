@@ -183,7 +183,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                     <th className="w-40">Question title</th>
                                     <th className="w-25">Topic</th>
                                     <th className="w-15">Stage</th>
-                                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Difficulty</th>}
+                                    <th className="w-15">Difficulty</th>
                                     {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
                                 </tr>
                             </thead>
@@ -262,7 +262,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             } else {
                                 const definedSubjects = ["physics", "maths", "chemistry"];
                                 selectedQuestions?.forEach((item) => {
-                                    let tags = intersection(definedSubjects, item.tags || []);
+                                    const tags = intersection(definedSubjects, item.tags || []);
                                     tags.forEach((tag: string) => subjects.push(tag));
                                 });
                                 // If none of the questions have a subject tag, default to physics

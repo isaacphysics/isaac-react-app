@@ -12,7 +12,7 @@ export function StageAndDifficultySummaryIcons({audienceViews}: {audienceViews: 
                 {view.stage && view.stage !== STAGE.ALL && <div className="hierarchy-tags text-center">
                     {stageLabelMap[view.stage]}
                 </div>}
-                {SITE_SUBJECT === SITE.PHY && view.difficulty && <div className="hierarchy-tags text-center ml-2 ml-md-0">
+                {view.difficulty && <div className="hierarchy-tags text-center ml-2 ml-md-0">
                     <DifficultyIcons difficulty={view.difficulty} />
                 </div>}
             </div>)

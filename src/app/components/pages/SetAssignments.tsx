@@ -206,9 +206,9 @@ const Board = (props: BoardProps) => {
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
-                {SITE_SUBJECT === SITE.PHY && <td className="text-center align-middle">
+                <td className="text-center align-middle">
                     {boardDifficulties.length > 0 && <AggregateDifficultyIcons difficulties={boardDifficulties} stacked />}
-                </td>}
+                </td>
                 <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
                 <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
                 <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
@@ -275,7 +275,7 @@ const Board = (props: BoardProps) => {
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
                         <CardSubtitle>Stages: <strong className="d-inline-flex">{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
-                        {SITE_SUBJECT === SITE.PHY && boardDifficulties.length > 1 && <CardSubtitle>
+                        {boardDifficulties.length > 1 && <CardSubtitle>
                             {"Difficulties: "}
                             <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
                         </CardSubtitle>}
@@ -560,7 +560,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                             Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                         </button>
                                                     </th>
-                                                    {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle">Difficulties</th>}
+                                                    <th className="text-center align-middle">Difficulties</th>
                                                     <th className="text-center align-middle">Creator</th>
                                                     <th className="text-center align-middle pointer-cursor">
                                                         <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>

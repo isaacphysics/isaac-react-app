@@ -121,6 +121,9 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 // Print
 @import "../common/print";
 
+// Difficulty icons
+@import "filter";
+
 a.disabled {
     color: $gray-600;
     pointer-events: none;

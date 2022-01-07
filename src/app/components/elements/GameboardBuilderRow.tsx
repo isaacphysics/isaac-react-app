@@ -100,11 +100,11 @@ export const GameboardBuilderRow = (
                 {stage && <span>{stageLabelMap[stage]}</span>}
             </div>)}
         </td>
-        {SITE_SUBJECT === SITE.PHY && <td className="w-15">
+        <td className="w-15">
             {filteredAudienceViews.map(v => v.difficulty).map((difficulty, i) => <div key={`${difficulty} ${i}`}>
                 {difficulty && <DifficultyIcons difficulty={difficulty} />}
             </div>)}
-        </td>}
+        </td>
         {SITE_SUBJECT === SITE.CS && <td className="w-15">
             {filteredAudienceViews.map(v => v.examBoard).map(examBoard => <div key={examBoard}>
                 {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
