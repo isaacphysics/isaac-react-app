@@ -15,12 +15,12 @@ export const NavigationBarPhy = () => {
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>
-        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="Assignments or tests incomplete" />}</>}>
+        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
             <LinkItem to="/account" muted={!isLoggedIn(user)}>My Account</LinkItem>
             <LinkItem to="/my_gameboards" muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
-            <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {<MenuBadge count={assignmentsCount} message="Assignments incomplete" />}</LinkItem>
+            <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
             <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
-            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="Tests incomplete" />}</LinkItem>
+            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">

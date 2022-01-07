@@ -15,11 +15,11 @@ export const NavigationBarCS = () => {
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>
-        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="Assignments or tests incomplete" />}</>}>
-            <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="Assignments incomplete" />}</LinkItem>
+        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
+            <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="Tests incomplete" />}</LinkItem>
+            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
