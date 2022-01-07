@@ -20,7 +20,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/my_gameboards" muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
             <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {<MenuBadge count={assignmentsCount} message="Assignments incomplete" />}</LinkItem>
             <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
-            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests (was Quizzes) {<MenuBadge count={quizzesCount} message="Tests incomplete" />}</LinkItem>
+            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="Tests incomplete" />}</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
@@ -28,8 +28,8 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
-            <LinkItem to="/set_tests">Set Tests (was Quizzes)</LinkItem>
-            <LinkItem to="/set_tests#manage">Manage Tests (was Quizzes)</LinkItem>
+            <LinkItem to="/set_tests">Set Tests</LinkItem>
+            <LinkItem to="/set_tests#manage">Manage Tests</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">
