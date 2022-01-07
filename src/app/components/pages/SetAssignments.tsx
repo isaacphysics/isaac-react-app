@@ -49,7 +49,7 @@ import {connect, useDispatch, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {isStaff} from "../../services/user";
+import {isAdminOrEventManager, isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
 import {difficultiesOrdered, sortIcon, stageLabelMap, stagesOrdered} from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -153,7 +153,7 @@ const Board = (props: BoardProps) => {
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
-            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
+            if (isAdminOrEventManager(user)) {
                 alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
                 showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.", timeout: 5000});

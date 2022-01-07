@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {ContentSummaryDTO, QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {
@@ -22,6 +22,7 @@ import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {isEventLeaderOrStaff} from "../../../services/user";
 
 interface SetQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -105,7 +106,9 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     useEffect(() => {
         if (isDefined(titleFilter) && isDefined(quizzes)) {
-            const results = quizzes.filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()));
+            const results = quizzes
+                .filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()))
+                .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles ? !quiz.hiddenFromRoles?.includes("TEACHER") : true));
 
             if (isDefined(results) && results.length > 0) {
                 setFilteredQuizzes(results);
@@ -127,6 +130,13 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         Students in the group will be emailed when you set a new test.
     </span>;
 
+    // If the user is event admin or above, and the quiz is hidden from teachers, then show that
+    // Otherwise, show if the quiz is visible to students
+    const roleVisibilitySummary = (quiz: QuizSummaryDTO) => <>
+        {isEventLeaderOrStaff(user) && quiz.hiddenFromRoles && quiz.hiddenFromRoles?.includes("TEACHER") && <div className="small text-muted d-none d-md-block ml-2">hidden from teachers</div>}
+        {((quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents) && <div className="small text-muted d-none d-md-block ml-2">visible to students</div>}
+    </>;
+
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
@@ -145,7 +155,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                             {filteredQuizzes.map(quiz =>  <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                 <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                     <span className="mb-2 mb-sm-0">{quiz.title}</span>
-                                    {quiz.visibleToStudents && <div className="small text-muted d-none d-md-block ml-2">visible to students</div>}
+                                    {roleVisibilitySummary(quiz)}
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
                                     <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz))}>

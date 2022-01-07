@@ -4,7 +4,7 @@ import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {QuizAssignmentDTO, QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {loadQuizAssignedToMe, loadQuizzes, loadQuizzesAttemptedFreelyByMe} from "../../../state/actions/quizzes";
@@ -137,6 +137,17 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     ];
     const [completedQuizzes, incompleteQuizzes] = partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
 
+    const showQuiz = (quiz: QuizSummaryDTO) => {
+        switch (user.role) {
+            case "STUDENT":
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents
+            case "TEACHER":
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true
+            default:
+                return true
+        }
+    };
+
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "My tests", [SITE.PHY]: "My Tests (was Quizzes)"}[SITE_SUBJECT]} help={pageHelp} />
 
@@ -163,7 +174,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no tests currently available.</em></p>}
                             <RS.ListGroup className="mb-3 quiz-list">
-                                {quizzes.map(quiz => quiz.visibleToStudents && <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                {quizzes.filter(showQuiz).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                         <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
