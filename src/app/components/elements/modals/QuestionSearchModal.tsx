@@ -22,6 +22,7 @@ import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {siteSpecific} from "../../../services/miscUtils";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -216,8 +217,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     />
                     <th className="w-25">Topic</th>
                     <th className="w-15">Stage</th>
-                    <th className="w-15">Difficulty</th>
-                    {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
+                    <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
+                    {SITE_SUBJECT === SITE.CS && <th className="w-5">Exam boards</th>}
                 </tr>
             </thead>
             <tbody>

@@ -38,6 +38,7 @@ import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
 import {EXAM_BOARD, STAGE} from "../../services/constants";
+import {siteSpecific} from "../../services/miscUtils";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -183,8 +184,8 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                     <th className="w-40">Question title</th>
                                     <th className="w-25">Topic</th>
                                     <th className="w-15">Stage</th>
-                                    <th className="w-15">Difficulty</th>
-                                    {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
+                                    <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
+                                    {SITE_SUBJECT === SITE.CS && <th className="w-5">Exam boards</th>}
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -205,7 +206,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                             })}
                                             {provided.placeholder}
                                             <tr>
-                                                <td colSpan={5}>
+                                                <td colSpan={siteSpecific(5, 6)}>
                                                     <div className="img-center">
                                                         <ShowLoading
                                                             placeholder={<div className="text-center"><IsaacSpinner /></div>}
