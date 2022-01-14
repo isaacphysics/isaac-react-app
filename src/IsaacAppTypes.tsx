@@ -29,6 +29,7 @@ import {
     TAG_ID,
     TAG_LEVEL
 } from "./app/services/constants";
+import {Dispatch} from "redux";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -101,6 +102,8 @@ export type Action =
     | {type: ACTION_TYPE.USER_SNAPSHOT_REQUEST}
     | {type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS; snapshot: UserSnapshot}
     | {type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.USER_RECOMMENDED_QUESTIONS_SUCCESS; recommendedQuestions: ContentSummaryDTO[]}
+    | {type: ACTION_TYPE.USER_RECOMMENDED_QUESTIONS_FAILURE}
     | {type: ACTION_TYPE.AUTHENTICATION_REQUEST_REDIRECT; provider: string}
     | {type: ACTION_TYPE.AUTHENTICATION_REDIRECT; provider: string; redirectUrl: string}
     | {type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK}
@@ -630,8 +633,8 @@ export interface School {
 export interface Toast {
     color: string;
     title: string;
-    body?: string;
     timeout?: number;
+    body?: string | ((dispatch: Dispatch<any>, toastId: string) => ReactElement);
     closable?: boolean;
     buttons?: ReactElement[];
 

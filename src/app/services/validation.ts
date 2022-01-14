@@ -82,6 +82,7 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
     }
 };
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
+export const withinLast24Hours = withinLastNMinutes.bind(null, 1440);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences &&

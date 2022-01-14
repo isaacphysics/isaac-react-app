@@ -16,6 +16,7 @@ import {
     user,
     userAuthSettings,
     userPreferences,
+    userRecommendedQuestions,
     userSchoolLookup
 } from "./userState";
 import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
@@ -53,6 +54,7 @@ const appReducer = combineReducers({
     user,
     userAuthSettings,
     userPreferences,
+    userRecommendedQuestions,
     userSchoolLookup,
     totpSharedSecret,
     totpChallengePending,

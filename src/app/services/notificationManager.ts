@@ -1,7 +1,7 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {ACTION_TYPE} from "./constants";
-import {openActiveModal} from "../state/actions";
-import {allRequiredInformationIsPresent, withinLast50Minutes} from "./validation";
+import {showRecommendedQuestions, openActiveModal} from "../state/actions";
+import {allRequiredInformationIsPresent, withinLast24Hours, withinLast50Minutes} from "./validation";
 import {isLoggedIn} from "./user";
 import * as persistence from "./localStorage";
 import {KEY} from "./localStorage";
@@ -19,6 +19,16 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
         ) {
             persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
             await dispatch(openActiveModal(requiredAccountInformationModal) as any);
+        }
+    }
+    // TODO Only if certain pages are visited (under the Teach tab)
+    if ([ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
+        if (
+            state && isLoggedIn(state.user) &&
+            !withinLast24Hours(persistence.load(KEY.RECOMMENDED_QUESTION_SHOWN_TIME))
+        ) {
+            persistence.save(KEY.RECOMMENDED_QUESTION_SHOWN_TIME, new Date().toString());
+            await dispatch(showRecommendedQuestions() as any);
         }
     }
 

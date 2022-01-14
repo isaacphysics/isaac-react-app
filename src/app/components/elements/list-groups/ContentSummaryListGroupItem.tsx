@@ -26,7 +26,7 @@ import {LaTeX} from "../LaTeX";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
+export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle, onFollowLink}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean; onFollowLink?: () => void}) => {
     const componentId = useRef(uuid.v4().slice(0, 4)).current;
     const userContext = useUserContext();
     const user = useSelector(selectors.user.orNull);
@@ -103,7 +103,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const displayStage = audienceViews && audienceViews.length > 0;
 
     return <RS.ListGroupItem className={`p-3 content-summary-item d-md-flex flex-column justify-content-center ${itemClasses}`} key={linkDestination}>
-        <Link to={{pathname: linkDestination, search: search}}>
+        <Link to={{pathname: linkDestination, search: search}} onClick={onFollowLink}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
@@ -133,8 +133,8 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     </RS.ListGroupItem>;
 };
 
-export const linkToContent = (search: string | undefined, item: ContentSummaryDTO, displayTopicTitle: boolean | undefined) => {
-    return <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}/>
+export const linkToContent = (search: string | undefined, item: ContentSummaryDTO, displayTopicTitle: boolean | undefined, onFollowLink?: () => void) => {
+    return <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle} onFollowLink={onFollowLink}/>
 };
 
 export const LinkToContentSummaryList = ({items, search, displayTopicTitle, ...rest}: {

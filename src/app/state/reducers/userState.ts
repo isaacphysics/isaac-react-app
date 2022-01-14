@@ -1,6 +1,6 @@
 import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
-import {TOTPSharedSecretDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, TOTPSharedSecretDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 
 type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -75,3 +75,13 @@ export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null,
             return userSchoolLookup;
     }
 };
+
+type RecommendedQuestionsState = ContentSummaryDTO[] | null;
+export const userRecommendedQuestions = (recommendedQuestions: RecommendedQuestionsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.USER_RECOMMENDED_QUESTIONS_SUCCESS:
+            return {...action.recommendedQuestions};
+        default:
+            return recommendedQuestions
+    }
+}

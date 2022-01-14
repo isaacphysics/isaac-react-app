@@ -83,6 +83,7 @@ import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
+import {questionRecommendationToast} from "../components/navigation/Toasts";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -967,6 +968,23 @@ export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
 };
 
+export const showRecommendedQuestions = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    // Don't request this again if it has already been fetched successfully
+    const state = getState();
+    if (state && state.userRecommendedQuestions) {
+        return;
+    }
+    try {
+        //const rqs = await api.questions.getRecommendedQuestions(); // TODO
+        const rqs = await api.questions.search({tags: "physics", searchString: "doppler", startIndex: 0, fasttrack: false, limit: 10});
+        dispatch({type: ACTION_TYPE.USER_RECOMMENDED_QUESTIONS_SUCCESS, recommendedQuestions: rqs.data.results});
+
+        showToast(questionRecommendationToast(rqs.data.results))(dispatch);
+    } catch (e) {
+        dispatch({type: ACTION_TYPE.USER_RECOMMENDED_QUESTIONS_FAILURE});
+    }
+};
+
 export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
     try {
@@ -1248,7 +1266,7 @@ export const adminUserGet = (userid: number | undefined) => async (dispatch: Dis
 
 export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     try {
-        let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        const confirmDeletion = window.confirm("Are you sure you want to delete this user?");
         if (confirmDeletion) {
             dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
             await api.admin.userDelete.delete(userid);
@@ -1348,7 +1366,7 @@ export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, em
 };
 
 export const mergeUsers = (targetId: number, sourceId: number) => async (dispatch: Dispatch<Action>) => {
-    let confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+    const confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
     if (confirmMerge) {
         dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST});
         try {
@@ -1622,7 +1640,7 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
     let dueDateUTC = undefined;
     if (dueDate != undefined) {
         dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
-        let today = new Date();
+        const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
             dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
@@ -1876,7 +1894,7 @@ export const addMyselfToWaitingList = (eventId: string, additionalInformation: A
 };
 
 export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    let cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    const cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
     if (cancel) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});

@@ -283,6 +283,9 @@ export const api = {
         },
         generateSpecification: (graphChoice: ApiTypes.GraphChoiceDTO) => {
             return endpoint.post("/questions/generateSpecification", graphChoice);
+        },
+        getRecommendedQuestions: (): AxiosPromise<ApiTypes.ContentSummaryDTO[]> => {
+            return endpoint.get(`/questions/recommended`);
         }
     },
     concepts: {
