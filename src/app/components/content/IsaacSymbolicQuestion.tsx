@@ -223,12 +223,6 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 </IsaacContentValueOrChildren>
             </div>
             {/* TODO Accessibility */}
-            <div
-                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
-                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
-                dangerouslySetInnerHTML={{ __html: !inputState.valid ? "Click to replace your typed answer" :
-                    previewText ? katex.renderToString(previewText) : 'Click to enter your answer' }}
-            />
             {modalVisible && <InequalityModal
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={updateState}
@@ -242,7 +236,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                 <RS.InputGroup className="my-2">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
-                              placeholder="or type your formula here"/>
+                              placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
                         <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
@@ -264,6 +258,12 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     The following symbols may be useful: <pre>{symbolList}</pre>
                 </div>}
             </div>}
+            <div
+                role={readonly ? undefined : "button"} className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={readonly ? undefined : 0}
+                onClick={() => !readonly && setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => !readonly && setModalVisible(true))}
+                dangerouslySetInnerHTML={{ __html: !inputState.valid ? "<small>or click to replace your typed answer</small>" :
+                    previewText ? katex.renderToString(previewText) : '<small>or click here to drag and drop your answer</small>' }}
+            />
         </div>
     );
 };
