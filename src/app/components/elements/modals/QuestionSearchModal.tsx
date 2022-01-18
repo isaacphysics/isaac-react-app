@@ -146,7 +146,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         {value: "phys_book_gcse", label: "GCSE Physics"},
                         {value: "maths_book", label: "Pre-Uni Maths"},
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"},
-                        {value: "physics_skills_14", label: "A Level Physics (2nd Edition - Old)"},
                     ]}
                 />
             </RS.Col>}
