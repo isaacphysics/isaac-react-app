@@ -15,7 +15,8 @@ import {
     NOT_FOUND,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     STAGE,
-    TAG_ID
+    TAG_ID,
+    UPGRADE_HOST_URL
 } from "../services/constants";
 import {
     Action,
@@ -83,6 +84,8 @@ import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
+import {UpgradeClient} from "upgrade_client_lib";
+import {SITE_SUBJECT} from "../services/siteConstants";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -234,6 +237,17 @@ export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: strin
     }
 };
 
+const getUpgradeExperiments = (userId?: number) => async (dispatch: Dispatch<Action>) => {
+    if (userId) {
+        const upgradeClient = new UpgradeClient(`${userId}`, UPGRADE_HOST_URL);
+        await upgradeClient.init();
+        await upgradeClient.getAllExperimentConditions(SITE_SUBJECT);
+        dispatch({type: ACTION_TYPE.UPGRADE_CLIENT_UPDATE, upgradeClient});
+    } else {
+        dispatch({type: ACTION_TYPE.UPGRADE_CLIENT_UPDATE, upgradeClient: null});
+    }
+}
+
 export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
@@ -246,7 +260,6 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         persistence.remove(KEY.AFTER_AUTH_PATH);
 
         history.push(afterAuthPath);
-
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showErrorToastIfNeeded("Error with verification code.", e));
@@ -288,8 +301,10 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
             dispatch(getUserPreferences() as any)
         ]);
         dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch(getUpgradeExperiments(currentUser.data.id) as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
+        dispatch(getUpgradeExperiments() as any);
     }
 };
 
@@ -446,7 +461,6 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
-
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }

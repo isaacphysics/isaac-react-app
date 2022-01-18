@@ -2,6 +2,7 @@ import Remarkable from "remarkable";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {UpgradeClient} from "upgrade_client_lib";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
@@ -33,6 +34,7 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
     [SITE.CS]: "UA-137475074-1",
 }[SITE_SUBJECT];
 
+export const UPGRADE_HOST_URL = 'http://localhost:3030';
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
@@ -102,6 +104,8 @@ export enum ACTION_TYPE {
     USER_PREFERENCES_REQUEST = "USER_PREFERENCES_REQUEST",
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
+
+    UPGRADE_CLIENT_UPDATE = "UPGRADE_CLIENT_UPDATE",
 
     TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD = "TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD",
     TRANSIENT_USER_CONTEXT_SET_STAGE = "TRANSIENT_USER_CONTEXT_SET_STAGE",

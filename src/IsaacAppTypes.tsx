@@ -29,6 +29,7 @@ import {
     TAG_ID,
     TAG_LEVEL
 } from "./app/services/constants";
+import {UpgradeClient} from "upgrade_client_lib";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -74,6 +75,8 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
+
+    | {type: ACTION_TYPE.UPGRADE_CLIENT_UPDATE; upgradeClient: UpgradeClient | null}
 
     | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE; stage: STAGE}
     | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}

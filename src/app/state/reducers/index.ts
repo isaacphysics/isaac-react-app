@@ -12,7 +12,7 @@ import {
 } from "./eventsState";
 import {
     totpChallengePending,
-    totpSharedSecret,
+    totpSharedSecret, upgradeClient,
     user,
     userAuthSettings,
     userPreferences,
@@ -56,6 +56,7 @@ const appReducer = combineReducers({
     userSchoolLookup,
     totpSharedSecret,
     totpChallengePending,
+    upgradeClient,
 
     // Internal App
     printingSettings,

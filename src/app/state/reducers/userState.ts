@@ -1,6 +1,12 @@
-import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {
+    Action,
+    PotentialUser,
+    UserPreferencesDTO,
+    UserSchoolLookup
+} from "../../../IsaacAppTypes";
+import {ACTION_TYPE, UPGRADE_HOST_URL} from "../../services/constants";
 import {TOTPSharedSecretDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
+import {UpgradeClient} from "upgrade_client_lib";
 
 type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -75,3 +81,13 @@ export const userSchoolLookup = (userSchoolLookup: UserSchoolLookupState = null,
             return userSchoolLookup;
     }
 };
+
+type UpgradeExperimentsState = UpgradeClient | null;
+export const upgradeClient = (userExperiments: UpgradeExperimentsState = null, action: Action): UpgradeExperimentsState => {
+    switch (action.type) {
+        case ACTION_TYPE.UPGRADE_CLIENT_UPDATE:
+            return action.upgradeClient;
+        default:
+            return userExperiments;
+    }
+}
