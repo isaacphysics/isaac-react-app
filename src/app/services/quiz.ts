@@ -2,10 +2,11 @@ import {useEffect, useMemo} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {isDefined} from "./miscUtils";
-import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
+import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
 import {deregisterQuestion, registerQuestion} from "../state/actions";
-import { API_PATH } from "./constants";
+import {API_PATH} from "./constants";
+import {partition} from "lodash";
 
 
 // FIXME - this wasn't supposed to be hardcoded here, but circular dependency issues mean we cannot import ./questions!
@@ -78,4 +79,14 @@ export function useCurrentQuizAttempt() {
 
 export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/quiz/assignment/${assignmentId}/download`;
-};
+}
+
+type QuizAttemptOrAssignment = (QuizAttemptDTO | QuizAssignmentDTO);
+
+export function isAttempt(a: QuizAttemptOrAssignment): a is QuizAttemptDTO {
+    return !('groupId' in a);
+}
+
+export function partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts: QuizAttemptOrAssignment[]): [QuizAttemptOrAssignment[], QuizAttemptOrAssignment[]] {
+    return partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate))
+}

@@ -19,6 +19,10 @@ import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {loadQuizAssignedToMe} from "../../state/actions/quizzes";
+import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
+import {isFound} from "../../services/miscUtils";
+import {RenderNothing} from "../elements/RenderNothing";
 
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
@@ -53,30 +57,40 @@ export const NavigationSection = ({children, title, topLevelLink, to}: Navigatio
     </MenuOpenContext.Consumer>
 );
 
-export const useAssignmentBadge = () => {
+export function MenuBadge({count, message}: {count: number, message: string}) {
+    if (count == 0) {
+        return RenderNothing;
+    }
+    return <React.Fragment>
+        <span className="badge badge-pill bg-grey ml-2">{count}</span>
+        <span className="sr-only">{message}</span>
+    </React.Fragment>;
+}
+
+export function useAssignmentsCount() {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
 
     useEffect(() => {
         if (user?.loggedIn) {
             dispatch(loadMyAssignments());
+            dispatch(loadQuizAssignedToMe());
         }
     }, [dispatch, user]);
 
-    const assignmentBadge = useSelector((state: AppState) => {
+    return useSelector((state: AppState) => {
+        const response = {assignmentsCount: 0, quizzesCount: 0};
         if (state?.assignments) {
             const {inProgressRecent} = filterAssignmentsByStatus(state.assignments);
-            const assignmentCount = inProgressRecent.length;
-            if (assignmentCount > 0) {
-                return <React.Fragment>
-                    <span className="badge badge-pill bg-grey ml-2">{assignmentCount}</span>
-                    <span className="sr-only">Incomplete assignments</span>
-                </React.Fragment>
-            }
+            response.assignmentsCount = inProgressRecent.length;
         }
+        if (state && isFound(state.quizAssignedToMe)) {
+            const [_completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(state.quizAssignedToMe);
+            response.quizzesCount = incompleteQuizzes.length;
+        }
+        return response;
     });
-    return assignmentBadge;
-};
+}
 
 export const NavigationBar = ({children}: {children: React.ReactNode}) => {
     const [menuOpen, setMenuOpen] = useState(false);

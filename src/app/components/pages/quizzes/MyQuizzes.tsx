@@ -4,19 +4,18 @@ import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAssignmentDTO, QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {loadQuizAssignedToMe, loadQuizzes, loadQuizzesAttemptedFreelyByMe} from "../../../state/actions/quizzes";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {extractTeacherName} from "../../../services/user";
-import {isDefined} from "../../../services/miscUtils";
-import {partition} from 'lodash';
-import {NOT_FOUND} from "../../../services/constants";
+import {isFound} from "../../../services/miscUtils";
 import {Spacer} from "../../elements/Spacer";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
+import {isAttempt, partitionCompleteAndIncompleteQuizzes} from "../../../services/quiz";
 
 interface MyQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -106,10 +105,6 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
     </>;
 }
 
-function isAttempt(a: QuizAssignmentDTO | QuizAttemptDTO): a is QuizAttemptDTO {
-    return !('groupId' in a);
-}
-
 const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     const quizAssignments = useSelector(selectors.quizzes.assignedToMe);
     const freeAttempts = useSelector(selectors.quizzes.attemptedFreelyByMe);
@@ -132,10 +127,10 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     </span>;
 
     const assignmentsAndAttempts = [
-        ...isDefined(quizAssignments) && quizAssignments !== NOT_FOUND ? quizAssignments : [],
-        ...isDefined(freeAttempts) && freeAttempts !== NOT_FOUND ? freeAttempts : [],
+        ...isFound(quizAssignments) ? quizAssignments : [],
+        ...isFound(freeAttempts) ? freeAttempts : [],
     ];
-    const [completedQuizzes, incompleteQuizzes] = partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
+    const [completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts);
 
     const showQuiz = (quiz: QuizSummaryDTO) => {
         switch (user.role) {

@@ -24,7 +24,14 @@ import {
 } from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../IsaacApiTypes";
+import {
+    AssignmentDTO,
+    GameboardDTO,
+    GameboardItem,
+    GameboardItemState,
+    QuizAssignmentDTO,
+    QuizUserFeedbackDTO
+} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
@@ -34,11 +41,10 @@ import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignm
 import {getQuizAssignmentCSVDownloadLink} from "../../services/quiz";
 import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import { loadQuizAssignmentFeedback, loadQuizAssignments } from "../../state/actions/quizzes";
-import { Tabs } from "../elements/Tabs";
-import { isDefined } from "../../services/miscUtils";
-import { resourceFound } from "../../services/validation";
-import { formatMark, ICON, passMark, ResultsTable } from "../elements/quiz/QuizProgressCommon";
+import {loadQuizAssignmentFeedback, loadQuizAssignments} from "../../state/actions/quizzes";
+import {Tabs} from "../elements/Tabs";
+import {isDefined, isFound} from "../../services/miscUtils";
+import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 
 function selectGroups(state: AppState) {
     if (isDefined(state)) {
@@ -70,7 +76,7 @@ function selectGroups(state: AppState) {
         }
 
         const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
-        if (resourceFound(state.quizAssignments)) { // assigned by me
+        if (isFound(state.quizAssignments)) { // assigned by me
             for (const qa of state.quizAssignments) {
                 if (!isDefined(qa.groupId)) {
                     continue;
@@ -514,7 +520,7 @@ const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
 
     let userFeedback: Nullable<QuizUserFeedbackDTO[]> = [];
     useEffect(() => {
-        if (resourceFound(quizAssignments)) {
+        if (isFound(quizAssignments)) {
             userFeedback = quizAssignments.find(qa => qa.id === quizAssignmentId)?.userFeedback;
         }
     }, [quizAssignments])
