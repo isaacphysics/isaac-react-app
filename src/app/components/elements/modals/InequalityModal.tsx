@@ -1125,9 +1125,12 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
         }
         const mathsOtherFunctionsTabLabel = '\\sin\\ \\int';
 
-        let parsedChemicalElements: Nullable<MenuItem[]>; 
+        let parsedChemicalElements: Nullable<MenuItem[]>;
+        let upperCaseWarning = false;
         if (isDefined(this.state.unparsedChemicalElements)) {
-            const splitChemicalElements = this.state.unparsedChemicalElements.replace(/[^a-z]+/img, ',').split(',').filter(s => this._chemicalElements.includes(s));
+            const splitUnparsed = this.state.unparsedChemicalElements.replace(/[^a-z]+/img, ',').split(',').filter(s => s !== '');
+            upperCaseWarning = splitUnparsed.some(e => e[0] !== e[0].toUpperCase());
+            const splitChemicalElements = splitUnparsed.filter(s => this._chemicalElements.includes(s));
             parsedChemicalElements = [... new Set(splitChemicalElements.map(this.makeChemicalElementMenuItem).filter(isDefined))];
         }
 
@@ -1187,6 +1190,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                 {(!isDefined(this.props.availableSymbols) || this.props.availableSymbols.length === 0) && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements text-entry">
                     <div className="input-box">
                         <Input id="chem-text-entry-box" type="text" placeholder="Type chemical elements here" onMouseDown={e => this.onMouseDown(e as any)} value={this.state.unparsedChemicalElements || ""} onChange={this.onUnparsedChemicalElementsChange} />
+                        {upperCaseWarning && <p className="uppercase-warning">Careful: chemical element names start with an upper-case letter.</p>}
                     </div>
                     <div className="items-box">
                         <ul className="sub-menu elements">

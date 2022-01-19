@@ -215,6 +215,17 @@
                                     font-size: 0.8em;
                                 }
                             }
+
+                            p.uppercase-warning {
+                                font-weight: bold;
+                                color: white;
+                                position: absolute;
+                                overflow: visible;
+                                width: 200%;
+                                left: 1ex;
+                                padding-top: 4px;
+                                z-index: 255;
+                            }
                         }
 
                         &.items-box {
