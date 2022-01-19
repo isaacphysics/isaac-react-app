@@ -28,7 +28,7 @@ import Select, {GroupedOptionsType} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {groupTagSelectionsByParent, multiSelectOnChange} from "../../services/gameboardBuilder";
+import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
 import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {debounce} from "lodash";

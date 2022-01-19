@@ -13,7 +13,6 @@ import {
 import {isDefined} from "../../services/miscUtils";
 import tags from "../../services/tags";
 import {difficultiesOrdered, stageLabelMap, stagesOrdered, TAG_ID} from "../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AggregateDifficultyIcons} from "./svg/DifficultyIcons";
 
 interface AssignmentsProps {
