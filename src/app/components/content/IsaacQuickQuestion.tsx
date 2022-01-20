@@ -21,25 +21,11 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
     const showConfidence = doc.showConfidence;
 
     const toggle = (payload?: string) => {
-        if (showConfidence) {
-            if (isVisible) {
-                const eventDetails = {type: "QUICK_QUESTION_CORRECT", questionId: doc.id, attemptUuid: attemptUuid.current, correct: payload};
-                dispatch(logAction(eventDetails));
-                setHideOptions(true);
-                attemptUuid.current = uuid.v4().slice(0, 8);
-            } else {
-                const eventDetails = {type: "QUICK_QUESTION_CONFIDENCE", questionId: doc.id, attemptUuid: attemptUuid.current, confidence: payload};
-                dispatch(logAction(eventDetails));
-                const isNowVisible = !isVisible;
-                setVisible(isNowVisible);
-            }
-        } else {
-            const isNowVisible = !isVisible;
-            setVisible(isNowVisible);
-            if (isNowVisible) {
-                const eventDetails = {type: "QUICK_QUESTION_SHOW_ANSWER", questionId: doc.id};
-                dispatch(logAction(eventDetails));
-            }
+        const isNowVisible = !isVisible;
+        setVisible(isNowVisible);
+        if (isNowVisible) {
+            const eventDetails = {type: "QUICK_QUESTION_SHOW_ANSWER", questionId: doc.id};
+            dispatch(logAction(eventDetails));
         }
     };
 
@@ -65,7 +51,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                 </div>
                 {!fastTrackInfo.isFastTrackPage ?
                     showConfidence ?
-                        ConfidenceQuestions({hideOptions, isVisible, toggle})
+                        ConfidenceQuestions({hideOptions: hideOptions, setHideOptions: setHideOptions, isVisible: isVisible, setVisible: setVisible, identifier: doc.id, attemptUuid: attemptUuid, type: "quick_question"})
                         :
                         defaultOptions
                     :

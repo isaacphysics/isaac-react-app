@@ -517,6 +517,8 @@ export type Action =
 
 export type NOT_FOUND_TYPE = 404;
 
+export type Confidence = "quick_question" | "question" | "concept";
+
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
@@ -18,6 +18,8 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
+import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
+import uuid from "uuid";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -34,6 +36,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
     const tooManySigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_many");
     const tooFewSigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_few");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
+    const [isVisible, setVisible] = useState(false);
+    const [hideOptions, setHideOptions] = useState(false);
+    const attemptUuid = useRef(uuid.v4().slice(0, 8));
 
     const tooManySigFigsFeedback = <p>
         Whether your answer is correct or not, it has the wrong number of&nbsp;
@@ -111,7 +116,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
                     }
                     {primaryAction &&
                         <div className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}>
-                            <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
+                            {hideOptions && <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />}
+                            {ConfidenceQuestions({hideOptions: hideOptions, setHideOptions: setHideOptions, isVisible: isVisible, setVisible: setVisible, identifier: doc.id, attemptUuid: attemptUuid, type: "question", correct: correct, answer: questionPart?.currentAttempt})}
                         </div>
                     }
                 </div>
