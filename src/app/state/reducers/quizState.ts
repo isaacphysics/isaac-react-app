@@ -7,8 +7,7 @@ import {
     QuizAttemptFeedbackDTO,
     QuizSummaryDTO
 } from "../../../IsaacApiTypes";
-import { isDefined } from "../../services/miscUtils";
-import { resourceFound } from "../../services/validation";
+import {isDefined, isFound} from "../../services/miscUtils";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -61,7 +60,7 @@ export const quizAssignments = (quizAssignments: QuizAssignmentsState = null, ac
                 return assignment;
             }) : quizAssignments;
         case ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS:
-            if (resourceFound(quizAssignments)) {
+            if (isFound(quizAssignments)) {
                 return quizAssignments.map(qa => {
                     if (qa.id === action.assignment.id) {
                         return { ...qa, quiz: action.assignment.quiz, userFeedback: action.assignment.userFeedback };

@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "1.6.19-SNAPSHOT",
+  "version": "1.6.21-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.9.0",

@@ -231,37 +231,11 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                     </div>}
                 </Col>
                 <Col md={{size: 8}} className="py-4 question-panel">
-                    <div className="equality-page">
-                        <Label>&nbsp;</Label>
-                        <div
-                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
-                            onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
-                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter a formula' }}
-                        />
-                        {modalVisible && <InequalityModal
-                            close={closeModal}
-                            onEditorStateChange={(state: any) => {
-                                setCurrentAttempt({
-                                    type: 'logicFormula',
-                                    value: JSON.stringify(state),
-                                    pythonExpression: (state && state.result && state.result.python)||"",
-                                    symbols: [],
-                                })
-                                setTextInput(state?.result?.python || '');
-                                initialEditorSymbols.current = state.symbols;
-                            }}
-                            availableSymbols={availableSymbols || []}
-                            initialEditorSymbols={initialEditorSymbols.current}
-                            editorMode={editorMode as string}
-                            logicSyntax={editorSyntax}
-                            visible={modalVisible}
-                        />}
-                    </div>
-                    {(editorMode === 'maths' || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input">
+                    {(editorMode === 'maths' || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input mt-4">
                         <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
                         <InputGroup className="my-2">
-                            <Input type="text" onChange={updateEquation} value={textInput}
-                                placeholder="or type your expression here"/>
+                            <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
+                                placeholder="Type your expression here"/>
                             <InputGroupAddon addonType="append">
                                 <Button type="button" className="eqn-editor-help" id='inequality-help' size="sm">?</Button>
                                 {editorMode === 'maths' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
@@ -289,6 +263,31 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                             {errors.map(e => (<li key={e}>{e}</li>))}
                         </ul></div>}
                     </div>}
+                    <div className="equality-page">
+                        <div
+                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${editorMode !== 'maths' ? 'mt-4' : ''}`} tabIndex={0}
+                            onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
+                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${editorMode === 'maths' ? 'or c' : 'C'}lick here to enter a formula</small>` }}
+                        />
+                        {modalVisible && <InequalityModal
+                            close={closeModal}
+                            onEditorStateChange={(state: any) => {
+                                setCurrentAttempt({
+                                    type: 'logicFormula',
+                                    value: JSON.stringify(state),
+                                    pythonExpression: (state && state.result && state.result.python)||"",
+                                    symbols: [],
+                                })
+                                setTextInput(state?.result?.python || '');
+                                initialEditorSymbols.current = state.symbols;
+                            }}
+                            availableSymbols={availableSymbols || []}
+                            initialEditorSymbols={initialEditorSymbols.current}
+                            editorMode={editorMode as string}
+                            logicSyntax={editorSyntax}
+                            visible={modalVisible}
+                        />}
+                    </div>
                 </Col>
             </Row>
             {currentAttempt && <Row>
