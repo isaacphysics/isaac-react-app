@@ -732,6 +732,7 @@ export enum TAG_ID {
     compression = "compression",
     encryption = "encryption",
     databases = "databases",
+    fileOrganisation = "file_organisation",
     sql = "sql",
     bigData = "big_data",
     // Data structures and algorithms topics
