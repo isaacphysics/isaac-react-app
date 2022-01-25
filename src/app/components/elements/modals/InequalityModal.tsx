@@ -1133,7 +1133,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
             const splitChemicalElements = splitUnparsed.filter(s => this._chemicalElements.includes(s));
             parsedChemicalElements = [... new Set(splitChemicalElements.map(this.makeChemicalElementMenuItem).filter(isDefined))];
         }
-
+debugger;
         const menu: JSX.Element =
         <nav className="inequality-ui" ref={this._menuRef}>
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
@@ -1187,7 +1187,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                     }</ul>}
                 </div>}
                 {this.props.editorMode === 'maths' && this.state.activeMenu === 'mathsOtherFunctions' && mathsOtherFunctionsMenu}
-                {(!isDefined(this.props.availableSymbols) || this.props.availableSymbols.length === 0) && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements text-entry">
+                {(!isDefined(this._availableSymbols) || this._availableSymbols.length === 0) && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements text-entry">
                     <div className="input-box">
                         <Input id="chem-text-entry-box" type="text" placeholder="Type chemical elements here" onMouseDown={e => this.onMouseDown(e as any)} value={this.state.unparsedChemicalElements || ""} onChange={this.onUnparsedChemicalElementsChange} />
                         {upperCaseWarning && <p className="uppercase-warning">Careful: chemical element names start with an upper-case letter.</p>}
@@ -1198,7 +1198,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                         </ul>
                     </div>
                 </div>}
-                { isDefined(this.props.availableSymbols) && this.props.availableSymbols.length > 0 && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
+                { isDefined(this._availableSymbols) && this._availableSymbols.length > 0 && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'elements' && <div className="top-menu chemistry elements">
                     <ul className="sub-menu elements">
                         {this.state.menuItems.chemicalElements.map(this.menuItem)}
                     </ul>
