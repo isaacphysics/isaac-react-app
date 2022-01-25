@@ -13,7 +13,6 @@ import {
 import {isDefined} from "../../services/miscUtils";
 import tags from "../../services/tags";
 import {difficultiesOrdered, stageLabelMap, stagesOrdered, TAG_ID} from "../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AggregateDifficultyIcons} from "./svg/DifficultyIcons";
 
 interface AssignmentsProps {
@@ -75,7 +74,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                             <strong>{stages.length === 1 ? "Stage" : "Stages"}:</strong>{" "}
                             {stages.map(s => stageLabelMap[s]).join(", ")}
                         </p>}
-                        {SITE_SUBJECT === SITE.PHY && difficulties.length > 0 && <p className="mb-0">
+                        {difficulties.length > 0 && <p className="mb-0">
                             <strong>{difficulties.length === 1 ? "Difficulty" : "Difficulties"}:</strong>{" "}
                             <div className="d-inline-flex">
                                 {<AggregateDifficultyIcons difficulties={difficulties} />}

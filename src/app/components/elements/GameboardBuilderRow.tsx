@@ -17,6 +17,7 @@ import {
     filterAudienceViewsByProperties
 } from "../../services/userContext";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
+import {siteSpecific} from "../../services/miscUtils";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -100,12 +101,12 @@ export const GameboardBuilderRow = (
                 {stage && <span>{stageLabelMap[stage]}</span>}
             </div>)}
         </td>
-        {SITE_SUBJECT === SITE.PHY && <td className="w-15">
+        <td className={siteSpecific("w-15","w-10")}>
             {filteredAudienceViews.map(v => v.difficulty).map((difficulty, i) => <div key={`${difficulty} ${i}`}>
                 {difficulty && <DifficultyIcons difficulty={difficulty} />}
             </div>)}
-        </td>}
-        {SITE_SUBJECT === SITE.CS && <td className="w-15">
+        </td>
+        {SITE_SUBJECT === SITE.CS && <td className="w-5">
             {filteredAudienceViews.map(v => v.examBoard).map(examBoard => <div key={examBoard}>
                 {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
             </div>)}
