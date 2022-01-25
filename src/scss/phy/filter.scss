@@ -30,6 +30,10 @@ svg {
         stroke: none;
       }
 
+      &.de-emph {
+        stroke: $gray-120
+      }
+
       &.none {
         fill: none;
         stroke: none;
