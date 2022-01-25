@@ -1,7 +1,6 @@
 import React from "react";
 import classnames from "classnames";
 import {STAGE, stageLabelMap} from "../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import {ViewingContext} from "../../../IsaacAppTypes";
 
