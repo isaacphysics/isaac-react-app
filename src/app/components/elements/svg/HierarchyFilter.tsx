@@ -117,9 +117,9 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                             {...hexagon} className={classNames("hex none", {"clickable": !isComingSoon})} properties={{clickable: !isComingSoon}} role="button"
                             tabIndex={isComingSoon ? -1 : 0} onClick={isComingSoon ? noop : selectValue} onKeyPress={isComingSoon ? noop : ifKeyIsEnter(selectValue)}
                         >
-                            <title>
-                                {!isComingSoon && `${isSelected ? "Remove" : "Add"} the ${tier.name.toLowerCase()} "${choice.label}" ${isSelected ? "from" : "to"} your gameboard filter`}
-                            </title>
+                            {!isComingSoon && <title>
+                                {`${isSelected ? "Remove" : "Add"} the ${tier.name.toLowerCase()} "${choice.label}" ${isSelected ? "from" : "to"} your gameboard filter`}
+                            </title>}
                         </Hexagon>
                         {isComingSoon && <title>
                             This topic is coming soon
