@@ -32,7 +32,7 @@ type TrackedRouteComponentProps = RouteComponentProps & {
 
 const WrapperComponent = function({component: Component, trackingOptions, ...props}: TrackedRouteComponentProps) {
     useEffect(() => {
-        // trackPage(props.location.pathname || props.location.location.pathname, trackingOptions);
+        // trackPage(props.location.pathname, trackingOptions);
         trackPage(props.location.pathname || props.location.location.pathname, trackingOptions);
     }, [props.location.pathname, trackingOptions]);
     return <FigureNumberingContext.Provider value={{}}> {/* Create a figure numbering scope for each page */}
