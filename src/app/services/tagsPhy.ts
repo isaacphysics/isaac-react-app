@@ -27,7 +27,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.inorganic, title: "Inorganic", parent: TAG_ID.chemistry},
         {id: TAG_ID.physical, title: "Physical", parent: TAG_ID.chemistry},
         {id: TAG_ID.analytical, title: "Analytical", parent: TAG_ID.chemistry},
-        {id: TAG_ID.foundations, title: "Foundations", parent: TAG_ID.chemistry},
+        {id: TAG_ID.foundations, title: `Founda${softHyphen}tions`, parent: TAG_ID.chemistry},
         {id: TAG_ID.organic, title: "Organic", parent: TAG_ID.chemistry},
         // Maths Fields
         {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
@@ -41,7 +41,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Mechanics
         {id: TAG_ID.dynamics, title: "Dynamics", parent: TAG_ID.mechanics},
         {id: TAG_ID.circularMotion, title: "Circular Motion", parent: TAG_ID.mechanics},
-        {id: TAG_ID.oscillations, title: "Oscillations", parent: TAG_ID.mechanics},
+        {id: TAG_ID.oscillations, title: `Oscill${softHyphen}ations`, parent: TAG_ID.mechanics},
         {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
         {id: TAG_ID.kinematics, title: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
         {id: TAG_ID.materials, title: "Materials", parent: TAG_ID.mechanics},
@@ -70,7 +70,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Electricity
         {id: TAG_ID.chargeCurrent, title: "Charge & Current", parent: TAG_ID.electricity},
         {id: TAG_ID.resistors, title: "Resistors", parent: TAG_ID.electricity},
-        {id: TAG_ID.components, title: "Components", parent: TAG_ID.electricity},
+        {id: TAG_ID.components, title: `Comp${softHyphen}onents`, parent: TAG_ID.electricity},
         {id: TAG_ID.internalResistance, title: "Internal Resistance", parent: TAG_ID.electricity},
         {id: TAG_ID.capacitors, title: "Capacitors", parent: TAG_ID.electricity},
         {id: TAG_ID.power, title: "Power", parent: TAG_ID.electricity},
