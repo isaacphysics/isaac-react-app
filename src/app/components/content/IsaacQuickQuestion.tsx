@@ -90,7 +90,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                 </Row>
                 }
                 {isVisible && <Row>
-                    <Col sm="12">
+                    <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
                         <Alert color="secondary">
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
