@@ -1133,7 +1133,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
             const splitChemicalElements = splitUnparsed.filter(s => this._chemicalElements.includes(s));
             parsedChemicalElements = [... new Set(splitChemicalElements.map(this.makeChemicalElementMenuItem).filter(isDefined))];
         }
-debugger;
+
         const menu: JSX.Element =
         <nav className="inequality-ui" ref={this._menuRef}>
             <div className={"inequality-ui menu-bar" + (this.state.menuOpen ? " open" : " closed")}>
