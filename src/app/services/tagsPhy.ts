@@ -41,7 +41,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Mechanics
         {id: TAG_ID.dynamics, title: "Dynamics", parent: TAG_ID.mechanics},
         {id: TAG_ID.circularMotion, title: "Circular Motion", parent: TAG_ID.mechanics},
-        {id: TAG_ID.oscillations, title: `Oscill${softHyphen}ations`, parent: TAG_ID.mechanics},
+        {id: TAG_ID.oscillations, title: `Oscil${softHyphen}lations`, parent: TAG_ID.mechanics},
         {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
         {id: TAG_ID.kinematics, title: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
         {id: TAG_ID.materials, title: "Materials", parent: TAG_ID.mechanics},
@@ -71,7 +71,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.chargeCurrent, title: "Charge & Current", parent: TAG_ID.electricity},
         {id: TAG_ID.resistors, title: "Resistors", parent: TAG_ID.electricity},
         {id: TAG_ID.components, title: `Comp${softHyphen}onents`, parent: TAG_ID.electricity},
-        {id: TAG_ID.internalResistance, title: "Internal Resistance", parent: TAG_ID.electricity},
+        {id: TAG_ID.internalResistance, title: `Internal Resis${softHyphen}tance`, parent: TAG_ID.electricity},
         {id: TAG_ID.capacitors, title: "Capacitors", parent: TAG_ID.electricity},
         {id: TAG_ID.power, title: "Power", parent: TAG_ID.electricity},
 
@@ -84,13 +84,13 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry},
         // Algebra
         {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
-        {id: TAG_ID.quadratics, title: "Quadratics", parent: TAG_ID.algebra},
+        {id: TAG_ID.quadratics, title: `Quadra${softHyphen}tics`, parent: TAG_ID.algebra},
         {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
         {id: TAG_ID.simultaneous, title: `Simul${softHyphen}taneous Equations`, parent: TAG_ID.algebra},
         {id: TAG_ID.matrices, title: "Matrices", parent: TAG_ID.algebra},
         {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.algebra},
         // Statistics
-        {id: TAG_ID.hypothesis, title: "Hypothesis Tests", parent: TAG_ID.statistics},
+        {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics},
         {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistics},
         {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics},
         {id: TAG_ID.probability, title: `Probabil${softHyphen}ity`, parent: TAG_ID.statistics},
@@ -110,7 +110,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.transitionMetals, title: "Transition Metals", parent: TAG_ID.inorganic},
         {id: TAG_ID.periodicTable, title: "Periodic Table", parent: TAG_ID.inorganic},
         // Physical
-        {id: TAG_ID.energetics, title: "Energetics", parent: TAG_ID.physical},
+        {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
         {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
         {id: TAG_ID.equilibrium, title: "Equilibrium", parent: TAG_ID.physical},
         {id: TAG_ID.acidsAndBases, title: "Acids and Bases", parent: TAG_ID.physical},
@@ -118,7 +118,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
         // Analytical
         {id: TAG_ID.electronicSpectroscopy, title: `Electronic Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
-        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
+        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoon: "yes"},
         {id: TAG_ID.massSpectrometry, title: `Mass Spectro${softHyphen}metry`, parent: TAG_ID.analytical},
         {id: TAG_ID.infraredSpectroscopy, title: `IR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
         {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical},
@@ -129,7 +129,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.atomicStructure, title: "Atomic Structure", parent: TAG_ID.foundations},
         // Organic
         {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic},
-        {id: TAG_ID.aromaticity, title: "Aromaticity", parent: TAG_ID.organic},
+        {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
         {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
         {id: TAG_ID.reactionsGeneral, title: "Reactions (general)", parent: TAG_ID.organic},
