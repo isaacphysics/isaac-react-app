@@ -36,7 +36,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.communication, title: "Communication", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.webTechnologies, title: "Web technologies", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
         // Computer systems topics
-        {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         {id: TAG_ID.architecture, title: "Systems architecture", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         {id: TAG_ID.memoryAndStorage, title: "Memory and storage", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
