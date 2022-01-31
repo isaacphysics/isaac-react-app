@@ -24,11 +24,11 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.skills, title: "Skills", parent: TAG_ID.physics},
         {id: TAG_ID.electricity, title: "Electricity", parent: TAG_ID.physics},
         // Chemistry Fields
-        {id: TAG_ID.inorganic, title: "Inorganic", parent: TAG_ID.chemistry},
-        {id: TAG_ID.physical, title: "Physical", parent: TAG_ID.chemistry},
-        {id: TAG_ID.analytical, title: "Analytical", parent: TAG_ID.chemistry},
         {id: TAG_ID.foundations, title: `Founda${softHyphen}tions`, parent: TAG_ID.chemistry},
+        {id: TAG_ID.physical, title: "Physical", parent: TAG_ID.chemistry},
+        {id: TAG_ID.inorganic, title: "Inorganic", parent: TAG_ID.chemistry},
         {id: TAG_ID.organic, title: "Organic", parent: TAG_ID.chemistry, comingSoonDate: "soon"},
+        {id: TAG_ID.analytical, title: "Analytical", parent: TAG_ID.chemistry},
         // Maths Fields
         {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
         {id: TAG_ID.algebra, title: "Algebra", parent: TAG_ID.maths},
@@ -105,33 +105,33 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // --- Chemistry Topics ---
 
         // Inorganic
-        {id: TAG_ID.redox, title: "Redox", parent: TAG_ID.inorganic},
-        {id: TAG_ID.bonding, title: "Bonding", parent: TAG_ID.inorganic},
-        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic, comingSoonDate: "soon"},
         {id: TAG_ID.periodicTable, title: "Periodic Table", parent: TAG_ID.inorganic},
+        {id: TAG_ID.bonding, title: "Bonding", parent: TAG_ID.inorganic},
+        {id: TAG_ID.redox, title: "Redox", parent: TAG_ID.inorganic},
+        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic, comingSoonDate: "soon"},
         // Physical
+        {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
         {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
-        {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
+        {id: TAG_ID.entropy, title: "Entropy", parent: TAG_ID.physical},
         {id: TAG_ID.equilibrium, title: "Equilibrium", parent: TAG_ID.physical},
         {id: TAG_ID.acidsAndBases, title: "Acids and Bases", parent: TAG_ID.physical},
-        {id: TAG_ID.entropy, title: "Entropy", parent: TAG_ID.physical},
-        {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
+        {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
         // Analytical
-        {id: TAG_ID.electronicSpectroscopy, title: `Electronic Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
-        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
+        {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
         {id: TAG_ID.massSpectrometry, title: `Mass Spectro${softHyphen}metry`, parent: TAG_ID.analytical},
         {id: TAG_ID.infraredSpectroscopy, title: `IR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
-        {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
+        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
+        {id: TAG_ID.electronicSpectroscopy, title: `Electronic Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
         // Foundations
-        {id: TAG_ID.stoichiometry, title: `Stoichio${softHyphen}metry`, parent: TAG_ID.foundations},
-        {id: TAG_ID.gasLaws, title: "Gas Laws", parent: TAG_ID.foundations},
         {id: TAG_ID.numericalSkills, title: "Numerical Skills", parent: TAG_ID.foundations},
         {id: TAG_ID.atomicStructure, title: "Atomic Structure", parent: TAG_ID.foundations},
+        {id: TAG_ID.stoichiometry, title: `Stoichio${softHyphen}metry`, parent: TAG_ID.foundations},
+        {id: TAG_ID.gasLaws, title: "Gas Laws", parent: TAG_ID.foundations},
         // Organic
         {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic, comingSoonDate: "soon"},
-        {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic, comingSoonDate: "soon"},
-        {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic, comingSoonDate: "soon"},
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic, comingSoonDate: "Coming soon"},
+        {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic, comingSoonDate: "soon"},
+        {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic, comingSoonDate: "soon"},
         {id: TAG_ID.reactionsGeneral, title: "Reactions (general)", parent: TAG_ID.organic, comingSoonDate: "soon"},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
