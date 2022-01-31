@@ -179,11 +179,11 @@ export function UserContextAccountInput({
                         </RS.UncontrolledTooltip>
                     </RS.Label>}
 
-                    {!teacher && <><br/><small>Teacher accounts may choose more than one exam board and stage combination. If you are a teacher, you can {" "}
-                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
-                            upgrade your account
-                        </Link>{"."}
-                    </small></>}
+                    {!teacher && <><br/>
+                        <small>
+                            If you are a teacher, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one exam board and stage.
+                        </small>
+                    </>}
                 </RS.FormGroup>
             })}
         </div>
