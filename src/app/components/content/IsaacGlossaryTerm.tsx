@@ -10,10 +10,11 @@ import { isDefined } from '../../services/miscUtils';
 import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
+import { Hash } from 'history';
 
 interface IsaacGlossaryTermProps extends IsaacContentProps {
     doc: GlossaryTermDTO;
-    location: { hash: string };
+    // location: { hash: Hash };
     linkToGlossary?: boolean;
 };
 

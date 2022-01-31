@@ -1,5 +1,5 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
@@ -19,7 +19,7 @@ import {selectors} from "../../state/selectors";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 
-export const Concepts = withRouter((props: {history: History; location: Location}) => {
+export const Concepts = withRouter<RouteComponentProps, any>((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);

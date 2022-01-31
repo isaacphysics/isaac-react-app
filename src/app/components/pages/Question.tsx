@@ -31,7 +31,7 @@ import {generateQuestionTitle} from "../../services/questions";
 interface QuestionPageProps extends RouteComponentProps {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
-    location: {search: string};
+    // location: {search: string};
 }
 
 

@@ -1,5 +1,5 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Col, Container, Form, Input, Row} from "reactstrap";
@@ -22,6 +22,7 @@ import {selectors} from "../../state/selectors";
 import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {selectOnChange} from "../../services/select";
+import { IsaacContentProps } from "../content/IsaacContent";
 
 interface Item<T> {
     value: T;
@@ -53,7 +54,7 @@ const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUME
     multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
 };
 
-export const Search = withRouter((props: {history: History; location: Location}) => {
+export const Search = withRouter<RouteComponentProps, any>((props: {history: History; location: Location}) => {
     const {location, history} = props;
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);

@@ -135,7 +135,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
     </RS.Row>;
 };
 
-export const Gameboard = withRouter(({location}: {location: Location}) => {
+export const Gameboard = withRouter(({ location }) => {
     const dispatch = useDispatch();
     const gameboard = useSelector(selectors.board.currentGameboardOrNotFound);
     const user = useSelector(selectors.user.orNull);

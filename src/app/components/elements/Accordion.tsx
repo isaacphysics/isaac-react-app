@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router-dom";
+import * as History from "history";
 import {ALPHABET, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
@@ -19,7 +20,7 @@ interface AccordionsProps extends RouteComponentProps {
     id?: string;
     trustedTitle?: string;
     index?: number;
-    location: {hash: string};
+    location: History.Location;
     children?: React.ReactNode;
     startOpen?: boolean;
     deEmphasised?: boolean;

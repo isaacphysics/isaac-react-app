@@ -1,9 +1,11 @@
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
-interface UnauthorisedProps {location: {pathname: string; state?: {overridePathname?: string}}}
+interface UnauthorisedProps extends RouteComponentProps {
+    // location: {pathname: string; state?: {overridePathname?: string}}
+}
 
 const UnauthorisedComponent = ({location: {pathname, state}}: UnauthorisedProps) => {
     return <Container>
@@ -13,7 +15,7 @@ const UnauthorisedComponent = ({location: {pathname, state}}: UnauthorisedProps)
                 <small>
                     {"You do not have authorisation to access the page: "}
                     <code>
-                        {(state && state.overridePathname) || pathname}
+                        {(state && (state as any).overridePathname) || pathname}
                     </code>
                 </small>
             </h3>

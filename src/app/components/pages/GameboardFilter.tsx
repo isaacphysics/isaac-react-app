@@ -90,7 +90,7 @@ function generateBoardName(selections: Item<TAG_ID>[][]) {
     return boardName;
 }
 
-export const GameboardFilter = withRouter(({location}: {location: Location}) => {
+export const GameboardFilter = withRouter(({ location }) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
 

@@ -20,7 +20,7 @@ import {Tabs} from "../../elements/Tabs";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
-    location: {hash: string};
+    // location: {hash: string};
 }
 
 type Quiz = AppQuizAssignment | QuizAttemptDTO;

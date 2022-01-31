@@ -1,9 +1,14 @@
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
-interface PageNotFoundProps {location: {pathname: string; state?: {overridePathname?: string}}}
+interface PageNotFoundProps extends RouteComponentProps {
+    // location: {
+    //     pathname: string;
+    //     state?: {overridePathname?: string}
+    // }
+}
 
 const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps) => {
     return <Container>
@@ -13,7 +18,7 @@ const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps)
                 <small>
                     {"We're sorry, page not found: "}
                     <code>
-                        {(state && state.overridePathname) || pathname}
+                        {(state && (state as any).overridePathname) || pathname}
                     </code>
                 </small>
             </h3>

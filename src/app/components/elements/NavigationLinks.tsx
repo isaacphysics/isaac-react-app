@@ -5,7 +5,7 @@ import {TrustedHtml} from "./TrustedHtml";
 
 export const NavigationLinks = ({navigation}: {navigation: PageNavigation}) => {
     const backToCollectionLink = navigation.backToCollection && <div className="w-50 w-md-auto mb-4">
-        <Link to={navigation.backToCollection.to}>
+        <Link to={navigation.backToCollection.to ?? ""}>
             <div className="isaac-nav-link text-decoration-none">{navigation.collectionType}:</div>
             <div className="isaac-nav-link a-alt d-block lrg-text text-dark font-weight-bold"><TrustedHtml html={navigation.backToCollection.title}/></div>
         </Link>

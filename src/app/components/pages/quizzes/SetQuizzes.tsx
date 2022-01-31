@@ -25,7 +25,7 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
-    location: {hash: string};
+    // location: {hash: string};
 }
 
 interface QuizAssignmentProps {
