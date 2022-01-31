@@ -94,7 +94,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                     const isSelected = !!selections[i]?.map(s => s.value).includes(choice.value);
                     const longWordInLabel = choice.label.split(/\s/).some(word => word.length > 10);
                     const tag = tags.getById(choice.value);
-                    const isComingSoon = isDefined(tag.comingSoon);
+                    const isComingSoon = isDefined(tag.comingSoonDate);
                     function selectValue() {
                         setTierSelection(i)(isSelected ?
                             selections[i].filter(s => s.value !== choice.value) : // remove
@@ -108,8 +108,8 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                             <div className={classNames("hexagon-tier-title", {"active": isSelected && !isComingSoon, "de-emph": isComingSoon, "small": longWordInLabel})}>
                                 {choice.label}
                             </div>
-                            {tag.comingSoon && <div className={classNames(subject, "hexagon-coming-soon")}>
-                                {tag.comingSoon}
+                            {tag.comingSoonDate && <div className={classNames(subject, "hexagon-coming-soon")}>
+                                Coming {tag.comingSoonDate}
                             </div>}
                         </foreignObject>
 

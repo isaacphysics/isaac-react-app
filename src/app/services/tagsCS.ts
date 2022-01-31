@@ -3,8 +3,8 @@ import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {AbstractBaseTagService} from "./tagsAbstract";
 
-const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoon: "2022"}};
-const GCSE_COMING_DEC = {[STAGE.GCSE]: {comingSoon: "December 2021"}};
+const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoonDate: "2022"}};
+const GCSE_COMING_DEC = {[STAGE.GCSE]: {comingSoonDate: "December 2021"}};
 const GCSE_HIDDEN = {[STAGE.GCSE]: {hidden: true}};
 const GCSE_NEW = {[STAGE.GCSE]: {new: true}};
 
