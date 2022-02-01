@@ -65,22 +65,22 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
     useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
 
     const renderTopic = (topic: Tag) => {
-        const TextTag = topic.comingSoon ? "span" : "strong";
-        const LinkTag = topic.comingSoon ? "span" : Link;
+        const TextTag = topic.comingSoonDate ? "span" : "strong";
+        const LinkTag = topic.comingSoonDate ? "span" : Link; // REVIEW See below
         if (!topic.hidden) {
             return <React.Fragment>
-                <Link // This may be not the intended behaviour, but that LinkTag thing above is horrendous in terms of types.
-                    to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}
-                    className={topic.comingSoon ? "text-muted" : ""}
+                <Link // REVIEW This may be not the intended behaviour, but that LinkTag thing above is horrendous in terms of types.
+                    to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
+                    className={topic.comingSoonDate ? "text-muted" : ""}
                 >
                     <TextTag>
                         {topic.title}
                     </TextTag>
                 </Link>
                 {" "}
-                {topic.comingSoon && !topic.new &&
-                <Badge color="light" className="border bg-white">Coming {topic.comingSoon}</Badge>}
-                {topic.new && !topic.comingSoon && <Badge color="secondary">New</Badge>}
+                {topic.comingSoonDate && !topic.new &&
+                <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}
+                {topic.new && !topic.comingSoonDate && <Badge color="secondary">New</Badge>}
             </React.Fragment>;
         }
     };

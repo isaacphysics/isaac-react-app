@@ -1,0 +1,5 @@
+#gameboard-generator {
+  @include respond-above(md) {
+    max-width: 942px !important;
+  }
+}

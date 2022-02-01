@@ -1,7 +1,6 @@
 import {
     AdditionalInformation,
     AugmentedEvent,
-    NOT_FOUND_TYPE,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser
@@ -9,7 +8,8 @@ import {
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import {EXAM_BOARD, NOT_FOUND, STAGE} from "./constants";
+import {EXAM_BOARD, STAGE} from "./constants";
+import {isStudent} from "./user";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -95,7 +95,7 @@ export function validateBookingSubmission(event: AugmentedEvent, user: UserSumma
     }
 
     // validation for users / forms that indicate the booker is not a teacher
-    if (user.role == 'STUDENT' && !(additionalInformation.yearGroup == 'TEACHER' || additionalInformation.yearGroup == 'OTHER')) {
+    if (isStudent(user) && !(additionalInformation.yearGroup == 'TEACHER' || additionalInformation.yearGroup == 'OTHER')) {
         if (!additionalInformation.yearGroup) {
             return Object.assign({}, FAILURE_TOAST, {title:"Year group required", body: "You must enter a year group to proceed."});
         }
@@ -106,16 +106,12 @@ export function validateBookingSubmission(event: AugmentedEvent, user: UserSumma
     }
 
     // validation for users that are teachers
-    if (user.role != 'STUDENT' && !additionalInformation.jobTitle) {
+    if (!isStudent(user) && !additionalInformation.jobTitle) {
         return Object.assign({}, FAILURE_TOAST, {title: "Job title required", body: "You must enter a job title to proceed."});
     }
 
     return true;
 }
-
-export const resourceFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is T => {
-    return resource !== undefined && resource !== null && resource !== NOT_FOUND;
-};
 
 export function safePercentage(correct: number | null | undefined, attempts: number | null | undefined) {
     return (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;

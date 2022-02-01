@@ -80,6 +80,7 @@ import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
+import {GameboardFilter} from "../pages/GameboardFilter";
 import {ContentEmails} from "../pages/ContentEmails";
 
 export const IsaacApp = () => {
@@ -154,7 +155,8 @@ export const IsaacApp = () => {
                     <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
                     <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
                     <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
-                    <TrackedRoute exact path="/add_gameboard/:gameboardId" ifUser={isLoggedIn} component={AddGameboard} />
+                    <TrackedRoute exact path="/add_gameboard/:gameboardId/:gameboardTitle?" ifUser={isLoggedIn} component={AddGameboard} />
+                    <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />
 
                     <TrackedRoute exact path='/events' component={Events}/>
                     <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>

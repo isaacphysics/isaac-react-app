@@ -286,9 +286,9 @@ export const api = {
         }
     },
     concepts: {
-        list: (conceptIds?: string): AxiosPromise<Concepts> => {
+        list: (conceptIds?: string, tagIds?: string): AxiosPromise<Concepts> => {
             return endpoint.get('/pages/concepts', {
-                params: { limit: 999 , ids: conceptIds }
+                params: { limit: 999 , ids: conceptIds, tags: tagIds }
             });
         },
         get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
@@ -316,6 +316,9 @@ export const api = {
         },
         save: (gameboardId: string) => {
             return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
+        },
+        renameAndSave: (gameboardId: string, newGameboardTitle: string) => {
+            return endpoint.post(`gameboards/${gameboardId}`, {}, {params: {title: newGameboardTitle}});
         },
         create: (gameboard: GameboardDTO) => {
             return endpoint.post(`gameboards`, gameboard);

@@ -14,7 +14,7 @@ import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
-import {isStudent, isTeacher} from "../../services/user";
+import {isStudent} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {selectors} from "../../state/selectors";
@@ -26,6 +26,7 @@ import tags from "../../services/tags";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {determineAudienceViews} from "../../services/userContext";
+import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {generateQuestionTitle} from "../../services/questions";
 
 interface QuestionPageProps extends RouteComponentProps {
@@ -88,26 +89,8 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                 </div>
                 <Row className="question-content-container">
                     <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
-                        {doc.supersededBy && !isStudent(user) && <div className="alert alert-warning">
-                            {isTeacher(user) && <React.Fragment>
-                                <strong>
-                                    <span id="superseded-help" className="icon-help" />
-                                    Teacher Note: {" "}
-                                </strong>
-                                <RS.UncontrolledTooltip placement="bottom" target="superseded-help">
-                                    <div  className="text-left">
-                                        We periodically update questions into new formats.<br />
-                                        If this question appears on one of your gameboards, you may want to update the gameboard.<br />
-                                        You can find help for this at Help and support &gt; Teacher Support &gt; Assigning Work.<br /><br />
-                                        Students will not see this message, but will see a smaller note at the bottom of the page.
-                                    </div>
-                                </RS.UncontrolledTooltip>
-                            </React.Fragment>}
-                            This question has been replaced by {" "}
-                            <RS.Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                                this question
-                            </RS.Button>.
-                        </div>}
+
+                        <SupersededDeprecatedWarningBanner doc={doc} />
 
                         <IntendedAudienceWarningBanner doc={doc} />
 
@@ -132,5 +115,5 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                 </Row>
             </Container>
         </div>}
-    }/>;
+    } />;
 });

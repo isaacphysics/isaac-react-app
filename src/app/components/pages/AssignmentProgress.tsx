@@ -24,35 +24,47 @@ import {
 } from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AssignmentDTO, GameboardDTO, GameboardItem, GameboardItemState} from "../../../IsaacApiTypes";
+import {
+    AssignmentDTO,
+    GameboardDTO,
+    GameboardItem,
+    GameboardItemState,
+    QuizAssignmentDTO,
+    QuizUserFeedbackDTO
+} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH} from "../../services/constants";
+import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {getQuizAssignmentCSVDownloadLink} from "../../services/quiz";
 import {usePageSettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {loadQuizAssignmentFeedback, loadQuizAssignments} from "../../state/actions/quizzes";
+import {Tabs} from "../elements/Tabs";
+import {isDefined, isFound} from "../../services/miscUtils";
+import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 
 function selectGroups(state: AppState) {
-    if (state != null) {
+    if (isDefined(state)) {
         const gameboards: {[id: string]: GameboardDTO} = {};
-        if (state.boards && state.boards.boards) {
-            state.boards.boards.boards.forEach(board => {
+        if (isDefined(state.boards) && isDefined(state.boards.boards)) {
+            for (const board of state.boards.boards.boards) {
                 gameboards[board.id as string] = board;
-            });
+            };
         }
 
-        const progress = selectors.assignments.progress(state);
+        const assignmentsProgress = selectors.assignments.progress(state);
         const assignments: { [id: number]: EnhancedAssignment[] } = {};
-        if (state.assignmentsByMe) {
-            state.assignmentsByMe.forEach(assignment => {
+        if (isDefined(state.assignmentsByMe)) {
+            for (const assignment of state.assignmentsByMe) {
                 const assignmentId = assignment._id as number;
                 const enhancedAssignment: EnhancedAssignment = {
                     ...assignment,
                     _id: assignmentId,
                     gameboard: (assignment.gameboard || gameboards[assignment.gameboardId as string]) as EnhancedGameboard,
-                    progress: progress && progress[assignmentId] || undefined,
+                    progress: assignmentsProgress && assignmentsProgress[assignmentId] || undefined,
                 };
                 const groupId = assignment.groupId as number;
                 if (groupId in assignments) {
@@ -60,7 +72,21 @@ function selectGroups(state: AppState) {
                 } else {
                     assignments[groupId] = [enhancedAssignment];
                 }
-            });
+            };
+        }
+
+        const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
+        if (isFound(state.quizAssignments)) { // assigned by me
+            for (const qa of state.quizAssignments) {
+                if (!isDefined(qa.groupId)) {
+                    continue;
+                }
+                if (isDefined(quizAssignments[qa.groupId])) {
+                    quizAssignments[qa.groupId].push(qa);
+                } else {
+                    quizAssignments[qa.groupId] = [qa];
+                }
+            }
         }
 
         const activeGroups = selectors.groups.active(state);
@@ -68,7 +94,8 @@ function selectGroups(state: AppState) {
             const activeGroupsWithAssignments = activeGroups.map(g => {
                 return {
                     ...g,
-                    assignments: assignments[g.id as number] || []
+                    assignments: assignments[g.id as number] || [],
+                    quizAssignments: quizAssignments[g.id as number] || []
                 };
             });
             return {
@@ -87,7 +114,7 @@ type EnhancedAssignment = AssignmentDTO & {
     progress?: AppAssignmentProgress[];
 };
 
-type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
+type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[], quizAssignments: QuizAssignmentDTO[]};
 
 interface AssignmentProgressPageProps {
     groups: AppGroupWithAssignments[] | null;
@@ -115,30 +142,6 @@ type AssignmentDetailsProps = GroupDetailsProps & {
 type ProgressDetailsProps = AssignmentDetailsProps & {
     progress: AppAssignmentProgress[];
 };
-
-const passMark = 0.75;
-export const ICON = {
-    [SITE.CS]: {
-        correct: <img src="/assets/tick-rp.svg" alt="Correct" style={{width: 30}} />,
-        incorrect: <img src="/assets/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
-        notAttempted: <img src="/assets/dash.svg" alt="Not attempted" style={{width: 30}} />,
-    },
-    [SITE.PHY]: {
-        correct: <svg style={{width: 30, height: 30}}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg>,
-        incorrect: <svg style={{width: 30, height: 30}}><use href={`/assets/cross-rp-hex.svg#icon`} xlinkHref={`/assets/cross-rp-hex.svg#icon`}/></svg>,
-        notAttempted: <svg  style={{width: 30, height: 30}}><use href={`/assets/dash-hex.svg#icon`} xlinkHref={`/assets/dash-hex.svg#icon`}/></svg>,
-    }
-}[SITE_SUBJECT];
-
-export function formatMark(numerator: number, denominator: number, formatAsPercentage: boolean) {
-    let result;
-    if (formatAsPercentage) {
-        result = denominator !== 0 ? Math.round(100 * numerator / denominator) + "%" : "100%";
-    } else {
-        result = numerator + "/" + denominator;
-    }
-    return result;
-}
 
 export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDetailsProps) => {
     const {assignment, progress, pageSettings} = props;
@@ -435,9 +438,9 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
             <div className="gameboard-links align-items-center">
                 <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">,</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/` + assignment._id} onClick={openSingleAssignment}>View individual assignment</Button>
+                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/${assignment._id}`} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
@@ -503,9 +506,78 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
     </div></div>
 };
 
+const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
+    const dispatch = useDispatch();
+    const { quizAssignment } = props;
+    const quizAssignmentId = isDefined(quizAssignment.id) ? quizAssignment.id : null;
+    const quizAssignments = useSelector(selectors.quizzes.assignments);
+
+    useEffect(() => {
+        if (isDefined(quizAssignmentId)) {
+            dispatch(loadQuizAssignmentFeedback(quizAssignmentId));
+        }
+    }, [quizAssignmentId]);
+
+    let userFeedback: Nullable<QuizUserFeedbackDTO[]> = [];
+    useEffect(() => {
+        if (isFound(quizAssignments)) {
+            userFeedback = quizAssignments.find(qa => qa.id === quizAssignmentId)?.userFeedback;
+        }
+    }, [quizAssignments])
+
+    return isDefined(userFeedback)
+        ? <QuizProgressDetails {...props} userFeedback={userFeedback} />
+        : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
+};
+
+const QuizProgressDetails = (props: { quizAssignment: QuizAssignmentDTO, userFeedback: QuizUserFeedbackDTO[] }) => {
+    const pageSettings = usePageSettings();
+    const { quizAssignment } = props;
+
+    return <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
+        <ResultsTable assignment={quizAssignment} pageSettings={pageSettings} />
+    </div>
+}
+
+const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
+    const { quizAssignment } = props;
+    const dispatch = useDispatch();
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+    }
+
+    function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        window.open(event.currentTarget.href, '_blank');
+    }
+
+    return isDefined(quizAssignment.id) && quizAssignment.id > 0 ? <div className="assignment-progress-gameboard" key={quizAssignment.id}>
+        <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
+            <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
+                <span>{quizAssignment.quizSummary?.title || "This test has no title"}{isDefined(quizAssignment.dueDate) && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(quizAssignment.dueDate)})</span>}</span>
+            </Button>
+            <div className="gameboard-links align-items-center">
+                <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
+                <span className="d-none d-md-inline">,</span>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+                <span className="d-none d-md-inline">or</span>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual assignment</Button>
+
+            </div>
+        </div>
+        {(isExpanded) && <QuizProgressLoader {...props} />}
+    </div> : null;
+};
+
 const GroupDetails = (props: GroupDetailsProps) => {
     const dispatch = useDispatch();
     const {group, pageSettings} = props;
+    const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
 
     const gameboardIs = group.assignments.map(assignment => assignment.gameboardId as string);
     const joinedGameboardIds = gameboardIs.join(",");
@@ -513,12 +585,33 @@ const GroupDetails = (props: GroupDetailsProps) => {
         gameboardIs.forEach(gameboardId => dispatch(loadBoard(gameboardId)));
     }, [joinedGameboardIds]);
 
+    function activeTabChanged(tabIndex: number) {
+        setActiveTab(tabIndex);
+    }
+
     const gameboardsLoaded = group.assignments.every(assignment => assignment.gameboard != null);
 
+    let groupAssignments: JSX.Element | JSX.Element[] = <div className="p-4 text-center"><IsaacSpinner size="md" /></div>;
+    if (gameboardsLoaded) {
+        if (group.assignments.length > 0) {
+            groupAssignments = group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>).filter(e => e) as JSX.Element[];
+        } else {
+            groupAssignments = <div className="p-4 text-center">There are no assignments for this group.</div>
+        }
+    }
+    let groupTests: JSX.Element | JSX.Element[];
+    if (isDefined(group.quizAssignments) && Array.isArray(group.quizAssignments) && group.quizAssignments.length > 0) {
+        groupTests = group.quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} /*{...props}*/ quizAssignment={quizAssignment} />);
+    } else {
+        groupTests = <div className="p-4 text-center">There are no tests assigned to this group.</div>
+    }
+
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <AssignmentProgressLegend pageSettings={pageSettings}/>
-        {gameboardsLoaded ? group.assignments.map(assignment => hasGameboard(assignment) && <AssignmentDetails key={assignment.gameboardId} {...props} assignment={assignment}/>)
-            : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>}
+        <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>{{
+            [`Assignments (${(Array.isArray(groupAssignments) && groupAssignments.length) || 0})`]: groupAssignments,
+            [`Tests (${(Array.isArray(groupTests) && groupTests.length) || 0})`]: groupTests
+        }}</Tabs>
     </div>;
 };
 
@@ -576,6 +669,7 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
     useEffect(() => {
         dispatch(loadGroups(false));
         dispatch(loadAssignmentsOwnedByMe());
+        dispatch(loadQuizAssignments());
     }, [dispatch]);
 
     const pageHelp = <span>
@@ -591,11 +685,6 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
                 modalId="assignment_progress_help"
             />
             <Row className="align-items-center d-none d-md-flex">
-                {/*<Col>*/}
-                {/*    <a href="/group_progress">*/}
-                {/*        View group progress summary*/}
-                {/*    </a>*/}
-                {/*</Col>*/}
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">

@@ -194,6 +194,46 @@
             }
 
             div.top-menu {
+                &.chemistry.elements.text-entry {
+                    display: flex;
+                    flex-direction: row;
+                    max-width: 66%;
+                    margin: 0 auto;
+                    padding: 16px 0;
+
+                    & > div {
+                        &.input-box {
+                            min-width: 25%;
+                            position: relative;
+                            padding: 16px 0;
+
+                            input {
+                                font-size: 1.5rem;
+                                padding: 12px;
+
+                                &::placeholder {
+                                    font-size: 0.8em;
+                                }
+                            }
+
+                            p.uppercase-warning {
+                                font-weight: bold;
+                                color: white;
+                                position: absolute;
+                                overflow: visible;
+                                width: 200%;
+                                left: 1ex;
+                                padding-top: 4px;
+                                z-index: 255;
+                            }
+                        }
+
+                        &.items-box {
+                            margin-left: 18px;
+                        }
+                    }
+                }
+
                 &.numbers {
                     display: flex;
                     flex-direction: row;

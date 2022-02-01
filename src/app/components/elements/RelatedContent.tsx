@@ -75,7 +75,7 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
                         <h5 className="my-2">Related questions</h5>
                     </Col>
                     {showConceptGameboardButton && <Col className={"ml-auto col-auto vertical-center text-right"}>
-                        <ConceptGameboardButton conceptId={conceptId}></ConceptGameboardButton>
+                        <ConceptGameboardButton conceptId={conceptId}/>
                     </Col>}
                 </Row>
                 <hr/>
@@ -173,8 +173,8 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                 {audienceViews.map(av => {
                     let result = "";
                     if (av.stage) {result += stageLabelMap[av.stage]}
-                    if (SITE_SUBJECT === SITE.PHY && av.stage && av.difficulty) {result += " - "}
-                    if (SITE_SUBJECT === SITE.PHY && av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
+                    if (av.stage && av.difficulty) {result += " - "}
+                    if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
                     return result;
                 }).join(", ")}
                 {audienceViews.length > 0 && ")"}

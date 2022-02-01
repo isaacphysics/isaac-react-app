@@ -1,37 +1,68 @@
 @import "../common/filter";
+
+$shapes: hex, square, octagon, diamond;
+
 svg {
-  .hex {
-    &.active.physics {
-      fill: $phy_physics;
-      stroke: $phy_physics;
-    }
-    &.active.maths {
-      fill: $phy_maths;
-      stroke: $phy_maths;
-    }
-    &.active.chemistry {
-      fill: $phy_chemistry;
-      stroke: $phy_chemistry;
-    }
-    &:not(.active) {
-      fill: none;
-      stroke: $gray-160;
-    }
-    &.none {
-      fill: none;
-      stroke: none;
-    }
-    &.clickable {
-      cursor: pointer;
-    }
-    &.level.active {
-      fill: $phy_green;
-      stroke: $phy_green;
-    }
-    &:focus {
-      outline: none;
-      stroke: black !important;
-      stroke-width: 0.2rem;
+  @each $shape in $shapes {
+    .#{$shape} {
+      &.active.physics {
+        fill: $phy_physics;
+        stroke: $phy_physics;
+      }
+
+      &.active.maths {
+        fill: $phy_maths;
+        stroke: $phy_maths;
+      }
+
+      &.active.chemistry {
+        fill: $phy_chemistry;
+        stroke: $phy_chemistry;
+      }
+
+      &:not(.active) {
+        fill: none;
+        stroke: $gray-160;
+      }
+
+      &.mini:not(.active) {
+        fill: white;
+        stroke: none;
+      }
+
+      &.de-emph {
+        stroke: $gray-120
+      }
+
+      &.none {
+        fill: none;
+        stroke: none;
+      }
+
+      &.clickable {
+        cursor: pointer;
+      }
+
+      &.level.active {
+        fill: $phy_green;
+        stroke: $phy_green;
+      }
+
+      &.active.difficulty.practice {
+        fill: $phy_green;
+        stroke: $phy_green;
+      }
+
+      &.active.difficulty.challenge {
+        fill: $phy_extra_force_yellow;
+        stroke: $phy_extra_force_yellow;
+      }
+
+      &:focus {
+        outline: none;
+        stroke: black !important;
+        stroke-width: 0.2rem;
+      }
     }
   }
   .connection {
@@ -48,5 +79,33 @@ svg {
     &:not(.active) {
       stroke: $gray-118;
     }
+  }
+
+}
+
+.hexagon-coming-soon {
+  width: 100%;
+  pointer-events: none;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 0.65rem;
+  bottom: 0;
+  left: 0;
+  border-radius: 5px;
+  font-family: $secondary-font-semi-bold;
+  background: white;
+
+  &.physics {
+    border: solid 1px $phy_physics;
+  }
+
+  &.maths {
+    border: solid 1px $phy_maths;
+  }
+
+  &.chemistry {
+    border: solid 1px $phy_chemistry;
   }
 }

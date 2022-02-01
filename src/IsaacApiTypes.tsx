@@ -160,11 +160,13 @@ export interface IsaacQuestionSummaryPageDTO extends SeguePageDTO {
 
 export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
     answer?: ContentBaseDTO;
+    showConfidence?: boolean;
 }
 
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
     rubric?: ContentDTO;
     visibleToStudents?: boolean;
+    hiddenFromRoles?: Role[];
     defaultFeedbackMode?: QuizFeedbackMode;
     total?: number;
     sectionTotals?: { [index: string]: number };
@@ -342,6 +344,7 @@ export interface ContentDTO extends ContentBaseDTO {
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
     published?: boolean;
+    deprecated?: boolean;
     level?: number;
 }
 
@@ -360,7 +363,8 @@ export interface ContentSummaryDTO {
 }
 
 export interface QuizSummaryDTO extends ContentSummaryDTO {
-    visibleToStudents?: boolean
+    visibleToStudents?: boolean;
+    hiddenFromRoles?: Role[];
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
@@ -682,7 +686,8 @@ export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export type Role = "STUDENT" | "TEACHER" | "EVENT_LEADER" | "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
+export const ROLES = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
+export type Role = (typeof ROLES)[number];
 
 export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
 

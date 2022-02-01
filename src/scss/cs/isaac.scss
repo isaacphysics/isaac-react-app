@@ -92,6 +92,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "logo";
 @import "featured-profile";
 @import "../common/code";
+@import "question-finder";
 
 // Navigation
 @import "header";
@@ -119,6 +120,9 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Print
 @import "../common/print";
+
+// Difficulty icons
+@import "filter";
 
 a.disabled {
     color: $gray-600;

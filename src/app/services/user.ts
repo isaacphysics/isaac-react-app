@@ -1,44 +1,45 @@
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
 import {Role} from "../../IsaacApiTypes";
+import {isDefined} from "./miscUtils";
 
 export function isLoggedIn(user?: PotentialUser | null): user is LoggedInUser {
     return user ? user.loggedIn : false;
 }
 
-export function isStudent(user?: PotentialUser | null): boolean {
-    return isLoggedIn(user) && user.role === "STUDENT";
+export function isStudent(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
+    return isDefined(user) && (user.role === "STUDENT") && (user.loggedIn ?? true);
 }
 
-export function isTeacher(user?: PotentialUser | null): boolean {
-    return isLoggedIn(user) && user.role !== "STUDENT";
+export function isTeacher(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
+    return isDefined(user) && (user.role !== "STUDENT") && (user.loggedIn ?? true);
 }
 
-export function isAdmin(user?: PotentialUser | null): boolean {
-    return isLoggedIn(user) && user.role === "ADMIN";
+export function isAdmin(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
+    return isDefined(user) && (user.role === "ADMIN") && (user.loggedIn ?? true);
 }
 
-export function isEventManager(user?: PotentialUser | null): boolean {
-    return isLoggedIn(user) && (user.role === "EVENT_MANAGER");
+export function isEventManager(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
+    return isDefined(user) && (user.role === "EVENT_MANAGER") && (user.loggedIn ?? true);
 }
 
-export function isStaff(user?: PotentialUser | null): boolean {
-    return isLoggedIn(user) && (user.role === "ADMIN" || user.role === "EVENT_MANAGER" || user.role === "CONTENT_EDITOR");
+export function isStaff(user?: {role?: Role, loggedIn?: boolean} | null) {
+    return isDefined(user) && (user.role === "ADMIN" || user.role === "EVENT_MANAGER" || user.role === "CONTENT_EDITOR") && (user.loggedIn ?? true);
 }
 
-export function isEventLeader(user?: PotentialUser | null): boolean {
-    return isLoggedIn(user) && user.role === "EVENT_LEADER";
+export function isEventLeader(user?: {role?: Role, loggedIn?: boolean} | null) {
+    return isDefined(user) && (user.role === "EVENT_LEADER") && (user.loggedIn ?? true);
 }
 
-export function isEventLeaderOrStaff(user?: PotentialUser | null): boolean {
+export function isEventLeaderOrStaff(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
     return isEventLeader(user) || isStaff(user);
 }
 
-export function isAdminOrEventManager(user?: PotentialUser | null): boolean {
+export function isAdminOrEventManager(user?: {role?: Role, loggedIn?: boolean} | null): boolean {
     return isAdmin(user) || isEventManager(user);
 }
 
-export const roleRequirements: Record<Role, (u: PotentialUser | null) => boolean> = {
-    "STUDENT": isLoggedIn,
+export const roleRequirements: Record<Role, (u: {role?: Role, loggedIn?: boolean} | null) => boolean> = {
+    "STUDENT": isStudent,
     "TEACHER": isTeacher,
     "EVENT_LEADER": isEventLeaderOrStaff,
     "CONTENT_EDITOR": isStaff,

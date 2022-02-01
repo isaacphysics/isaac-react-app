@@ -49,18 +49,19 @@ import {connect, useDispatch, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {isStaff} from "../../services/user";
+import {isAdminOrEventManager, isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
 import Select from "react-select";
 import {
     difficultiesOrdered,
-    difficultyShortLabelMap,
     sortIcon,
     stageLabelMap,
     stagesOrdered
 } from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {selectOnChange} from "../../services/select";
+import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
+import {above, below, useDeviceSize} from "../../services/device";
 
 enum boardViews {
     "table" = "Table View",
@@ -149,10 +150,9 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
 const Board = (props: BoardProps) => {
     const {user, board, boardView, loadGroupsForBoard, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
+    const deviceSize = useDeviceSize();
 
-    useEffect( () => {
-        loadGroupsForBoard(board);
-    }, [board.id]);
+    useEffect(() => {loadGroupsForBoard(board);}, [board.id]);
 
     const assignmentLink = `/assignment/${board.id}`;
 
@@ -160,7 +160,7 @@ const Board = (props: BoardProps) => {
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
-            if (user.role == "ADMIN" || user.role == "EVENT_MANAGER") {
+            if (isAdminOrEventManager(user)) {
                 alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
                 showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.", timeout: 5000});
@@ -213,12 +213,15 @@ const Board = (props: BoardProps) => {
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
+                <td className="text-center align-middle">
+                    {boardDifficulties.length > 0 && <AggregateDifficultyIcons difficulties={boardDifficulties} stacked />}
+                </td>
                 <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
                 <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
                 <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
                 <td className="text-center align-middle">
-                    <Button block color="tertiary" style={{fontSize: 15}} className="text-nowrap" onClick={toggleAssignModal}>
-                        {"Assign / Unassign"}
+                    <Button color="tertiary" size="sm" style={{fontSize: 15}} onClick={toggleAssignModal}>
+                        Assign&nbsp;/ Unassign
                     </Button>
                 </td>
                 <td className="text-center align-middle">
@@ -278,8 +281,11 @@ const Board = (props: BoardProps) => {
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                        <CardSubtitle>Stages: <strong>{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
-                        {SITE_SUBJECT === SITE.PHY && boardDifficulties.length > 1 && <CardSubtitle>Difficulties: <strong>{boardDifficulties.map(d => difficultyShortLabelMap[d]).join(', ')}</strong></CardSubtitle>}
+                        <CardSubtitle>Stages: <strong className="d-inline-flex">{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
+                        {boardDifficulties.length > 1 && <CardSubtitle>
+                            {"Difficulties: "}
+                            <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
+                        </CardSubtitle>}
                     </aside>
 
                     <Row className="mt-1 mb-3">
@@ -366,7 +372,6 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
     const [boardSubject, setBoardSubject] = useState<boardSubjects>(boardSubjects.all);
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
-    const [levels, setLevels] = useState<string[]>([]);
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
 
@@ -536,7 +541,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>
+                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}> { /* REVIEW */ }
                                                 <Label className="w-100">Levels
                                                     <Select inputId="levels-select"
                                                             isMulti
@@ -581,7 +586,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                             Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                         </button>
                                                     </th>
-                                                    {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle">Levels</th>}
+                                                    <th className="text-center align-middle">Difficulties</th>
                                                     <th className="text-center align-middle">Creator</th>
                                                     <th className="text-center align-middle pointer-cursor">
                                                         <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>

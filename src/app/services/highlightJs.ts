@@ -58,6 +58,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
     const KEYWORDS = [
         "GLOBAL",
         "MOD",
+        "DIV",
         "AND",
         "OR",
         "NOT",

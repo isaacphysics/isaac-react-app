@@ -16,7 +16,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
-import {extractTeacherName} from "../../../services/user";
+import {extractTeacherName, isLoggedIn, isStudent} from "../../../services/user";
 import {AdminUserGetState} from "../../../state/reducers/adminState";
 
 
@@ -120,7 +120,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 </RS.Col>
             </RS.Row>
 
-            {user.loggedIn && user.role !== "STUDENT" && <React.Fragment>
+            {isLoggedIn(user) && !isStudent(user) && <React.Fragment>
                 <hr className="my-5" />
                 <RS.Row>
                     <RS.Col lg={7}>
