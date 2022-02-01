@@ -181,7 +181,7 @@ export function UserContextAccountInput({
 
                     {!teacher && <><br/>
                         <small>
-                            If you are a teacher, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one exam board and stage.
+                            If you are a teacher, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {SITE_SUBJECT === SITE.CS && "exam board and "}stage.
                         </small>
                     </>}
                 </RS.FormGroup>
