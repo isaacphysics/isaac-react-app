@@ -544,13 +544,13 @@ const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
     const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
-    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
         event.preventDefault();
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
-    function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement>) {
+    function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
         event.preventDefault();
         window.open(event.currentTarget.href, '_blank');

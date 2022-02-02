@@ -9,6 +9,7 @@ import Select, {MultiValue} from "react-select";
 import {
     groupTagSelectionsByParent,
     logEvent,
+    multiSelectOnChange,
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
