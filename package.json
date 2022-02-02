@@ -2,6 +2,11 @@
   "name": "isaac-react-app",
   "version": "1.6.22-SNAPSHOT",
   "private": true,
+  "engines": {
+    "node": ">=17",
+    "npm": ">=8"
+  },
+  "engineStrict": true,
   "dependencies": {
     "@react-google-maps/api": "^2.7.0",
     "axios-mock-adapter": "^1.20.0",
