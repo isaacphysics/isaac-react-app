@@ -51,7 +51,6 @@ import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isAdminOrEventManager, isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
-import Select from "react-select";
 import {
     difficultiesOrdered,
     sortIcon,
@@ -59,7 +58,6 @@ import {
     stagesOrdered
 } from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {selectOnChange} from "../../services/select";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import {above, below, useDeviceSize} from "../../services/device";
 
@@ -541,25 +539,6 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}> { /* REVIEW */ }
-                                                <Label className="w-100">Levels
-                                                    <Select inputId="levels-select"
-                                                            isMulti
-                                                            options={[
-                                                                {value: '1', label: '1'},
-                                                                {value: '2', label: '2'},
-                                                                {value: '3', label: '3'},
-                                                                {value: '4', label: '4'},
-                                                                {value: '5', label: '5'},
-                                                                {value: '6', label: '6'}
-                                                            ]}
-                                                            className="basic-multi-select"
-                                                            classNamePrefix="select"
-                                                            placeholder="None"
-                                                            onChange={selectOnChange(setLevels, true)}
-                                                    />
-                                                </Label>
-                                            </Col>}
                                             {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={2}>
                                                 <Label className="w-100">
                                                     Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as boardSubjects)}>

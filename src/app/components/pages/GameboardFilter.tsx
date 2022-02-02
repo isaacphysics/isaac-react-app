@@ -22,9 +22,9 @@ import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {Item, selectOnChange, unwrapValue, isItemEqual} from "../../services/select";
+import {Item, selectOnChange, isItemEqual} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
-import Select, {GroupedOptionsType} from "react-select"; // REVIEW GroupedOptionsType
+import Select, {GroupBase} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -159,13 +159,13 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                         {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
             </div>
             {/*<div>*/}
             {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
             {/*        I would like some questions from Isaac to...*/}
             {/*    </RS.Label>*/}
-            {/*    <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
+            {/*    <Select id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
             {/*</div>*/}
             <div>
                 <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
@@ -181,7 +181,7 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                     </RS.UncontrolledTooltip>
                 </RS.Label>
                 <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                {/*<Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
+                {/*<Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
             </div>
         </RS.Col>
         <RS.Col lg={8}>
@@ -215,7 +215,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
 
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const conceptDTOs = useSelector((state: AppState) => selections[2]?.length > 0 ? state?.concepts?.results : undefined);
-    const [conceptChoices, setConceptChoices] = useState<GroupedOptionsType<Item<string>>>([]);
+    const [conceptChoices, setConceptChoices] = useState<GroupBase<Item<string>>[]>([]);
 
     const selectedTopics = selections[2];
     useEffect(() => {
@@ -262,7 +262,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         {"Find questions that are suitable for this stage of school learning."}
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
@@ -272,7 +272,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     inputId="exam-boards" isClearable placeholder="Any"
                     value={examBoards}
                     options={getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})}
-                    onChange={unwrapValue(setExamBoards)}
+                    onChange={selectOnChange(setExamBoards, false)}
                 />
             </RS.Col>
         </RS.Row>
@@ -290,7 +290,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         C3 require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
+                <Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
@@ -300,7 +300,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         if ((Array.isArray(v) && v.length === 0) || v === null) {
                             setConcepts([]);
                         }
-                        return unwrapValue(setTierSelection)(v);
+                        return selectOnChange(setTierSelection, false)(v);
                     }}
                 />
             </RS.Col>
@@ -312,7 +312,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     <Select
                         inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
                         placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
-                        value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
+                        value={concepts} options={conceptChoices} onChange={selectOnChange(setConcepts, false)}
                     /> :
                     <IsaacSpinner/>}
             </RS.Col>
@@ -520,47 +520,7 @@ export const GameboardFilter = withRouter<RouteComponentProps, any>(({location}:
                     </RS.Button>
                 </RS.Col>)}
 
-            {/* REVIEW Filter */}
-            {filterExpanded && <RS.Row className="mb-sm-4">
-                <RS.Col xs={12}>
-                    <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
-                </RS.Col>
-                <RS.Col lg={4}>
-                    <div>
-                        <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                            I am interested in stage...
-                            <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                            <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                                {"Find questions that are suitable for this stage of school learning."} <br />
-                                {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
-                            </RS.UncontrolledTooltip>
-                        </RS.Label>
-                        <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
-                    </div>
-                    <div>
-                        <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                            I would like questions for...
-                            <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                            <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
-                                Practice questions let you directly apply one idea -<br />
-                                P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                                P3 covers later topics.<br />
-                                Challenge questions are solved by combining multiple concepts and creativity.<br />
-                                C1 can be attempted near the beginning of your course,<br />
-                                C3 require more creativity and could be attempted later in a course.
-                            </RS.UncontrolledTooltip>
-                        </RS.Label>
-                        <Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
-                    </div>
-                </RS.Col>
-                <RS.Col lg={8}>
-                    <RS.Label className={`mt-4 mt-lg-0`}>
-                        Topics:
-                    </RS.Label>
-                    <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} /> {/* REVIEW setTierSelection */}
-                </RS.Col>
-            </RS.Row>}
-            {/* REVIEW Filter */}
+            {/* Filter */}
             {filterExpanded && siteSpecific(
                 <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
                 <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>

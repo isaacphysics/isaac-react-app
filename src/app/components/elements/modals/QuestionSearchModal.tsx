@@ -9,7 +9,6 @@ import Select, {MultiValue} from "react-select";
 import {
     groupTagSelectionsByParent,
     logEvent,
-    multiSelectOnChange,
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
@@ -155,7 +154,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
-                    options={groupBaseTagOptions} onChange={s => selectOnChange(setSearchTopics, true)(s.map(v => v.options).flat())}
+                    options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action}) => {
+                        selectOnChange(setSearchTopics, true)(x)
+                    }}
                 />
             </RS.Col>
         </RS.Row>
@@ -171,7 +172,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
             {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
