@@ -3,7 +3,6 @@ import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {Helmet} from "react-helmet";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
@@ -22,7 +21,7 @@ import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
@@ -68,12 +67,6 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
         return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <Container>
-                <Helmet>
-                    <meta property="og:title" content={generateQuestionTitle(doc) + " — Isaac " + SITE_SUBJECT_TITLE} />
-                    <meta property="og:title" content={generateQuestionTitle(doc)} />
-                    {doc.summary && <meta name="description" content={doc.summary}/>}
-                    {doc.summary && <meta name="og:description" content={doc.summary}/>}
-                </Helmet>
                 {/*High contrast option*/}
                 <TitleAndBreadcrumb
                     currentPageTitle={generateQuestionTitle(doc)}
