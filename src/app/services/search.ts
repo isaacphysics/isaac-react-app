@@ -39,6 +39,13 @@ export const pushConceptsToHistory = function(history: History, searchText: stri
 };
 
 export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: PotentialUser | null) {
-    const isPublic = (content.id != "_regression_test_" && (!content.tags || content.tags.indexOf("nofilter") < 0 && !content.supersededBy));
-    return isPublic || isStaff(user);
+    if (content.deprecated) {
+        return false;
+    } else if (isStaff(user)) {
+        return true;
+    } else {
+        return content.id != "_regression_test_" &&
+            !content.supersededBy &&
+            !content.tags?.includes("nofilter");
+    }
 };
