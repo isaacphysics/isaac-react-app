@@ -905,14 +905,14 @@ export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type LevelAttempts<T> = { [level in Levels]?: T; }
 
 interface TagInstruction {
-    hidden?: boolean; comingSoon?: string; new?: boolean;
+    hidden?: boolean; comingSoonDate?: string; new?: boolean;
 }
 
 export interface BaseTag {
     id: TAG_ID;
     title: string;
     parent?: TAG_ID;
-    comingSoon?: string;
+    comingSoonDate?: string;
     new?: boolean;
     hidden?: boolean;
     stageOverride?: {[s in STAGE]?: TagInstruction};

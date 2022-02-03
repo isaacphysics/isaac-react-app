@@ -247,7 +247,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                             1/2 mv**2<br />
                             log(x_a, 2) == log(x_a) / log(2)<br />
                             <br />
-                            As you type, the box above will preview the result.
+                            As you type, the box below will preview the result.
                         </RS.UncontrolledTooltip>
                     </RS.InputGroupAddon>
                 </RS.InputGroup>

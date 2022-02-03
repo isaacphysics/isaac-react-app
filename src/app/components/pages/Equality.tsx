@@ -246,7 +246,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                                     1/2 mv**2<br />
                                     log(x_a, 2) == log(x_a) / log(2)<br />
                                     <br />
-                                    As you type, the box above will preview the result.
+                                    As you type, the box below will preview the result.
                                 </UncontrolledTooltip>}
                                 {editorMode === 'logic' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
@@ -255,7 +255,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                                     A &amp; (B ^ !C)<br />
                                     T &amp; ~(F + A)<br />
                                     1 . ~(0 + A)<br />
-                                    As you type, the box above will preview the result.
+                                    As you type, the box below will preview the result.
                                 </UncontrolledTooltip>}
                             </InputGroupAddon>
                         </InputGroup>

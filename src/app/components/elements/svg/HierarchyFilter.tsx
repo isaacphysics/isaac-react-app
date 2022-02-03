@@ -8,6 +8,9 @@ import {HexagonConnection} from "./HexagonConnection";
 import {Item, unwrapValue} from "../../../services/select";
 import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services/svg";
 import {ifKeyIsEnter} from "../../../services/navigation";
+import tags from "../../../services/tags";
+import {isDefined, noop} from "../../../services/miscUtils";
+import classNames from "classnames";
 
 export interface Tier {id: string; name: string; for: string}
 
@@ -90,6 +93,8 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                     const subject = i == 0 ? choice.value : selections[0][0].value;
                     const isSelected = !!selections[i]?.map(s => s.value).includes(choice.value);
                     const longWordInLabel = choice.label.split(/\s/).some(word => word.length > 10);
+                    const tag = tags.getById(choice.value);
+                    const isComingSoon = isDefined(tag.comingSoonDate);
                     function selectValue() {
                         setTierSelection(i)(isSelected ?
                             selections[i].filter(s => s.value !== choice.value) : // remove
@@ -98,20 +103,27 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                     }
 
                     return <g key={choice.value} transform={hexagonTranslation(deviceSize, hexagon, i, j)}>
-                        <Hexagon {...hexagon} className={`hex ${subject} ${isSelected ? "active" : ""}`} />
+                        <Hexagon {...hexagon} className={classNames("hex", subject, {"active": isSelected && !isComingSoon, "de-emph": isComingSoon})} />
                         <foreignObject width={hexagon.halfWidth * 2} height={hexagon.quarterHeight * 4}>
-                            <div className={`hexagon-tier-title ${isSelected ? "active" : ""} ${longWordInLabel ? "small" : ""}`}>
+                            <div className={classNames("hexagon-tier-title", {"active": isSelected && !isComingSoon, "de-emph": isComingSoon, "small": longWordInLabel})}>
                                 {choice.label}
                             </div>
+                            {tag.comingSoonDate && <div className={classNames(subject, "hexagon-coming-soon")}>
+                                Coming {tag.comingSoonDate}
+                            </div>}
                         </foreignObject>
+
                         <Hexagon
-                            {...hexagon} className="hex none clickable" properties={{clickable: true}} role="button"
-                            tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
+                            {...hexagon} className={classNames("hex none", {"clickable": !isComingSoon})} properties={{clickable: !isComingSoon}} role="button"
+                            tabIndex={isComingSoon ? -1 : 0} onClick={isComingSoon ? noop : selectValue} onKeyPress={isComingSoon ? noop : ifKeyIsEnter(selectValue)}
                         >
-                            <title>
+                            {!isComingSoon && <title>
                                 {`${isSelected ? "Remove" : "Add"} the ${tier.name.toLowerCase()} "${choice.label}" ${isSelected ? "from" : "to"} your gameboard filter`}
-                            </title>
+                            </title>}
                         </Hexagon>
+                        {isComingSoon && <title>
+                            This topic is coming soon
+                        </title>}
                     </g>;
                 })}
             </g>)}
