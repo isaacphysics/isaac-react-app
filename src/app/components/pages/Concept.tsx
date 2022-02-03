@@ -46,9 +46,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     subTitle={doc.subtitle as string}
                 />
                 <div className="no-print d-flex align-items-center">
-                    <div className="not-mobile">
-                        <EditContentButton doc={doc} />
-                    </div>
+                    <EditContentButton doc={doc} />
                     <div className="mt-3 mr-sm-1 ml-auto">
                         <UserContextPicker className="no-print text-right" />
                     </div>

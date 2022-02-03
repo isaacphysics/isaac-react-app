@@ -13,7 +13,7 @@ export interface EditContentButtonProps {
 export const EditContentButton = ({doc, className}: EditContentButtonProps) => {
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     if (segueEnvironment === "DEV" && doc.canonicalSourceFile) {
-        return <div>
+        return <div className="not-mobile">
             <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={className || ""}>
                 <h3>{doc.published ? "Published" : "Unpublished"} ✎</h3>
             </ExternalLink>

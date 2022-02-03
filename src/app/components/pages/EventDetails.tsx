@@ -28,6 +28,7 @@ import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/events";
+import {EditContentButton} from "../elements/EditContentButton";
 
 function formatDate(date: Date|number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -130,6 +131,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                 currentPageTitle={event.title as string} subTitle={event.subtitle}
                 breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
             />
+            <EditContentButton doc={event} />
 
             <RS.Card className="mt-4 pt-2">
                 <RS.CardBody>
