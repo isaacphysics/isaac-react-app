@@ -40,7 +40,8 @@ module.exports = (isProd) => {
             extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
             alias: {
                 'p5': 'p5/lib/p5.min.js'
-            }
+            },
+            fallback: { "querystring": require.resolve("querystring-es3") }
         },
 
         module: {
