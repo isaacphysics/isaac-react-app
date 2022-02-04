@@ -83,13 +83,14 @@ export const Glossary = () => {
         }
 
         const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
-        const sortedTerms =
+        const sortedAndFilteredTerms =
             (searchText === ''
                 ? rawGlossaryTerms
                 : rawGlossaryTerms?.filter(e => e.value?.match(regex))
-            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
+            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
+             ?.filter(t => t.examBoard === "" || t.examBoard === examBoard);
 
-        return groupTerms(sortedTerms?.filter(t => t.examBoard === "" || t.examBoard === examBoard));
+        return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, searchText, examBoard]);
 
     const scrollToKey = (k: string) => {
