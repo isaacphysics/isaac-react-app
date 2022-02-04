@@ -189,9 +189,6 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                     <div id="stickyalphabetlist" className="alphabetlist pb-4">
                         {alphabetList}
                     </div>
-                    <div className="alphabetlist pb-4">
-                        {alphabetList}
-                    </div>
                 </div>
                 {Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
                     <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2 style={{position: 'sticky', top: '1em'}}>{key}</h2></Col>
