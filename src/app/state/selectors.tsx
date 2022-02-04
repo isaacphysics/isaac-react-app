@@ -5,7 +5,7 @@ import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
-import {ChoiceDTO, QuizAssignmentDTO} from "../../IsaacApiTypes";
+import {ChoiceDTO, QuizAssignmentDTO, QuizAttemptFeedbackDTO} from "../../IsaacApiTypes";
 import {extractQuestions} from "../services/quiz";
 
 export const selectors = {
@@ -145,7 +145,8 @@ export const selectors = {
         },
         assignedToMe: (state: AppState) => state?.quizAssignedToMe,
         available: (state: AppState) => state?.quizzes?.quizzes,
-        assignments: (state: AppState) => augmentWithGroupNameIfInCache(state, state?.quizAssignments),
+        assignments: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments),
+        /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => {
             const quizAttempt = state?.quizAttempt;
             if (!isDefined(quizAttempt)) {
@@ -169,6 +170,7 @@ export const selectors = {
             }
             return quizAttempt;
         },
+        /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
         currentStudentQuizAttempt: (state: AppState) => {
             const quizAttempt = state?.studentQuizAttempt;
             if (!isDefined(quizAttempt)) {
@@ -190,11 +192,9 @@ export const selectors = {
                     }
                 });
             }
-            return quizAttempt;
+            return load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.quizAttempt(quizAttempt) : quizAttempt;
         },
-        assignment: function (state: AppState) {
-            return state?.quizAssignment;
-        },
+        assignment: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignment(state?.quizAssignment) : state?.quizAssignment,
         attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
 };
@@ -260,6 +260,53 @@ export const anonymisationFunctions = {
             })
         });
         return anonymousGroupProgress;
+    },
+    assignments: (quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined) => {
+        if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
+            return quizAssignments;
+        }
+        return quizAssignments.map(assignment => {
+            const groupName = `Demo Group ${assignment.groupId}`;
+            return {
+                // @ts-ignore we know an assignment will be returned from this, since we pass in an assignment
+                ...anonymisationFunctions.assignment({assignment: assignment}).assignment,
+                groupName,
+            } as AppQuizAssignment;
+        });
+    },
+    assignment: (assignmentState: {assignment: QuizAssignmentDTO} | {error: string} | null | undefined) => {
+        if (!isDefined(assignmentState) || "error" in assignmentState) {
+            return assignmentState;
+        }
+        return {
+            assignment: {
+                ...assignmentState.assignment,
+                userFeedback: assignmentState.assignment.userFeedback?.map((uf, i) => {
+                    return {
+                        ...uf,
+                        user: {
+                            ...uf.user,
+                            familyName: "",
+                            givenName: `Test Student ${i + 1}`,
+                        }
+                    }
+                }),
+                quizAttempt: assignmentState.assignment
+            }
+        };
+    },
+    quizAttempt: (quizAttempt: { studentAttempt: QuizAttemptFeedbackDTO }) => {
+        return {
+            ...quizAttempt,
+            studentAttempt: {
+                ...quizAttempt.studentAttempt,
+                user: {
+                    ...quizAttempt.studentAttempt.user,
+                    familyName: "",
+                    givenName: `Test Student`,
+                }
+            }
+        };
     }
 }
 
