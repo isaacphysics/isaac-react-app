@@ -52,10 +52,7 @@ export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | unde
 export function formatGlossaryTermId(rawTermId: string) {
     const idRegExp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
     const simplifiedTermId = idRegExp.exec(rawTermId.split('|').slice(1).join('|'));
-    if (simplifiedTermId) {
-        return simplifiedTermId.slice(1,3).filter(i => typeof i === 'string').join('|').toLowerCase().replace(/[^a-z0-9]/g, '-');
-    }
-    return undefined;
+    return simplifiedTermId?.slice(1,3).filter(i => typeof i === 'string').join('|').toLowerCase().replace(/[^a-z0-9]/g, '-');
 }
 
 /* An offset applied when scrolling to a glossary term, so the term isn't hidden under the alphabet header */
