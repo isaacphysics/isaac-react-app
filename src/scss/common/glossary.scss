@@ -14,18 +14,17 @@
     background: transparent;
   }
 
-  .alphabetlist {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+  #stickyalphabetlist {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 255;
+    display: none;
 
     &.active {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: white;
-      z-index: 255;
+      display: flex;
       @include make-col(12);
       box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
       padding-top: 0;
@@ -35,37 +34,27 @@
         display: block;
         margin-bottom: 0;
         line-height: 3em;
+        cursor: pointer;
 
         &.unavailable {
           cursor: default;
         }
       }
-    }
 
-    div.key {
-      line-height: 1.2em;
-      width: 2em;
-      text-align: center;
-      vertical-align: bottom;
-      margin-bottom: 0.8em;
-      cursor: pointer;
-
-      &.unavailable {
-        color: $gray-120;
-        cursor: default;
+      @include respond-below(sm) {
+        display: none;
       }
     }
   }
 
-  // IMPORTANT - all CSS below overrides that of the class above (when used on the same
-  // element) because of *specificity*
-  // This is needed to make sure the three different responsive versions of the alphabet list
-  // can use the same elements.
-  #stickyalphabetlist {
+  .alphabetlist {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
     @include respond-below(sm) {
       flex-direction: column;
       position: fixed;
-      left: unset;
       right: 0vw;
       top: 10vh;
       z-index: 255;
@@ -82,7 +71,8 @@
         font-weight: bold;
         display: block;
         line-height: 1em;
-        text-align: center !important;
+        width: 1.2em;
+        text-align: center!important;
         padding-left: 0.6em;
         margin: 0 !important;
 
@@ -99,6 +89,20 @@
         &.unavailable {
           display: none;
         }
+      }
+    }
+
+    div.key {
+      line-height: 1.2em;
+      width: 2em;
+      text-align: center;
+      vertical-align: bottom;
+      margin-bottom: 0.8em;
+      cursor: pointer;
+
+      &.unavailable {
+        color: $gray-120;
+        cursor: default;
       }
     }
   }
