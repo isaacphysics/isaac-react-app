@@ -168,11 +168,11 @@ export const Glossary = () => {
 
     const alphabetList = glossaryTerms && '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k => {
         if (glossaryTerms.hasOwnProperty(k)) {
-            return <div id={`alphascroller-key-${k}`} className="key" data-key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={() => scrollToKey(k)}>
+            return <div id={`alphascroller-key-${k}`} className="key" data-key={k} key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={() => scrollToKey(k)}>
                 {k}
             </div>
         } else {
-            return <div className="key unavailable" data-key={k}>
+            return <div className="key unavailable" data-key={k} key={k}>
                 {k}
             </div>
         }
