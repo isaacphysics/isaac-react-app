@@ -232,7 +232,7 @@ export const Glossary = () => {
             </Row>}
             {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
                 <div className="no-print">
-                    <div id="sentinel" className={"sentinel"} ref={alphabetScrollerSentinel}>&nbsp;</div>
+                    <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
                     <div ref={alphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
                         {alphabetList}
                     </div>
