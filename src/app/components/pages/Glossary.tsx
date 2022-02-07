@@ -34,18 +34,12 @@ export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | unde
                 }, 200);
             }
             return () => {
-                if (timeout) {
-                    clearTimeout(timeout);
-                }
+                if (timeout) clearTimeout(timeout);
             };
         }
     }, [waitingFor, waiting]);
 
-    if (waiting) {
-        return valueWhileWaiting;
-    } else {
-        return valueWhenFound;
-    }
+    return waiting ? valueWhileWaiting : valueWhenFound;
 }
 
 /* Gets rid of glossary page and exam board information from a glossary term id, just to keep the URL hash looking nice */
@@ -98,23 +92,6 @@ export const Glossary = () => {
         return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, searchText, examBoard]);
 
-    const scrollToKey = (k: string) => {
-        const element = document.getElementById(`key-${k}`);
-        const link = document.getElementById(`alphascroller-key-${k}`);
-
-        if (isDefined(element)) {
-            scrollVerticallyIntoView(element, ALPHABET_HEADER_OFFSET);
-        }
-        link?.blur();
-    }
-
-    const onKeyUpScrollTo = (event: React.KeyboardEvent) => {
-        if (event.key === "Enter") {
-            const key = event.currentTarget.getAttribute('data-key');
-            if (key) scrollToKey(key);
-        }
-    }
-
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
 
@@ -124,29 +101,57 @@ export const Glossary = () => {
     /* Scrolls to the term given by the URL hash, when the hash becomes available (see line above) */
     useEffect(() => {
         const el = glossaryTermRefs.current?.get(hash);
-        if (isDefined(el)) {
-            scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
-        }
+        if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
     }, [hash]);
 
-    /* Horror lies ahead. Sorry. */
+
+    /* Stores a reference to each alphabet header (to the h2 element) - these are the headers alongside the glossary
+     * terms, NOT the letters that exist in the clickable sticky header (or the other non-sticky one)
+     */
+    const alphabetHeaderRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
+
+    const scrollToKey = ({currentTarget}: {currentTarget: EventTarget & Element}) => {
+        // Find alphabet heading corresponding to the given letter from ref list, and scroll to that element
+        const letter = currentTarget.getAttribute('data-key') ?? "A";
+        const el = alphabetHeaderRefs.current.get(letter);
+        if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
+
+        // Removes focus outline from the clicked letter on the alphabet scroller headers
+        const links = document.getElementsByClassName(`alphascroller-key-${letter}`);
+        for (const link of links) {
+            (link as HTMLElement)?.blur();
+        }
+    }
+
+    const onKeyUpScrollTo = ({currentTarget, key}: React.KeyboardEvent) => {
+        if (key === "Enter") {
+            const letter = currentTarget.getAttribute('data-key');
+            if (letter) scrollToKey({currentTarget});
+        }
+    }
+
+    /* "Horror lies ahead. Sorry."
+     * This code deals with showing or hiding the sticky alphabet header UI depending
+     * on how far down the page the user has scrolled. It uses a 'sentinel' div element near the top of the glossary
+     * to do this .
+     */
     const alphabetScrollerSentinel = useRef<HTMLDivElement>(null);
     const alphabetScrollerFlag = useRef(false);
     const alphabetScrollerObserver = useRef<IntersectionObserver>();
-    const alphabetListContainer = useRef<HTMLDivElement>(null);
+    const stickyAlphabetListContainer = useRef<HTMLDivElement>(null);
 
     const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
                 if (entry.isIntersecting) {
-                    alphabetListContainer.current?.classList.remove('active');
+                    stickyAlphabetListContainer.current?.classList.remove('active');
                 } else {
                     if (entry.boundingClientRect.top <= 0) {
                         // Gone up
-                        alphabetListContainer.current?.classList.add('active');
+                        stickyAlphabetListContainer.current?.classList.add('active');
                     } else if (entry.boundingClientRect.top > 0) {
                         // Gone down
-                        alphabetListContainer.current?.classList.remove('active');
+                        stickyAlphabetListContainer.current?.classList.remove('active');
                     }
                 }
             }
@@ -173,7 +178,7 @@ export const Glossary = () => {
 
     const alphabetList = glossaryTerms && '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k => {
         if (glossaryTerms.hasOwnProperty(k)) {
-            return <div id={`alphascroller-key-${k}`} className="key" data-key={k} key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={() => scrollToKey(k)}>
+            return <div className={`key alphascroller-key-${k}`} data-key={k} key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={scrollToKey}>
                 {k}
             </div>
         } else {
@@ -233,7 +238,7 @@ export const Glossary = () => {
             {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
                 <div className="no-print">
                     <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
-                    <div ref={alphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
+                    <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
                         {alphabetList}
                     </div>
                     <div className="alphabetlist pb-4">
@@ -241,8 +246,8 @@ export const Glossary = () => {
                     </div>
                 </div>
                 {Object.entries(glossaryTerms).map(([letter, terms]) => <Row key={letter} className="pb-5">
-                    <Col md={{size: 1, offset: 1}} id={`key-${letter}`}>
-                        <h2 style={{position: 'sticky', top: '1em'}}>
+                    <Col md={{size: 1, offset: 1}}>
+                        <h2 style={{position: 'sticky', top: '1em'}} ref={(el: HTMLHeadingElement) => alphabetHeaderRefs.current.set(letter, el)}>
                             {letter}
                         </h2>
                     </Col>
