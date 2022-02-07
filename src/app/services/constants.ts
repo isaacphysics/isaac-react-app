@@ -1010,12 +1010,12 @@ export const specificDoughnutColours: { [key: string]: string } = {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
         "Chemistry": "#e22e25",
-        "Practice\u00A0(P1)": "#509e2e",
-        "Practice\u00A0(P2)": "#3b6e25",
-        "Practice\u00A0(P3)": "#27421a",
-        "Challenge\u00A0(C1)": "#d68000",
-        "Challenge\u00A0(C2)": "#955a0f",
-        "Challenge\u00A0(C3)": "#764811"
+        [difficultyLabelMap.practice_1]: "#509e2e",
+        [difficultyLabelMap.practice_2]: "#3b6e25",
+        [difficultyLabelMap.practice_3]: "#27421a",
+        [difficultyLabelMap.challenge_1]: "#d68000",
+        [difficultyLabelMap.challenge_2]: "#955a0f",
+        [difficultyLabelMap.challenge_3]: "#764811"
     },
     [SITE.CS]: {}
 }[SITE_SUBJECT];

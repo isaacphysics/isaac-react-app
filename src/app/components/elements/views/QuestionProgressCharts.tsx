@@ -1,11 +1,18 @@
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import * as RS from "reactstrap";
-import {LevelAttempts, Levels} from "../../../../IsaacAppTypes";
+import {LevelAttempts} from "../../../../IsaacAppTypes";
 import bb, {Chart} from "billboard.js";
 import tags from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
-import {difficultyLabelMap, doughnutColours, specificDoughnutColours, STAGE, TAG_ID} from "../../../services/constants";
+import {
+    difficultyLabelMap,
+    doughnutColours,
+    specificDoughnutColours,
+    STAGE,
+    stageLabelMap,
+    TAG_ID
+} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {getFilteredStageOptions} from "../../../services/userContext";
 import {Difficulty} from "../../../../IsaacApiTypes";
@@ -47,12 +54,11 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     const defaultSearchChoiceTag = tags.getSpecifiedTags(searchTagLevel, tags.allTagIds)[0];
     const [searchChoice, setSearchChoice] = useState(defaultSearchChoiceTag.id);
-    const [stageChoice, setStageChoice] = useState<{value: STAGE; label: string}>({value: STAGE.A_LEVEL, label: "A Level"});
+    const [stageChoice, setStageChoice] = useState<{value: STAGE; label: string}>({value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]});
 
     const isAllZero = (arr: (string | number)[][]) => arr.filter((elem) => elem[1] > 0).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const levelColumns = [...Array(7)].map((_, i) => [`Level ${i}`, questionsByLevel[i as Levels] || 0]);
     const difficultyColumns = stageChoice && questionsByStageAndDifficulty[stageChoice.value] ?
         Object.keys(questionsByStageAndDifficulty[stageChoice.value])
         .sort(function(a, b){
@@ -77,23 +83,22 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             }));
         }
 
-        if (!isAllZero(topicColumns)) {
-            charts.push(bb.generate({
-                data: {
-                    columns: topicColumns,
-                    colors: colourPicker(topicColumns.map((column) => column[0]) as string[]),
-                    type: "donut"
-                },
-                donut: {
-                    title: "By Topic",
-                    label: {format: (value, ratio, id) => `${value}`}
-                },
-                bindto: `#${subId}-topicChart`,
-                ...OPTIONS
-            }));
-        }
 
-        if (SITE_SUBJECT === SITE.PHY && !isAllZero(difficultyColumns || [])) {
+        charts.push(bb.generate({
+            data: {
+                columns: topicColumns,
+                colors: colourPicker(topicColumns.map((column) => column[0]) as string[]),
+                type: "donut"
+            },
+            donut: {
+                title: isAllZero(topicColumns) ? "No Data" : "By Topic",
+                label: {format: (value, ratio, id) => `${value}`}
+            },
+            bindto: `#${subId}-topicChart`,
+            ...OPTIONS
+        }));
+
+        if (SITE_SUBJECT === SITE.PHY) {
             charts.push(bb.generate({
                 data: {
                     columns: difficultyColumns,
@@ -102,7 +107,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     order: null
                 },
                 donut: {
-                    title: "By Difficulty",
+                    title: isAllZero(difficultyColumns) ? "No data" : "By Difficulty",
                     label: {format: (value, ratio, id) => `${value}`}
                 },
                 bindto: `#${subId}-stageChart`,
@@ -125,12 +130,12 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         return () => {
             flushRef.current = undefined;
         }
-    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, levelColumns]);
+    }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
 
     const noCharts = {[SITE.CS]: 2, [SITE.PHY]: 3}[SITE_SUBJECT];
 
     return <RS.Row>
-        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={4} className="mt-4 d-flex flex-column">
+        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 Questions by {topTagLevel}
             </div>
@@ -161,14 +166,14 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             </div>
         </RS.Col>
         {SITE_SUBJECT === SITE.CS && <RS.Col md={3}/>}
-        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={4} className="mt-4 d-flex flex-column">
+        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <Select
                     inputId={`${subId}-stage-select`}
                     name="stage"
                     className="d-inline-block text-left pr-2 w-50"
                     classNamePrefix="select"
-                    defaultValue={{value: STAGE.A_LEVEL, label: "A Level"}}
+                    defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
                     options={getFilteredStageOptions()}
                     onChange={(e: ValueType<{value: STAGE; label: string}>) => setStageChoice((e as {value: STAGE; label: string}))}
                 />
@@ -176,14 +181,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             </div>
             <div className="d-flex flex-grow-1">
                 <div id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(difficultyColumns || []) ? "No data" : ""}</strong>
-                </div>
-            </div>
-        </RS.Col>}
-        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={4} className="mt-4 d-flex flex-column">
-            <div className="d-flex flex-grow-1">
-                <div id={`${subId}-levelChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(levelColumns) ? "No data" : ""}</strong>
+                    <strong>{isAllZero(difficultyColumns) ? "No data" : ""}</strong>
                 </div>
             </div>
         </RS.Col>}
