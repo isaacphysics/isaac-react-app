@@ -46,19 +46,19 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.kinematics, title: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
         {id: TAG_ID.materials, title: "Materials", parent: TAG_ID.mechanics},
         // Fields
-        {id: TAG_ID.combined, title: "Combined Fields", parent: TAG_ID.fields},
         {id: TAG_ID.electric, title: "Electric Fields", parent: TAG_ID.fields},
         {id: TAG_ID.magnetic, title: "Magnetic Fields", parent: TAG_ID.fields},
         {id: TAG_ID.gravitational, title: `Gravi${softHyphen}tational Fields`, parent: TAG_ID.fields},
+        {id: TAG_ID.combined, title: "Combined Fields", parent: TAG_ID.fields},
         // Thermal
         {id: TAG_ID.gases, title: "Gases", parent: TAG_ID.thermal},
         {id: TAG_ID.heatCapacity, title: "Heat Capacity", parent: TAG_ID.thermal},
         // Waves Particles
-        {id: TAG_ID.nuclear, title: "Nuclear", parent: TAG_ID.wavesParticles},
-        {id: TAG_ID.superposition, title: `Super${softHyphen}position`, parent: TAG_ID.wavesParticles},
+        {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.optics, title: "Optics", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.quantum, title: "Quantum", parent: TAG_ID.wavesParticles},
-        {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.wavesParticles},
+        {id: TAG_ID.superposition, title: `Super${softHyphen}position`, parent: TAG_ID.wavesParticles},
+        {id: TAG_ID.nuclear, title: "Nuclear", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.fundamental, title: `Funda${softHyphen}mental Particles`, parent: TAG_ID.wavesParticles},
         // Skills
         {id: TAG_ID.units, title: "Units", parent: TAG_ID.skills},
