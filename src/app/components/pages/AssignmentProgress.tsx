@@ -619,6 +619,10 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/assignments/assign/group/" + groupId + "/progress/download";
 }
 
+function getGroupQuizProgressCSVDownloadLink(groupId: number) {
+    return API_PATH + "/quiz/group/" + groupId + "/download";
+}
+
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
     const dispatch = useDispatch();
     const {group} = props;
@@ -632,12 +636,19 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
-    return <React.Fragment>
+    function openGroupQuizDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+        event.stopPropagation();
+        event.preventDefault();
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+    }
+
+return <React.Fragment>
         <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Group CSV)</a></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Group Assignments CSV)</a></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupQuizDownloadLink}>(Download Group Test CSV)</a></div>
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
