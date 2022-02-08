@@ -2,8 +2,8 @@ import {AnyAction, applyMiddleware, compose, createStore, Middleware} from "redu
 import thunk, {ThunkDispatch} from "redux-thunk";
 import * as reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
-import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
-import {notificationCheckerMiddleware} from "../services/notificationManager";
+import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
+import {notificationCheckerMiddleware} from "./middleware/notificationManager";
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

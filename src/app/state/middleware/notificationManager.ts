@@ -1,11 +1,11 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
-import {ACTION_TYPE} from "./constants";
-import {openActiveModal} from "../state/actions";
-import {allRequiredInformationIsPresent, withinLast50Minutes} from "./validation";
-import {isLoggedIn} from "./user";
-import * as persistence from "./localStorage";
-import {KEY} from "./localStorage";
-import {requiredAccountInformationModal} from "../components/elements/modals/RequiredAccountInformationModal";
+import {ACTION_TYPE} from "../../services/constants";
+import {openActiveModal} from "../actions";
+import {allRequiredInformationIsPresent, withinLast50Minutes} from "../../services/validation";
+import {isLoggedIn} from "../../services/user";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
+import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async action => {
     const dispatchedActionsResult = await dispatch(action);

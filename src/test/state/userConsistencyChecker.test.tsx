@@ -1,7 +1,7 @@
 import "../../app/state/actions"; // very annoying but this needs to be imported early to avoid a cyclic dependency issue
-import {getUserId, setUserId} from "../../app/state/userConsistencyCheckerCurrentUser";
+import {getUserId, setUserId} from "../../app/state/middleware/userConsistencyCheckerCurrentUser";
 import {ACTION_TYPE} from "../../app/services/constants";
-import {userConsistencyCheckerMiddleware} from "../../app/state/userConsistencyChecker";
+import {userConsistencyCheckerMiddleware} from "../../app/state/middleware/userConsistencyChecker";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
 
 jest.mock("../../app/state/userConsistencyCheckerCurrentUser");
