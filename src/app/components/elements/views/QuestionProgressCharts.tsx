@@ -6,6 +6,7 @@ import tags from "../../../services/tags";
 import Select from "react-select";
 import {ValueType} from "react-select/src/types";
 import {
+    difficultiesOrdered,
     difficultyLabelMap,
     doughnutColours,
     specificDoughnutColours,
@@ -16,6 +17,7 @@ import {
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {getFilteredStageOptions} from "../../../services/userContext";
 import {Difficulty} from "../../../../IsaacApiTypes";
+import {comparatorFromOrderedValues} from "../../../services/gameboards";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -61,9 +63,8 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
     const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const difficultyColumns = stageChoice && questionsByStageAndDifficulty[stageChoice.value] ?
         Object.keys(questionsByStageAndDifficulty[stageChoice.value])
-        .sort(function(a, b){
-            return Object.keys(difficultyLabelMap).indexOf(a) - Object.keys(difficultyLabelMap).indexOf(b);
-        }).map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice.value][key]]) : [];
+        .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
+        .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice.value][key]]) : [];
 
     useEffect(() => {
         const charts: Chart[] = [];
