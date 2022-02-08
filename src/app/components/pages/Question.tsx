@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useNavigation} from "../../services/navigation";
