@@ -43,7 +43,7 @@
       }
     }
 
-    .stage-label {
+    .stage-label, .stage-label-gcse, .stage-label-alevel, .stage-label-all {
       font-family: $secondary-font;
       padding: 1rem;
       min-width: 130px;

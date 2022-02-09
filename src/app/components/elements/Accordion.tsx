@@ -12,7 +12,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import uuid from "uuid";
-import {notRelevantMessage, useUserContext} from "../../services/userContext";
+import {audienceStyle, notRelevantMessage, useUserContext} from "../../services/userContext";
 import classnames from "classnames";
 
 interface AccordionsProps {
@@ -142,7 +142,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className="accordion-label badge-secondary d-flex align-items-center justify-content-center">
+                {isConceptPage && audienceString && <span className={"accordion-label" + (SITE_SUBJECT === SITE.CS && audienceStyle(audienceString)) + " badge-secondary d-flex align-items-center justify-content-center"}>
                     {audienceString}
                 </span>}
                 <div className="accordion-title pl-3">

@@ -140,6 +140,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/events";
 @import "../common/glossary";
 @import "../common/quiz";
+@import "topic";
+@import "accordions";
 
 @import "parsons-layout";
 

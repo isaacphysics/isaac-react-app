@@ -381,6 +381,17 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
     return `not relevant for ${message.join(" ")}`;
 }
 
+export function audienceStyle(audienceString: string): string {
+    switch (audienceString) {
+        case stageLabelMap.a_level:
+            return "-alevel";
+        case stageLabelMap.gcse:
+            return "-gcse";
+        default:
+            return "-all";
+    }
+}
+
 export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType): string {
     let stagesSet: Set<Stage>;
     if (!audience) {
