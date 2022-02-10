@@ -44,7 +44,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                 <Helmet>
                     <meta property="og:title" content={generateQuestionTitle(doc) + " — Isaac " + SITE_SUBJECT_TITLE} />
                     {doc.summary && <meta name="description" content={doc.summary}/>}
-                    {doc.summary && <meta name="og:description" content={doc.summary}/>}
+                    {doc.summary && <meta property="og:description" content={doc.summary}/>}
                 </Helmet>
                 <TitleAndBreadcrumb
                     intermediateCrumbs={navigation.breadcrumbHistory}
