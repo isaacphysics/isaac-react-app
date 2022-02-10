@@ -103,7 +103,7 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
     const assignment = attempt.quizAssignment;
     if (preview) {
         return <>
-            <EditContentButton doc={attempt.quiz as IsaacQuizDTO} />
+            <EditContentButton doc={attempt.quiz} />
             <div className="d-flex">
                 <span>You are previewing this test.</span>
                 <Spacer />
