@@ -25,21 +25,19 @@ import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
-import {Redirect, RouteComponentProps, withRouter} from "react-router";
+import {Redirect} from "react-router";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 
-export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
+export const Registration = ({email, password, redirect}: {email?: string; password?: string, redirect?: string}) => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
     const errorMessage = useSelector(selectors.error.general);
-    const userEmail = location.state?.email || undefined;
-    const userPassword = location.state?.password || undefined;
 
     // Inputs which trigger re-render
     const [registrationUser, setRegistrationUser] = useState(
         Object.assign({}, user,{
-            email: userEmail,
+            email: email,
             dateOfBirth: undefined,
             password: null,
         })
@@ -47,7 +45,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
 
     loadZxcvbnIfNotPresent();
 
-    const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword);
+    const [unverifiedPassword, setUnverifiedPassword] = useState(password);
     const [dobCheckboxChecked, setDobCheckboxChecked] = useState(false);
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
@@ -148,7 +146,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 </Label>
                                 <Input
                                     id="password-input" type="password" name="password" required
-                                    defaultValue={userPassword}
+                                    defaultValue={password}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setUnverifiedPassword(e.target.value);
                                         passwordDebounce(e.target.value, setPasswordFeedback);
@@ -199,7 +197,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 <Input
                                     id="email-input" name="email" type="email"
                                     aria-describedby="email-validation-feedback" required
-                                    defaultValue={userEmail}
+                                    defaultValue={email}
                                     invalid={attemptedSignUp && !emailIsValid}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         assignToRegistrationUser({email: e.target.value});
@@ -276,4 +274,4 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             </CardBody>
         </Card>
     </Container>;
-});
+};

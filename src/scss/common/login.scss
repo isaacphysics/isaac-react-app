@@ -1,26 +1,18 @@
-// ISAAC
-#login-page {
-  .login-google {
-    display: inline-block;
-    text-indent: -99999em;
-    width: 191px;
-    height: 46px;
-    background: url(/assets/google-login-sprite-dark.png) no-repeat 0 0;
-    &:hover {
-      background: url(/assets/google-login-sprite-dark-pressed.png) no-repeat 0 0;
-      width: 191px;
-      height: 46px;
-    }
-  }
-  @media only screen and (min-resolution: 192dpi) {
-    .login-google {
-      background-image: url(/assets/google-login-sprite-dark@2x.png);
-      background-size: 191px 46px;
-      &:hover {
-        background-image: url(/assets/google-login-sprite-dark-pressed@2x.png);
-        background-size: 191px 46px;
-      }
-    }
+#google-button-logo {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+#login-modal-form {
+  max-height: max(90vh, 800px);
+  padding-top: 20vh;
+  padding-bottom: 20vh;
+  @include media-breakpoint-down(md) {
+    max-height: unset;
+    padding-top: 20px;
+    padding-bottom: 30px;
   }
 }
 
