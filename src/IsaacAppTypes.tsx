@@ -641,7 +641,7 @@ export interface Toast {
 }
 
 export interface ActiveModal {
-    centered?: boolean,
+    centered?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: string;
