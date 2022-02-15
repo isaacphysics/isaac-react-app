@@ -4,7 +4,7 @@ import {ACTION_TYPE} from "../../app/services/constants";
 import {userConsistencyCheckerMiddleware} from "../../app/state/middleware/userConsistencyChecker";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
 
-jest.mock("../../app/state/userConsistencyCheckerCurrentUser");
+jest.mock("../../app/state/middleware/userConsistencyCheckerCurrentUser");
 
 let fakeDispatch: Dispatch, fakeGetState, fakeStore: MiddlewareAPI, fakeNext: Dispatch<AnyAction>;
 
