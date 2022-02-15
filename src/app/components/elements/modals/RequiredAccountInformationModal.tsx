@@ -1,5 +1,5 @@
 import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";

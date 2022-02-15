@@ -7,7 +7,10 @@
 
 #login-modal-form {
   max-height: max(90vh, 800px);
-  padding: 20vh 30px;
+  padding-top: 20vh;
+  padding-bottom: 20vh;
+  padding-left: 30px;
+  padding-right: 30px;
   @include media-breakpoint-down(md) {
     max-height: unset;
     padding-top: 20px;
