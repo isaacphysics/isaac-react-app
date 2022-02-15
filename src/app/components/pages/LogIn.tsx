@@ -266,8 +266,8 @@ export const LogIn = () => {
 
                                     <hr className="text-center"/>
 
-                                    <Row className="my-4">
-                                        <Col>
+                                    <Row className="my-4 justify-content-center">
+                                        <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>
                                     </Row>
