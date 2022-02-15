@@ -7,8 +7,7 @@
 
 #login-modal-form {
   max-height: max(90vh, 800px);
-  padding-top: 20vh;
-  padding-bottom: 20vh;
+  padding: 20vh 30px;
   @include media-breakpoint-down(md) {
     max-height: unset;
     padding-top: 20px;
@@ -16,5 +15,17 @@
   }
 }
 
+.hr-or {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  &::before {
+    font-family: "exo_2regular", sans-serif;
+    content: "or";
+    bottom: -12px;
+    background: white;
+    border-bottom: none;
+    width: 50px;
+  }
+}
 
 // NOMENSA login.scss LIVES IN ISAAC'S elements.scss

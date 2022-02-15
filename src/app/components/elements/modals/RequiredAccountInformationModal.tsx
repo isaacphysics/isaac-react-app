@@ -1,5 +1,5 @@
 import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";
@@ -54,7 +54,7 @@ const RequiredAccountInfoBody = () => {
         setSubmissionAttempted(true);
 
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user));
+            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
             dispatch(closeActiveModal());
         }
     }
