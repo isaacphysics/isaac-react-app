@@ -3,13 +3,12 @@ import {Button, Col, Row, CustomInput, Form} from "reactstrap";
 import {useDispatch, useSelector} from "react-redux";
 import {useLocation} from "react-router-dom";
 import {selectors} from "../../../state/selectors";
-import {
-    closeActiveModal,
-} from "../../../state/actions";
+import {closeActiveModal} from "../../../state/actions";
 import {store} from "../../../state/store";
 import {GoogleSignInButton, PasswordResetButton, TFAInput, EmailPasswordInputs, useLoginLogic} from "../../pages/LogIn";
 import * as persistence from "../../../services/localStorage";
 import {KEY} from "../../../services/localStorage";
+import {siteSpecific} from "../../../services/miscUtils";
 
 const LoginOrSignUpBody = () => {
 
@@ -35,16 +34,19 @@ const LoginOrSignUpBody = () => {
     }
 
     return <Row id={"login-page"}>
-        <Col lg={6} className={"content-body"}>
-            <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />
-            <div className={"px-3 mb-5"}>
+        <Col lg={6} className={"content-body pattern-06-inverted"}>
+            {siteSpecific(
+                <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
+                <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />
+            )}
+            <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
                     Log in or sign up<br/>
                 </h1>
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
                 <br/>
                 <p>Alternatively, you can</p>
-                <Button size={"sm"} color={"primary"} style={{backgroundColor: "#ffffff66"}} outline onClick={closeModal} block>
+                <Button size={"sm"} color={"primary"} style={{backgroundColor: siteSpecific("#ffffff66","#ffffff99")}} outline onClick={closeModal} block>
                     Continue without an account
                 </Button>
             </div>
