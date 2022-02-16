@@ -81,6 +81,7 @@ import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ContentEmails} from "../pages/ContentEmails";
+import {usePrefetchImmediately} from "../../state/slices/api";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -97,6 +98,8 @@ export const IsaacApp = () => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
     }, [dispatch]);
+
+    usePrefetchImmediately("getTerms", undefined);
 
     useEffect(() => {
         if (isLoggedIn(user)) {

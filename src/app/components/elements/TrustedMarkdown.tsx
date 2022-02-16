@@ -39,7 +39,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
 
-    const { data: glossaryTerms } = glossaryTermsAPI.useGetTermsQuery();
+    const { data: glossaryTerms } = glossaryTermsAPI.endpoints.getTerms.useQueryState();
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain

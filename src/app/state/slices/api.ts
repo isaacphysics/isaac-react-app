@@ -3,6 +3,9 @@ import {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/quer
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {ACTION_TYPE, API_PATH} from "../../services/constants";
 import {GlossaryTermDTO, ResultsWrapper} from "../../../IsaacApiTypes";
+import {PrefetchOptions} from "@reduxjs/toolkit/dist/query/core/module";
+import {useDispatch} from "react-redux";
+import {useEffect} from "react";
 
 // This should be used by default as the `baseQuery` of any API slice
 const isaacBaseQuery: (fetchBaseQueryArgs?: FetchBaseQueryArgs) => BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = (fetchBaseQueryArgs) => async (args, api, extraOptions) => {
@@ -65,3 +68,16 @@ export const glossaryTermsAPI = createApi({
         })
     })
 });
+
+type EndpointNames = keyof typeof glossaryTermsAPI.endpoints
+
+export function usePrefetchImmediately<T extends EndpointNames>(
+    endpoint: T,
+    arg: Parameters<typeof glossaryTermsAPI.endpoints[T]['initiate']>[0],
+    options: PrefetchOptions = {}
+) {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(glossaryTermsAPI.util.prefetch(endpoint, arg as any, options))
+    }, [])
+}

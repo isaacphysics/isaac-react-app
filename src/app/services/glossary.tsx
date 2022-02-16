@@ -30,7 +30,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
     const {examBoard} = useUserContext();
     const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
-    const { data: glossaryTerms } = glossaryTermsAPI.useGetTermsQuery();
+    const { data: glossaryTerms } = glossaryTermsAPI.endpoints.getTerms.useQueryState();
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.

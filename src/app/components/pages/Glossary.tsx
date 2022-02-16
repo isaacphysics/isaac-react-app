@@ -65,7 +65,7 @@ export const Glossary = () => {
     const [filterTopic, setFilterTopic] = useState<Tag>();
 
     // DO NOT MUTATE `data` or Redux gets very unhappy!
-    const { data: rawGlossaryTerms } = glossaryTermsAPI.useGetTermsQuery();
+    const { data: rawGlossaryTerms } = glossaryTermsAPI.endpoints.getTerms.useQueryState();
 
     const {examBoard} = useUserContext();
 
