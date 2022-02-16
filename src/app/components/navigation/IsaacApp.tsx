@@ -99,7 +99,8 @@ export const IsaacApp = () => {
         dispatch(requestConstantsSegueEnvironment());
     }, [dispatch]);
 
-    usePrefetchImmediately("getTerms", undefined);
+    // Prefetch glossary terms
+    usePrefetchImmediately("getGlossaryTerms", undefined);
 
     useEffect(() => {
         if (isLoggedIn(user)) {

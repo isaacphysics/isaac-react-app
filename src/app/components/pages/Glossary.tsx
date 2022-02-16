@@ -15,7 +15,7 @@ import Select from "react-select";
 import {useUserContext} from "../../services/userContext";
 import {useUrlHashValue} from "../../services/reactRouterExtension";
 import {Item} from "../../services/select";
-import {glossaryTermsAPI} from "../../state/slices/api";
+import {api} from "../../state/slices/api";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -65,7 +65,7 @@ export const Glossary = () => {
     const [filterTopic, setFilterTopic] = useState<Tag>();
 
     // DO NOT MUTATE `data` or Redux gets very unhappy!
-    const { data: rawGlossaryTerms } = glossaryTermsAPI.endpoints.getTerms.useQueryState();
+    const { data: rawGlossaryTerms } = api.endpoints.getGlossaryTerms.useQueryState();
 
     const {examBoard} = useUserContext();
 

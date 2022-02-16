@@ -12,7 +12,7 @@ import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {glossaryTermsAPI} from "../../state/slices/api";
+import {api} from "../../state/slices/api";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
     const href = escapeHtml(tokens[idx].href || "");
@@ -39,7 +39,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
 
-    const { data: glossaryTerms } = glossaryTermsAPI.endpoints.getTerms.useQueryState();
+    const { data: glossaryTerms } = api.endpoints.getGlossaryTerms.useQueryState();
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain

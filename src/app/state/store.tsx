@@ -4,13 +4,13 @@ import reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
 import {notificationCheckerMiddleware} from "../services/notificationManager";
-import {glossaryTermsAPI} from "./slices/api";
+import {api} from "./slices/api";
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const middleware: Middleware[] = [
-    glossaryTermsAPI.middleware,
+    api.middleware,
     userConsistencyCheckerMiddleware,
     notificationCheckerMiddleware,
     thunk,

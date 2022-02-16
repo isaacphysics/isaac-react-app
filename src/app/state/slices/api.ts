@@ -38,16 +38,16 @@ const isaacBaseQuery: (fetchBaseQueryArgs?: FetchBaseQueryArgs) => BaseQueryFn<s
 }
 
 // Each API slice creates reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
-export const glossaryTermsAPI = createApi({
+export const api = createApi({
     tagTypes: ["GlossaryTerms"], // Used to control refetching and caching of collections of data
-    reducerPath: 'glossaryTermsAPI',
+    reducerPath: 'isaacApi',
     baseQuery: isaacBaseQuery(),
     endpoints: (build) => ({
         /* The type parameters of `build.query` are:
          *  - The final return type of the query *after transformations* (`GlossaryTermDTO[]` is extracted from the results wrapper in `transformResponse`)
          *  - The input type of the query function (in this case, `void` because `query` takes no arguments)
          */
-        getTerms: build.query<GlossaryTermDTO[] | undefined, void>({
+        getGlossaryTerms: build.query<GlossaryTermDTO[] | undefined, void>({
             query: () => ({
                 url: "/glossary/terms",
                 // FIXME: Magic number. This needs to go through pagination with
@@ -60,7 +60,7 @@ export const glossaryTermsAPI = createApi({
             // resulting state
             transformResponse: (response: ResultsWrapper<GlossaryTermDTO>) => response.results
         }),
-        getTermById: build.query<GlossaryTermDTO | undefined, string>({
+        getGlossaryTermById: build.query<GlossaryTermDTO | undefined, string>({
             query: (id: string) => ({
                 url: `/glossary/terms/${id}`
             }),
@@ -69,15 +69,17 @@ export const glossaryTermsAPI = createApi({
     })
 });
 
-type EndpointNames = keyof typeof glossaryTermsAPI.endpoints
+
+// A recipe provided in the RTK Query API docs for immediately prefetching from a given endpoint
+type EndpointNames = keyof typeof api.endpoints
 
 export function usePrefetchImmediately<T extends EndpointNames>(
     endpoint: T,
-    arg: Parameters<typeof glossaryTermsAPI.endpoints[T]['initiate']>[0],
+    arg: Parameters<typeof api.endpoints[T]['initiate']>[0],
     options: PrefetchOptions = {}
 ) {
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(glossaryTermsAPI.util.prefetch(endpoint, arg as any, options))
-    }, [])
+        dispatch(api.util.prefetch(endpoint, arg as any, options))
+    }, []);
 }

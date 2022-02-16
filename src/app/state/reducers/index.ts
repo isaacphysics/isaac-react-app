@@ -47,7 +47,7 @@ import {
     quizPreview,
     quizzes, studentQuizAttempt,
 } from "./quizState";
-import {glossaryTermsAPI} from "../slices/api";
+import {api} from "../slices/api";
 
 const appReducer = combineReducers({
     // User
@@ -142,7 +142,7 @@ const appReducer = combineReducers({
     quizAttemptedFreelyByMe,
 
     // API slice reducers
-    [glossaryTermsAPI.reducerPath]: glossaryTermsAPI.reducer,
+    [api.reducerPath]: api.reducer,
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
