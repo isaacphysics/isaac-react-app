@@ -37,6 +37,9 @@ export type AppDispatch = ThunkDispatch<AppState, never, AnyAction>;
 
 
 /*
+If we use this, might need to to turn off the `immutableStateInvariant` middleware (for now!)
+see https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
+
 export const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
