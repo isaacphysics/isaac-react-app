@@ -23,6 +23,7 @@ import {
 import {LaTeX} from "../elements/LaTeX";
 import {generateQuestionTitle} from "../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
+import { isDefined } from "../../services/miscUtils";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -131,7 +132,7 @@ export const Gameboard = withRouter(({ location }) => {
     let showFilter = false;
     if (filter) {
         const filterValue = filter instanceof Array ? filter[0] : filter;
-        showFilter = filterValue.toLowerCase() === "true";
+        showFilter = isDefined(filterValue) && filterValue.toLowerCase() === "true";
     }
 
     useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);

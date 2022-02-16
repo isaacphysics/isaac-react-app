@@ -23,6 +23,7 @@ import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select"
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {selectOnChange} from "../../services/select";
 import { IsaacContentProps } from "../content/IsaacContent";
+import { isDefined } from "../../services/miscUtils";
 
 interface Item<T> {
     value: T;
@@ -36,14 +37,14 @@ function deitemise(item: Item<DOCUMENT_TYPE>) {
     return item.value;
 }
 
-function parseLocationSearch(search: string): [string, DOCUMENT_TYPE[]] {
+function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT_TYPE[]] {
     const searchParsed = queryString.parse(search);
 
     const parsedQuery = searchParsed.query || "";
     const query = parsedQuery instanceof Array ? parsedQuery[0] : parsedQuery;
 
     const parsedFilters = searchParsed.types || "";
-    const possibleFilters = (parsedFilters instanceof Array ? parsedFilters[0] : parsedFilters).split(",");
+    const possibleFilters = (Array.isArray(parsedFilters) ? parsedFilters[0] || "" : parsedFilters || "").split(",");
     const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[]
 
     return [query, filters];
@@ -67,12 +68,12 @@ export const Search = withRouter<RouteComponentProps, any>((props: {history: His
     useEffect(function triggerSearchOnUrlChange() {
         setQueryState(urlQuery);
         setFiltersState(urlFilters.map(itemise));
-        dispatch(fetchSearch(urlQuery, urlFilters.length ? urlFilters.join(",") : undefined));
+        dispatch(fetchSearch(urlQuery || "", urlFilters.length ? urlFilters.join(",") : undefined));
     }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
         if (e) {e.preventDefault();}
-        pushSearchToHistory(history, queryState, filtersState.map(deitemise));
+        pushSearchToHistory(history, queryState || "", filtersState.map(deitemise));
     }
 
     // Trigger update to search url on query or filter change
@@ -105,7 +106,7 @@ export const Search = withRouter<RouteComponentProps, any>((props: {history: His
                     <Form inline onSubmit={updateSearchUrl}>
                         <Input
                             className='search--filter-input mt-4'
-                            type="search" value={queryState}
+                            type="search" value={queryState || ""}
                             placeholder="Search"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setQueryState(e.target.value)}
                             maxLength={SEARCH_CHAR_LENGTH_LIMIT}

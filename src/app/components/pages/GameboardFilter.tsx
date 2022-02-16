@@ -74,11 +74,11 @@ function processQueryString(query: string): QueryStringResponse {
     const {subjects, fields, topics, stages, difficulties, questionCategories, concepts, examBoards} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStageOptions());
-    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
-    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards), EXAM_BOARD_ITEM_OPTIONS);
-    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
-    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts))
+    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), DIFFICULTY_ITEM_OPTIONS);
+    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), EXAM_BOARD_ITEM_OPTIONS);
+    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
+    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>))
 
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;

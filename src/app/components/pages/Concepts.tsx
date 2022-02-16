@@ -33,7 +33,7 @@ export const Concepts = withRouter<RouteComponentProps, any>((props: {history: H
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
 
     const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry));
-    const filters = (filterParsed instanceof Array ? filterParsed[0] : filterParsed).split(",");
+    const filters = (Array.isArray(filterParsed) ? filterParsed[0] || "" : filterParsed || "").split(",");
 
     const physics = filters.includes(TAG_ID.physics);
     const maths = filters.includes(TAG_ID.maths);
@@ -50,7 +50,7 @@ export const Concepts = withRouter<RouteComponentProps, any>((props: {history: H
             e.preventDefault();
         }
         if (searchText != query || conceptFilterPhysics != physics || conceptFilterMaths != maths || conceptFilterChemistry != chemistry) {
-            pushConceptsToHistory(history, searchText, conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry);
+            pushConceptsToHistory(history, searchText || "", conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry);
         }
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -71,8 +71,8 @@ export const Concepts = withRouter<RouteComponentProps, any>((props: {history: H
 
     const searchResults = concepts
         ?.filter(c =>
-            c?.title?.toLowerCase().includes(searchText.toLowerCase()) ||
-            c?.summary?.toLowerCase().includes(searchText.toLowerCase())
+            c?.title?.toLowerCase().includes((searchText || "").toLowerCase()) ||
+            c?.summary?.toLowerCase().includes((searchText || "").toLowerCase())
         );
 
     const filteredSearchResults = searchResults
@@ -93,7 +93,7 @@ export const Concepts = withRouter<RouteComponentProps, any>((props: {history: H
                     <Form inline onSubmit={doSearch}>
                         <Input
                             className='search--filter-input mt-4'
-                            type="search" value={searchText}
+                            type="search" value={searchText || ""}
                             placeholder="Search concepts"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
                         />

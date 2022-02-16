@@ -105,13 +105,11 @@ module.exports = (isProd) => {
                             ].filter(Boolean),
                         },
                         {
-                            include: [/\.ttf$/, /\.woff2?$/,],
-                            use: {
-                                loader: 'file-loader',
-                                options: {
-                                    name: isProd ? 'static/fonts/[name].[contenthash:8].[ext]' : 'static/fonts/[name].[ext]',
-                                },
-                            },
+                            test: /\.(ttf|woff2?)$/,
+                            type: 'asset/resource',
+                            generator: {
+                                filename: isProd ? 'static/fonts/[name].[contenthash:8].[ext]' : 'static/fonts/[name].[ext]',
+                            }
                         }
                     ],
                 },
