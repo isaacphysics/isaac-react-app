@@ -19,7 +19,7 @@ import {
     userSchoolLookup
 } from "./userState";
 import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
-import {constants, glossaryTerms, news} from "./staticState";
+import {constants, news} from "./staticState";
 import {concepts, doc, fragments} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
 import {activeModals, notifications, toasts} from "./notifiersState";
@@ -47,6 +47,7 @@ import {
     quizPreview,
     quizzes, studentQuizAttempt,
 } from "./quizState";
+import {glossaryTermsAPI} from "../slices/api";
 
 const appReducer = combineReducers({
     // User
@@ -71,7 +72,6 @@ const appReducer = combineReducers({
     // Static Content
     constants,
     news,
-    glossaryTerms,
 
     // Content
     doc,
@@ -140,6 +140,9 @@ const appReducer = combineReducers({
     quizAssignment,
     quizPreview,
     quizAttemptedFreelyByMe,
+
+    // API slice reducers
+    [glossaryTermsAPI.reducerPath]: glossaryTermsAPI.reducer,
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;

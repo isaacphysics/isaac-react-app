@@ -1,5 +1,5 @@
 import ReactDOMServer from "react-dom/server";
-import {Provider, useSelector, useStore} from "react-redux";
+import {Provider, useStore} from "react-redux";
 import {Router} from "react-router-dom";
 import {history} from "./history";
 import {IsaacGlossaryTerm} from "../components/content/IsaacGlossaryTerm";
@@ -7,10 +7,10 @@ import * as RS from "reactstrap";
 import React, {useRef} from "react";
 import {GlossaryTermDTO} from "../../IsaacApiTypes";
 import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
-import {AppState} from "../state/reducers";
 import {TrustedMarkdown} from "../components/elements/TrustedMarkdown";
 import uuid from "uuid";
 import {useUserContext} from "./userContext";
+import {glossaryTermsAPI} from "../state/slices/api";
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     if (candidateTerms.length === 0) {
@@ -30,7 +30,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
     const {examBoard} = useUserContext();
     const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
-    const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+    const { data: glossaryTerms } = glossaryTermsAPI.useGetTermsQuery();
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.

@@ -45,7 +45,6 @@ import {
     EmailTemplateDTO,
     EmailVerificationStatus,
     GameboardDTO,
-    GlossaryTermDTO,
     GraphChoiceDTO,
     IsaacQuestionPageDTO,
     QuestionDTO,
@@ -862,17 +861,6 @@ export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) 
     }
 };
 
-// Glossary Terms
-export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
-    try {
-        const response = await api.glossary.getTerms();
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as GlossaryTermDTO[]});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
-    }
-};
-
 // Questions
 export const registerQuestion = (question: QuestionDTO, accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question, accordionClientId});
@@ -1248,7 +1236,7 @@ export const adminUserGet = (userid: number | undefined) => async (dispatch: Dis
 
 export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     try {
-        let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        const confirmDeletion = window.confirm("Are you sure you want to delete this user?");
         if (confirmDeletion) {
             dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
             await api.admin.userDelete.delete(userid);
@@ -1348,7 +1336,7 @@ export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, em
 };
 
 export const mergeUsers = (targetId: number, sourceId: number) => async (dispatch: Dispatch<Action>) => {
-    let confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+    const confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
     if (confirmMerge) {
         dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST});
         try {
@@ -1622,7 +1610,7 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
     let dueDateUTC = undefined;
     if (dueDate != undefined) {
         dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
-        let today = new Date();
+        const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
             dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
@@ -1876,7 +1864,7 @@ export const addMyselfToWaitingList = (eventId: string, additionalInformation: A
 };
 
 export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    let cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    const cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
     if (cancel) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});

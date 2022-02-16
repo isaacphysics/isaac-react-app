@@ -1,8 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
-import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useSelector} from "react-redux";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
@@ -17,6 +15,7 @@ import Select from "react-select";
 import {useUserContext} from "../../services/userContext";
 import {useUrlHashValue} from "../../services/reactRouterExtension";
 import {Item} from "../../services/select";
+import {glossaryTermsAPI} from "../../state/slices/api";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -64,7 +63,10 @@ export const Glossary = () => {
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+
+    // DO NOT MUTATE `data` or Redux gets very unhappy!
+    const { data: rawGlossaryTerms } = glossaryTermsAPI.useGetTermsQuery();
+
     const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {
@@ -86,7 +88,7 @@ export const Glossary = () => {
             (searchText === ''
                 ? rawGlossaryTerms
                 : rawGlossaryTerms?.filter(e => e.value?.match(regex))
-            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
+            )?.slice()?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
              ?.filter(t => t.examBoard === "" || t.examBoard === examBoard);
 
         return groupTerms(sortedAndFilteredTerms);

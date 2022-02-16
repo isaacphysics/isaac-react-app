@@ -18,7 +18,6 @@ import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
 import {NotFound} from "../pages/NotFound";
 import {
-    fetchGlossaryTerms,
     openActiveModal,
     requestConstantsSegueEnvironment,
     requestCurrentUser,
@@ -97,7 +96,6 @@ export const IsaacApp = () => {
     useEffect(() => {
         dispatch(requestCurrentUser());
         dispatch(requestConstantsSegueEnvironment());
-        dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import {GlossaryTermDTO, IsaacPodDTO} from "../../../IsaacApiTypes";
+import {IsaacPodDTO} from "../../../IsaacApiTypes";
 import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 
@@ -23,16 +23,5 @@ export const constants = (constants: ConstantsState = null, action: Action) => {
             return {...constants, segueEnvironment: action.segueEnvironment};
         default:
             return constants;
-    }
-};
-
-type GlossaryTermsState = GlossaryTermDTO[] | null;
-export const glossaryTerms = (glossaryTerms: GlossaryTermsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS:
-            return action.terms;
-        case ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE:
-        default:
-            return glossaryTerms;
     }
 };

@@ -1,9 +1,8 @@
 import React, {useState} from "react";
 import ReactDOMServer from "react-dom/server";
-import {Provider, useSelector, useStore} from "react-redux";
+import {Provider, useStore} from "react-redux";
 import * as RS from "reactstrap";
 import {Router} from "react-router-dom";
-import {AppState} from "../../state/reducers";
 import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
@@ -13,11 +12,12 @@ import {Token} from "remarkable";
 import uuid from "uuid";
 import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {glossaryTermsAPI} from "../../state/slices/api";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
-    let href = escapeHtml(tokens[idx].href || "");
-    let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
-    let title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title || "")) + '"') : '';
+    const href = escapeHtml(tokens[idx].href || "");
+    const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
+    const title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title || "")) + '"') : '';
     if (localLink) {
         return `<a href="${href}" ${title}>`;
     } else {
@@ -39,7 +39,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
 
-    const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+    const { data: glossaryTerms } = glossaryTermsAPI.useGetTermsQuery();
     const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain
