@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
-import {useDispatch} from "react-redux";
-import {logOutUser} from "../../state/actions";
 import {IsaacSpinner} from "./IsaacSpinner";
+import {api} from "../../state/slices/api";
 
 export const LogOutHandler = () => {
-    const dispatch = useDispatch();
-    useEffect(() => {dispatch(logOutUser())});
+    const [ logoutTrigger ] = api.endpoints.logout.useMutation();
+    useEffect(() => {
+        logoutTrigger();
+    });
     return <React.Fragment>
         <div className="w-100 text-center">
             <h2 className="pt-5 pb-2">

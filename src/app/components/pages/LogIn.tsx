@@ -1,13 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {handleProviderLoginRedirect, logInUser, resetPassword, submitTotpChallengeResponse} from "../../state/actions";
+import {handleProviderLoginRedirect, resetPassword, submitTotpChallengeResponse} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {selectors} from "../../state/selectors";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import * as RS from "reactstrap";
+import {api} from "../../state/slices/api";
 
 export const LogIn = () => {
     const headingRef = useRef<HTMLHeadingElement>(null);
@@ -32,7 +33,7 @@ export const LogIn = () => {
     }, [totpChallengePending]);
 
     const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
+    //const user = useSelector(selectors.user.orNull);
     const errorMessage = useSelector(selectors.error.general);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -47,12 +48,14 @@ export const LogIn = () => {
 
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
 
-    const validateAndLogIn = (event: React.FormEvent<HTMLFormElement>) => {
+    const [ loginTrigger, { data: user } ] = api.endpoints.login.useMutation();
+
+    const validateAndLogIn = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if ((isValidPassword && isValidEmail)) {
-            dispatch(logInUser("SEGUE", {email: email, password: password, rememberMe: rememberMe}));
+            loginTrigger({provider: "SEGUE", credentials: {email: email, password: password, rememberMe: rememberMe}});
         }
-    };
+    }, [email, password, rememberMe, isValidEmail, isValidPassword, loginTrigger]);
 
     const signUp = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

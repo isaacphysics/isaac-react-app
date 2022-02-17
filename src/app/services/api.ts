@@ -118,15 +118,6 @@ export const api = {
         checkProviderCallback: (provider: ApiTypes.AuthenticationProvider, params: string): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/callback${params}`);
         },
-        logout: (): AxiosPromise => {
-            return endpoint.post(`/auth/logout`);
-        },
-        logoutEverywhere: (): AxiosPromise => {
-            return endpoint.post(`/auth/logout/everywhere`);
-        },
-        login: (provider: ApiTypes.AuthenticationProvider, credentials: CredentialsAuthDTO): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            return endpoint.post(`/auth/${provider}/authenticate`, securePadCredentials(credentials));
-        },
         mfaCompleteLogin: (mfaVerificationCode : string, rememberMe: boolean): AxiosPromise => {
             return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode, rememberMe});
         },

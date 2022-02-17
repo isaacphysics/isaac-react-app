@@ -2,21 +2,32 @@ import {FetchBaseQueryArgs} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {ACTION_TYPE, API_PATH} from "../../services/constants";
-import {GlossaryTermDTO, ResultsWrapper} from "../../../IsaacApiTypes";
+import {
+    AuthenticationProvider,
+    GlossaryTermDTO,
+    ResultsWrapper,
+} from "../../../IsaacApiTypes";
 import {PrefetchOptions} from "@reduxjs/toolkit/dist/query/core/module";
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
+import {CredentialsAuthDTO, PotentialUser} from "../../../IsaacAppTypes";
+import {securePadCredentials} from "../../services/credentialPadding";
+import {store} from "../store";
+import {extractMessage, showErrorToastIfNeeded} from "../actions";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
+import {history} from "../../services/history";
+import {createSlice} from "@reduxjs/toolkit";
 
 // This should be used by default as the `baseQuery` of any API slice
-const isaacBaseQuery: (fetchBaseQueryArgs?: FetchBaseQueryArgs) => BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = (fetchBaseQueryArgs) => async (args, api, extraOptions) => {
+const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     const baseQueryArgs: FetchBaseQueryArgs = {
         baseUrl: API_PATH,
         credentials: "include",
         prepareHeaders: (headers, { getState }) => {
             headers.set("accept", "application/json, text/plain, */*");
             return headers;
-        },
-        ...fetchBaseQueryArgs // overwrite defaults with any arguments provided
+        }
     }
     const result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
     if (result.error) {
@@ -37,11 +48,18 @@ const isaacBaseQuery: (fetchBaseQueryArgs?: FetchBaseQueryArgs) => BaseQueryFn<s
     return result;
 }
 
+
+export type UserState = PotentialUser | null;
+export interface LoginUserArgs {
+    provider: AuthenticationProvider;
+    credentials: CredentialsAuthDTO;
+}
+
 // Each API slice creates reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 export const api = createApi({
-    tagTypes: ["GlossaryTerms"], // Used to control refetching and caching of collections of data
+    tagTypes: ["GlossaryTerms", "User"], // Used to control refetching and caching of collections of data
     reducerPath: 'isaacApi',
-    baseQuery: isaacBaseQuery(),
+    baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
         /* The type parameters of `build.query` are:
          *  - The final return type of the query *after transformations* (`GlossaryTermDTO[]` is extracted from the results wrapper in `transformResponse`)
@@ -60,12 +78,99 @@ export const api = createApi({
             // resulting state
             transformResponse: (response: ResultsWrapper<GlossaryTermDTO>) => response.results
         }),
+
         getGlossaryTermById: build.query<GlossaryTermDTO | undefined, string>({
             query: (id: string) => ({
                 url: `/glossary/terms/${id}`
             }),
             providesTags: ["GlossaryTerms"],
+        }),
+
+        // Super important vvv
+        // https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#performing-multiple-requests-with-a-single-query !!!
+
+        // could use endpoint extensions to separate into different files
+
+        // Login endpoint, handles asking for
+        login: build.mutation<UserState, LoginUserArgs>({
+            query: ({provider, credentials}: LoginUserArgs) => ({
+                url: `/auth/${provider}/authenticate`,
+                method: "POST",
+                responseHandler: async (response: Response) => {
+                    const responseJson = await response.json();
+                    if (response.status === 202) {
+                        return {
+                            ...responseJson,
+                            body: null
+                        };
+                    }
+                    return responseJson;
+                },
+                body: securePadCredentials(credentials)
+            }),
+            onQueryStarted: async (loginArgs: LoginUserArgs, { dispatch , queryFulfilled }) => {
+                dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider: loginArgs.provider});
+                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
+
+                try {
+                    const { data } = await queryFulfilled
+                    if (data?.hasOwnProperty("2FA_REQUIRED")) {
+                        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
+                        return;
+                    }
+                    dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: data});
+                    persistence.remove(KEY.AFTER_AUTH_PATH);
+                    history.push(afterAuthPath);
+
+                } catch (err: any) {
+                    dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(err)})
+                }
+            },
+            invalidatesTags: ["User"]
+        }),
+
+        logout: build.mutation<void, void>({
+            query: () => ({
+                url: "/auth/logout",
+                method: "POST",
+            }),
+            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    dispatch({type: ACTION_TYPE.CLEAR_STATE});
+                } catch (e) {
+                    dispatch(showErrorToastIfNeeded("Logout failed", e));
+                }
+            },
+            invalidatesTags: ["User"]
+        }),
+        logoutEverywhere: build.mutation<void, void>({
+            query: () => ({
+                url: "/auth/logout/everywhere",
+                method: "POST",
+            }),
+            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    dispatch({type: ACTION_TYPE.CLEAR_STATE});
+                } catch (e) {
+                    dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
+                }
+            },
+            invalidatesTags: ["User"]
         })
+        // twoFactorAuth: build.mutation<TOTPSharedSecretDTO, {provider: AuthenticationProvider, credentials: CredentialsAuthDTO}>({
+        //     query: ({provider, credentials}) => ({
+        //         url: `/auth/${provider}/authenticate`,
+        //         method: "POST",
+        //         responseHandler: async (response: Response) => {
+        //             console.log(response);
+        //             const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
+        //         },
+        //         body: securePadCredentials(credentials)
+        //     }),
+        //     invalidatesTags: ["User"]
+        // })
     })
 });
 
@@ -80,6 +185,7 @@ export function usePrefetchImmediately<T extends EndpointNames>(
 ) {
     const dispatch = useDispatch();
     useEffect(() => {
+        // @ts-ignore  Don't use this hook for mutation endpoints!
         dispatch(api.util.prefetch(endpoint, arg as any, options))
     }, []);
 }

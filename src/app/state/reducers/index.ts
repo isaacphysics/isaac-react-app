@@ -48,6 +48,7 @@ import {
     quizzes, studentQuizAttempt,
 } from "./quizState";
 import {api} from "../slices/api";
+import {userSlice} from "../slices/user";
 
 const appReducer = combineReducers({
     // User
@@ -141,14 +142,15 @@ const appReducer = combineReducers({
     quizPreview,
     quizAttemptedFreelyByMe,
 
-    // API slice reducers
-    [api.reducerPath]: api.reducer,
+    // Slice reducers
+    newUser: userSlice.reducer,
+    [api.reducerPath]: api.reducer
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+    if (action.type === ACTION_TYPE.CLEAR_STATE || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);

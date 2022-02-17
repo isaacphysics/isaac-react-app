@@ -129,10 +129,10 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
                            try {
                                setSubmitting(true);
                                await dispatch(setQuiz(assignment));
-                               toastId = await dispatch(showToast({
+                               toastId = await showToast({
                                    color: "success", title: "Test set", body: "Test set to " + selectedGroups[0].label + " successfully", timeout: 7000,
                                    buttons: [<RS.Button key="again" onClick={again}>Set to another group</RS.Button>]
-                               }));
+                               })(dispatch);
                            } catch (e) {
                                return;
                            } finally {

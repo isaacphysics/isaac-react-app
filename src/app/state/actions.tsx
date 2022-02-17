@@ -2,7 +2,7 @@ import React, {Dispatch} from "react";
 import {api} from "../services/api";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
-import {store} from "./store";
+import {AppDispatch, store} from "./store";
 import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
@@ -100,7 +100,7 @@ const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
 };
 
-export const hideToast = (toastId: string) => (dispatch: any) => {
+export const hideToast = (toastId: string) => (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
     setTimeout(() => {
         dispatch(removeToast(toastId));
@@ -108,7 +108,7 @@ export const hideToast = (toastId: string) => (dispatch: any) => {
 };
 
 let nextToastId = 0;
-export const showToast = (toast: Toast) => (dispatch: any) => {
+export const showToast = (toast: Toast) => (dispatch: AppDispatch) => {
     const toastId = toast.id = "toast" + nextToastId++;
     if (toast.timeout) {
         setTimeout(() => {
@@ -406,50 +406,6 @@ export const getSnapshot = () => async (dispatch: Dispatch<Action>) => {
     } catch (e) {
         dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE});
     }
-};
-
-export const logOutUser = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_LOG_OUT_REQUEST});
-    try {
-        await api.authentication.logout();
-        dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
-    } catch (e) {
-        dispatch(showErrorToastIfNeeded("Logout failed", e));
-    }
-};
-
-export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_REQUEST});
-    try {
-        await api.authentication.logoutEverywhere();
-        dispatch({type: ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS});
-    } catch (e) {
-        dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
-    }
-};
-
-export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
-    const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-
-    try {
-        const result = await api.authentication.login(provider, credentials);
-
-        if (result.status === 202) {
-            // indicates MFA is required for this user and user isn't logged in yet.
-            dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
-            return;
-        }
-
-        await dispatch(requestCurrentUser() as any); // Request user preferences
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        history.push(afterAuthPath);
-
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
-    }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
