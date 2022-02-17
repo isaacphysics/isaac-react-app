@@ -40,6 +40,9 @@ export type AppDispatch = ThunkDispatch<AppState, never, AnyAction>;
 If we use this, might need to to turn off the `immutableStateInvariant` middleware (for now!)
 see https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
 
+[thunk, immutableStateInvariant, serializableStateInvariant] are all included by default in development, witho nly
+thunk included in production
+
 export const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => {
@@ -53,4 +56,7 @@ export const store = configureStore({
     preloadedState: {},
     devTools: process.env.NODE_ENV !== 'production',
 });
+
+The typing of `store.dispatch` doesn't take into account any middleware, specifically that of thunk, which is
+really problematic and makes `configureStore` not just a drop in replacement
  */
