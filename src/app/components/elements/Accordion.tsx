@@ -12,7 +12,7 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
-import * as uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {notRelevantMessage, useUserContext} from "../../services/userContext";
 import classnames from "classnames";
 
@@ -32,7 +32,7 @@ let nextClientId = 0;
 export const Accordion = withRouter<AccordionsProps, any>(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
     const userContext = useUserContext();
-    const componentId = useRef(uuid.v4().slice(0, 4)).current;
+    const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const page = useSelector((state: AppState) => (state && state.doc) || null);
 
     // Toggle

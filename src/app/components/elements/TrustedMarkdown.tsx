@@ -10,7 +10,7 @@ import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-import * as uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
@@ -40,7 +40,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const [componentUuid, setComponentUuid] = useState(uuid.v4().slice(0, 8));
+    const [componentUuid, setComponentUuid] = useState(uuid_v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.

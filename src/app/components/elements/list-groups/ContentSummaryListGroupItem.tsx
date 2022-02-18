@@ -21,13 +21,13 @@ import {
 } from "../../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
-import * as uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {LaTeX} from "../LaTeX";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
-    const componentId = useRef(uuid.v4().slice(0, 4)).current;
+    const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserContext();
     const user = useSelector(selectors.user.orNull);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);

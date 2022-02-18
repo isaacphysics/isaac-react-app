@@ -8,10 +8,11 @@
   },
   "engineStrict": true,
   "resolutions": {
-    "jest-environment-jsdom": "27.4.6"
+    "jest-environment-jsdom": "27.5.1"
   },
   "dependencies": {
     "@react-google-maps/api": "^2.7.0",
+    "axios": "^0.26.0",
     "axios-mock-adapter": "^1.20.0",
     "billboard.js": "^1.12.11",
     "core-js": "^3.19.3",
@@ -28,6 +29,7 @@
     "js-cookie": "^3.0.1",
     "katex": "^0.15.1",
     "lodash": "^4.17.21",
+    "p5": "^1.4.1",
     "qrcode": "^1.5.0",
     "query-string": "^7.0.1",
     "querystring": "^0.2.1",
@@ -52,7 +54,6 @@
     "url-loader": "^4.1.1"
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "build-phy": "webpack --env prod --config config/webpack.config.physics.js",
     "build-cs": "webpack --env prod --config config/webpack.config.cs.js",
     "build-phy-dev": "webpack --config config/webpack.config.physics.js",
@@ -110,6 +111,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
+    "@types/enzyme": "^3.10.11",
     "@types/he": "^1.1.2",
     "@types/history": "^4.7.11",
     "@types/html-to-text": "^8.0.1",
@@ -127,6 +129,7 @@
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^1.15.6",
     "ajv": "^8.9.0",
     "babel-loader": "^8.2.3",
     "bootstrap": "^4.6.1",
@@ -134,13 +137,14 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.0.0",
     "css-loader": "^6.5.1",
+    "enzyme": "^3.11.0",
     "eslint": "^8.4.1",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.4.7",
-    "jest-environment-jsdom": "^27.4.6",
+    "jest-environment-jsdom": "^27.5.1",
     "jest-enzyme": "^7.1.2",
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.4.5",
