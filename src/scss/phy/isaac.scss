@@ -73,6 +73,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
+@import "~leaflet/dist/leaflet.css";
 
 // Utility
 @import "preload";
@@ -200,4 +201,10 @@ body {
 }
 .footerLogo {
     margin-top: -0.55px;
+}
+
+.leaflet-container {
+    width: 100%;
+    // height: 100vh;
+    aspect-ratio: 1;
 }

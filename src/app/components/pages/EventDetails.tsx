@@ -29,6 +29,8 @@ import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/events";
 import {EditContentButton} from "../elements/EditContentButton";
+import { isDefined } from "../../services/miscUtils";
+import { Map, Marker, Popup, TileLayer } from "react-leaflet";
 
 function formatDate(date: Date|number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -146,6 +148,22 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                 <div className="border px-2 py-1 mt-3 bg-light">
                                     <strong>{event.title}</strong>
                                 </div>
+                                <div className="border px-2 py-1 mt-3 bg-light">
+                                {isDefined(event.location) &&
+                                 isDefined(event.location?.latitude) &&
+                                 isDefined(event.location?.longitude) &&
+                                    <Map center={[event.location.latitude, event.location.longitude]} zoom={13}>
+                                        <TileLayer
+                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                        />
+                                        <Marker position={[event.location.latitude, event.location.longitude]}>
+                                            <Popup>
+                                                {event.location?.address?.addressLine1}<br />{event.location?.address?.addressLine2}<br />{event.location?.address?.town}<br />{event.location?.address?.postalCode}
+                                            </Popup>
+                                        </Marker>
+                                    </Map>
+                                }</div>
                             </div>}
                         </RS.Col>
                         <RS.Col lg={8} className={event.hasExpired ? "expired" : ""}>

@@ -94,6 +94,10 @@ module.exports = (isProd) => {
                                 'sass-loader',
                             ].filter(Boolean),
                         },
+                        { 
+                            test: /\.(png|jpg)$/,
+                            loader: 'url-loader?limit=10000' 
+                        },
                         {
                             include: [/\.ttf$/, /\.woff2?$/,],
                             use: {
