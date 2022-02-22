@@ -16,7 +16,7 @@ export const IsaacTabs = (props: any) => {
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
-    return <Tabs className="isaac-tab" tabContentClass="pt-4">
+    return <Tabs className="isaac-tab parsons-layout" tabContentClass="pt-4">
         {tabTitlesToContent}
     </Tabs>;
 };
