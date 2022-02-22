@@ -6,6 +6,7 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {katexify} from "./LaTeX";
 import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
+import {siteSpecific} from "../../services/miscUtils";
 
 const htmlDom = document.createElement("html");
 function manipulateHtml(html: string) {
@@ -26,7 +27,7 @@ function manipulateHtml(html: string) {
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
-        div.setAttribute("class", "parsons-layout isaac-expand-bg");
+        div.setAttribute("class", siteSpecific("overflow-auto mb-4", "parsons-layout isaac-expand-bg"));
         parent.insertBefore(div, table);
         div.appendChild(parent.removeChild(table));
     }

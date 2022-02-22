@@ -2,6 +2,8 @@ import React, {ReactElement} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import classNames from "classnames";
 
 interface IsaacTabsProps {
     doc: {children: {title?: string; children?: ContentDTO[]}[]};
@@ -16,7 +18,7 @@ export const IsaacTabs = (props: any) => {
         tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
     });
 
-    return <Tabs className="isaac-tab parsons-layout" tabContentClass="pt-4">
+    return <Tabs className={classNames("isaac-tab", {"parsons-layout": SITE_SUBJECT === SITE.CS})} tabContentClass="pt-4">
         {tabTitlesToContent}
     </Tabs>;
 };
