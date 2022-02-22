@@ -11,6 +11,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {selectors} from "../../state/selectors";
 
 const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
@@ -51,16 +52,14 @@ export const SingleAssignmentProgress = () => {
     });
 
     useEffect(() => {
-        let thisAssignment = myOwnedAssignments?.filter(obj => {
+        const thisAssignment = myOwnedAssignments?.filter(obj => {
             return obj._id == assignmentId
         })[0];
-        let boardId = thisAssignment?.gameboardId;
+        const boardId = thisAssignment?.gameboardId;
         boardId && dispatch(loadBoard(boardId));
     }, [dispatch, myOwnedAssignments]);
 
-    const assignmentProgress = useSelector((state: AppState) => {
-        return state?.progress
-    });
+    const assignmentProgress = useSelector(selectors.assignments.progress);
 
     const boards = useSelector((state: AppState) => {
         return state?.boards?.boards?.boards;
