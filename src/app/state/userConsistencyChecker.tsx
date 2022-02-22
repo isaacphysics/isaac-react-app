@@ -3,6 +3,7 @@ import {RegisteredUserDTO} from "../../IsaacApiTypes";
 import {ACTION_TYPE} from "../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
 import {changePage} from "./actions";
+import {is2FARequired} from "./slices/api";
 
 // Generic log action:
 // This is not imported from actions to avoid a circular dependency through store.
@@ -60,11 +61,21 @@ const clearCurrentUser = () => {
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     switch (action.type) {
         case 'isaacApi/executeMutation/fulfilled':
-            if (action.meta.arg.endpointName === "logout" || action.meta.arg.endpointName === "logoutEverywhere") {
-                clearCurrentUser();
+            switch (action.meta.arg.endpointName) {
+                case "logout":
+                case "logoutEverywhere":
+                    clearCurrentUser();
+                    break;
+                case "login":
+                    if (!is2FARequired(action.payload)) {
+                        setCurrentUser(action.payload, api);
+                    }
+                    break;
+                case "totpChallenge":
+                    setCurrentUser(action.payload, api);
+                    break;
             }
             break;
-        case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS:
             setCurrentUser(action.user, api);
             break;

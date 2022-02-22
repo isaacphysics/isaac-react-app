@@ -118,9 +118,6 @@ export const api = {
         checkProviderCallback: (provider: ApiTypes.AuthenticationProvider, params: string): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/callback${params}`);
         },
-        mfaCompleteLogin: (mfaVerificationCode : string, rememberMe: boolean): AxiosPromise => {
-            return endpoint.post(`/auth/mfa/challenge`, {mfaVerificationCode: mfaVerificationCode, rememberMe});
-        },
         getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
             return endpoint.get(`/auth/user_authentication_settings`)
         },
@@ -132,16 +129,7 @@ export const api = {
         },
         unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.delete(`/auth/${provider}/link`);
-        },
-        getNewMFASecret: (): AxiosPromise => {
-            return endpoint.get(`/users/current_user/mfa/new_secret`)
-        },
-        setupMFAOnAccount: (sharedSecret: string, mfaVerificationCode: string): AxiosPromise => {
-            return endpoint.post(`/users/current_user/mfa`, {sharedSecret: sharedSecret, mfaVerificationCode: mfaVerificationCode})
-        },
-        disableMFAOnAccount: (userId: number): AxiosPromise => {
-            return endpoint.delete(`/users/${userId}/mfa`)
-        },
+        }
     },
     email: {
         verify: (params: {userid: string | null; token: string | null}): AxiosPromise => {

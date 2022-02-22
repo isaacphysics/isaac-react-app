@@ -209,63 +209,6 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
-export const getNewTotpSecret = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST});
-    try {
-        const mfaSetupResponse = await api.authentication.getNewMFASecret();
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS, totpSharedSecretDTO: mfaSetupResponse.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
-    }
-};
-
-export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST});
-    try {
-        await api.authentication.setupMFAOnAccount(sharedSecret, mfaVerificationCode);
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS});
-        dispatch(showToast({
-            color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}) as any);
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
-    }
-};
-
-export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
-    try {
-        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-        const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
-
-        await dispatch(requestCurrentUser() as any); // Request user preferences
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-
-        history.push(afterAuthPath);
-
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Error with verification code.", e));
-    }
-    dispatch(requestCurrentUser() as any)
-};
-
-export const disableTotpForAccount = (userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST});
-    try {
-        await api.authentication.disableMFAOnAccount(userId);
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS});
-        dispatch(showToast({
-            color: "success", title: "2FA Disabled", body: "You have disabled 2FA on this account!"}) as any);
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
-    }
-};
-
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
     try {
@@ -464,7 +407,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
         await dispatch(requestCurrentUser() as any); // Request user preferences
-        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
+        //dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data}); TODO!!!
         let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);
         nextPage = nextPage || "/";

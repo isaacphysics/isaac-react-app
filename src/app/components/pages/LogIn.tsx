@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
-import {handleProviderLoginRedirect, resetPassword, submitTotpChallengeResponse} from "../../state/actions";
+import {handleProviderLoginRedirect, resetPassword} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {selectors} from "../../state/selectors";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import * as RS from "reactstrap";
-import {api} from "../../state/slices/api";
+import {useLoginMutation, useTotpChallengeMutation} from "../../state/slices/api";
 
 export const LogIn = () => {
     const headingRef = useRef<HTMLHeadingElement>(null);
@@ -33,7 +33,6 @@ export const LogIn = () => {
     }, [totpChallengePending]);
 
     const dispatch = useDispatch();
-    //const user = useSelector(selectors.user.orNull);
     const errorMessage = useSelector(selectors.error.general);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -48,7 +47,8 @@ export const LogIn = () => {
 
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
 
-    const [ loginTrigger, { data: user } ] = api.endpoints.login.useMutation();
+    const [ loginTrigger, { data: user } ] = useLoginMutation();
+    const [ totpChallengeTrigger ] = useTotpChallengeMutation();
 
     const validateAndLogIn = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -118,8 +118,7 @@ export const LogIn = () => {
                                             disabled={isNaN(Number(mfaVerificationCode))}
                                             onClick={(event) => {
                                                 event.preventDefault();
-                                                if (mfaVerificationCode)
-                                                    dispatch(submitTotpChallengeResponse(mfaVerificationCode, rememberMe))
+                                                if (mfaVerificationCode) totpChallengeTrigger({mfaVerificationCode, rememberMe})
                                             }}
                                         />
                                     </FormGroup>

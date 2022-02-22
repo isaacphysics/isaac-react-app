@@ -5,21 +5,20 @@ import {ACTION_TYPE, API_PATH} from "../../services/constants";
 import {
     AuthenticationProvider,
     GlossaryTermDTO,
-    ResultsWrapper,
+    ResultsWrapper, TOTPSharedSecretDTO,
 } from "../../../IsaacApiTypes";
 import {PrefetchOptions} from "@reduxjs/toolkit/dist/query/core/module";
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {CredentialsAuthDTO, PotentialUser} from "../../../IsaacAppTypes";
 import {securePadCredentials} from "../../services/credentialPadding";
-import {store} from "../store";
-import {extractMessage, showErrorToastIfNeeded} from "../actions";
+import {extractMessage, showErrorToastIfNeeded, showToast} from "../actions";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
-import {createSlice} from "@reduxjs/toolkit";
+import {totpChallengeRequired, totpChallengeSuccess} from "./user";
 
-// This should be used by default as the `baseQuery` of any API slice
+// This should be used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     const baseQueryArgs: FetchBaseQueryArgs = {
         baseUrl: API_PATH,
@@ -48,6 +47,7 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
     return result;
 }
 
+export const is2FARequired = <T extends {}>(data: T | null) => data?.hasOwnProperty("2FA_REQUIRED")
 
 export type UserState = PotentialUser | null;
 export interface LoginUserArgs {
@@ -55,7 +55,7 @@ export interface LoginUserArgs {
     credentials: CredentialsAuthDTO;
 }
 
-// Each API slice creates reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
+// The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 export const api = createApi({
     tagTypes: ["GlossaryTerms", "User"], // Used to control refetching and caching of collections of data
     reducerPath: 'isaacApi',
@@ -91,42 +91,28 @@ export const api = createApi({
 
         // could use endpoint extensions to separate into different files
 
-        // Login endpoint, handles asking for
+        // Login endpoint
         login: build.mutation<UserState, LoginUserArgs>({
             query: ({provider, credentials}: LoginUserArgs) => ({
                 url: `/auth/${provider}/authenticate`,
                 method: "POST",
-                responseHandler: async (response: Response) => {
-                    const responseJson = await response.json();
-                    if (response.status === 202) {
-                        return {
-                            ...responseJson,
-                            body: null
-                        };
-                    }
-                    return responseJson;
-                },
                 body: securePadCredentials(credentials)
             }),
             onQueryStarted: async (loginArgs: LoginUserArgs, { dispatch , queryFulfilled }) => {
-                dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider: loginArgs.provider});
                 const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-
                 try {
-                    const { data } = await queryFulfilled
-                    if (data?.hasOwnProperty("2FA_REQUIRED")) {
-                        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
+                    const { data } = await queryFulfilled;
+                    console.log(data);
+                    if (is2FARequired(data)) {
+                        dispatch(totpChallengeRequired());
                         return;
                     }
-                    dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: data});
                     persistence.remove(KEY.AFTER_AUTH_PATH);
                     history.push(afterAuthPath);
-
                 } catch (err: any) {
                     dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(err)})
                 }
-            },
-            invalidatesTags: ["User"]
+            }
         }),
 
         logout: build.mutation<void, void>({
@@ -141,9 +127,9 @@ export const api = createApi({
                 } catch (e) {
                     dispatch(showErrorToastIfNeeded("Logout failed", e));
                 }
-            },
-            invalidatesTags: ["User"]
+            }
         }),
+
         logoutEverywhere: build.mutation<void, void>({
             query: () => ({
                 url: "/auth/logout/everywhere",
@@ -156,21 +142,70 @@ export const api = createApi({
                 } catch (e) {
                     dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
                 }
-            },
-            invalidatesTags: ["User"]
+            }
+        }),
+        totpChallenge: build.mutation<UserState, {mfaVerificationCode: string, rememberMe: boolean}>({
+            query: ({mfaVerificationCode, rememberMe}) => ({
+                url: `/auth/mfa/challenge`,
+                method: "POST",
+                body: {mfaVerificationCode: mfaVerificationCode, rememberMe}
+            }),
+            onQueryStarted: async (args: {mfaVerificationCode: string, rememberMe: boolean}, { dispatch , queryFulfilled }) => {
+                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
+                try {
+                    await queryFulfilled;
+                    dispatch(totpChallengeSuccess());
+                    persistence.remove(KEY.AFTER_AUTH_PATH);
+                    history.push(afterAuthPath);
+                } catch (e) {
+                    dispatch(showErrorToastIfNeeded("Error with verification code.", e));
+                }
+            }
+        }),
+        setupAccountMFA: build.mutation<void, {sharedSecret: string, mfaVerificationCode: string}>({
+            query: ({sharedSecret, mfaVerificationCode}) => ({
+                url: "/users/current_user/mfa",
+                method: "POST",
+                body: {sharedSecret, mfaVerificationCode}
+            }),
+            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    dispatch(showToast({
+                        color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}));
+                } catch (e) {
+                    dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
+                }
+            }
+        }),
+        disableAccountMFA: build.mutation<void, number>({
+            query: (userId) => ({
+                url: `/users/${userId}/mfa`,
+                method: "DELETE"
+            }),
+            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                    dispatch(showToast({
+                        color: "success", title: "2FA Disabled", body: "You have disabled 2FA on this account!"}));
+                } catch (e) {
+                    dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
+                }
+            }
+        }),
+        newMFASecret: build.mutation<TOTPSharedSecretDTO, void>({
+            query: () => ({
+                url: "/users/current_user/mfa/new_secret",
+                method: "GET"
+            }),
+            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
+                try {
+                    await queryFulfilled;
+                } catch (e) {
+                    dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
+                }
+            }
         })
-        // twoFactorAuth: build.mutation<TOTPSharedSecretDTO, {provider: AuthenticationProvider, credentials: CredentialsAuthDTO}>({
-        //     query: ({provider, credentials}) => ({
-        //         url: `/auth/${provider}/authenticate`,
-        //         method: "POST",
-        //         responseHandler: async (response: Response) => {
-        //             console.log(response);
-        //             const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-        //         },
-        //         body: securePadCredentials(credentials)
-        //     }),
-        //     invalidatesTags: ["User"]
-        // })
     })
 });
 
@@ -189,3 +224,11 @@ export function usePrefetchImmediately<T extends EndpointNames>(
         dispatch(api.util.prefetch(endpoint, arg as any, options))
     }, []);
 }
+
+export const {
+    useLoginMutation,
+    useTotpChallengeMutation,
+    useSetupAccountMFAMutation,
+    useDisableAccountMFAMutation,
+    useNewMFASecretMutation
+} = api;

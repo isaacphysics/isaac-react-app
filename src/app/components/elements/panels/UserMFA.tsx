@@ -3,8 +3,8 @@ import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
-import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
+import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import { useNewMFASecretMutation, useSetupAccountMFAMutation, useDisableAccountMFAMutation } from "../../../state/slices/api";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
 import {selectors} from "../../../state/selectors";
@@ -16,13 +16,16 @@ interface UserMFAProps {
 }
 
 export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
-    const dispatch = useDispatch();
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
-    const [updateMFARequest, setUpdateMFARequest] = useState(false);
+    //const [updateMFARequest, setUpdateMFARequest] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
     const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
+
+    const [ newMFASecret , { isLoading: updateMFARequest } ] = useNewMFASecretMutation();
+    const [ setupAccountMFA ] = useSetupAccountMFAMutation();
+    const [ disableAccountMFA ] = useDisableAccountMFAMutation();
 
     const authenticatorURL: string | null = useMemo(() => {
         if (totpSharedSecret) {
@@ -45,7 +48,6 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
 
     if (totpSharedSecret == null && mfaVerificationCode) {
         // assume we have just completed a successful configuration of MFA as secret is clear and tidy up
-        setUpdateMFARequest(false);
         setMFAVerificationCode(undefined);
         setSuccessfulMFASetup(true);
     }
@@ -53,7 +55,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
     function setupMFA(event?: React.FormEvent<HTMLFormElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (totpSharedSecret && mfaVerificationCode) {
-            dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode));
+            setupAccountMFA({sharedSecret: totpSharedSecret, mfaVerificationCode});
         }
     }
 
@@ -113,7 +115,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                                 <FormGroup>
                                     <Button
                                         className="btn-secondary"
-                                        onClick={() => {setUpdateMFARequest(true); dispatch(getNewTotpSecret())}}
+                                        onClick={() => newMFASecret()}
                                     >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                     </Button>
@@ -146,7 +148,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                             <FormGroup>
                                 <Button
                                     className="btn-secondary"
-                                    onClick={() => {userToUpdate.id && dispatch(disableTotpForAccount(userToUpdate.id))}}
+                                    onClick={() => {userToUpdate.id && disableAccountMFA(userToUpdate.id) }}
                                 >
                                     Disable 2FA for user
                                 </Button>

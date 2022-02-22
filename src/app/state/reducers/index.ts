@@ -11,9 +11,6 @@ import {
     events
 } from "./eventsState";
 import {
-    totpChallengePending,
-    totpSharedSecret,
-    user,
     userAuthSettings,
     userPreferences,
     userSchoolLookup
@@ -48,15 +45,15 @@ import {
     quizzes, studentQuizAttempt,
 } from "./quizState";
 import {api} from "../slices/api";
-import {userSlice} from "../slices/user";
+import {authSlice, TotpSharedSecretSlice, totpChallengePending} from "../slices/user";
 
 const appReducer = combineReducers({
     // User
-    user,
+    user: authSlice.reducer,
     userAuthSettings,
     userPreferences,
     userSchoolLookup,
-    totpSharedSecret,
+    totpSharedSecret: TotpSharedSecretSlice.reducer,
     totpChallengePending,
 
     // Internal App
@@ -142,8 +139,7 @@ const appReducer = combineReducers({
     quizPreview,
     quizAttemptedFreelyByMe,
 
-    // Slice reducers
-    newUser: userSlice.reducer,
+    // API reducer
     [api.reducerPath]: api.reducer
 });
 
@@ -151,7 +147,7 @@ export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
     if (action.type === ACTION_TYPE.CLEAR_STATE || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        state = undefined;
+        state = undefined; // TODO this is really nasty
     }
     return appReducer(state, action);
 };

@@ -11,7 +11,7 @@ let fakeDispatch: Dispatch, fakeGetState, fakeStore: MiddlewareAPI, fakeNext: Di
 const USER_ID1 = "foo";
 const USER_ID2 = "bar";
 
-const actionLogin = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: {_id: USER_ID1}};
+const actionLogin = {type: 'isaacApi/executeMutation/fulfilled', meta: { args: { endpointName: "login" } }, user: {_id: USER_ID1}};
 const actionLogout = {type: 'isaacApi/executeMutation/fulfilled', meta: { args: { endpointName: "logout" } } };
 const actionError = {type: ACTION_TYPE.USER_CONSISTENCY_ERROR};
 

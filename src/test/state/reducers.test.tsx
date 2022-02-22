@@ -6,13 +6,13 @@ import {mapValues, union, without} from "lodash";
 import {selectors} from "../../app/state/selectors";
 import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 import {rootReducer} from "../../app/state/reducers";
-import {user} from "../../app/state/reducers/userState";
 import {questions} from "../../app/state/reducers/questionState";
 import {constants} from "../../app/state/reducers/staticState";
 import {toasts} from "../../app/state/reducers/notifiersState";
 import {groups} from "../../app/state/reducers/groupsState";
 import {search} from "../../app/state/reducers/searchState";
 import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
+import {authSlice} from "../../app/state/slices/user";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -48,6 +48,8 @@ describe("root reducer", () => {
 describe("user reducer", () => {
     const {profWheeler, dameShirley} = registeredUserDTOs;
 
+    const user = authSlice.reducer;
+
     const previousStates: (PotentialUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
 
     it("returns null as an initial value", () => {
@@ -63,7 +65,7 @@ describe("user reducer", () => {
     });
 
     it("should always add a user on login response success", () => {
-        const addProfWheelerAction: Action = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: profWheeler};
+        const addProfWheelerAction: any = {type: 'isaacApi/executeMutation/fulfilled', meta: { args: { endpointName: "login" } },  user: profWheeler};
         previousStates.map((previousState) => {
             const actualNextState = user(previousState, addProfWheelerAction);
             expect(actualNextState).toEqual({...profWheeler, loggedIn: true});
