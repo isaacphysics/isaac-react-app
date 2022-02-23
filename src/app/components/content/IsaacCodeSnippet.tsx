@@ -4,6 +4,7 @@ import {Col, Row} from "reactstrap";
 
 import hljs from 'highlight.js/lib/core';
 import {addLineNumbers} from "../../services/highlightJs";
+import {ScrollPrompt} from "../elements/ScrollPrompt";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -19,10 +20,13 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         }
     }, [doc]);
 
-    return <div>
+    const scrollPromptRef = useRef<HTMLPreElement>(null);
+
+    return <div className={"position-relative"}>
+        <ScrollPrompt scrollRef={scrollPromptRef} />
         <Row>
             <Col className="code-snippet">
-                <pre className="line-numbers">
+                <pre ref={scrollPromptRef} className="line-numbers">
                     <code ref={codeSnippetRef} className={doc.disableHighlighting ? 'plaintext' : doc.language}>
                         {doc.code}
                     </code>

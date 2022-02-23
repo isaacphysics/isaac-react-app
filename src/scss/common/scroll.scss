@@ -1,0 +1,71 @@
+.scroll-arrow {
+  position: absolute;
+  z-index: 1;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+
+  span {
+    position: absolute;
+    display: none;
+    width: 30px;
+    height: 30px;
+    border-bottom: 5px solid $secondary;
+    border-right: 5px solid $secondary;
+    border-radius: 2px;
+  }
+
+  &.left {
+    span {
+      display: block;
+      transform: rotate(135deg);
+      margin: -10px;
+      animation: left-animate 1.5s infinite;
+    }
+  }
+
+  &.right {
+    span {
+      display: block;
+      transform: rotate(315deg);
+      margin: -10px;
+      animation: right-animate 1.5s infinite;
+    }
+  }
+
+  span:nth-child(2){
+    animation-delay: -0.5s;
+  }
+  span:nth-child(3){
+    animation-delay: -1s;
+  }
+}
+
+@keyframes left-animate {
+  0% {
+    opacity: 0;
+    transform: rotate(135deg) translate(-20px, -20px);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(135deg) translate(20px, 20px);
+  }
+}
+
+@keyframes right-animate {
+  0% {
+    opacity: 0;
+    transform: rotate(315deg) translate(-20px, -20px);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(315deg) translate(20px, 20px);
+  }
+}

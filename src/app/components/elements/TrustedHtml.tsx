@@ -24,6 +24,7 @@ function manipulateHtml(html: string) {
         const uniqueTableClasses = Array.from(new Set([...currentTableClasses, ...bootstrapTableClasses]));
         table.setAttribute("class", uniqueTableClasses.join(" "));
 
+        // TODO use a portal to add the ScrollPrompt to the below div
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
