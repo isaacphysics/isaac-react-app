@@ -28,7 +28,7 @@ function manipulateHtml(html: string) {
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
-        div.setAttribute("class", siteSpecific("overflow-auto mb-4", "parsons-layout isaac-expand-bg"));
+        div.setAttribute("class", "overflow-auto mb-4");
         parent.insertBefore(div, table);
         div.appendChild(parent.removeChild(table));
     }
