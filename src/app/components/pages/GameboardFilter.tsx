@@ -262,7 +262,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         {"Find questions that are suitable for this stage of school learning."}
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                <Select placeholder="Any" id="stage-selector" onChange={unwrapValue(setStages)}
+                        value={stages} options={getFilteredStageOptions()} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
@@ -290,7 +291,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         C3 require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
+                <Select id="difficulty-selector" placeholder="Any" onChange={unwrapValue(setDifficulties)}
+                        isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
