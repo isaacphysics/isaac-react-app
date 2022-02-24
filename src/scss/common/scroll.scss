@@ -1,7 +1,6 @@
 .scroll-arrow {
   position: absolute;
   z-index: 1;
-  top: 50px;
   left: 50%;
   transform: translate(-50%,-50%);
   pointer-events: none;
@@ -9,6 +8,7 @@
   span {
     position: absolute;
     display: none;
+    opacity: 0;
     width: 30px;
     height: 30px;
     border-bottom: 5px solid $secondary;
@@ -21,7 +21,7 @@
       display: block;
       transform: rotate(135deg);
       margin: -10px;
-      animation: left-animate 1.5s infinite;
+      animation: left-animate 1.5s 3;
     }
   }
 
@@ -30,7 +30,7 @@
       display: block;
       transform: rotate(315deg);
       margin: -10px;
-      animation: right-animate 1.5s infinite;
+      animation: right-animate 1.5s 3;
     }
   }
 
