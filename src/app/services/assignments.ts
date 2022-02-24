@@ -2,6 +2,7 @@ import {AssignmentDTO} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
 import {SingleEnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH} from "./constants";
+import {extractTeacherName} from "./user";
 
 function notMissing<T>(item: T | undefined): T {
     if (item === undefined) throw new Error("Missing item");
@@ -51,3 +52,54 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) =
 
     return myAssignments;
 };
+
+export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assignmentTitleFilter: string,
+                                              assignmentGroupFilter: string,
+                                              assignmentSetByFilter:string): AssignmentDTO[] => {
+    const filteredAssignments: AssignmentDTO[] = []
+
+    if (assignments) {
+        assignments.forEach(assignment => {
+            assignment.assignerSummary = notMissing(assignment.assignerSummary);
+            assignment.assignerSummary.familyName = notMissing(assignment.assignerSummary.familyName);
+            assignment.gameboard = notMissing(assignment.gameboard);
+            assignment.gameboard.title = notMissing(assignment.gameboard.title);
+            assignment.groupName = notMissing(assignment.groupName);
+
+            const assignmentMatchesFilter =
+                assignment.gameboard.title.toLowerCase().includes(assignmentTitleFilter.toLowerCase())
+                && (assignmentGroupFilter == "All" || assignment.groupName == assignmentGroupFilter)
+                && (assignmentSetByFilter == "All" || extractTeacherName(assignment.assignerSummary)
+                    == assignmentSetByFilter)
+
+            if (assignmentMatchesFilter){
+                filteredAssignments.push(assignment)
+            }
+        });
+    }
+    return filteredAssignments
+}
+
+export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | null): Set<string> => {
+    const distinctAssignmentGroups = new Set<string>()
+
+    if (assignments) {
+        assignments.forEach(assignment => {
+            assignment.groupName = notMissing(assignment.groupName)
+            distinctAssignmentGroups.add(assignment.groupName)
+        })
+    }
+    return distinctAssignmentGroups
+}
+
+export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | null): Set<string> => {
+    const distinctFormattedAssignmentSetters = new Set<string>()
+
+    if (assignments) {
+        assignments.forEach(assignment => {
+            assignment.assignerSummary = notMissing(assignment.assignerSummary)
+            distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string)
+        })
+    }
+    return distinctFormattedAssignmentSetters
+}
