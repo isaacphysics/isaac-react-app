@@ -1,4 +1,10 @@
-import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "../../navigation/NavigationBar";
+import {
+    LinkItem,
+    MenuBadge,
+    NavigationBar,
+    NavigationSection,
+    useAssignmentsCount
+} from "../../navigation/NavigationBar";
 import React from "react";
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
@@ -6,15 +12,15 @@ import {selectors} from "../../../state/selectors";
 
 export const NavigationBarPhy = () => {
     const user = useSelector(selectors.user.orNull);
-    const assignmentBadge = useAssignmentBadge();
+    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>
-        <NavigationSection title={<>My Isaac {assignmentBadge}</>}>
+        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
             <LinkItem to="/account" muted={!isLoggedIn(user)}>My Account</LinkItem>
             <LinkItem to="/my_gameboards" muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
-            <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {assignmentBadge}</LinkItem>
+            <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
             <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
-            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests (was Quizzes)</LinkItem>
+            <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
         </NavigationSection>
 
         {isTeacher(user) && <NavigationSection title="Teach">
@@ -22,8 +28,8 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
-            <LinkItem to="/set_tests">Set Tests (was Quizzes)</LinkItem>
-            <LinkItem to="/set_tests#manage">Manage Tests (was Quizzes)</LinkItem>
+            <LinkItem to="/set_tests">Set Tests</LinkItem>
+            <LinkItem to="/set_tests#manage">Manage Tests</LinkItem>
         </NavigationSection>}
 
         <NavigationSection title="Learn">

@@ -231,12 +231,43 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                     </div>}
                 </Col>
                 <Col md={{size: 8}} className="py-4 question-panel">
+                    {(editorMode === 'maths' || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input mt-4">
+                        <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
+                        <InputGroup className="my-2">
+                            <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
+                                placeholder="Type your expression here"/>
+                            <InputGroupAddon addonType="append">
+                                <Button type="button" className="eqn-editor-help" id='inequality-help' size="sm">?</Button>
+                                {editorMode === 'maths' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                    Here are some examples of expressions you can type:<br />
+                                    <br />
+                                    a*x^2 + b x + c<br />
+                                    (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
+                                    1/2 mv**2<br />
+                                    log(x_a, 2) == log(x_a) / log(2)<br />
+                                    <br />
+                                    As you type, the box below will preview the result.
+                                </UncontrolledTooltip>}
+                                {editorMode === 'logic' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                    Here are some examples of expressions you can type:<br />
+                                    <br />
+                                    A AND (B XOR NOT C)<br />
+                                    A &amp; (B ^ !C)<br />
+                                    T &amp; ~(F + A)<br />
+                                    1 . ~(0 + A)<br />
+                                    As you type, the box below will preview the result.
+                                </UncontrolledTooltip>}
+                            </InputGroupAddon>
+                        </InputGroup>
+                        {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                            {errors.map(e => (<li key={e}>{e}</li>))}
+                        </ul></div>}
+                    </div>}
                     <div className="equality-page">
-                        <Label>&nbsp;</Label>
                         <div
-                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''}`} tabIndex={0}
+                            role="button" className={`eqn-editor-preview rounded ${!previewText ? 'empty' : ''} ${editorMode !== 'maths' ? 'mt-4' : ''}`} tabIndex={0}
                             onClick={() => setModalVisible(true)} onKeyDown={ifKeyIsEnter(() => setModalVisible(true))}
-                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : 'Click to enter a formula' }}
+                            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : `<small>${editorMode === 'maths' ? 'or c' : 'C'}lick here to enter a formula</small>` }}
                         />
                         {modalVisible && <InequalityModal
                             close={closeModal}
@@ -257,38 +288,6 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                             visible={modalVisible}
                         />}
                     </div>
-                    {(editorMode === 'maths' || (isStaff(user) && editorMode === 'logic')) && <div className="eqn-editor-input">
-                        <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                        <InputGroup className="my-2">
-                            <Input type="text" onChange={updateEquation} value={textInput}
-                                placeholder="or type your expression here"/>
-                            <InputGroupAddon addonType="append">
-                                <Button type="button" className="eqn-editor-help" id='inequality-help' size="sm">?</Button>
-                                {editorMode === 'maths' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
-                                    Here are some examples of expressions you can type:<br />
-                                    <br />
-                                    a*x^2 + b x + c<br />
-                                    (-b ± sqrt(b**2 - 4ac)) / (2a)<br />
-                                    1/2 mv**2<br />
-                                    log(x_a, 2) == log(x_a) / log(2)<br />
-                                    <br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>}
-                                {editorMode === 'logic' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
-                                    Here are some examples of expressions you can type:<br />
-                                    <br />
-                                    A AND (B XOR NOT C)<br />
-                                    A &amp; (B ^ !C)<br />
-                                    T &amp; ~(F + A)<br />
-                                    1 . ~(0 + A)<br />
-                                    As you type, the box above will preview the result.
-                                </UncontrolledTooltip>}
-                            </InputGroupAddon>
-                        </InputGroup>
-                        {errors && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
-                            {errors.map(e => (<li key={e}>{e}</li>))}
-                        </ul></div>}
-                    </div>}
                 </Col>
             </Row>
             {currentAttempt && <Row>

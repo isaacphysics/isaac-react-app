@@ -11,6 +11,7 @@ import {selectors} from "../../state/selectors";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {isAdmin} from "../../services/user";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useDispatch();
@@ -97,7 +98,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                             <RS.Button
                                                 type="button" className="p-0 border-dark"
                                                 onClick={startVersionUpdate}
-                                                disabled={user.role != "ADMIN" || displayVersion === contentVersion.liveVersion}
+                                                disabled={!isAdmin(user) || displayVersion === contentVersion.liveVersion}
                                             >
                                                 Set Version
                                             </RS.Button>

@@ -4,19 +4,18 @@ import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAssignmentDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {loadQuizAssignedToMe, loadQuizzes, loadQuizzesAttemptedFreelyByMe} from "../../../state/actions/quizzes";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {extractTeacherName} from "../../../services/user";
-import {isDefined} from "../../../services/miscUtils";
-import {partition} from 'lodash';
-import {NOT_FOUND} from "../../../services/constants";
+import {isFound} from "../../../services/miscUtils";
 import {Spacer} from "../../elements/Spacer";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
+import {isAttempt, partitionCompleteAndIncompleteQuizzes} from "../../../services/quiz";
 
 interface MyQuizzesPageProps {
     user: RegisteredUserDTO;
@@ -106,10 +105,6 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
     </>;
 }
 
-function isAttempt(a: QuizAssignmentDTO | QuizAttemptDTO): a is QuizAttemptDTO {
-    return !('groupId' in a);
-}
-
 const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     const quizAssignments = useSelector(selectors.quizzes.assignedToMe);
     const freeAttempts = useSelector(selectors.quizzes.attemptedFreelyByMe);
@@ -132,13 +127,24 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     </span>;
 
     const assignmentsAndAttempts = [
-        ...isDefined(quizAssignments) && quizAssignments !== NOT_FOUND ? quizAssignments : [],
-        ...isDefined(freeAttempts) && freeAttempts !== NOT_FOUND ? freeAttempts : [],
+        ...isFound(quizAssignments) ? quizAssignments : [],
+        ...isFound(freeAttempts) ? freeAttempts : [],
     ];
-    const [completedQuizzes, incompleteQuizzes] = partition(assignmentsAndAttempts, a => isDefined(isAttempt(a) ? a.completedDate : a.attempt?.completedDate));
+    const [completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(assignmentsAndAttempts);
+
+    const showQuiz = (quiz: QuizSummaryDTO) => {
+        switch (user.role) {
+            case "STUDENT":
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents
+            case "TEACHER":
+                return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("TEACHER")) ?? true
+            default:
+                return true
+        }
+    };
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "My tests", [SITE.PHY]: "My Tests (was Quizzes)"}[SITE_SUBJECT]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "My tests", [SITE.PHY]: "My Tests"}[SITE_SUBJECT]} help={pageHelp} />
 
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
             {{
@@ -163,7 +169,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no tests currently available.</em></p>}
                             <RS.ListGroup className="mb-3 quiz-list">
-                                {quizzes.map(quiz => quiz.visibleToStudents && <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
+                                {quizzes.filter(showQuiz).map(quiz => <RS.ListGroupItem className="p-0 bg-transparent" key={quiz.id}>
                                     <div className="d-flex flex-grow-1 flex-column flex-sm-row align-items-center p-3">
                                         <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}

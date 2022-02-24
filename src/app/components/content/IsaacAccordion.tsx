@@ -1,49 +1,26 @@
 import React from "react";
-import {ContentDTO, Stage} from "../../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
 import {
     isIntendedAudience,
+    makeIntendedAudienceComparator,
     mergeDisplayOptions,
-    useUserContext,
-    UseUserContextReturnType
+    stringifyAudience,
+    useUserContext
 } from "../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
-import {resourceFound} from "../../services/validation";
-import {DOCUMENT_TYPE, STAGE, stageLabelMap, stagesOrdered} from "../../services/constants";
-import {comparatorFromOrderedValues} from "../../services/gameboards";
+import {DOCUMENT_TYPE} from "../../services/constants";
+import {isFound} from "../../services/miscUtils";
 
 const defaultConceptDisplay = {
     [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
     [SITE.CS]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
 }[SITE_SUBJECT];
 const defaultQuestionDisplay = {audience: [], nonAudience: []};
-
-function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType): string {
-    let stagesSet: Set<Stage>;
-    if (!audience) {
-        stagesSet = new Set<Stage>([STAGE.ALL]);
-    } else {
-        stagesSet = new Set<Stage>();
-        audience.forEach(audienceRecord => audienceRecord.stage?.forEach(stage => stagesSet.add(stage)));
-    }
-    // order stages
-    const audienceStages = Array.from(stagesSet).sort(comparatorFromOrderedValues(stagesOrdered));
-    // if you are one of the options - only show that option
-    const stagesFilteredByUserContext = audienceStages.filter(s => userContext.stage === s);
-    let stagesToView = stagesFilteredByUserContext.length > 0 ? stagesFilteredByUserContext : audienceStages;
-    // If common, could find substrings and report ranges i.e, GCSE to University
-
-    // CS would like to show All stages instead of GCSE & A Level - that will work until we have more stages
-    if (SITE_SUBJECT === SITE.CS && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
-        stagesToView = [STAGE.ALL];
-    }
-
-    return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
-}
 
 interface SectionWithDisplaySettings extends ContentDTO {
     startOpen?: boolean;
@@ -56,7 +33,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const userContext = useUserContext();
 
     // Select different default display depending on page type
-    const defaultDisplay = resourceFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
+    const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
     const accordionDisplay = mergeDisplayOptions(defaultDisplay, doc.display);
 
     return <div className="isaac-accordion">
@@ -66,11 +43,9 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             ?.map((section, index) => ({...section, sectionIndex: index}))
 
             // For CS we want relevant sections to appear first
-            .sort((sectionA, sectionB) => {
+            .sort((a, b) => {
                 if (SITE_SUBJECT !== SITE.CS) {return 0;}
-                const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user);
-                const isAudienceB = isIntendedAudience(sectionB.audience, userContext, user);
-                return isAudienceA === isAudienceB ? 0 : isAudienceB ? 1 : -1;
+                return makeIntendedAudienceComparator(user, userContext)(a, b);
             })
 
             // Handle conditional display settings

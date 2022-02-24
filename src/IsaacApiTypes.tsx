@@ -160,11 +160,13 @@ export interface IsaacQuestionSummaryPageDTO extends SeguePageDTO {
 
 export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
     answer?: ContentBaseDTO;
+    showConfidence?: boolean;
 }
 
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
     rubric?: ContentDTO;
     visibleToStudents?: boolean;
+    hiddenFromRoles?: Role[];
     defaultFeedbackMode?: QuizFeedbackMode;
     total?: number;
     sectionTotals?: { [index: string]: number };
@@ -347,6 +349,7 @@ export interface ContentDTO extends ContentBaseDTO {
     attribution?: string;
     relatedContent?: ContentSummaryDTO[];
     published?: boolean;
+    deprecated?: boolean;
     level?: number;
 }
 
@@ -360,12 +363,14 @@ export interface ContentSummaryDTO {
     url?: string;
     correct?: boolean;
     supersededBy?: string;
+    deprecated?: boolean;
     difficulty?: string;
     audience?: AudienceContext[];
 }
 
 export interface QuizSummaryDTO extends ContentSummaryDTO {
-    visibleToStudents?: boolean
+    visibleToStudents?: boolean;
+    hiddenFromRoles?: Role[];
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
@@ -491,7 +496,7 @@ export interface GroupMembershipDTO {
 
 export type Stage = "year_7" | "year_8" | "year_9" | "gcse" | "a_level" | "further_a" | "university" | "all";
 
-export type ExamBoard = "aqa" | "ocr" | "cie" | "edexcel" | "eduqas" | "wjec" | "all";
+export type ExamBoard = "aqa" | "cie" | "edexcel" | "eduqas" | "ocr" | "wjec" | "all";
 
 export type Difficulty = "practice_1" | "practice_2" | "practice_3" | "challenge_1" | "challenge_2" | "challenge_3";
 
@@ -694,7 +699,8 @@ export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export type Role = "STUDENT" | "TEACHER" | "EVENT_LEADER" | "CONTENT_EDITOR" | "EVENT_MANAGER" | "ADMIN";
+export const ROLES = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
+export type Role = (typeof ROLES)[number];
 
 export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
 

@@ -10,7 +10,8 @@ import {ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {getCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {selectors} from "../../state/selectors";
 
 const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
@@ -25,7 +26,7 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     return <div className={"assignment-progress-details single-assignment" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend pageSettings={pageSettings}/>
         <div className="single-download mb-2 mx-4">
-            <Button className="d-none d-md-inline" color="link" tag="a" href={getCSVDownloadLink(assignmentId)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+            <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignmentId)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
         </div>
         <div className="mx-md-4 mx-sm-2">
             <ProgressDetails assignmentId={assignmentId} pageSettings={pageSettings} assignment={assignment} progress={progress}/>
@@ -51,16 +52,14 @@ export const SingleAssignmentProgress = () => {
     });
 
     useEffect(() => {
-        let thisAssignment = myOwnedAssignments?.filter(obj => {
+        const thisAssignment = myOwnedAssignments?.filter(obj => {
             return obj._id == assignmentId
         })[0];
-        let boardId = thisAssignment?.gameboardId;
+        const boardId = thisAssignment?.gameboardId;
         boardId && dispatch(loadBoard(boardId));
     }, [dispatch, myOwnedAssignments]);
 
-    const assignmentProgress = useSelector((state: AppState) => {
-        return state?.progress
-    });
+    const assignmentProgress = useSelector(selectors.assignments.progress);
 
     const boards = useSelector((state: AppState) => {
         return state?.boards?.boards?.boards;

@@ -10,9 +10,9 @@ import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
 import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
 import {AppQuestionDTO} from "../../IsaacAppTypes";
-import {REVERSE_GREEK_LETTERS_MAP} from '../services/constants';
-import {ContentDTO} from "../../IsaacApiTypes";
-import { IsaacClozeQuestion } from "../components/content/IsaacClozeQuestion";
+import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from '../services/constants';
+import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
+import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
 
 // @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
@@ -60,7 +60,7 @@ export const HUMAN_QUESTION_TAGS = new Map([
 
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
     if (!availableSymbols) return;
-    let theseSymbols = availableSymbols.slice(0).map(s => s.trim());
+    const theseSymbols = availableSymbols.slice(0).map(s => s.trim());
     let i = 0;
     while (i < theseSymbols.length) {
         if (theseSymbols[i] === '_trigs') {
@@ -109,7 +109,7 @@ export function sanitiseInequalityState(state: any) {
         saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
     }
     if (saneState.symbols) {
-        for (let symbol of saneState.symbols) {
+        for (const symbol of saneState.symbols) {
             if (symbol.expression.latex) {
                 symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
             }
@@ -119,4 +119,21 @@ export function sanitiseInequalityState(state: any) {
         }
     }
     return saneState;
+}
+
+function fastTrackConceptEnumerator(questionId: string) {
+    // Magic, unfortunately
+    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
+}
+
+export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
+    let title = doc.title as string;
+
+    // FastTrack title renaming
+    if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && doc.id
+        && (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower'))) {
+        title += " " + fastTrackConceptEnumerator(doc.id) + (doc.tags.includes('ft_lower') ? "ii" : "i");
+    }
+
+    return title;
 }

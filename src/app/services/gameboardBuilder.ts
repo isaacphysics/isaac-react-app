@@ -1,10 +1,11 @@
-import {SortOrder} from "./constants";
+import {difficultiesOrdered, SortOrder} from "./constants";
 import {orderBy} from "lodash";
 import tags from "./tags";
-import {ContentSummaryDTO, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
+import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {Dispatch, SetStateAction} from "react";
 import {ValueType} from "react-select/src/types";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
+import {determineAudienceViews} from "./userContext";
 
 const bookSort = (a: string, b: string) => {
     const splitRegex = /(\d+)/;
@@ -41,10 +42,21 @@ const bookSort = (a: string, b: string) => {
     return sectionsB.length - sectionsA.length;
 };
 
-export const sortQuestions = (sortState: { [s: string]: string }) => (questions: ContentSummaryDTO[]) => {
+export const sortQuestions = (sortState: {[s: string]: string}, creationContext?: AudienceContext) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
         const sortedQuestions = questions.sort((a, b) => bookSort(a.title || "", b.title || ""));
         return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
+    }
+    if (sortState.difficulty && sortState.difficulty != SortOrder.NONE) {
+        questions.sort(function compareFirstDifficulty(a, b) {
+            const firstDifficultyA = determineAudienceViews(a.audience, creationContext)[0]?.difficulty;
+            const firstDifficultyB = determineAudienceViews(b.audience, creationContext)[0]?.difficulty;
+            if (firstDifficultyA === firstDifficultyB) return 0;
+            const aIndex = difficultiesOrdered.indexOf(firstDifficultyA as Difficulty)
+            const bIndex = difficultiesOrdered.indexOf(firstDifficultyB as Difficulty);
+            return (sortState.difficulty === SortOrder.ASC && aIndex > bIndex) ? 1 : -1;
+        });
+        return questions;
     }
     const keys: string[] = [];
     const order: ("asc" | "desc")[] = [];
@@ -71,8 +83,8 @@ export const convertGameboardItemToContentSummary = (question: GameboardItem): C
 export const convertTagToSelectionOption = (tag: Tag) => {
     return {
         value: tag.id,
-        label: `${tag.title}${tag.comingSoon ? ` (Coming ${tag.comingSoon})`: ""}`,
-        isDisabled: !!tag.comingSoon,
+        label: `${tag.title}${tag.comingSoonDate ? ` (Coming ${tag.comingSoonDate})`: ""}`,
+        isDisabled: !!tag.comingSoonDate,
         isHidden: !!tag.hidden,
     }
 };

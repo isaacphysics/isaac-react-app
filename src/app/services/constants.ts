@@ -181,6 +181,9 @@ export enum ACTION_TYPE {
     ADMIN_SEND_EMAIL_WITH_IDS_REQUEST = "ADMIN_SEND_EMAIL_WITH_IDS_REQUEST",
     ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS",
     ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE = "ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE",
+    CONTENT_SEND_EMAIL_WITH_IDS_REQUEST = "CONTENT_SEND_EMAIL_WITH_IDS_REQUEST",
+    CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS = "CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS",
+    CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE = "CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE",
     ADMIN_MERGE_USERS_REQUEST = "ADMIN_MERGE_USERS_REQUEST",
     ADMIN_MERGE_USERS_RESPONSE_SUCCESS = "ADMIN_MERGE_USERS_RESPONSE_SUCCESS",
     ADMIN_MERGE_USERS_RESPONSE_FAILURE = "ADMIN_MERGE_USERS_RESPONSE_FAILURE",
@@ -546,6 +549,7 @@ export enum PROGRAMMING_LANGUAGE {
     PYTHON = "PYTHON",
     PHP = "PHP",
     CSHARP = "CSHARP",
+    ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
     NONE = "NONE",
@@ -557,6 +561,7 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
     [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
+    [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
 };
@@ -564,25 +569,27 @@ export const programmingLanguagesMap: {[language: string]: string} = {
 // EXAM BOARDS
 export enum EXAM_BOARD {
     AQA = "aqa",
-    OCR = "ocr",
     CIE = "cie",
     EDEXCEL = "edexcel",
     EDUQAS = "eduqas",
+    OCR = "ocr",
     WJEC = "wjec",
     ALL = "all",
 }
 export const examBoardLabelMap: {[examBoard in ExamBoard]: string} = {
     [EXAM_BOARD.AQA]: "AQA",
-    [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.CIE]: "CIE",
     [EXAM_BOARD.EDEXCEL]: "EDEXCEL",
     [EXAM_BOARD.EDUQAS]: "EDUQAS",
+    [EXAM_BOARD.OCR]: "OCR",
     [EXAM_BOARD.WJEC]: "WJEC",
     [EXAM_BOARD.ALL]: "All exam boards",
 }
 export const EXAM_BOARD_NULL_OPTIONS = new Set([EXAM_BOARD.ALL]);
-export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.CIE, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
-export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.OCR, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
+export const EXAM_BOARDS_CS_A_LEVEL = new Set([EXAM_BOARD.AQA, EXAM_BOARD.CIE, EXAM_BOARD.OCR, EXAM_BOARD.EDUQAS, EXAM_BOARD.WJEC]);
+export const EXAM_BOARDS_CS_GCSE = new Set([EXAM_BOARD.AQA, EXAM_BOARD.EDEXCEL, EXAM_BOARD.EDUQAS, EXAM_BOARD.OCR, EXAM_BOARD.WJEC]);
+
+export const EXAM_BOARD_ITEM_OPTIONS = Object.keys(EXAM_BOARD).map(s => ({value: s, label: examBoardLabelMap[s as EXAM_BOARD]}));
 
 // BOOLEAN LOGIC NOTATION OPTIONS
 export enum BOOLEAN_NOTATION {
@@ -635,9 +642,20 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_2: "Challenge\u00A0(C2)",
     challenge_3: "Challenge\u00A0(C3)",
 }
+export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
+    practice_1: "Practice (P1) \u2B22\u2B21\u2B21",
+    practice_2: "Practice (P2) \u2B22\u2B22\u2B21",
+    practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
+    challenge_1: "Challenge (C1) \u25A0\u25A1\u25A1",
+    challenge_2: "Challenge (C2) \u25A0\u25A0\u25A1",
+    challenge_3: "Challenge (C3) \u25A0\u25A0\u25A0",
+}
 export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyLabelMap[d]}
+));
+export const DIFFICULTY_ICON_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
+    {value: d, label: difficultyIconLabelMap[d]}
 ));
 
 // QUESTION CATEGORIES
@@ -717,6 +735,7 @@ export enum TAG_ID {
     compression = "compression",
     encryption = "encryption",
     databases = "databases",
+    fileOrganisation = "file_organisation",
     sql = "sql",
     bigData = "big_data",
     // Data structures and algorithms topics
@@ -765,68 +784,132 @@ export enum TAG_ID {
     modelsOfComputation = "models_of_computation",
 
     // PHY ----
-    // Subjects
+
+    // Subjects ---
     physics = "physics",
     maths = "maths",
     chemistry = "chemistry",
 
-    // Physics fields
-    mechanics = "mechanics",
-    waves = "waves",
-    fields = "fields",
-    circuits = "circuits",
-    chemPhysics = "chemphysics",
-    // Maths fields
-    geometry = "geometry",
-    calculus = "calculus",
-    algebra = "algebra",
-    functions = "functions",
-    statistics = "statistics",
+    // Fields ---
 
-    // Mechanics topics
-    statics = "statics",
+    // Physics Fields
+    mechanics = "mechanics",
+    fields = "fields",
+    thermal = "thermal",
+    wavesParticles = "waves_particles",
+    skills = "skills",
+    electricity = "electricity",
+    applications = "applications",
+    // Chemistry Fields
+    inorganic = "inorganic",
+    physical = "physical",
+    analytical = "analytical",
+    foundations = "foundations",
+    organic = "organic",
+    // Maths Fields
+    geometry = "geometry",
+    algebra = "algebra",
+    statistics = "statistics",
+    functions = "functions",
+    calculus = "calculus",
+
+    // Physics Topics ---
+
+    // Mechanics
     dynamics = "dynamics",
-    shm = "shm",
-    angularMotion = "angular_motion",
     circularMotion = "circular_motion",
+    oscillations = "oscillations",
+    statics = "statics",
     kinematics = "kinematics",
-    // Fields topics
+    materials = "materials",
+    // Fields
+    combined = "combined",
     electric = "electric",
     magnetic = "magnetic",
     gravitational = "gravitational",
-    combined = "combined",
-    // Circuits topics
-    resistors = "resistors",
-    capacitors = "capacitors",
-    generalCircuits = "general_circuits",
-    // Waves topics:
-    optics = "optics",
+    // Thermal
+    gases = "gases",
+    heatCapacity = "heat_capacity",
+    // Waves & Particles
+    nuclear = "nuclear",
     superposition = "superposition",
+    optics = "optics",
+    quantum = "quantum",
     waveMotion = "wave_motion",
-    // Physical Chemistry topics:
-    thermodynamics = "thermodynamics",
-    kinetics = "kinetics",
+    fundamental = "fundamental",
+    // Skills
+    units = "units",
+    graphs = "graphs",
+    uncertainties = "uncertainties",
+    relationships = "relationships",
+    prefixes = "prefixes",
+    sigFigs = "sig_figs",
+    // Electricity
+    chargeCurrent = "charge_current",
+    resistors = "resistors",
+    components = "components",
+    internalResistance = "internal_resistance",
+    capacitors = "capacitors",
+    power = "power",
 
-    // Geometry topics
+    // Maths Topics ---
+
+    // Geometry
     geomVectors = "geom_vectors",
-    trigonometry = "trigonometry",
     shapes = "shapes",
-    // Calculus topics
-    differentiation = "differentiation",
-    integration = "integration",
-    differentialEq = "differential_eq",
-    // Algebra topics
-    simultaneous = "simultaneous",
-    quadratics = "quadratics",
+    trigonometry = "trigonometry",
+    planes = "planes",
+    // Algebra
     manipulation = "manipulation",
+    quadratics = "quadratics",
     series = "series",
-    complex_numbers = "complex_numbers",
-    // Functions topics
+    simultaneous = "simultaneous",
+    matrices = "matrices",
+    complexNumbers = "complex_numbers",
+    // Statistics
+    hypothesis = "hypothesis",
+    dataAnalysis = "data_analysis",
+    randomVars = "random_vars",
+    probability = "probability",
+    // Functions
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",
-    // Statistical topics
-    probability = "probability",
-    dataAnalysis = "data_analysis",
+    // Calculus
+    integration = "integration",
+    differentiation = "differentiation",
+    differentialEq = "differential_eq",
+
+    // Chemistry Topics ---
+
+    // Inorganic
+    redox = "redox",
+    bonding = "bonding",
+    transitionMetals = "transition_metals",
+    periodicTable = "periodic_table",
+    // Physical
+    energetics = "energetics",
+    electrochemistry = "electrochemistry",
+    equilibrium = "equilibrium",
+    acidsAndBases = "acids_and_bases",
+    entropy = "entropy",
+    kinetics = "kinetics",
+    // Analytical
+    electronicSpectroscopy = "electronic_spectroscopy",
+    nmrSpectroscopy = "nmr_spectroscopy",
+    massSpectrometry = "mass_spectrometry",
+    infraredSpectroscopy = "infrared_spectroscopy",
+    chromatography = "chromatography",
+    // Foundations
+    stoichiometry = "stoichiometry",
+    gasLaws = "gas_laws",
+    numericalSkills = "numerical_skills",
+    atomicStructure = "atomic_structure",
+    // Organic
+    functionalGroups = "functional_groups",
+    aromaticity = "aromaticity",
+    organicReactions = "organic_reactions",
+    isomerism = "isomerism",
+    reactionsGeneral = "reactions_general",
 }
 
 export enum TAG_LEVEL {
@@ -882,6 +965,7 @@ export enum MEMBERSHIP_STATUS {
 export enum ACCOUNT_TAB {account, passwordreset, teacherconnections, emailpreferences, betafeatures}
 
 export enum MANAGE_QUIZ_TAB {set = 1, manage = 2}
+export enum MARKBOOK_TYPE_TAB {assignments = 1, tests = 2}
 
 export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -984,8 +1068,8 @@ export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
     "Omega": "Ω",
 };
 
-let _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
-for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
+const _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
+for(const entry of Object.entries(GREEK_LETTERS_MAP)) {
     _REVERSE_GREEK_LETTERS_MAP[entry[1]] = entry[0];
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
@@ -996,7 +1080,13 @@ export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
-        "Chemistry": "#e22e25"
+        "Chemistry": "#e22e25",
+        [difficultyLabelMap.practice_1]: "#509e2e",
+        [difficultyLabelMap.practice_2]: "#3b6e25",
+        [difficultyLabelMap.practice_3]: "#27421a",
+        [difficultyLabelMap.challenge_1]: "#d68000",
+        [difficultyLabelMap.challenge_2]: "#955a0f",
+        [difficultyLabelMap.challenge_3]: "#764811"
     },
     [SITE.CS]: {}
 }[SITE_SUBJECT];
@@ -1030,3 +1120,5 @@ export const progressColour = {
 export const GRAY_120 = '#c9cad1';
 
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
+
+export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";

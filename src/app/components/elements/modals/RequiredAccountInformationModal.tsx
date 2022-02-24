@@ -13,19 +13,21 @@ import {
     validateUserSchool
 } from "../../../services/validation";
 import {isMobile} from "../../../services/device";
-import {isLoggedIn} from "../../../services/user";
+import {isLoggedIn, isStudent} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import { isDefined } from "../../../services/miscUtils";
+import {Link} from "react-router-dom";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector((state: AppState) => state?.userPreferences);
+    const student = isStudent({...user, loggedIn: true});
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -66,6 +68,15 @@ const RequiredAccountInfoBody = () => {
             <div className="text-right text-muted required-before">
                 Required
             </div>
+            {student && <div className="text-left mb-4">
+                Account type: <b>Student</b> <span>
+                    <small>(Are you a teacher? {" "}
+                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
+                            Upgrade your account
+                        </Link>{".)"}
+                    </small>
+                </span>
+            </div>}
 
             <RS.Row className="d-flex flex-wrap my-2">
                 {((SITE_SUBJECT === SITE.CS && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>

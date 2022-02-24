@@ -18,7 +18,7 @@ module.exports = (isProd) => {
 
         devServer: {
             headers: {
-                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 ws://localhost:8080 https://www.google-analytics.com https://maps.googleapis.com; object-src 'none'; frame-src 'self' https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
+                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 ws://localhost:8080 https://www.google-analytics.com https://maps.googleapis.com; object-src 'none'; frame-src 'self' https://editor.isaaccode.org https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
                 "Feature-Policy": "geolocation 'none'; camera 'none'; microphone 'none'; accelerometer 'none';",
                 "X-Clacks-Overhead": "GNU Terry Pratchett",
             },
@@ -33,7 +33,7 @@ module.exports = (isProd) => {
 
         resolve: {
             modules: [path.resolve(__dirname), 'node_modules'],
-            extensions: ['.ts', '.tsx', '.js', '.jsx'],
+            extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
             alias: {
                 'p5': 'p5/lib/p5.min.js'
             }
@@ -43,6 +43,11 @@ module.exports = (isProd) => {
             rules: [
                 {
                     oneOf: [
+                        {
+                            test: /\.mjs$/,
+                            include: /node_modules/,
+                            type: 'javascript/auto'
+                        },
                         {
                             test: /\.[jt]sx?$/,
                             exclude: /node_modules/,

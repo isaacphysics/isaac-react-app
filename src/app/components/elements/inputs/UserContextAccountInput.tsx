@@ -5,11 +5,11 @@ import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
 import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD, EXAM_BOARD, STAGE} from "../../../services/constants";
 import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
-import {Link} from "react-router-dom";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
 import uuid from "uuid";
 import {isDefined} from "../../../services/miscUtils";
+import {Link} from "react-router-dom";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -132,8 +132,6 @@ export function UserContextAccountInput({
                 }
             </RS.UncontrolledTooltip>
         </React.Fragment>}
-
-        {!teacher && <span className="float-right mt-1"><Link to={TEACHER_REQUEST_ROUTE} target="_blank">I am a teacher</Link></span>}
         <div id="user-context-selector" className={SITE_SUBJECT === SITE.PHY ? "d-flex flex-wrap" : ""}>
             {userContexts.map((userContext, index) => {
                 const showPlusOption = teacher &&
@@ -166,20 +164,26 @@ export function UserContextAccountInput({
                         {SITE_SUBJECT === SITE.CS && <span className="ml-1">add stage</span>}
                     </RS.Label>}
 
-                    {SITE_SUBJECT === SITE.CS && index === userContexts.length - 1 && <RS.Label className="mt-2">
+                    {SITE_SUBJECT === SITE.CS && index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
                         <CustomInput
                             type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
                             checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
                             onChange={e => setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: !e.target.checked})}
                         />{" "}
-                        <span>Show other content that is not relevant to me. <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
+                        <span>Show other content that is not for my selected qualification(s). <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
                         <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
                             {teacher ?
-                                "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content in your GCSE view)." :
-                                "If you select this box, additional content that is not relevant to your chosen stage and examination board will be shown (e.g. you will also see A level content if you are studying GCSE)."
+                                "If you select this box, additional content that is not intended for your chosen stage and examination board will be shown (e.g. you will also see A level content in your GCSE view)." :
+                                "If you select this box, additional content that is not intended for your chosen stage and examination board will be shown (e.g. you will also see A level content if you are studying GCSE)."
                             }
                         </RS.UncontrolledTooltip>
                     </RS.Label>}
+
+                    {!teacher && <><br/>
+                        <small>
+                            If you are a teacher, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {SITE_SUBJECT === SITE.CS && "exam board and "}stage.
+                        </small>
+                    </>}
                 </RS.FormGroup>
             })}
         </div>

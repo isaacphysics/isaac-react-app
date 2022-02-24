@@ -155,6 +155,10 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE}
 
+    | {type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_REQUEST}
+    | {type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_SUCCESS}
+    | {type: ACTION_TYPE.CONTENT_SEND_EMAIL_WITH_IDS_RESPONSE_FAILURE}
+
     | {type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MERGE_USERS_RESPONSE_FAILURE}
@@ -426,7 +430,7 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
 
     | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS; gameboardId: string}
+    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS; gameboardId: string; gameboardTitle?: string}
     | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
@@ -888,6 +892,8 @@ export interface UserProgress {
     correctByType?: { [type: string]: number };
     attemptsByTag?: { [tag: string]: number };
     correctByTag?: { [tag: string]: number };
+    attemptsByStageAndDifficulty?: { [stage: string]: {[difficulty: string]: number} };
+    correctByStageAndDifficulty?: { [stage: string]: {[difficulty: string]: number} };
     userSnapshot?: UserSnapshot;
     userDetails?: ApiTypes.UserSummaryDTO;
 }
@@ -901,14 +907,14 @@ export type Levels = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type LevelAttempts<T> = { [level in Levels]?: T; }
 
 interface TagInstruction {
-    hidden?: boolean; comingSoon?: string; new?: boolean;
+    hidden?: boolean; comingSoonDate?: string; new?: boolean;
 }
 
 export interface BaseTag {
     id: TAG_ID;
     title: string;
     parent?: TAG_ID;
-    comingSoon?: string;
+    comingSoonDate?: string;
     new?: boolean;
     hidden?: boolean;
     stageOverride?: {[s in STAGE]?: TagInstruction};

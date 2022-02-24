@@ -17,7 +17,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful
 import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
-import {isValidGameboardId, resourceFound} from "../../services/validation";
+import {isValidGameboardId} from "../../services/validation";
 import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
@@ -38,6 +38,8 @@ import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
 import {EXAM_BOARD, STAGE} from "../../services/constants";
+import {siteSpecific} from "../../services/miscUtils";
+import {isFound} from "../../services/miscUtils";
 
 export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
@@ -167,7 +169,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setWildcardId(e.target.value);}}
                         >
                             <option value="random">Random wildcard</option>
-                            {resourceFound(wildcards) && wildcards.map((wildcard) => {
+                            {isFound(wildcards) && wildcards.map((wildcard) => {
                                 return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
                             })}
                         </RS.Input>
@@ -183,8 +185,8 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                     <th className="w-40">Question title</th>
                                     <th className="w-25">Topic</th>
                                     <th className="w-15">Stage</th>
-                                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Difficulty</th>}
-                                    {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
+                                    <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
+                                    {SITE_SUBJECT === SITE.CS && <th className="w-5">Exam boards</th>}
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -205,7 +207,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                                             })}
                                             {provided.placeholder}
                                             <tr>
-                                                <td colSpan={5}>
+                                                <td colSpan={siteSpecific(5, 6)}>
                                                     <div className="img-center">
                                                         <ShowLoading
                                                             placeholder={<div className="text-center"><IsaacSpinner /></div>}
@@ -251,7 +253,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                         onClick={() => {
                             // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                             let wildcard = undefined;
-                            if (wildcardId && resourceFound(wildcards) && wildcards.length > 0) {
+                            if (wildcardId && isFound(wildcards) && wildcards.length > 0) {
                                 wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                             }
 
@@ -262,7 +264,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             } else {
                                 const definedSubjects = ["physics", "maths", "chemistry"];
                                 selectedQuestions?.forEach((item) => {
-                                    let tags = intersection(definedSubjects, item.tags || []);
+                                    const tags = intersection(definedSubjects, item.tags || []);
                                     tags.forEach((tag: string) => subjects.push(tag));
                                 });
                                 // If none of the questions have a subject tag, default to physics

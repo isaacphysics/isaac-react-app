@@ -14,7 +14,7 @@ import {
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
+import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
 import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
@@ -22,6 +22,7 @@ import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {siteSpecific} from "../../../services/miscUtils";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -59,7 +60,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     const [searchFastTrack, setSearchFastTrack] = useState<boolean>(false);
 
-    const [questionsSort, setQuestionsSort] = useState({});
+    const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({difficulty: SortOrder.ASC});
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
@@ -146,7 +147,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         {value: "phys_book_gcse", label: "GCSE Physics"},
                         {value: "maths_book", label: "Pre-Uni Maths"},
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"},
-                        {value: "physics_skills_14", label: "A Level Physics (2nd Edition - Old)"},
                     ]}
                 />
             </RS.Col>}
@@ -166,13 +166,13 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     options={getFilteredStageOptions()} onChange={multiSelectOnChange(setSearchStages)}
                 />
             </RS.Col>
-            {SITE_SUBJECT === SITE.PHY && <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
+            <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
                 />
-            </RS.Col>}
+            </RS.Col>
             {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
@@ -216,19 +216,24 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     />
                     <th className="w-25">Topic</th>
                     <th className="w-15">Stage</th>
-                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Difficulty</th>}
-                    {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
+                    <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
+                    {SITE_SUBJECT === SITE.CS && <th className="w-5">Exam boards</th>}
                 </tr>
             </thead>
             <tbody>
                 {
-                    questions && sortQuestions(searchBook.length === 0 ? questionsSort : {title: SortOrder.ASC})(questions.filter((question) => {
-                        let qIsPublic = searchResultIsPublic(question, user);
-                        if (isBookSearch) return qIsPublic;
-                        let qTopicsMatch = (searchTopics.length == 0 || (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0));
+                    questions &&
+                    sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+                        questions.filter(question => {
+                            const qIsPublic = searchResultIsPublic(question, user);
+                            if (isBookSearch) return qIsPublic;
+                            const qTopicsMatch =
+                                searchTopics.length == 0 ||
+                                (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
 
-                        return qIsPublic && qTopicsMatch;
-                    })).map((question) =>
+                            return qIsPublic && qTopicsMatch;
+                        })
+                    ).map(question =>
                         <GameboardBuilderRow
                             key={`question-search-modal-row-${question.id}`} question={question}
                             selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}

@@ -10,7 +10,7 @@ function notMissing<T>(item: T | undefined): T {
 export function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnhancedAssignment {
     return assignment.gameboard != undefined;
 }
-export function getCSVDownloadLink(assignmentId: number) {
+export function getAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
 export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) => {

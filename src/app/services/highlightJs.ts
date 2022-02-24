@@ -13,6 +13,7 @@ export function registerLanguages() {
     hljs.registerLanguage('php', php);
     hljs.registerLanguage('csharp', csharp);
     hljs.registerLanguage('plaintext', plaintext);
+    hljs.registerLanguage('assembly', plaintext);
     hljs.registerLanguage('sql', sql);
     hljs.registerLanguage('pseudocode', isaacPseudocodeHighlightDefinition);
 }
@@ -58,6 +59,7 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
     const KEYWORDS = [
         "GLOBAL",
         "MOD",
+        "DIV",
         "AND",
         "OR",
         "NOT",
