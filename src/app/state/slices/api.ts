@@ -16,7 +16,7 @@ import {extractMessage, showErrorToastIfNeeded, showToast} from "../actions";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
-import {totpChallengeRequired, totpChallengeSuccess} from "./user";
+import {totpChallenge} from "./user";
 
 // This should be used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -104,7 +104,7 @@ export const api = createApi({
                     const { data } = await queryFulfilled;
                     console.log(data);
                     if (is2FARequired(data)) {
-                        dispatch(totpChallengeRequired());
+                        dispatch(totpChallenge.actions.challengeRequired());
                         return;
                     }
                     persistence.remove(KEY.AFTER_AUTH_PATH);
@@ -154,7 +154,7 @@ export const api = createApi({
                 const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
                 try {
                     await queryFulfilled;
-                    dispatch(totpChallengeSuccess());
+                    dispatch(totpChallenge.actions.challengeSuccess());
                     persistence.remove(KEY.AFTER_AUTH_PATH);
                     history.push(afterAuthPath);
                 } catch (e) {

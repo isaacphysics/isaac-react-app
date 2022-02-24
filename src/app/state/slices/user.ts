@@ -1,4 +1,4 @@
-import {createAction, createReducer, createSlice} from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 import {api, is2FARequired, UserState} from "./api";
 import {TOTPSharedSecretDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
@@ -54,7 +54,7 @@ export const authSlice = createSlice({
     ]
 });
 
-export const TotpSharedSecretSlice = createSlice({
+export const totpSharedSecretSlice = createSlice({
     name: "totpSharedSecret",
     initialState: null as TOTPSharedSecretDTO | null,
     reducers: {},
@@ -70,16 +70,11 @@ export const TotpSharedSecretSlice = createSlice({
 });
 
 type TotpChallengePendingState = boolean;
-const totpChallengePendingInitialState = false as TotpChallengePendingState;
-
-export const totpChallengeRequired = createAction(ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED);
-export const totpChallengeSuccess = createAction(ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS);
-export const totpChallengePending = createReducer(totpChallengePendingInitialState, (builder) => {
-    builder.addCase(
-        totpChallengeRequired,
-        () => true
-    ).addCase(
-        totpChallengeSuccess,
-        () => false
-    )
+export const totpChallenge = createSlice({
+    name: "totpChallengePending",
+    initialState: false as TotpChallengePendingState,
+    reducers: {
+        challengeRequired: () => true,
+        challengeSuccess: () => false
+    }
 });

@@ -45,7 +45,7 @@ import {
     quizzes, studentQuizAttempt,
 } from "./quizState";
 import {api} from "../slices/api";
-import {authSlice, TotpSharedSecretSlice, totpChallengePending} from "../slices/user";
+import {authSlice, totpSharedSecretSlice, totpChallenge} from "../slices/user";
 
 const appReducer = combineReducers({
     // User
@@ -53,8 +53,8 @@ const appReducer = combineReducers({
     userAuthSettings,
     userPreferences,
     userSchoolLookup,
-    totpSharedSecret: TotpSharedSecretSlice.reducer,
-    totpChallengePending,
+    totpSharedSecret: totpSharedSecretSlice.reducer,
+    totpChallengePending: totpChallenge.reducer,
 
     // Internal App
     printingSettings,
