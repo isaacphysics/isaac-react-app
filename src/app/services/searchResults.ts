@@ -61,6 +61,54 @@ export const searchList = [
         summary: "Click here to view and edit your account details.",
         url: "/account",
         type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "ambassador",
+        title: "Ambassador",
+        terms: ["ambassador"],
+        summary: "View ambassador information",
+        url: "/support/teacher/partner",
+        hash: "ambassadors",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "embedded_school",
+        title: "Embedded schools",
+        terms: ["embedded school"],
+        summary: "View embedded school information",
+        url: "/support/teacher/partner",
+        hash: "embedded_schools",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "edit_group_managers",
+        title: "Edit group managers",
+        terms: ["edit group managers"],
+        summary: "View information on editing group managers",
+        url: "/support/teacher/general",
+        hash: "create_group",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "email_notifications",
+        title: "Email notifications",
+        terms: ["email notifications"],
+        summary: "View email notification information",
+        url: "/support/teacher/troubleshooting",
+        hash: "email_preferences",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "ske",
+        title: "Ske",
+        terms: ["ske"],
+        summary: "View ske information",
+        url: "/support/teacher/direct",
+        hash: "teacher_mentoring",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "spreadsheet_of_questions",
+        title: "Spreadsheet of questions",
+        terms: ["spreadsheet of questions"],
+        summary: "View a spreadsheet of questions",
+        url: "/support/teacher/suggestions",
+        hash: "spreadsheet",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 
 ];

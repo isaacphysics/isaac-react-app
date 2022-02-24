@@ -43,7 +43,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
     let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
     let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
     let [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
-    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponse | ContentSummaryDTO)[]>();
+    let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {

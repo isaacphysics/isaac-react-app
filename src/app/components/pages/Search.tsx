@@ -92,7 +92,7 @@ export const Search = withRouter((props: {history: History; location: Location})
     const filteredSearchResults = searchResults?.results && searchResults.results
         .filter(result => searchResultIsPublic(result, user))
         .filter(result => SITE_SUBJECT === SITE.PHY || isIntendedAudience(result.audience, userContext, user));
-    const shortcutResponses = (queryState ? shortcuts(queryState) : []) as (ContentSummaryDTO | ShortcutResponse)[];
+    const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
 
     return (

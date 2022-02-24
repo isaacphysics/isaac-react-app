@@ -25,12 +25,14 @@ import uuid from "uuid";
 import {LaTeX} from "../LaTeX";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
+import {ShortcutResponse} from "../../../../IsaacAppTypes";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
+export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid.v4().slice(0, 4)).current;
     const userContext = useUserContext();
     const user = useSelector(selectors.user.orNull);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
+    const hash = item.hash;
 
     let linkDestination, icon, iconLabel, audienceViews;
     let itemClasses = "p-0 content-summary-link ";
@@ -103,7 +105,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const displayStage = audienceViews && audienceViews.length > 0;
 
     return <RS.ListGroupItem className={`p-3 content-summary-item d-md-flex flex-column justify-content-center ${itemClasses}`} key={linkDestination}>
-        <Link to={{pathname: linkDestination, search: search}}>
+        <Link to={{pathname: linkDestination, search: search, hash: hash}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
