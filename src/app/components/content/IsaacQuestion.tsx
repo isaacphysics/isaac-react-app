@@ -86,7 +86,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
 
             {/* Validation Response */}
             {validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
-                <div className="pb-1">
+                <div className="pb-2">
                     <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 {validationResponse.explanation && <div className="mb-2">
