@@ -13,6 +13,7 @@ bundle-stats-*.json
 /build
 /build-physics
 /build-cs
+/build-components
 
 # misc
 .DS_Store

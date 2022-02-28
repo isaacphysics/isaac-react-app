@@ -73,9 +73,10 @@ module.exports = (isProd) => {
                                         compilerOptions: {
                                             noEmit: false,
                                             jsx: "react",
+                                            isolatedModules: true
                                         },
                                     },
-                                }
+                                },
                             ],
                         },
                         {

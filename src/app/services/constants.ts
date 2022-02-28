@@ -6,8 +6,16 @@ import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
-// eslint-disable-next-line no-undef
-export const API_VERSION: string = REACT_APP_API_VERSION || "any";
+function getApiVersion() {
+    try {
+        // eslint-disable-next-line no-undef
+        return REACT_APP_API_VERSION || "any";
+    } catch {
+        return "any";
+    }
+}
+
+export const API_VERSION: string = getApiVersion();
 
 /*
  * Configure the api provider with the server running the API:

@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "1.6.22-SNAPSHOT",
+  "version": "1.6.23-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=17",
@@ -67,8 +67,13 @@
     "build-stats-phy": "webpack --env prod --config config/webpack.config.physics.js --profile --json > bundle-stats-phy.json",
     "analyse-bundle-phy": "webpack-bundle-analyzer bundle-stats-phy.json build-physics",
     "build-stats-cs": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats-cs.json",
-    "analyse-bundle-cs": "webpack-bundle-analyzer bundle-stats-cs.json build-cs"
+    "analyse-bundle-cs": "webpack-bundle-analyzer bundle-stats-cs.json build-cs",
+    "prepare-wp": "webpack --env prod --config config/webpack.config.components.js",
+    "prepare-ts": "tsc -p tsconfig.components.json --sourceMap true --jsx react --module es6",
+    "postprepare-wp": "tsc -p tsconfig.components.json --emitDeclarationOnly"
   },
+  "main": "build-components/index-components.js",
+  "types": "build-components/index-components.d.ts",
   "eslintConfig": {
     "extends": [
       "eslint:recommended",
@@ -122,6 +127,7 @@
     "@types/qrcode": "^1.4.1",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.11",
+    "@types/react-redux": "^7.1.22",
     "@types/react-router": "^5.1.17",
     "@types/react-router-dom": "^5.3.2",
     "@types/redux-logger": "^3.0.9",
@@ -129,7 +135,7 @@
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
-    "@wojtekmaj/enzyme-adapter-react-17": "^1.15.6",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "ajv": "^8.9.0",
     "babel-loader": "^8.2.3",
     "bootstrap": "^4.6.1",

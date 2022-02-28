@@ -1,6 +1,15 @@
 export enum SITE {PHY = "physics", CS = "cs"}
-// eslint-disable-next-line no-undef
-export const SITE_SUBJECT = ISAAC_SITE as SITE;
+
+function getSite() {
+    try {
+        // eslint-disable-next-line no-undef
+        return ISAAC_SITE as SITE;
+    } catch {
+        return SITE.CS;
+    }
+}
+
+export const SITE_SUBJECT = getSite();
 
 export const SITE_SUBJECT_TITLE = {
     [SITE.PHY]: "Physics",

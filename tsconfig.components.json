@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "files": ["src/react-app-env.d.ts","./src/index-components.tsx"],
+  "include": [],
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./build-components",
+    "skipLibCheck": true,
+    "outDir": "./build-components"
+  }
+}

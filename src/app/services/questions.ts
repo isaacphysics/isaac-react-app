@@ -14,8 +14,8 @@ import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from '../services/constants';
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
 
-// @ts-ignore as TypeScript is struggling to infer common type for questions
-export const QUESTION_TYPES = new Map([
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const QUESTION_TYPES = new Map<string, any>([
     ["isaacMultiChoiceQuestion", IsaacMultiChoiceQuestion],
     ["isaacItemQuestion", IsaacItemQuestion],
     ["isaacParsonsQuestion", IsaacParsonsQuestion],
