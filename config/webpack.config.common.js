@@ -94,10 +94,9 @@ module.exports = (isProd) => {
                                 'sass-loader',
                             ].filter(Boolean),
                         },
-                        { 
+                        {
                             test: /\.(png|jpg)$/,
-                            loader: 'url-loader',
-                            exclude: /^data:image/
+                            loader: 'url-loader'
                         },
                         {
                             include: [/\.ttf$/, /\.woff2?$/,],

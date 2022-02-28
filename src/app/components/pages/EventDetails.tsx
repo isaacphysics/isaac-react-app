@@ -31,6 +31,7 @@ import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/ev
 import {EditContentButton} from "../elements/EditContentButton";
 import { isDefined } from "../../services/miscUtils";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
+import * as L from "leaflet";
 
 function formatDate(date: Date|number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -128,6 +129,14 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             setBookingFormOpen(true);
         }
 
+        // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
+        let icon = L.icon({
+            iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+            iconUrl: require('leaflet/dist/images/marker-icon.png'),
+            shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+            iconAnchor: [12, 41]
+        });
+
         return <RS.Container className="events mb-5">
             <TitleAndBreadcrumb
                 currentPageTitle={event.title as string} subTitle={event.subtitle}
@@ -157,7 +166,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                                         />
-                                        <Marker position={[event.location.latitude, event.location.longitude]}>
+                                        <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
                                             <Popup>
                                                 {event.location?.address?.addressLine1}<br />{event.location?.address?.addressLine2}<br />{event.location?.address?.town}<br />{event.location?.address?.postalCode}
                                             </Popup>
