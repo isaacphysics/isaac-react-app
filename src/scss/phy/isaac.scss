@@ -75,6 +75,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~billboard.js/dist/theme/insight.css";
 @import "~leaflet/dist/leaflet.css";
 
+@import "../common/isaac";
+
 // Utility
 @import "preload";
 @import "../common/mixins";
@@ -201,10 +203,4 @@ body {
 }
 .footerLogo {
     margin-top: -0.55px;
-}
-
-.leaflet-container {
-    width: 100%;
-    // height: 100vh;
-    aspect-ratio: 1;
 }

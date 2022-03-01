@@ -130,6 +130,10 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
         }
 
         // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
+        // There are various places online discussing this issue, but this one is a good starting point: https://github.com/Leaflet/Leaflet/issues/4968
+        // _______
+        // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
+        // ¯¯¯¯¯¯¯
         let icon = L.icon({
             iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
             iconUrl: require('leaflet/dist/images/marker-icon.png'),
@@ -157,22 +161,23 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                 <div className="border px-2 py-1 mt-3 bg-light">
                                     <strong>{event.title}</strong>
                                 </div>
-                                <div className="border px-2 py-1 mt-3 bg-light">
                                 {isDefined(event.location) &&
                                  isDefined(event.location?.latitude) &&
                                  isDefined(event.location?.longitude) &&
-                                    <Map center={[event.location.latitude, event.location.longitude]} zoom={13}>
-                                        <TileLayer
-                                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                            attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                        />
-                                        <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
-                                            <Popup>
-                                                {event.location?.address?.addressLine1}<br />{event.location?.address?.addressLine2}<br />{event.location?.address?.town}<br />{event.location?.address?.postalCode}
-                                            </Popup>
-                                        </Marker>
-                                    </Map>
-                                }</div>
+                                    <div className="border px-2 py-1 mt-3 bg-light">
+                                        <Map center={[event.location.latitude, event.location.longitude]} zoom={13}>
+                                            <TileLayer
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                            />
+                                            <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
+                                                <Popup>
+                                                    {event.location?.address?.addressLine1}<br />{event.location?.address?.addressLine2}<br />{event.location?.address?.town}<br />{event.location?.address?.postalCode}
+                                                </Popup>
+                                            </Marker>
+                                        </Map>
+                                    </div>
+                                }
                             </div>}
                         </RS.Col>
                         <RS.Col lg={8} className={event.hasExpired ? "expired" : ""}>
