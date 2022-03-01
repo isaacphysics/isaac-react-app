@@ -1,16 +1,15 @@
 import React, {Ref} from 'react';
 import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {IsaacContent, IsaacContentProps} from "./IsaacContent";
+import {IsaacContent} from "./IsaacContent";
 import tags from "../../services/tags";
 import { isDefined } from '../../services/miscUtils';
 import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
 import {formatGlossaryTermId} from "../pages/Glossary";
-import { withRouter } from 'react-router-dom';
 
-interface IsaacGlossaryTermProps extends IsaacContentProps {
+interface IsaacGlossaryTermProps {
     doc: GlossaryTermDTO;
     linkToGlossary?: boolean;
 }
@@ -39,4 +38,4 @@ const IsaacGlossaryTermComponent = ({doc, linkToGlossary}: IsaacGlossaryTermProp
     </Row>;
 };
 
-export const IsaacGlossaryTerm = withRouter(React.forwardRef(IsaacGlossaryTermComponent));
+export const IsaacGlossaryTerm = React.forwardRef(IsaacGlossaryTermComponent);

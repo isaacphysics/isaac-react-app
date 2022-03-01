@@ -9,6 +9,7 @@ import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {getFilteredStageOptions} from "../../../services/userContext";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {comparatorFromOrderedValues} from "../../../services/gameboards";
+import {Item, selectOnChange} from "../../../services/select";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -47,15 +48,15 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     const defaultSearchChoiceTag = tags.getSpecifiedTags(searchTagLevel, tags.allTagIds)[0];
     const [searchChoice, setSearchChoice] = useState(defaultSearchChoiceTag.id);
-    const [stageChoice, setStageChoice] = useState<{value: STAGE; label: string}>({value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]});
+    const [stageChoice, setStageChoices] = useState<Item<STAGE>[]>([{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}]);
 
     const isAllZero = (arr: (string | number)[][]) => arr.filter((elem) => elem[1] > 0).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const difficultyColumns = stageChoice && questionsByStageAndDifficulty[stageChoice.value] ?
-        Object.keys(questionsByStageAndDifficulty[stageChoice.value])
+    const difficultyColumns = stageChoice && questionsByStageAndDifficulty[stageChoice[0].value] ?
+        Object.keys(questionsByStageAndDifficulty[stageChoice[0].value])
         .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
-        .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice.value][key]]) : [];
+        .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice[0].value][key]]) : [];
 
     useEffect(() => {
         const charts: Chart[] = [];
@@ -167,7 +168,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     classNamePrefix="select"
                     defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
                     options={getFilteredStageOptions()}
-                    onChange={(e: ValueType<{value: STAGE; label: string}>) => setStageChoice((e as {value: STAGE; label: string}))}
+                    onChange={selectOnChange(setStageChoices, false)}
                 />
                 questions
             </div>
