@@ -10,9 +10,16 @@ import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {EXAM_BOARD, STAGE} from "./constants";
 import {isStudent} from "./user";
+import {Form} from "reactstrap";
+import {FormEvent} from "react";
+import {userPreferences} from "../state/reducers/userState";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
+
+export function validateName(userName?: string | null) {
+    return userName && userName.length > 0 && userName.length <= 255 && !userName.includes('*')
+}
 
 export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
@@ -83,10 +90,11 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
-    return user && userPreferences &&
-        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user))) &&
-        (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
-        validateUserContexts(userContexts);
+    return user && userPreferences
+        && (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user)
+        && validateName(user.givenName) && validateName(user.familyName)))
+        && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
+        && validateUserContexts(userContexts);
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {
