@@ -434,7 +434,8 @@ export const GameboardFilter = withRouter<RouteComponentProps, any>(({location}:
 
     // This is a leading debounced version of loadNewGameboard, used with the shuffle questions button - this stops
     // users from spamming the generateTemporaryGameboard endpoint by clicking the button fast
-    const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}), []);
+    const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}),
+        [selections, stages, difficulties, concepts, examBoards]);
 
     useEffect(() => {
         if (gameboardIdAnchor && gameboardIdAnchor !== gameboard?.id) {

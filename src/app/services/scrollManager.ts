@@ -17,8 +17,8 @@ history.listen(listener => {
     // }
 });
 
-export function scrollVerticallyIntoView(element: Element, offset: number = 0): void {
-    const yPosition = element.getBoundingClientRect().top + pageYOffset + offset;
+export function scrollVerticallyIntoView(element: Element, offset = 0): void {
+    const yPosition = element.getBoundingClientRect().top + window.scrollY + offset;
     if (isDefined(yPosition)) {
         window.scrollTo(0, yPosition);
     }

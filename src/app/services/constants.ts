@@ -550,6 +550,7 @@ export enum PROGRAMMING_LANGUAGE {
     PYTHON = "PYTHON",
     PHP = "PHP",
     CSHARP = "CSHARP",
+    ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
     NONE = "NONE",
@@ -561,6 +562,7 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
     [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
+    [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
 };
@@ -1079,7 +1081,13 @@ export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
-        "Chemistry": "#e22e25"
+        "Chemistry": "#e22e25",
+        [difficultyLabelMap.practice_1]: "#509e2e",
+        [difficultyLabelMap.practice_2]: "#3b6e25",
+        [difficultyLabelMap.practice_3]: "#27421a",
+        [difficultyLabelMap.challenge_1]: "#d68000",
+        [difficultyLabelMap.challenge_2]: "#955a0f",
+        [difficultyLabelMap.challenge_3]: "#764811"
     },
     [SITE.CS]: {}
 }[SITE_SUBJECT];
