@@ -73,7 +73,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
             return ReactDOMServer.renderToStaticMarkup(
                 <Provider store={store}>
                     <Router history={history}>
-                        <IsaacGlossaryTerm doc={term}/>
+                        <IsaacGlossaryTerm doc={term} />
                     </Router>
                 </Provider>
             );

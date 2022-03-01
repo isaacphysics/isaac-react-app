@@ -8,6 +8,7 @@ import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
 import {formatGlossaryTermId} from "../pages/Glossary";
+import { withRouter } from 'react-router-dom';
 
 interface IsaacGlossaryTermProps extends IsaacContentProps {
     doc: GlossaryTermDTO;
@@ -38,4 +39,4 @@ const IsaacGlossaryTermComponent = ({doc, linkToGlossary}: IsaacGlossaryTermProp
     </Row>;
 };
 
-export const IsaacGlossaryTerm = React.forwardRef(IsaacGlossaryTermComponent);
+export const IsaacGlossaryTerm = withRouter(React.forwardRef(IsaacGlossaryTermComponent));
