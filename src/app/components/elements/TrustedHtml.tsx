@@ -54,7 +54,7 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefOb
                 "overflow-auto mb-4": !expanded,
                 "parsons-layout isaac-expand-bg": expanded
             })} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
-                {hovering && !isMobile() && <button className={"position-absolute bg-transparent border-0"} style={expanded ? {top: 31, right: 27} : {top: 9, right: 6}} onClick={toggleExpanded}>
+                {hovering && !isMobile() && <button className={"position-absolute bg-transparent border-0"} style={{top: 9, right: 6}} onClick={toggleExpanded}>
                     <img style={{width: "30px", height: "auto"}} src={"/assets/expand-arrow.svg"}/>
                 </button>}
                 <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
