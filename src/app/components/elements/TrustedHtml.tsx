@@ -37,24 +37,37 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
     return {manipulatedHtml: htmlDom.innerHTML, tableData: tableInnerHTMLs};
 }
 
-// A portal component to manage table elements from inside the React DOM
-const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefObject<HTMLElement>}) => {
-    const parentElement = rootElement.current?.querySelector(`#table-${id}`);
-
+export const useExpandContent = (unexpandedClasses?: string) => {
     const [ expanded, setExpanded ] = useState(false);
     const toggleExpanded = () => setExpanded(b => !b);
 
     const [ hovering, setHovering ] = useState(false);
 
+    const expandOnMouseEnter = () => setHovering(true);
+    const expandOnMouseLeave = () => setHovering(false);
+
+    const expandButton = (hovering && !isMobile() && <button className={"position-absolute bg-transparent border-0"} style={{top: 9, right: 6, zIndex: 2}} onClick={toggleExpanded}>
+        <img style={{width: "30px", height: "auto"}} src={"/assets/expand-arrow.svg"}/>
+    </button>) || null;
+
+    const expandedClasses = classNames({
+        [unexpandedClasses || ""]: !expanded,
+        "parsons-layout isaac-expand-bg": expanded
+    })
+
+    return {expandButton, expandedClasses, expandOnMouseEnter, expandOnMouseLeave};
+}
+
+// A portal component to manage table elements from inside the React DOM
+const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefObject<HTMLElement>}) => {
+    const parentElement = rootElement.current?.querySelector(`#table-${id}`);
+
+    const {expandButton, expandedClasses, expandOnMouseEnter, expandOnMouseLeave} = useExpandContent("overflow-auto mb-4");
+
     if (html && parentElement) {
         return ReactDOM.createPortal(
-            <div className={classNames("position-relative", {
-                "overflow-auto mb-4": !expanded,
-                "parsons-layout isaac-expand-bg": expanded
-            })} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
-                {hovering && !isMobile() && <button className={"position-absolute bg-transparent border-0"} style={{top: 9, right: 6}} onClick={toggleExpanded}>
-                    <img style={{width: "30px", height: "auto"}} src={"/assets/expand-arrow.svg"}/>
-                </button>}
+            <div className={classNames("position-relative", expandedClasses)} onMouseEnter={expandOnMouseEnter} onMouseLeave={expandOnMouseLeave}>
+                {expandButton}
                 <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
             </div>,
             parentElement

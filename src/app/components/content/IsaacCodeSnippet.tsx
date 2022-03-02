@@ -1,7 +1,6 @@
 import {CodeSnippetDTO} from "../../../IsaacApiTypes";
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
-
 import hljs from 'highlight.js/lib/core';
 import {addLineNumbers} from "../../services/highlightJs";
 import {ScrollPrompt} from "../elements/ScrollPrompt";

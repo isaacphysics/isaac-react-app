@@ -1,5 +1,6 @@
 .scroll-arrow {
   position: absolute;
+  overflow: visible;
   z-index: 1;
   left: 50%;
   transform: translate(-50%,-50%);
@@ -16,12 +17,27 @@
     border-radius: 2px;
   }
 
+  p {
+    position: absolute;
+    display: none;
+    top: 24px;
+    left: -35px;
+    color: $secondary;
+    font: $secondary-font;
+    text-wrap: avoid;
+    opacity: 0;
+  }
+
   &.left {
     span {
       display: block;
       transform: rotate(135deg);
       margin: -10px;
-      animation: left-animate 1.5s 3;
+      animation: left-animate 3s 2;
+    }
+    p {
+      display: block;
+      animation: animate-text 6s 1;
     }
   }
 
@@ -30,15 +46,18 @@
       display: block;
       transform: rotate(315deg);
       margin: -10px;
-      animation: right-animate 1.5s 3;
+      animation: right-animate 3s 2;
+    }
+    p {
+      display: block;
+      animation: animate-text 6s 1;
     }
   }
-
   span:nth-child(2){
-    animation-delay: -0.5s;
+    animation-delay: -1s;
   }
   span:nth-child(3){
-    animation-delay: -1s;
+    animation-delay: -2s;
   }
 }
 
@@ -67,5 +86,17 @@
   100% {
     opacity: 0;
     transform: rotate(315deg) translate(20px, 20px);
+  }
+}
+
+@keyframes animate-text {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

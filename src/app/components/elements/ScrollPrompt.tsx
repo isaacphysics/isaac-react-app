@@ -1,6 +1,7 @@
 import React, {RefObject, useLayoutEffect, useState} from "react";
 import {isDefined} from "../../services/miscUtils";
 import classNames from "classnames";
+import {isTouchDevice} from "../../services/device";
 
 export const ScrollPrompt = <T extends HTMLElement>({scrollRef} : {scrollRef : RefObject<T>}) => {
     const [ direction , setDirection ] = useState<'left' | 'right'>();
@@ -33,5 +34,6 @@ export const ScrollPrompt = <T extends HTMLElement>({scrollRef} : {scrollRef : R
         <span/>
         <span/>
         <span/>
+        {isTouchDevice() ? <p>Swipe&nbsp;to&nbsp;scroll</p> : <p>Scroll&nbsp;for&nbsp;more</p>}
     </div>;
 }

@@ -3,6 +3,8 @@ import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import {isDefined} from "../../services/miscUtils";
+import {useExpandContent} from "./TrustedHtml";
+import classNames from "classnames";
 
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -45,8 +47,11 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
+    const {expandButton, expandedClasses, expandOnMouseEnter, expandOnMouseLeave} = useExpandContent();
+
     return <div
-        className={className}
+        className={classNames("position-relative", className, expandedClasses)}
+        onMouseEnter={expandOnMouseEnter} onMouseLeave={expandOnMouseLeave}
     >
         <Nav tabs className="flex-wrap">
             {Object.keys(children).map((tabTitle, mapIndex) => {
@@ -63,6 +68,8 @@ export const Tabs = (props: TabsProps) => {
                 </NavItem>;
             })}
         </Nav>
+
+        {expandButton}
 
         <TabContent activeTab={activeTab} className={tabContentClass}>
             {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {

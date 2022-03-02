@@ -7,6 +7,11 @@ export const isMobile = () => {
 };
 export const isNotMobile = !isMobile();
 
+export const isTouchDevice = () => {
+    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+}
+export const isNotTouchDevice = () => !isTouchDevice();
+
 export enum DeviceSize {
     XL = "xl",
     LG = "lg",
