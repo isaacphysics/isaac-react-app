@@ -8,7 +8,8 @@ import {katexify} from "./LaTeX";
 import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
-import {isMobile} from "../../services/device";
+import {ScrollPrompt} from "./ScrollPrompt";
+import {above, isMobile, useDeviceSize} from "../../services/device";
 
 interface TableData {
     id: number;
@@ -37,38 +38,41 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
     return {manipulatedHtml: htmlDom.innerHTML, tableData: tableInnerHTMLs};
 }
 
-export const useExpandContent = (unexpandedClasses?: string) => {
+export const useExpandContent = (unexpandedInnerClasses?: string) => {
     const [ expanded, setExpanded ] = useState(false);
     const toggleExpanded = () => setExpanded(b => !b);
 
-    const [ hovering, setHovering ] = useState(false);
+    const deviceSize = useDeviceSize();
 
-    const expandOnMouseEnter = () => setHovering(true);
-    const expandOnMouseLeave = () => setHovering(false);
-
-    const expandButton = (hovering && !isMobile() && <button className={"position-absolute bg-transparent border-0"} style={{top: 9, right: 6, zIndex: 2}} onClick={toggleExpanded}>
-        <img style={{width: "30px", height: "auto"}} src={"/assets/expand-arrow.svg"}/>
+    const expandButton = (!isMobile() && <button className={"expand-arrow"} style={{top: 9, right: 6, zIndex: 2}} onClick={toggleExpanded}>
+        <img src={"/assets/expand-arrow.svg"}/>
     </button>) || null;
 
-    const expandedClasses = classNames({
-        [unexpandedClasses || ""]: !expanded,
-        "parsons-layout isaac-expand-bg": expanded
-    })
+    // If screen size goes below md, then the `parsons-layout` class no longer applies - this means we shouldn't apply
+    // the classes `parsons-layout` and `isaac-expand-bg`.
+    const shouldExpand = expanded && above["md"](deviceSize);
 
-    return {expandButton, expandedClasses, expandOnMouseEnter, expandOnMouseLeave};
+    const innerClasses = shouldExpand ? "" : unexpandedInnerClasses;
+    const outerClasses = shouldExpand ? "isaac-expand-bg expand-outer" : "expand-outer";
+
+    return {expandButton, innerClasses, outerClasses};
 }
 
 // A portal component to manage table elements from inside the React DOM
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefObject<HTMLElement>}) => {
     const parentElement = rootElement.current?.querySelector(`#table-${id}`);
 
-    const {expandButton, expandedClasses, expandOnMouseEnter, expandOnMouseLeave} = useExpandContent("overflow-auto mb-4");
+    const divRef = useRef<HTMLDivElement>(null);
+    const {expandButton, innerClasses, outerClasses} = useExpandContent("overflow-auto mb-4");
 
     if (html && parentElement) {
         return ReactDOM.createPortal(
-            <div className={classNames("position-relative", expandedClasses)} onMouseEnter={expandOnMouseEnter} onMouseLeave={expandOnMouseLeave}>
-                {expandButton}
-                <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
+            <div className={outerClasses}>
+                <ScrollPrompt scrollRef={divRef} />
+                <div ref={divRef} className={innerClasses}>
+                    {expandButton}
+                    <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
+                </div>
             </div>,
             parentElement
         );

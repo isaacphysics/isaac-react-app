@@ -47,11 +47,10 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
-    const {expandButton, expandedClasses, expandOnMouseEnter, expandOnMouseLeave} = useExpandContent();
+    const {expandButton, innerClasses, outerClasses} = useExpandContent();
 
     return <div
-        className={classNames("position-relative", className, expandedClasses)}
-        onMouseEnter={expandOnMouseEnter} onMouseLeave={expandOnMouseLeave}
+        className={classNames(className, innerClasses, outerClasses)}
     >
         <Nav tabs className="flex-wrap">
             {Object.keys(children).map((tabTitle, mapIndex) => {

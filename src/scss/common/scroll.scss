@@ -33,11 +33,15 @@
       display: block;
       transform: rotate(135deg);
       margin: -10px;
-      animation: left-animate 3s 2;
+      -webkit-animation: left-scroll-animate 3s 2;
+      -moz-animation: left-scroll-animate 3s 2;
+      animation: left-scroll-animate 3s 2;
     }
     p {
       display: block;
-      animation: animate-text 6s 1;
+      -webkit-animation: animate-scroll-text 6s 1;
+      -moz-animation: animate-scroll-text 6s 1;
+      animation: animate-scroll-text 6s 1;
     }
   }
 
@@ -46,57 +50,77 @@
       display: block;
       transform: rotate(315deg);
       margin: -10px;
-      animation: right-animate 3s 2;
+      -webkit-animation: right-scroll-animate 3s 2;
+      -moz-animation: right-scroll-animate 3s 2;
+      animation: right-scroll-animate 3s 2;
     }
     p {
       display: block;
-      animation: animate-text 6s 1;
+      -webkit-animation: animate-scroll-text 6s 1;
+      -moz-animation: animate-scroll-text 6s 1;
+      animation: animate-scroll-text 6s 1;
     }
   }
   span:nth-child(2){
+    -webkit-animation-delay: -1s;
+    -moz-animation-delay: -1s;
     animation-delay: -1s;
   }
   span:nth-child(3){
+    -webkit-animation-delay: -2s;
+    -moz-animation-delay: -2s;
     animation-delay: -2s;
   }
 }
 
-@keyframes left-animate {
-  0% {
-    opacity: 0;
-    transform: rotate(135deg) translate(-20px, -20px);
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: rotate(135deg) translate(20px, 20px);
+// CSS for expanding out tables and code snippets
+.isaac-expand-bg {
+  border: solid 1px $gray-103;
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  //padding: 1.5rem 1.5rem 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+  overflow: auto;
+  background-color: #fff;
+
+  transition: 0.2s;
+  -moz-transition: 0.2s;
+  -webkit-transition: 0.2s;
+
+  @include media-breakpoint-up(md) {
+    -webkit-animation: expand-overflow 0.5s; /* Safari 4+ */
+    -moz-animation:    expand-overflow 0.5s; /* Fx 5+ */
+    -o-animation:      expand-overflow 0.5s; /* Opera 12+ */
+    animation:         expand-overflow 0.5s; /* IE 10+, Fx 29+ */
+    @include make-col-offset(-2.8, 8);
+    width: 175%;
   }
 }
 
-@keyframes right-animate {
-  0% {
+.expand-outer {
+  position: relative;
+  .expand-arrow {
     opacity: 0;
-    transform: rotate(315deg) translate(-20px, -20px);
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: rotate(315deg) translate(20px, 20px);
+    position: absolute;
+    border: 0;
+    border-radius: 20px;
+    background: rgb(255,255,255);
+    background: radial-gradient(ellipse, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
+    top: 9px;
+    right: 6px;
+    z-index: 2;
+    img {
+      width: 30px;
+      height: auto;
+    }
   }
 }
 
-@keyframes animate-text {
-  0% {
-    opacity: 0;
-  }
-  50% {
+.expand-outer:hover {
+  .expand-arrow {
     opacity: 1;
-  }
-  100% {
-    opacity: 0;
+    animation: show-expand 0.8s forwards;
+    -webkit-animation: show-expand 0.8s forwards;
+    -moz-animation: show-expand 0.8s forwards;
   }
 }
