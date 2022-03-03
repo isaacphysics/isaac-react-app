@@ -4,10 +4,6 @@ import {SingleEnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH} from "./constants";
 import {extractTeacherName} from "./user";
 
-function notMissing<T>(item: T | undefined): T {
-    if (item === undefined) throw new Error("Missing item");
-    return item;
-}
 export function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnhancedAssignment {
     return assignment.gameboard != undefined;
 }
@@ -30,10 +26,8 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) =
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment.gameboard = notMissing(assignment.gameboard);
-            assignment.creationDate = notMissing(assignment.creationDate);
-            if (assignment.gameboard.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
-                let noDueDateButRecent = !assignment.dueDate && (assignment.creationDate > fourWeeksAgo);
+            if (assignment?.gameboard?.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
+                let noDueDateButRecent = !assignment.dueDate && (assignment.creationDate &&  assignment.creationDate > fourWeeksAgo);
                 let dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= fiveDaysAgo);
                 if (noDueDateButRecent || dueDateAndCurrent) {
                     // Assignment either not/only just overdue, or else set within last month but no due date.
@@ -60,17 +54,12 @@ export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assi
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment.assignerSummary = notMissing(assignment.assignerSummary);
-            assignment.assignerSummary.familyName = notMissing(assignment.assignerSummary.familyName);
-            assignment.gameboard = notMissing(assignment.gameboard);
-            assignment.gameboard.title = notMissing(assignment.gameboard.title);
-            assignment.groupName = notMissing(assignment.groupName);
 
             const assignmentMatchesFilter =
-                assignment.gameboard.title.toLowerCase().includes(assignmentTitleFilter.toLowerCase())
-                && (assignmentGroupFilter == "All" || assignment.groupName == assignmentGroupFilter)
-                && (assignmentSetByFilter == "All" || extractTeacherName(assignment.assignerSummary)
-                    == assignmentSetByFilter)
+                assignment?.gameboard?.title?.toLowerCase().includes(assignmentTitleFilter.toLowerCase())
+                && (assignmentGroupFilter === "All" || assignment.groupName === assignmentGroupFilter)
+                && (assignmentSetByFilter === "All" || extractTeacherName(assignment.assignerSummary)
+                    === assignmentSetByFilter)
 
             if (assignmentMatchesFilter){
                 filteredAssignments.push(assignment)
@@ -85,8 +74,7 @@ export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | null)
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment.groupName = notMissing(assignment.groupName)
-            distinctAssignmentGroups.add(assignment.groupName)
+            assignment?.groupName && distinctAssignmentGroups.add(assignment.groupName)
         })
     }
     return distinctAssignmentGroups
@@ -97,8 +85,7 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | null
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment.assignerSummary = notMissing(assignment.assignerSummary)
-            distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string)
+            assignment?.assignerSummary && distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string)
         })
     }
     return distinctFormattedAssignmentSetters
