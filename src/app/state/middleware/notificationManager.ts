@@ -1,5 +1,6 @@
-import {Action, Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {ACTION_TYPE} from "../../services/constants";
+import {Action} from "../../../IsaacAppTypes";
 import {openActiveModal} from "../actions";
 import {allRequiredInformationIsPresent, withinLast50Minutes, withinLast2Hours} from "../../services/validation";
 import {isLoggedIn} from "../../services/user";
@@ -23,11 +24,20 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
     }
 
     if (action.type === ACTION_TYPE.QUESTION_ATTEMPT_REQUEST) {
-        if (
-            state && !isLoggedIn(state.user) && !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
-        ) {
-            persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
-            await dispatch(openActiveModal(loginOrSignUpModal) as any);
+        const lastQuestionId = persistence.session.load(KEY.FIRST_ANON_QUESTION);
+
+        if (lastQuestionId === null) {
+            persistence.session.save(KEY.FIRST_ANON_QUESTION, action.questionId);
+        } else {
+            if (
+                state && !isLoggedIn(state.user) &&
+                lastQuestionId !== action.questionId &&
+                !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
+            ) {
+                persistence.session.remove(KEY.FIRST_ANON_QUESTION);
+                persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
+                await dispatch(openActiveModal(loginOrSignUpModal) as any);
+            }
         }
     }
 

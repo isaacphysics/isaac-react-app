@@ -8,6 +8,7 @@ export enum KEY {
     LAST_NOTIFICATION_TIME = "lastNotificationTime",
     ANONYMISE_USERS = "anonymiseUsers",
     MOST_RECENT_ALL_TOPICS_PATH = "mostRecentAllTopicsPath",
+    FIRST_ANON_QUESTION = "firstAnonQuestion",
 }
 
 export const LOADING_FAILURE_VALUE = null;
