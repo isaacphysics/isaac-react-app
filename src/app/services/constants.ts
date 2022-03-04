@@ -12,7 +12,6 @@ export const API_VERSION: string = REACT_APP_API_VERSION || "any";
  */
 let apiPath = `${document.location.origin}/api/${API_VERSION}/api`;
 if (document.location.hostname === "localhost") {
-    // apiPath = "https://staging.isaaccomputerscience.org/api/v2.17.2/api";
     apiPath = "http://localhost:8080/isaac-api/api";
 } else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";

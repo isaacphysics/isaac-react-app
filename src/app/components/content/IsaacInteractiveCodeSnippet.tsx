@@ -2,12 +2,14 @@ import React, {useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
 import {useIFrameMessages} from "../../services/miscUtils";
 import uuid from "uuid";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
+import {logAction} from "../../state/actions";
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
 export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) => {
+    const dispatch = useDispatch();
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const uid = useRef((doc?.id || "") + uuid.v4().slice(0, 8));
     const {receivedData, sendMessage} = useIFrameMessages(uid.current, iframeRef);
@@ -43,6 +45,12 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                 // setupFail represents the same but for setup code
                 if (segueEnvironment !== "PROD") {
                     console.error(`IsaacInteractiveCodeSnippet ${receivedData.type === "setupFail" ? "setup code" : "checker"} error: ${receivedData.message}`);
+                } else {
+                    dispatch(logAction({
+                        type: "ISAAC_INTERACTIVE_CODE_SNIPPET_ERROR",
+                        questionId: doc.id,
+                        error: `IsaacInteractiveCodeSnippet ${receivedData.type === "setupFail" ? "setup code" : "checker"} error: ${receivedData.message}`
+                    }));
                 }
                 break;
             case "checker":

@@ -8,8 +8,6 @@ import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
 import {selectors} from "../../../state/selectors";
-import {IsaacInteractiveCodeSnippet} from "../../content/IsaacInteractiveCodeSnippet";
-import {IsaacCodeSnippet} from "../../content/IsaacCodeSnippet";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -103,38 +101,6 @@ export const HomepageCS = () => {
                     </Row>}
             </Container>
         </section>
-
-        <Container>
-            <h2>Code Demo:</h2>
-            {/*<IsaacCodeSnippet doc={{language: "python",*/}
-            {/*    code: "for i in range(0, 100):\n  print(i)",*/}
-            {/*    disableHighlighting: false*/}
-            {/*}} />*/}
-            <IsaacInteractiveCodeSnippet doc={{
-                id: "ajsbfjlanfknslkdnfla",
-                language: "python",
-                code: "age = int(input(\"Please enter an accepted age \"))\nwhile age < 18:\n    age = int(input(\"Please enter an accepted age \"))\n",
-                disableHighlighting: false,
-                wrapCodeInMain: false,
-                testCode: "endTest(\"Your program stopped looping at the correct input\", \"Your program did not end after '18' being input. Try again!\", True)\n",
-                setupCode: "startTest([\"4\", \"5\", \"2\", \"17\", \"18\"], None)\n",
-                url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
-            }} />
-            <IsaacInteractiveCodeSnippet doc={{
-                id: "anotherone",
-                language: "javascript",
-                wrapCodeInMain: true,
-                setupCode: "startTest(['2','8','-1','3','9', '17', '18'], undefined)",
-                code: "let age = parseInt(prompt(\"Please enter an accepted age \"))\n" +
-                    "while (age < 18) {\n" +
-                    "    age = parseInt(prompt(\"Please enter an accepted age \"))\n}\n",
-                testCode: "main()\nendTest('Wow you did great!', 'Oops something went wrong!', true)\n"
-                    + "startTest(['20','18','18'], undefined)\nendTest('Testing the test','Testing the test', false)",
-                // outputRegex: ".*4\\n.*64\\n.*1\\n.*9",
-                //expectedResult: "[4, 64, 1, 9]",
-                url: "https://github.com/isaaccomputerscience/isaac-code-samples/blob/main/recursion/recursion-examples/gcd_recursive.py",
-            }} />
-        </Container>
 
         {!(user && user.loggedIn) && <Container>
             <hr/>
