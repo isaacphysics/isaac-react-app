@@ -2,11 +2,8 @@ import {AssignmentDTO} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
 import {SingleEnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH} from "./constants";
+import {extractTeacherName} from "./user";
 
-function notMissing<T>(item: T | undefined): T {
-    if (item === undefined) throw new Error("Missing item");
-    return item;
-}
 export function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnhancedAssignment {
     return assignment.gameboard != undefined;
 }
@@ -29,10 +26,8 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) =
 
     if (assignments) {
         assignments.forEach(assignment => {
-            assignment.gameboard = notMissing(assignment.gameboard);
-            assignment.creationDate = notMissing(assignment.creationDate);
-            if (assignment.gameboard.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
-                let noDueDateButRecent = !assignment.dueDate && (assignment.creationDate > fourWeeksAgo);
+            if (assignment?.gameboard?.percentageCompleted === undefined || assignment.gameboard.percentageCompleted < 100) {
+                let noDueDateButRecent = !assignment.dueDate && (assignment.creationDate &&  assignment.creationDate > fourWeeksAgo);
                 let dueDateAndCurrent = assignment.dueDate && (assignment.dueDate >= fiveDaysAgo);
                 if (noDueDateButRecent || dueDateAndCurrent) {
                     // Assignment either not/only just overdue, or else set within last month but no due date.
@@ -51,3 +46,47 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) =
 
     return myAssignments;
 };
+
+export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assignmentTitleFilter: string,
+                                              assignmentGroupFilter: string,
+                                              assignmentSetByFilter:string): AssignmentDTO[] => {
+    const filteredAssignments: AssignmentDTO[] = []
+
+    if (assignments) {
+        assignments.forEach(assignment => {
+
+            const assignmentMatchesFilter =
+                assignment?.gameboard?.title?.toLowerCase().includes(assignmentTitleFilter.toLowerCase())
+                && (assignmentGroupFilter === "All" || assignment.groupName === assignmentGroupFilter)
+                && (assignmentSetByFilter === "All" || extractTeacherName(assignment.assignerSummary)
+                    === assignmentSetByFilter)
+
+            if (assignmentMatchesFilter){
+                filteredAssignments.push(assignment)
+            }
+        });
+    }
+    return filteredAssignments
+}
+
+export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | null): Set<string> => {
+    const distinctAssignmentGroups = new Set<string>()
+
+    if (assignments) {
+        assignments.forEach(assignment => {
+            assignment?.groupName && distinctAssignmentGroups.add(assignment.groupName)
+        })
+    }
+    return distinctAssignmentGroups
+}
+
+export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | null): Set<string> => {
+    const distinctFormattedAssignmentSetters = new Set<string>()
+
+    if (assignments) {
+        assignments.forEach(assignment => {
+            assignment?.assignerSummary && distinctFormattedAssignmentSetters.add(extractTeacherName(assignment.assignerSummary) as string)
+        })
+    }
+    return distinctFormattedAssignmentSetters
+}

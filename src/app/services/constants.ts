@@ -548,6 +548,7 @@ export enum PROGRAMMING_LANGUAGE {
     PYTHON = "PYTHON",
     PHP = "PHP",
     CSHARP = "CSHARP",
+    ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
     NONE = "NONE",
@@ -559,6 +560,7 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
     [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
+    [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
 };
