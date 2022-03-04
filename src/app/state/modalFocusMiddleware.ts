@@ -17,7 +17,7 @@ export const modalFocusMiddleware: Middleware = (api: MiddlewareAPI) => (next: D
                 (lastFocused as HTMLElement)?.focus();
                 lastFocused = null;
             } else {
-                document.getElementById("main-heading")?.focus();
+                document.getElementById("main")?.focus();
             }
     }
 
