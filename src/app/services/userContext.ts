@@ -384,11 +384,11 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
 export function audienceStyle(audienceString: string): string {
     switch (audienceString) {
         case stageLabelMap.a_level:
-            return "-alevel";
+            return "stage-label-alevel";
         case stageLabelMap.gcse:
-            return "-gcse";
+            return "stage-label-gcse";
         default:
-            return "-all";
+            return "stage-label-all";
     }
 }
 
