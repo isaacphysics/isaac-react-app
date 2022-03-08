@@ -82,7 +82,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.numberSystems, title: "Number systems and sets", parent: TAG_ID.mathsForCs, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.mathsFunctions, title: "Mathematical functions", parent: TAG_ID.mathsForCs, stageOverride: GCSE_COMING_2022},
         // Programming  fundamentals topics
-        {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_NEW},
         {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
