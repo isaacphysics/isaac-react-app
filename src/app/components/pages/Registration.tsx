@@ -129,11 +129,11 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         assignToRegistrationUser({givenName: e.target.value});
                                     }}
-                                    invalid={(!validateName(registrationUser.givenName))}
+                                    invalid={(attemptedSignUp && !validateName(registrationUser.givenName))}
                                     aria-describedby="firstNameValidationMessage" required
                                 />
                                 <FormFeedback id="firstNameValidationMessage">
-                                    {(!validateName(registrationUser.givenName)) ? "Enter a valid name" : null}
+                                    {(attemptedSignUp && !validateName(registrationUser.givenName)) ? "Enter a valid name" : null}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
@@ -147,11 +147,11 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         assignToRegistrationUser({familyName: e.target.value});
                                     }}
-                                    invalid={(!validateName(registrationUser.familyName))}
+                                    invalid={(attemptedSignUp && !validateName(registrationUser.familyName))}
                                     aria-describedby="lastNameValidationMessage" required
                                 />
                                 <FormFeedback id="lastNameValidationMessage">
-                                    {(!validateName(registrationUser.familyName)) ? "Enter a valid name" : null}
+                                    {(attemptedSignUp && !validateName(registrationUser.familyName)) ? "Enter a valid name" : null}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
@@ -272,7 +272,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 || !validateName(registrationUser.givenName)
                                 || !validateName(registrationUser.familyName)) &&
                                 <h4 role="alert" className="text-danger text-left">
-                                    Please correct the errors marked above to continue.
+                                    Not all required fields have been correctly filled.
                                 </h4>
                             }
                             <h4 role="alert" className="text-danger text-left">

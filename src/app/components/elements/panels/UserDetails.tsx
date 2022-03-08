@@ -73,7 +73,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         aria-describedby="firstNameValidationMessage" required
                     />
                     <FormFeedback id="firstNameValidationMessage">
-                        {(!validateName(userToUpdate.givenName))
+                        {(submissionAttempted && !validateName(userToUpdate.givenName))
                             ? "Enter a valid name" : null}
                     </FormFeedback>
                 </FormGroup>
@@ -88,7 +88,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                         aria-describedby="lastNameValidationMessage" required
                     />
                     <FormFeedback id="lastNameValidationMessage">
-                        {(!validateName(userToUpdate.familyName))
+                        {(submissionAttempted && !validateName(userToUpdate.familyName))
                             ? "Enter a valid name" : null}
                     </FormFeedback>
                 </FormGroup>
