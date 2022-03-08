@@ -33,8 +33,6 @@ import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
-import * as RS from "reactstrap";
-import {notRelevantMessage} from "../../services/userContext";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
     const dispatch = useDispatch();

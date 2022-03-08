@@ -10,9 +10,6 @@ import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {EXAM_BOARD, STAGE} from "./constants";
 import {isStudent} from "./user";
-import {Form} from "reactstrap";
-import {FormEvent} from "react";
-import {userPreferences} from "../state/reducers/userState";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
