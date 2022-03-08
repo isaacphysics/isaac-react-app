@@ -109,6 +109,30 @@ export const searchList = [
         url: "/support/teacher/suggestions",
         hash: "spreadsheet",
         type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "constants",
+        title: "Physical constants",
+        terms: ["constants", "value of g", "value of epsilon0", "value of e", "value of h", "physical constants", "table of constants"],
+        summary: "View a list of constants",
+        url: "/solving_problems",
+        hash: "physical_constants",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "equation_editor",
+        title: "Equation editor help",
+        terms: ["equation editor", "equation editor help"],
+        summary: "Information about the symbolic editor",
+        url: "/solving_problems",
+        hash: "symbolic",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "significant_figures",
+        title: "Significant figures",
+        terms: ["significant figures", "sig figs", "sig fig", "sf"],
+        summary: "Help on significant figures",
+        url: "/solving_problems",
+        hash: "acc_solving_problems_sig_figs",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 
 ];
