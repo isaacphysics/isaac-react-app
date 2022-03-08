@@ -1,9 +1,13 @@
+$highlight-text-colour: #FFFFFF;
+
 .hi-pink {
   background-color: $highlight-pink;
+  color: $highlight-text-colour;
 }
 
 .hi-pink-50 {
   background-color: $highlight-pink-50;
+  color: $highlight-text-colour;
 }
 
 .hi-pink-25 {
@@ -12,10 +16,12 @@
 
 .hi-navy {
   background-color: $highlight-navy;
+  color: $highlight-text-colour;
 }
 
 .hi-navy-50 {
   background-color: $highlight-navy-50;
+  color: $highlight-text-colour;
 }
 
 .hi-navy-25 {
@@ -24,10 +30,12 @@
 
 .hi-teal {
   background-color: $highlight-teal;
+  color: $highlight-text-colour;
 }
 
 .hi-teal-50 {
   background-color: $highlight-teal-50;
+  color: $highlight-text-colour;
 }
 
 .hi-teal-25 {
@@ -36,10 +44,12 @@
 
 .hi-mustard {
   background-color: $highlight-mustard;
+  color: $highlight-text-colour;
 }
 
 .hi-mustard-50 {
   background-color: $highlight-mustard-50;
+  color: $highlight-text-colour;
 }
 
 .hi-mustard-25 {
