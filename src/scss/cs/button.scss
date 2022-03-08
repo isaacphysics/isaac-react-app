@@ -5,13 +5,16 @@
     color: $black;
   }
   &.btn-negative {
-    background-color: $cs-reddish;
+    background-color: $gcse-colour;
+    color: white;
   }
   &.btn-neutral {
-    background-color: $cs-mustard;
+    background-color: $highlight-mustard;
+    color: white;
   }
   &.btn-positive {
-    background-color: $green;
+    background-color: $highlight-teal;
+    color: white;
   }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $cs-reddish;
@@ -19,11 +22,24 @@
     color: $black;
     text-decoration: underline;
   }
+  &.btn-hide {
+    color: $black;
+  }
+  &.btn-hide:not(:disabled):not(.disabled):active {
+    background-color: $highlight-navy;
+    border: 1px solid transparent;
+    color: $black;
+    text-decoration: underline;
+  }
+}
+
+.alert-hide {
+  background-color: $highlight-navy-25;
 }
 
 .quick-question-options {
-  background: rgba(lightcoral, 0.5);
-  border: 1px solid transparent;
+  background: white;
+  border: 2px solid $highlight-navy;
   color: $black;
   border-radius: 5px;
   padding: 10px !important;
