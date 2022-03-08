@@ -22,6 +22,7 @@ import {
 import {ACTION_TYPE} from "../../app/services/constants";
 import {Action} from "../../IsaacAppTypes";
 import {middleware} from "../../app/state/store";
+import {jest} from "@jest/globals";
 
 const mockStore = configureMockStore(middleware);
 const axiosMock = new MockAdapter(endpoint);
