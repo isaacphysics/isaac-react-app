@@ -41,5 +41,5 @@ jobs:
     - run: yarn install --frozen-lockfile
     - run: yarn run build-cs
     - run: yarn run test-phy --silent
-    - run: yarn run test-cs --coverage
+    - run: yarn run test-cs --silent --coverage
     - run: codecov
