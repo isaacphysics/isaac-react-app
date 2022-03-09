@@ -14,7 +14,7 @@ import {
     FormGroup,
     Input,
     Label,
-    Row, UncontrolledTooltip
+    Row
 } from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {updateCurrentUser} from "../../state/actions";
