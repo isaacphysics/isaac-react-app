@@ -40,6 +40,6 @@ jobs:
     - run: yarn global add codecov
     - run: yarn install --frozen-lockfile
     - run: yarn run build-cs
-    - run: yarn run test-phy
+    - run: yarn run test-phy --silent
     - run: yarn run test-cs --coverage
     - run: codecov
