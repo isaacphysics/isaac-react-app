@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
 import hljs from 'highlight.js/lib/core';
 import {addLineNumbers} from "../../services/highlightJs";
-import {ScrollPrompt} from "../elements/ScrollPrompt";
+import {ScrollShadows} from "../elements/ScrollShadows";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -22,7 +22,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const scrollPromptRef = useRef<HTMLPreElement>(null);
 
     return <div className={"position-relative"}>
-        <ScrollPrompt scrollRef={scrollPromptRef} />
+        <ScrollShadows scrollRef={scrollPromptRef} />
         <Row>
             <Col className="code-snippet">
                 <pre ref={scrollPromptRef} className="line-numbers">

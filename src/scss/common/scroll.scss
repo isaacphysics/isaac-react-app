@@ -1,126 +1,98 @@
 .scroll-arrow {
   position: absolute;
-  overflow: visible;
+  overflow: hidden;
+  height: auto;
+  display: block;
   z-index: 1;
-  left: 50%;
-  transform: translate(-50%,-50%);
+  width: 10%;
+  top: 0;
+  bottom: 0;
   pointer-events: none;
 
-  span {
-    position: absolute;
-    display: none;
-    opacity: 0;
-    width: 30px;
-    height: 30px;
-    border-bottom: 5px solid $secondary;
-    border-right: 5px solid $secondary;
-    border-radius: 2px;
-  }
-
-  p {
-    position: absolute;
-    display: none;
-    top: 24px;
-    left: -35px;
-    color: $secondary;
-    font: $secondary-font;
-    text-wrap: avoid;
-    opacity: 0;
-  }
-
   &.left {
-    span {
-      display: block;
-      transform: rotate(135deg);
-      margin: -10px;
-      -webkit-animation: left-scroll-animate 3s 2;
-      -moz-animation: left-scroll-animate 3s 2;
-      animation: left-scroll-animate 3s 2;
-    }
-    p {
-      display: block;
-      -webkit-animation: animate-scroll-text 6s 1;
-      -moz-animation: animate-scroll-text 6s 1;
-      animation: animate-scroll-text 6s 1;
-    }
+    left: 0;
+    background: linear-gradient(to right, $shadow-08 0%, rgba(0,0,0,0) 100%);
   }
 
   &.right {
-    span {
-      display: block;
-      transform: rotate(315deg);
-      margin: -10px;
-      -webkit-animation: right-scroll-animate 3s 2;
-      -moz-animation: right-scroll-animate 3s 2;
-      animation: right-scroll-animate 3s 2;
-    }
-    p {
-      display: block;
-      -webkit-animation: animate-scroll-text 6s 1;
-      -moz-animation: animate-scroll-text 6s 1;
-      animation: animate-scroll-text 6s 1;
-    }
+    left: 90%;
+    background: linear-gradient(to left, $shadow-08 0%, rgba(0,0,0,0) 100%);
   }
-  span:nth-child(2){
-    -webkit-animation-delay: -1s;
-    -moz-animation-delay: -1s;
-    animation-delay: -1s;
+}
+
+.expand-outer {
+  .scroll-arrow {
+    margin-top: 35px;
   }
-  span:nth-child(3){
-    -webkit-animation-delay: -2s;
-    -moz-animation-delay: -2s;
-    animation-delay: -2s;
+}
+
+.isaac-tab {
+  .scroll-arrow {
+    margin-bottom: 1em;
   }
 }
 
 // CSS for expanding out tables and code snippets
 .isaac-expand-bg {
+  position: relative;
   border: solid 1px $gray-103;
   box-shadow: 0 2px 30px 0 $shadow-08;
-  //padding: 1.5rem 1.5rem 1.5rem;
+  padding: 1.5rem 1.5rem 1.5rem;
   margin-top: 1.5rem;
   margin-bottom: 2.5rem;
   overflow: auto;
-  background-color: #fff;
-
-  transition: 0.2s;
-  -moz-transition: 0.2s;
-  -webkit-transition: 0.2s;
+  background-color: #ffffff55;
 
   @include media-breakpoint-up(md) {
-    -webkit-animation: expand-overflow 0.5s; /* Safari 4+ */
-    -moz-animation:    expand-overflow 0.5s; /* Fx 5+ */
-    -o-animation:      expand-overflow 0.5s; /* Opera 12+ */
-    animation:         expand-overflow 0.5s; /* IE 10+, Fx 29+ */
-    @include make-col-offset(-2.8, 8);
-    width: 175%;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-animation: expand-overflow 0.4s; /* Safari 4+ */
+    -moz-animation:    expand-overflow 0.4s; /* Fx 5+ */
+    -o-animation:      expand-overflow 0.4s; /* Opera 12+ */
+    animation:         expand-overflow 0.4s; /* IE 10+, Fx 29+ */
+    width: 95vw;
   }
 }
 
 .expand-outer {
   position: relative;
   .expand-arrow {
-    opacity: 0;
-    position: absolute;
+    margin-top: 4px;
+    opacity: 1;
     border: 0;
+    position: absolute;
+    right: 0;
     border-radius: 20px;
     background: rgb(255,255,255);
     background: radial-gradient(ellipse, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
-    top: 9px;
-    right: 6px;
     z-index: 2;
     img {
-      width: 30px;
+      width: 1em;
+      margin-right: 6px;
       height: auto;
+      display: inline-block;
+      margin-top: -4px;
+    }
+    div {
+      overflow: hidden;
+      display: inline-block;
+      span {
+        transform: translate(calc(100% - 1em - 6px));
+        transition-property: transform;
+        transition-duration: 0.5s;
+        transition-delay: 0.15s;
+        display: inline-block;
+      }
     }
   }
 }
 
 .expand-outer:hover {
   .expand-arrow {
-    opacity: 1;
-    animation: show-expand 0.8s forwards;
-    -webkit-animation: show-expand 0.8s forwards;
-    -moz-animation: show-expand 0.8s forwards;
+    div {
+      span {
+        transform: translate(0%);
+      }
+    }
   }
 }

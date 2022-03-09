@@ -8,8 +8,9 @@ import {katexify} from "./LaTeX";
 import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
-import {ScrollPrompt} from "./ScrollPrompt";
+import {ScrollShadows} from "./ScrollShadows";
 import {above, isMobile, useDeviceSize} from "../../services/device";
+import {QuizAttemptDTO} from "../../../IsaacApiTypes";
 
 interface TableData {
     id: number;
@@ -38,18 +39,31 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
     return {manipulatedHtml: htmlDom.innerHTML, tableData: tableInnerHTMLs};
 }
 
-export const useExpandContent = (unexpandedInnerClasses?: string) => {
+export const ExpandedContext = React.createContext<{expanded: boolean}>({expanded: false});
+
+export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedInnerClasses = "") => {
     const [ expanded, setExpanded ] = useState(false);
-    const toggleExpanded = () => setExpanded(b => !b);
+
+    const toggleExpanded = () => {
+        const newExpanded = !expanded;
+        if (newExpanded) {
+            ref.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            });
+        }
+        setExpanded(newExpanded);
+    }
 
     const deviceSize = useDeviceSize();
 
-    const expandButton = (!isMobile() && <button className={"expand-arrow"} style={{top: 9, right: 6, zIndex: 2}} onClick={toggleExpanded}>
-        <img src={"/assets/expand-arrow.svg"}/>
-    </button>) || null;
+    const expandButton = (!isMobile() && <div className={"position-relative"} style={{width: "100%", height: 35}}>
+        <button className={"expand-arrow ml-auto"} onClick={toggleExpanded}>
+            <div><span><img aria-hidden alt={"Indicator for expandable content"} src={"/assets/expand-arrow.svg"}/> {expanded ? "Collapse content" : "View larger version"}</span></div>
+        </button>
+    </div>) || null;
 
-    // If screen size goes below md, then the `parsons-layout` class no longer applies - this means we shouldn't apply
-    // the classes `parsons-layout` and `isaac-expand-bg`.
+    // If screen size goes below md, then the `isaac-expand-bg` class no longer applies (the screen is too thin)
     const shouldExpand = expanded && above["md"](deviceSize);
 
     const innerClasses = shouldExpand ? "" : unexpandedInnerClasses;
@@ -62,15 +76,16 @@ export const useExpandContent = (unexpandedInnerClasses?: string) => {
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefObject<HTMLElement>}) => {
     const parentElement = rootElement.current?.querySelector(`#table-${id}`);
 
-    const divRef = useRef<HTMLDivElement>(null);
-    const {expandButton, innerClasses, outerClasses} = useExpandContent("overflow-auto mb-4");
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const expandRef = useRef<HTMLDivElement>(null);
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef, "overflow-auto mb-4");
 
     if (html && parentElement) {
         return ReactDOM.createPortal(
-            <div className={outerClasses}>
-                <ScrollPrompt scrollRef={divRef} />
-                <div ref={divRef} className={innerClasses}>
-                    {expandButton}
+            <div className={outerClasses} ref={expandRef}>
+                <ScrollShadows scrollRef={scrollRef} />
+                {expandButton}
+                <div ref={scrollRef} className={innerClasses}>
                     <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
                 </div>
             </div>,

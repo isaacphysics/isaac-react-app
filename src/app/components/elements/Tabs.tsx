@@ -1,9 +1,9 @@
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useRef, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import {isDefined} from "../../services/miscUtils";
-import {useExpandContent} from "./TrustedHtml";
+import {ExpandedContext, useExpandContent} from "./TrustedHtml";
 import classNames from "classnames";
 
 
@@ -47,11 +47,13 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
-    const {expandButton, innerClasses, outerClasses} = useExpandContent();
+    const expandRef = useRef(null);
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef);
 
     return <div
-        className={classNames(className, innerClasses, outerClasses)}
+        className={classNames(className, innerClasses, outerClasses)} ref={expandRef}
     >
+        {expandButton}
         <Nav tabs className="flex-wrap">
             {Object.keys(children).map((tabTitle, mapIndex) => {
                 const tabIndex = mapIndex + 1;
@@ -67,8 +69,6 @@ export const Tabs = (props: TabsProps) => {
                 </NavItem>;
             })}
         </Nav>
-
-        {expandButton}
 
         <TabContent activeTab={activeTab} className={tabContentClass}>
             {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
