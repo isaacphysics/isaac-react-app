@@ -26,8 +26,9 @@ import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect, RouteComponentProps, withRouter} from "react-router";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
+import {Helmet} from "react-helmet";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
     const dispatch = useDispatch();
@@ -88,10 +89,16 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         return <Redirect to="/" />;
     }
 
+    const metaDescriptionCS =  "Sign up for a free account and get powerful GCSE and A Level Computer Science resources and questions. For classwork, homework, and revision.";
+
     // Render
     return <Container id="registration-page" className="mb-5">
 
         <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
+        {SITE_SUBJECT === SITE.CS && <Helmet>
+            <meta name="description" content={metaDescriptionCS} />
+            <meta property="og:description" content={metaDescriptionCS} />
+        </Helmet>}
 
         <Card>
             <CardBody>
