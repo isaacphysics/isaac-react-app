@@ -7,6 +7,9 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y ca-certificates curl ope
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -yy nodejs
 
+# Install Yarn
+RUN apt install --no-install-recommends yarn
+
 
 # Install Docker
 
