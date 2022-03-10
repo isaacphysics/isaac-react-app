@@ -2,15 +2,15 @@ language: node_js
 node_js:
 - 10
 install:
-    - npm install -g codecov
-    - npm ci
-cache: npm
+    - yarn global add codecov
+    - yarn --frozen-lockfile
+cache: yarn
 before_script:
   - export NODE_OPTIONS=--max_old_space_size=4096
 script:
-- npm run build-cs
-- npm run test-phy
-- npm run test-cs -- --coverage
+- yarn run build-cs
+- yarn run test-phy --silent
+- yarn run test-cs --silent --coverage
 - codecov
 notifications:
   slack:
