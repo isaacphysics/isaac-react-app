@@ -38,7 +38,7 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-  
     - run: yarn global add codecov
-    - run: yarn install --frozen-lockfile
+    - run: yarn --frozen-lockfile
     - run: yarn run build-cs
     - run: yarn run test-phy --silent
     - run: yarn run test-cs --silent --coverage
