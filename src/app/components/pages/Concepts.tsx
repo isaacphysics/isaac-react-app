@@ -7,7 +7,6 @@ import queryString from "query-string";
 import {fetchConcepts} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {TAG_ID} from "../../services/constants";
