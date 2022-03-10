@@ -143,7 +143,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 aria-expanded={open ? "true" : "false"}
             >
                 {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
-                    "justify-content-center " + (SITE_SUBJECT === SITE.CS ? audienceStyle(audienceString) : "")}>
+                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: SITE_SUBJECT === SITE.CS})}>
                     {audienceString}
                 </span>}
                 <div className="accordion-title pl-3">
