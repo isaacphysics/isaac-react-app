@@ -24,6 +24,7 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {Helmet} from "react-helmet";
 import {generateQuestionTitle} from "../../services/questions";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -52,6 +53,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     collectionType={navigation.collectionType}
                     subTitle={doc.subtitle as string}
                 />
+                <CanonicalHrefElement />
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
                     <div className="mt-3 mr-sm-1 ml-auto">
