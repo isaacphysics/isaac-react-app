@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
@@ -15,6 +15,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {isFound} from "../../services/miscUtils";
+import {Alert, Col, Row} from "reactstrap";
 
 const defaultConceptDisplay = {
     [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -36,7 +37,10 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
     const accordionDisplay = mergeDisplayOptions(defaultDisplay, doc.display);
 
+    const hashAnchor = location.hash.includes('#') ? location.hash.slice(1) : 'undefined-string-will-never-match';
+
     return <div className="isaac-accordion">
+        {hashAnchor !== 'undefined-string-will-never-match' && <Row><Col><Alert color="warning">You see this section despite it not being relevant to your content preferences because you have followed a direct link.</Alert></Col></Row>}
         {(doc.children as SectionWithDisplaySettings[] | undefined)
 
             // We take the doc's children's index as a key for each section so that react is not confused between filtering/reordering.
@@ -67,6 +71,15 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                     !isIntendedAudience(section.audience, userContext, user)
                 ) {
                     section.hidden = true;
+                }
+                return section;
+            })
+
+            // If we followed a direct link to a section, we want to show it regardless
+            // of any other settings. We also want to show a message somewhere on the page.
+            .map(section => {
+                if ((section.id || "").includes(hashAnchor)) {
+                    section.hidden = false;
                 }
                 return section;
             })
