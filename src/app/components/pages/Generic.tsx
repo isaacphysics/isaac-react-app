@@ -16,6 +16,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {Helmet} from "react-helmet";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
@@ -34,6 +35,10 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
         return <div className={doc.subjectId || ""}>
             <Container>
                 <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
+                <Helmet>
+                    {doc.summary && <meta name="description" content={doc.summary}/>}
+                    {doc.summary && <meta property="og:description" content={doc.summary}/>}
+                </Helmet>
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
                     <div className="question-actions question-actions-leftmost mt-3">
