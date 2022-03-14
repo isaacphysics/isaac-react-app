@@ -7,7 +7,7 @@
   }
 }
 
-.accordion-label {
+.stage-label {
   font-family: $secondary-font;
   padding: 1rem;
   min-width: 130px;
@@ -89,7 +89,7 @@
       &.de-emphasised {
         background: darken(#fff, 9%);
         color: lighten(black, 10%);
-        .accordion-label {
+        .stage-label {
           background: lighten($dark, 10%);
         }
       }
