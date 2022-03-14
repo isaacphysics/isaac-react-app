@@ -10,6 +10,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import uuid from "uuid";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import classNames from "classnames";
 
 export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuickQuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -83,8 +84,8 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                     </div>
                 }
                 {isVisible && showConfidence && !fastTrackInfo.isFastTrackPage  && <Row className="mt-3">
-                    <Col sm="12" md="12">
-                        <Button color={SITE_SUBJECT === SITE.CS ? "hide" : "secondary"} block className="active" onClick={hideAnswer}>
+                    <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
+                        <Button color="secondary" block className={"active " + classNames({"hide-answer": SITE_SUBJECT === SITE.CS})} onClick={hideAnswer}>
                             Hide answer
                         </Button>
                     </Col>

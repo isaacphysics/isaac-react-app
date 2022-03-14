@@ -22,13 +22,12 @@
     color: $black;
     text-decoration: underline;
   }
-  &.btn-hide {
-    color: $black;
+  &.hide-answer {
+    background-color: $highlight-navy !important;
+    border: 1px solid transparent !important;
+    color: $white !important;
   }
-  &.btn-hide:not(:disabled):not(.disabled):active {
-    background-color: $highlight-navy;
-    border: 1px solid transparent;
-    color: $black;
+  &.hide-answer:not(:disabled):not(.disabled):active {
     text-decoration: underline;
   }
 }
