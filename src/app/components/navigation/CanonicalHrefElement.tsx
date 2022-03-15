@@ -8,7 +8,7 @@ export const CanonicalHrefElement = () => {
     if (location.pathname !== "/") {
         canonicalPath = location.pathname;
     }
-    const canonicalHref = `${location.origin}${canonicalPath}`;
+    const canonicalHref = `${window.location.origin}${canonicalPath}`;
     return <Helmet>
         <link rel="canonical" href={canonicalHref}/>
     </Helmet>
