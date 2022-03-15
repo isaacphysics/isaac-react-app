@@ -17,6 +17,8 @@ import Select from "react-select";
 import {useUserContext} from "../../services/userContext";
 import {useUrlHashValue} from "../../services/reactRouterExtension";
 import {Item} from "../../services/select";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {Helmet} from "react-helmet";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -188,9 +190,16 @@ export const Glossary = () => {
         }
     });
 
+    const metaDescriptionCS = "Confused about an A level or GCSE Computer Science term? Look it up in our glossary.";
+
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
+            {SITE_SUBJECT === SITE.CS && <Helmet>
+                <meta name="description" content={metaDescriptionCS} />
+                <meta property="og:description" content={metaDescriptionCS} />
+            </Helmet>}
+
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">
                     <ShareLink linkUrl={`/glossary`} clickAwayClose/>
