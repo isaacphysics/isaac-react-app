@@ -1,10 +1,8 @@
 import {history} from "./history";
 import { isDefined } from './miscUtils';
 
-let previousPathname = "";
-
 // WARNING: the listener here doesn't seem to have an action parameter anywhere to be seen so I'm commenting this block out.
-history.listen(listener => {
+history.listen(_listener => {
     // if (["PUSH", "REPLACE"].includes(action) && previousPathname !== listener.pathname) {
     //     previousPathname = listener.pathname;
     //     (window as any).followedAtLeastOneSoftLink = true;

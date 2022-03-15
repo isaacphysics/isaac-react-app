@@ -8,7 +8,7 @@ import {range} from "lodash";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {isDefined} from "../../../services/miscUtils";
 import * as RS from "reactstrap";
-import Select, {SingleValue} from "react-select";
+import Select from "react-select";
 import {closeActiveModal, hideToast, showToast} from "../../../state/actions";
 import {setQuiz, showQuizSettingModal} from "../../../state/actions/quizzes";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";

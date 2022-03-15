@@ -96,7 +96,7 @@ const KatexBaseMacros = mathjaxToKatex(BaseMacros);
 const KatexMacrosWithMathsBool = mathjaxToKatex(MacrosWithMathsBoolean);
 const KatexMacrosWithEngineeringBool = mathjaxToKatex(MacrosWithEngineeringBoolean);
 
-const KatexOptions = {
+const customKatexOptions: KatexOptions = {
     throwOnError: false,
     strict: false,
     colorIsTextColor: true,
@@ -274,7 +274,7 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                         const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
                         return "\\text{" + REF + reference + ENDREF + "}";
                     }};
-                let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse} as KatexOptions;
+                let katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
                     return createReference(match, "unknown reference " + match);

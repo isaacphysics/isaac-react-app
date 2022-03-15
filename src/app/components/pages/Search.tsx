@@ -21,8 +21,6 @@ import {selectors} from "../../state/selectors";
 import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {selectOnChange} from "../../services/select";
-import { IsaacContentProps } from "../content/IsaacContent";
-import { isDefined } from "../../services/miscUtils";
 
 interface Item<T> {
     value: T;
