@@ -16,7 +16,8 @@ export const searchList = [
             "classes", "share token", "groups", "group", "join", "group code", "code", "token", "teacher code",
             "teachers connections", "join a group", "teacher conections", "teacher connect", "teachers connection"],
         summary: "Join groups and manage your teacher connections.",
-        url: "/account#teacherconnections",
+        url: "/account",
+        hash: "teacherconnections",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "logout",
