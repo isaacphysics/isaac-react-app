@@ -37,6 +37,7 @@ import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {siteSpecific} from "../../services/miscUtils";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {Helmet} from "react-helmet";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -253,7 +254,14 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
+    const metaDescriptionCS = "Search for the perfect free GCSE or A level Computer Science questions to study. For revision. For homework. For classroom learning.";
+
     return <>
+        {/* CS-specific metadata: */}
+        <Helmet>
+            <meta name="description" content={metaDescriptionCS} />
+            <meta property="og:description" content={metaDescriptionCS} />
+        </Helmet>
         <RS.Row>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">

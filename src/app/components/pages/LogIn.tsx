@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import * as RS from "reactstrap";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {handleProviderLoginRedirect, logInUser, resetPassword, submitTotpChallengeResponse} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -7,7 +8,7 @@ import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import * as RS from "reactstrap";
+import {Helmet} from "react-helmet";
 
 export const LogIn = () => {
     const headingRef = useRef<HTMLHeadingElement>(null);
@@ -79,7 +80,13 @@ export const LogIn = () => {
         return <Redirect to="/" />;
     }
 
+    const metaDescriptionCS = "Log in to your account. Access free GCSE and A level Computer Science resources. Use our materials to learn and revise for your exams.";
+
     return <Container id="login-page" className="my-4">
+        {SITE_SUBJECT === SITE.CS && <Helmet>
+            <meta name="description" content={metaDescriptionCS} />
+            <meta property="og:description" content={metaDescriptionCS} />
+        </Helmet>}
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>
