@@ -36,6 +36,7 @@ import {History} from "history";
 import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {siteSpecific} from "../../services/miscUtils";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {Helmet} from "react-helmet";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
@@ -488,6 +489,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
+        <CanonicalHrefElement />
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
