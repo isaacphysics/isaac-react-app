@@ -11,6 +11,7 @@ import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext
 import {STAGE, stageLabelMap} from "../../services/constants";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
+import {Helmet} from "react-helmet";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserContext();
@@ -77,6 +78,9 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, audience
             <LaTeX markup={currentPageTitle} />
             {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
         </div>
+        <Helmet>
+            <meta property="og:title" content={currentPageTitle} />
+        </Helmet>
         {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
         {help && !showModal && <React.Fragment>
             <div id="title-help" className="title-help">Help</div>
