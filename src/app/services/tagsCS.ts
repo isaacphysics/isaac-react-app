@@ -56,9 +56,9 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.imageRepresentation, title: "Representation of images", parent: TAG_ID.dataAndInformation, stageOverride: GCSE},
         {id: TAG_ID.soundRepresentation, title: "Representation of sound", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, stageOverride: GCSE},
+        {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
         {id: TAG_ID.fileOrganisation, title: "File organisation", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.databases, title: "Database concepts", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.databases, title: "Database concepts", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
         {id: TAG_ID.sql, title: "SQL", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
         // Data structures and algorithms topics
