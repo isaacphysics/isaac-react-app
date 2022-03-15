@@ -23,7 +23,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
 import {selectors} from "../../state/selectors";
-import {Helmet} from "react-helmet";
+import {MetaDescription} from "../elements/MetaDescription";
 
 const determineUrlQueryPresets = (user?: PotentialUser | null) => {
     const urlQuery = queryString.parse(location.search);
@@ -91,10 +91,7 @@ export const Contact = () => {
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />
-        {SITE_SUBJECT === SITE.CS && <Helmet>
-            <meta name="description" content={metaDescriptionCS} />
-            <meta property="og:description" content={metaDescriptionCS} />
-        </Helmet>}
+        {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS}/>}
         <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">

@@ -18,7 +18,7 @@ import {useUserContext} from "../../services/userContext";
 import {useUrlHashValue} from "../../services/reactRouterExtension";
 import {Item} from "../../services/select";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {Helmet} from "react-helmet";
+import {MetaDescription} from "../elements/MetaDescription";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -195,10 +195,7 @@ export const Glossary = () => {
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
-            {SITE_SUBJECT === SITE.CS && <Helmet>
-                <meta name="description" content={metaDescriptionCS} />
-                <meta property="og:description" content={metaDescriptionCS} />
-            </Helmet>}
+            {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS} />}
 
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">

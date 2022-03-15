@@ -16,7 +16,7 @@ import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {Helmet} from "react-helmet";
+import {MetaDescription} from "../elements/MetaDescription";
 
 
 interface EventsPageQueryParams {
@@ -62,10 +62,7 @@ export const Events = withRouter(({history, location}: {history: History; locati
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
             {SITE_SUBJECT === SITE.CS && <>
                 <CoronavirusWarningBanner />
-                <Helmet>
-                    <meta name="description" content={metaDescriptionCS} />
-                    <meta property="og:description" content={metaDescriptionCS} />
-                </Helmet>
+                <MetaDescription description={metaDescriptionCS} />
             </>}
             <div className="my-4">
                 {/* Filters */}
