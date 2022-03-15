@@ -7,7 +7,6 @@ import queryString from "query-string";
 import {fetchConcepts} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {TAG_ID} from "../../services/constants";
@@ -43,7 +42,7 @@ export const Concepts = withRouter((props: {history: History; location: Location
     let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
     let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
     let [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
-    let [shortcutResponse, setShortcutResponse] = useState<(ShortcutResponse | ContentSummaryDTO)[]>();
+    let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {

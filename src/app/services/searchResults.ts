@@ -16,7 +16,8 @@ export const searchList = [
             "classes", "share token", "groups", "group", "join", "group code", "code", "token", "teacher code",
             "teachers connections", "join a group", "teacher conections", "teacher connect", "teachers connection"],
         summary: "Join groups and manage your teacher connections.",
-        url: "/account#teacherconnections",
+        url: "/account",
+        hash: "teacherconnections",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
         id: "logout",
@@ -60,6 +61,78 @@ export const searchList = [
             "preferences", "my isaac"],
         summary: "Click here to view and edit your account details.",
         url: "/account",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "ambassador",
+        title: "Ambassador",
+        terms: ["ambassador"],
+        summary: "View ambassador information",
+        url: "/support/teacher/partner",
+        hash: "ambassadors",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "embedded_school",
+        title: "Embedded schools",
+        terms: ["embedded school"],
+        summary: "View embedded school information",
+        url: "/support/teacher/partner",
+        hash: "embedded_schools",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "edit_group_managers",
+        title: "Edit group managers",
+        terms: ["edit group managers"],
+        summary: "View information on editing group managers",
+        url: "/support/teacher/general",
+        hash: "create_group",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "email_notifications",
+        title: "Email notifications",
+        terms: ["email notifications"],
+        summary: "View email notification information",
+        url: "/support/teacher/troubleshooting",
+        hash: "email_preferences",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "ske",
+        title: "Ske",
+        terms: ["ske"],
+        summary: "View ske information",
+        url: "/support/teacher/direct",
+        hash: "teacher_mentoring",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "spreadsheet_of_questions",
+        title: "Spreadsheet of questions",
+        terms: ["spreadsheet of questions"],
+        summary: "View a spreadsheet of questions",
+        url: "/support/teacher/suggestions",
+        hash: "spreadsheet",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "constants",
+        title: "Physical constants",
+        terms: ["constants", "value of g", "value of epsilon0", "value of e", "value of h", "physical constants", "table of constants"],
+        summary: "View a list of constants",
+        url: "/solving_problems",
+        hash: "physical_constants",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "equation_editor",
+        title: "Equation editor help",
+        terms: ["equation editor", "equation editor help"],
+        summary: "Information about the symbolic editor",
+        url: "/solving_problems",
+        hash: "symbolic",
+        type: SEARCH_RESULT_TYPE.SHORTCUT
+    }, {
+        id: "significant_figures",
+        title: "Significant figures",
+        terms: ["significant figures", "sig figs", "sig fig", "sf"],
+        summary: "Help on significant figures",
+        url: "/solving_problems",
+        hash: "acc_solving_problems_sig_figs",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }
 
