@@ -28,7 +28,7 @@ import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons"
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
-    const componentId = useRef(uuid.v4().slice(0, 4)).current;
+    const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserContext();
     const user = useSelector(selectors.user.orNull);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
