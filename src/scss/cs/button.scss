@@ -30,6 +30,9 @@
   &.hide-answer:not(:disabled):not(.disabled):active {
     text-decoration: underline;
   }
+  &.confidence-help {
+    min-width: 20px !important;
+  }
 }
 
 .alert-hide {
@@ -42,4 +45,9 @@
   color: $black;
   border-radius: 5px;
   padding: 10px !important;
+}
+
+.quick-question-secondary {
+  background: $highlight-teal-25 !important;
+  border: none !important;
 }

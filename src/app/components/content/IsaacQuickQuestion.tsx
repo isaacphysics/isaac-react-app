@@ -62,6 +62,11 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">
             <div className={!fastTrackInfo.isFastTrackPage ? "quick-question" : ""}>
+                {SITE_SUBJECT === SITE.CS &&
+                    <div className="quick-question-title">
+                        <h3>Try it yourself!</h3>
+                    </div>
+                }
                 <div className="question-content clearfix">
                     <IsaacContentValueOrChildren {...doc} />
                 </div>

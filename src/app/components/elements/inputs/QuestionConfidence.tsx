@@ -2,6 +2,8 @@ import {Button, Col, Row} from "reactstrap";
 import React from "react";
 import {closeActiveModal, openActiveModal} from "../../../state/actions";
 import {useDispatch} from "react-redux";
+import classNames from "classnames";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 
 interface QuestionConfidenceProps {
@@ -29,13 +31,13 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
         }))
     }
 
-    return <div className="quick-question-options" hidden={hideOptions}>
+    return <div className={"quick-question-options " + classNames({"quick-question-secondary": SITE_SUBJECT === SITE.CS && isVisible})} hidden={hideOptions}>
         {!isVisible && <Row>
             <Col md="9">
                 <h4>Click a button to show the answer</h4>
             </Col>
             <Col md="3" className="text-center not-mobile">
-                <Button outline color="primary" className="confidence-help" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
+                <Button outline color="primary" className="confidence-help m-0" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
             </Col>
         </Row>}
         <Row className="mb-2">
