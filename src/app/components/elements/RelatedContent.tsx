@@ -24,7 +24,7 @@ interface RelatedContentProps {
     parentPage: ContentDTO;
 }
 
-type RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => ReactNode;
+type RenderItemFunction = (contentSummary: ContentSummaryDTO) => ReactNode;
 
 function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentDTO) {
     const eventDetails: any = {};
@@ -82,16 +82,16 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
                 {/* Large devices - multi column */}
                 <div className="d-none d-lg-flex">
                     <ListGroup className="w-50">
-                        {firstColQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                        {firstColQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                     <ListGroup className="w-50">
-                        {secondColQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                        {secondColQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
                 {/* Small devices - single column */}
                 <div className="d-lg-none">
                     <ListGroup>
-                        {allQuestions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS))}
+                        {allQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
                 </div>
             </div>
@@ -130,7 +130,7 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
                 <div className="d-lg-flex">
                     <ListGroup className="mr-lg-3">
                         {questions.length > 0 ?
-                            questions.map(contentSummary => renderItem(contentSummary, SITE_SUBJECT == SITE.CS)) :
+                            questions.map(contentSummary => renderItem(contentSummary)) :
                             <div className="mt-2 ml-3">There are no related questions</div>
                         }
                     </ListGroup>
@@ -158,7 +158,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const questions = sortedContent
         .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.QUESTION);
 
-    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO, openInNewTab?: boolean) => {
+    const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
         const audienceViews = filterAudienceViewsByProperties(determineAudienceViews(contentSummary.audience), AUDIENCE_DISPLAY_FIELDS);
         return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link
@@ -166,7 +166,6 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
                 onClick={() => {
                     dispatch(logAction(getEventDetails(contentSummary, parentPage)))
                 }}
-                target={openInNewTab ? "_blank" : undefined}
             >
                 {contentSummary.title}
                 {audienceViews.length > 0 && " ("}

@@ -36,6 +36,8 @@ import {History} from "history";
 import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {siteSpecific} from "../../services/miscUtils";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {Helmet} from "react-helmet";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -252,7 +254,14 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
+    const metaDescriptionCS = "Search for the perfect free GCSE or A level Computer Science questions to study. For revision. For homework. For classroom learning.";
+
     return <>
+        {/* CS-specific metadata: */}
+        <Helmet>
+            <meta name="description" content={metaDescriptionCS} />
+            <meta property="og:description" content={metaDescriptionCS} />
+        </Helmet>
         <RS.Row>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
@@ -480,6 +489,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
+        <CanonicalHrefElement />
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
