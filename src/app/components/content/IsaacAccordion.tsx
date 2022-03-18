@@ -40,7 +40,6 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const hashAnchor = location.hash.includes('#') ? location.hash.slice(1) : 'undefined-string-will-never-match';
 
     return <div className="isaac-accordion">
-        {hashAnchor !== 'undefined-string-will-never-match' && <Row><Col><Alert color="warning">You see this section despite it not being relevant to your content preferences because you have followed a direct link.</Alert></Col></Row>}
         {(doc.children as SectionWithDisplaySettings[] | undefined)
 
             // We take the doc's children's index as a key for each section so that react is not confused between filtering/reordering.
