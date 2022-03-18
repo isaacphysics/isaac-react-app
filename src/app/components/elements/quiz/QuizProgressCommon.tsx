@@ -117,7 +117,7 @@ export function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     }
     const valid = message === undefined;
     return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
-        <th className="student-name">
+        <td className="student-name">
             {valid ?
                 <>
                     <Button color="link" onClick={toggle} disabled={working}>
@@ -143,7 +143,7 @@ export function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                     <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
                 </>
             }
-        </th>
+        </td>
         {!valid && <td colSpan={sections.map(questionsInSection).flat().length + 1}>{message}</td>}
         {valid && <>
             {sections.map(section => {
@@ -160,9 +160,9 @@ export function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
                     </td>
                 }).flat()
             })}
-            <td className="total-column">
+            <th className="total-column">
                 {formatMark(row.feedback?.overallMark?.correct as number, quiz?.total as number, pageSettings.formatAsPercentage)}
-            </td>
+            </th>
         </>}
     </tr>;
 }
@@ -170,24 +170,25 @@ export function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
 export function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
 
-    return <table className="progress-table w-100 mb-5 border">
-        <tbody>
-            <tr className="bg-white">
-                <th>&nbsp;</th>
-                {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
-                    {section.title}
-                </th>)}
-                <th rowSpan={2} className="border-bottom">Overall</th>
-            </tr>
-            <tr className="bg-white">
-                <th className="bg-white border-bottom">&nbsp;</th>
-                {sections.map(section => questionsInSection(section).map((question, index) => <th key={question.id} className="border">
-                    {`Q${index + 1}`}
-                </th>)).flat()}
-            </tr>
-            {assignment.userFeedback?.map(row =>
-                <ResultRow key={row.user?.id} pageSettings={pageSettings} row={row} assignment={assignment} />
-            )}
-        </tbody>
-    </table>;
+    return <div className={"progress-table-container mb-5"}>
+        <table className="progress-table border">
+            <tbody>
+                <tr className="bg-white">
+                    <th rowSpan={2} className="bg-white border-bottom student-name">&nbsp;</th>
+                    {sections.map(section => <th key={section.id} colSpan={questionsInSection(section).length} className="border font-weight-bold">
+                        {section.title}
+                    </th>)}
+                    <th rowSpan={2} className="border-bottom total-column">Overall</th>
+                </tr>
+                <tr className="bg-white">
+                    {sections.map(section => questionsInSection(section).map((question, index) => <th key={question.id} className="border">
+                        {`Q${index + 1}`}
+                    </th>)).flat()}
+                </tr>
+                {assignment.userFeedback?.map(row =>
+                    <ResultRow key={row.user?.id} pageSettings={pageSettings} row={row} assignment={assignment} />
+                )}
+            </tbody>
+        </table>
+    </div> ;
 }
