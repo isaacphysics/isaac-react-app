@@ -15,7 +15,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {isFound} from "../../services/miscUtils";
-import {Alert, Col, Row} from "reactstrap";
+import { useLocation } from "react-router-dom";
 
 const defaultConceptDisplay = {
     [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -37,7 +37,8 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
     const accordionDisplay = mergeDisplayOptions(defaultDisplay, doc.display);
 
-    const hashAnchor = location.hash.includes('#') ? location.hash.slice(1) : 'undefined-string-will-never-match';
+    const location = useLocation();
+    const hashAnchor = location.hash !== "" && location.hash[0] === '#' ? location.hash.slice(1) : null;
 
     return <div className="isaac-accordion">
         {(doc.children as SectionWithDisplaySettings[] | undefined)
