@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import * as History from "history";
 import {ALPHABET, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";

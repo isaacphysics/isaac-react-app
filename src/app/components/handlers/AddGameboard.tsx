@@ -3,7 +3,7 @@ import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "./ShowLoading";
 import {useDispatch} from "react-redux";
 import {addGameboard} from "../../state/actions";
-import {match, RouteComponentProps, withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 interface AddGameboardProps extends RouteComponentProps<{ gameboardId: string; gameboardTitle: string }> {
