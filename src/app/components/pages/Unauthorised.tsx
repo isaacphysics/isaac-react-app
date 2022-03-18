@@ -3,11 +3,7 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
-interface UnauthorisedProps extends RouteComponentProps {
-    // location: {pathname: string; state?: {overridePathname?: string}}
-}
-
-const UnauthorisedComponent = ({location: {pathname, state}}: UnauthorisedProps) => {
+const UnauthorisedComponent = ({location: {pathname, state}}: RouteComponentProps) => {
     return <Container>
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle="Access denied" />

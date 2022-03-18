@@ -20,7 +20,6 @@ interface AccordionsProps extends RouteComponentProps {
     id?: string;
     trustedTitle?: string;
     index?: number;
-    location: History.Location;
     children?: React.ReactNode;
     startOpen?: boolean;
     deEmphasised?: boolean;

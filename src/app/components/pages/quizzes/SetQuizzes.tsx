@@ -26,7 +26,6 @@ import {isEventLeaderOrStaff} from "../../../services/user";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
-    // location: {hash: string};
 }
 
 interface QuizAssignmentProps {

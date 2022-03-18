@@ -105,7 +105,7 @@ module.exports = (isProd) => {
                             ].filter(Boolean),
                         },
                         {
-                            test: /\.(png|gif|svg)$/,
+                            test: /\.(png|gif|jpg|svg)$/,
                             type: 'asset/resource'
                         },
                         {

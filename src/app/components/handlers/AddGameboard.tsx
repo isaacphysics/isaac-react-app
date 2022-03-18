@@ -6,9 +6,8 @@ import {addGameboard} from "../../state/actions";
 import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
-interface AddGameboardProps extends RouteComponentProps {
+interface AddGameboardProps extends RouteComponentProps<{ gameboardId: string; gameboardTitle: string }> {
     user: PotentialUser;
-    match: match & {params: {gameboardId: string; gameboardTitle?: string}};
 }
 
 const AddGameboardComponent = (props: AddGameboardProps) => {

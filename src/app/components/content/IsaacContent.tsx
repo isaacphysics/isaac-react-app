@@ -27,9 +27,9 @@ const classBasedLayouts = {
     righthalf: "align-right-half"
 };
 
-export interface IsaacContentProps extends RouteComponentProps {
+export interface IsaacContentProps extends RouteComponentProps<{ path: string }> {
     doc: ContentDTO,
-    match: match & { path: string },
+    // match: match & { path: string },
     contentIndex?: number
 };
 

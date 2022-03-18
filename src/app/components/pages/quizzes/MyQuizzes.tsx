@@ -19,7 +19,6 @@ import {isAttempt, partitionCompleteAndIncompleteQuizzes} from "../../../service
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
-    // location: {hash: string};
 }
 
 type Quiz = AppQuizAssignment | QuizAttemptDTO;

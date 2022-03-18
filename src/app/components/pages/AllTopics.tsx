@@ -66,10 +66,9 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoonDate ? "span" : "strong";
-        // const LinkTag = topic.comingSoonDate ? "span" : Link; // REVIEW See below
         if (!topic.hidden) {
             return <React.Fragment>
-                <Link // REVIEW This may be not the intended behaviour, but that LinkTag thing above is horrendous in terms of types.
+                <Link
                     to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
                     className={topic.comingSoonDate ? "text-muted" : ""}
                 >
