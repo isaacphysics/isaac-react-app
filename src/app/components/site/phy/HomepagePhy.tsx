@@ -59,7 +59,7 @@ export const HomepagePhy = () => {
                 <div className="physics-site-intro mt-4 mt-lg-2">
                     <strong>Show me resources for...</strong>
                     <Row className="mt-2">
-                        <Col xs={4} className="pr-1 px-sm-2">
+                        <Col xs={4} className="pr-1 pr-sm-2">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 GCSE
                             </Button>
