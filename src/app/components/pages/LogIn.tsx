@@ -8,7 +8,7 @@ import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {Helmet} from "react-helmet";
+import {MetaDescription} from "../elements/MetaDescription";
 
 export const LogIn = () => {
     const headingRef = useRef<HTMLHeadingElement>(null);
@@ -83,10 +83,7 @@ export const LogIn = () => {
     const metaDescriptionCS = "Log in to your account. Access free GCSE and A level Computer Science resources. Use our materials to learn and revise for your exams.";
 
     return <Container id="login-page" className="my-4">
-        {SITE_SUBJECT === SITE.CS && <Helmet>
-            <meta name="description" content={metaDescriptionCS} />
-            <meta property="og:description" content={metaDescriptionCS} />
-        </Helmet>}
+        {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS} />}
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>

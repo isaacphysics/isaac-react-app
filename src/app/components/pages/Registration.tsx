@@ -28,7 +28,7 @@ import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect, RouteComponentProps, withRouter} from "react-router";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
-import {Helmet} from "react-helmet";
+import {MetaDescription} from "../elements/MetaDescription";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
     const dispatch = useDispatch();
@@ -95,10 +95,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     return <Container id="registration-page" className="mb-5">
 
         <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
-        {SITE_SUBJECT === SITE.CS && <Helmet>
-            <meta name="description" content={metaDescriptionCS} />
-            <meta property="og:description" content={metaDescriptionCS} />
-        </Helmet>}
+        {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS} />}
 
         <Card>
             <CardBody>
