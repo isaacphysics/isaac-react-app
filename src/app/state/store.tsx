@@ -4,7 +4,6 @@ import * as reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
 import {notificationCheckerMiddleware} from "../services/notificationManager";
-import {modalFocusMiddleware} from "./modalFocusMiddleware";
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -12,7 +11,6 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 export const middleware: Middleware[] = [
     userConsistencyCheckerMiddleware,
     notificationCheckerMiddleware,
-    modalFocusMiddleware,
     thunk,
 ];
 
