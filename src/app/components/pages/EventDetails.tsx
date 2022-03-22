@@ -91,7 +91,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             !canMakeABooking &&
             event.isNotClosed &&
             !event.hasExpired &&
-            event.userBookingStatus !== "WAITING_LIST" &&
+            isDefined(event.userBookingStatus) && !["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus) &&
             studentOnlyRestrictionSatisfied;
 
         const canReserveSpaces =
