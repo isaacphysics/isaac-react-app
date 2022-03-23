@@ -35,12 +35,13 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
 export interface PageTitleProps {
     currentPageTitle: string;
     subTitle?: string;
+    disallowLaTeX?: boolean;
     help?: ReactElement;
     className?: string;
     audienceViews?: ViewingContext[];
     modalId?: string;
 }
-export const PageTitle = ({currentPageTitle, subTitle, help, className, audienceViews, modalId}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId}: PageTitleProps) => {
     const dispatch = useDispatch();
     const openModal = useSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -75,7 +76,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, audience
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
         <div className="mr-auto">
-            <LaTeX markup={currentPageTitle} />
+            {formatPageTitle(currentPageTitle, disallowLaTeX)}
             {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
         </div>
         <Helmet>
@@ -91,3 +92,7 @@ export const PageTitle = ({currentPageTitle, subTitle, help, className, audience
         </React.Fragment>}
     </h1>
 };
+
+export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => {
+   return  disallowLaTeX ? <span> {currentPageTitle} </span> : <LaTeX markup={currentPageTitle} />
+}
