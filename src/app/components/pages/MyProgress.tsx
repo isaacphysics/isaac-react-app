@@ -28,8 +28,7 @@ import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryLi
 export const siteSpecific = {
     [SITE.PHY]: {
         questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion"
-            // TODO isaacClozeQuestion when it exists
+            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacClozeQuestion"
         ],
         questionTagsStatsList: [
             "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16"
@@ -40,8 +39,7 @@ export const siteSpecific = {
     [SITE.CS]: {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion"
-            // TODO isaacClozeQuestion when it exists
+            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
         ],
         questionTagsStatsList: [] as string[],
         typeColWidth: "col-lg-4",
