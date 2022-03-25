@@ -604,11 +604,20 @@ const handleObject = (tree, a11yStrings, atomType) => {
         }
 
         case "vphantom": {
-            throw new Error("KaTeX-a11y: vphantom not implemented yet");
+            // throw new Error("KaTeX-a11y: vphantom not implemented yet");
+            // Throwing here makes the parsing/generation stop abruptly and say "no can do"
+            // In reality, we should simply be able to ignore \vphantom.
+            // Breaking here also prevents the translation from going into the actual element
+            // which turns out to be \vphantom{X} and so "A Wild X Appears!"
+            break;
+            
         }
 
         case "hphantom": {
-            throw new Error("KaTeX-a11y: hphantom not implemented yet");
+            // throw new Error("KaTeX-a11y: hphantom not implemented yet");
+            // Same as above, I suppose.
+            break;
+            
         }
 
         case "operatorname": {
