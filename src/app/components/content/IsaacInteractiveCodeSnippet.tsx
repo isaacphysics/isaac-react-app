@@ -5,6 +5,7 @@ import uuid from "uuid";
 import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {logAction} from "../../state/actions";
+import {CODE_EDITOR_BASE_URL} from "../../services/constants";
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
@@ -88,7 +89,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         }
     }, [receivedData, segueEnvironment]);
 
-    return <iframe title={"Code Sandbox"} src={"http://localhost:3000/#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100 mb-1"} style={
+    return <iframe title={"Code Sandbox"} src={CODE_EDITOR_BASE_URL + "/#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100 mb-1"} style={
         {
             resize: "none",
             height: iFrameHeight,
