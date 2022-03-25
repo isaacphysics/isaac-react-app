@@ -400,6 +400,13 @@ export interface CodeSnippetDTO extends ContentDTO {
     url?: string;
 }
 
+export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
+    setupCode?: string;
+    testCode?: string;
+    expectedResult?: string;
+    wrapCodeInMain?: boolean;
+}
+
 export interface GraphChoiceDTO extends ChoiceDTO {
     graphSpec?: string;
 }
