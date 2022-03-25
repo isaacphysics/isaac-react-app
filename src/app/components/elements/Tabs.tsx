@@ -3,7 +3,7 @@ import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import {isDefined} from "../../services/miscUtils";
-import {ExpandedContext, useExpandContent} from "./TrustedHtml";
+import {useExpandContent} from "./TrustedHtml";
 import classNames from "classnames";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 

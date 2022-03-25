@@ -10,7 +10,6 @@ import ReactDOM from "react-dom";
 import classNames from "classnames";
 import {ScrollShadows} from "./ScrollShadows";
 import {above, isMobile, useDeviceSize} from "../../services/device";
-import {QuizAttemptDTO} from "../../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface TableData {
