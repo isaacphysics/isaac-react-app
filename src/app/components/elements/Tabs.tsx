@@ -5,6 +5,7 @@ import {LaTeX} from "./LaTeX";
 import {isDefined} from "../../services/miscUtils";
 import {ExpandedContext, useExpandContent} from "./TrustedHtml";
 import classNames from "classnames";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
@@ -77,6 +78,6 @@ export const Tabs = (props: TabsProps) => {
                 </TabPane>;
             })}
         </TabContent>
-        {expandButton}
+        {SITE_SUBJECT === SITE.CS && expandButton}
     </div>;
 };

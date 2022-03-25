@@ -11,6 +11,7 @@ import classNames from "classnames";
 import {ScrollShadows} from "./ScrollShadows";
 import {above, isMobile, useDeviceSize} from "../../services/device";
 import {QuizAttemptDTO} from "../../../IsaacApiTypes";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface TableData {
     id: number;
@@ -81,8 +82,8 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefOb
     if (html && parentElement) {
         return ReactDOM.createPortal(
             <div className={classNames(outerClasses, "position-relative isaac-table")} ref={expandRef}>
-                <ScrollShadows scrollRef={scrollRef} />
-                {expandButton}
+                {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollRef} />}
+                {SITE_SUBJECT === SITE.CS && expandButton}
                 <div ref={scrollRef} className={innerClasses}>
                     <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
                 </div>

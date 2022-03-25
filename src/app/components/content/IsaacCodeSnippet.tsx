@@ -4,6 +4,7 @@ import {Col, Row} from "reactstrap";
 import hljs from 'highlight.js/lib/core';
 import {addLineNumbers} from "../../services/highlightJs";
 import {ScrollShadows} from "../elements/ScrollShadows";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
@@ -22,7 +23,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const scrollPromptRef = useRef<HTMLPreElement>(null);
 
     return <div className={"position-relative"}>
-        <ScrollShadows scrollRef={scrollPromptRef} />
+        {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollPromptRef} />}
         <Row>
             <Col className="code-snippet">
                 <pre ref={scrollPromptRef} className="line-numbers">
