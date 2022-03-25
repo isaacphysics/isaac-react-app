@@ -11,7 +11,7 @@ import {extractTeacherName} from "../../../services/user";
 import {Spacer} from "../Spacer";
 import {formatDate} from "../DateString";
 import {Link} from "react-router-dom";
-import {QuizAttemptContext} from "../../content/QuizQuestion";
+import {QuizAttemptContext} from "../../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import * as RS from "reactstrap";
@@ -219,8 +219,11 @@ export function QuizPagination({attempt, page, sections, pageLink, finalLabel, s
 }
 
 export function QuizAttemptComponent(props: QuizAttemptProps) {
-    const {page} = props;
-    return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt}}>
+    const {page, questions} = props;
+    // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
+    // we do unchecked casts of "possibly undefined" content ids to strings almost everywhere
+    const questionNumbers = Object.assign({}, ...questions.map((q, i) => ({[q.id as string]: i + 1})));
+    return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizTitle {...props} />
         {page === null ?
             <div className="mt-4">

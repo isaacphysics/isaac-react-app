@@ -7,15 +7,13 @@ import {isDefined} from "../../services/miscUtils";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
-import {QuizAttemptDTO} from "../../../IsaacApiTypes";
-
-export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null}>({quizAttempt: null});
 import * as ApiTypes from "../../../IsaacApiTypes";
+import {QuizAttemptContext} from "../../../IsaacAppTypes";
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const dispatch = useDispatch();
 
-    const {quizAttempt} = useContext(QuizAttemptContext);
+    const {quizAttempt, questionNumbers} = useContext(QuizAttemptContext);
 
     useEffect((): (() => void) => {
         return () => {
@@ -38,6 +36,9 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         <div className={
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
+            {doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+
+            {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={validated} />
 
