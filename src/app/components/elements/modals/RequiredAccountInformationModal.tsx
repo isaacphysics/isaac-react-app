@@ -122,7 +122,7 @@ const RequiredAccountInfoBody = () => {
 
         {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
-                Required information in this form is not set
+                Not all required fields have been correctly filled.
             </h4>
         </div>}
 

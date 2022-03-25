@@ -1,6 +1,9 @@
 import React, {ChangeEvent} from "react";
 import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
-import {allRequiredInformationIsPresent, validateEmail} from "../../../services/validation";
+import {
+    allRequiredInformationIsPresent,
+    validateEmail, validateName
+} from "../../../services/validation";
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -64,22 +67,30 @@ export const UserDetails = (props: UserDetailsProps) => {
                 <FormGroup>
                     <Label htmlFor="first-name-input" className="form-required">First name</Label>
                     <Input
-                        id="first-name-input" type="text" name="givenName" maxLength={255}
-                        defaultValue={userToUpdate.givenName}
+                        invalid={!validateName(userToUpdate.givenName)} id="first-name-input" type="text"
+                        name="givenName" defaultValue={userToUpdate.givenName}
                         onChange={e => setUserToUpdate({...userToUpdate, givenName: e.target.value})}
-                        required
+                        aria-describedby="firstNameValidationMessage" required
                     />
+                    <FormFeedback id="firstNameValidationMessage">
+                        {(submissionAttempted && !validateName(userToUpdate.givenName))
+                            ? "Enter a valid name" : null}
+                    </FormFeedback>
                 </FormGroup>
             </Col>
             <Col md={6}>
                 <FormGroup>
                     <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                     <Input
-                        id="last-name-input" type="text" name="last-name" maxLength={255}
-                        defaultValue={userToUpdate.familyName}
+                        invalid={!validateName(userToUpdate.familyName)} id="last-name-input" type="text"
+                        name="last-name" defaultValue={userToUpdate.familyName}
                         onChange={e => setUserToUpdate({...userToUpdate, familyName: e.target.value})}
-                        required
+                        aria-describedby="lastNameValidationMessage" required
                     />
+                    <FormFeedback id="lastNameValidationMessage">
+                        {(submissionAttempted && !validateName(userToUpdate.familyName))
+                            ? "Enter a valid name" : null}
+                    </FormFeedback>
                 </FormGroup>
             </Col>
         </Row>
@@ -149,7 +160,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         </Row>}
 
         {submissionAttempted && !allRequiredFieldsValid && <h4 role="alert" className="text-danger text-center mt-4 mb-3">
-            Required information in this form is not set
+            Not all required fields have been correctly filled.
         </h4>}
     </CardBody>
 };

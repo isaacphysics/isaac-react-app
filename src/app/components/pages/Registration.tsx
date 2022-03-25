@@ -18,7 +18,12 @@ import {
 } from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {updateCurrentUser} from "../../state/actions";
-import {isDobOverThirteen, validateEmail, validatePassword} from "../../services/validation";
+import {
+    isDobOverThirteen,
+    validateEmail,
+    validateName,
+    validatePassword
+} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import * as persistence from "../../services/localStorage"
 import {KEY} from "../../services/localStorage"
@@ -43,6 +48,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             email: userEmail,
             dateOfBirth: undefined,
             password: null,
+            familyName: undefined,
+            givenName: undefined
         })
     );
 
@@ -56,6 +63,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
 
     // Values derived from inputs (props and state)
     const emailIsValid = registrationUser.email && validateEmail(registrationUser.email);
+    const givenNameIsValid = validateName(registrationUser.givenName);
+    const familyNameIsValid = validateName(registrationUser.familyName);
     const passwordIsValid =
         (registrationUser.password == unverifiedPassword) && validatePassword(registrationUser.password || "");
     const confirmedOverThirteen = dobCheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
@@ -65,7 +74,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (passwordIsValid && emailIsValid && confirmedOverThirteen) {
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOverThirteen ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true}))));
@@ -120,11 +129,15 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 </Label>
                                 <Input
                                     id="first-name-input" type="text" name="givenName"
-                                    maxLength={255} required
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         assignToRegistrationUser({givenName: e.target.value});
                                     }}
+                                    invalid={(attemptedSignUp && !givenNameIsValid)}
+                                    aria-describedby="firstNameValidationMessage" required
                                 />
+                                <FormFeedback id="firstNameValidationMessage">
+                                    {(attemptedSignUp && !givenNameIsValid) ? "Enter a valid name" : null}
+                                </FormFeedback>
                             </FormGroup>
                         </Col>
                         <Col md={6}>
@@ -134,11 +147,15 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 </Label>
                                 <Input
                                     id="last-name-input" type="text" name="familyName"
-                                    maxLength={255} required
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         assignToRegistrationUser({familyName: e.target.value});
                                     }}
+                                    invalid={(attemptedSignUp && !familyNameIsValid)}
+                                    aria-describedby="lastNameValidationMessage" required
                                 />
+                                <FormFeedback id="lastNameValidationMessage">
+                                    {(attemptedSignUp && !familyNameIsValid) ? "Enter a valid name" : null}
+                                </FormFeedback>
                             </FormGroup>
                         </Col>
                     </Row>
@@ -254,6 +271,12 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Form Error */}
                     <Row>
                         <Col>
+                            {attemptedSignUp &&
+                                (!givenNameIsValid || !familyNameIsValid || !passwordIsValid || !emailIsValid) &&
+                                <h4 role="alert" className="text-danger text-left">
+                                    Not all required fields have been correctly filled.
+                                </h4>
+                            }
                             <h4 role="alert" className="text-danger text-left">
                                 {!confirmedOverThirteen && attemptedSignUp ?
                                     "You must be over 13 years old to create an account." :
@@ -261,7 +284,6 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                             </h4>
                         </Col>
                     </Row>
-
                     <Row>
                         <Col className="text-center">
                             By clicking Register now, you accept our <Link to="/terms" target="_blank">Terms of Use</Link>.
