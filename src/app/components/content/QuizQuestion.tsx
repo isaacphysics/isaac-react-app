@@ -1,8 +1,6 @@
 import React, {useContext, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import classnames from "classnames";
-
-import * as ApiTypes from "../../../IsaacApiTypes";
 import {QUESTION_TYPES} from "../../services/questions";
 import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
 import {isDefined} from "../../services/miscUtils";
@@ -12,8 +10,9 @@ import {IsaacContent} from "./IsaacContent";
 import {QuizAttemptDTO} from "../../../IsaacApiTypes";
 
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null}>({quizAttempt: null});
+import * as ApiTypes from "../../../IsaacApiTypes";
 
-export const QuizQuestion = ({doc}: { doc: ApiTypes.IsaacQuestionBaseDTO }) => {
+export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const dispatch = useDispatch();
 
     const {quizAttempt} = useContext(QuizAttemptContext);
