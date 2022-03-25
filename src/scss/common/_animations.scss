@@ -18,19 +18,3 @@
   60%  {width: 100%; @include make-col-offset(0, 8);}
   100% {width: 150%; @include make-col-offset(-2, 8);}
 }
-@-webkit-keyframes expand-overflow {
-0%  {width: 100%; position: relative; left: 0; transform: translateX(0);}
-100% {width: 95vw; position: relative; left: 50%; transform: translateX(-50%);}
-}
-@-moz-keyframes expand-overflow {
-0%  {width: 100%; position: relative; left: 0; transform: translateX(0);}
-100% {width: 95vw; position: relative; left: 50%; transform: translateX(-50%);}
-}
-@-o-keyframes expand-overflow {
-0%  {width: 100%; position: relative; left: 0; transform: translateX(0);}
-100% {width: 95vw; position: relative; left: 50%; transform: translateX(-50%);}
-}
-@keyframes expand-overflow {
-  0%  {width: 100%; position: relative; left: 0; transform: translateX(0);}
-  100% {width: 95vw; position: relative; left: 50%; transform: translateX(-50%);}
-}

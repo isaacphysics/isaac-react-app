@@ -51,9 +51,8 @@ export const Tabs = (props: TabsProps) => {
     const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef);
 
     return <div
-        className={classNames(className, innerClasses, outerClasses)} ref={expandRef}
+        className={classNames(className, innerClasses, outerClasses, "position-relative")} ref={expandRef}
     >
-        {expandButton}
         <Nav tabs className="flex-wrap">
             {Object.keys(children).map((tabTitle, mapIndex) => {
                 const tabIndex = mapIndex + 1;
@@ -78,5 +77,6 @@ export const Tabs = (props: TabsProps) => {
                 </TabPane>;
             })}
         </TabContent>
+        {expandButton}
     </div>;
 };

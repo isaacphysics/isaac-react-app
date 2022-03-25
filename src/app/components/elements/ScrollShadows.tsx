@@ -58,10 +58,8 @@ export const ScrollShadows = <T extends HTMLElement>({scrollRef} : {scrollRef : 
         ? ((scrollWidth - clientWidth) - scrollLeft < 60 ? ((scrollWidth - clientWidth) - scrollLeft)/60 : 1)
         : 0;
 
-    console.log(`New opacities: left: ${leftOpacity}, right: ${rightOpacity}`);
-
     return (scrollWidth - clientWidth) > 5 ? <>
-        <div aria-hidden className={classNames("scroll-arrow left")} style={{opacity: leftOpacity}}/>
-        <div aria-hidden className={classNames("scroll-arrow right")} style={{opacity: rightOpacity}}/>
+        <div aria-hidden className={classNames("scroll-shadow left")} style={{opacity: leftOpacity}}/>
+        <div aria-hidden className={classNames("scroll-shadow right")} style={{opacity: rightOpacity}}/>
     </> : null;
 }

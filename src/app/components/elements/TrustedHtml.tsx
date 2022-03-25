@@ -57,17 +57,15 @@ export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedIn
 
     const deviceSize = useDeviceSize();
 
-    const expandButton = (!isMobile() && <div className={"position-relative"} style={{width: "100%", height: 35}}>
-        <button className={"expand-arrow ml-auto"} onClick={toggleExpanded}>
-            <div><span><img aria-hidden alt={"Indicator for expandable content"} src={"/assets/expand-arrow.svg"}/> {expanded ? "Collapse content" : "View larger version"}</span></div>
+    const expandButton = (!isMobile() && <div className={"expand-button position-relative"}>
+        <button onClick={toggleExpanded}>
+            <div><span><img aria-hidden alt={"Button to expand content"} src={"/assets/expand-arrow.svg"}/> {expanded ? "Shrink content" : "Expand content"}</span></div>
         </button>
     </div>) || null;
 
     // If screen size goes below md, then the `isaac-expand-bg` class no longer applies (the screen is too thin)
-    const shouldExpand = expanded && above["md"](deviceSize);
-
-    const innerClasses = shouldExpand ? "" : unexpandedInnerClasses;
-    const outerClasses = shouldExpand ? "isaac-expand-bg expand-outer" : "expand-outer";
+    const innerClasses = (expanded && above["md"](deviceSize)) ? "" : unexpandedInnerClasses;
+    const outerClasses = above["md"](deviceSize) ? (expanded ? "isaac-expand-bg expand-outer" : "expand-outer") : "";
 
     return {expandButton, innerClasses, outerClasses};
 }
@@ -82,7 +80,7 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefOb
 
     if (html && parentElement) {
         return ReactDOM.createPortal(
-            <div className={outerClasses} ref={expandRef}>
+            <div className={classNames(outerClasses, "position-relative isaac-table")} ref={expandRef}>
                 <ScrollShadows scrollRef={scrollRef} />
                 {expandButton}
                 <div ref={scrollRef} className={innerClasses}>
