@@ -39,7 +39,8 @@ export const siteSpecific = {
     [SITE.CS]: {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
+            "isaacStringMatchQuestion", "isaacRegexMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion",
+            "isaacClozeQuestion"
         ],
         questionTagsStatsList: [] as string[],
         typeColWidth: "col-lg-4",
