@@ -8,6 +8,7 @@ import {LaTeX} from "./LaTeX";
 
 interface BreadcrumbTrailProps {
     currentPageTitle: string;
+    disallowLaTeX?: boolean;
     intermediateCrumbs?: LinkInfo[];
     collectionType?: CollectionType;
 }
@@ -16,7 +17,8 @@ interface BreadcrumbTrailProps {
 // If you want to use it elsewhere, that is fine but you must consider the implications on the "Skip to main content"
 // link which needs to skip all static navigational elements (i.e. breadcrumbs).
 // We manage the ID of the "main content" with the mainContentId reducer.
-const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionType}: BreadcrumbTrailProps) => {
+const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionType, disallowLaTeX}:
+                             BreadcrumbTrailProps) => {
     const breadcrumbHistory = [HOME_CRUMB as LinkInfo, ...intermediateCrumbs];
 
     // Copy and mask collection type title
@@ -27,20 +29,28 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
     }
 
     return <Breadcrumb className="py-md-2 px-md-0 mb-3 mb-md-0 bread">
-        {breadcrumbHistory.map((breadcrumb) => (
-            <BreadcrumbItem key={breadcrumb.title}>
-                {breadcrumb.to ?
-                    <Link to={breadcrumb.to} replace={breadcrumb.replace}><LaTeX markup={breadcrumb.title} /></Link>
-                    :
-                    <LaTeX markup={breadcrumb.title} />
-                }
-            </BreadcrumbItem>
-        ))}
-        <BreadcrumbItem active>
-            <LaTeX markup={currentPageTitle} />
-        </BreadcrumbItem>
+        {breadcrumbHistory.map((breadcrumb) => formatBreadcrumbHistoryItem(breadcrumb, disallowLaTeX))}
+        {formatBreadcrumbItem(currentPageTitle, disallowLaTeX)}
     </Breadcrumb>;
 };
+
+export const formatBreadcrumbItemTitle = (title: string, disallowLaTeX?: boolean) => {
+    return disallowLaTeX ? <span> {title} </span> : <LaTeX markup={title} />
+}
+
+export const formatBreadcrumbHistoryItem = (breadcrumb: LinkInfo, disallowLaTeX?: boolean) => {
+    const titleElement = formatBreadcrumbItemTitle(breadcrumb.title, disallowLaTeX)
+
+    return <BreadcrumbItem key={breadcrumb.title}>
+        {breadcrumb.to ? <Link to={breadcrumb.to} replace={breadcrumb.replace}>{titleElement}</Link> : titleElement}
+    </BreadcrumbItem>
+}
+
+export const formatBreadcrumbItem = (currentPageTitle: string, disallowLaTeX?: boolean) => {
+    return <BreadcrumbItem active>
+        {formatBreadcrumbItemTitle(currentPageTitle, disallowLaTeX)}
+    </BreadcrumbItem>
+}
 
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;
