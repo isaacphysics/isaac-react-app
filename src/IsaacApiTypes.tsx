@@ -181,6 +181,11 @@ export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
     preserveTrailingWhitespace?: boolean;
 }
 
+export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
+    multiLineEntry?: boolean;
+    preserveTrailingWhitespace?: boolean;
+}
+
 export interface IsaacRegexMatchQuestionDTO extends IsaacQuestionBaseDTO {
     multiLineEntry?: boolean;
 }
@@ -400,6 +405,13 @@ export interface CodeSnippetDTO extends ContentDTO {
     code?: string;
     disableHighlighting?: boolean;
     url?: string;
+}
+
+export interface InteractiveCodeSnippetDTO extends CodeSnippetDTO {
+    setupCode?: string;
+    testCode?: string;
+    expectedResult?: string;
+    wrapCodeInMain?: boolean;
 }
 
 export interface GraphChoiceDTO extends ChoiceDTO {
