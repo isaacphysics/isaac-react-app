@@ -5,28 +5,28 @@
     color: $black;
   }
   &.btn-negative {
-    background-color: $highlight-mustard-25;
-    color: black;
-  }
-  &.btn-neutral {
-    background-color: $highlight-teal-25;
-    color: black;
-  }
-  &.btn-positive {
-    background-color: $highlight-navy-25;
-    color: black;
-  }
-  &.btn-negative-answer {
     background-color: $highlight-mustard-50;
     color: black;
   }
-  &.btn-neutral-answer {
+  &.btn-neutral {
     background-color: $highlight-teal-50;
     color: black;
   }
-  &.btn-positive-answer {
+  &.btn-positive {
     background-color: $highlight-navy-50;
     color: black;
+  }
+  &.btn-negative-answer {
+    background-color: $highlight-mustard;
+    color: white;
+  }
+  &.btn-neutral-answer {
+    background-color: $highlight-teal;
+    color: white;
+  }
+  &.btn-positive-answer {
+    background-color: $highlight-navy;
+    color: white;
   }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $cs-reddish;
