@@ -8,9 +8,6 @@ module.exports = {
         "<rootDir>src/test/setupTests.ts",
         "react-app-polyfill/jsdom"
     ],
-    "setupFilesAfterEnv": [
-        // "enzyme"
-    ],
     "rootDir": "../../",
     "testMatch": [
         "<rootDir>src/**/*.test.(js|jsx|ts|tsx)"
