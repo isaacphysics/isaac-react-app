@@ -14,6 +14,7 @@ interface QuestionConfidenceProps {
 
 export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionConfidenceProps) => {
     const dispatch = useDispatch();
+    const isCs = SITE_SUBJECT === SITE.CS;
 
     function quickQuestionInformationModal() {
         dispatch(openActiveModal({
@@ -47,17 +48,17 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
         </Row>
         <Row>
             <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color="negative" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
+                <Button color={isCs && isVisible ? "negative-answer" : "negative"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
                     {isVisible ? "No" : "Low"}
                 </Button>
             </Col>
             <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color="neutral" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
+                <Button color={isCs && isVisible ? "neutral-answer" : "neutral"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
                     {isVisible ? "Partly" : "Medium"}
                 </Button>
             </Col>
             <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color="positive" block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
+                <Button color={isCs && isVisible ?"positive-answer" : "positive"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
                     {isVisible ? "Yes" : "High"}
                 </Button>
             </Col>
