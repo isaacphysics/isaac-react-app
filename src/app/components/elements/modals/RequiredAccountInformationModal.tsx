@@ -54,7 +54,7 @@ const RequiredAccountInfoBody = () => {
         setSubmissionAttempted(true);
 
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
-            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user));
+            dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
             dispatch(closeActiveModal());
         }
     }

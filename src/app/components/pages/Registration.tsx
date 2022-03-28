@@ -77,7 +77,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOverThirteen ) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
-            dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true}))));
+            dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             ReactGA.event({
                 category: 'user',
