@@ -29,7 +29,7 @@ export const Gcse = () => {
             <IsaacCard doc={{title: "Question Finder", subtitle: "Practise your problem solving skills with our GCSE questions.",
                 clickUrl: "/gameboards/new?stages=gcse", image: {src: "/assets/phy/key_stage_sprite.svg#triple"}
             }}/>
-            <IsaacCard doc={{title: "GCSE Physics Lessons", subtitle: "Packages of questions, recorded explanations and tutorials and topic based learning plan.",
+            <IsaacCard doc={{title: "GCSE Physics Lessons", subtitle: "Packages of questions, recorded explanations and tutorials and topic based revision plan.",
                 clickUrl: "/pages/gcse_topic_index", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
