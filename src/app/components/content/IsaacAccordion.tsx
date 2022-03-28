@@ -14,7 +14,7 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {isDefined, isFound} from "../../services/miscUtils";
+import {isFound} from "../../services/miscUtils";
 import { useLocation } from "react-router-dom";
 
 const defaultConceptDisplay = {
@@ -79,7 +79,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // of any other settings. We also want to show a message somewhere on the page.
             .map(section => {
                 const parts = (section.id || "").split("|");
-                if (isDefined(parts) && parts.length > 1 && parts[1] === hashAnchor) {
+                if (parts.length > 1 && parts[1] === hashAnchor) {
                     section.hidden = false;
                 }
                 return section;
