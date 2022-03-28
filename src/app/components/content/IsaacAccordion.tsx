@@ -14,7 +14,7 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {isFound} from "../../services/miscUtils";
+import {isDefined, isFound} from "../../services/miscUtils";
 import { useLocation } from "react-router-dom";
 
 const defaultConceptDisplay = {
@@ -78,7 +78,8 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // If we followed a direct link to a section, we want to show it regardless
             // of any other settings. We also want to show a message somewhere on the page.
             .map(section => {
-                if ((section.id || "").includes(hashAnchor)) {
+                const parts = (section.id || "").split("|");
+                if (isDefined(parts) && parts.length > 1 && parts[1] === hashAnchor) {
                     section.hidden = false;
                 }
                 return section;

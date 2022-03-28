@@ -55,7 +55,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                         {item.deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${index}`} className="icon-help mx-1" />
                             <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${index}`}>
-                                {`This content is ${notRelevantMessage(userContext)}.`}
+                                {`This content has ${notRelevantMessage(userContext)}.`}
                             </RS.UncontrolledTooltip>
                         </div>}
                     </div>

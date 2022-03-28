@@ -153,7 +153,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                             <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
-                                {`This content is ${notRelevantMessage(userContext)}.`}
+                                {`This content has ${notRelevantMessage(userContext)}.`}
                             </RS.UncontrolledTooltip>
                         </div>}
 
