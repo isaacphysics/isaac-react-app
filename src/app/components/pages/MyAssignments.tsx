@@ -4,9 +4,10 @@ import {loadMyAssignments, logAction} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
-import {Card, CardBody, Col, Container, Nav, NavItem, NavLink, Row} from 'reactstrap';
+import {Card, CardBody, Col, Container, Input, Label, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {filterAssignmentsByStatus} from "../../services/assignments";
+import {filterAssignmentsByStatus, filterAssignmentsByProperties,
+    getDistinctAssignmentGroups, getDistinctAssignmentSetters} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {Assignments} from "../elements/Assignments";
 
@@ -19,6 +20,9 @@ export const MyAssignments = () => {
     const myAssignments = filterAssignmentsByStatus(assignments);
 
     const [activeTab, setActiveTab] = useState(0);
+    const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
+    const [assignmentSetByFilter, setAssignmentSetByFilter] = useState<string>("All");
+    const [assignmentGroupFilter, setAssignmentGroupFilter] = useState<string>("All");
 
     const showOld = myAssignments.inProgressRecent.length == 0 && myAssignments.inProgressOld.length > 0 && function(event: MouseEvent) {
         setActiveTab(1);
@@ -56,8 +60,29 @@ export const MyAssignments = () => {
                         })}
                     </Nav>
                     <Row>
+                        <Col lg={4}>
+                            <Label className="w-100">
+                                Filter assignments <Input type="text" onChange={(e) => setAssignmentTitleFilter(e.target.value)} placeholder="Filter assignments by name"/>
+                            </Label>
+                        </Col>
+                        <Col sm={6} lg={{size: 2, offset: 4}}>
+                            <Label className="w-100">
+                                Group <Input type="select" value={assignmentGroupFilter} onChange={e => setAssignmentGroupFilter(e.target.value)}>
+                                {["All", ...getDistinctAssignmentGroups(assignments), ].map(group => <option key={group} value={group}>{group}</option>)}
+                            </Input>
+                            </Label>
+                        </Col>
+                        <Col sm={6} lg={2}>
+                            <Label className="w-100">
+                                Set by <Input type="select" value={assignmentSetByFilter} onChange={e => setAssignmentSetByFilter(e.target.value)}>
+                                {["All", ...getDistinctAssignmentSetters(assignments)].map(setter => <option key={setter} value={setter}>{setter}</option>)}
+                            </Input>
+                            </Label>
+                        </Col>
+                    </Row>
+                    <Row>
                         <Col sm="12">
-                            <Assignments assignments={tabs[activeTab][1]} showOld={showOld} />
+                            <Assignments assignments={filterAssignmentsByProperties(tabs[activeTab][1], assignmentTitleFilter, assignmentGroupFilter, assignmentSetByFilter)} showOld={showOld} />
                         </Col>
                     </Row>
                 </ShowLoading>

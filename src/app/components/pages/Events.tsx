@@ -16,6 +16,7 @@ import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {MetaDescription} from "../elements/MetaDescription";
 
 
 interface EventsPageQueryParams {
@@ -54,10 +55,15 @@ export const Events = withRouter(({history, location}: {history: History; locati
         Follow the links below to find out more about our FREE events.
     </span>;
 
+    const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
+
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {SITE_SUBJECT === SITE.CS && <CoronavirusWarningBanner />}
+            {SITE_SUBJECT === SITE.CS && <>
+                <CoronavirusWarningBanner />
+                <MetaDescription description={metaDescriptionCS} />
+            </>}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
@@ -91,22 +97,6 @@ export const Events = withRouter(({history, location}: {history: History; locati
 
                 {/* Results */}
                 <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="my-4">
-                    {/* Map */}
-                    {/*<div className="mb-3" hidden={total == 0 || (statusFilter === EventStatusFilter["My booked events"])}>*/}
-                    {/*    <InteractiveMap*/}
-                    {/*        getInfoWindow={(event) => {*/}
-                    {/*            return <div className="event-map-info">*/}
-                    {/*                <h3><a className="heading link" href={`events/${event.id}`}>{event.title}</a></h3>*/}
-                    {/*                {event.subtitle}<br/>*/}
-                    {/*                <b>When: </b><DateString>{event.date}</DateString><br/>*/}
-                    {/*                <b>Location: </b>{event && event.address && `${event.address.addressLine1}, ${event.address.town}`}<br/>*/}
-                    {/*                <a className="link" href={`events/${event.id}`}>View Full Details</a>*/}
-                    {/*            </div>*/}
-                    {/*        }}*/}
-                    {/*        locationData={eventMapData ? eventMapData.filter((event) => event && event.longitude !== undefined && event.latitude !== undefined) : []}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-                    {/* Event Cards */}
                     <RS.Row>
                         {events.map(event => <div key={event.id} className="col-xs-12 col-sm-6 col-md-4 d-flex">
                             <EventCard event={event} />

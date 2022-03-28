@@ -18,7 +18,7 @@ module.exports = (isProd) => {
 
         devServer: {
             headers: {
-                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 ws://localhost:8080 https://www.google-analytics.com https://maps.googleapis.com; object-src 'none'; frame-src 'self' https://editor.isaaccode.org https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
+                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 ws://localhost:8080 https://www.google-analytics.com https://maps.googleapis.com https://*.tile.openstreetmap.org; object-src 'none'; frame-src 'self' https://editor.isaaccode.org https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
                 "Feature-Policy": "geolocation 'none'; camera 'none'; microphone 'none'; accelerometer 'none';",
                 "X-Clacks-Overhead": "GNU Terry Pratchett",
             },
@@ -93,6 +93,10 @@ module.exports = (isProd) => {
                                 'css-loader',
                                 'sass-loader',
                             ].filter(Boolean),
+                        },
+                        {
+                            test: /\.(png|jpg)$/,
+                            loader: 'url-loader'
                         },
                         {
                             include: [/\.ttf$/, /\.woff2?$/,],

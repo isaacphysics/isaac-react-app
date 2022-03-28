@@ -14,6 +14,10 @@ import {isStudent} from "./user";
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
 
+export function validateName(userName?: string | null) {
+    return userName && userName.length > 0 && userName.length <= 255 && !userName.includes('*')
+}
+
 export const validateEmail = (email?: string) => {
     return email && email.length > 0 && email.includes("@");
 };
@@ -84,10 +88,11 @@ export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
-    return user && userPreferences &&
-        (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user))) &&
-        (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE)) &&
-        validateUserContexts(userContexts);
+    return user && userPreferences
+        && (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user)
+        && validateName(user.givenName) && validateName(user.familyName)))
+        && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
+        && validateUserContexts(userContexts);
 }
 
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {

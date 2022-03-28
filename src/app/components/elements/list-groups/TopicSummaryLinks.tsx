@@ -3,6 +3,7 @@ import * as RS from "reactstrap";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {LaTeX} from "../LaTeX";
 import {
+    audienceStyle,
     isIntendedAudience,
     makeIntendedAudienceComparator,
     notRelevantMessage,
@@ -14,7 +15,7 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import classnames from "classnames";
+import classNames from "classnames";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const userContext = useUserContext();
@@ -42,9 +43,9 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
             .map((item, index) => <RS.ListGroupItem key={item.id} className="topic-summary-link">
                 <RS.Button
                     tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
-                    block color="link" className={"d-flex align-items-stretch " + classnames({"de-emphasised": item.deEmphasised})}
+                    block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                 >
-                    <div className="stage-label badge-primary d-flex align-items-center justify-content-center">
+                    <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(stringifyAudience(item.audience, userContext))]: SITE_SUBJECT === SITE.CS})}>
                         {stringifyAudience(item.audience, userContext)}
                     </div>
                     <div className="title pl-3 d-flex">

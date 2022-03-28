@@ -533,13 +533,9 @@ export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembers
     groupMembershipInformation: ApiTypes.GroupMembershipDTO;
 }
 
-export interface ShortcutResponse {
-    id: string;
-    title: string;
-    terms: string[];
-    summary: string;
-    url: string;
-    type: string;
+export interface ShortcutResponse extends ContentSummaryDTO {
+    terms?: string[];
+    hash?: string;
 }
 
 export interface UserBetaFeaturePreferences {

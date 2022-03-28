@@ -19,11 +19,11 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
-import {Helmet} from "react-helmet";
-import {generateQuestionTitle} from "../../services/questions";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {MetaDescription} from "../elements/MetaDescription";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -41,21 +41,16 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
         return <div className={doc.subjectId || ""}>
             <Container>
-                <Helmet>
-                    <meta property="og:title" content={generateQuestionTitle(doc) + " — Isaac " + SITE_SUBJECT_TITLE} />
-                    {doc.summary && <meta name="description" content={doc.summary}/>}
-                    {doc.summary && <meta name="og:description" content={doc.summary}/>}
-                </Helmet>
                 <TitleAndBreadcrumb
                     intermediateCrumbs={navigation.breadcrumbHistory}
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
                     subTitle={doc.subtitle as string}
                 />
+                <MetaDescription description={doc.summary} />
+                <CanonicalHrefElement />
                 <div className="no-print d-flex align-items-center">
-                    <div className="not-mobile">
-                        <EditContentButton doc={doc} />
-                    </div>
+                    <EditContentButton doc={doc} />
                     <div className="mt-3 mr-sm-1 ml-auto">
                         <UserContextPicker className="no-print text-right" />
                     </div>

@@ -52,7 +52,7 @@ function selectGroups(state: AppState) {
         if (isDefined(state.boards) && isDefined(state.boards.boards)) {
             for (const board of state.boards.boards.boards) {
                 gameboards[board.id as string] = board;
-            };
+            }
         }
 
         const assignmentsProgress = selectors.assignments.progress(state);
@@ -72,7 +72,7 @@ function selectGroups(state: AppState) {
                 } else {
                     assignments[groupId] = [enhancedAssignment];
                 }
-            };
+            }
         }
 
         const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
@@ -155,23 +155,23 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     const [singleQuestionSort, setSingleQuestionSort] = useState(false);
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
-    let questions = assignment.gameboard.contents;
+    const questions = assignment.gameboard.contents;
     const assignmentAverages: number[] = [];
     let assignmentTotalQuestionParts = 0;
 
-    for (let i in questions) {
-        let q = questions[i];
+    for (const i in questions) {
+        const q = questions[i];
         let tickCount = 0;
 
         for (let j = 0; j < progress.length; j++) {
-            let studentResults = progress[j].results;
+            const studentResults = progress[j].results;
 
-            if (studentResults[i] == "PASSED" || studentResults[i] == "PERFECT") {
+            if (studentResults[i] === "PASSED" || studentResults[i] === "PERFECT") {
                 tickCount++;
             }
         }
 
-        let tickPercent = Math.round(100 * (tickCount / progress.length));
+        const tickPercent = Math.round(100 * (tickCount / progress.length));
         assignmentAverages.push(tickPercent);
         assignmentTotalQuestionParts += q.questionPartsTotal;
     }
@@ -180,7 +180,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     let studentsCorrect = 0;
     for (let j = 0; j < progress.length; j++) {
 
-        let studentProgress = progress[j];
+        const studentProgress = progress[j];
 
         if (progress[j].user.authorisedFullAccess) {
 
@@ -189,8 +189,8 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
             studentProgress.incorrectQuestionPartsCount = 0;
             studentProgress.notAttemptedPartResults = [];
 
-            for (let i in studentProgress.results) {
-                if (studentProgress.results[i] == "PASSED" || studentProgress.results[i] == "PERFECT") {
+            for (const i in studentProgress.results) {
+                if (studentProgress.results[i] === "PASSED" || studentProgress.results[i] === "PERFECT") {
                     studentProgress.tickCount++;
                 }
                 studentProgress.correctQuestionPartsCount += studentProgress.correctPartResults[i];
@@ -251,7 +251,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
         const {itemOrder, ...rest} = props;
         const className = (props.className || "") + " " + sortClasses(itemOrder);
         const clickToSelect = typeof itemOrder === "number" ? (() => setSelectedQuestion(itemOrder)) : undefined;
-        const sortArrows = (typeof itemOrder !== "number" || itemOrder == selectedQuestionNumber) ?
+        const sortArrows = (typeof itemOrder !== "number" || itemOrder === selectedQuestionNumber) ?
             <button className="sort" onClick={() => {toggleSort(itemOrder);}}>
                 <span className="up" >▲</span>
                 <span className="down">▼</span>
@@ -272,11 +272,11 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     function markClassesInternal(studentProgress: AppAssignmentProgress, status: GameboardItemState | null, correctParts: number, incorrectParts: number, totalParts: number) {
         if (!studentProgress.user.authorisedFullAccess) {
             return "revoked";
-        } else if (correctParts == totalParts) {
+        } else if (correctParts === totalParts) {
             return "completed";
-        } else if (status == "PASSED" || (correctParts / totalParts) >= passMark) {
+        } else if (status === "PASSED" || (correctParts / totalParts) >= passMark) {
             return "passed";
-        } else if (status == "FAILED" || (incorrectParts / totalParts) > (1 - passMark)) {
+        } else if (status === "FAILED" || (incorrectParts / totalParts) > (1 - passMark)) {
             return "failed";
         } else if (correctParts > 0 || incorrectParts > 0) {
             return "in-progress";
@@ -286,9 +286,9 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
     }
 
     function markClasses(studentProgress: AppAssignmentProgress, totalParts: number) {
-        let correctParts = studentProgress.correctQuestionPartsCount;
-        let incorrectParts = studentProgress.incorrectQuestionPartsCount;
-        let status = null;
+        const correctParts = studentProgress.correctQuestionPartsCount;
+        const incorrectParts = studentProgress.incorrectQuestionPartsCount;
+        const status = null;
 
         return markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
@@ -297,9 +297,9 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
         const question = questions[index];
 
         const totalParts = question.questionPartsTotal;
-        let correctParts = studentProgress.correctPartResults[index];
-        let incorrectParts = studentProgress.incorrectPartResults[index];
-        let status = studentProgress.results[index];
+        const correctParts = studentProgress.correctPartResults[index];
+        const incorrectParts = studentProgress.incorrectPartResults[index];
+        const status = studentProgress.results[index];
 
         return isSelected(question) + " " + markClassesInternal(studentProgress, status, correctParts, incorrectParts, totalParts);
     }
@@ -339,7 +339,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
         <div className="progress-header">
             <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong> students have completed the gameboard <Link to={`/gameboards#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link> correctly.
         </div>
-        {progress.length > 0 && <React.Fragment>
+        {progress.length > 0 && <>
             <div className="progress-questions">
                 <Button color="tertiary" disabled={selectedQuestionNumber == 0}
                     onClick={() => setSelectedQuestion(selectedQuestionNumber - 1)}>◄</Button>
@@ -393,7 +393,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
                     </tfoot>
                 </table>
             </div>
-        </React.Fragment>}
+        </>}
     </div>;
 };
 
@@ -440,7 +440,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
                 <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment._id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                < Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/${assignment._id}`} onClick={openSingleAssignment}>View individual assignment</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/${assignment._id}`} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader {...props} />}
@@ -642,7 +642,7 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }
 
-return <React.Fragment>
+    return <>
         <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
@@ -655,7 +655,7 @@ return <React.Fragment>
             </Button>
         </div>
         {isExpanded && <GroupDetails {...props} />}
-    </React.Fragment>;
+    </>;
 };
 
 export function AssignmentProgress(props: AssignmentProgressPageProps) {
@@ -687,7 +687,7 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
         Click on your groups to see the assignments you have set. View your students' progress by question.
     </span>;
 
-    return <React.Fragment>
+    return <>
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
@@ -721,5 +721,5 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
                 </Container>}
             </ShowLoading>
         </div>
-    </React.Fragment>;
+    </>;
 }

@@ -16,7 +16,7 @@ enum boardCompletions {
 }
 
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
-    if (board.tags && board.tags.includes("isaac")) {
+    if (board.tags && board.tags.includes("ISAAC_BOARD")) {
         return "Isaac";
     }
     if (user.id == board.ownerUserId) {

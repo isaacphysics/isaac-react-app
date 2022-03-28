@@ -28,6 +28,7 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {determineAudienceViews} from "../../services/userContext";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {generateQuestionTitle} from "../../services/questions";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
 interface QuestionPageProps {
     questionIdOverride?: string;
@@ -76,10 +77,9 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                 >
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
+                <CanonicalHrefElement />
                 <div className="no-print d-flex align-items-center mt-3">
-                    <div className="not-mobile">
-                        <EditContentButton doc={doc} />
-                    </div>
+                    <EditContentButton doc={doc} />
                     <div className="question-actions ml-auto">
                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
                     </div>

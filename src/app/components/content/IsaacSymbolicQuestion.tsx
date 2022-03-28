@@ -238,7 +238,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
                               placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
-                        <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
+                        <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>
                         <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
@@ -251,7 +251,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                         </RS.UncontrolledTooltip>
                     </RS.InputGroupAddon>
                 </RS.InputGroup>
-                {errors && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>}
                 {symbolList && <div className="eqn-editor-symbols">
