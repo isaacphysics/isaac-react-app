@@ -39,7 +39,7 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
     return {manipulatedHtml: htmlDom.innerHTML, tableData: tableInnerHTMLs};
 }
 
-export const ExpandedContext = React.createContext<{expanded: boolean}>({expanded: false});
+export const ExpandableParentContext = React.createContext<boolean>(false);
 
 export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedInnerClasses = "") => {
     const [ expanded, setExpanded ] = useState(false);
@@ -55,17 +55,20 @@ export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedIn
         setExpanded(newExpanded);
     }
 
+    const expandableParent = useContext(ExpandableParentContext);
     const deviceSize = useDeviceSize();
 
-    const expandButton = (!isMobile() && <div className={"expand-button position-relative"}>
+    const show = SITE_SUBJECT === SITE.CS && !isMobile() && above["md"](deviceSize) && !expandableParent;
+
+    const expandButton = (show && <div className={"expand-button position-relative"}>
         <button onClick={toggleExpanded}>
             <div><span><img aria-hidden alt={"Button to expand content"} src={"/assets/expand-arrow.svg"}/> {expanded ? "Shrink content" : "Expand content"}</span></div>
         </button>
     </div>) || null;
 
     // If screen size goes below md, then the `isaac-expand-bg` class no longer applies (the screen is too thin)
-    const innerClasses = (expanded && above["md"](deviceSize)) ? "" : unexpandedInnerClasses;
-    const outerClasses = above["md"](deviceSize) ? (expanded ? "isaac-expand-bg expand-outer" : "expand-outer") : "";
+    const innerClasses = (expanded && show) ? "" : unexpandedInnerClasses;
+    const outerClasses = show ? (expanded ? "isaac-expand-bg expand-outer" : "expand-outer") : "";
 
     return {expandButton, innerClasses, outerClasses};
 }
@@ -82,7 +85,7 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefOb
         return ReactDOM.createPortal(
             <div className={classNames(outerClasses, "position-relative isaac-table")} ref={expandRef}>
                 {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollRef} />}
-                {SITE_SUBJECT === SITE.CS && expandButton}
+                {expandButton}
                 <div ref={scrollRef} className={innerClasses}>
                     <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
                 </div>

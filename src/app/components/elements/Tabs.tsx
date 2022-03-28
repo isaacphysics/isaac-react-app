@@ -3,7 +3,7 @@ import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import {isDefined} from "../../services/miscUtils";
-import {useExpandContent} from "./TrustedHtml";
+import {ExpandableParentContext, useExpandContent} from "./TrustedHtml";
 import classNames from "classnames";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
@@ -70,14 +70,16 @@ export const Tabs = (props: TabsProps) => {
             })}
         </Nav>
 
-        <TabContent activeTab={activeTab} className={tabContentClass}>
-            {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
-                const tabIndex = mapIndex + 1;
-                return <TabPane key={tabTitle} tabId={tabIndex}>
-                    {tabBody as ReactNode}
-                </TabPane>;
-            })}
-        </TabContent>
-        {SITE_SUBJECT === SITE.CS && expandButton}
+        <ExpandableParentContext.Provider value={true}>
+            <TabContent activeTab={activeTab} className={tabContentClass}>
+                {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
+                    const tabIndex = mapIndex + 1;
+                    return <TabPane key={tabTitle} tabId={tabIndex}>
+                        {tabBody as ReactNode}
+                    </TabPane>;
+                })}
+            </TabContent>
+        </ExpandableParentContext.Provider>
+        {expandButton}
     </div>;
 };

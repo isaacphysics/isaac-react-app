@@ -20,9 +20,18 @@
   }
 }
 
-.isaac-tab {
+.code-snippet {
   .scroll-shadow {
+    margin-top: 35px;
     margin-bottom: 1em;
+  }
+}
+
+.isaac-tab {
+  .code-snippet {
+    .scroll-shadow {
+      margin-top: 0 !important;
+    }
   }
 }
 
