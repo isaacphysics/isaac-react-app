@@ -146,7 +146,12 @@
     "build-stats-phy": "webpack --env prod --config config/webpack.config.physics.js --profile --json > bundle-stats-phy.json",
     "analyse-bundle-phy": "webpack-bundle-analyzer bundle-stats-phy.json build-physics",
     "build-stats-cs": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats-cs.json",
-    "analyse-bundle-cs": "webpack-bundle-analyzer bundle-stats-cs.json build-cs"
+    "analyse-bundle-cs": "webpack-bundle-analyzer bundle-stats-cs.json build-cs",
+    "build-cs-renderer": "webpack --env prod --config config/webpack.config.cs.renderer.js",
+    "start-cs-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --disableHostCheck=true",
+    "build-phy-renderer": "webpack --env prod --config config/webpack.config.phy.renderer.js",
+    "start-phy-renderer": "webpack-dev-server --hot --port 3002 --history-api-fallback --config config/webpack.config.phy.renderer.js --disableHostCheck=true",
+    "build-renderer": "npm run build-cs-renderer && npm run build-phy-renderer"
   },
   "eslintConfig": {
     "extends": [
