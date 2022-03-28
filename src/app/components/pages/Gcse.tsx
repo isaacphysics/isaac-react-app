@@ -21,16 +21,16 @@ export const Gcse = () => {
             <IsaacCard doc={{title: "Physics Skills Mastery Book", subtitle: "Interactive questions from our Mastering Essential GCSE Physics book.",
                 clickUrl: "/books/phys_book_gcse", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
-            <IsaacCard doc={{title: "Question Finder", subtitle: "Practise your problem solving skills with our GCSE questions.",
-                clickUrl: "/gameboards/new?stages=gcse", image: {src: "/assets/phy/key_stage_sprite.svg#triple"}
+            <IsaacCard doc={{title: "GCSE Maths Book", subtitle: "Interactive questions from our Using Essential GCSE Maths book.",
+                clickUrl: "/books/maths_book_gcse", image: {src: "/assets/phy/key_stage_sprite.svg#skills-book-cover"}
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
-            <IsaacCard doc={{title: "GCSE Physics Lessons", subtitle: "Packages of questions, recorded explanations and tutorials",
-                clickUrl: "/pages/gcse_topic_index", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            <IsaacCard doc={{title: "Question Finder", subtitle: "Practise your problem solving skills with our GCSE questions.",
+                clickUrl: "/gameboards/new?stages=gcse", image: {src: "/assets/phy/key_stage_sprite.svg#triple"}
             }}/>
-            <IsaacCard doc={{title: "Consolidation Programme", subtitle: "Topic based learning plan",
-                clickUrl: "/pages/summer_programmes_2021", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
+            <IsaacCard doc={{title: "GCSE Physics Lessons", subtitle: "Packages of questions, recorded explanations and tutorials and topic based revision plan.",
+                clickUrl: "/pages/gcse_topic_index", image: {src: "/assets/phy/key_stage_sprite.svg#teacher-hat"}
             }}/>
         </Row>
         <Row className="card-deck isaac-cards-body my-3">
