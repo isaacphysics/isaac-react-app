@@ -22,22 +22,29 @@
 
 .code-snippet {
   .scroll-shadow {
-    margin-top: 35px;
     margin-bottom: 1em;
   }
 }
 
-.isaac-tab {
+@include media-breakpoint-up(md) {
   .code-snippet {
     .scroll-shadow {
-      margin-top: 0 !important;
+      margin-top: 35px;
     }
   }
-}
 
-.isaac-table {
-  .scroll-shadow {
-    margin-top: 35px;
+  .isaac-tab {
+    .code-snippet {
+      .scroll-shadow {
+        margin-top: 0 !important;
+      }
+    }
+  }
+
+  .isaac-table {
+    .scroll-shadow {
+      margin-top: 35px;
+    }
   }
 }
 
