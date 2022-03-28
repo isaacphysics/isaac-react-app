@@ -13,6 +13,8 @@ import * as persistence from "../../services/localStorage";
 import {useQueryParams} from "../../services/reactRouterExtension";
 import {useUserContext} from "../../services/userContext";
 import {RenderNothing} from "../elements/RenderNothing";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {MetaDescription} from "../elements/MetaDescription";
 
 export function AllTopicsWithoutAStage() {
     const history = useHistory();
@@ -118,9 +120,15 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
         </Col>
     };
 
+    const metaDescriptionMap = {
+        [STAGE.A_LEVEL]: "Our free A level Computer Science topics cover the AQA, CIE, OCR, Eduqas, and WJEC exam specifications. Use our exam questions to learn or revise today.",
+        [STAGE.GCSE]: "Discover our free GCSE Computer Science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn and revise for your exams with us today."
+    };
+
     return <div className="pattern-02">
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
+            {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionMap[stage]} />}
 
             <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
                 {

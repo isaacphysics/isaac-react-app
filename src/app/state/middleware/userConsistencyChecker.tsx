@@ -1,8 +1,8 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
-import {RegisteredUserDTO} from "../../IsaacApiTypes";
-import {ACTION_TYPE} from "../services/constants";
+import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {ACTION_TYPE} from "../../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
-import {changePage} from "./actions";
+import {changePage} from "../actions";
 
 // Generic log action:
 // This is not imported from actions to avoid a circular dependency through store.

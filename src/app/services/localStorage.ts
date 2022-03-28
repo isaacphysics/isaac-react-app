@@ -4,9 +4,11 @@ export enum KEY {
     CURRENT_USER_ID = "currentUserId",
     FIRST_LOGIN = "firstLogin",
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
+    LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME = "loginOrSignUpModalShownTime",
     LAST_NOTIFICATION_TIME = "lastNotificationTime",
     ANONYMISE_USERS = "anonymiseUsers",
     MOST_RECENT_ALL_TOPICS_PATH = "mostRecentAllTopicsPath",
+    FIRST_ANON_QUESTION = "firstAnonQuestion",
 }
 
 export const LOADING_FAILURE_VALUE = null;

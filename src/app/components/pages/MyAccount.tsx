@@ -85,6 +85,7 @@ interface AccountPageProps {
         userContexts: UserContext[] | undefined,
         passwordCurrent: string | null,
         currentUser: PotentialUser,
+        redirect: boolean
     ) => void;
     firstLogin: boolean;
     hashAnchor: string | null;
@@ -223,6 +224,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                 userContextsUpdated ? userContextsToUpdate : undefined,
                 currentPassword,
                 user,
+                true
             );
         }
     }

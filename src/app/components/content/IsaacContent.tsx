@@ -20,6 +20,7 @@ import {IsaacCodeSnippet} from "./IsaacCodeSnippet";
 import {QuizQuestion} from "./QuizQuestion";
 import {isQuestion} from "../../services/questions";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
+import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 
 const classBasedLayouts = {
     left: "align-left",
@@ -52,6 +53,7 @@ export const IsaacContent = withRouter<IsaacContentProps, any>((props: IsaacCont
             case "image": selectedComponent = <IsaacImage {...props} />; break;
             case "video": selectedComponent = <IsaacVideo {...props} />; break;
             case "codeSnippet": selectedComponent = <IsaacCodeSnippet {...props} />; break;
+            case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...props} />; break;
             case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} />; break;
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break;
             case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;

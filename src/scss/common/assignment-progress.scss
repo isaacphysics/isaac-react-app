@@ -346,18 +346,20 @@ $failed-bg-size: 25%;
 
 @mixin table-sticky() {
   position: sticky !important;
+  position: -webkit-sticky !important;
   background-clip:  padding-box !important;
   background: $gray-103;
   z-index: 2;
 }
 
 @mixin after-border() {
-  content:'';
-  position:absolute;
-  left: 0px;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
+  content: '';
+  position: absolute;
+  margin: -0.5px -0.5px;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .single-download {
@@ -365,18 +367,29 @@ $failed-bg-size: 25%;
   text-align: right;
 }
 
-.progress-table {
+.progress-table-container {
+  width: 100% !important;
+  display: block;
+  overflow-y: auto;
   overflow-x: auto;
-  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Safari 10.1+
+// https://stackoverflow.com/questions/16348489/is-there-a-css-hack-for-safari-only-not-chrome
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) {
+  .progress-table-container {
+    overflow-x: scroll !important;
+  }
+}}
+
+.progress-table {
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
 
   th.selected {
     // Fixes Firefox bug with position: relative table cells: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
     background-clip: padding-box !important;
-  }
-
-  table {
-    width: 100%;
   }
 
   tbody tr:nth-of-type(even) {
@@ -396,6 +409,7 @@ $failed-bg-size: 25%;
   font-size: 12px;
   tbody td, tbody th {
     min-width: 40px;
+    z-index: 1;
   }
   .total-column.left {
     right: 40px;
@@ -487,15 +501,21 @@ $failed-bg-size: 25%;
     font-weight: bold;
   }
 
-  th:first-child {
+  .student-name {
+    font-weight: bold;
+    color: $text-muted;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-width: 130px;
+
     @include table-sticky;
     left: 0;
     top: 0;
     width: 195px;
-
     &:after {
       @include after-border;
       border-right: 1px solid $gray-118;
+      border-left: 1px solid $gray-118;
       pointer-events: none; // don't intercept clicks as we want links in the th element
     }
   }
@@ -505,21 +525,12 @@ $failed-bg-size: 25%;
     width: 65px;
     right: 0;
     top: 0;
-    button {
-      z-index: 2;
-    }
-    &.left:after{
+    &:after {
       @include after-border;
+      border-right: 1px solid $gray-118;
       border-left: 1px solid $gray-118;
+      pointer-events: none; // don't intercept clicks as we want links in the th element
     }
-  }
-
-  .student-name {
-    font-weight: bold;
-    color: $text-muted;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    min-width: 130px;
   }
 }
 

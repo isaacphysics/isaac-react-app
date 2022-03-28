@@ -126,7 +126,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
                     <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                     <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
-                        {`This content is ${notRelevantMessage(userContext)}.`}
+                        {`This content has ${notRelevantMessage(userContext)}.`}
                     </RS.UncontrolledTooltip>
                 </div>}
                 {audienceViews && displayStage && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}

@@ -376,9 +376,9 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
         message.push(examBoardLabelMap[userContext.examBoard]);
     }
     if (message.length === 0) { // should never happen...
-        message.push("your account settings." /* "anyone!" */)
+        message.push("your account settings" /* "anyone!" */)
     }
-    return `not relevant for ${message.join(" ")}`;
+    return `not been marked for ${message.join(" ")}`;
 }
 
 export function audienceStyle(audienceString: string): string {
