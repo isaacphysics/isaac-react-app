@@ -27,7 +27,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef, "");
 
     return <div ref={expandRef} className={classNames("position-relative code-snippet", outerClasses)}>
-        {expandButton}
+        {doc.expandable && expandButton}
         <div className={innerClasses}>
             {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollPromptRef} />}
             <Row>

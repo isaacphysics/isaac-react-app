@@ -80,12 +80,13 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefOb
     const scrollRef = useRef<HTMLDivElement>(null);
     const expandRef = useRef<HTMLDivElement>(null);
     const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef, "overflow-auto mb-4");
+    const expandable = classes.includes('expandable');
 
     if (html && parentElement) {
         return ReactDOM.createPortal(
             <div className={classNames(outerClasses, "position-relative isaac-table")} ref={expandRef}>
                 {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollRef} />}
-                {expandButton}
+                {expandable && expandButton}
                 <div ref={scrollRef} className={innerClasses}>
                     <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
                 </div>

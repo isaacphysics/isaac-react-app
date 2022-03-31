@@ -399,6 +399,7 @@ export interface CodeSnippetDTO extends ContentDTO {
     language?: string;
     code?: string;
     disableHighlighting?: boolean;
+    expandable?: boolean;
     url?: string;
 }
 
