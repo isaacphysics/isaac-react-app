@@ -12,8 +12,8 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import uuid from "uuid";
-import {notRelevantMessage, useUserContext} from "../../services/userContext";
-import classnames from "classnames";
+import {audienceStyle, notRelevantMessage, useUserContext} from "../../services/userContext";
+import classNames from "classnames";
 
 interface AccordionsProps {
     id?: string;
@@ -130,7 +130,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={"d-flex align-items-stretch " + classnames({"de-emphasised": deEmphasised, "active": open})}
+                className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised, "active": open})}
                 onClick={(event: any) => {
                     pauseAllVideos();
                     const nextState = !open;
@@ -142,7 +142,8 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 }}
                 aria-expanded={open ? "true" : "false"}
             >
-                {isConceptPage && audienceString && <span className="accordion-label badge-secondary d-flex align-items-center justify-content-center">
+                {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
+                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: SITE_SUBJECT === SITE.CS})}>
                     {audienceString}
                 </span>}
                 <div className="accordion-title pl-3">
@@ -152,7 +153,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                         {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                             <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
-                                {`This content is ${notRelevantMessage(userContext)}.`}
+                                {`This content has ${notRelevantMessage(userContext)}.`}
                             </RS.UncontrolledTooltip>
                         </div>}
 

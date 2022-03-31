@@ -533,13 +533,9 @@ export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembers
     groupMembershipInformation: ApiTypes.GroupMembershipDTO;
 }
 
-export interface ShortcutResponse {
-    id: string;
-    title: string;
-    terms: string[];
-    summary: string;
-    url: string;
-    type: string;
+export interface ShortcutResponse extends ContentSummaryDTO {
+    terms?: string[];
+    hash?: string;
 }
 
 export interface UserBetaFeaturePreferences {
@@ -641,10 +637,12 @@ export interface Toast {
 }
 
 export interface ActiveModal {
+    centered?: boolean;
+    noPadding?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: string;
-    title: string;
+    title?: string;
     body: any;
     buttons?: any[];
     overflowVisible?: boolean;

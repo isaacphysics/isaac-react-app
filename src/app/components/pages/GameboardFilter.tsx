@@ -2,17 +2,17 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useHistory, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
 import {
+    DIFFICULTY_ICON_ITEM_OPTIONS,
     DIFFICULTY_ITEM_OPTIONS,
     EXAM_BOARD_ITEM_OPTIONS,
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
-    STAGE,
-    TAG_ID,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
-    DIFFICULTY_ICON_ITEM_OPTIONS
+    STAGE,
+    TAG_ID
 } from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
@@ -20,9 +20,8 @@ import {fetchConcepts, generateTemporaryGameboard, loadGameboard} from '../../st
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
-import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {Item, unwrapValue, isItemEqual} from "../../services/select";
+import {isItemEqual, Item, unwrapValue} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select, {GroupedOptionsType} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
@@ -36,6 +35,8 @@ import {History} from "history";
 import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {siteSpecific} from "../../services/miscUtils";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {MetaDescription} from "../elements/MetaDescription";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -252,7 +253,11 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
+    const metaDescriptionCS = "Search for the perfect free GCSE or A level Computer Science questions to study. For revision. For homework. For classroom learning.";
+
     return <>
+        {/* CS-specific metadata: */}
+        <MetaDescription description={metaDescriptionCS} />
         <RS.Row>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
@@ -480,6 +485,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
+        <CanonicalHrefElement />
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}

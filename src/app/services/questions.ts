@@ -60,7 +60,7 @@ export const HUMAN_QUESTION_TAGS = new Map([
 
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
     if (!availableSymbols) return;
-    let theseSymbols = availableSymbols.slice(0).map(s => s.trim());
+    const theseSymbols = availableSymbols.slice(0).map(s => s.trim());
     let i = 0;
     while (i < theseSymbols.length) {
         if (theseSymbols[i] === '_trigs') {
@@ -109,7 +109,7 @@ export function sanitiseInequalityState(state: any) {
         saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
     }
     if (saneState.symbols) {
-        for (let symbol of saneState.symbols) {
+        for (const symbol of saneState.symbols) {
             if (symbol.expression.latex) {
                 symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
             }

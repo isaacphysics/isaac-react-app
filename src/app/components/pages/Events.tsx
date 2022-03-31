@@ -16,6 +16,7 @@ import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {MetaDescription} from "../elements/MetaDescription";
 
 
 interface EventsPageQueryParams {
@@ -54,10 +55,15 @@ export const Events = withRouter(({history, location}: {history: History; locati
         Follow the links below to find out more about our FREE events.
     </span>;
 
+    const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
+
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {SITE_SUBJECT === SITE.CS && <CoronavirusWarningBanner />}
+            {SITE_SUBJECT === SITE.CS && <>
+                <CoronavirusWarningBanner />
+                <MetaDescription description={metaDescriptionCS} />
+            </>}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">

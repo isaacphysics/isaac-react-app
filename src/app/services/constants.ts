@@ -33,6 +33,8 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
     [SITE.CS]: "UA-137475074-1",
 }[SITE_SUBJECT];
 
+export const CODE_EDITOR_BASE_URL = document.location.hostname === "localhost" ? "http://localhost:3000" : "https://editor.isaaccode.org";
+
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
