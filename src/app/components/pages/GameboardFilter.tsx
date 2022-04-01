@@ -325,7 +325,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
     </>
 }
 
-export const GameboardFilter = withRouter<RouteComponentProps, any>(({location}: {location: Location}) => {
+export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
 

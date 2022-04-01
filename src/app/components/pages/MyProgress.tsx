@@ -10,7 +10,7 @@ import {
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
-import {match, RouteComponentProps, withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
@@ -50,11 +50,10 @@ export const siteSpecific = {
 }[SITE_SUBJECT];
 
 
-interface MyProgressProps extends RouteComponentProps {
+interface MyProgressProps extends RouteComponentProps<{userIdOfInterest: string}> {
     user: PotentialUser;
-    match: match & { params: { userIdOfInterest: string } };
 }
-export const MyProgress = withRouter<MyProgressProps, any>((props: MyProgressProps) => {
+export const MyProgress = withRouter((props: MyProgressProps) => {
     const { user, match } = props;
     const { userIdOfInterest } = match.params;
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);

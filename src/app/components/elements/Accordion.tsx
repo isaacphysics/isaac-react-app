@@ -27,7 +27,7 @@ interface AccordionsProps extends RouteComponentProps {
 
 let nextClientId = 0;
 
-export const Accordion = withRouter<AccordionsProps, any>(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
     const userContext = useUserContext();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;

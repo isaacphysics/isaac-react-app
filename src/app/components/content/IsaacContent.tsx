@@ -28,13 +28,12 @@ const classBasedLayouts = {
     righthalf: "align-right-half"
 };
 
-export interface IsaacContentProps extends RouteComponentProps<{ path: string }> {
+export interface IsaacContentProps extends RouteComponentProps {
     doc: ContentDTO,
-    // match: match & { path: string },
     contentIndex?: number
-};
+}
 
-export const IsaacContent = withRouter<IsaacContentProps, any>((props: IsaacContentProps) => {
+export const IsaacContent = withRouter((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;

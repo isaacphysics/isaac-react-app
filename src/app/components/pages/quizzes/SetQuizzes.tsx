@@ -185,4 +185,4 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     </RS.Container>;
 };
 
-export const SetQuizzes = withRouter<SetQuizzesPageProps, any>(SetQuizzesPageComponent);
+export const SetQuizzes = withRouter(SetQuizzesPageComponent);

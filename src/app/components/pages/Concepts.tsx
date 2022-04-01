@@ -7,7 +7,6 @@ import queryString from "query-string";
 import {fetchConcepts} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {TAG_ID} from "../../services/constants";
 import {pushConceptsToHistory, searchResultIsPublic} from "../../services/search";
@@ -18,7 +17,7 @@ import {selectors} from "../../state/selectors";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 
-export const Concepts = withRouter<RouteComponentProps, any>((props: {history: History; location: Location}) => {
+export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
