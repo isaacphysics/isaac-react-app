@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -62,7 +62,7 @@ const stateToProps = (state: AppState, props: any) => {
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
         userOfInterest: searchParams?.userId as string ?? null,
-        userToEdit: state && {...state.adminUserGet, loggedIn: true} || {loggedIn: false}
+        adminUserToEdit: state?.adminUserGet
     }
 };
 
@@ -91,10 +91,16 @@ interface AccountPageProps {
     authToken: string | null;
     userOfInterest: string | null;
     adminUserGet: (userid: number | undefined) => void;
-    userToEdit: AdminUserGetState;
+    adminUserToEdit?: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+    // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
+    // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
+    const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
+        return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
+    }, [adminUserToEdit]);
+
     useEffect(() => {
         if (userOfInterest) {
             adminUserGet(Number(userOfInterest));
@@ -112,7 +118,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             {...user, password: ""}
     );
 
-    useEffect(() => {
+    // This is necessary for updating the user when the user updates fields from the required account info modal, for example.
+    useEffect(function keepUserInSyncWithChangesElsewhere() {
         if (editingOtherUser && userToEdit) {
             setUserToUpdate({...userToEdit, loggedIn: true});
         } else if (user) {
@@ -173,7 +180,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
         const clearLanguages: { [pl in PROGRAMMING_LANGUAGE]: false } = {
-            PSEUDOCODE: false, JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, PLAINTEXT: false, SQL: false, NONE: false,
+            PSEUDOCODE: false, JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, ASSEMBLY: false, PLAINTEXT: false, SQL: false, NONE: false,
         };
 
         const fullNewProgrammingLanguage = {...clearLanguages, ...newProgrammingLanguage};

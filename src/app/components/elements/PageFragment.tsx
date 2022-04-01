@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {NOT_FOUND} from "../../services/constants";
+import {EditContentButton} from "./EditContentButton";
 
 
 interface PageFragmentComponentProps {
@@ -35,6 +36,7 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
         {fragment !== NOT_FOUND && <ShowLoading
             until={fragment}
             thenRender={fragment => <WithFigureNumbering doc={fragment}>
+                <EditContentButton doc={fragment} />
                 <IsaacContent doc={fragment} />
             </WithFigureNumbering>}
             ifNotFound={ifNotFound || defaultNotFoundComponent}

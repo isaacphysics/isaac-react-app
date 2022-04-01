@@ -358,6 +358,7 @@ export interface ContentSummaryDTO {
     url?: string;
     correct?: boolean;
     supersededBy?: string;
+    deprecated?: boolean;
     difficulty?: string;
     audience?: AudienceContext[];
 }

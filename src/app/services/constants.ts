@@ -548,6 +548,7 @@ export enum PROGRAMMING_LANGUAGE {
     PYTHON = "PYTHON",
     PHP = "PHP",
     CSHARP = "CSHARP",
+    ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
     NONE = "NONE",
@@ -559,6 +560,7 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
     [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
+    [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
 };
@@ -732,6 +734,7 @@ export enum TAG_ID {
     compression = "compression",
     encryption = "encryption",
     databases = "databases",
+    fileOrganisation = "file_organisation",
     sql = "sql",
     bigData = "big_data",
     // Data structures and algorithms topics
@@ -780,68 +783,132 @@ export enum TAG_ID {
     modelsOfComputation = "models_of_computation",
 
     // PHY ----
-    // Subjects
+
+    // Subjects ---
     physics = "physics",
     maths = "maths",
     chemistry = "chemistry",
 
-    // Physics fields
-    mechanics = "mechanics",
-    waves = "waves",
-    fields = "fields",
-    circuits = "circuits",
-    chemPhysics = "chemphysics",
-    // Maths fields
-    geometry = "geometry",
-    calculus = "calculus",
-    algebra = "algebra",
-    functions = "functions",
-    statistics = "statistics",
+    // Fields ---
 
-    // Mechanics topics
-    statics = "statics",
+    // Physics Fields
+    mechanics = "mechanics",
+    fields = "fields",
+    thermal = "thermal",
+    wavesParticles = "waves_particles",
+    skills = "skills",
+    electricity = "electricity",
+    applications = "applications",
+    // Chemistry Fields
+    inorganic = "inorganic",
+    physical = "physical",
+    analytical = "analytical",
+    foundations = "foundations",
+    organic = "organic",
+    // Maths Fields
+    geometry = "geometry",
+    algebra = "algebra",
+    statistics = "statistics",
+    functions = "functions",
+    calculus = "calculus",
+
+    // Physics Topics ---
+
+    // Mechanics
     dynamics = "dynamics",
-    shm = "shm",
-    angularMotion = "angular_motion",
     circularMotion = "circular_motion",
+    oscillations = "oscillations",
+    statics = "statics",
     kinematics = "kinematics",
-    // Fields topics
+    materials = "materials",
+    // Fields
+    combined = "combined",
     electric = "electric",
     magnetic = "magnetic",
     gravitational = "gravitational",
-    combined = "combined",
-    // Circuits topics
-    resistors = "resistors",
-    capacitors = "capacitors",
-    generalCircuits = "general_circuits",
-    // Waves topics:
-    optics = "optics",
+    // Thermal
+    gases = "gases",
+    heatCapacity = "heat_capacity",
+    // Waves & Particles
+    nuclear = "nuclear",
     superposition = "superposition",
+    optics = "optics",
+    quantum = "quantum",
     waveMotion = "wave_motion",
-    // Physical Chemistry topics:
-    thermodynamics = "thermodynamics",
-    kinetics = "kinetics",
+    fundamental = "fundamental",
+    // Skills
+    units = "units",
+    graphs = "graphs",
+    uncertainties = "uncertainties",
+    relationships = "relationships",
+    prefixes = "prefixes",
+    sigFigs = "sig_figs",
+    // Electricity
+    chargeCurrent = "charge_current",
+    resistors = "resistors",
+    components = "components",
+    internalResistance = "internal_resistance",
+    capacitors = "capacitors",
+    power = "power",
 
-    // Geometry topics
+    // Maths Topics ---
+
+    // Geometry
     geomVectors = "geom_vectors",
-    trigonometry = "trigonometry",
     shapes = "shapes",
-    // Calculus topics
-    differentiation = "differentiation",
-    integration = "integration",
-    differentialEq = "differential_eq",
-    // Algebra topics
-    simultaneous = "simultaneous",
-    quadratics = "quadratics",
+    trigonometry = "trigonometry",
+    planes = "planes",
+    // Algebra
     manipulation = "manipulation",
+    quadratics = "quadratics",
     series = "series",
-    complex_numbers = "complex_numbers",
-    // Functions topics
+    simultaneous = "simultaneous",
+    matrices = "matrices",
+    complexNumbers = "complex_numbers",
+    // Statistics
+    hypothesis = "hypothesis",
+    dataAnalysis = "data_analysis",
+    randomVars = "random_vars",
+    probability = "probability",
+    // Functions
     generalFunctions = "general_functions",
     graphSketching = "graph_sketching",
-    // Statistical topics
-    probability = "probability",
-    dataAnalysis = "data_analysis",
+    // Calculus
+    integration = "integration",
+    differentiation = "differentiation",
+    differentialEq = "differential_eq",
+
+    // Chemistry Topics ---
+
+    // Inorganic
+    redox = "redox",
+    bonding = "bonding",
+    transitionMetals = "transition_metals",
+    periodicTable = "periodic_table",
+    // Physical
+    energetics = "energetics",
+    electrochemistry = "electrochemistry",
+    equilibrium = "equilibrium",
+    acidsAndBases = "acids_and_bases",
+    entropy = "entropy",
+    kinetics = "kinetics",
+    // Analytical
+    electronicSpectroscopy = "electronic_spectroscopy",
+    nmrSpectroscopy = "nmr_spectroscopy",
+    massSpectrometry = "mass_spectrometry",
+    infraredSpectroscopy = "infrared_spectroscopy",
+    chromatography = "chromatography",
+    // Foundations
+    stoichiometry = "stoichiometry",
+    gasLaws = "gas_laws",
+    numericalSkills = "numerical_skills",
+    atomicStructure = "atomic_structure",
+    // Organic
+    functionalGroups = "functional_groups",
+    aromaticity = "aromaticity",
+    organicReactions = "organic_reactions",
+    isomerism = "isomerism",
+    reactionsGeneral = "reactions_general",
 }
 
 export enum TAG_LEVEL {
@@ -1000,8 +1067,8 @@ export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
     "Omega": "Ω",
 };
 
-let _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
-for(let entry of Object.entries(GREEK_LETTERS_MAP)) {
+const _REVERSE_GREEK_LETTERS_MAP: { [key: string]: string } = {};
+for(const entry of Object.entries(GREEK_LETTERS_MAP)) {
     _REVERSE_GREEK_LETTERS_MAP[entry[1]] = entry[0];
 }
 _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
@@ -1012,7 +1079,13 @@ export const specificDoughnutColours: { [key: string]: string } = {
     [SITE.PHY]: {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
-        "Chemistry": "#e22e25"
+        "Chemistry": "#e22e25",
+        [difficultyLabelMap.practice_1]: "#509e2e",
+        [difficultyLabelMap.practice_2]: "#3b6e25",
+        [difficultyLabelMap.practice_3]: "#27421a",
+        [difficultyLabelMap.challenge_1]: "#d68000",
+        [difficultyLabelMap.challenge_2]: "#955a0f",
+        [difficultyLabelMap.challenge_3]: "#764811"
     },
     [SITE.CS]: {}
 }[SITE_SUBJECT];

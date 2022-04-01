@@ -1,7 +1,6 @@
 import {
     AdditionalInformation,
     AugmentedEvent,
-    NOT_FOUND_TYPE,
     UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser
@@ -9,7 +8,7 @@ import {
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
-import {EXAM_BOARD, NOT_FOUND, STAGE} from "./constants";
+import {EXAM_BOARD, STAGE} from "./constants";
 import {isStudent} from "./user";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -113,10 +112,6 @@ export function validateBookingSubmission(event: AugmentedEvent, user: UserSumma
 
     return true;
 }
-
-export const resourceFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is T => {
-    return resource !== undefined && resource !== null && resource !== NOT_FOUND;
-};
 
 export function safePercentage(correct: number | null | undefined, attempts: number | null | undefined) {
     return (!(correct || correct == 0) || !attempts) ? null : correct / attempts * 100;

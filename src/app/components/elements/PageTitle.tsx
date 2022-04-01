@@ -24,7 +24,7 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
             {view.stage && view.stage !== STAGE.ALL && <div className="text-center align-self-center">
                 {stageLabelMap[view.stage]}
             </div>}
-            {SITE_SUBJECT === SITE.PHY && view.difficulty && <div className={"ml-2 ml-sm-0" + classnames({"mr-2": i > 0})}>
+            {view.difficulty && <div className={"ml-2 ml-sm-0" + classnames({"mr-2": i > 0})}>
                 <DifficultyIcons difficulty={view.difficulty} />
             </div>}
         </div>)}

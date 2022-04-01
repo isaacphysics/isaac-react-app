@@ -3,8 +3,8 @@ import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO} from "../../IsaacApiTypes";
 import {AbstractBaseTagService} from "./tagsAbstract";
 
-const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoon: "2022"}};
-const GCSE_COMING_DEC = {[STAGE.GCSE]: {comingSoon: "December 2021"}};
+const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoonDate: "2022"}};
+const GCSE_COMING_DEC = {[STAGE.GCSE]: {comingSoonDate: "December 2021"}};
 const GCSE_HIDDEN = {[STAGE.GCSE]: {hidden: true}};
 const GCSE_NEW = {[STAGE.GCSE]: {new: true}};
 
@@ -36,7 +36,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.communication, title: "Communication", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.webTechnologies, title: "Web technologies", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
         // Computer systems topics
-        {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         {id: TAG_ID.architecture, title: "Systems architecture", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         {id: TAG_ID.memoryAndStorage, title: "Memory and storage", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
@@ -56,6 +56,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.soundRepresentation, title: "Representation of sound", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.fileOrganisation, title: "File organisation", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.databases, title: "Database concepts", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.sql, title: "SQL", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
@@ -68,8 +69,6 @@ export class CsTagService extends AbstractBaseTagService {
         // GCSE to A level transition topics
         {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel},
         {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseBooleanLogic, title: "GCSE Boolean logic", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseSystems, title: "GCSE Systems", parent: TAG_ID.gcseToALevel},
         {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
         // Impacts of technology topics
         {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology, stageOverride: GCSE_COMING_2022},
@@ -83,7 +82,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.numberSystems, title: "Number systems and sets", parent: TAG_ID.mathsForCs, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.mathsFunctions, title: "Mathematical functions", parent: TAG_ID.mathsForCs, stageOverride: GCSE_COMING_2022},
         // Programming  fundamentals topics
-        {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_NEW},
         {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},

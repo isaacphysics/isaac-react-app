@@ -43,8 +43,6 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/topics/gcse" component={AllTopics} componentProps={{stage: STAGE.GCSE}} />,
     <TrackedRoute key={key++} exact path="/topics/a_level" component={AllTopics} componentProps={{stage: STAGE.A_LEVEL}} />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
-    <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
-
 
     // Books:
     <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,

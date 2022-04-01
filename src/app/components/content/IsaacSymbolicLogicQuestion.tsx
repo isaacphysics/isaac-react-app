@@ -260,7 +260,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
                         </UncontrolledTooltip>
                     </InputGroupAddon>
                 </InputGroup>
-                {errors && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
+                {isDefined(errors) && Array.isArray(errors) && errors.length > 0 && <div className="eqn-editor-input-errors"><strong>Careful!</strong><ul>
                     {errors.map(e => (<li key={e}>{e}</li>))}
                 </ul></div>}
                 {symbolList && <div className="eqn-editor-symbols">

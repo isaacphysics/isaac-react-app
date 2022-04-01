@@ -1,19 +1,25 @@
 import React from "react";
-import {LinkItem, NavigationBar, NavigationSection, useAssignmentBadge} from "../../navigation/NavigationBar";
+import {
+    LinkItem,
+    MenuBadge,
+    NavigationBar,
+    NavigationSection,
+    useAssignmentsCount
+} from "../../navigation/NavigationBar";
 import {useSelector} from "react-redux";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
 
 export const NavigationBarCS = () => {
     const user = useSelector(selectors.user.orNull);
-    const assignmentBadge = useAssignmentBadge();
+    const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>
-        <NavigationSection title={<>My Isaac {assignmentBadge}</>}>
-            <LinkItem to="/assignments">My assignments {assignmentBadge}</LinkItem>
+        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
+            <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            <LinkItem to="/tests">My tests</LinkItem>
+            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
@@ -38,6 +44,7 @@ export const NavigationBarCS = () => {
             {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
+            <LinkItem to="/pages/event_types">Event formats</LinkItem>
             <LinkItem to="/safeguarding">Safeguarding</LinkItem>
         </NavigationSection>
 

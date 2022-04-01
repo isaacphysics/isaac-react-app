@@ -2,7 +2,8 @@ import {
     IsaacQuizDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
-    QuizAttemptDTO, UserSummaryDTO
+    QuizAttemptDTO,
+    UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
 import {isDefined} from "../../../services/miscUtils";
@@ -23,6 +24,7 @@ import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {closeActiveModal, openActiveModal} from "../../../state/actions";
 import {UserContextPicker} from "../inputs/UserContextPicker";
+import {EditContentButton} from "../EditContentButton";
 
 type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number, studentId?: string, quizAssignmentId?: string) => string;
 
@@ -100,11 +102,14 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
     const dispatch = useDispatch();
     const assignment = attempt.quizAssignment;
     if (preview) {
-        return <p className="d-flex">
-            <span>You are previewing this test.</span>
-            <Spacer />
-            <RS.Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</RS.Button>
-        </p>;
+        return <>
+            <EditContentButton doc={attempt.quiz} />
+            <div className="d-flex">
+                <span>You are previewing this test.</span>
+                <Spacer />
+                <RS.Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</RS.Button>
+            </div>
+        </>;
     } else if (isDefined(assignment)) {
         return <p className="d-flex">
             <span>

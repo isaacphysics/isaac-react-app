@@ -4,7 +4,16 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
-import {DIFFICULTY_ITEM_OPTIONS, EXAM_BOARD_ITEM_OPTIONS, NOT_FOUND, QUESTION_CATEGORY_ITEM_OPTIONS, STAGE, TAG_ID, QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER} from '../../services/constants';
+import {
+    DIFFICULTY_ITEM_OPTIONS,
+    EXAM_BOARD_ITEM_OPTIONS,
+    NOT_FOUND,
+    QUESTION_CATEGORY_ITEM_OPTIONS,
+    STAGE,
+    TAG_ID,
+    QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
+    DIFFICULTY_ICON_ITEM_OPTIONS
+} from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {fetchConcepts, generateTemporaryGameboard, loadGameboard} from '../../state/actions';
@@ -253,7 +262,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         {"Find questions that are suitable for this stage of school learning."}
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                <Select placeholder="Any" id="stage-selector" onChange={unwrapValue(setStages)}
+                        value={stages} options={getFilteredStageOptions()} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
@@ -268,9 +278,9 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
             </RS.Col>
         </RS.Row>
         <RS.Row className="mt-lg-3 mb-sm-3">
-            {SITE_SUBJECT !== SITE.CS /* wait until difficulty is released */ && <RS.Col md={4}>
+            <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
-                    I would like questions for...
+                    with difficulty levels...
                     <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
                     <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                         Practice questions let you directly apply one idea -<br />
@@ -281,8 +291,9 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         C3 require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />
-            </RS.Col>}
+                <Select id="difficulty-selector" placeholder="Any" onChange={unwrapValue(setDifficulties)}
+                        isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
+            </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
                 <Select
@@ -295,13 +306,15 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     }}
                 />
             </RS.Col>
-            <RS.Col md={6}>
+        </RS.Row>
+        <RS.Row>
+            <RS.Col md={12}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</RS.Label>
                 {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
                     <Select
-                    inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
-                    placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
-                    value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
+                        inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
+                        placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
+                        value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
                     /> :
                     <IsaacSpinner/>}
             </RS.Col>
@@ -423,7 +436,8 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     // This is a leading debounced version of loadNewGameboard, used with the shuffle questions button - this stops
     // users from spamming the generateTemporaryGameboard endpoint by clicking the button fast
-    const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}), []);
+    const debouncedLeadingLoadGameboard = useCallback(debounce(loadNewGameboard, 200, {leading: true, trailing: false}),
+        [selections, stages, difficulties, concepts, examBoards]);
 
     useEffect(() => {
         if (gameboardIdAnchor && gameboardIdAnchor !== gameboard?.id) {

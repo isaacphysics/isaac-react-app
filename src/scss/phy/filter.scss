@@ -30,6 +30,10 @@ svg {
         stroke: none;
       }
 
+      &.de-emph {
+        stroke: $gray-120
+      }
+
       &.none {
         fill: none;
         stroke: none;
@@ -77,4 +81,51 @@ svg {
     }
   }
 
+}
+
+.hexagon-coming-soon {
+  width: 100%;
+  pointer-events: none;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 0.65rem;
+  bottom: 0;
+  left: 0;
+  border-radius: 5px;
+  font-family: $secondary-font-semi-bold;
+  background: white;
+
+  &.physics {
+    border: solid 1px $phy_physics;
+  }
+
+  &.maths {
+    border: solid 1px $phy_maths;
+  }
+
+  &.chemistry {
+    border: solid 1px $phy_chemistry;
+  }
+}
+
+/* Taken from https://www.browserstack.com/guide/create-browser-specific-css */
+
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+    .hexagon-coming-soon {
+      visibility: hidden !important;
+    }
+  }
+}
+
+/* Safari 10.1 */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
+    .hexagon-coming-soon {
+      visibility: hidden !important;
+    }
+  }
 }

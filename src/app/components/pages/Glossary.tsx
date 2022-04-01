@@ -3,30 +3,64 @@ import {Col, Container, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {useSelector} from "react-redux";
-import {withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {IsaacGlossaryTerm} from '../../components/content/IsaacGlossaryTerm';
+import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {isDefined} from '../../services/miscUtils';
 import tags from "../../services/tags";
-import {TAG_ID} from '../../services/constants';
-import {Tag} from '../../../IsaacAppTypes';
+import {NOT_FOUND, TAG_ID} from '../../services/constants';
+import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import Select from "react-select";
 import {useUserContext} from "../../services/userContext";
+import {useUrlHashValue} from "../../services/reactRouterExtension";
+import {Item} from "../../services/select";
 
-interface GlossaryProps {
-    location: { hash: string },
+/*
+    This hook waits for `waitingFor` to be populated, returning:
+     - `valueWhileWaiting` while waiting
+     - `valueWhenFound` any time *after the first time* `waitingFor` becomes truthy
+ */
+export function useUntilFound<T, U>(waitingFor: T | NOT_FOUND_TYPE | null | undefined, valueWhenFound: U, valueWhileWaiting: any = undefined) {
+    const [waiting, setWaiting] = useState(true);
+    useEffect( () => {
+        if (waiting) {
+            let timeout: number;
+            if (waitingFor !== null && waitingFor !== NOT_FOUND && waitingFor !== undefined) {
+                timeout = window.setTimeout(() => {
+                    setWaiting(false);
+                }, 200);
+            }
+            return () => {
+                if (timeout) clearTimeout(timeout);
+            };
+        }
+    }, [waitingFor, waiting]);
+
+    return waiting ? valueWhileWaiting : valueWhenFound;
 }
 
-interface Item<T> {
-    value: T;
-    label: string;
+/* Gets rid of glossary page and exam board information from a glossary term id, just to keep the URL hash looking nice */
+export function formatGlossaryTermId(rawTermId: string) {
+    const idRegExp = new RegExp('([a-z0-9-_]+)\\|?(?:(aqa|ocr)\\|?)?([a-z0-9-_~]+)?');
+    const simplifiedTermId = idRegExp.exec(
+        rawTermId.split('|')
+            .slice(1)
+            .join('|')
+    );
+    return simplifiedTermId?.slice(1,3)
+        .filter(i => typeof i === 'string')
+        .join('|')
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-');
 }
 
-export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
+/* An offset applied when scrolling to a glossary term, so the term isn't hidden under the alphabet header */
+const ALPHABET_HEADER_OFFSET = -65;
+
+export const Glossary = () => {
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
@@ -34,71 +68,90 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
     const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {
-        function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } {
-            const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
+        function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
             if (sortedTerms) {
+                const groupedTerms: { [key: string]: GlossaryTermDTO[] } = {};
                 for (const term of sortedTerms) {
                     if (isDefined(filterTopic) && !term.tags?.includes(filterTopic.id)) continue;
                     const k = term?.value?.[0] || '#';
                     groupedTerms[k] = [...(groupedTerms[k] || []), term];
                 }
+                return groupedTerms;
             }
-            return groupedTerms;
+            return undefined;
         }
 
-        if (searchText === '') {
-            const sortedTerms = rawGlossaryTerms?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
-            return groupTerms(sortedTerms?.filter(t => t.examBoard === "" || t.examBoard === examBoard));
-        } else {
-            const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
-            const sortedTerms = rawGlossaryTerms?.filter(e => e.value?.match(regex)).sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0);
-            return groupTerms(sortedTerms?.filter(t => t.examBoard === "" || t.examBoard === examBoard));
-        }
+        const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
+        const sortedAndFilteredTerms =
+            (searchText === ''
+                ? rawGlossaryTerms
+                : rawGlossaryTerms?.filter(e => e.value?.match(regex))
+            )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
+             ?.filter(t => t.examBoard === "" || t.examBoard === examBoard);
+
+        return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, searchText, examBoard]);
 
-    const scrollToKey = (k: string) => {
-        const element = document.getElementById(`key-${k}`);
-        const link = document.getElementById(`alphascroller-key-${k}`);
+    /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
+    const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
 
-        if (isDefined(element)) {
-            scrollVerticallyIntoView(element, -70);
-        }
-        link?.blur();
-    }
+    /* `hash` is `undefined` until `glossaryTerms` is populated */
+    const hash = useUntilFound(glossaryTerms, useUrlHashValue());
 
-    const onKeyUpScrollTo = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            scrollToKey(event.currentTarget.getAttribute('key') || '');
-        }
-    }
-
+    /* Scrolls to the term given by the URL hash, when the hash becomes available (see line above) */
     useEffect(() => {
-        if (hash.includes("#")) {
-            const hashAnchor = hash.slice(1);
-            const element = document.getElementById(hashAnchor);
-            if (element) { // exists on page
-                scrollVerticallyIntoView(element, -70);
-            }
-        }
+        const el = glossaryTermRefs.current?.get(hash);
+        if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
     }, [hash]);
 
-    /* Horror lies ahead. Sorry. */
-    const alphabetScrollerSentinel = useRef<HTMLDivElement | null>(null);
+
+    /* Stores a reference to each alphabet header (to the h2 element) - these are the headers alongside the glossary
+     * terms, NOT the letters that exist in the clickable sticky header (or the other non-sticky one)
+     */
+    const alphabetHeaderRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
+
+    const scrollToKey = ({currentTarget}: {currentTarget: EventTarget & Element}) => {
+        // Find alphabet heading corresponding to the given letter from ref list, and scroll to that element
+        const letter = currentTarget.getAttribute('data-key') ?? "A";
+        const el = alphabetHeaderRefs.current.get(letter);
+        if (isDefined(el)) scrollVerticallyIntoView(el, ALPHABET_HEADER_OFFSET);
+
+        // Removes focus outline from the clicked letter on the alphabet scroller headers
+        const links = document.getElementsByClassName(`alphascroller-key-${letter}`);
+        for (const link of links) {
+            (link as HTMLElement)?.blur();
+        }
+    }
+
+    const onKeyUpScrollTo = ({currentTarget, key}: React.KeyboardEvent) => {
+        if (key === "Enter") {
+            const letter = currentTarget.getAttribute('data-key');
+            if (letter) scrollToKey({currentTarget});
+        }
+    }
+
+    /* "Horror lies ahead. Sorry."
+     * This code deals with showing or hiding the sticky alphabet header UI depending
+     * on how far down the page the user has scrolled. It uses a 'sentinel' div element near the top of the glossary
+     * to do this .
+     */
+    const alphabetScrollerSentinel = useRef<HTMLDivElement>(null);
     const alphabetScrollerFlag = useRef(false);
     const alphabetScrollerObserver = useRef<IntersectionObserver>();
+    const stickyAlphabetListContainer = useRef<HTMLDivElement>(null);
 
     const alphabetScrollerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
         for (const entry of entries) {
             if (entry.target.id === 'sentinel') {
                 if (entry.isIntersecting) {
-                    document.getElementById('stickyalphabetlist')?.classList.remove('active');
+                    stickyAlphabetListContainer.current?.classList.remove('active');
                 } else {
                     if (entry.boundingClientRect.top <= 0) {
                         // Gone up
-                        document.getElementById('stickyalphabetlist')?.classList.add('active');
+                        stickyAlphabetListContainer.current?.classList.add('active');
                     } else if (entry.boundingClientRect.top > 0) {
                         // Gone down
-                        document.getElementById('stickyalphabetlist')?.classList.remove('active');
+                        stickyAlphabetListContainer.current?.classList.remove('active');
                     }
                 }
             }
@@ -125,15 +178,15 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
 
     const alphabetList = glossaryTerms && '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(k => {
         if (glossaryTerms.hasOwnProperty(k)) {
-            return <div id={`alphascroller-key-${k}`} className="key" key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={() => scrollToKey(k)}>
+            return <div className={`key alphascroller-key-${k}`} data-key={k} key={k} role="button" tabIndex={0} onKeyUp={onKeyUpScrollTo} onClick={scrollToKey}>
                 {k}
             </div>
         } else {
-            return <div className="key unavailable" key={k}>
+            return <div className="key unavailable" data-key={k} key={k}>
                 {k}
             </div>
         }
-    })
+    });
 
     const thenRender = <div className="glossary-page">
         <Container>
@@ -146,7 +199,6 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
                     <PrintButton/>
                 </div>
             </div>
-
             <Row>
                 <Col md={{size: 9}} className="py-4">
                     <Row className="no-print">
@@ -186,26 +238,32 @@ export const Glossary = withRouter(({ location: { hash } }: GlossaryProps) => {
             {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className="pt-2 pb-4">
                 <div className="no-print">
                     <div id="sentinel" ref={alphabetScrollerSentinel}>&nbsp;</div>
-                    <div id="stickyalphabetlist" className="alphabetlist pb-4">
+                    <div ref={stickyAlphabetListContainer} id="stickyalphabetlist" className="alphabetlist pb-4">
                         {alphabetList}
                     </div>
                     <div className="alphabetlist pb-4">
                         {alphabetList}
                     </div>
                 </div>
-                {Object.entries(glossaryTerms).map(([key, terms]) => <Row key={key} className="pb-5">
-                    <Col md={{size: 1, offset: 1}} id={`key-${key}`}><h2 style={{position: 'sticky', top: '1em'}}>{key}</h2></Col>
+                {Object.entries(glossaryTerms).map(([letter, terms]) => <Row key={letter} className="pb-5">
+                    <Col md={{size: 1, offset: 1}}>
+                        <h2 style={{position: 'sticky', top: '1em'}} ref={(el: HTMLHeadingElement) => alphabetHeaderRefs.current.set(letter, el)}>
+                            {letter}
+                        </h2>
+                    </Col>
                     <Col>
-                        {terms.map(term => <Row key={term.id}>
-                            <Col md={{size: 10}}>
-                                <IsaacGlossaryTerm doc={term} linkToGlossary={true} />
-                            </Col>
-                        </Row>)}
+                        {terms.map(term => (!isDefined(term.examBoard) || term.examBoard === '' || examBoard === term.examBoard) &&
+                            <IsaacGlossaryTerm
+                                ref={(el: HTMLElement) => glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el)}
+                                doc={term}
+                                linkToGlossary={true}
+                            />
+                        )}
                     </Col>
                 </Row>)}
             </Col>}
         </Container>
-    </div>
+    </div>;
 
     return <ShowLoading until={glossaryTerms} thenRender={() => thenRender}/>;
-});
+};

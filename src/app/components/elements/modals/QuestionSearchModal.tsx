@@ -22,6 +22,7 @@ import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {siteSpecific} from "../../../services/miscUtils";
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -146,7 +147,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         {value: "phys_book_gcse", label: "GCSE Physics"},
                         {value: "maths_book", label: "Pre-Uni Maths"},
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"},
-                        {value: "physics_skills_14", label: "A Level Physics (2nd Edition - Old)"},
                     ]}
                 />
             </RS.Col>}
@@ -166,13 +166,13 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     options={getFilteredStageOptions()} onChange={multiSelectOnChange(setSearchStages)}
                 />
             </RS.Col>
-            {SITE_SUBJECT === SITE.PHY && <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
+            <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
                 />
-            </RS.Col>}
+            </RS.Col>
             {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
@@ -216,8 +216,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     />
                     <th className="w-25">Topic</th>
                     <th className="w-15">Stage</th>
-                    {SITE_SUBJECT === SITE.PHY && <th className="w-15">Difficulty</th>}
-                    {SITE_SUBJECT === SITE.CS && <th className="w-15">Exam boards</th>}
+                    <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
+                    {SITE_SUBJECT === SITE.CS && <th className="w-5">Exam boards</th>}
                 </tr>
             </thead>
             <tbody>
@@ -225,9 +225,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     questions &&
                     sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
                         questions.filter(question => {
-                            let qIsPublic = searchResultIsPublic(question, user);
+                            const qIsPublic = searchResultIsPublic(question, user);
                             if (isBookSearch) return qIsPublic;
-                            let qTopicsMatch =
+                            const qTopicsMatch =
                                 searchTopics.length == 0 ||
                                 (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
 

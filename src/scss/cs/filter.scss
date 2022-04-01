@@ -1,0 +1,45 @@
+@import "../common/filter";
+
+$shapes: hex, square, octagon, diamond;
+
+svg {
+  @each $shape in $shapes {
+    .#{$shape} {
+      &:not(.active) {
+        fill: white;
+        stroke: $gray-160;
+      }
+
+      &.mini:not(.active) {
+        fill: none;
+        stroke: none;
+      }
+
+      &.none {
+        fill: none;
+        stroke: none;
+      }
+
+      &.clickable {
+        cursor: pointer;
+      }
+
+      &.active.difficulty.practice {
+        fill: $cs-mustard;
+        stroke: $cs-mustard;
+      }
+
+      &.active.difficulty.challenge {
+        fill: $cs-hot-pink;
+        stroke: $cs-hot-pink;
+      }
+
+      &:focus {
+        outline: none;
+        stroke: black !important;
+        stroke-width: 0.2rem;
+      }
+    }
+  }
+
+}

@@ -18,6 +18,31 @@ $theme-colors: (
     "secondary": $secondary
 );
 
+// Stage colours
+$gcse-colour: #C40E50;
+$gcse-colour-50: #E186A7;
+$gcse-colour-25: #F0C3D3;
+$all-stages-colour: #9148BC;
+$all-stages-colour-50: #C8A3DD;
+$all-stages-colour-25: #E3D1EE;
+$a-level-colour: #2146AD;
+$a-level-colour-50: #90A2D6;
+$a-level-colour-25: #C7D1EA;
+
+// Highlighting colours
+$highlight-pink: #E72C62;
+$highlight-pink-50: #F395B0;
+$highlight-pink-25: #F9CAD8;
+$highlight-navy: #07174F;
+$highlight-navy-50: #838BA7;
+$highlight-navy-25: #C1C5D3;
+$highlight-teal: #0F8294;
+$highlight-teal-50: #87C0C9;
+$highlight-teal-25: #C3E0E4;
+$highlight-mustard: #E09220;
+$highlight-mustard-50: #EFC88F;
+$highlight-mustard-25: #F7E4C7;
+
 //Greys
 $gray-103: #f8f8f8;
 $gray-107: #ececec;
@@ -58,6 +83,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~billboard.js/dist/theme/insight.css";
 @import "~highlight.js/styles/a11y-light.css";
 
+@import "../common/isaac";
 
 // Utility
 @import "preload";
@@ -69,7 +95,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/typography";
 @import "../common/headings";
 @import "../common/modals";
-@import "../common/questions";
+@import "questions";
 @import "../common/forms";
 @import "../common/elements";
 @import "../common/breadcrumbs";
@@ -120,6 +146,12 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Print
 @import "../common/print";
+
+// Difficulty icons
+@import "filter";
+
+// Highlights
+@import "highlight";
 
 a.disabled {
     color: $gray-600;

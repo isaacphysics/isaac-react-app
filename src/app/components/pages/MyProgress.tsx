@@ -121,11 +121,13 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                             subId="correct"
                                             questionsByTag={(progress?.correctByTag) || {}}
                                             questionsByLevel={(progress?.correctByLevel) || {}}
+                                            questionsByStageAndDifficulty={(progress?.correctByStageAndDifficulty) || {}}
                                             flushRef={tabRefs[0]} />,
                                         "Attempted questions": <QuestionProgressCharts
                                             subId="attempted"
                                             questionsByTag={(progress?.attemptsByTag) || {}}
                                             questionsByLevel={(progress?.attemptsByLevel) || {}}
+                                            questionsByStageAndDifficulty={(progress?.attemptsByStageAndDifficulty) || {}}
                                             flushRef={tabRefs[1]}/>
                                     }}
                                 </Tabs>

@@ -65,22 +65,22 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
     useEffect(function makeSureTheUrlHashRecordsTabState() { if (!location.hash) setActiveTab(activeTab); });
 
     const renderTopic = (topic: Tag) => {
-        const TextTag = topic.comingSoon ? "span" : "strong";
-        const LinkTag = topic.comingSoon ? "span" : Link;
+        const TextTag = topic.comingSoonDate ? "span" : "strong";
+        const LinkTag = topic.comingSoonDate ? "span" : Link;
         if (!topic.hidden) {
             return <React.Fragment>
                 <LinkTag
-                    to={topic.comingSoon ? "/coming_soon" : `/topics/${topic.id}`}
-                    className={topic.comingSoon ? "text-muted" : ""}
+                    to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
+                    className={topic.comingSoonDate ? "text-muted" : ""}
                 >
                     <TextTag>
                         {topic.title}
                     </TextTag>
                 </LinkTag>
                 {" "}
-                {topic.comingSoon && !topic.new &&
-                <Badge color="light" className="border bg-white">Coming {topic.comingSoon}</Badge>}
-                {topic.new && !topic.comingSoon && <Badge color="secondary">New</Badge>}
+                {topic.comingSoonDate && !topic.new &&
+                <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}
+                {topic.new && !topic.comingSoonDate && <Badge color="secondary">New</Badge>}
             </React.Fragment>;
         }
     };

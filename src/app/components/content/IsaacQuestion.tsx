@@ -115,7 +115,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
                         </div>
                     }
                     {primaryAction &&
-                        <div className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}>
+                        <div className={`m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}>
                             {hideOptions && <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />}
                             {ConfidenceQuestions({hideOptions: hideOptions, setHideOptions: setHideOptions, isVisible: isVisible, setVisible: setVisible, identifier: doc.id, attemptUuid: attemptUuid, type: "question", correct: correct, answer: questionPart?.currentAttempt})}
                         </div>

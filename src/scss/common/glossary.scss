@@ -108,27 +108,24 @@
   }
 
   .glossary_term_name {
+    position: relative;
+    margin-left: 15px;
+
     img {
+      position: absolute;
+      top: 0.4em;
       left: 0;
+      height: 1em;
+      display: block;
+    }
+
+    strong {
+      text-decoration: underline;
+      display: block;
+      float: left;
+      top: 0;
+      left: 2em;
     }
   }
 }
 
-.glossary_term_name {
-  position: relative;
-
-  img {
-    position: absolute;
-    top: 0.4em;
-    height: 1em;
-    display: block;
-  }
-
-  strong {
-    text-decoration: underline;
-    display: block;
-    float: left;
-    top: 0;
-    left: 2em;
-  }
-}

@@ -13,6 +13,7 @@ export function registerLanguages() {
     hljs.registerLanguage('php', php);
     hljs.registerLanguage('csharp', csharp);
     hljs.registerLanguage('plaintext', plaintext);
+    hljs.registerLanguage('assembly', plaintext);
     hljs.registerLanguage('sql', sql);
     hljs.registerLanguage('pseudocode', isaacPseudocodeHighlightDefinition);
 }

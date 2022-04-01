@@ -99,7 +99,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttempt = questionPart?.currentAttempt as (ItemChoiceDTO | undefined);
-    const cssFriendlyQuestionPartId = questionPart?.id?.replaceAll("|", "-") ?? ""; // Maybe we should clean up IDs more?
+    const cssFriendlyQuestionPartId = questionPart?.id?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
     const withReplacement = doc.withReplacement ?? false;
 

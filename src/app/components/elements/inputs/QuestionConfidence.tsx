@@ -5,6 +5,8 @@ import {useDispatch} from "react-redux";
 import uuid from "uuid";
 import {Confidence, UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {confidenceOptions} from "../../../services/confidence";
+import classNames from "classnames";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 
 
 interface QuestionConfidenceProps {
@@ -21,6 +23,7 @@ interface QuestionConfidenceProps {
 
 export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, setVisible, identifier, attemptUuid, type, correct, answer}: QuestionConfidenceProps) => {
     const dispatch = useDispatch();
+    const isCs = SITE_SUBJECT === SITE.CS;
 
     const confidenceVariables = confidenceOptions(type);
 
@@ -77,7 +80,7 @@ export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, set
         }))
     }
 
-    return <div className="quick-question-options" hidden={hideOptions}>
+    return <div className={"quick-question-options " + classNames({"quick-question-secondary": SITE_SUBJECT === SITE.CS && isVisible})} hidden={hideOptions}>
         {!isVisible && <Row>
             <Col md="9">
                 <h4>{confidenceVariables?.title}</h4>
@@ -93,17 +96,17 @@ export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, set
         </Row>
         <Row>
             <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color="negative" block className={isVisible ? "active" : ""} type="submit" onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.negative : confidenceVariables?.firstOptions?.negative)}>
+                <Button color={isCs && isVisible ? "negative-answer" : "negative"} block className={isVisible ? "active" : ""} type="submit" onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.negative : confidenceVariables?.firstOptions?.negative)}>
                     {isVisible ? confidenceVariables?.secondOptions?.negative : confidenceVariables?.firstOptions?.negative}
                 </Button>
             </Col>
             <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color="neutral" block className={isVisible ? "active" : ""} type="submit" onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.neutral : confidenceVariables?.firstOptions?.neutral)}>
+                <Button color={isCs && isVisible ? "neutral-answer" : "neutral"} block className={isVisible ? "active" : ""} type="submit" onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.neutral : confidenceVariables?.firstOptions?.neutral)}>
                     {isVisible ? confidenceVariables?.secondOptions?.neutral : confidenceVariables?.firstOptions?.neutral}
                 </Button>
             </Col>
             <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color="positive" block className={isVisible ? "active" : ""} type="submit" onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.positive : confidenceVariables?.firstOptions?.positive)}>
+                <Button color={isCs && isVisible ?"positive-answer" : "positive"} block className={isVisible ? "active" : ""} type="submit" onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.positive : confidenceVariables?.firstOptions?.positive)}>
                     {isVisible ? confidenceVariables?.secondOptions?.positive : confidenceVariables?.firstOptions?.positive}
                 </Button>
             </Col>

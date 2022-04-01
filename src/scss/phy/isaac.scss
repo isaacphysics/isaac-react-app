@@ -73,6 +73,9 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~katex/dist/katex.min.css";
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
+@import "~leaflet/dist/leaflet.css";
+
+@import "../common/isaac";
 
 // Utility
 @import "preload";

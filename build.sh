@@ -52,7 +52,8 @@ else
     fi
     SEGUE_VERSION=${SEGUE_VERSION:-$VERSION_TO_DEPLOY}
 
-    echo "REACT_APP_API_VERSION=" $SEGUE_VERSION >> .env
+    echo "" >> .env
+    echo "REACT_APP_API_VERSION=$SEGUE_VERSION" >> .env
 fi
 
 set +e

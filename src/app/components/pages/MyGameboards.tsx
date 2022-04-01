@@ -129,9 +129,9 @@ const Board = (props: BoardTableProps) => {
             </td>
             <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
             <td className="text-center align-middle">{boardStages.map(s => stageLabelMap[s]).join(', ')}</td>
-            {SITE_SUBJECT == SITE.PHY && <td className="text-center align-middle">
+            <td className="text-center align-middle">
                 {boardDifficulties.length > 0 && <AggregateDifficultyIcons stacked difficulties={boardDifficulties} />}
-            </td>}
+            </td>
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
             <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
@@ -163,7 +163,7 @@ const Board = (props: BoardTableProps) => {
                     <CardSubtitle>
                         {`Stage${boardStages.length !== 1 ? "s" : ""}: `}<strong>{boardStages.map(s => stageLabelMap[s]).join(', ') || "N/A"}</strong>
                     </CardSubtitle>
-                    {SITE_SUBJECT == SITE.PHY && <CardSubtitle>
+                    <CardSubtitle>
                         {`Difficult${boardStages.length !== 1 ? "ies" : "y"}: `}
                         <strong>
                             {boardDifficulties.length > 0 ?
@@ -171,7 +171,7 @@ const Board = (props: BoardTableProps) => {
                                 : "N/A"
                             }
                         </strong>
-                    </CardSubtitle>}
+                    </CardSubtitle>
                 </aside>
 
                 <Row className="mt-1 mb-2">
@@ -426,13 +426,13 @@ export const MyGameboards = () => {
                                                             </button>
                                                         </th>
                                                         <th className="text-center align-middle">Stages</th>
-                                                        {SITE_SUBJECT == SITE.PHY && <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
+                                                        <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
                                                             Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
                                                             <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                                                                 Practice: {difficultiesOrdered.slice(0, 3).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
                                                                 Challenge: {difficultiesOrdered.slice(3).map(d => difficultyShortLabelMap[d]).join(", ")}
                                                             </RS.UncontrolledTooltip>
-                                                        </th>}
+                                                        </th>
                                                         <th className="text-center align-middle">Creator</th>
                                                         <th className="text-center align-middle pointer-cursor">
                                                             <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
