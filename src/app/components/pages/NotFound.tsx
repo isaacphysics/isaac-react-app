@@ -1,16 +1,10 @@
 import React from "react";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
-interface PageNotFoundProps extends RouteComponentProps {
-    // location: {
-    //     pathname: string;
-    //     state?: {overridePathname?: string}
-    // }
-}
-
-const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps) => {
+export const NotFound = () => {
+    const {pathname, state} = useLocation<{overridePathname?: string}>();
     return <Container>
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Unknown page" currentPageTitle="Page not found" />
@@ -18,12 +12,10 @@ const PageNotFoundComponent = ({location: {pathname, state}}: PageNotFoundProps)
                 <small>
                     {"We're sorry, page not found: "}
                     <code>
-                        {(state && (state as any).overridePathname) || pathname}
+                        {(state && state.overridePathname) || pathname}
                     </code>
                 </small>
             </h3>
         </div>
     </Container>;
 };
-
-export const NotFound = withRouter(PageNotFoundComponent);
