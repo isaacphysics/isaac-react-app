@@ -181,6 +181,17 @@ const denominatorMap = {
     "100": "hundredth"
 };
 
+const arrowMap = {
+    "\\xleftarrow": "arrow left",
+    "\\xrightarrow": "arrow right",
+    "\\xLeftarrow": "arrow left",
+    "\\xRightarrow": "arrow right",
+    "\\xleftrightarrow": "arrow left and right",
+    "\\xLeftrightarrow": "arrow left and right",
+    "\\xmapsto": "maps to",
+    "\\xrightleftarrows": "arrow left and right",
+}
+
 
 const buildString = (str, type, a11yStrings) => {
     if (!str) {
@@ -197,6 +208,8 @@ const buildString = (str, type, a11yStrings) => {
         ret = binMap[str] || str;
     } else if (type === "rel") {
         ret = relMap[str] || str;
+    } else if (type === "arrow") {
+        ret = arrowMap[str] || "arrow";
     } else {
         ret = stringMap[str] || str;
     }
@@ -604,20 +617,15 @@ const handleObject = (tree, a11yStrings, atomType) => {
         }
 
         case "vphantom": {
-            // throw new Error("KaTeX-a11y: vphantom not implemented yet");
-            // Throwing here makes the parsing/generation stop abruptly and say "no can do"
-            // In reality, we should simply be able to ignore \vphantom.
+            // We should simply be able to ignore \vphantom.
             // Breaking here also prevents the translation from going into the actual element
             // which turns out to be \vphantom{X} and so "A Wild X Appears!"
             break;
-            
         }
 
         case "hphantom": {
-            // throw new Error("KaTeX-a11y: hphantom not implemented yet");
             // Same as above, I suppose.
             break;
-            
         }
 
         case "operatorname": {
@@ -705,7 +713,8 @@ const handleObject = (tree, a11yStrings, atomType) => {
         }
 
         case "xArrow": {
-            throw new Error("KaTeX-a11y: xArrow not implemented yet");
+            buildString(tree.label, "arrow", a11yStrings);
+            break;
         }
 
         case "mclass": {
