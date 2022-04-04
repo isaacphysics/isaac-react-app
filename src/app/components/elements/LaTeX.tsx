@@ -281,7 +281,6 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
 
                 let screenreaderText;
                 try {
-                    // debugger;
                     let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
                     screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
                     screenreaderText = screenreaderText.replace(SR_REF_REGEXP, (_, match) => {
