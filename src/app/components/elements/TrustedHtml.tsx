@@ -12,7 +12,7 @@ function manipulateHtml(html: string) {
     // This can't be quick but it is more robust than writing regular expressions...
     htmlDom.innerHTML = html;
 
-    // Table manipulation#
+    // Table manipulation
     const tableElements = htmlDom.getElementsByTagName("table");
     for (let i = 0; i < tableElements.length; i++) {
         const table = tableElements[i];
