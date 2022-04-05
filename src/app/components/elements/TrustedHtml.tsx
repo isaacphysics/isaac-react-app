@@ -16,6 +16,7 @@ interface TableData {
     id: number;
     html: string;
     classes: string[];
+    expandable?: boolean;
 }
 
 const htmlDom = document.createElement("html");
@@ -74,13 +75,12 @@ export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedIn
 }
 
 // A portal component to manage table elements from inside the React DOM
-const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefObject<HTMLElement>}) => {
+const Table = ({id, html, classes, rootElement, expandable}: TableData & {rootElement: RefObject<HTMLElement>}) => {
     const parentElement = rootElement.current?.querySelector(`#table-${id}`);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const expandRef = useRef<HTMLDivElement>(null);
     const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef, "overflow-auto mb-4");
-    const expandable = classes.includes('expandable');
 
     if (html && parentElement) {
         return ReactDOM.createPortal(
@@ -97,7 +97,8 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefOb
     return null;
 }
 
-export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string}) => {
+export const TrustedHtml = ({html, span, className, expandable}: {html: string; span?: boolean; className?: string;
+    expandable?: boolean}) => {
     const user = useSelector(selectors.user.orNull);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
@@ -113,6 +114,6 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
     const ElementType = span ? "span" : "div";
     return <>
         <ElementType ref={htmlRef} className={className} dangerouslySetInnerHTML={{__html: html}} />
-        {tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes} />)}
+        {tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes} expandable={expandable}/>)}
     </>;
 };

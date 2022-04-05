@@ -19,6 +19,7 @@ interface TabsProps {
     onActiveTabChange?: (tabIndex: number) => void;
     deselectable?: boolean;
     refreshHash?: string;
+    expandable?: boolean;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string, tabIndex: number) {
@@ -80,6 +81,6 @@ export const Tabs = (props: TabsProps) => {
                 })}
             </TabContent>
         </ExpandableParentContext.Provider>
-        {expandButton}
+        {props.expandable && expandButton}
     </div>;
 };

@@ -5,13 +5,16 @@ import {IsaacContent} from "./IsaacContent";
 import {isDefined} from "../../services/miscUtils";
 
 interface IsaacTabsProps {
-    doc: {children: {title?: string; children?: ContentDTO[]}[]};
+    doc: {
+        children: {title?: string; children?: ContentDTO[]}[],
+        expandable?: boolean
+    };
 }
 
 type IsaacTabChildren = {[title: string]: ReactElement};
 
 export const IsaacTabs = (props: any) => {
-    const { doc: { children: tabs } } = props as IsaacTabsProps;
+    const { doc: { children: tabs, expandable: expandable} } = props as IsaacTabsProps;
     const [ tabTitlesToContent , setTabTitlesToContent ] = useState<IsaacTabChildren>({});
 
     useEffect(() => {
@@ -25,7 +28,7 @@ export const IsaacTabs = (props: any) => {
         setTabTitlesToContent(newTabTitlesToContent);
     }, [tabs]);
 
-    return <Tabs className="isaac-tab" tabContentClass="pt-4">
+    return <Tabs className="isaac-tab" tabContentClass="pt-4" expandable={expandable}>
         {tabTitlesToContent}
     </Tabs>;
 };

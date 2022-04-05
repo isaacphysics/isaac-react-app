@@ -10,9 +10,10 @@ type ContentOrAccordionChunk = ContentDTO[] & {isAccordion?: boolean, isFirstChu
 interface ContentValueOrChildrenProps {
     value?: string;
     encoding?: string;
+    expandable?: boolean
     children?: ContentDTO[];
 }
-export const IsaacContentValueOrChildren = ({value, encoding, children}: ContentValueOrChildrenProps) => {
+export const IsaacContentValueOrChildren = ({value, encoding, expandable, children}: ContentValueOrChildrenProps) => {
     // Content chunking inherited from Isaac Physics
     const contentChunks: ContentOrAccordionChunk[] = []; // One of these for each chunk of content, where accordions may only appear on their own in a chunk.
     let breakOnTypeChange = false;
@@ -56,8 +57,8 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
         {value && <div className="content-value">
             <Row>
                 <Col>{
-                    (encoding == "markdown" && <TrustedMarkdown markdown={value}/>) ||
-                    (encoding == "html" && <TrustedHtml html={value}/>) ||
+                    (encoding == "markdown" && <TrustedMarkdown markdown={value} expandable={expandable}/>) ||
+                    (encoding == "html" && <TrustedHtml html={value} expandable={expandable}/>) ||
                     (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
                 }</Col>
             </Row>

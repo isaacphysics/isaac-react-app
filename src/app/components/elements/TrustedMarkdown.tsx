@@ -36,7 +36,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     }
 }
 
-export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
+export const TrustedMarkdown = ({markdown, expandable}: {markdown: string, expandable?: boolean}) => {
     const store = useStore();
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
@@ -118,7 +118,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
 
     const html = MARKDOWN_RENDERER.render(regexProcessedMarkdown);
     return <div>
-        <TrustedHtml html={html} />
+        <TrustedHtml html={html} expandable={expandable}/>
         {tooltips}
     </div>;
 };
