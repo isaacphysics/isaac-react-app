@@ -1,23 +1,18 @@
 import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import {connect} from "react-redux";
 import * as RS from "reactstrap";
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
+import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {selectors} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
 import {parseMathsExpression, ParsingError} from "inequality-grammar";
-
 import _flattenDeep from 'lodash/flatMapDeep';
-import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
+import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState, useCurrentQuestionAttempt} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
 import uuid from "uuid";
 import { isDefined } from '../../services/miscUtils';
-import {Action, Dispatch} from "redux";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 // Magic starts here
 interface ChildrenMap {
@@ -44,30 +39,10 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions(state);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const r: {currentAttempt?: FormulaDTO | null} = {};
-    if (questionPart) {
-        r.currentAttempt = questionPart.currentAttempt;
-    }
-    return r;
-};
-const dispatchToProps = (dispatch : Dispatch<Action>) => {
-    return {
-        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
-    }
-};
+export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
 
-interface IsaacSymbolicQuestionProps {
-    doc: IsaacSymbolicQuestionDTO;
-    questionId: string;
-    currentAttempt?: FormulaDTO | null;
-    setCurrentAttempt: (questionId: string, attempt: FormulaDTO) => void;
-    readonly?: boolean;
-}
-const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
+    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
+
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const [textInput, setTextInput] = useState('');
@@ -267,5 +242,3 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         </div>
     );
 };
-
-export const IsaacSymbolicQuestion = connect(stateToProps, dispatchToProps)(IsaacSymbolicQuestionComponent);

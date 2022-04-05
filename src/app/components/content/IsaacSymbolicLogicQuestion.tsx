@@ -1,15 +1,12 @@
 import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {connect, useSelector} from "react-redux";
-import {setCurrentAttempt} from "../../state/actions";
+import {useSelector} from "react-redux";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
+import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
-import {EXAM_BOARD} from "../../services/constants";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {selectors} from "../../state/selectors";
-import {sanitiseInequalityState, selectQuestionPart} from '../../services/questions';
+import {sanitiseInequalityState, useCurrentQuestionAttempt} from '../../services/questions';
 import _flattenDeep from 'lodash/flattenDeep';
 import {jsonHelper} from "../../services/json";
 import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
@@ -19,7 +16,7 @@ import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {isDefined} from '../../services/miscUtils';
 import {isStaff} from '../../services/user';
 import {useUserContext} from "../../services/userContext";
-import {Action, Dispatch} from "redux";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 // Magic starts here
 interface ChildrenMap {
@@ -30,10 +27,10 @@ function countChildren(root: ChildrenMap) {
     let q = [root];
     let count = 1;
     while (q.length > 0) {
-        let e = q.shift();
+        const e = q.shift();
         if (!e) continue;
 
-        let c = Object.keys(e.children).length;
+        const c = Object.keys(e.children).length;
         if (c > 0) {
             count = count + c;
             q = q.concat(Object.values(e.children));
@@ -46,31 +43,10 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions(state);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const r: {currentAttempt?: LogicFormulaDTO | null} = {};
-    if (questionPart) {
-        r.currentAttempt = questionPart.currentAttempt;
-    }
-    return r;
-};
-const dispatchToProps = (dispatch : Dispatch<Action>) => {
-    return {
-        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
-    }
-};
+export const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
 
-interface IsaacSymbolicLogicQuestionProps {
-    doc: IsaacSymbolicLogicQuestionDTO;
-    questionId: string;
-    currentAttempt?: LogicFormulaDTO | null;
-    setCurrentAttempt: (questionId: string, attempt: LogicFormulaDTO) => void;
-    examBoard: EXAM_BOARD;
-    readonly?: boolean;
-}
-const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
+    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
+
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const {preferredBooleanNotation} = useUserContext();
@@ -270,5 +246,3 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         </div>
     );
 };
-
-export const IsaacSymbolicLogicQuestion = connect(stateToProps, dispatchToProps)(IsaacSymbolicLogicQuestionComponent);

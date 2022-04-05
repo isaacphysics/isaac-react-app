@@ -9,12 +9,14 @@ import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLog
 import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
 import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
-import {AppQuestionDTO} from "../../IsaacAppTypes";
+import {AppQuestionDTO, ValidatedChoice} from "../../IsaacAppTypes";
 import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from '../services/constants';
-import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
+import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
+import {useDispatch, useSelector} from "react-redux";
+import {setCurrentAttempt} from "../state/actions";
+import {selectors} from "../state/selectors";
 
-// @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
     ["isaacMultiChoiceQuestion", IsaacMultiChoiceQuestion],
     ["isaacItemQuestion", IsaacItemQuestion],
@@ -137,4 +139,19 @@ export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
     }
 
     return title;
+}
+
+/**
+ * Essentially a useState for the current question attempt - used in all question components.
+ * @param questionId  id of the question to return the current attempt of
+ */
+export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: string) {
+    const dispatch = useDispatch();
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
+    return {
+        currentAttempt: questionPart?.currentAttempt as (T | undefined),
+        setCurrentAttempt: (questionId: string, attempt: T | ValidatedChoice<T>) => dispatch(setCurrentAttempt(questionId, attempt)),
+        questionPart: questionPart
+    };
 }

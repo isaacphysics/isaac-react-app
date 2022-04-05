@@ -1,44 +1,19 @@
 import React, {useEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChemicalFormulaDTO, ChoiceDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
+import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {selectors} from "../../state/selectors";
-
+import {useCurrentQuestionAttempt} from "../../services/questions";
 import _flattenDeep from 'lodash/flattenDeep';
-import {selectQuestionPart} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
 import { isDefined } from '../../services/miscUtils';
-import {Action, Dispatch} from "redux";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions(state);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    let r: {currentAttempt?: ChemicalFormulaDTO | null} = {};
-    if (questionPart) {
-        r.currentAttempt = questionPart.currentAttempt;
-    }
-    return r;
-};
-const dispatchToProps = (dispatch : Dispatch<Action>) => {
-    return {
-        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
-    }
-};
+export const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
-interface IsaacSymbolicChemistryQuestionProps {
-    doc: IsaacSymbolicChemistryQuestionDTO;
-    questionId: string;
-    currentAttempt?: ChemicalFormulaDTO | null;
-    setCurrentAttempt: (questionId: string, attempt: ChemicalFormulaDTO) => void;
-    readonly?: boolean;
-}
-const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
+    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
+
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
 
@@ -91,5 +66,3 @@ const IsaacSymbolicChemistryQuestionComponent = (props: IsaacSymbolicChemistryQu
         </div>
     );
 };
-
-export const IsaacSymbolicChemistryQuestion = connect(stateToProps, dispatchToProps)(IsaacSymbolicChemistryQuestionComponent);

@@ -1,12 +1,9 @@
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacFreeTextQuestionDTO, StringChoiceDTO} from "../../../IsaacApiTypes";
 import {Alert, FormGroup, Input} from "reactstrap";
-import {ValidatedChoice} from "../../../IsaacAppTypes";
-import {selectors} from "../../state/selectors";
-import {selectQuestionPart} from "../../services/questions";
+import {IsaacQuestionProps, ValidatedChoice} from "../../../IsaacAppTypes";
+import {useCurrentQuestionAttempt} from "../../services/questions";
 
 interface Limit {
     exceeded: boolean;
@@ -62,11 +59,11 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
         </Alert>;
 };
 
-export const IsaacFreeTextQuestion = ({doc, questionId, readonly}: {doc: IsaacFreeTextQuestionDTO; questionId: string; readonly?: boolean}) => {
-    const dispatch = useDispatch();
-    const questionsOnPage = useSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(questionsOnPage, questionId);
-    const currentAttemptValue = questionPart?.currentAttempt?.value || "";
+export const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacFreeTextQuestionDTO>) => {
+
+    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt(questionId);
+
+    const currentAttemptValue = currentAttempt?.value ?? "";
     const validation = validate(currentAttemptValue);
 
     return (
@@ -83,7 +80,7 @@ export const IsaacFreeTextQuestion = ({doc, questionId, readonly}: {doc: IsaacFr
                     rows={3}
                     value={currentAttemptValue}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        dispatch(setCurrentAttempt(questionId, validatedChoiceDtoFromEvent(event)))}
+                        setCurrentAttempt(questionId, validatedChoiceDtoFromEvent(event))}
                     readOnly={readonly}
                 />
             </FormGroup>
