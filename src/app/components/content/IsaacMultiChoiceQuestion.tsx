@@ -20,7 +20,7 @@ export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuest
                 <Label className="label-radio multichoice-option d-flex">
                     <CustomInput
                         id={`${questionId}${index}`} color="secondary" type="radio"
-                        checked={currentAttempt?.id == choice.value}
+                        checked={currentAttempt?.value === choice.value}
                         onChange={() => setCurrentAttempt(questionId, choice)}
                         disabled={readonly}
                     />
