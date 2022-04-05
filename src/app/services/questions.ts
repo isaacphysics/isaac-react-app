@@ -39,11 +39,10 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["isaacSymbolicQuestion", "Symbolic"],
     ["isaacSymbolicChemistryQuestion", "Chemistry"],
     ["isaacStringMatchQuestion", "String match"],
-    ["isaacRegexMatchQuestion", "String match"],
     ["isaacFreeTextQuestion", "Free text"],
     ["isaacSymbolicLogicQuestion", "Boolean logic"],
     ["isaacGraphSketcherQuestion", "Graph Sketcher"],
-    ["isaacClozeQuestion", "Drag and drop"],
+    ["isaacClozeQuestion", "Cloze drag and drop"],
     ["default", "Multiple choice"]
 ]);
 
