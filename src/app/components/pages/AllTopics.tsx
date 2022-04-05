@@ -70,14 +70,17 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
         const TextTag = topic.comingSoonDate ? "span" : "strong";
         if (!topic.hidden) {
             return <React.Fragment>
-                <Link
-                    to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
-                    className={topic.comingSoonDate ? "text-muted" : ""}
-                >
-                    <TextTag>
-                        {topic.title}
-                    </TextTag>
-                </Link>
+                {topic.comingSoonDate ? <span><TextTag>{topic.title}</TextTag></span>
+                    :
+                    <Link
+                        to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
+                        className={topic.comingSoonDate ? "text-muted" : ""}
+                    >
+                        <TextTag>
+                            {topic.title}
+                        </TextTag>
+                    </Link>
+                }
                 {" "}
                 {topic.comingSoonDate && !topic.new &&
                 <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}
