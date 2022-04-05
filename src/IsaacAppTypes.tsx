@@ -11,6 +11,7 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
+    QuizAttemptDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
@@ -706,6 +707,7 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string} | undefined>(undefined);
+export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
