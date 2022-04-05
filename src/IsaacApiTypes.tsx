@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 /* tslint:disable */
 
 // Manually added/modified parts
@@ -79,7 +80,7 @@ export interface GameboardProgressSummaryDTO {
     questionPagesTotal?: number;
 }
 
-export interface IsaacAnvilQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacAnvilQuestionDTO extends QuestionDTO {
     anvilApp?: AnvilAppDTO;
 }
 
@@ -109,21 +110,21 @@ export interface IsaacFeaturedProfileDTO extends ContentDTO {
     homepage?: string;
 }
 
-export interface IsaacFreeTextQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacFreeTextQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacGraphSketcherQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
 
-export interface IsaacItemQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacItemQuestionDTO extends QuestionDTO {
     items?: ItemDTO[];
 }
 
-export interface IsaacMultiChoiceQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacMultiChoiceQuestionDTO extends QuestionDTO {
     choices?: ChoiceDTO[];
 }
 
-export interface IsaacNumericQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacNumericQuestionDTO extends QuestionDTO {
     requireUnits?: boolean;
     availableUnits?: string[];
     knownUnits?: string[];
@@ -143,9 +144,6 @@ export interface IsaacPodDTO extends ContentDTO {
     url?: string;
 }
 
-export interface IsaacQuestionBaseDTO extends ChoiceQuestionDTO {
-}
-
 export interface IsaacQuestionPageDTO extends SeguePageDTO {
     difficulty?: number;
     passMark?: number;
@@ -158,7 +156,7 @@ export interface IsaacQuestionSummaryPageDTO extends SeguePageDTO {
     extraordinaryQuestions?: ExternalReference[];
 }
 
-export interface IsaacQuickQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacQuickQuestionDTO extends QuestionDTO {
     answer?: ContentBaseDTO;
     showConfidence?: boolean;
 }
@@ -176,17 +174,12 @@ export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
 export interface IsaacQuizSectionDTO extends SeguePageDTO {
 }
 
-export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacStringMatchQuestionDTO extends QuestionDTO {
     multiLineEntry?: boolean;
     preserveTrailingWhitespace?: boolean;
 }
 
-export interface IsaacStringMatchQuestionDTO extends IsaacQuestionBaseDTO {
-    multiLineEntry?: boolean;
-    preserveTrailingWhitespace?: boolean;
-}
-
-export interface IsaacRegexMatchQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacRegexMatchQuestionDTO extends QuestionDTO {
     multiLineEntry?: boolean;
 }
 
@@ -196,7 +189,7 @@ export interface IsaacSymbolicChemistryQuestionDTO extends IsaacSymbolicQuestion
 export interface IsaacSymbolicLogicQuestionDTO extends IsaacSymbolicQuestionDTO {
 }
 
-export interface IsaacSymbolicQuestionDTO extends IsaacQuestionBaseDTO {
+export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
     formulaSeed?: string;
     availableSymbols?: string[];
 }
@@ -425,9 +418,6 @@ export interface ImageDTO extends MediaDTO {
 
 export interface ItemChoiceDTO extends ChoiceDTO {
     items?: ItemDTO[];
-}
-
-export interface ItemDTO extends ContentDTO {
 }
 
 export interface LogicFormulaDTO extends ChoiceDTO {

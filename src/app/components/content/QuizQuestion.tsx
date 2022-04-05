@@ -1,22 +1,19 @@
 import React, {useContext, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import classnames from "classnames";
-
-import * as ApiTypes from "../../../IsaacApiTypes";
 import {QUESTION_TYPES} from "../../services/questions";
 import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
 import {isDefined} from "../../services/miscUtils";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
-import {QuizAttemptDTO} from "../../../IsaacApiTypes";
+import * as ApiTypes from "../../../IsaacApiTypes";
+import {QuizAttemptContext} from "../../../IsaacAppTypes";
 
-export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null}>({quizAttempt: null});
-
-export const QuizQuestion = ({doc}: { doc: ApiTypes.IsaacQuestionBaseDTO }) => {
+export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const dispatch = useDispatch();
 
-    const {quizAttempt} = useContext(QuizAttemptContext);
+    const {quizAttempt, questionNumbers} = useContext(QuizAttemptContext);
 
     useEffect((): (() => void) => {
         return () => {
@@ -39,6 +36,9 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.IsaacQuestionBaseDTO }) => {
         <div className={
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
+            {SITE_SUBJECT === SITE.CS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+
+            {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={validated} />
 
