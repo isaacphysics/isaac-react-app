@@ -36,7 +36,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         <div className={
             classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
         }>
-            {doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+            {SITE_SUBJECT === SITE.CS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
