@@ -32,7 +32,7 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
         }))
     }
 
-    return <div className={"quick-question-options " + classNames({"quick-question-secondary": SITE_SUBJECT === SITE.CS && isVisible})} hidden={hideOptions}>
+    return <div className={"quick-question-options " + classNames({"quick-question-secondary": isCs && isVisible})} hidden={hideOptions}>
         {!isVisible && <Row>
             <Col md="9">
                 <h4>Click a button to show the answer</h4>
@@ -47,17 +47,17 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
             </Col>
         </Row>
         <Row>
-            <Col sm="3" md="3" className="mx-auto mb-2">
+            <Col sm="3" className="mx-auto mb-2">
                 <Button color={isCs && isVisible ? "negative-answer" : "negative"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
                     {isVisible ? "No" : "Low"}
                 </Button>
             </Col>
-            <Col sm="3" md="3" className="mx-auto mb-2">
+            <Col sm="3" className="mx-auto mb-2">
                 <Button color={isCs && isVisible ? "neutral-answer" : "neutral"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
                     {isVisible ? "Partly" : "Medium"}
                 </Button>
             </Col>
-            <Col sm="3" md="3" className="mx-auto mb-2">
+            <Col sm="3" className="mx-auto mb-2">
                 <Button color={isCs && isVisible ?"positive-answer" : "positive"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
                     {isVisible ? "Yes" : "High"}
                 </Button>
