@@ -206,7 +206,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
             // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
             // This also takes care of updating the two lists when a user moves items from one to the other.
             let fixedAvailableItems: ParsonsItemDTO[] = [];
-            const currentAttemptItems: ParsonsItemDTO[] = (newCurrentAttempt && newCurrentAttempt.items) || [];
+            const currentAttemptItems: ParsonsItemDTO[] = newCurrentAttempt.items || [];
             if (doc.items) {
                 fixedAvailableItems = doc.items.filter(item => {
                     let found = false;
@@ -338,7 +338,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
                                         }}
                                     </Draggable>
                                 })}
-                                {(!(currentAttempt && currentAttempt.items) || (currentAttempt && currentAttempt.items && currentAttempt.items.length === 0)) &&
+                                {currentAttempt?.items?.length === 0 &&
                                     <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
                                     </div>
