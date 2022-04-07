@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "1.7.8-SNAPSHOT",
+  "version": "1.7.9-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.9.0",
@@ -72,7 +72,7 @@
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
     "inequality": "0.9.33",
-    "inequality-grammar": "0.10.3",
+    "inequality-grammar": "0.11.0",
     "isaac-graph-sketcher": "0.9.4",
     "jest": "^26.2.2",
     "jest-pnp-resolver": "^1.2.2",

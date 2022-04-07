@@ -95,7 +95,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
 
     const { currentAttempt, setCurrentAttempt, questionPart } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
-    const cssFriendlyQuestionPartId = questionPart?.id?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
+    const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
     const withReplacement = doc.withReplacement ?? false;
 
@@ -251,7 +251,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
                         ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
                         className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                     >
-                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} draggableId={item.replacementId || `${i}`} index={i}>
+                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
                             {(provided) =>
                                 <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                     <Item item={item} />
