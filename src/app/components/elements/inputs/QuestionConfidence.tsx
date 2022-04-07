@@ -33,35 +33,37 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
     }
 
     return <div className={"quick-question-options " + classNames({"quick-question-secondary": isCs && isVisible})} hidden={hideOptions}>
-        {!isVisible && <Row>
-            <Col md="9">
-                <h4>Click a button to show the answer</h4>
-            </Col>
-            <Col md="3" className="text-center not-mobile">
-                <Button outline color="primary" className="confidence-help m-0" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
-            </Col>
-        </Row>}
-        <Row className="mb-2">
-            <Col>
-                {isVisible ? "Is your own answer correct?" : "What is your level of confidence that your own answer is correct?"}
-            </Col>
-        </Row>
-        <Row>
-            <Col sm="3" className="mx-auto mb-2">
-                <Button color={isCs && isVisible ? "negative-answer" : "negative"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
-                    {isVisible ? "No" : "Low"}
-                </Button>
-            </Col>
-            <Col sm="3" className="mx-auto mb-2">
-                <Button color={isCs && isVisible ? "neutral-answer" : "neutral"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
-                    {isVisible ? "Partly" : "Medium"}
-                </Button>
-            </Col>
-            <Col sm="3" className="mx-auto mb-2">
-                <Button color={isCs && isVisible ?"positive-answer" : "positive"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
-                    {isVisible ? "Yes" : "High"}
-                </Button>
-            </Col>
-        </Row>
+        <Col>
+            {!isVisible && <Row>
+                <Col md="9">
+                    <h4>Click a button to show the answer</h4>
+                </Col>
+                <Col md="3" className="text-center not-mobile">
+                    <Button outline color="primary" className="confidence-help m-0" size="sm" onClick={() => quickQuestionInformationModal()}><i>i</i></Button>
+                </Col>
+            </Row>}
+            <Row className="mb-2">
+                <Col>
+                    {isVisible ? "Is your own answer correct?" : "What is your level of confidence that your own answer is correct?"}
+                </Col>
+            </Row>
+            <Row>
+                <Col className="mx-auto mb-2">
+                    <Button color={isCs && isVisible ? "negative-answer" : "negative"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
+                        {isVisible ? "No" : "Low"}
+                    </Button>
+                </Col>
+                <Col className="mx-auto mb-2">
+                    <Button color={isCs && isVisible ? "neutral-answer" : "neutral"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
+                        {isVisible ? "Partly" : "Medium"}
+                    </Button>
+                </Col>
+                <Col className="mx-auto mb-2">
+                    <Button color={isCs && isVisible ?"positive-answer" : "positive"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
+                        {isVisible ? "Yes" : "High"}
+                    </Button>
+                </Col>
+            </Row>
+        </Col>
     </div>;
 };
