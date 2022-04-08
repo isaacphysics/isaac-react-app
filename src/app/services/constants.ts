@@ -1029,6 +1029,11 @@ export enum EventTypeFilter {
     "Teacher events" = "teacher",
     "Online tutorials" = "virtual",
 }
+export enum EventStageFilter {
+    "All stages" = "all",
+    "GCSE" = "gcse",
+    "A-Level" = "a_level"
+}
 
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
     "alpha": "α",

@@ -1,5 +1,5 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
+import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
@@ -455,11 +455,18 @@ export const api = {
         },
         getEvents: (
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean,
+            filterEventsByStage: EventStageFilter | null
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             return endpoint.get(`/events`, {params: {
-                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, show_reservations_only: showReservedOnly, tags: filterEventsByType
+                start_index: startIndex,
+                limit: eventsPerPage,
+                show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly,
+                show_booked_only: showBookedOnly,
+                show_reservations_only: showReservedOnly,
+                tags: filterEventsByType,
+                audience: filterEventsByStage
             }});
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
