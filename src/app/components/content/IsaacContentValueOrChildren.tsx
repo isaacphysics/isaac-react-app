@@ -10,10 +10,9 @@ type ContentOrAccordionChunk = ContentDTO[] & {isAccordion?: boolean, isFirstChu
 interface ContentValueOrChildrenProps {
     value?: string;
     encoding?: string;
-    expandable?: boolean
     children?: ContentDTO[];
 }
-export const IsaacContentValueOrChildren = ({value, encoding, expandable, children}: ContentValueOrChildrenProps) => {
+export const IsaacContentValueOrChildren = ({value, encoding, children}: ContentValueOrChildrenProps) => {
     // Content chunking inherited from Isaac Physics
     const contentChunks: ContentOrAccordionChunk[] = []; // One of these for each chunk of content, where accordions may only appear on their own in a chunk.
     let breakOnTypeChange = false;
@@ -32,7 +31,7 @@ export const IsaacContentValueOrChildren = ({value, encoding, expandable, childr
             if (currentChunk.length > 0) {
                 contentChunks.push(currentChunk);
             }
-            let accordionChunk: ContentOrAccordionChunk = [child];
+            const accordionChunk: ContentOrAccordionChunk = [child];
             accordionChunk.isAccordion = true;
             accordionChunk.isFirstChunk = contentChunks.length == 0;
             contentChunks.push(accordionChunk);
@@ -67,13 +66,13 @@ export const IsaacContentValueOrChildren = ({value, encoding, expandable, childr
             if (contentChunk.isAccordion) {
                 return <React.Fragment key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
-                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} expandable={expandable}/>)
+                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex}/>)
                     }
                 </React.Fragment>;
             } else {
                 return <div className="clearfix content-chunk" key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
-                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} expandable={expandable}/>)}
+                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex}/>)}
                 </div>
             }
         })}

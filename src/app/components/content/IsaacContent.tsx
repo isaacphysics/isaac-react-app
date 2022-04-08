@@ -28,7 +28,7 @@ const classBasedLayouts = {
 };
 
 export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: string}, contentIndex?: number}) => {
-    const {doc: {type, layout, encoding, value, children, expandable}, match} = props;
+    const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;
     let tempSelectedComponent;
@@ -59,7 +59,7 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
                     case "accordion": selectedComponent = <IsaacAccordion {...props} />; break;
                     case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break;
                     default: selectedComponent =
-                        <IsaacContentValueOrChildren encoding={encoding} value={value} expandable={expandable}>
+                        <IsaacContentValueOrChildren encoding={encoding} value={value}>
                             {children}
                         </IsaacContentValueOrChildren>;
                 }
