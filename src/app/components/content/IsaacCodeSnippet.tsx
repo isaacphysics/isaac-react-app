@@ -24,10 +24,10 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
 
     const scrollPromptRef = useRef<HTMLPreElement>(null);
     const expandRef = useRef<HTMLDivElement>(null);
-    const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef, "");
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(doc.expandable ?? false, expandRef);
 
     return <div ref={expandRef} className={classNames("position-relative code-snippet", outerClasses)}>
-        {doc.expandable && expandButton}
+        {expandButton}
         <div className={innerClasses}>
             {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollPromptRef} />}
             <Row>

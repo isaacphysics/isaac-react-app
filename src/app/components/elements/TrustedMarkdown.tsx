@@ -15,9 +15,9 @@ import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Token[], idx/* options, env */) {
-    let href = escapeHtml(tokens[idx].href || "");
-    let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
-    let title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title || "")) + '"') : '';
+    const href = escapeHtml(tokens[idx].href || "");
+    const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
+    const title = tokens[idx].title ? (' title="' + escapeHtml(replaceEntities(tokens[idx].title || "")) + '"') : '';
     if (localLink) {
         return `<a href="${href}" ${title}>`;
     } else {
@@ -36,7 +36,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     }
 }
 
-export const TrustedMarkdown = ({markdown, expandable}: {markdown: string, expandable?: boolean}) => {
+export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
@@ -118,7 +118,7 @@ export const TrustedMarkdown = ({markdown, expandable}: {markdown: string, expan
 
     const html = MARKDOWN_RENDERER.render(regexProcessedMarkdown);
     return <div>
-        <TrustedHtml html={html} expandable={expandable}/>
+        <TrustedHtml html={html}/>
         {tooltips}
     </div>;
 };

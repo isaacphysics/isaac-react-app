@@ -27,23 +27,25 @@
 }
 
 @include media-breakpoint-up(md) {
-  .code-snippet {
-    .scroll-shadow {
-      margin-top: 35px;
-    }
-  }
-
-  .isaac-tab {
-    .code-snippet {
+  .expand-outer {
+    &.code-snippet {
       .scroll-shadow {
-        margin-top: 0 !important;
+        margin-top: 35px;
       }
     }
   }
 
   .isaac-table {
-    .scroll-shadow {
-      margin-top: 35px;
+    &.expandable {
+      .scroll-shadow {
+        margin-top: 35px;
+      }
+    }
+  }
+
+  .expand-outer {
+    .isaac-tab {
+      margin-top: 0 !important;
     }
   }
 }
@@ -57,13 +59,17 @@
   border: solid 1px $gray-103;
   box-shadow: 0 2px 30px 0 $shadow-08;
   padding: 0.1rem 1.5rem 1.5rem;
+  &.code-snippet {
+    padding: 0.1rem 1.5rem 0.5rem 1.5rem;
+  }
   margin-top: 1.5rem;
   margin-bottom: 2.5rem;
   overflow: auto;
   background-color: #ffffff55;
 
-  &.isaac-tab {
-    padding: 1.5rem 1.5rem 1.5rem;
+  .isaac-tab {
+    //padding: 1.5rem 1.5rem 1.5rem;
+    margin-bottom: 0 !important;
   }
 
   @include media-breakpoint-up(md) {
@@ -73,18 +79,15 @@
   }
 }
 
-.accordion {
-  .isaac-expand-bg {
-    @include media-breakpoint-up(md) {
-      &.isaac-table {
-        // This fixes the fact that everything in a content-value div has a weird right "margin", so when
-        // expanding a table this needs to be compensated for, to center the table properly
-        left: 52.5%;
-      }
+.isaac-expand-bg {
+  @include media-breakpoint-up(md) {
+    &.isaac-table {
+      // This fixes the fact that everything in a content-value div has a weird right "margin", so when
+      // expanding a table this needs to be compensated for, to center the table properly
+      left: 52.5%;
     }
   }
 }
-
 
 .expand-outer {
   position: relative;

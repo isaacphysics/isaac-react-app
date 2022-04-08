@@ -5,8 +5,6 @@ import {LaTeX} from "./LaTeX";
 import {isDefined} from "../../services/miscUtils";
 import {ExpandableParentContext, useExpandContent} from "./TrustedHtml";
 import classNames from "classnames";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -28,7 +26,7 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false, refreshHash} = props;
+    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false, refreshHash, expandable} = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     useEffect(() => {
@@ -50,37 +48,39 @@ export const Tabs = (props: TabsProps) => {
     }
 
     const expandRef = useRef(null);
-    const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef);
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(expandable ?? false, expandRef);
 
-    return <div
-        className={classNames(className, innerClasses, outerClasses, "position-relative")} ref={expandRef}
-    >
-        <Nav tabs className="flex-wrap">
-            {Object.keys(children).map((tabTitle, mapIndex) => {
-                const tabIndex = mapIndex + 1;
-                const c = callOrString(tabTitleClass, tabTitle, tabIndex);
-                const classes = activeTab === tabIndex ? `${c} active` : c;
-                return <NavItem key={tabTitle} className="px-3 text-center">
-                    <NavLink
-                        tag="button" type="button" name={tabTitle.replace(" ", "_")}
-                        tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
-                    >
-                        <LaTeX markup={tabTitle} />
-                    </NavLink>
-                </NavItem>;
-            })}
-        </Nav>
-
-        <ExpandableParentContext.Provider value={true}>
-            <TabContent activeTab={activeTab} className={tabContentClass}>
-                {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
+    return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={expandRef}>
+        {expandButton}
+        <div
+            className={classNames(className, innerClasses, "position-relative")}
+        >
+            <Nav tabs className="flex-wrap">
+                {Object.keys(children).map((tabTitle, mapIndex) => {
                     const tabIndex = mapIndex + 1;
-                    return <TabPane key={tabTitle} tabId={tabIndex}>
-                        {tabBody as ReactNode}
-                    </TabPane>;
+                    const c = callOrString(tabTitleClass, tabTitle, tabIndex);
+                    const classes = activeTab === tabIndex ? `${c} active` : c;
+                    return <NavItem key={tabTitle} className="px-3 text-center">
+                        <NavLink
+                            tag="button" type="button" name={tabTitle.replace(" ", "_")}
+                            tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
+                        >
+                            <LaTeX markup={tabTitle} />
+                        </NavLink>
+                    </NavItem>;
                 })}
-            </TabContent>
-        </ExpandableParentContext.Provider>
-        {props.expandable && expandButton}
+            </Nav>
+
+            <ExpandableParentContext.Provider value={true}>
+                <TabContent activeTab={activeTab} className={tabContentClass}>
+                    {Object.entries(children).map(([tabTitle, tabBody], mapIndex) => {
+                        const tabIndex = mapIndex + 1;
+                        return <TabPane key={tabTitle} tabId={tabIndex}>
+                            {tabBody as ReactNode}
+                        </TabPane>;
+                    })}
+                </TabContent>
+            </ExpandableParentContext.Provider>
+        </div>
     </div>;
 };

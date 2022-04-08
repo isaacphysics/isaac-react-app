@@ -57,8 +57,8 @@ export const IsaacContentValueOrChildren = ({value, encoding, expandable, childr
         {value && <div className="content-value">
             <Row>
                 <Col>{
-                    (encoding == "markdown" && <TrustedMarkdown markdown={value} expandable={expandable}/>) ||
-                    (encoding == "html" && <TrustedHtml html={value} expandable={expandable}/>) ||
+                    (encoding == "markdown" && <TrustedMarkdown markdown={value}/>) ||
+                    (encoding == "html" && <TrustedHtml html={value}/>) ||
                     (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
                 }</Col>
             </Row>
@@ -67,13 +67,13 @@ export const IsaacContentValueOrChildren = ({value, encoding, expandable, childr
             if (contentChunk.isAccordion) {
                 return <React.Fragment key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
-                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex}/>)
+                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} expandable={expandable}/>)
                     }
                 </React.Fragment>;
             } else {
                 return <div className="clearfix content-chunk" key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
-                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} />)}
+                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} expandable={expandable}/>)}
                 </div>
             }
         })}

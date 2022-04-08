@@ -34,7 +34,7 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
         const div = document.createElement("div");
         div.setAttribute("id", `table-${i}`);
         parent.insertBefore(div, table);
-        tableInnerHTMLs.push({id: i, html: table.innerHTML, classes: (table.getAttribute("class") || "").split(" ")});
+        tableInnerHTMLs.push({id: i, html: table.innerHTML, classes: (table.getAttribute("class") || "").split(/\s+/)});
         parent.removeChild(table);
     }
     return {manipulatedHtml: htmlDom.innerHTML, tableData: tableInnerHTMLs};
@@ -42,7 +42,7 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
 
 export const ExpandableParentContext = React.createContext<boolean>(false);
 
-export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedInnerClasses = "") => {
+export const useExpandContent = (expandable: boolean, ref: React.RefObject<HTMLElement>, unexpandedInnerClasses = "") => {
     const [ expanded, setExpanded ] = useState(false);
 
     const toggleExpanded = () => {
@@ -59,11 +59,11 @@ export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedIn
     const expandableParent = useContext(ExpandableParentContext);
     const deviceSize = useDeviceSize();
 
-    const show = SITE_SUBJECT === SITE.CS && !isMobile() && above["md"](deviceSize) && !expandableParent;
+    const show = SITE_SUBJECT === SITE.CS && expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
 
     const expandButton = (show && <div className={"expand-button position-relative"}>
         <button onClick={toggleExpanded}>
-            <div><span><img aria-hidden alt={"Button to expand content"} src={"/assets/expand-arrow.svg"}/> {expanded ? "Shrink content" : "Expand content"}</span></div>
+            <div><span><img aria-hidden alt={"Button to expand content"} src={"/assets/expand-arrow.svg"}/> {expanded ? "Close" : "Expand"}</span></div>
         </button>
     </div>) || null;
 
@@ -75,18 +75,18 @@ export const useExpandContent = (ref: React.RefObject<HTMLElement>, unexpandedIn
 }
 
 // A portal component to manage table elements from inside the React DOM
-const Table = ({id, html, classes, rootElement, expandable}: TableData & {rootElement: RefObject<HTMLElement>}) => {
+const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefObject<HTMLElement>}) => {
     const parentElement = rootElement.current?.querySelector(`#table-${id}`);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const expandRef = useRef<HTMLDivElement>(null);
-    const {expandButton, innerClasses, outerClasses} = useExpandContent(expandRef, "overflow-auto mb-4");
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "overflow-auto mb-4");
 
     if (html && parentElement) {
         return ReactDOM.createPortal(
             <div className={classNames(outerClasses, "position-relative isaac-table")} ref={expandRef}>
                 {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollRef} />}
-                {expandable && expandButton}
+                {expandButton}
                 <div ref={scrollRef} className={innerClasses}>
                     <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
                 </div>
@@ -97,8 +97,7 @@ const Table = ({id, html, classes, rootElement, expandable}: TableData & {rootEl
     return null;
 }
 
-export const TrustedHtml = ({html, span, className, expandable}: {html: string; span?: boolean; className?: string;
-    expandable?: boolean}) => {
+export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string;}) => {
     const user = useSelector(selectors.user.orNull);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
@@ -114,6 +113,6 @@ export const TrustedHtml = ({html, span, className, expandable}: {html: string; 
     const ElementType = span ? "span" : "div";
     return <>
         <ElementType ref={htmlRef} className={className} dangerouslySetInnerHTML={{__html: html}} />
-        {tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes} expandable={expandable}/>)}
+        {tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes}/>)}
     </>;
 };

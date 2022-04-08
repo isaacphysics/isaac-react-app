@@ -14,7 +14,7 @@ interface IsaacTabsProps {
 type IsaacTabChildren = {[title: string]: ReactElement};
 
 export const IsaacTabs = (props: any) => {
-    const { doc: { children: tabs, expandable: expandable} } = props as IsaacTabsProps;
+    const { doc: { children: tabs, expandable} } = props as IsaacTabsProps;
     const [ tabTitlesToContent , setTabTitlesToContent ] = useState<IsaacTabChildren>({});
 
     useEffect(() => {
