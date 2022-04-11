@@ -7,7 +7,6 @@ import tags from '../../services/tags';
 import {
     DIFFICULTY_ICON_ITEM_OPTIONS,
     DIFFICULTY_ITEM_OPTIONS,
-    EXAM_BOARD_ITEM_OPTIONS,
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
@@ -76,8 +75,8 @@ function processQueryString(query: string): QueryStringResponse {
     const tagHierarchy = tags.getTagHierarchy();
 
     const stageItems = itemiseByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
-    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), DIFFICULTY_ITEM_OPTIONS);
-    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), EXAM_BOARD_ITEM_OPTIONS);
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
+    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
     const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>))
 
@@ -385,7 +384,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
     const [examBoards, setExamBoards] = useState<Item<string>[]>(
-        queryExamBoards.length > 0 ? queryStages : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
+        queryExamBoards.length > 0 ? queryExamBoards : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     useEffect(function keepExamBoardsInSyncWithUserContext() {
         if (examBoards.length === 0) setExamBoards(itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     }, [userContext.examBoard]);
