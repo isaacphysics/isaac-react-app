@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
 import {useIFrameMessages} from "../../services/miscUtils";
-import uuid from "uuid";
+import { v4 as uuid_v4 } from "uuid";
 import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {logAction} from "../../state/actions";
@@ -12,7 +12,7 @@ interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) => {
     const dispatch = useDispatch();
     const iframeRef = useRef<HTMLIFrameElement>(null);
-    const uid = useRef((doc?.id || "") + uuid.v4().slice(0, 8));
+    const uid = useRef((doc?.id || "") + uuid_v4().slice(0, 8));
     const {receivedData, sendMessage} = useIFrameMessages(uid.current, iframeRef);
     const [loaded, setLoaded] = useState<boolean>(false);
 

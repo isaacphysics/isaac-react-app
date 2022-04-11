@@ -17,7 +17,7 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
     const dispatch = useDispatch();
 
-    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
         event.preventDefault();
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
@@ -36,8 +36,8 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
 
 export const SingleAssignmentProgress = () => {
     const dispatch = useDispatch();
-    const params = useParams();
-    const assignmentId = params.assignmentId;
+    const params = useParams<{ assignmentId?: string }>();
+    const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
 
     useEffect(() => {
         dispatch(loadProgress({_id: assignmentId}));

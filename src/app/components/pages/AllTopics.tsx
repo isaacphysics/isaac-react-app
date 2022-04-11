@@ -5,7 +5,7 @@ import "../../services/tagsPhy";
 import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
-import {EXAM_BOARDS_CS_A_LEVEL, EXAM_BOARDS_CS_GCSE, STAGE, STAGE_NULL_OPTIONS, TAG_ID} from "../../services/constants";
+import {EXAM_BOARD, EXAM_BOARDS_CS_A_LEVEL, EXAM_BOARDS_CS_GCSE, STAGE, STAGE_NULL_OPTIONS, TAG_ID} from "../../services/constants";
 import {PageFragment} from "../elements/PageFragment";
 import {Tabs} from "../elements/Tabs";
 import {Redirect} from "react-router";
@@ -58,7 +58,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
     }, [stage]);
 
     // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards
-    const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase()) + 2 || 1;
+    const activeTab = stageExamBoards.indexOf(location.hash.replace("#","").toLowerCase() as EXAM_BOARD) + 2 || 1;
     function setActiveTab(tabIndex: number) {
         if (tabIndex < 1 || tabIndex - 1 > stageExamBoards.length) return;
         const hash = tabIndex > 1 ? stageExamBoards[tabIndex - 2].toString() : "all"
@@ -68,17 +68,19 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
 
     const renderTopic = (topic: Tag) => {
         const TextTag = topic.comingSoonDate ? "span" : "strong";
-        const LinkTag = topic.comingSoonDate ? "span" : Link;
         if (!topic.hidden) {
             return <React.Fragment>
-                <LinkTag
-                    to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
-                    className={topic.comingSoonDate ? "text-muted" : ""}
-                >
-                    <TextTag>
-                        {topic.title}
-                    </TextTag>
-                </LinkTag>
+                {topic.comingSoonDate ? <span><TextTag>{topic.title}</TextTag></span>
+                    :
+                    <Link
+                        to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
+                        className={topic.comingSoonDate ? "text-muted" : ""}
+                    >
+                        <TextTag>
+                            {topic.title}
+                        </TextTag>
+                    </Link>
+                }
                 {" "}
                 {topic.comingSoonDate && !topic.new &&
                 <Badge color="light" className="border bg-white">Coming {topic.comingSoonDate}</Badge>}

@@ -5,7 +5,7 @@ const resolve = (p) => path.resolve(BASE_DIRECTORY, p);
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const configCommon = require('./webpack.config.common');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const webpack = require('webpack');
 
 module.exports = env => {

@@ -51,7 +51,12 @@ import {ShareLink} from "../elements/ShareLink";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isAdminOrEventManager, isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
-import {difficultiesOrdered, sortIcon, stageLabelMap, stagesOrdered} from "../../services/constants";
+import {
+    difficultiesOrdered,
+    sortIcon,
+    stageLabelMap,
+    stagesOrdered
+} from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import {above, below, useDeviceSize} from "../../services/device";

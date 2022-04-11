@@ -48,7 +48,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     const [authenticationToken, setAuthenticationToken] = useState<string | null>(authToken);
 
-    function processToken(event: React.FormEvent<HTMLFormElement>) {
+    function processToken(event: React.FormEvent<HTMLFormElement | HTMLButtonElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (user.loggedIn && user.id) {
             dispatch(authenticateWithTokenAfterPrompt(user.id, authenticationToken));

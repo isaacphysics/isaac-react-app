@@ -1,5 +1,5 @@
-import React, {ChangeEvent, CSSProperties, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
-import {withRouter} from "react-router-dom";
+import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {Col, Container, Form, Input, Row} from "reactstrap";
@@ -7,7 +7,6 @@ import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {History} from "history";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE, documentDescription, SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
 import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
@@ -18,16 +17,13 @@ import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
-import Select, {Styles, ValueType} from "react-select";
+import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {selectOnChange} from "../../services/select";
 
 interface Item<T> {
     value: T;
     label: string;
-}
-
-function unwrapValue<T>(f: React.Dispatch<React.SetStateAction<Item<T>[]>>) {
-    return (value: ValueType<Item<T>>) => f(Array.isArray(value) ? [...value] : !value ? [] : [value]);
 }
 
 function itemise(document: DOCUMENT_TYPE): Item<DOCUMENT_TYPE> {
@@ -37,25 +33,25 @@ function deitemise(item: Item<DOCUMENT_TYPE>) {
     return item.value;
 }
 
-function parseLocationSearch(search: string): [string, DOCUMENT_TYPE[]] {
+function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT_TYPE[]] {
     const searchParsed = queryString.parse(search);
 
     const parsedQuery = searchParsed.query || "";
     const query = parsedQuery instanceof Array ? parsedQuery[0] : parsedQuery;
 
     const parsedFilters = searchParsed.types || "";
-    const possibleFilters = (parsedFilters instanceof Array ? parsedFilters[0] : parsedFilters).split(",");
+    const possibleFilters = (Array.isArray(parsedFilters) ? parsedFilters[0] || "" : parsedFilters || "").split(",");
     const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[]
 
     return [query, filters];
 }
 
-const selectStyle: Styles = {
-    multiValue: (styles: CSSProperties) => ({...styles, backgroundColor: {[SITE.PHY]: "rgba(254, 161, 0, 0.9)", [SITE.CS]: "rgba(255, 181, 63, 0.9)"}[SITE_SUBJECT]}),
-    multiValueLabel: (styles: CSSProperties) => ({...styles, color: "black"}),
+const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUMENT_TYPE>>> = {
+    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: {[SITE.PHY]: "rgba(254, 161, 0, 0.9)", [SITE.CS]: "rgba(255, 181, 63, 0.9)"}[SITE_SUBJECT]}),
+    multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
 };
 
-export const Search = withRouter((props: {history: History; location: Location}) => {
+export const Search = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const dispatch = useDispatch();
     const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);
@@ -68,12 +64,12 @@ export const Search = withRouter((props: {history: History; location: Location})
     useEffect(function triggerSearchOnUrlChange() {
         setQueryState(urlQuery);
         setFiltersState(urlFilters.map(itemise));
-        dispatch(fetchSearch(urlQuery, urlFilters.length ? urlFilters.join(",") : undefined));
+        dispatch(fetchSearch(urlQuery || "", urlFilters.length ? urlFilters.join(",") : undefined));
     }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
         if (e) {e.preventDefault();}
-        pushSearchToHistory(history, queryState, filtersState.map(deitemise));
+        pushSearchToHistory(history, queryState || "", filtersState.map(deitemise));
     }
 
     // Trigger update to search url on query or filter change
@@ -106,7 +102,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                     <Form inline onSubmit={updateSearchUrl}>
                         <Input
                             className='search--filter-input mt-4'
-                            type="search" value={queryState}
+                            type="search" value={queryState || ""}
                             placeholder="Search"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setQueryState(e.target.value)}
                             maxLength={SEARCH_CHAR_LENGTH_LIMIT}
@@ -140,7 +136,7 @@ export const Search = withRouter((props: {history: History; location: Location})
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
                                         classNamePrefix="select"
-                                        onChange={unwrapValue(setFiltersState)}
+                                        onChange={selectOnChange(setFiltersState, false)}
                                         styles={selectStyle}
                                     />
                                     {SITE_SUBJECT === SITE.CS && <RS.Label className="mt-2 mb-2 mb-md-0">
