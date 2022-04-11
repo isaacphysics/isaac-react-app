@@ -58,27 +58,27 @@ export const HomepagePhy = () => {
 
                 <div className="physics-site-intro mt-4 mt-lg-2">
                     <strong>Show me resources for...</strong>
-                    <Row className="mt-2 overflow-auto">
-                        <Col xs={12} lg={3} className="pr-md-1 py-1">
+                    <Row className="mt-2">
+                        <Col xs={12} lg={3} className="pr-lg-1 py-1">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/pre_gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 11-14
                             </Button>
                         </Col>
-                        <Col xs={12} lg={3} className="px-md-1 py-1">
+                        <Col xs={12} lg={3} className="px-lg-1 py-1">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 {above["md"](deviceSize) ?
                                     "GCSE or\u00A0equivalent" :
                                     "GCSE"}
                             </Button>
                         </Col>
-                        <Col xs={12} lg={3} className="px-md-1 py-1">
+                        <Col xs={12} lg={3} className="px-lg-1 py-1">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/alevel" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 {above["md"](deviceSize) ?
                                     "A\u00A0Level or\u00A0equivalent" :
                                     "A\u00A0Level"}
                             </Button>
                         </Col>
-                        <Col xs={12} lg={3} className="pl-md-1 py-1">
+                        <Col xs={12} lg={3} className="pl-lg-1 py-1">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/teacher_features" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 teachers
                             </Button>
