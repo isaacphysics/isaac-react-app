@@ -30,10 +30,9 @@ import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDepreca
 import {generateQuestionTitle} from "../../services/questions";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
-interface QuestionPageProps extends RouteComponentProps {
+interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
-    // location: {search: string};
 }
 
 
