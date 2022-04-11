@@ -58,7 +58,7 @@
     "build-cs-dev": "webpack --config config/webpack.config.cs.js",
     "start-phy": "webpack-dev-server --hot --port 8004 --history-api-fallback --config config/webpack.config.physics.js --allowed-hosts=true",
     "start-cs": "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.cs.js --allowed-hosts=true",
-    "test": "npm run test-phy && npm run test-cs",
+    "test": "yarn run test-phy && yarn run test-cs",
     "test-phy": "jest --config config/jest/jest.config.physics.js",
     "test-cs": "jest --config config/jest/jest.config.cs.js",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
@@ -70,7 +70,7 @@
     "start-cs-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --disableHostCheck=true",
     "build-phy-renderer": "webpack --env prod --config config/webpack.config.phy.renderer.js",
     "start-phy-renderer": "webpack-dev-server --hot --port 3002 --history-api-fallback --config config/webpack.config.phy.renderer.js --disableHostCheck=true",
-    "build-renderer": "npm run build-cs-renderer && npm run build-phy-renderer"
+    "build-renderer": "yarn run build-cs-renderer && yarn run build-phy-renderer"
   },
   "eslintConfig": {
     "extends": [
