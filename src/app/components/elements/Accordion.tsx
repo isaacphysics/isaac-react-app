@@ -147,6 +147,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 </span>}
                 <div className="accordion-title pl-3">
                     <RS.Row>
+                        {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                         <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}
                         {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
