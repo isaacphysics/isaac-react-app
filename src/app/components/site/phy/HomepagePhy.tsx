@@ -60,7 +60,7 @@ export const HomepagePhy = () => {
                     <strong>Show me resources for...</strong>
                     <Row className="mt-2">
                         <Col xs={12} lg={3} className="pr-lg-1 py-1">
-                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/pre_gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
+                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/11_14" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 11-14
                             </Button>
                         </Col>
