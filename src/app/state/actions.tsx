@@ -516,7 +516,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(nextPage?.replace("#!", "") || "/account");
     } catch (error: any) {
-        history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
+        history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import Select from "react-select";
-import {Item, unwrapValue} from "../../../services/select";
+import {Item, selectOnChange} from "../../../services/select";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {ifKeyIsEnter} from "../../../services/navigation";
 
@@ -88,5 +88,5 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
 }
 
 export function LevelsFilterSelect({levelOptions, levels, setLevels, id}: LevelsFilterProps) {
-    return <Select id={id} onChange={unwrapValue(setLevels)} isMulti value={levels} options={levelOptions} />
+    return <Select id={id} onChange={selectOnChange(setLevels, false)} isMulti value={levels} options={levelOptions} />
 }

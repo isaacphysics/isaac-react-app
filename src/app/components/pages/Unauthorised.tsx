@@ -1,11 +1,10 @@
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 
-interface UnauthorisedProps {location: {pathname: string; state?: {overridePathname?: string}}}
-
-const UnauthorisedComponent = ({location: {pathname, state}}: UnauthorisedProps) => {
+export const Unauthorised = () => {
+    const {pathname, state} = useLocation<{overridePathname?: string}>();
     return <Container>
         <div>
             <TitleAndBreadcrumb breadcrumbTitleOverride="Unauthorised" currentPageTitle="Access denied" />
@@ -20,5 +19,3 @@ const UnauthorisedComponent = ({location: {pathname, state}}: UnauthorisedProps)
         </div>
     </Container>;
 };
-
-export const Unauthorised = withRouter(UnauthorisedComponent);

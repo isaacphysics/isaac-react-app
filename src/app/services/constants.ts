@@ -1,4 +1,7 @@
-import Remarkable from "remarkable";
+// @ts-ignore
+import {Remarkable} from "remarkable";
+// @ts-ignore
+import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
@@ -43,9 +46,8 @@ export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
 
 export const MARKDOWN_RENDERER = new Remarkable({
-    linkify: true,
-    html: true,
-});
+    html: true
+}).use(linkify);
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",

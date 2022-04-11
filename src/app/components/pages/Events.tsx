@@ -5,8 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
-import {withRouter} from "react-router-dom";
-import {History} from "history";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {clearEventsList, getEventMapData, getEventsList} from "../../state/actions";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
@@ -29,7 +28,7 @@ interface EventsPageQueryParams {
 
 const EVENTS_PER_PAGE = 6;
 
-export const Events = withRouter(({history, location}: {history: History; location: Location}) => {
+export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const dispatch = useDispatch();

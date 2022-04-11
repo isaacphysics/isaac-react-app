@@ -37,7 +37,7 @@ export const useLoginLogic = () => {
         }
     };
 
-    const signUp = (event: React.FormEvent<HTMLFormElement>) => {
+    const signUp = (event: React.MouseEvent) => {
         event.preventDefault();
         history.push("/register", {email: email, password: password});
     };

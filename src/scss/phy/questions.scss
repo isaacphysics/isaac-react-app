@@ -53,6 +53,11 @@
 .quick-question {
   button {
     border-radius: 0 !important;
+
+    &.active {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
   .alert {
     border-bottom-left-radius: 0 !important;

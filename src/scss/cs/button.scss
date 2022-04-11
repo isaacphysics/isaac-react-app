@@ -5,13 +5,28 @@
     color: $black;
   }
   &.btn-negative {
-    background-color: $cs-reddish;
+    background-color: $highlight-mustard-50;
+    color: black;
   }
   &.btn-neutral {
-    background-color: $cs-mustard;
+    background-color: $highlight-teal-50;
+    color: black;
   }
   &.btn-positive {
-    background-color: $green;
+    background-color: $highlight-navy-50;
+    color: black;
+  }
+  &.btn-negative-answer {
+    background-color: $highlight-mustard;
+    color: white;
+  }
+  &.btn-neutral-answer {
+    background-color: $highlight-teal;
+    color: white;
+  }
+  &.btn-positive-answer {
+    background-color: $highlight-navy;
+    color: white;
   }
   &.btn-secondary:not(:disabled):not(.disabled):active {
     background-color: $cs-reddish;
@@ -19,12 +34,32 @@
     color: $black;
     text-decoration: underline;
   }
+  &.hide-answer {
+    background-color: $highlight-navy !important;
+    border: 1px solid transparent !important;
+    color: $white !important;
+  }
+  &.hide-answer:not(:disabled):not(.disabled):active {
+    text-decoration: underline;
+  }
+  &.confidence-help {
+    min-width: 20px !important;
+  }
+}
+
+.alert-hide {
+  background-color: $highlight-navy-25;
 }
 
 .quick-question-options {
-  background: rgba(lightcoral, 0.5);
-  border: 1px solid transparent;
+  background: white;
+  border: 2px solid $highlight-navy;
   color: $black;
   border-radius: 5px;
   padding: 10px !important;
+}
+
+.quick-question-secondary {
+  background: $highlight-teal-25 !important;
+  border: none !important;
 }

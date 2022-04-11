@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -30,10 +30,9 @@ import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDepreca
 import {generateQuestionTitle} from "../../services/questions";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
-interface QuestionPageProps {
+interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
-    match: {params: {questionId: string}};
-    location: {search: string};
+    match: match & { params: { questionId: string } };
 }
 
 
