@@ -22,7 +22,7 @@ interface EventsPageQueryParams {
     show_booked_only?: boolean;
     show_reservations_only?: boolean;
     event_status?: "all";
-    show_stage?: EventStageFilter;
+    show_stage_only?: EventStageFilter;
     types?: EventTypeFilter;
 }
 
@@ -43,13 +43,13 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         (query.event_status === "all" && EventStatusFilter["All events"]) ||
         EventStatusFilter["Upcoming events"];
     const typeFilter = query.types || EventTypeFilter["All events"];
-    const stageFilter = query.show_stage || EventStageFilter["All stages"];
+    const stageFilter = query.show_stage_only || EventStageFilter["All stages"];
 
     useEffect(() => {
         const startIndex = 0;
         dispatch(clearEventsList);
         dispatch(getEventsList(startIndex, EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter));
-        dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter));
+        dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter, stageFilter));
     }, [dispatch, typeFilter, statusFilter, stageFilter]);
 
     const pageHelp = <span>
@@ -95,7 +95,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                         </RS.Input>
                         <RS.Input id="event-stage-filter" className="ml-2" type="select" value={stageFilter} onChange={e => {
                             const selectedStage = e.target.value as EventStageFilter;
-                            query.show_stage = selectedStage;
+                            query.show_stage_only = selectedStage !== EventStageFilter["All stages"] ? selectedStage : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                         }}>
                             {Object.entries(EventStageFilter).map(([stageLabel, stageValue]) =>
