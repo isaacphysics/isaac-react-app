@@ -6,7 +6,7 @@ import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUse
 import he from "he";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import katex, { KatexOptions } from "katex";
-import 'katex/contrib/mhchem';
+import 'katex/dist/contrib/mhchem.mjs';
 import renderA11yString from "../../services/katex-a11y";
 // @ts-ignore
 import { utils } from "remarkable";
