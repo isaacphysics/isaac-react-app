@@ -11,7 +11,7 @@ import {IsaacQuickQuestion} from "./IsaacQuickQuestion";
 import {IsaacTabs} from "./IsaacTabs";
 import {IsaacAccordion} from "./IsaacAccordion";
 import {IsaacHorizontal} from "./IsaacHorizontal";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
@@ -20,6 +20,7 @@ import {IsaacCodeSnippet} from "./IsaacCodeSnippet";
 import {QuizQuestion} from "./QuizQuestion";
 import {isQuestion} from "../../services/questions";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
+import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 
 const classBasedLayouts = {
     left: "align-left",
@@ -27,7 +28,12 @@ const classBasedLayouts = {
     righthalf: "align-right-half"
 };
 
-export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: string}, contentIndex?: number}) => {
+export interface IsaacContentProps extends RouteComponentProps {
+    doc: ContentDTO,
+    contentIndex?: number
+}
+
+export const IsaacContent = withRouter((props: IsaacContentProps) => {
     const {doc: {type, layout, encoding, value, children}, match} = props;
 
     let selectedComponent;
@@ -46,6 +52,7 @@ export const IsaacContent = withRouter((props: {doc: ContentDTO; match: {path: s
             case "image": selectedComponent = <IsaacImage {...props} />; break;
             case "video": selectedComponent = <IsaacVideo {...props} />; break;
             case "codeSnippet": selectedComponent = <IsaacCodeSnippet {...props} />; break;
+            case "interactiveCodeSnippet": selectedComponent = <IsaacInteractiveCodeSnippet {...props} />; break;
             case "glossaryTerm": selectedComponent = <IsaacGlossaryTerm {...props} />; break;
             case "isaacFeaturedProfile": selectedComponent = <IsaacFeaturedProfile {...props} />; break;
             case "isaacQuestion": selectedComponent = <IsaacQuickQuestion {...props} />; break;

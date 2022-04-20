@@ -4,7 +4,6 @@ import {ContentDTO} from "../../IsaacApiTypes";
 import {AbstractBaseTagService} from "./tagsAbstract";
 
 const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoonDate: "2022"}};
-const GCSE_COMING_DEC = {[STAGE.GCSE]: {comingSoonDate: "December 2021"}};
 const GCSE_HIDDEN = {[STAGE.GCSE]: {hidden: true}};
 const GCSE_NEW = {[STAGE.GCSE]: {new: true}};
 
@@ -36,12 +35,12 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.communication, title: "Communication", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.webTechnologies, title: "Web technologies", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
         // Computer systems topics
-        {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
-        {id: TAG_ID.architecture, title: "Systems architecture", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
-        {id: TAG_ID.memoryAndStorage, title: "Memory and storage", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
-        {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
-        {id: TAG_ID.software, title: "Software", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
-        {id: TAG_ID.operatingSystems, title: "Operating systems", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
+        {id: TAG_ID.booleanLogic, title: "Boolean logic", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.architecture, title: "Systems architecture", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.memoryAndStorage, title: "Memory and storage", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.software, title: "Software", parent: TAG_ID.computerSystems},
+        {id: TAG_ID.operatingSystems, title: "Operating systems", parent: TAG_ID.computerSystems},
         {id: TAG_ID.programmingLanguages, title: "High- and low-level languages", parent: TAG_ID.computerSystems, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, stageOverride: GCSE_COMING_2022},
         // Cyber security topics
@@ -50,14 +49,14 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.security, title: "Network security", parent: TAG_ID.cyberSecurity, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.identificationPrevention, title: "Managing security threats", parent: TAG_ID.cyberSecurity, stageOverride: GCSE_COMING_2022},
         // Data and information topics
-        {id: TAG_ID.numberRepresentation, title: "Representation of numbers", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
-        {id: TAG_ID.textRepresentation, title: "Representation of text", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
-        {id: TAG_ID.imageRepresentation, title: "Representation of images", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
-        {id: TAG_ID.soundRepresentation, title: "Representation of sound", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.numberRepresentation, title: "Representation of numbers", parent: TAG_ID.dataAndInformation},
+        {id: TAG_ID.textRepresentation, title: "Representation of text", parent: TAG_ID.dataAndInformation},
+        {id: TAG_ID.imageRepresentation, title: "Representation of images", parent: TAG_ID.dataAndInformation},
+        {id: TAG_ID.soundRepresentation, title: "Representation of sound", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
         {id: TAG_ID.compression, title: "Compression", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.encryption, title: "Encryption", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
         {id: TAG_ID.fileOrganisation, title: "File organisation", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.databases, title: "Database concepts", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.databases, title: "Database concepts", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_NEW},
         {id: TAG_ID.sql, title: "SQL", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
         // Data structures and algorithms topics

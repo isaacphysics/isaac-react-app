@@ -304,7 +304,8 @@ export const updateCurrentUser = (
     updatedUserPreferences: UserPreferencesDTO,
     userContexts: UserContext[] | undefined,
     passwordCurrent: string | null,
-    currentUser: PotentialUser
+    currentUser: PotentialUser,
+    redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
@@ -336,15 +337,10 @@ export const updateCurrentUser = (
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
-            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
+            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH);
             persistence.remove(KEY.AFTER_AUTH_PATH);
-            if ((afterAuthPath).includes('account')) {
-                history.push(afterAuthPath, {firstLogin: isFirstLogin});
-            }
-            history.push('/account', {firstLogin: isFirstLogin});
-        }
-
-        if (!editingOtherUser) {
+            redirect && history.push(afterAuthPath || '/account', {firstLogin: isFirstLogin});
+        } else if (!editingOtherUser) {
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "Your account settings were updated successfully.",
@@ -352,9 +348,8 @@ export const updateCurrentUser = (
                 timeout: 5000,
                 closable: false,
             }) as any);
-        }
-        if (editingOtherUser) {
-            history.push('/');
+        } else if (editingOtherUser) {
+            redirect && history.push('/');
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "The user's account settings were updated successfully.",
@@ -510,22 +505,18 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
-        let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        nextPage = nextPage || "/";
-        nextPage = nextPage.replace("#!", "");
-        if (providerResponse.data.firstLogin && !nextPage.includes("account")) {
+        if (providerResponse.data.firstLogin) {
             ReactGA.event({
                 category: 'user',
                 action: 'registration',
                 label: `Create Account (${provider})`,
             });
-            history.push('/account');
-        } else {
-            history.push(nextPage);
         }
+        const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+        history.push(nextPage?.replace("#!", "") || "/account");
     } catch (error: any) {
-        history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
+        history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
@@ -1248,7 +1239,7 @@ export const adminUserGet = (userid: number | undefined) => async (dispatch: Dis
 
 export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     try {
-        let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        const confirmDeletion = window.confirm("Are you sure you want to delete this user?");
         if (confirmDeletion) {
             dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
             await api.admin.userDelete.delete(userid);
@@ -1348,7 +1339,7 @@ export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, em
 };
 
 export const mergeUsers = (targetId: number, sourceId: number) => async (dispatch: Dispatch<Action>) => {
-    let confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+    const confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
     if (confirmMerge) {
         dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST});
         try {
@@ -1622,7 +1613,7 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
     let dueDateUTC = undefined;
     if (dueDate != undefined) {
         dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
-        let today = new Date();
+        const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
             dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
@@ -1876,7 +1867,7 @@ export const addMyselfToWaitingList = (eventId: string, additionalInformation: A
 };
 
 export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    let cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    const cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
     if (cancel) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});

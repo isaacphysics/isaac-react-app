@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -58,11 +58,11 @@ const stateToProps = (state: AppState, props: any) => {
         errorMessage: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
         userPreferences: state?.userPreferences ?? null,
-        firstLogin: history?.location?.state?.firstLogin,
+        firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
         userOfInterest: searchParams?.userId as string ?? null,
-        userToEdit: state && {...state.adminUserGet, loggedIn: true} || {loggedIn: false}
+        adminUserToEdit: state?.adminUserGet
     }
 };
 
@@ -85,16 +85,23 @@ interface AccountPageProps {
         userContexts: UserContext[] | undefined,
         passwordCurrent: string | null,
         currentUser: PotentialUser,
+        redirect: boolean
     ) => void;
     firstLogin: boolean;
     hashAnchor: string | null;
     authToken: string | null;
     userOfInterest: string | null;
     adminUserGet: (userid: number | undefined) => void;
-    userToEdit: AdminUserGetState;
+    adminUserToEdit?: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, userToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+    // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
+    // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
+    const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
+        return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
+    }, [adminUserToEdit]);
+
     useEffect(() => {
         if (userOfInterest) {
             adminUserGet(Number(userOfInterest));
@@ -112,7 +119,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             {...user, password: ""}
     );
 
-    useEffect(() => {
+    // This is necessary for updating the user when the user updates fields from the required account info modal, for example.
+    useEffect(function keepUserInSyncWithChangesElsewhere() {
         if (editingOtherUser && userToEdit) {
             setUserToUpdate({...userToEdit, loggedIn: true});
         } else if (user) {
@@ -216,6 +224,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                 userContextsUpdated ? userContextsToUpdate : undefined,
                 currentPassword,
                 user,
+                true
             );
         }
     }

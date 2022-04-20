@@ -11,6 +11,7 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
+    QuizAttemptDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
@@ -533,13 +534,9 @@ export interface AppGroupMembership extends ApiTypes.UserSummaryWithGroupMembers
     groupMembershipInformation: ApiTypes.GroupMembershipDTO;
 }
 
-export interface ShortcutResponse {
-    id: string;
-    title: string;
-    terms: string[];
-    summary: string;
-    url: string;
-    type: string;
+export interface ShortcutResponse extends ContentSummaryDTO {
+    terms?: string[];
+    hash?: string;
 }
 
 export interface UserBetaFeaturePreferences {
@@ -641,10 +638,12 @@ export interface Toast {
 }
 
 export interface ActiveModal {
+    centered?: boolean;
+    noPadding?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: string;
-    title: string;
+    title?: string;
     body: any;
     buttons?: any[];
     overflowVisible?: boolean;
@@ -708,6 +707,7 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
 export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string} | undefined>(undefined);
+export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;

@@ -5,8 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
-import {withRouter} from "react-router-dom";
-import {History} from "history";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {clearEventsList, getEventMapData, getEventsList} from "../../state/actions";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
@@ -16,6 +15,7 @@ import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {MetaDescription} from "../elements/MetaDescription";
 
 
 interface EventsPageQueryParams {
@@ -27,7 +27,7 @@ interface EventsPageQueryParams {
 
 const EVENTS_PER_PAGE = 6;
 
-export const Events = withRouter(({history, location}: {history: History; location: Location}) => {
+export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
     const dispatch = useDispatch();
@@ -54,10 +54,15 @@ export const Events = withRouter(({history, location}: {history: History; locati
         Follow the links below to find out more about our FREE events.
     </span>;
 
+    const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
+
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {SITE_SUBJECT === SITE.CS && <CoronavirusWarningBanner />}
+            {SITE_SUBJECT === SITE.CS && <>
+                <CoronavirusWarningBanner />
+                <MetaDescription description={metaDescriptionCS} />
+            </>}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">

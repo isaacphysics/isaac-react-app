@@ -91,7 +91,7 @@ export const HomepageCS = () => {
                             <iframe
                                 title="Isaac Computer Science introduction video" width="640" height="345"
                                 className="mw-100 pt-lg-4"
-                                src="https://www.youtube-nocookie.com/embed/nW4J-NVDziw?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
+                                src="https://www.youtube-nocookie.com/embed/ci6_Du_NHZA?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
                                 frameBorder="0" allowFullScreen
                             />
                         </Col>

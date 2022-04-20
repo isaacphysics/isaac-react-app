@@ -15,7 +15,7 @@ export const MathsBookGcse = () => {
     return <Container className="maths">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-5" currentPageTitle="GCSE Maths Book" help={pageHelp} />
+                <TitleAndBreadcrumb className="mb-5" currentPageTitle="Using Essential GCSE Mathematics" help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/2021_maths_book_gcse.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="maths_book_gcse_intro"/>
             </div>

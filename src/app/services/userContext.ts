@@ -88,7 +88,7 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Gameboard views overrides all context options
     const currentGameboard = useSelector(selectors.board.currentGameboard);
-    const {questionId} = useParams();
+    const {questionId} = useParams<{ questionId: string}>();
     if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
         const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];
         if (gameboardItem) {
@@ -376,9 +376,20 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
         message.push(examBoardLabelMap[userContext.examBoard]);
     }
     if (message.length === 0) { // should never happen...
-        message.push("your account settings." /* "anyone!" */)
+        message.push("your account settings" /* "anyone!" */)
     }
-    return `not relevant for ${message.join(" ")}`;
+    return `not been marked for ${message.join(" ")}`;
+}
+
+export function audienceStyle(audienceString: string): string {
+    switch (audienceString) {
+        case stageLabelMap.a_level:
+            return "stage-label-alevel";
+        case stageLabelMap.gcse:
+            return "stage-label-gcse";
+        default:
+            return "stage-label-all";
+    }
 }
 
 export function stringifyAudience(audience: ContentDTO["audience"], userContext: UseUserContextReturnType): string {

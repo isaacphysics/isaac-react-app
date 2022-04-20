@@ -22,7 +22,7 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isLoggedIn, isStaff, isStudent, isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
@@ -91,7 +91,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             !canMakeABooking &&
             event.isNotClosed &&
             !event.hasExpired &&
-            event.userBookingStatus !== "WAITING_LIST" &&
+            (event.userBookingStatus === undefined || !["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus)) &&
             studentOnlyRestrictionSatisfied;
 
         const canReserveSpaces =

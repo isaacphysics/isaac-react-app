@@ -15,6 +15,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {isFound} from "../../services/miscUtils";
+import { useLocation } from "react-router-dom";
 
 const defaultConceptDisplay = {
     [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
@@ -35,6 +36,9 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
     const accordionDisplay = mergeDisplayOptions(defaultDisplay, doc.display);
+
+    const location = useLocation();
+    const hashAnchor = location.hash !== "" && location.hash[0] === '#' ? location.hash.slice(1) : null;
 
     return <div className="isaac-accordion">
         {(doc.children as SectionWithDisplaySettings[] | undefined)
@@ -67,6 +71,16 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
                     !isIntendedAudience(section.audience, userContext, user)
                 ) {
                     section.hidden = true;
+                }
+                return section;
+            })
+
+            // If we followed a direct link to a section, we want to show it regardless
+            // of any other settings. We also want to show a message somewhere on the page.
+            .map(section => {
+                const parts = (section.id || "").split("|");
+                if (parts.length > 1 && parts[1] === hashAnchor) {
+                    section.hidden = false;
                 }
                 return section;
             })

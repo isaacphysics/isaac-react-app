@@ -1,5 +1,4 @@
 import React, {RefObject, useContext, useRef, useState} from "react";
-import 'katex/dist/contrib/mhchem.js';
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";

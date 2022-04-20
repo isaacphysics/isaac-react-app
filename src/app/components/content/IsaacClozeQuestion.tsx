@@ -22,7 +22,7 @@ import {
 import ReactDOM from 'react-dom';
 import {ClozeDropRegionContext, ClozeItemDTO} from "../../../IsaacAppTypes";
 import {setCurrentAttempt} from "../../state/actions";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {Item} from "../../services/select";
 
 function Item({item}: {item: ItemDTO}) {
@@ -99,7 +99,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     const currentAttempt = questionPart?.currentAttempt as (ItemChoiceDTO | undefined);
-    const cssFriendlyQuestionPartId = questionPart?.id?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
+    const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
     const withReplacement = doc.withReplacement ?? false;
 
@@ -115,7 +115,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
     useEffect(() => {
         if (currentAttempt?.items) {
             const idvs = currentAttempt.items as (ClozeItemDTO | undefined)[];
-            setInlineDropValues(registeredDropRegionIDs.map((_, i) => idvs[i] ? {...idvs[i], replacementId: `${idvs[i]?.id}-${uuid.v4()}`} : undefined));
+            setInlineDropValues(registeredDropRegionIDs.map((_, i) => idvs[i] ? {...idvs[i], replacementId: `${idvs[i]?.id}-${uuid_v4()}`} : undefined));
 
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
@@ -213,7 +213,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
             const destinationDropIndex = inlineDropIndex(destination.droppableId);
             if (destinationDropIndex !== -1 && destination.index === 0) {
                 replaceSource(idvs[destinationDropIndex]);
-                idvs.splice(destinationDropIndex, 1, withReplacement ? {...item, replacementId: item.id + uuid.v4()} : item);
+                idvs.splice(destinationDropIndex, 1, withReplacement ? {...item, replacementId: item.id + uuid_v4()} : item);
             } else {
                 replaceSource(item);
             }
@@ -255,7 +255,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
                         ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
                         className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                     >
-                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} draggableId={item.replacementId || `${i}`} index={i}>
+                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
                             {(provided) =>
                                 <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                     <Item item={item} />

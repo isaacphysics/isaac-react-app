@@ -8,10 +8,9 @@
   padding: 0.5rem 2.1rem;
   white-space: normal;
 
-  &.btn-negative, &.btn-neutral, &.btn-positive {
+  &.btn-negative, &.btn-neutral, &.btn-positive, &.btn-negative-answer, &.btn-neutral-answer, &.btn-positive-answer {
     border: 1px solid transparent;
     color: $black;
-    width: 100px !important;
     min-width: 100px !important;
     padding: 0 !important;
     border-radius: 5px;
@@ -24,7 +23,8 @@
   }
 
   &.btn-positive:not(:disabled):not(.disabled):active, &.btn-neutral:not(:disabled):not(.disabled):active,
-  &.btn-negative:not(:disabled):not(.disabled):active {
+  &.btn-negative:not(:disabled):not(.disabled):active, &.btn-negative-answer:not(:disabled):not(.disabled):active,
+  &.btn-neutral-answer:not(:disabled):not(.disabled):active, &.btn-positive-answer:not(:disabled):not(.disabled):active {
     border: 1px solid transparent;
     color: $black;
     text-decoration: underline;

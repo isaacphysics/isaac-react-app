@@ -186,7 +186,7 @@ export const DateInput = (props: DateInputProps) => {
         }
     };
 
-    const clear = (e: MouseEvent<HTMLInputElement>) => {
+    const clear = (e: MouseEvent<HTMLButtonElement>) => {
         values.day.set(undefined);
         values.month.set(undefined);
         values.year.set(undefined);
@@ -196,6 +196,7 @@ export const DateInput = (props: DateInputProps) => {
         if (props.onChange) {
             props.onChange({
                 ...e,
+                // @ts-ignore <- I am NOT sure this is a good idea...
                 currentTarget: {
                     ...(e.currentTarget || hiddenRef.current),
                     valueAsDate: timestamp || null
