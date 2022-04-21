@@ -84,7 +84,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_NEW},
         {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_NEW},
         {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.ide, title: "IDEs", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
         // Programming paradigms topics:
@@ -94,7 +94,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.eventDrivenProgramming, title: "Event-driven programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.declarativeProgramming, title: "Declarative programming", parent: TAG_ID.programmingParadigms, hidden: true},
         // Software engineering topics
-        {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_NEW},
         {id: TAG_ID.testing, title: "Testing", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.softwareProject, title: "A level programming project / NEA", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_HIDDEN},
