@@ -17,12 +17,12 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // --- Fields ---
 
         // Physics Fields
+        {id: TAG_ID.skills, title: "Skills", parent: TAG_ID.physics},
         {id: TAG_ID.mechanics, title: "Mechanics", parent: TAG_ID.physics},
+        {id: TAG_ID.electricity, title: "Electricity", parent: TAG_ID.physics},
+        {id: TAG_ID.wavesParticles, title: "Waves & Particles", parent: TAG_ID.physics},
         {id: TAG_ID.fields, title: "Fields", parent: TAG_ID.physics},
         {id: TAG_ID.thermal, title: "Thermal", parent: TAG_ID.physics},
-        {id: TAG_ID.wavesParticles, title: "Waves & Particles", parent: TAG_ID.physics},
-        {id: TAG_ID.skills, title: "Skills", parent: TAG_ID.physics},
-        {id: TAG_ID.electricity, title: "Electricity", parent: TAG_ID.physics},
         // Chemistry Fields
         {id: TAG_ID.foundations, title: `Founda${softHyphen}tions`, parent: TAG_ID.chemistry},
         {id: TAG_ID.physical, title: "Physical", parent: TAG_ID.chemistry},
@@ -30,77 +30,82 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.organic, title: "Organic", parent: TAG_ID.chemistry, comingSoonDate: "soon"},
         {id: TAG_ID.analytical, title: "Analytical", parent: TAG_ID.chemistry},
         // Maths Fields
-        {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
+        {id: TAG_ID.numbers, title: "Numbers", parent: TAG_ID.maths},
         {id: TAG_ID.algebra, title: "Algebra", parent: TAG_ID.maths},
-        {id: TAG_ID.statistics, title: "Statistics", parent: TAG_ID.maths},
+        {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
         {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.maths},
         {id: TAG_ID.calculus, title: "Calculus", parent: TAG_ID.maths},
+        {id: TAG_ID.statistics, title: "Statistics", parent: TAG_ID.maths},
 
         // --- Physics Topics ---
 
         // Mechanics
+        {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
+        {id: TAG_ID.kinematics, title: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
         {id: TAG_ID.dynamics, title: "Dynamics", parent: TAG_ID.mechanics},
         {id: TAG_ID.circularMotion, title: "Circular Motion", parent: TAG_ID.mechanics},
         {id: TAG_ID.oscillations, title: `Oscil${softHyphen}lations`, parent: TAG_ID.mechanics},
-        {id: TAG_ID.statics, title: "Statics", parent: TAG_ID.mechanics},
-        {id: TAG_ID.kinematics, title: `Kine${softHyphen}matics`, parent: TAG_ID.mechanics},
         {id: TAG_ID.materials, title: "Materials", parent: TAG_ID.mechanics},
         // Fields
+        {id: TAG_ID.gravitational, title: `Gravi${softHyphen}tational Fields`, parent: TAG_ID.fields},
         {id: TAG_ID.electric, title: "Electric Fields", parent: TAG_ID.fields},
         {id: TAG_ID.magnetic, title: "Magnetic Fields", parent: TAG_ID.fields},
-        {id: TAG_ID.gravitational, title: `Gravi${softHyphen}tational Fields`, parent: TAG_ID.fields},
         {id: TAG_ID.combined, title: "Combined Fields", parent: TAG_ID.fields},
         // Thermal
-        {id: TAG_ID.gases, title: "Gases", parent: TAG_ID.thermal},
         {id: TAG_ID.heatCapacity, title: "Heat Capacity", parent: TAG_ID.thermal},
+        {id: TAG_ID.gases, title: "Gases", parent: TAG_ID.thermal},
         // Waves Particles
-        {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.optics, title: "Optics", parent: TAG_ID.wavesParticles},
-        {id: TAG_ID.quantum, title: "Quantum", parent: TAG_ID.wavesParticles},
+        {id: TAG_ID.waveMotion, title: "Wave Motion", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.superposition, title: `Super${softHyphen}position`, parent: TAG_ID.wavesParticles},
+        {id: TAG_ID.quantum, title: "Quantum", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.nuclear, title: "Nuclear", parent: TAG_ID.wavesParticles},
         {id: TAG_ID.fundamental, title: `Funda${softHyphen}mental Particles`, parent: TAG_ID.wavesParticles},
         // Skills
+        {id: TAG_ID.sigFigs, title: "Significant Figures", parent: TAG_ID.skills},
         {id: TAG_ID.units, title: "Units", parent: TAG_ID.skills},
+        {id: TAG_ID.prefixes, title: "Prefixes", parent: TAG_ID.skills},
+        {id: TAG_ID.relationships, title: `Relation${softHyphen}ships`, parent: TAG_ID.skills},
         {id: TAG_ID.graphs, title: "Graphs", parent: TAG_ID.skills},
         {id: TAG_ID.uncertainties, title: `Un${softHyphen}certainties`, parent: TAG_ID.skills},
-        {id: TAG_ID.relationships, title: `Relation${softHyphen}ships`, parent: TAG_ID.skills},
-        {id: TAG_ID.prefixes, title: "Prefixes", parent: TAG_ID.skills},
-        {id: TAG_ID.sigFigs, title: "Significant Figures", parent: TAG_ID.skills},
         // Electricity
         {id: TAG_ID.chargeCurrent, title: "Charge & Current", parent: TAG_ID.electricity},
         {id: TAG_ID.resistors, title: "Resistors", parent: TAG_ID.electricity},
-        {id: TAG_ID.components, title: `Comp${softHyphen}onents`, parent: TAG_ID.electricity},
         {id: TAG_ID.internalResistance, title: `Internal Resis${softHyphen}tance`, parent: TAG_ID.electricity},
-        {id: TAG_ID.capacitors, title: "Capacitors", parent: TAG_ID.electricity},
         {id: TAG_ID.power, title: "Power", parent: TAG_ID.electricity},
+        {id: TAG_ID.components, title: `Comp${softHyphen}onents`, parent: TAG_ID.electricity},
+        {id: TAG_ID.capacitors, title: "Capacitors", parent: TAG_ID.electricity},
 
         // --- Maths Topics ---
 
-        // Geometry
-        {id: TAG_ID.geomVectors, title: "Vectors", parent: TAG_ID.geometry},
-        {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
-        {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
-        {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry, comingSoonDate: "soon"},
+        // Numbers
+        {id: TAG_ID.arithmetic, title: "Arithmetic", parent: TAG_ID.numbers, comingSoonDate: "soon"},
+        {id: TAG_ID.rational, title: "Rational Numbers", parent: TAG_ID.numbers, comingSoonDate: "soon"},
+        {id: TAG_ID.factors, title: "Factors and Powers", parent: TAG_ID.numbers, comingSoonDate: "soon"},
+        {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.numbers},
         // Algebra
         {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
         {id: TAG_ID.quadratics, title: `Quadra${softHyphen}tics`, parent: TAG_ID.algebra},
-        {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
         {id: TAG_ID.simultaneous, title: `Simul${softHyphen}taneous Equations`, parent: TAG_ID.algebra},
+        {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
         {id: TAG_ID.matrices, title: "Matrices", parent: TAG_ID.algebra, comingSoonDate: "soon"},
-        {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.algebra},
-        // Statistics
-        {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics, comingSoonDate: "soon"},
-        {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistics},
-        {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics, comingSoonDate: "soon"},
-        {id: TAG_ID.probability, title: `Probabil${softHyphen}ity`, parent: TAG_ID.statistics},
+        // Geometry
+        {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
+        {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
+        {id: TAG_ID.geomVectors, title: "Vectors", parent: TAG_ID.geometry},
+        {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry, comingSoonDate: "soon"},
         // Functions
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
         // Calculus
-        {id: TAG_ID.integration, title: "Integration", parent: TAG_ID.calculus},
         {id: TAG_ID.differentiation, title: `Differen${softHyphen}tiation`, parent: TAG_ID.calculus},
+        {id: TAG_ID.integration, title: "Integration", parent: TAG_ID.calculus},
         {id: TAG_ID.differentialEq, title: "Differential Equations", parent: TAG_ID.calculus},
+        // Statistics
+        {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistics},
+        {id: TAG_ID.probability, title: `Probabil${softHyphen}ity`, parent: TAG_ID.statistics},
+        {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics, comingSoonDate: "soon"},
+        {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics, comingSoonDate: "soon"},
 
         // --- Chemistry Topics ---
 
