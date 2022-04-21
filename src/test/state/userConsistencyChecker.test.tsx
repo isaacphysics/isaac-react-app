@@ -3,6 +3,7 @@ import {getUserId, setUserId} from "../../app/state/middleware/userConsistencyCh
 import {ACTION_TYPE} from "../../app/services/constants";
 import {userConsistencyCheckerMiddleware} from "../../app/state/middleware/userConsistencyChecker";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
+import {jest} from "@jest/globals";
 
 jest.mock("../../app/state/middleware/userConsistencyCheckerCurrentUser");
 

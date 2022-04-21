@@ -255,11 +255,6 @@ button {
 .quick-question {
   button {
       box-shadow: none !important; // How horrible...
-
-      &.active {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
   }
   .alert {
     border-top-left-radius: 0;

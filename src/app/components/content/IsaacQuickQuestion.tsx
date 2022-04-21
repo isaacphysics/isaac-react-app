@@ -7,8 +7,10 @@ import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
 import {RouteComponentProps, withRouter} from "react-router";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import classNames from "classnames";
 
 export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuickQuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -17,7 +19,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
     const [hideOptions, setHideOptions] = useState(false);
     const answer: ContentDTO = doc.answer as ContentDTO;
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
-    const attemptUuid = useRef(uuid.v4().slice(0, 8));
+    const attemptUuid = useRef(uuid_v4().slice(0, 8));
     const showConfidence = doc.showConfidence;
 
     const toggle = (payload?: string) => {
@@ -26,7 +28,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                 const eventDetails = {type: "QUICK_QUESTION_CORRECT", questionId: doc.id, attemptUuid: attemptUuid.current, correct: payload};
                 dispatch(logAction(eventDetails));
                 setHideOptions(true);
-                attemptUuid.current = uuid.v4().slice(0, 8);
+                attemptUuid.current = uuid_v4().slice(0, 8);
             } else {
                 const eventDetails = {type: "QUICK_QUESTION_CONFIDENCE", questionId: doc.id, attemptUuid: attemptUuid.current, confidence: payload};
                 dispatch(logAction(eventDetails));
@@ -46,7 +48,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
     const hideAnswer = () => {
         setVisible(false);
         setHideOptions(false);
-        attemptUuid.current = uuid.v4().slice(0, 8);
+        attemptUuid.current = uuid_v4().slice(0, 8);
     };
 
     const defaultOptions = <Row>
@@ -60,6 +62,11 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">
             <div className={!fastTrackInfo.isFastTrackPage ? "quick-question" : ""}>
+                {SITE_SUBJECT === SITE.CS &&
+                    <div className="quick-question-title">
+                        <h3>Try it yourself!</h3>
+                    </div>
+                }
                 <div className="question-content clearfix">
                     <IsaacContentValueOrChildren {...doc} />
                 </div>
@@ -82,8 +89,8 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                     </div>
                 }
                 {isVisible && showConfidence && !fastTrackInfo.isFastTrackPage  && <Row className="mt-3">
-                    <Col sm="12" md="12">
-                        <Button color="secondary" block className="active" onClick={hideAnswer}>
+                    <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
+                        <Button color="secondary" block className={"active " + classNames({"hide-answer": SITE_SUBJECT === SITE.CS})} onClick={hideAnswer}>
                             Hide answer
                         </Button>
                     </Col>
@@ -91,7 +98,7 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
                 }
                 {isVisible && <Row>
                     <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
-                        <Alert color="secondary">
+                        <Alert color={SITE_SUBJECT === SITE.CS ? "hide" : "secondary"}>
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
                     </Col>

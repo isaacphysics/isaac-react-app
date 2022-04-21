@@ -102,7 +102,6 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 loadOptions={throttledSchoolSearch}
                 filterOption={() => true}
                 formatCreateLabel={(input) => <span>Use &quot;{input}&quot; as your school name</span>}
-                autoComplete="new-password"
             />
         </React.Fragment>}
 

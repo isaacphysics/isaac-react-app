@@ -7,7 +7,7 @@ import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD, EXAM_BOARD, STAGE} from
 import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
 import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {isDefined} from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
 
@@ -108,7 +108,7 @@ export function UserContextAccountInput({
     user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
 }: UserContextAccountInputProps) {
     const teacher = isTeacher({...user, loggedIn: true});
-    const componentId = useRef(uuid.v4().slice(0, 4)).current;
+    const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">

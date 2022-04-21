@@ -10,7 +10,7 @@ import {parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState, useCurrentQuestionAttempt} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import { isDefined } from '../../services/miscUtils';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
@@ -187,7 +187,7 @@ export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestion
         }, 250);
     };
 
-    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     return (

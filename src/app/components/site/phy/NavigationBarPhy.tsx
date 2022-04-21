@@ -33,6 +33,7 @@ export const NavigationBarPhy = () => {
         </NavigationSection>}
 
         <NavigationSection title="Learn">
+            <LinkItem to="/11_14">11-14 Resources</LinkItem>
             <LinkItem to="/gcse">GCSE Resources</LinkItem>
             <LinkItem to="/alevel">A Level Resources</LinkItem>
             <LinkItem to="/gameboards/new">Question Finder</LinkItem>

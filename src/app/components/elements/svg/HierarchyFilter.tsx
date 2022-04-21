@@ -5,7 +5,7 @@ import {TAG_ID} from "../../../services/constants";
 import {calculateHexagonProportions, Hexagon, HexagonProportions} from "./Hexagon";
 import {DeviceSize, useDeviceSize} from "../../../services/device";
 import {HexagonConnection} from "./HexagonConnection";
-import {Item, unwrapValue} from "../../../services/select";
+import {Item, selectOnChange} from "../../../services/select";
 import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services/svg";
 import {ifKeyIsEnter} from "../../../services/navigation";
 import tags from "../../../services/tags";
@@ -191,7 +191,7 @@ export function HierarchyFilterSelects({tiers, choices, selections, setTierSelec
     return <React.Fragment>
         {tiers.map((tier, i) => <React.Fragment key={tier.for}>
             <RS.Label htmlFor={tier.for} className="pt-2 pb-0">{tier.name}: </RS.Label>
-            <Select name={tier.for} onChange={unwrapValue(setTierSelection(i))} isMulti options={choices[i]} value={selections[i]} />
+            <Select name={tier.for} onChange={selectOnChange(setTierSelection(i), false)} isMulti options={choices[i]} value={selections[i]} />
         </React.Fragment>)}
     </React.Fragment>;
 }

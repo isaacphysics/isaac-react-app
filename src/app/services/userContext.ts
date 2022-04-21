@@ -88,7 +88,7 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Gameboard views overrides all context options
     const currentGameboard = useSelector(selectors.board.currentGameboard);
-    const {questionId} = useParams();
+    const {questionId} = useParams<{ questionId: string}>();
     if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
         const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];
         if (gameboardItem) {

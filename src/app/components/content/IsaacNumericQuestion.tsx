@@ -20,7 +20,7 @@ import {
     UncontrolledTooltip
 } from "reactstrap";
 import {useCurrentQuestionAttempt} from "../../services/questions";
-import uuid from 'uuid';
+import {v4 as uuid_v4} from 'uuid';
 import {LaTeX} from "../elements/LaTeX";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
@@ -130,7 +130,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const helpTooltipId = useMemo(() => `numeric-input-help-${uuid.v4()}`, []);
+    const helpTooltipId = useMemo(() => `numeric-input-help-${uuid_v4()}`, []);
 
     const noDisplayUnit = doc.displayUnit == null || doc.displayUnit === "";
 

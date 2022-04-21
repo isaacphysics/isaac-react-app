@@ -5,10 +5,8 @@ module.exports = {
     ],
     "resolver": "jest-pnp-resolver",
     "setupFiles": [
+        "<rootDir>src/test/setupTests.ts",
         "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-        "jest-enzyme"
     ],
     "rootDir": "../../",
     "testMatch": [

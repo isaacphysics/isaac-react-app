@@ -260,7 +260,9 @@ export const Glossary = () => {
                     <Col>
                         {terms.map(term => (!isDefined(term.examBoard) || term.examBoard === '' || examBoard === term.examBoard) &&
                             <IsaacGlossaryTerm
-                                ref={(el: HTMLElement) => glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el)}
+                                ref={(el: HTMLElement) => {
+                                    glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
+                                }}
                                 doc={term}
                                 linkToGlossary={true}
                             />

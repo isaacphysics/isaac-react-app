@@ -22,8 +22,7 @@ import {
     convertContentSummaryToGameboardItem,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
-    logEvent,
-    multiSelectOnChange
+    logEvent
 } from "../../services/gameboardBuilder";
 import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
 import {history} from "../../services/history"
@@ -38,6 +37,7 @@ import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
 import {EXAM_BOARD, STAGE} from "../../services/constants";
+import {selectOnChange} from "../../services/select";
 import {siteSpecific} from "../../services/miscUtils";
 import {isFound} from "../../services/miscUtils";
 
@@ -147,7 +147,7 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
                             className="basic-multi-select"
                             classNamePrefix="select"
                             placeholder="None"
-                            onChange={multiSelectOnChange(setGameboardTags)}
+                            onChange={selectOnChange(setGameboardTags, true)}
                         />
                     </RS.Col>
                     <RS.Col>

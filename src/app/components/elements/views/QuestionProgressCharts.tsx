@@ -1,23 +1,15 @@
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import * as RS from "reactstrap";
 import {LevelAttempts} from "../../../../IsaacAppTypes";
-import bb, {Chart} from "billboard.js";
+import {bb, Chart} from "billboard.js";
 import tags from "../../../services/tags";
-import Select from "react-select";
-import {ValueType} from "react-select/src/types";
-import {
-    difficultiesOrdered,
-    difficultyLabelMap,
-    doughnutColours,
-    specificDoughnutColours,
-    STAGE,
-    stageLabelMap,
-    TAG_ID
-} from "../../../services/constants";
+import Select, { SingleValue } from "react-select";
+import {difficultiesOrdered, difficultyLabelMap, doughnutColours, specificDoughnutColours, STAGE, stageLabelMap, TAG_ID} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {getFilteredStageOptions} from "../../../services/userContext";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {comparatorFromOrderedValues} from "../../../services/gameboards";
+import {Item, selectOnChange} from "../../../services/select";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -56,15 +48,15 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     const defaultSearchChoiceTag = tags.getSpecifiedTags(searchTagLevel, tags.allTagIds)[0];
     const [searchChoice, setSearchChoice] = useState(defaultSearchChoiceTag.id);
-    const [stageChoice, setStageChoice] = useState<{value: STAGE; label: string}>({value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]});
+    const [stageChoices, setStageChoices] = useState<Item<STAGE>[]>([{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}]);
 
     const isAllZero = (arr: (string | number)[][]) => arr.filter((elem) => elem[1] > 0).length == 0;
     const categoryColumns = tags.getSpecifiedTags(topTagLevel, tags.allTagIds).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
     const topicColumns = tags.getDescendents(searchChoice).map((tag) => [tag.title, questionsByTag[tag.id] || 0]);
-    const difficultyColumns = stageChoice && questionsByStageAndDifficulty[stageChoice.value] ?
-        Object.keys(questionsByStageAndDifficulty[stageChoice.value])
+    const difficultyColumns = stageChoices && questionsByStageAndDifficulty[stageChoices[0].value] ?
+        Object.keys(questionsByStageAndDifficulty[stageChoices[0].value])
         .sort(comparatorFromOrderedValues(difficultiesOrdered as string[]))
-        .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoice.value][key]]) : [];
+        .map((key) => [difficultyLabelMap[key as Difficulty], questionsByStageAndDifficulty[stageChoices[0].value][key]]) : [];
 
     useEffect(() => {
         const charts: Chart[] = [];
@@ -156,7 +148,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     classNamePrefix="select"
                     defaultValue={{value: defaultSearchChoiceTag.id, label: defaultSearchChoiceTag.title}}
                     options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title}})}
-                    onChange={(e: ValueType<{value: TAG_ID; label: string}>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
+                    onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                 />
                 questions
             </div>
@@ -176,7 +168,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     classNamePrefix="select"
                     defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
                     options={getFilteredStageOptions()}
-                    onChange={(e: ValueType<{value: STAGE; label: string}>) => setStageChoice((e as {value: STAGE; label: string}))}
+                    onChange={selectOnChange(setStageChoices, false)}
                 />
                 questions
             </div>

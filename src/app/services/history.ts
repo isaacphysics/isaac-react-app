@@ -5,10 +5,10 @@ export const history = createBrowserHistory();
 
 let previousPathname = window.location.pathname;
 
-history.listen((location) => {
-    const nextPathname = location.pathname;
+history.listen(listener => {
+    const nextPathname = listener.pathname;
     if (previousPathname != nextPathname) {
-        registerPageChange(location.pathname);
+        registerPageChange(listener.pathname);
         previousPathname = nextPathname;
     }
 });

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {ALPHABET, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
 import {logAction} from "../../state/actions";
@@ -11,16 +11,15 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {audienceStyle, notRelevantMessage, useUserContext} from "../../services/userContext";
 import classNames from "classnames";
 
-interface AccordionsProps {
+interface AccordionsProps extends RouteComponentProps {
     id?: string;
     trustedTitle?: string;
-    index: number;
-    location: {hash: string};
-    children?: React.ReactElement;
+    index?: number;
+    children?: React.ReactNode;
     startOpen?: boolean;
     deEmphasised?: boolean;
     audienceString?: string;
@@ -31,7 +30,7 @@ let nextClientId = 0;
 export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useDispatch();
     const userContext = useUserContext();
-    const componentId = useRef(uuid.v4().slice(0, 4)).current;
+    const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const page = useSelector((state: AppState) => (state && state.doc) || null);
 
     // Toggle
@@ -148,7 +147,8 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 </span>}
                 <div className="accordion-title pl-3">
                     <RS.Row>
-                        <span className="accordion-part p-3 text-secondary">Part {ALPHABET[index % ALPHABET.length]}  {" "}</span>
+                        {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
+                        <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
                         {trustedTitle && <div className="p-3"><LaTeX markup={trustedTitle} /></div>}
                         {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
