@@ -79,9 +79,9 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // --- Maths Topics ---
 
         // Numbers
-        {id: TAG_ID.arithmetic, title: "Arithmetic", parent: TAG_ID.numbers, comingSoonDate: "soon"},
-        {id: TAG_ID.rational, title: "Rational Numbers", parent: TAG_ID.numbers, comingSoonDate: "soon"},
-        {id: TAG_ID.factors, title: "Factors and Powers", parent: TAG_ID.numbers, comingSoonDate: "soon"},
+        {id: TAG_ID.arithmetic, title: "Arithmetic", parent: TAG_ID.numbers},
+        {id: TAG_ID.rational, title: "Rational Numbers", parent: TAG_ID.numbers},
+        {id: TAG_ID.factors, title: "Factors and Powers", parent: TAG_ID.numbers},
         {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.numbers},
         // Algebra
         {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
