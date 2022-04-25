@@ -7,7 +7,7 @@ const merge = require('webpack-merge');
 
 module.exports = env => {
 
-    let isProd = env === "prod";
+    let isProd = env['prod'];
 
     let configPHYrenderer = {
         entry: {

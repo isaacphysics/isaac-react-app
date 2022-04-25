@@ -10,7 +10,7 @@ const webpack = require('webpack');
 
 module.exports = env => {
 
-    let isProd = env === "prod";
+    let isProd = env['prod'];
 
     let configCS = {
         entry: {
