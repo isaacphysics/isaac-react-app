@@ -317,8 +317,8 @@ button {
     //background-color: lightgray;
     background-color: inherit;
     border-left: 1px solid #bababa;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    //border-top-right-radius: 3px;
+  //      border-bottom-right-radius: 3px;
     width: 26px;
     height: calc(100% - 16px);
     top: 0;
@@ -340,6 +340,12 @@ button {
     }
   }
   .cloze-inline-clear:hover {
+    .cloze-clear-cross {
+      fill: red;
+    }
+  }
+  .cloze-inline-clear:focus {
+    border: black 1px solid;
     .cloze-clear-cross {
       fill: red;
     }

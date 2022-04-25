@@ -46,7 +46,7 @@ function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt, sho
     if (droppableTarget) {
         return ReactDOM.createPortal(
             <div style={{minHeight: "inherit", position: "relative", margin: "2px"}}>
-                <Droppable droppableId={id} isDropDisabled={readonly} direction="vertical" >
+                <Droppable droppableId={id} key={id} isDropDisabled={readonly} direction="vertical" >
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
                         className={`d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden ${showBorder && "border border-dark"}`}
