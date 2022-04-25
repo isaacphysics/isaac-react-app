@@ -3,7 +3,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
 import {changePage} from "../actions";
-import {is2FARequired, api as apiSlice, UserState} from "../slices/api";
+import {is2FARequired, api as apiSlice} from "../slices/api";
 import {isAnyOf} from "@reduxjs/toolkit";
 
 // Generic log action:
