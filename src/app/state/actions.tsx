@@ -83,6 +83,7 @@ import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
+import {authProviderResponse} from "./slices/user";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -398,12 +399,12 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
     // TODO MT handle case when user is already logged in
 };
 
-export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
         await dispatch(requestCurrentUser() as any); // Request user preferences
-        dispatch({type: ACTION_TYPE.AUTH_PROVIDER_SUCCESS, user: providerResponse.data});
+        dispatch(authProviderResponse(providerResponse.data));
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
                 category: 'user',

@@ -1,7 +1,9 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createAction, createSlice} from "@reduxjs/toolkit";
 import {api, is2FARequired, UserState} from "./api";
-import {TOTPSharedSecretDTO} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO, TOTPSharedSecretDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
+
+export const authProviderResponse = createAction<RegisteredUserDTO>("authProviderResponse");
 
 const initialState = {loggedIn: false} as UserState;
 export const authSlice = createSlice({
@@ -25,10 +27,9 @@ export const authSlice = createSlice({
                 return { loggedIn: true, ...action.user };
             }
         ).addCase(
-            ACTION_TYPE.AUTH_PROVIDER_SUCCESS,
+            authProviderResponse,
             (state, action) => {
-                // @ts-ignore
-                return { loggedIn: true, ...action.user };
+                return { loggedIn: true, ...action.payload };
             }
         ),
         builder.addMatcher(
