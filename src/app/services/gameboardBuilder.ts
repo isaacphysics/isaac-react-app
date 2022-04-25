@@ -2,8 +2,6 @@ import {difficultiesOrdered, SortOrder} from "./constants";
 import {orderBy} from "lodash";
 import tags from "./tags";
 import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
-import {Dispatch, SetStateAction} from "react";
-import {ValueType} from "react-select/src/types";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
 import {determineAudienceViews} from "./userContext";
 
@@ -94,25 +92,6 @@ export const groupTagSelectionsByParent = (parent: Tag) => {
         label: parent.title,
         options: tags.getChildren(parent.id).map(convertTagToSelectionOption).filter(tag => !tag.isHidden)
     };
-};
-
-// TODO REMOVE AUDIENCE_CONTEXT Let's move from multiSelectOnChange and selectOnChange to select.ts.unwrapValue(...) for types and consistency
-export const multiSelectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
-    if (e && Array.isArray(e)) {
-        setValue(e.map((item) => item.value));
-    } else {
-        setValue([]);
-    }
-};
-export const selectOnChange = <T>(setValue: Dispatch<SetStateAction<T[]>>) => (e: ValueType<{value: T; label: string}>) => {
-    if (e) {
-        const value = (e as {value: T; label: string})?.value;
-        if (value) {
-            setValue([value]);
-        }
-    } else {
-        setValue([]);
-    }
 };
 
 export const loadGameboardQuestionOrder = (gameboard: GameboardDTO) => {

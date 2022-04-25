@@ -22,13 +22,16 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isLoggedIn, isStaff, isStudent, isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/events";
 import {EditContentButton} from "../elements/EditContentButton";
+import { isDefined } from "../../services/miscUtils";
+import { Map, Marker, Popup, TileLayer } from "react-leaflet";
+import * as L from "leaflet";
 
 function formatDate(date: Date|number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -88,7 +91,7 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             !canMakeABooking &&
             event.isNotClosed &&
             !event.hasExpired &&
-            event.userBookingStatus !== "WAITING_LIST" &&
+            (event.userBookingStatus === undefined || !["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus)) &&
             studentOnlyRestrictionSatisfied;
 
         const canReserveSpaces =
@@ -126,6 +129,18 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
             setBookingFormOpen(true);
         }
 
+        // This is UGLY but there's a weird issue between the leaflet.css file and how webpack loads url()s that makes everything go kaboom.
+        // There are various places online discussing this issue, but this one is a good starting point: https://github.com/Leaflet/Leaflet/issues/4968
+        // _______
+        // WARNING 2022-03-01 - This will need to be reconsidered when we upgrade the front-end dependencies
+        // ¯¯¯¯¯¯¯
+        let icon = L.icon({
+            iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+            iconUrl: require('leaflet/dist/images/marker-icon.png'),
+            shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+            iconAnchor: [12, 41]
+        });
+
         return <RS.Container className="events mb-5">
             <TitleAndBreadcrumb
                 currentPageTitle={event.title as string} subTitle={event.subtitle}
@@ -146,6 +161,23 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
                                 <div className="border px-2 py-1 mt-3 bg-light">
                                     <strong>{event.title}</strong>
                                 </div>
+                                {isDefined(event.location) &&
+                                 isDefined(event.location?.latitude) &&
+                                 isDefined(event.location?.longitude) &&
+                                    <div className="border px-2 py-1 mt-3 bg-light">
+                                        <Map center={[event.location.latitude, event.location.longitude]} zoom={13}>
+                                            <TileLayer
+                                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                            />
+                                            <Marker position={[event.location.latitude, event.location.longitude]} icon={icon}>
+                                                <Popup>
+                                                    {event.location?.address?.addressLine1}<br />{event.location?.address?.addressLine2}<br />{event.location?.address?.town}<br />{event.location?.address?.postalCode}
+                                                </Popup>
+                                            </Marker>
+                                        </Map>
+                                    </div>
+                                }
                             </div>}
                         </RS.Col>
                         <RS.Col lg={8} className={event.hasExpired ? "expired" : ""}>

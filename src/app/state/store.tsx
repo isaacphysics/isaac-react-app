@@ -1,8 +1,8 @@
 import {Middleware} from "redux";
 import reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
-import {userConsistencyCheckerMiddleware} from "./userConsistencyChecker";
-import {notificationCheckerMiddleware} from "../services/notificationManager";
+import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
+import {notificationCheckerMiddleware} from "./middleware/notificationManager";
 import {api} from "./slices/api";
 import {configureStore} from "@reduxjs/toolkit";
 
@@ -12,7 +12,7 @@ export const middleware: Middleware[] = [
     api.middleware,
 ];
 
-// The typing of `configureStore` and `store.dispatch` doesn't take into account any middleware, specifically that of thunk,
+// The typing of `configureStore` and `store.dispatch` doesn't take into account any middleware, most importantly that of thunk,
 // which is why `any` is required in the second generic argument of `configureStore` here.
 export const store = configureStore<AppState, any, Middleware<AppState>[]>({
     reducer: rootReducer,

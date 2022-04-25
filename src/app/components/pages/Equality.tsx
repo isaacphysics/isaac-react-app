@@ -216,7 +216,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                 <Col md={{size: 2}} className="py-4 syntax-picker mode-picker">
                     <div>
                         <Label for="inequality-mode-select">Editor mode:</Label>
-                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorMode(e.target.value)}>
+                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode as string} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorMode(e.target.value)}>
                             <option value="maths">Maths</option>
                             <option value="chemistry">Chemistry</option>
                             <option value="logic">Boolean Logic</option>
@@ -237,7 +237,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                             <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
                                 placeholder="Type your expression here"/>
                             <InputGroupAddon addonType="append">
-                                <Button type="button" className="eqn-editor-help" id='inequality-help' size="sm">?</Button>
+                                <Button type="button" className="eqn-editor-help pt-2" id='inequality-help' size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>
                                 {editorMode === 'maths' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
                                     <br />

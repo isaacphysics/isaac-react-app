@@ -1,4 +1,7 @@
-import Remarkable from "remarkable";
+// @ts-ignore
+import {Remarkable} from "remarkable";
+// @ts-ignore
+import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
@@ -33,6 +36,8 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
     [SITE.CS]: "UA-137475074-1",
 }[SITE_SUBJECT];
 
+export const CODE_EDITOR_BASE_URL = document.location.hostname === "localhost" ? "http://localhost:3000" : "https://editor.isaaccode.org";
+
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
@@ -41,9 +46,8 @@ export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
 
 export const MARKDOWN_RENDERER = new Remarkable({
-    linkify: true,
-    html: true,
-});
+    html: true
+}).use(linkify);
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
@@ -527,6 +531,7 @@ export enum PROGRAMMING_LANGUAGE {
     PYTHON = "PYTHON",
     PHP = "PHP",
     CSHARP = "CSHARP",
+    ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
     NONE = "NONE",
@@ -538,6 +543,7 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.PYTHON]: "Python",
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
     [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
+    [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
 };

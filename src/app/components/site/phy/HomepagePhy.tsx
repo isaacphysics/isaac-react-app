@@ -59,19 +59,26 @@ export const HomepagePhy = () => {
                 <div className="physics-site-intro mt-4 mt-lg-2">
                     <strong>Show me resources for...</strong>
                     <Row className="mt-2">
-                        <Col xs={4} className="pr-1 pr-sm-2">
-                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
-                                GCSE
+                        <Col xs={12} lg={3} className="pr-lg-1 py-1">
+                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/11_14" className="h-100 d-inline-flex align-items-center justify-content-center">
+                                11-14
                             </Button>
                         </Col>
-                        <Col xs={4} className="px-1 px-sm-2">
+                        <Col xs={12} lg={3} className="px-lg-1 py-1">
+                            <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/gcse" className="h-100 d-inline-flex align-items-center justify-content-center">
+                                {above["md"](deviceSize) ?
+                                    "GCSE or\u00A0equivalent" :
+                                    "GCSE"}
+                            </Button>
+                        </Col>
+                        <Col xs={12} lg={3} className="px-lg-1 py-1">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/alevel" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 {above["md"](deviceSize) ?
                                     "A\u00A0Level or\u00A0equivalent" :
                                     "A\u00A0Level"}
                             </Button>
                         </Col>
-                        <Col xs={4} className="pl-1 pl-sm-2">
+                        <Col xs={12} lg={3} className="pl-lg-1 py-1">
                             <Button size={deviceSize==="xs" ? "sm" : ""} block tag={Link} to="/teacher_features" className="h-100 d-inline-flex align-items-center justify-content-center">
                                 teachers
                             </Button>

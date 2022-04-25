@@ -8,7 +8,7 @@ import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import Select from "react-select";
-import {multiSelectOnChange} from "../../services/gameboardBuilder";
+import {selectOnChange} from "../../services/select";
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>
@@ -85,7 +85,7 @@ export const AdminContentErrors = () => {
                                 {value: PUBLISHED_FILTER.PUBLISHED, label: PUBLISHED_FILTER.PUBLISHED},
                                 {value: PUBLISHED_FILTER.UNPUBLISHED, label: PUBLISHED_FILTER.UNPUBLISHED}
                             ]}
-                            onChange={multiSelectOnChange(setPublishedFilter)}
+                            onChange={selectOnChange(setPublishedFilter, true)}
                             />
                     </Col>
                 </Row>

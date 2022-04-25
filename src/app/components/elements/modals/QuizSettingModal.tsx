@@ -3,7 +3,7 @@ import {AppGroup} from "../../../../IsaacAppTypes";
 import {AppDispatch} from "../../../state/store";
 import {useDispatch} from "react-redux";
 import React, {useState} from "react";
-import {Item, unwrapValue} from "../../../services/select";
+import {Item, selectOnChange} from "../../../services/select";
 import {range} from "lodash";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import {isDefined} from "../../../services/miscUtils";
@@ -53,7 +53,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     const currentMonth = now.getMonth() + 1;
     const currentDay = now.getDate();
 
-    const groupOptions = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
+    const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
 
     function addValidated(what: ControlName) {
         setValidated(validated => {
@@ -68,13 +68,12 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     return <div className="mb-4">
         <RS.Label className="w-100 mb-4">Set test to the following groups:<br/>
             <Select
-                value={selectedGroups}
+                options={groupOptions}
                 onChange={(s) => {
-                    unwrapValue(setSelectedGroups)(s);
+                    selectOnChange(setSelectedGroups, false)(s);
                     addValidated('group');
                 }}
                 onBlur={() => addValidated('group')}
-                options={groupOptions}
                 isSearchable
                 menuPortalTarget={document.body}
                 styles={{

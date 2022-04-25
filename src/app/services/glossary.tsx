@@ -8,7 +8,7 @@ import React, {useRef} from "react";
 import {GlossaryTermDTO} from "../../IsaacApiTypes";
 import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
 import {TrustedMarkdown} from "../components/elements/TrustedMarkdown";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {useUserContext} from "./userContext";
 import {api} from "../state/slices/api";
 
@@ -25,7 +25,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Element[]] {
     // Create a unique id which does not change over the lifecycle of the component
-    const componentUuid = useRef(uuid.v4().slice(0, 8)).current;
+    const componentUuid = useRef(uuid_v4().slice(0, 8)).current;
     const store = useStore();
     const {examBoard} = useUserContext();
     const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";

@@ -11,12 +11,13 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
+import {selectors} from "../../state/selectors";
 
 const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
     const dispatch = useDispatch();
 
-    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
+    function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
         event.preventDefault();
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
@@ -35,8 +36,8 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
 
 export const SingleAssignmentProgress = () => {
     const dispatch = useDispatch();
-    const params = useParams();
-    const assignmentId = params.assignmentId;
+    const params = useParams<{ assignmentId?: string }>();
+    const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
 
     useEffect(() => {
         dispatch(loadProgress({_id: assignmentId}));
@@ -51,16 +52,14 @@ export const SingleAssignmentProgress = () => {
     });
 
     useEffect(() => {
-        let thisAssignment = myOwnedAssignments?.filter(obj => {
+        const thisAssignment = myOwnedAssignments?.filter(obj => {
             return obj._id == assignmentId
         })[0];
-        let boardId = thisAssignment?.gameboardId;
+        const boardId = thisAssignment?.gameboardId;
         boardId && dispatch(loadBoard(boardId));
     }, [dispatch, myOwnedAssignments]);
 
-    const assignmentProgress = useSelector((state: AppState) => {
-        return state?.progress
-    });
+    const assignmentProgress = useSelector(selectors.assignments.progress);
 
     const boards = useSelector((state: AppState) => {
         return state?.boards?.boards?.boards;

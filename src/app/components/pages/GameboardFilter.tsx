@@ -2,17 +2,16 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Link, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
 import tags from '../../services/tags';
 import {
+    DIFFICULTY_ICON_ITEM_OPTIONS,
     DIFFICULTY_ITEM_OPTIONS,
-    EXAM_BOARD_ITEM_OPTIONS,
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
-    STAGE,
-    TAG_ID,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
-    DIFFICULTY_ICON_ITEM_OPTIONS
+    STAGE,
+    TAG_ID
 } from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
@@ -20,11 +19,10 @@ import {fetchConcepts, generateTemporaryGameboard, loadGameboard} from '../../st
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
-import {useHistory} from "react-router-dom";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {Item, unwrapValue, isItemEqual} from "../../services/select";
+import {isItemEqual, Item, selectOnChange} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
-import Select, {GroupedOptionsType} from "react-select";
+import Select, {GroupBase} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
@@ -36,6 +34,8 @@ import {History} from "history";
 import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {siteSpecific} from "../../services/miscUtils";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {MetaDescription} from "../elements/MetaDescription";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -74,11 +74,11 @@ function processQueryString(query: string): QueryStringResponse {
     const {subjects, fields, topics, stages, difficulties, questionCategories, concepts, examBoards} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
-    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages), getFilteredStageOptions());
-    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties), DIFFICULTY_ITEM_OPTIONS);
-    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards), EXAM_BOARD_ITEM_OPTIONS);
-    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories), QUESTION_CATEGORY_ITEM_OPTIONS);
-    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts))
+    const stageItems = itemiseByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
+    const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
+    const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
+    const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>))
 
     const selectionItems: Item<TAG_ID>[][] = [];
     let plausibleParentHierarchy = true;
@@ -159,13 +159,13 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                         {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
             </div>
             {/*<div>*/}
             {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
             {/*        I would like some questions from Isaac to...*/}
             {/*    </RS.Label>*/}
-            {/*    <Select id="question-category-selector" isClearable onChange={unwrapValue(setQuestionCategories)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
+            {/*    <Select id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
             {/*</div>*/}
             <div>
                 <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
@@ -181,7 +181,7 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                     </RS.UncontrolledTooltip>
                 </RS.Label>
                 <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                {/*<Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
+                {/*<Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
             </div>
         </RS.Col>
         <RS.Col lg={8}>
@@ -215,7 +215,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
 
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const conceptDTOs = useSelector((state: AppState) => selections[2]?.length > 0 ? state?.concepts?.results : undefined);
-    const [conceptChoices, setConceptChoices] = useState<GroupedOptionsType<Item<string>>>([]);
+    const [conceptChoices, setConceptChoices] = useState<GroupBase<Item<string>>[]>([]);
 
     const selectedTopics = selections[2];
     useEffect(() => {
@@ -252,7 +252,11 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
+    const metaDescriptionCS = "Search for the perfect free GCSE or A level Computer Science questions to study. For revision. For homework. For classroom learning.";
+
     return <>
+        {/* CS-specific metadata: */}
+        <MetaDescription description={metaDescriptionCS} />
         <RS.Row>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
@@ -262,7 +266,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         {"Find questions that are suitable for this stage of school learning."}
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="stage-selector" onChange={unwrapValue(setStages)} value={stages} options={getFilteredStageOptions()} />
+                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
@@ -272,7 +276,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     inputId="exam-boards" isClearable placeholder="Any"
                     value={examBoards}
                     options={getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})}
-                    onChange={unwrapValue(setExamBoards)}
+                    onChange={selectOnChange(setExamBoards, false)}
                 />
             </RS.Col>
         </RS.Row>
@@ -290,7 +294,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         C3 require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="difficulty-selector" onChange={unwrapValue(setDifficulties)} isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
+                <Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
@@ -300,7 +304,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         if ((Array.isArray(v) && v.length === 0) || v === null) {
                             setConcepts([]);
                         }
-                        return unwrapValue(setTierSelection)(v);
+                        return selectOnChange(setTierSelection, false)(v);
                     }}
                 />
             </RS.Col>
@@ -312,7 +316,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                     <Select
                         inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
                         placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
-                        value={concepts} options={conceptChoices} onChange={unwrapValue(setConcepts)}
+                        value={concepts} options={conceptChoices} onChange={selectOnChange(setConcepts, false)}
                     /> :
                     <IsaacSpinner/>}
             </RS.Col>
@@ -320,7 +324,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
     </>
 }
 
-export const GameboardFilter = withRouter(({location}: {location: Location}) => {
+export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const dispatch = useDispatch();
     const deviceSize = useDeviceSize();
 
@@ -380,7 +384,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
     // const [questionCategories, setQuestionCategories] = useState<Item<string>[]>(queryQuestionCategories);
 
     const [examBoards, setExamBoards] = useState<Item<string>[]>(
-        queryExamBoards.length > 0 ? queryStages : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
+        queryExamBoards.length > 0 ? queryExamBoards : itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     useEffect(function keepExamBoardsInSyncWithUserContext() {
         if (examBoards.length === 0) setExamBoards(itemiseByValue([userContext.examBoard], getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})));
     }, [userContext.examBoard]);
@@ -478,6 +482,7 @@ export const GameboardFilter = withRouter(({location}: {location: Location}) => 
 
     return <RS.Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
+        <CanonicalHrefElement />
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}

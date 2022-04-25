@@ -109,3 +109,23 @@ svg {
     border: solid 1px $phy_chemistry;
   }
 }
+
+/* Taken from https://www.browserstack.com/guide/create-browser-specific-css */
+
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+    .hexagon-coming-soon {
+      visibility: hidden !important;
+    }
+  }
+}
+
+/* Safari 10.1 */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
+    .hexagon-coming-soon {
+      visibility: hidden !important;
+    }
+  }
+}

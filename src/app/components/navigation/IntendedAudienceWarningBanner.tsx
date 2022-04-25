@@ -17,6 +17,6 @@ export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {
 
     return <RS.Alert color="warning">
         <strong>Note: </strong>
-        {`This page is ${notRelevantMessage(userContext)}.`}
+        {`The content on this page has ${notRelevantMessage(userContext)}. You can change your viewing preferences by updating your profile.`}
     </RS.Alert>
 }

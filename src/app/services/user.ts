@@ -47,7 +47,7 @@ export const roleRequirements: Record<Role, (u: {role?: Role, loggedIn?: boolean
     "ADMIN": isAdmin
 };
 
-export function extractTeacherName(teacher: {givenName?: string; familyName?: string} | null): string | null {
+export function extractTeacherName(teacher: {givenName?: string; familyName?: string} | null | undefined): string | null {
     if (null == teacher) {
         return null;
     }

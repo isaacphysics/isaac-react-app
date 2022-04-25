@@ -83,6 +83,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~billboard.js/dist/theme/insight.css";
 @import "~highlight.js/styles/a11y-light.css";
 
+@import "../common/isaac";
 
 // Utility
 @import "preload";
@@ -94,7 +95,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/typography";
 @import "../common/headings";
 @import "../common/modals";
-@import "../common/questions";
+@import "questions";
 @import "../common/forms";
 @import "../common/elements";
 @import "../common/breadcrumbs";
@@ -140,6 +141,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/events";
 @import "../common/glossary";
 @import "../common/quiz";
+@import "accordions";
 
 @import "parsons-layout";
 
@@ -302,6 +304,11 @@ body {
         margin: 0;
         padding: 0;
     }
+}
+.pattern-06-inverted {
+    background-image: url('/assets/pattern06-inverted.svg');
+    background-position: 96.5% bottom;
+    background-repeat: no-repeat;
 }
 .pattern-07 {
     background-image: url('/assets/pattern06.svg');

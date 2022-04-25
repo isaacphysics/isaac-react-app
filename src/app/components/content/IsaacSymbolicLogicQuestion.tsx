@@ -13,7 +13,7 @@ import {sanitiseInequalityState, selectQuestionPart} from '../../services/questi
 import _flattenDeep from 'lodash/flattenDeep';
 import {jsonHelper} from "../../services/json";
 import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {isDefined} from '../../services/miscUtils';
@@ -213,7 +213,7 @@ const IsaacSymbolicLogicQuestionComponent = (props: IsaacSymbolicLogicQuestionPr
         }, 250);
     };
 
-    const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid.v4()}`);
+    const helpTooltipId = CSS.escape(`eqn-editor-help-${uuid_v4()}`);
     const symbolList = doc.availableSymbols?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     return (

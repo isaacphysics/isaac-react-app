@@ -14,11 +14,15 @@ require('dotenv').config();
 module.exports = (isProd) => {
 
     return {
+        stats: {
+            errorDetails: true
+        },
+        
         mode: isProd ? "production" : "development",
 
         devServer: {
             headers: {
-                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 ws://localhost:8080 https://www.google-analytics.com https://maps.googleapis.com; object-src 'none'; frame-src 'self' https://editor.isaaccode.org https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
+                "Content-Security-Policy-Report-Only": "default-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org localhost:8080 ws://localhost:8080 https://www.google-analytics.com https://maps.googleapis.com https://*.tile.openstreetmap.org; object-src 'none'; frame-src 'self' https://editor.isaaccode.org https://anvil.works https://*.anvil.app https://www.youtube-nocookie.com; img-src 'self' localhost:8080 data: https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://www.google-analytics.com https://i.ytimg.com https://maps.googleapis.com https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://cdn.isaacphysics.org https://cdn.isaaccomputerscience.org https://fonts.gstatic.com;",
                 "Feature-Policy": "geolocation 'none'; camera 'none'; microphone 'none'; accelerometer 'none';",
                 "X-Clacks-Overhead": "GNU Terry Pratchett",
             },
@@ -36,7 +40,8 @@ module.exports = (isProd) => {
             extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
             alias: {
                 'p5': 'p5/lib/p5.min.js'
-            }
+            },
+            fallback: { "querystring": require.resolve("querystring-es3") }
         },
 
         module: {
@@ -63,13 +68,13 @@ module.exports = (isProd) => {
                                     }
                                 },
                                 {
-                                loader: 'ts-loader',
-                                options: {
-                                    compilerOptions: {
-                                        noEmit: false,
-                                        jsx: "react",
+                                    loader: 'ts-loader',
+                                    options: {
+                                        compilerOptions: {
+                                            noEmit: false,
+                                            jsx: "react",
+                                        },
                                     },
-                                },
                                 }
                             ],
                         },
@@ -89,20 +94,27 @@ module.exports = (isProd) => {
                             test: /\.scss$/,
                             use: [
                                 'style-loader',
-                                isProd ? MiniCssExtractPlugin.loader : null,
-                                'css-loader',
+                                isProd ? { loader: MiniCssExtractPlugin.loader, options: { esModule: false } } : null,
+                                {
+                                    loader: 'css-loader',
+                                    options: {
+                                        url: false
+                                    }
+                                },
                                 'sass-loader',
                             ].filter(Boolean),
                         },
                         {
-                            include: [/\.ttf$/, /\.woff2?$/,],
-                            use: {
-                                loader: 'file-loader',
-                                options: {
-                                    name: isProd ? 'static/fonts/[name].[contenthash:8].[ext]' : 'static/fonts/[name].[ext]',
-                                },
-                            },
+                            test: /\.(png|gif|jpg|svg)$/,
+                            type: 'asset/resource'
                         },
+                        {
+                            test: /\.(ttf|woff2?)$/,
+                            type: 'asset/resource',
+                            generator: {
+                                filename: isProd ? 'static/fonts/[name].[contenthash:8].[ext]' : 'static/fonts/[name].[ext]',
+                            }
+                        }
                     ],
                 },
             ],

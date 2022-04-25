@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Link, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -24,9 +24,8 @@ import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {isEventLeaderOrStaff} from "../../../services/user";
 
-interface SetQuizzesPageProps {
+interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
-    location: {hash: string};
 }
 
 interface QuizAssignmentProps {

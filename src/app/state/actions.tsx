@@ -1,5 +1,6 @@
 import React, {Dispatch} from "react";
 import {api} from "../services/api";
+import {api as apiSlices} from "../state/slices/api";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {AppDispatch, store} from "./store";
@@ -246,7 +247,8 @@ export const updateCurrentUser = (
     updatedUserPreferences: UserPreferencesDTO,
     userContexts: UserContext[] | undefined,
     passwordCurrent: string | null,
-    currentUser: PotentialUser
+    currentUser: PotentialUser,
+    redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
@@ -278,15 +280,10 @@ export const updateCurrentUser = (
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
-            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
+            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH);
             persistence.remove(KEY.AFTER_AUTH_PATH);
-            if ((afterAuthPath).includes('account')) {
-                history.push(afterAuthPath, {firstLogin: isFirstLogin});
-            }
-            history.push('/account', {firstLogin: isFirstLogin});
-        }
-
-        if (!editingOtherUser) {
+            redirect && history.push(afterAuthPath || '/account', {firstLogin: isFirstLogin});
+        } else if (!editingOtherUser) {
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "Your account settings were updated successfully.",
@@ -294,9 +291,8 @@ export const updateCurrentUser = (
                 timeout: 5000,
                 closable: false,
             }) as any);
-        }
-        if (editingOtherUser) {
-            history.push('/');
+        } else if (editingOtherUser) {
+            redirect && history.push('/');
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "The user's account settings were updated successfully.",
@@ -407,23 +403,19 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
         await dispatch(requestCurrentUser() as any); // Request user preferences
-        //dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data}); TODO!!!
-        let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        nextPage = nextPage || "/";
-        nextPage = nextPage.replace("#!", "");
-        if (providerResponse.data.firstLogin && !nextPage.includes("account")) {
+        // dispatch({type: apiSlices.endpoints.totpChallenge.matchFulfilled, user: providerResponse.data}); TODO make this dispatch an action as if it was an api apiSlices.endpoints.totpChallenge.matchFulfilled
+        if (providerResponse.data.firstLogin) {
             ReactGA.event({
                 category: 'user',
                 action: 'registration',
                 label: `Create Account (${provider})`,
             });
-            history.push('/account');
-        } else {
-            history.push(nextPage);
         }
+        const nextPage = persistence.load(KEY.AFTER_AUTH_PATH) || "/";
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+        history.push(nextPage?.replace("#!", "") || "/account");
     } catch (error: any) {
-        history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
+        history.push("/auth_error", { errorMessage: extractMessage(error) });
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
