@@ -43,6 +43,7 @@ export type Action =
     | {type: ACTION_TYPE.API_SERVER_ERROR}
     | {type: ACTION_TYPE.API_GONE_AWAY}
 
+    | {type: ACTION_TYPE.AUTH_PROVIDER_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}

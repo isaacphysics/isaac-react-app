@@ -403,7 +403,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
         await dispatch(requestCurrentUser() as any); // Request user preferences
-        // dispatch({type: apiSlices.endpoints.totpChallenge.matchFulfilled, user: providerResponse.data}); TODO make this dispatch an action as if it was an api apiSlices.endpoints.totpChallenge.matchFulfilled
+        dispatch({type: ACTION_TYPE.AUTH_PROVIDER_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
                 category: 'user',

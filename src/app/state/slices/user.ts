@@ -15,11 +15,17 @@ export const authSlice = createSlice({
         ).addCase(
             ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS,
             (state, action) => {
-                // @ts-ignore
+                // @ts-ignore Can't infer the payload for our action types, we really need to use createAction instead
                 return { loggedIn: true, ...action.user };
             }
         ).addCase(
             ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS,
+            (state, action) => {
+                // @ts-ignore
+                return { loggedIn: true, ...action.user };
+            }
+        ).addCase(
+            ACTION_TYPE.AUTH_PROVIDER_SUCCESS,
             (state, action) => {
                 // @ts-ignore
                 return { loggedIn: true, ...action.user };
