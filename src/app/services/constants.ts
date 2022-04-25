@@ -815,6 +815,7 @@ export enum TAG_ID {
     statistics = "statistics",
     functions = "functions",
     calculus = "calculus",
+    numbers = "numbers",
 
     // Physics Topics ---
 
@@ -857,6 +858,11 @@ export enum TAG_ID {
 
     // Maths Topics ---
 
+    // Numbers
+    arithmetic = "arithmetic",
+    rational = "rational",
+    factors = "factors_powers",
+    complexNumbers = "complex_numbers",
     // Geometry
     geomVectors = "geom_vectors",
     shapes = "shapes",
@@ -868,7 +874,6 @@ export enum TAG_ID {
     series = "series",
     simultaneous = "simultaneous",
     matrices = "matrices",
-    complexNumbers = "complex_numbers",
     // Statistics
     hypothesis = "hypothesis",
     dataAnalysis = "data_analysis",
