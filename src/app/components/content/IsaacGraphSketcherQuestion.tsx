@@ -8,7 +8,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 export const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<GraphChoiceDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<GraphChoiceDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
@@ -38,7 +38,7 @@ export const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQue
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
-        setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
+        dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(newState)});
         if (previewSketch) {
             previewSketch.state = newState;
             previewSketch.state.curves = previewSketch.state.curves || [];

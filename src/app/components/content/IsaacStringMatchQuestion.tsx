@@ -7,7 +7,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacStringMatchQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     return <div className="stringmatch-question">
         <div className="question-content">
@@ -21,7 +21,7 @@ export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuest
             rows={doc.multiLineEntry ? 3 : undefined}
             value={currentAttempt?.value || ""}
             onChange={event =>
-                setCurrentAttempt(questionId, {type: "stringChoice", value: event.target.value})
+                dispatchSetCurrentAttempt({type: "stringChoice", value: event.target.value})
             }
             readOnly={readonly}
         />

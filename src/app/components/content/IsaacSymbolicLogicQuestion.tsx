@@ -45,7 +45,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 
 export const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicLogicQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
@@ -69,7 +69,7 @@ export const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQue
         const pythonExpression = newState?.result?.python || "";
         const previousPythonExpression = currentAttemptValue?.result?.python || "";
         if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            setCurrentAttempt(questionId, {type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
+            dispatchSetCurrentAttempt({type: 'logicFormula', value: JSON.stringify(newState), pythonExpression});
         }
         initialEditorSymbols.current = state.symbols;
     };
@@ -174,7 +174,7 @@ export const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQue
                 setErrors(undefined);
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
-                    setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
                     initialEditorSymbols.current = [];
                 } else if (parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
@@ -208,7 +208,7 @@ export const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQue
             {modalVisible && <InequalityModal
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={(state: any) => {
-                    setCurrentAttempt(questionId, { type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
+                    dispatchSetCurrentAttempt({ type: 'logicFormula', value: JSON.stringify(state), pythonExpression: (state && state.result && state.result.python)||"" })
                     initialEditorSymbols.current = state.symbols;
                 }}
                 availableSymbols={doc.availableSymbols}

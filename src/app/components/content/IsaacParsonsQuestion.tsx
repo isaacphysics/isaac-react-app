@@ -27,7 +27,7 @@ const PARSONS_INDENT_STEP = 45;
 
 export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
 
     const [ availableItems, setAvailableItems ] = useState<ParsonsItemDTO[]>([...doc.items ?? []]);
     const [ draggedElement, setDraggedElement ] = useState<HTMLElement | null>(null);
@@ -116,7 +116,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
             // Reorder currentAttempt
             const items = [...(currentAttempt?.items || [])];
             moveItem(items, result.source.index, items, result.destination.index, currentIndent || 0);
-            setCurrentAttempt(questionId, {...currentAttempt, ...{ items }});
+            dispatchSetCurrentAttempt({...currentAttempt, ...{ items }});
         } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
             // Reorder availableItems
             const items = [...availableItems];
@@ -127,14 +127,14 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
             const srcItems = [...availableItems];
             const dstItems = [...(currentAttempt?.items || [])];
             moveItem(srcItems, result.source.index, dstItems, result.destination.index, currentIndent || 0);
-            setCurrentAttempt(questionId, {...currentAttempt, ...{ items: dstItems }});
+            dispatchSetCurrentAttempt({...currentAttempt, ...{ items: dstItems }});
             setAvailableItems(srcItems);
         } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && currentAttempt) {
             // Move from currentAttempt to availableItems
             const srcItems = [...(currentAttempt?.items || [])];
             const dstItems = [...availableItems];
             moveItem(srcItems, result.source.index, dstItems, result.destination.index, 0);
-            setCurrentAttempt(questionId, {...currentAttempt, ...{ items: srcItems }});
+            dispatchSetCurrentAttempt({...currentAttempt, ...{ items: srcItems }});
             setAvailableItems(dstItems);
         } else {
             console.error("Not sure how we got here...");
@@ -178,7 +178,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
         if (isDefined(items[index].indentation)) {
             items[index].indentation = Math.max((items[index].indentation || 0) - 1, 0);
         }
-        setCurrentAttempt(questionId, {...currentAttempt, ...{ items }});
+        dispatchSetCurrentAttempt({...currentAttempt, ...{ items }});
     }
 
     const increaseIndentation = (index: number) => {
@@ -189,7 +189,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
         if (isDefined(items[index].indentation)) {
             items[index].indentation = Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT));
         }
-        setCurrentAttempt(questionId, {...currentAttempt, ...{ items }});
+        dispatchSetCurrentAttempt({...currentAttempt, ...{ items }});
     }
 
     const onCurrentAttemptUpdate = (newCurrentAttempt?: ParsonsChoiceDTO, newAvailableItems?: ParsonsItemDTO[]) => {
@@ -198,7 +198,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
                 type: "parsonsChoice",
                 items: [],
             }
-            setCurrentAttempt(questionId, defaultAttempt);
+            dispatchSetCurrentAttempt(defaultAttempt);
         }
         if (newCurrentAttempt) {
             // This makes sure that available items and current attempt items contain different items.

@@ -7,7 +7,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 export const IsaacRegexMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacRegexMatchQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     return <div className="regexmatch-question">
         <div className="question-content">
@@ -21,7 +21,7 @@ export const IsaacRegexMatchQuestion = ({doc, questionId, readonly}: IsaacQuesti
             rows={doc.multiLineEntry ? 3 : undefined}
             value={currentAttempt?.value ?? ""}
             onChange={event =>
-                setCurrentAttempt(questionId, {type: "stringChoice", value: event.target.value})
+                dispatchSetCurrentAttempt({type: "stringChoice", value: event.target.value})
             }
             readOnly={readonly}
         />

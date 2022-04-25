@@ -7,7 +7,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacMultiChoiceQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     return <div className="multichoice-question">
         <div className="question-content">
@@ -21,7 +21,7 @@ export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuest
                     <CustomInput
                         id={`${questionId}${index}`} color="secondary" type="radio"
                         checked={currentAttempt?.value === choice.value}
-                        onChange={() => setCurrentAttempt(questionId, choice)}
+                        onChange={() => dispatchSetCurrentAttempt(choice)}
                         disabled={readonly}
                     />
                     <div className="flex-fill">

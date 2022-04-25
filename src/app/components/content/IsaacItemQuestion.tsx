@@ -7,7 +7,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacItemQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {
         const selected = changeEvent.target.checked;
@@ -23,7 +23,7 @@ export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
         } else if (itemChoice.items) {
             itemChoice.items = itemChoice.items.filter(i => i.id !== item.id);
         }
-        setCurrentAttempt(questionId, itemChoice);
+        dispatchSetCurrentAttempt(itemChoice);
     }
 
     return (

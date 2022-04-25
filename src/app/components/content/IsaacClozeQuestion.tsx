@@ -93,7 +93,7 @@ export function useClozeDropRegionsInHtml(html: string): string {
 
 export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
@@ -233,7 +233,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
                     return x as unknown as ItemDTO;
                 })
             };
-            setCurrentAttempt(questionId, itemChoice);
+            dispatchSetCurrentAttempt(itemChoice);
         }
     }
 

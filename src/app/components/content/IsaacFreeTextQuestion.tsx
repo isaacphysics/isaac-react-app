@@ -61,7 +61,7 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
 
 export const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacFreeTextQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     const currentAttemptValue = currentAttempt?.value ?? "";
     const validation = validate(currentAttemptValue);
@@ -80,7 +80,7 @@ export const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestion
                     rows={3}
                     value={currentAttemptValue}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                        setCurrentAttempt(questionId, validatedChoiceDtoFromEvent(event))}
+                        dispatchSetCurrentAttempt(validatedChoiceDtoFromEvent(event))}
                     readOnly={readonly}
                 />
             </FormGroup>

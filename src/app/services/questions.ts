@@ -151,7 +151,7 @@ export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: strin
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     return {
         currentAttempt: questionPart?.currentAttempt as (T | undefined),
-        setCurrentAttempt: (questionId: string, attempt: T | ValidatedChoice<T>) => dispatch(setCurrentAttempt(questionId, attempt)),
+        dispatchSetCurrentAttempt: (attempt: T | ValidatedChoice<T>) => dispatch(setCurrentAttempt(questionId, attempt)),
         questionPart: questionPart
     };
 }

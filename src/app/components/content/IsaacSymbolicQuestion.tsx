@@ -41,7 +41,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
 
 export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
@@ -63,7 +63,7 @@ export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestion
         const pythonExpression = newState?.result?.python || "";
         const previousPythonExpression = currentAttemptValue?.result?.python || "";
         if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(newState), pythonExpression});
+            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
         }
         initialEditorSymbols.current = state.symbols;
     };
@@ -172,7 +172,7 @@ export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestion
                 }
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
-                    setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
                     initialEditorSymbols.current = [];
                 } else if (parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit

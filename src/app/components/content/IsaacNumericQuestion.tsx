@@ -96,7 +96,7 @@ type IsaacNumericQuestionProps = IsaacQuestionProps<IsaacNumericQuestionDTO> & {
 
 export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
 
     const currentAttemptValue = currentAttempt?.value;
     const currentAttemptUnits = currentAttempt?.units;
@@ -116,7 +116,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
             value: event.currentTarget.value,
             units: currentAttemptUnits
         };
-        dispatch(setCurrentAttempt(questionId, attempt));
+        dispatch(dispatchSetCurrentAttempt(attempt));
     }
 
     function updateUnits(units?: string) {
@@ -125,7 +125,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
             value: currentAttemptValue,
             units: units
         };
-        dispatch(setCurrentAttempt(questionId, attempt));
+        dispatch(dispatchSetCurrentAttempt(attempt));
     }
 
     const [isOpen, setIsOpen] = useState(false);

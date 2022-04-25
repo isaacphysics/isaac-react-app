@@ -12,7 +12,7 @@ import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 export const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
-    const { currentAttempt, setCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
@@ -54,7 +54,7 @@ export const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: Isaa
             {modalVisible && <InequalityModal
                 close={closeModal(window.scrollY)}
                 onEditorStateChange={(state: any) => {
-                    setCurrentAttempt(questionId, { type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" })
+                    dispatchSetCurrentAttempt({ type: 'chemicalFormula', value: JSON.stringify(state), mhchemExpression: (state && state.result && state.result.mhchem) || "" })
                     initialEditorSymbols.current = state.symbols;
                 }}
                 availableSymbols={doc.availableSymbols}
