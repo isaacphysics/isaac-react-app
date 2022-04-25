@@ -4,7 +4,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {ACTION_TYPE, API_PATH} from "../../services/constants";
 import {
     AuthenticationProvider,
-    GlossaryTermDTO,
+    GlossaryTermDTO, RegisteredUserDTO,
     ResultsWrapper, TOTPSharedSecretDTO,
 } from "../../../IsaacApiTypes";
 import {PrefetchOptions} from "@reduxjs/toolkit/dist/query/core/module";
@@ -92,7 +92,7 @@ export const api = createApi({
         // could use endpoint extensions to separate into different files
 
         // Login endpoint
-        login: build.mutation<UserState, LoginUserArgs>({
+        login: build.mutation<RegisteredUserDTO, LoginUserArgs>({
             query: ({provider, credentials}: LoginUserArgs) => ({
                 url: `/auth/${provider}/authenticate`,
                 method: "POST",
@@ -102,7 +102,7 @@ export const api = createApi({
                 const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
                 try {
                     const { data } = await queryFulfilled;
-                    console.log(data);
+                    console.log(data); // TODO DEBUG remove
                     if (is2FARequired(data)) {
                         dispatch(totpChallenge.actions.challengeRequired());
                         return;
@@ -110,7 +110,7 @@ export const api = createApi({
                     persistence.remove(KEY.AFTER_AUTH_PATH);
                     history.push(afterAuthPath);
                 } catch (err: any) {
-                    dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(err)})
+                    dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(err)}); // TODO refactor using createAction - anything that gets caught by the "general" case in the `error` reducer should use the same action
                 }
             }
         }),
@@ -144,7 +144,7 @@ export const api = createApi({
                 }
             }
         }),
-        totpChallenge: build.mutation<UserState, {mfaVerificationCode: string, rememberMe: boolean}>({
+        totpChallenge: build.mutation<RegisteredUserDTO, {mfaVerificationCode: string, rememberMe: boolean}>({
             query: ({mfaVerificationCode, rememberMe}) => ({
                 url: `/auth/mfa/challenge`,
                 method: "POST",
