@@ -16,6 +16,7 @@ import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
+import {stageExistsForSite} from "../../services/events";
 
 
 interface EventsPageQueryParams {
@@ -98,8 +99,9 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                             query.show_stage_only = selectedStage !== EventStageFilter["All stages"] ? selectedStage : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                         }}>
-                            {Object.entries(EventStageFilter).map(([stageLabel, stageValue]) =>
-                                <option key={stageValue} value={stageValue}>{stageLabel}</option>
+                            {Object.entries(EventStageFilter).filter(([_, stageValue]) =>
+                                stageExistsForSite(stageValue)).map(([stageLabel, stageValue]) =>
+                                    <option key={stageValue} value={stageValue}>{stageLabel}</option>
                             )}
                         </RS.Input>
                     </RS.Label>
