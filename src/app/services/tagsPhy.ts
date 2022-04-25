@@ -81,7 +81,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Numbers
         {id: TAG_ID.arithmetic, title: "Arithmetic", parent: TAG_ID.numbers},
         {id: TAG_ID.rational, title: "Rational Numbers", parent: TAG_ID.numbers},
-        {id: TAG_ID.factors, title: "Factors and Powers", parent: TAG_ID.numbers},
+        {id: TAG_ID.factors, title: "Factors & Powers", parent: TAG_ID.numbers},
         {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.numbers},
         // Algebra
         {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
@@ -119,7 +119,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
         {id: TAG_ID.entropy, title: "Entropy", parent: TAG_ID.physical},
         {id: TAG_ID.equilibrium, title: "Equilibrium", parent: TAG_ID.physical},
-        {id: TAG_ID.acidsAndBases, title: "Acids and Bases", parent: TAG_ID.physical},
+        {id: TAG_ID.acidsAndBases, title: "Acids & Bases", parent: TAG_ID.physical},
         {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
         // Analytical
         {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
