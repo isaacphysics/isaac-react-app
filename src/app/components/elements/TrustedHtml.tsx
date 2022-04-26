@@ -76,13 +76,13 @@ export const useExpandContent = (expandable: boolean, ref: React.RefObject<HTMLE
 
 // A portal component to manage table elements from inside the React DOM
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
-    const [ parentElement, setParentElement ] = useState<Element | null>()
+    const [ parentElement, setParentElement ] = useState<Element | null>(null);
 
     useEffect(() => {
         if (isDefined(rootElement)) {
             setParentElement(rootElement.querySelector(`#table-${id}`));
         }
-    }, [rootElement])
+    }, [rootElement]);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const expandRef = useRef<HTMLDivElement>(null);
