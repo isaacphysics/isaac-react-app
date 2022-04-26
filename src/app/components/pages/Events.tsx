@@ -9,19 +9,21 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {clearEventsList, getEventMapData, getEventsList} from "../../state/actions";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
-import {EventStatusFilter, EventTypeFilter} from "../../services/constants";
+import {EventStageFilter, EventStatusFilter, EventTypeFilter} from "../../services/constants";
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
+import {stageExistsForSite} from "../../services/events";
 
 
 interface EventsPageQueryParams {
     show_booked_only?: boolean;
     show_reservations_only?: boolean;
     event_status?: "all";
+    show_stage_only?: EventStageFilter;
     types?: EventTypeFilter;
 }
 
@@ -42,13 +44,14 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         (query.event_status === "all" && EventStatusFilter["All events"]) ||
         EventStatusFilter["Upcoming events"];
     const typeFilter = query.types || EventTypeFilter["All events"];
+    const stageFilter = query.show_stage_only || EventStageFilter["All stages"];
 
     useEffect(() => {
         const startIndex = 0;
         dispatch(clearEventsList);
-        dispatch(getEventsList(startIndex, EVENTS_PER_PAGE, typeFilter, statusFilter));
-        dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter));
-    }, [dispatch, typeFilter, statusFilter]);
+        dispatch(getEventsList(startIndex, EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter));
+        dispatch(getEventMapData(startIndex, -1, typeFilter, statusFilter, stageFilter));
+    }, [dispatch, typeFilter, statusFilter, stageFilter]);
 
     const pageHelp = <span>
         Follow the links below to find out more about our FREE events.
@@ -91,6 +94,16 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                                 <option key={typeValue} value={typeValue}>{typeLabel}</option>
                             )}
                         </RS.Input>
+                        <RS.Input id="event-stage-filter" className="ml-2" type="select" value={stageFilter} onChange={e => {
+                            const selectedStage = e.target.value as EventStageFilter;
+                            query.show_stage_only = selectedStage !== EventStageFilter["All stages"] ? selectedStage : undefined;
+                            history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
+                        }}>
+                            {Object.entries(EventStageFilter).filter(([_, stageValue]) =>
+                                stageExistsForSite(stageValue)).map(([stageLabel, stageValue]) =>
+                                    <option key={stageValue} value={stageValue}>{stageLabel}</option>
+                            )}
+                        </RS.Input>
                     </RS.Label>
                 </RS.Form>
 
@@ -105,7 +118,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                     {/* Load More Button */}
                     {numberOfLoadedEvents < total && <div className="text-center mb-5">
                         <RS.Button onClick={() => {
-                            dispatch(getEventsList(numberOfLoadedEvents, EVENTS_PER_PAGE, typeFilter, statusFilter));
+                            dispatch(getEventsList(numberOfLoadedEvents, EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter));
                         }}>
                             Load more events
                         </RS.Button>
