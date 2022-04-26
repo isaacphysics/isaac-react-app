@@ -5,19 +5,18 @@ import {ACTION_TYPE} from "../../services/constants";
 
 export const authProviderResponse = createAction<RegisteredUserDTO>("authProviderResponse");
 
-const initialState = {loggedIn: false} as UserState;
 export const authSlice = createSlice({
     name: "auth",
-    initialState: initialState,
+    initialState: null as UserState,
     reducers: {},
     extraReducers: (builder) => [
         builder.addCase(
             ACTION_TYPE.CLEAR_STATE,
-            () => initialState
+            () => null
         ).addCase(
             ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS,
             (state, action) => {
-                // @ts-ignore Can't infer the payload for our action types, we really need to use createAction instead
+                // @ts-ignore TODO Can't infer the payload for our action types, we really need to use createAction instead
                 return { loggedIn: true, ...action.user };
             }
         ).addCase(

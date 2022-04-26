@@ -13,6 +13,7 @@ import {groups} from "../../app/state/reducers/groupsState";
 import {search} from "../../app/state/reducers/searchState";
 import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
 import {authSlice} from "../../app/state/slices/user";
+import {api as apiSlice} from "../../app/state/slices/api";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -48,11 +49,13 @@ describe("root reducer", () => {
 describe("user reducer", () => {
     const {profWheeler, dameShirley} = registeredUserDTOs;
 
+    console.log(apiSlice.endpoints.login)
+
     const user = authSlice.reducer;
 
     const previousStates: (PotentialUser | null)[] = [null, {loggedIn: false}, {...dameShirley, loggedIn: true}, {...profWheeler, loggedIn: true}];
 
-    it("returns null as an initial value", () => {
+    it("returns `{loggedIn: false}` as an initial value", () => {
         const actualState = user(undefined, ignoredTestAction);
         expect(actualState).toBe(null);
     });
@@ -65,7 +68,7 @@ describe("user reducer", () => {
     });
 
     it("should always add a user on login response success", () => {
-        const addProfWheelerAction: any = {type: 'isaacApi/executeMutation/fulfilled', meta: { args: { endpointName: "login" } },  user: profWheeler};
+        const addProfWheelerAction: any = {type: 'isaacApi/executeMutation/fulfilled', meta: { args: { endpointName: "login" } }, payload: profWheeler};
         previousStates.map((previousState) => {
             const actualNextState = user(previousState, addProfWheelerAction);
             expect(actualNextState).toEqual({...profWheeler, loggedIn: true});
