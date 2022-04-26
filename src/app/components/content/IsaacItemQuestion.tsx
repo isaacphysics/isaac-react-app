@@ -1,28 +1,18 @@
 import React, {ChangeEvent} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {CustomInput, Label} from "reactstrap";
-import {selectors} from "../../state/selectors";
-import {selectQuestionPart} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services/questions";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-interface IsaacItemQuestionProps {
-    doc: IsaacItemQuestionDTO;
-    questionId: string;
-    readonly?: boolean;
-}
+export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacItemQuestionDTO>) => {
 
-export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacItemQuestionProps) => {
-    const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const currentAttempt = questionPart?.currentAttempt as ItemChoiceDTO;
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {
-        let selected = changeEvent.target.checked;
-        let currentItems = currentAttempt && currentAttempt.items || [];
-        let itemChoice: ItemChoiceDTO = {type: "itemChoice", items: currentItems};
+        const selected = changeEvent.target.checked;
+        const currentItems = currentAttempt && currentAttempt.items || [];
+        const itemChoice: ItemChoiceDTO = {type: "itemChoice", items: currentItems};
 
         if (selected) {
             if (!itemChoice.items) {
@@ -33,7 +23,7 @@ export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacItemQuestion
         } else if (itemChoice.items) {
             itemChoice.items = itemChoice.items.filter(i => i.id !== item.id);
         }
-        dispatch(setCurrentAttempt(questionId, itemChoice));
+        dispatchSetCurrentAttempt(itemChoice);
     }
 
     return (

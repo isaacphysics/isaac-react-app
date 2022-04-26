@@ -6,9 +6,7 @@ import {
     ItemChoiceDTO,
     ItemDTO
 } from "../../../IsaacApiTypes";
-import {useDispatch, useSelector} from "react-redux";
-import {selectors} from "../../state/selectors";
-import {selectQuestionPart} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services/questions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
     DragDropContext,
@@ -20,8 +18,7 @@ import {
     ResponderProvided
 } from "react-beautiful-dnd";
 import ReactDOM from 'react-dom';
-import {ClozeDropRegionContext, ClozeItemDTO} from "../../../IsaacAppTypes";
-import {setCurrentAttempt} from "../../state/actions";
+import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../../services/select";
 
@@ -94,11 +91,10 @@ export function useClozeDropRegionsInHtml(html: string): string {
     return html;
 }
 
-export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacClozeQuestionDTO; questionId: string; readonly?: boolean}) {
-    const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const currentAttempt = questionPart?.currentAttempt as (ItemChoiceDTO | undefined);
+export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
+
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
+
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const questionContentRef = useRef<HTMLDivElement>(null);
     const withReplacement = doc.withReplacement ?? false;
@@ -237,7 +233,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: {doc: IsaacCloze
                     return x as unknown as ItemDTO;
                 })
             };
-            dispatch(setCurrentAttempt(questionId, itemChoice));
+            dispatchSetCurrentAttempt(itemChoice);
         }
     }
 
