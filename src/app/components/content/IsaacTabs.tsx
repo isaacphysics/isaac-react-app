@@ -1,34 +1,22 @@
-import React, {ReactElement, useEffect, useState} from "react";
+import React, {ReactElement} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {isDefined} from "../../services/miscUtils";
 
 interface IsaacTabsProps {
-    doc: {
-        children: {title?: string; children?: ContentDTO[]}[],
-        expandable?: boolean
-    };
+    doc: {children: {title?: string; children?: ContentDTO[]}[]};
 }
 
-type IsaacTabChildren = {[title: string]: ReactElement};
-
 export const IsaacTabs = (props: any) => {
-    const { doc: { children: tabs, expandable} } = props as IsaacTabsProps;
-    const [ tabTitlesToContent , setTabTitlesToContent ] = useState<IsaacTabChildren>({});
+    const {doc: {children}} = props as IsaacTabsProps;
+    const tabTitlesToContent: {[title: string]: ReactElement} = {};
 
-    useEffect(() => {
-        if (!isDefined(tabs)) return;
+    children.forEach((child, index) => {
+        const tabTitle = child.title || `Tab ${index + 1}`;
+        tabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
+    });
 
-        const newTabTitlesToContent: IsaacTabChildren = {};
-        tabs.forEach((child, index) => {
-            const tabTitle = child.title || `Tab ${index + 1}`;
-            newTabTitlesToContent[tabTitle] = <IsaacContent doc={child} />;
-        });
-        setTabTitlesToContent(newTabTitlesToContent);
-    }, [tabs]);
-
-    return <Tabs className="isaac-tab" tabContentClass="pt-4" expandable={expandable}>
+    return <Tabs className="isaac-tab" tabContentClass="pt-4">
         {tabTitlesToContent}
     </Tabs>;
 };

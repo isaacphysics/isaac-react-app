@@ -337,7 +337,6 @@ export interface ContentDTO extends ContentBaseDTO {
     subtitle?: string;
     encoding?: string;
     layout?: string;
-    expandable?: boolean;
     children?: ContentBaseDTO[];
     value?: string;
     attribution?: string;
