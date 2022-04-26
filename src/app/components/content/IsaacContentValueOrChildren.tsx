@@ -31,7 +31,7 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
             if (currentChunk.length > 0) {
                 contentChunks.push(currentChunk);
             }
-            let accordionChunk: ContentOrAccordionChunk = [child];
+            const accordionChunk: ContentOrAccordionChunk = [child];
             accordionChunk.isAccordion = true;
             accordionChunk.isFirstChunk = contentChunks.length == 0;
             contentChunks.push(accordionChunk);
@@ -72,7 +72,7 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
             } else {
                 return <div className="clearfix content-chunk" key={chunkIndex}>
                     {contentChunk.map((content, contentIndex) =>
-                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex} />)}
+                        <IsaacContent doc={content} key={contentIndex} contentIndex={contentIndex}/>)}
                 </div>
             }
         })}
