@@ -1,4 +1,4 @@
-import React, {RefObject, useContext, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
@@ -10,6 +10,7 @@ import classNames from "classnames";
 import {ScrollShadows} from "./ScrollShadows";
 import {above, isMobile, useDeviceSize} from "../../services/device";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isDefined} from "../../services/miscUtils";
 
 interface TableData {
     id: number;
@@ -74,8 +75,14 @@ export const useExpandContent = (expandable: boolean, ref: React.RefObject<HTMLE
 }
 
 // A portal component to manage table elements from inside the React DOM
-const Table = ({id, html, classes, rootElement}: TableData & {rootElement: RefObject<HTMLElement>}) => {
-    const parentElement = rootElement.current?.querySelector(`#table-${id}`);
+const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
+    const [ parentElement, setParentElement ] = useState<Element | null>()
+
+    useEffect(() => {
+        if (isDefined(rootElement)) {
+            setParentElement(rootElement.querySelector(`#table-${id}`));
+        }
+    }, [rootElement])
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const expandRef = useRef<HTMLDivElement>(null);
@@ -104,14 +111,19 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
 
     const figureNumbers = useContext(FigureNumberingContext);
 
-    const htmlRef = useRef<HTMLDivElement>(null);
+    const [ htmlRef, setHtmlRef ] = useState<HTMLDivElement>();
+    const updateHtmlRef = useCallback(ref => {
+        if (ref !== null) {
+            setHtmlRef(ref);
+        }
+    }, []);
 
     const {manipulatedHtml, tableData} = manipulateHtml(katexify(html, user, booleanNotation, screenReaderHoverText, figureNumbers));
     html = useClozeDropRegionsInHtml(manipulatedHtml);
 
     const ElementType = span ? "span" : "div";
     return <>
-        <ElementType ref={htmlRef} className={className} dangerouslySetInnerHTML={{__html: html}} />
-        {tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes}/>)}
+        <ElementType ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: html}} />
+        {htmlRef && tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes}/>)}
     </>;
 };
