@@ -14,10 +14,11 @@ import {v4 as uuid_v4} from "uuid";
 import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 
+
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
-    let href = utils.escapeHtml(tokens[idx].href || "");
-    let localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
-    let title = tokens[idx].title ? (' title="' + utils.escapeHtml(utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
+    const href = utils.escapeHtml(tokens[idx].href || "");
+    const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
+    const title = tokens[idx].title ? (' title="' + utils.escapeHtml(utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
     if (localLink) {
         return `<a href="${href}" ${title}>`;
     } else {
@@ -118,7 +119,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
 
     const html = MARKDOWN_RENDERER.render(regexProcessedMarkdown);
     return <div>
-        <TrustedHtml html={html} />
+        <TrustedHtml html={html}/>
         {tooltips}
     </div>;
 };
