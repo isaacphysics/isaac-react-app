@@ -73,11 +73,17 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
+            if (SITE_SUBJECT === SITE.CS) {
+                typeLabel = "Question";
+            }
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
             icon = <img src="/assets/concept.svg" alt="Concept page"/>;
             iconLabel = "Concept page icon";
+            if (SITE_SUBJECT === SITE.CS) {
+                typeLabel = "Concept";
+            }
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
@@ -111,7 +117,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
                         <LaTeX className={titleTextClass} markup={title ?? ""} />
-                        {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
+                        {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>
                             ({typeLabel})
                         </span>}
                     </div>
