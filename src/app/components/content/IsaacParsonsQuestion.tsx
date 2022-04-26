@@ -291,7 +291,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
                     <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
-                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", currentIndent === null && `ghost-indent-${currentIndent}`, {"empty": currentAttempt && currentAttempt.items && currentAttempt.items.length > 0})}>
+                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0)})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => {
                                     const canDecreaseIndentation = canIndent && isDefined(item?.indentation) && item.indentation > 0;
                                     const canIncreaseIndentation = canIndent && isDefined(item?.indentation) && index !== 0 && item.indentation <= getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;
