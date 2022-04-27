@@ -2,10 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
 import {useIFrameMessages} from "../../services/miscUtils";
 import { v4 as uuid_v4 } from "uuid";
-import {useDispatch, useSelector} from "react-redux";
-import {selectors} from "../../state/selectors";
+import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 import {CODE_EDITOR_BASE_URL} from "../../services/constants";
+import {api} from "../../state/slices/api";
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
@@ -28,7 +28,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         });
     }
 
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
     const [iFrameHeight, setIFrameHeight] = useState(100);
 
     useEffect(() => {

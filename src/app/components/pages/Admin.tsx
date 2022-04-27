@@ -1,41 +1,33 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/constants";
+import {EDITOR_COMPARE_URL} from "../../services/constants";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {selectors} from "../../state/selectors";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {isAdmin} from "../../services/user";
+import {api} from "../../state/slices/api";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
-    const dispatch = useDispatch();
-    const segueVersion = useSelector(selectors.segue.versionOrUnknown);
-    const contentVersion = useSelector(selectors.segue.contentVersion);
-    useEffect(() => {
-        dispatch(getContentVersion());
-        dispatch(requestConstantsSegueVersion());
-    }, [dispatch]);
+    const segueVersion = api.endpoints.getSegueVersion.useQueryState().currentData ?? "unknown";
+    const { currentData: liveContentVersion } = api.endpoints.getLiveContentVersion.useQuery();
+    const [ setLiveContentVersion, { originalArgs: updatedLiveContentVersion, isLoading, isSuccess, isError } ] = api.endpoints.setLiveContentVersion.useMutation();
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
 
-    const displayVersion = newVersion || (contentVersion && contentVersion.liveVersion) || null;
+    const displayVersion = newVersion || liveContentVersion || null;
 
     const startVersionUpdate = function(event?: React.FormEvent) {
         if (event) {
             event.preventDefault();
         }
-        if (contentVersion && displayVersion !== contentVersion.liveVersion && newVersion != null) {
-            dispatch(setContentVersion(newVersion));
+        if (liveContentVersion && displayVersion !== liveContentVersion && newVersion != null) {
+            setLiveContentVersion(newVersion);
         }
     };
-
-    const updateState = contentVersion && contentVersion.updateState || null;
 
     return <RS.Container id="admin-page">
         <TitleAndBreadcrumb currentPageTitle="Isaac administration" breadcrumbTitleOverride="Admin tools" />
@@ -68,12 +60,12 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                 <RS.CardTitle tag="h2">Administrative tools</RS.CardTitle>
                 <RS.CardBody>
                     <h3>Manage site content</h3>
-                    {contentVersion && <React.Fragment>
+                    {liveContentVersion && <React.Fragment>
                         <div>
                             <strong>Live Content Version</strong>
                         </div>
                         <ShowLoading until={displayVersion !== null} thenRender={() => {
-                            return displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING &&
+                            return displayVersion !== null && !isLoading &&
                                 <RS.Form onSubmit={startVersionUpdate}>
                                     <RS.InputGroup>
                                         <RS.Input
@@ -86,9 +78,9 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                             <a
                                                 className={classnames({
                                                     "p-1 border-dark btn btn-secondary": true,
-                                                    "disabled": displayVersion === contentVersion.liveVersion
+                                                    "disabled": displayVersion === liveContentVersion
                                                 })}
-                                                href={`${EDITOR_COMPARE_URL}/${contentVersion?.liveVersion}/${displayVersion}`}
+                                                href={`${EDITOR_COMPARE_URL}/${liveContentVersion}/${displayVersion}`}
                                                 target="_blank" rel="noopener"
                                             >
                                                 Preview Changes
@@ -98,7 +90,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                             <RS.Button
                                                 type="button" className="p-0 border-dark"
                                                 onClick={startVersionUpdate}
-                                                disabled={!isAdmin(user) || displayVersion === contentVersion.liveVersion}
+                                                disabled={!isAdmin(user) || displayVersion === liveContentVersion}
                                             >
                                                 Set Version
                                             </RS.Button>
@@ -106,19 +98,19 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                     </RS.InputGroup>
                                 </RS.Form>
                         }} />
-                        {updateState == ContentVersionUpdatingStatus.UPDATING &&
+                        {isLoading &&
                             <RS.Alert color="info">
                                 <h4>Updating...</h4>
-                                <p>Replacing version {contentVersion.liveVersion} with {contentVersion.updatingVersion}</p>
+                                <p>Replacing version {liveContentVersion} with {updatedLiveContentVersion}</p>
                                 <IsaacSpinner />
                             </RS.Alert>
                         }
-                        {updateState == ContentVersionUpdatingStatus.SUCCESS &&
+                        {isSuccess &&
                             <RS.Alert color="success">
                                 <h4>Content version changed successfully.</h4>
                             </RS.Alert>
                         }
-                        {updateState == ContentVersionUpdatingStatus.FAILURE &&
+                        {isError &&
                             <RS.Alert color="danger">
                                 <h4>Error: Content version could not be changed.</h4>
                             </RS.Alert>

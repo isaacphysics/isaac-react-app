@@ -10,6 +10,7 @@ import 'katex/dist/contrib/mhchem.mjs';
 import renderA11yString from "../../services/katex-a11y";
 // @ts-ignore
 import { utils } from "remarkable";
+import {api} from "../../state/slices/api";
 
 type MathJaxMacro = string|[string, number];
 
@@ -325,9 +326,9 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
 
 export function LaTeX({markup, className}: {markup: string, className?: string}) {
     const user = useSelector(selectors.user.orNull);
-    const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
-    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
-        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
+    const userPreferences = api.endpoints.userPreferences.useQueryState().currentData;
+    const booleanNotation = userPreferences?.BOOLEAN_NOTATION || null;
+    const screenReaderHoverText = (userPreferences?.BETA_FEATURE && userPreferences?.BETA_FEATURE.SCREENREADER_HOVERTEXT) || false;
     const figureNumbers = useContext(FigureNumberingContext);
 
     const escapedMarkup = utils.escapeHtml(markup);

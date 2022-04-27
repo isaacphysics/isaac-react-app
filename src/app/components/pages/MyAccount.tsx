@@ -17,7 +17,7 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
-import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
+import {adminUserGet, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
     BooleanNotation,
     DisplaySettings,
@@ -50,14 +50,13 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstan
 import {isStaff} from "../../services/user";
 import {ErrorState} from "../../state/reducers/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
+import {api} from "../../state/slices/api";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
     const searchParams = queryString.parse(search);
     return {
         errorMessage: state?.error ?? null,
-        userAuthSettings: state?.userAuthSettings ?? null,
-        userPreferences: state?.userPreferences ?? null,
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
@@ -70,15 +69,11 @@ const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
     adminUserGet,
-    getChosenUserAuthSettings,
 };
 
 interface AccountPageProps {
     user: PotentialUser;
     errorMessage: ErrorState;
-    userAuthSettings: UserAuthenticationSettingsDTO | null;
-    getChosenUserAuthSettings: (userid: number) => void;
-    userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
         updatedUser: ValidationUser,
         updatedUserPreferences: UserPreferencesDTO,
@@ -95,12 +90,17 @@ interface AccountPageProps {
     adminUserToEdit?: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, errorMessage, adminUserGet, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
     // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
     }, [adminUserToEdit]);
+
+    const userPreferences = api.endpoints.userPreferences.useQuery().currentData ?? null;
+    const userAuthSettings = api.endpoints.userAuthSettings.useQuery().currentData ?? null;
+
+    const [ getChosenUserAuthSettings, chosenUserAuthSettings ] = api.endpoints.getSelectedUserAuthSettings.useLazyQuery();
 
     useEffect(() => {
         if (userOfInterest) {

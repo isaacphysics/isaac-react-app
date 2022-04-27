@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {katexify} from "./LaTeX";
 import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
+import {api} from "../../state/slices/api";
 
 const htmlDom = document.createElement("html");
 function manipulateHtml(html: string) {
@@ -35,9 +36,9 @@ function manipulateHtml(html: string) {
 
 export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string}) => {
     const user = useSelector(selectors.user.orNull);
-    const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
-    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
-        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
+    const userPreferences = api.endpoints.userPreferences.useQueryState().currentData;
+    const booleanNotation = userPreferences?.BOOLEAN_NOTATION || null;
+    const screenReaderHoverText = (userPreferences?.BETA_FEATURE && userPreferences?.BETA_FEATURE.SCREENREADER_HOVERTEXT) || false;
 
     const figureNumbers = useContext(FigureNumberingContext);
 

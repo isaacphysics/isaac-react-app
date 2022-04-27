@@ -1,4 +1,4 @@
-import {createAction, createSlice} from "@reduxjs/toolkit";
+import {createAction, createSlice, isAnyOf} from "@reduxjs/toolkit";
 import {api, is2FARequired, UserState} from "./api";
 import {RegisteredUserDTO, TOTPSharedSecretDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
@@ -11,24 +11,10 @@ export const authSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => [
         builder.addCase(
-            ACTION_TYPE.CLEAR_STATE,
-            () => null
-        ).addCase(
-            ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS,
-            (state, action) => {
-                // @ts-ignore TODO Can't infer the payload for our action types, we really need to use createAction instead
-                return { loggedIn: true, ...action.user };
-            }
-        ).addCase(
             ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS,
             (state, action) => {
                 // @ts-ignore
                 return { loggedIn: true, ...action.user };
-            }
-        ).addCase(
-            authProviderResponse,
-            (state, action) => {
-                return { loggedIn: true, ...action.payload };
             }
         ),
         builder.addMatcher(
@@ -43,18 +29,15 @@ export const authSlice = createSlice({
                 return { loggedIn: true, ...payload };
             }
         ).addMatcher(
-            api.endpoints.login.matchRejected,
-            () => ({ loggedIn: false })
-        ).addMatcher(
-            api.endpoints.totpChallenge.matchPending,
-            () => ({ loggedIn: false, requesting: true })
-        ).addMatcher(
-            api.endpoints.totpChallenge.matchFulfilled,
+            isAnyOf(api.endpoints.totpChallenge.matchFulfilled, api.endpoints.currentUser.matchFulfilled, authProviderResponse.match),
             (state, { payload }) => {
                 return { loggedIn: true, ...payload };
             }
         ).addMatcher(
-            api.endpoints.totpChallenge.matchRejected,
+            api.endpoints.totpChallenge.matchPending,
+            () => ({ loggedIn: false, requesting: true })
+        ).addMatcher(
+            isAnyOf(api.endpoints.login.matchRejected, api.endpoints.totpChallenge.matchRejected, api.endpoints.currentUser.matchRejected, api.endpoints.logout.matchFulfilled, api.endpoints.logoutEverywhere.matchFulfilled),
             () => ({ loggedIn: false })
         )
     ]

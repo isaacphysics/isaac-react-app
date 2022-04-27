@@ -14,6 +14,7 @@ import {search} from "../../app/state/reducers/searchState";
 import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
 import {authSlice} from "../../app/state/slices/user";
 import {api as apiSlice} from "../../app/state/slices/api";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 

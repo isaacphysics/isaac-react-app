@@ -156,88 +156,6 @@ export const logAction = (eventDetails: object) => {
     return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
 };
 
-// User authentication
-export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST});
-    try {
-        const authenticationSettings = await api.authentication.getCurrentUserAuthSettings();
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings: authenticationSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const getChosenUserAuthSettings = (userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_REQUEST});
-    try {
-        const authenticationSettings = await api.authentication.getSelectedUserAuthSettings(userId);
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_SUCCESS, selectedUserAuthSettings: authenticationSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.SELECTED_USER_AUTH_SETTINGS_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const linkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_LINK_REQUEST});
-    try {
-        const redirectResponse = await api.authentication.linkAccount(provider);
-        const redirectUrl = redirectResponse.data.redirectUrl;
-        dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_SUCCESS, provider, redirectUrl: redirectUrl});
-        window.location.href = redirectUrl;
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_LINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to link account", e));
-    }
-};
-
-export const unlinkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST});
-    try {
-        await api.authentication.unlinkAccount(provider);
-        dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS, provider});
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any)
-        ]);
-        dispatch(showToast({
-            title: "Account unlinked",
-            body: "Your account settings were updated successfully.",
-            color: "success",
-            timeout: 5000,
-            closable: false,
-        }) as any);
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to unlink account", e));
-    }
-};
-
-export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
-    try {
-        const userPreferenceSettings = await api.users.getPreferences();
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences: userPreferenceSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
-    try {
-        // Request the user
-        const currentUser = await api.users.getCurrent();
-        // Now with that information request auth settings and preferences asynchronously
-        await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
-        ]);
-        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
-    }
-};
-
-
 export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
 };
@@ -250,7 +168,7 @@ export const updateCurrentUser = (
     passwordCurrent: string | null,
     currentUser: PotentialUser,
     redirect: boolean
-) => async (dispatch: Dispatch<Action>) => {
+) => async (dispatch: AppDispatch) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
         if (currentUser.loggedIn && currentUser.email !== updatedUser.email) {
@@ -277,7 +195,7 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(requestCurrentUser() as any);
+        await dispatch(apiSlices.util.invalidateTags(["UserInfo"]));
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
@@ -403,7 +321,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        await dispatch(apiSlices.util.invalidateTags([{type: "UserInfo", id: "Preferences"}]));
         dispatch(authProviderResponse(providerResponse.data));
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
@@ -452,12 +370,12 @@ export const requestEmailVerification = () => async (dispatch: any, getState: ()
     dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE});
 };
 
-export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: Dispatch<Action>) => {
+export const handleEmailAlter = (params: ({userid: string | null; token: string | null})) => async (dispatch: AppDispatch) => {
     try {
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
-        dispatch(requestCurrentUser() as any);
+        dispatch(apiSlices.util.invalidateTags(["UserInfo"]));
         dispatch(showToast({
             title: "Email address verified",
             body: "The email address has been verified",
@@ -656,52 +574,6 @@ export const releaseAllAuthorisations = (userId: number) => async (dispatch: Dis
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_FAILURE});
         dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
-    }
-};
-
-// Constants
-export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    // Don't request this again if it has already been fetched successfully
-    const state = getState();
-    if (state && state.constants && state.constants.units) {
-        return;
-    }
-
-    dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST});
-    try {
-        const units = await api.constants.getUnits();
-        dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE});
-    }
-};
-
-export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    // Don't request this again if it has already been fetched successfully
-    const state = getState();
-    if (state && state.constants && state.constants.segueVersion) {
-        return;
-    }
-    dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST});
-    try {
-        const version = await api.constants.getSegueVersion();
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS, ...version.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE});
-    }
-};
-
-export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.constants && state.constants.segueEnvironment) {
-        return;
-    }
-    dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_REQUEST});
-    try {
-        const environment = await api.constants.getSegueEnvironment();
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS, ...environment.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE});
     }
 };
 
@@ -1060,28 +932,6 @@ export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Disp
         dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS, assignment, progress: result.data});
     } catch {
         dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE, assignment});
-    }
-};
-
-// Content version
-export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
-    try {
-        const version = await api.contentVersion.getLiveVersion();
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS, ...version.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Failed to get content version", e));
-    }
-};
-
-export const setContentVersion = (version: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST, version});
-    try {
-        await api.contentVersion.setLiveVersion(version);
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS, newVersion: version});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
     }
 };
 

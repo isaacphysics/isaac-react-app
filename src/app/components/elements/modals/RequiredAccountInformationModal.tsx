@@ -4,7 +4,6 @@ import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
     validateEmailPreferences,
@@ -21,12 +20,13 @@ import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import { isDefined } from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
+import {api} from "../../../state/slices/api";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = useSelector((state: AppState) => state?.userPreferences);
+    const userPreferences = api.endpoints.userPreferences.useQueryState().currentData;
     const student = isStudent({...user, loggedIn: true});
 
     // Local state

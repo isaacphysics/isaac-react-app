@@ -1,4 +1,4 @@
-import {Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {Action, Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
@@ -59,20 +59,12 @@ const clearCurrentUser = () => {
     changePage("/");
 };
 
-export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
-    if ((apiSlice.endpoints.login.matchFulfilled(action) && !is2FARequired(action.payload)) || apiSlice.endpoints.totpChallenge.matchFulfilled(action)) {
+export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => (action: Action) => {
+    if ((apiSlice.endpoints.login.matchFulfilled(action) && !is2FARequired(action.payload)) || isAnyOf(apiSlice.endpoints.totpChallenge.matchFulfilled, apiSlice.endpoints.currentUser.matchFulfilled)(action)) {
         setCurrentUser(action.payload, api);
     }
-    if (isAnyOf(apiSlice.endpoints.logout.matchFulfilled, apiSlice.endpoints.logoutEverywhere.matchFulfilled)(action)) {
+    if (isAnyOf(apiSlice.endpoints.logout.matchFulfilled, apiSlice.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         clearCurrentUser();
     }
-    switch (action.type) {
-        case ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS:
-            setCurrentUser(action.user, api);
-            break;
-        case ACTION_TYPE.USER_CONSISTENCY_ERROR:
-            clearCurrentUser();
-            break;
-    }
-    return next(action);
+    return next(action as any);
 };

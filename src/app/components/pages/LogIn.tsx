@@ -30,7 +30,8 @@ export const useLoginLogic = () => {
 
     const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
 
-    const [ loginTrigger, { data: user } ] = useLoginMutation();
+    const [ loginTrigger, { isLoading: loginLoading } ] = useLoginMutation();
+    const [ totpChallengeTrigger, { isLoading: totpChallengeLoading } ] = useTotpChallengeMutation();
     const totpChallengePending = useSelector((state: AppState) => state?.totpChallengePending);
 
     const validateAndLogIn = useCallback((event: React.FormEvent<HTMLFormElement>) => {
@@ -49,10 +50,14 @@ export const useLoginLogic = () => {
         setLoginAttempted(true);
     };
 
+    const submitTotpChallenge = useCallback((mfaVerificationCode: string) => {
+        totpChallengeTrigger({mfaVerificationCode, rememberMe})
+    }, [rememberMe]);
+
     return {
-        loginFunctions: {attemptLogIn, signUp, validateAndLogIn},
+        loginFunctions: {attemptLogIn, signUp, validateAndLogIn, submitTotpChallenge },
         setStateFunctions: {setEmail, setPassword, setRememberMe, setPasswordResetAttempted},
-        loginValues: {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword}
+        loginValues: {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword, authPending: loginLoading || totpChallengeLoading}
     };
 }
 
@@ -70,8 +75,7 @@ export const GoogleSignInButton = () => {
 }
 
 // Handles display and logic of the two-factor authentication form (usually shown after the first login step)
-export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
-    const [ totpChallengeTrigger ] = useTotpChallengeMutation();
+export const TFAInput = React.forwardRef(function TFAForm({submitTotpChallenge}: {submitTotpChallenge: (mfaCode: string) => void}, ref: React.Ref<HTMLHeadingElement>) {
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
 
     return <React.Fragment>
@@ -99,7 +103,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 disabled={isNaN(Number(mfaVerificationCode))}
                 onClick={(event) => {
                     event.preventDefault();
-                    if (mfaVerificationCode) totpChallengeTrigger({mfaVerificationCode, rememberMe})
+                    if (mfaVerificationCode) submitTotpChallenge(mfaVerificationCode)
                 }}
             />
         </FormGroup>
@@ -184,9 +188,9 @@ export const LogIn = () => {
     const user = useSelector(selectors.user.orNull);
 
     const {loginFunctions, setStateFunctions, loginValues} = useLoginLogic();
-    const {attemptLogIn, signUp, validateAndLogIn} = loginFunctions;
+    const {attemptLogIn, signUp, validateAndLogIn, submitTotpChallenge} = loginFunctions;
     const {setEmail, setPassword, setRememberMe, setPasswordResetAttempted} = setStateFunctions;
-    const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword} = loginValues;
+    const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, isValidEmail, isValidPassword, authPending} = loginValues;
 
     const headingRef = useRef<HTMLHeadingElement>(null);
     const subHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -223,7 +227,7 @@ export const LogIn = () => {
                                 Log&nbsp;in or sign&nbsp;up:
                             </h2>
                             {totpChallengePending ?
-                                <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
+                                <TFAInput ref={subHeadingRef} submitTotpChallenge={submitTotpChallenge} />
                                 :
                                 <React.Fragment>
                                     <EmailPasswordInputs
@@ -259,7 +263,7 @@ export const LogIn = () => {
                                                 tag="input" value="Log in"
                                                 color="secondary" type="submit" className="mb-2" block
                                                 onClick={attemptLogIn}
-                                                disabled={!!user?.requesting}
+                                                disabled={authPending}
                                             />
                                         </Col>
                                         <Col sm={6}>

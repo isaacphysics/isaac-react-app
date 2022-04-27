@@ -2,12 +2,16 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
-import { useNewMFASecretMutation, useSetupAccountMFAMutation, useDisableAccountMFAMutation } from "../../../state/slices/api";
+import {
+    useNewMFASecretMutation,
+    useSetupAccountMFAMutation,
+    useDisableAccountMFAMutation,
+    api
+} from "../../../state/slices/api";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
-import {selectors} from "../../../state/selectors";
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
@@ -16,7 +20,7 @@ interface UserMFAProps {
 }
 
 export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
     //const [updateMFARequest, setUpdateMFARequest] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);

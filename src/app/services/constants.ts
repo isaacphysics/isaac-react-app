@@ -52,8 +52,6 @@ export const MARKDOWN_RENDERER = new Remarkable({
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
 
-    CLEAR_STATE = "CLEAR_STATE",
-
     USER_SNAPSHOT_PARTIAL_UPDATE = "USER_SNAPSHOT_PARTIAL_UPDATE",
 
     ROUTER_PAGE_CHANGE = "ROUTER_PAGE_CHANGE",
@@ -932,12 +930,6 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
     [DOCUMENT_TYPE.QUIZ]: "quiz",
 };
-
-export enum ContentVersionUpdatingStatus {
-    UPDATING = "UPDATING",
-    SUCCESS = "SUCCESS",
-    FAILURE = "FAILURE"
-}
 
 export enum MEMBERSHIP_STATUS {
     ACTIVE = "ACTIVE",

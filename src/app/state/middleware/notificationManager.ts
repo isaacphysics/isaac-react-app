@@ -8,14 +8,15 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
+import {api} from "../slices/api";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
 
     const state = middlewareApi.getState();
-    if([ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
+    if([ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type) || api.endpoints.userPreferences.matchFulfilled(action) || api.endpoints.currentUser.matchFulfilled(action)) {
         if (
-            state && isLoggedIn(state.user) &&
-            !allRequiredInformationIsPresent(state.user, state.userPreferences, state.user.registeredContexts) &&
+            state && isLoggedIn(state.user) && state?.isaacApi?.queries["userPreferences(undefined)"]?.status === "fulfilled" &&
+            !allRequiredInformationIsPresent(state.user, state?.isaacApi?.queries["userPreferences(undefined)"]?.data, state.user.registeredContexts) &&
             !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))
         ) {
             persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());

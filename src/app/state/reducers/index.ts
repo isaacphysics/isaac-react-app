@@ -11,12 +11,10 @@ import {
     events
 } from "./eventsState";
 import {
-    userAuthSettings,
-    userPreferences,
     userSchoolLookup
 } from "./userState";
 import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
-import {constants, news} from "./staticState";
+import {news} from "./staticState";
 import {concepts, doc, fragments} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
 import {activeModals, notifications, toasts} from "./notifiersState";
@@ -27,7 +25,6 @@ import {
     adminStats,
     adminUserGet,
     adminUserSearch,
-    contentVersion,
     testQuestions
 } from "./adminState";
 import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations} from "./groupsState";
@@ -46,12 +43,11 @@ import {
 } from "./quizState";
 import {api} from "../slices/api";
 import {authSlice, totpSharedSecretSlice, totpChallenge} from "../slices/user";
+import {isAnyOf} from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
     // User
     user: authSlice.reducer,
-    userAuthSettings,
-    userPreferences,
     userSchoolLookup,
     totpSharedSecret: totpSharedSecretSlice.reducer,
     totpChallengePending: totpChallenge.reducer,
@@ -68,7 +64,6 @@ const appReducer = combineReducers({
     notifications,
 
     // Static Content
-    constants,
     news,
 
     // Content
@@ -92,7 +87,6 @@ const appReducer = combineReducers({
     adminContentErrors,
     adminStats,
     adminEmailTemplate,
-    contentVersion,
     testQuestions,
 
     // Groups
@@ -146,8 +140,8 @@ const appReducer = combineReducers({
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.CLEAR_STATE || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        state = undefined; // TODO this is really nasty
+    if (isAnyOf(api.endpoints.logout.matchFulfilled, api.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+        state = undefined;
     }
     return appReducer(state, action);
 };

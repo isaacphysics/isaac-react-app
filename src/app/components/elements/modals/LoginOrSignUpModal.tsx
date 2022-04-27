@@ -21,9 +21,9 @@ const LoginOrSignUpBody = () => {
     const location = useLocation();
 
     const {loginFunctions, setStateFunctions, loginValues} = useLoginLogic();
-    const {attemptLogIn, signUp, validateAndLogIn} = loginFunctions;
+    const {attemptLogIn, signUp, validateAndLogIn, submitTotpChallenge} = loginFunctions;
     const {setEmail, setPassword, setRememberMe, setPasswordResetAttempted} = setStateFunctions;
-    const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword} = loginValues;
+    const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword, authPending} = loginValues;
 
     // When modal is first shown, record the current question page to redirect back to after successful auth
     useEffect(() => {
@@ -57,7 +57,7 @@ const LoginOrSignUpBody = () => {
             {!totpChallengePending && <span className={"d-block d-lg-none pb-3"}>To <b>continue with an account</b>, please do so below</span>}
             <Form name="login" onSubmit={validateAndLogIn} noValidate>
                 {totpChallengePending ?
-                    <TFAInput rememberMe={rememberMe} />
+                    <TFAInput submitTotpChallenge={submitTotpChallenge} />
                     :
                     <>
                         <EmailPasswordInputs
@@ -86,7 +86,7 @@ const LoginOrSignUpBody = () => {
                             tag="input" value="Log in"
                             color="secondary" type="submit" block
                             onClick={attemptLogIn}
-                            disabled={!!user?.requesting}
+                            disabled={authPending}
                         />
 
                         <Button id="sign-up" color="primary" onClick={(e) => {

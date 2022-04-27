@@ -19,8 +19,6 @@ import {Gameboard} from "../pages/Gameboard";
 import {NotFound} from "../pages/NotFound";
 import {
     openActiveModal,
-    requestConstantsSegueEnvironment,
-    requestCurrentUser,
     requestNotifications
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -81,7 +79,7 @@ import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ContentEmails} from "../pages/ContentEmails";
-import {usePrefetchImmediately} from "../../state/slices/api";
+import {usePrefetchImmediately, api} from "../../state/slices/api";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -89,18 +87,14 @@ export const IsaacApp = () => {
     const consistencyError = useSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
     const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
-    const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
+    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
     const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
     const user = useSelector(selectors.user.orNull);
 
-    // Run once on component mount
-    useEffect(() => {
-        dispatch(requestCurrentUser());
-        dispatch(requestConstantsSegueEnvironment());
-    }, [dispatch]);
-
-    // Prefetch glossary terms
-    usePrefetchImmediately("getGlossaryTerms", undefined);
+    // Prefetch current user and glossary terms
+    usePrefetchImmediately("currentUser"); // TODO current user, user preferences, and user auth settings need to be added to the store at exactly the same time!!!
+    usePrefetchImmediately("getSegueEnvironment")
+    usePrefetchImmediately("getGlossaryTerms");
 
     useEffect(() => {
         if (isLoggedIn(user)) {

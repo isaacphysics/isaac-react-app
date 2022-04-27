@@ -74,12 +74,6 @@ export const api = {
         }
     },
     users: {
-        getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-            return endpoint.get(`/users/current_user`);
-        },
-        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
-            return endpoint.get(`/users/user_preferences`)
-        },
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },
@@ -117,18 +111,6 @@ export const api = {
         },
         checkProviderCallback: (provider: ApiTypes.AuthenticationProvider, params: string): AxiosPromise => {
             return endpoint.get(`/auth/${provider}/callback${params}`);
-        },
-        getCurrentUserAuthSettings: (): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
-            return endpoint.get(`/auth/user_authentication_settings`)
-        },
-        getSelectedUserAuthSettings: (userId: number): AxiosPromise<ApiTypes.UserAuthenticationSettingsDTO> => {
-            return endpoint.get(`/auth/user_authentication_settings/${userId}`)
-        },
-        linkAccount: (provider: AuthenticationProvider): AxiosPromise => {
-            return endpoint.get(`/auth/${provider}/link`)
-        },
-        unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
-            return endpoint.delete(`/auth/${provider}/link`);
         }
     },
     email: {
@@ -318,25 +300,6 @@ export const api = {
         },
         getProgressForAssignment: (assignment: ApiTypes.AssignmentDTO): AxiosPromise<AppTypes.AppAssignmentProgress[]> => {
             return endpoint.get(`/assignments/assign/${assignment._id}/progress`);
-        }
-    },
-    contentVersion: {
-        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
-            return endpoint.get(`/info/content_versions/live_version`);
-        },
-        setLiveVersion(version: string): AxiosPromise {
-            return endpoint.post(`/admin/live_version/${version}`);
-        }
-    },
-    constants: {
-        getUnits: (): AxiosPromise<string[]> => {
-            return endpoint.get(`/content/units`);
-        },
-        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
-            return endpoint.get(`/info/segue_version`);
-        },
-        getSegueEnvironment: (): AxiosPromise<{segueEnvironment: string}> => {
-            return endpoint.get(`/info/segue_environment`);
         }
     },
     schools: {

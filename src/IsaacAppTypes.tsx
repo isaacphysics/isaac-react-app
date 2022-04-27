@@ -34,8 +34,6 @@ import {
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
-    | {type: ACTION_TYPE.CLEAR_STATE}
-
     | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
 
     | {type: ACTION_TYPE.ROUTER_PAGE_CHANGE; path: string}

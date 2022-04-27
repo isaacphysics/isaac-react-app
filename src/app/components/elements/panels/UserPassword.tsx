@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
-import {linkAccount, resetPassword, unlinkAccount} from "../../../state/actions";
+import {resetPassword} from "../../../state/actions";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../../services/passwordStrength";
 import {useDispatch} from "react-redux";
 import {api} from "../../../state/slices/api";
@@ -28,7 +28,9 @@ export const UserPassword = (
     const dispatch = useDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
-    const [ logoutEverywhereTrigger ] = api.endpoints.logoutEverywhere.useMutation();
+    const [ logoutEverywhere ] = api.endpoints.logoutEverywhere.useMutation();
+    const [ linkAccount ] = api.endpoints.linkAccount.useMutation();
+    const [ unlinkAccount ] = api.endpoints.unlinkAccount.useMutation();
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
@@ -191,7 +193,7 @@ export const UserPassword = (
                         </small>
                         <Col className="text-center mt-2">
                             <div className="vertical-center ml-2">
-                                <Button onClick={() => logoutEverywhereTrigger()}>
+                                <Button onClick={() => logoutEverywhere()}>
                                     Log me out everywhere
                                 </Button>
                             </div>

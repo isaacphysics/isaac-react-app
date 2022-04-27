@@ -1,5 +1,6 @@
 import {Action, PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
+import {api} from "../slices/api";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
@@ -40,9 +41,12 @@ export const transientUserContext = (transientUserContext: TransientUserContextS
 };
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
-export const error = (error: ErrorState = null, action: Action): ErrorState => {
+export const error = (error: ErrorState = null, action: any): ErrorState => {
+    if (api.endpoints.login.matchRejected(action)) {
+        return {type: "generalError", generalError: action.error.message ?? ""};
+    }
+
     switch (action.type) {
-        case ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE:
         case ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE:

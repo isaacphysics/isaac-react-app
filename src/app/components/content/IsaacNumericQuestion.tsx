@@ -1,7 +1,7 @@
-import React, {FormEvent, useEffect, useMemo, useState} from "react";
+import React, {FormEvent, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Rand from 'rand-seed';
-import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
+import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
@@ -23,6 +23,7 @@ import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import {v4 as uuid_v4} from 'uuid';
 import {LaTeX} from "../elements/LaTeX";
+import {useGetUnitsQuery} from "../../state/slices/api";
 
 interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;
@@ -102,7 +103,6 @@ function wrapUnitForSelect(unit?: string): string {
 export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps): JSX.Element => {
     const dispatch = useDispatch();
     const userId = useSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
-    const units = useSelector((state: AppState) => state?.constants?.units || undefined);
     const pageQuestions = useSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
 
@@ -112,7 +112,8 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
     const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
-    useEffect((): void => {dispatch(requestConstantsUnits());}, [dispatch]);
+    const { currentData: units } = useGetUnitsQuery();
+
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
     function updateValue(event: FormEvent<HTMLInputElement>) {
