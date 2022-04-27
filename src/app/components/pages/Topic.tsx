@@ -29,7 +29,6 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
         getRelatedDocs(topicPage, {...userContext, showOtherContent: false}, user);
 
     const searchQuery = `?topic=${topicName}`;
-    // TODO REMOVE AUDIENCE_CONTEXT - maybe we don't need to bother with this now
     const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
