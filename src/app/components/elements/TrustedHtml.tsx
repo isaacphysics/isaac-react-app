@@ -25,7 +25,7 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
     htmlDom.innerHTML = html;
 
     // Table manipulation
-    const tableElements = htmlDom.getElementsByTagName("table");
+    const tableElements = [...htmlDom.getElementsByTagName("table")];
     const tableInnerHTMLs: TableData[] = [];
     for (let i = 0; i < tableElements.length; i++) {
         const table = tableElements[i];
