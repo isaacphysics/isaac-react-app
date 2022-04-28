@@ -5,11 +5,11 @@ import {isMobile} from "../../services/device";
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {useOutsideCallback} from "../../services/miscUtils";
-import {api} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
     const [showShareLink, setShowShareLink] = useState(false);
-    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
+    const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
     const user = useSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
     const csUrlOrigin = segueEnvironment !== "DEV" ? "https://isaaccs.org" : window.location.origin;

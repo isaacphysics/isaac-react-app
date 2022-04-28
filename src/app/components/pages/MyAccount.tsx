@@ -50,7 +50,7 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstan
 import {isStaff} from "../../services/user";
 import {ErrorState} from "../../state/reducers/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
-import {api} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -97,10 +97,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, adminUserG
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
     }, [adminUserToEdit]);
 
-    const userPreferences = api.endpoints.userPreferences.useQuery().currentData ?? null;
-    const userAuthSettings = api.endpoints.userAuthSettings.useQuery().currentData ?? null;
+    const userPreferences = isaacApi.endpoints.userPreferences.useQuery().currentData ?? null;
+    const userAuthSettings = isaacApi.endpoints.userAuthSettings.useQuery().currentData ?? null;
 
-    const [ getChosenUserAuthSettings, chosenUserAuthSettings ] = api.endpoints.getSelectedUserAuthSettings.useLazyQuery();
+    const [ getChosenUserAuthSettings, chosenUserAuthSettings ] = isaacApi.endpoints.getSelectedUserAuthSettings.useLazyQuery();
 
     useEffect(() => {
         if (userOfInterest) {

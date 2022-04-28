@@ -15,7 +15,7 @@ import Select from "react-select";
 import {useUserContext} from "../../services/userContext";
 import {useUrlHashValue} from "../../services/reactRouterExtension";
 import {Item} from "../../services/select";
-import {api} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
@@ -67,7 +67,7 @@ export const Glossary = () => {
     const [filterTopic, setFilterTopic] = useState<Tag>();
 
     // DO NOT MUTATE `data` or Redux gets very unhappy!
-    const { data: rawGlossaryTerms } = api.endpoints.getGlossaryTerms.useQueryState();
+    const { data: rawGlossaryTerms } = isaacApi.endpoints.getGlossaryTerms.useQueryState();
 
     const {examBoard} = useUserContext();
 

@@ -1,6 +1,6 @@
 import React, {Dispatch} from "react";
 import {api} from "../services/api";
-import {api as apiSlices} from "../state/slices/api";
+import {isaacApi} from "./slices/api";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {AppDispatch, store} from "./store";
@@ -195,7 +195,7 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(apiSlices.util.invalidateTags(["UserInfo"]));
+        await dispatch(isaacApi.util.invalidateTags(["UserInfo"]));
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
@@ -321,7 +321,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        await dispatch(apiSlices.util.invalidateTags([{type: "UserInfo", id: "Preferences"}]));
+        await dispatch(isaacApi.util.invalidateTags([{type: "UserInfo", id: "Preferences"}]));
         dispatch(authProviderResponse(providerResponse.data));
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
@@ -375,7 +375,7 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
-        dispatch(apiSlices.util.invalidateTags(["UserInfo"]));
+        dispatch(isaacApi.util.invalidateTags(["UserInfo"]));
         dispatch(showToast({
             title: "Email address verified",
             body: "The email address has been verified",

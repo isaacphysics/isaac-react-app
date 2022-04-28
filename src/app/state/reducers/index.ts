@@ -41,7 +41,7 @@ import {
     quizPreview,
     quizzes, studentQuizAttempt,
 } from "./quizState";
-import {api} from "../slices/api";
+import {isaacApi} from "../slices/api";
 import {authSlice, totpSharedSecretSlice, totpChallenge} from "../slices/user";
 import {isAnyOf} from "@reduxjs/toolkit";
 
@@ -134,13 +134,13 @@ const appReducer = combineReducers({
     quizAttemptedFreelyByMe,
 
     // API reducer
-    [api.reducerPath]: api.reducer
+    [isaacApi.reducerPath]: isaacApi.reducer
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (isAnyOf(api.endpoints.logout.matchFulfilled, api.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+    if (isAnyOf(isaacApi.endpoints.logout.matchFulfilled, isaacApi.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);

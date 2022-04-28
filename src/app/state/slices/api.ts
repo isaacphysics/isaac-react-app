@@ -61,7 +61,7 @@ export interface LoginUserArgs {
 }
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
-export const api = createApi({
+export const isaacApi = createApi({
     tagTypes: ["GlossaryTerms", "UserInfo"], // Used to control refetching and caching of collections of data
     reducerPath: 'isaacApi',
     baseQuery: isaacBaseQuery,
@@ -285,7 +285,7 @@ export const api = createApi({
                 // This is a way of updating the cache of another endpoint
                 try {
                     await queryFulfilled;
-                    dispatch(api.util.updateQueryData('getLiveContentVersion', undefined, () => version));
+                    dispatch(isaacApi.util.updateQueryData('getLiveContentVersion', undefined, () => version));
                 } catch {}
             }
         }),
@@ -343,17 +343,17 @@ export const api = createApi({
 });
 
 // A recipe provided in the RTK Query API docs for immediately prefetching from a given endpoint
-type EndpointNames = keyof typeof api.endpoints
+type EndpointNames = keyof typeof isaacApi.endpoints
 
 export function usePrefetchImmediately(
     endpoint: EndpointNames,
-    arg?: Parameters<typeof api.endpoints[EndpointNames]['initiate']>[0],
+    arg?: Parameters<typeof isaacApi.endpoints[EndpointNames]['initiate']>[0],
     options: PrefetchOptions = {}
 ) {
     const dispatch = useDispatch();
     useEffect(() => {
         // @ts-ignore  Don't use this hook for mutation endpoints!
-        dispatch(api.util.prefetch(endpoint, arg as any, options))
+        dispatch(isaacApi.util.prefetch(endpoint, arg as any, options))
     }, []);
 }
 
@@ -366,4 +366,4 @@ export const {
     useCurrentUserQuery,
     useGetSegueVersionQuery,
     useGetUnitsQuery
-} = api;
+} = isaacApi;

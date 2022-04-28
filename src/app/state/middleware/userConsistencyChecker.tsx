@@ -3,7 +3,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
 import {changePage} from "../actions";
-import {is2FARequired, api as apiSlice} from "../slices/api";
+import {is2FARequired, isaacApi} from "../slices/api";
 import {isAnyOf} from "@reduxjs/toolkit";
 
 // Generic log action:
@@ -60,10 +60,12 @@ const clearCurrentUser = () => {
 };
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => (action: Action) => {
-    if ((apiSlice.endpoints.login.matchFulfilled(action) && !is2FARequired(action.payload)) || isAnyOf(apiSlice.endpoints.totpChallenge.matchFulfilled, apiSlice.endpoints.currentUser.matchFulfilled)(action)) {
+    if ((isaacApi.endpoints.login.matchFulfilled(action) && !is2FARequired(action.payload))
+        || isAnyOf(isaacApi.endpoints.totpChallenge.matchFulfilled, isaacApi.endpoints.currentUser.matchFulfilled)(action)) {
         setCurrentUser(action.payload, api);
     }
-    if (isAnyOf(apiSlice.endpoints.logout.matchFulfilled, apiSlice.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+    if (isAnyOf(isaacApi.endpoints.logout.matchFulfilled, isaacApi.endpoints.logoutEverywhere.matchFulfilled)(action)
+        || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         clearCurrentUser();
     }
     return next(action as any);

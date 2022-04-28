@@ -9,12 +9,12 @@ import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {isAdmin} from "../../services/user";
-import {api} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
-    const segueVersion = api.endpoints.getSegueVersion.useQueryState().currentData ?? "unknown";
-    const { currentData: liveContentVersion } = api.endpoints.getLiveContentVersion.useQuery();
-    const [ setLiveContentVersion, { originalArgs: updatedLiveContentVersion, isLoading, isSuccess, isError } ] = api.endpoints.setLiveContentVersion.useMutation();
+    const segueVersion = isaacApi.endpoints.getSegueVersion.useQueryState().currentData ?? "unknown";
+    const { currentData: liveContentVersion } = isaacApi.endpoints.getLiveContentVersion.useQuery();
+    const [ setLiveContentVersion, { originalArgs: updatedLiveContentVersion, isLoading, isSuccess, isError } ] = isaacApi.endpoints.setLiveContentVersion.useMutation();
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
 

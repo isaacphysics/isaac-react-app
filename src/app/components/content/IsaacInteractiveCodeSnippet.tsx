@@ -5,7 +5,7 @@ import { v4 as uuid_v4 } from "uuid";
 import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 import {CODE_EDITOR_BASE_URL} from "../../services/constants";
-import {api} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
@@ -28,7 +28,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         });
     }
 
-    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
+    const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
     const [iFrameHeight, setIFrameHeight] = useState(100);
 
     useEffect(() => {

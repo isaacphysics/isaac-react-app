@@ -8,7 +8,7 @@ import {
     useNewMFASecretMutation,
     useSetupAccountMFAMutation,
     useDisableAccountMFAMutation,
-    api
+    isaacApi
 } from "../../../state/slices/api";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
@@ -20,7 +20,7 @@ interface UserMFAProps {
 }
 
 export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
-    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
+    const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
     //const [updateMFARequest, setUpdateMFARequest] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);

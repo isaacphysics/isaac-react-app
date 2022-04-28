@@ -13,8 +13,7 @@ import {groups} from "../../app/state/reducers/groupsState";
 import {search} from "../../app/state/reducers/searchState";
 import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
 import {authSlice} from "../../app/state/slices/user";
-import {api as apiSlice} from "../../app/state/slices/api";
-import {createAsyncThunk} from "@reduxjs/toolkit";
+import {isaacApi} from "../../app/state/slices/api";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -50,7 +49,7 @@ describe("root reducer", () => {
 describe("user reducer", () => {
     const {profWheeler, dameShirley} = registeredUserDTOs;
 
-    console.log(apiSlice.endpoints.login)
+    console.log(isaacApi.endpoints.login)
 
     const user = authSlice.reducer;
 

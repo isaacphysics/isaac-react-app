@@ -79,7 +79,7 @@ import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ContentEmails} from "../pages/ContentEmails";
-import {usePrefetchImmediately, api} from "../../state/slices/api";
+import {usePrefetchImmediately, isaacApi} from "../../state/slices/api";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -87,7 +87,7 @@ export const IsaacApp = () => {
     const consistencyError = useSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
     const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
-    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
+    const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
     const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
     const user = useSelector(selectors.user.orNull);
 

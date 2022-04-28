@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {IsaacSpinner} from "./IsaacSpinner";
-import {api} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 
 export const LogOutHandler = () => {
-    const [ logoutTrigger ] = api.endpoints.logout.useMutation();
+    const [ logoutTrigger ] = isaacApi.endpoints.logout.useMutation();
     useEffect(() => {
         logoutTrigger();
     });

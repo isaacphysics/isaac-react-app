@@ -14,14 +14,14 @@ import {selectors} from "../../../state/selectors";
 import {history} from "../../../services/history";
 import queryString from "query-string";
 import {useQueryParams} from "../../../services/reactRouterExtension";
-import {api} from "../../../state/slices/api";
+import {isaacApi} from "../../../state/slices/api";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useDispatch();
     const qParams = useQueryParams();
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const segueEnvironment = api.endpoints.getSegueEnvironment.useQueryState().currentData;
+    const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});

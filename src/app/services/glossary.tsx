@@ -10,7 +10,7 @@ import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
 import {TrustedMarkdown} from "../components/elements/TrustedMarkdown";
 import {v4 as uuid_v4} from "uuid";
 import {useUserContext} from "./userContext";
-import {api} from "../state/slices/api";
+import {isaacApi} from "../state/slices/api";
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     if (candidateTerms.length === 0) {
@@ -30,7 +30,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
     const {examBoard} = useUserContext();
     const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
-    const { data: glossaryTerms } = api.endpoints.getGlossaryTerms.useQueryState();
+    const { data: glossaryTerms } = isaacApi.endpoints.getGlossaryTerms.useQueryState();
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.

@@ -1,6 +1,6 @@
 import {Action, PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
-import {api} from "../slices/api";
+import {isaacApi} from "../slices/api";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
@@ -42,7 +42,7 @@ export const transientUserContext = (transientUserContext: TransientUserContextS
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: any): ErrorState => {
-    if (api.endpoints.login.matchRejected(action)) {
+    if (isaacApi.endpoints.login.matchRejected(action)) {
         return {type: "generalError", generalError: action.error.message ?? ""};
     }
 

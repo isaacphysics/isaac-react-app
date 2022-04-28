@@ -14,7 +14,7 @@ import {Remarkable, utils} from "remarkable";
 import {v4 as uuid_v4} from "uuid";
 import {history} from "../../services/history";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import {api} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     let href = utils.escapeHtml(tokens[idx].href || "");
@@ -41,7 +41,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     const store = useStore();
 
-    const { data: glossaryTerms } = api.endpoints.getGlossaryTerms.useQueryState();
+    const { data: glossaryTerms } = isaacApi.endpoints.getGlossaryTerms.useQueryState();
     const [componentUuid, setComponentUuid] = useState(uuid_v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain

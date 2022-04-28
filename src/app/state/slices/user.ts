@@ -1,5 +1,5 @@
 import {createAction, createSlice, isAnyOf} from "@reduxjs/toolkit";
-import {api, is2FARequired, UserState} from "./api";
+import {isaacApi, is2FARequired, UserState} from "./api";
 import {RegisteredUserDTO, TOTPSharedSecretDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
 
@@ -18,10 +18,10 @@ export const authSlice = createSlice({
             }
         ),
         builder.addMatcher(
-            api.endpoints.login.matchPending,
+            isaacApi.endpoints.login.matchPending,
             () => ({ loggedIn: false, requesting: true })
         ).addMatcher(
-            api.endpoints.login.matchFulfilled,
+            isaacApi.endpoints.login.matchFulfilled,
             (state, { payload }) => {
                 if (is2FARequired(payload)) {
                     return { loggedIn: false };
@@ -29,15 +29,15 @@ export const authSlice = createSlice({
                 return { loggedIn: true, ...payload };
             }
         ).addMatcher(
-            isAnyOf(api.endpoints.totpChallenge.matchFulfilled, api.endpoints.currentUser.matchFulfilled, authProviderResponse.match),
+            isAnyOf(isaacApi.endpoints.totpChallenge.matchFulfilled, isaacApi.endpoints.currentUser.matchFulfilled, authProviderResponse.match),
             (state, { payload }) => {
                 return { loggedIn: true, ...payload };
             }
         ).addMatcher(
-            api.endpoints.totpChallenge.matchPending,
+            isaacApi.endpoints.totpChallenge.matchPending,
             () => ({ loggedIn: false, requesting: true })
         ).addMatcher(
-            isAnyOf(api.endpoints.login.matchRejected, api.endpoints.totpChallenge.matchRejected, api.endpoints.currentUser.matchRejected, api.endpoints.logout.matchFulfilled, api.endpoints.logoutEverywhere.matchFulfilled),
+            isAnyOf(isaacApi.endpoints.login.matchRejected, isaacApi.endpoints.totpChallenge.matchRejected, isaacApi.endpoints.currentUser.matchRejected, isaacApi.endpoints.logout.matchFulfilled, isaacApi.endpoints.logoutEverywhere.matchFulfilled),
             () => ({ loggedIn: false })
         )
     ]
@@ -49,10 +49,10 @@ export const totpSharedSecretSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => [
         builder.addMatcher(
-            api.endpoints.newMFASecret.matchFulfilled,
+            isaacApi.endpoints.newMFASecret.matchFulfilled,
             (state, { payload }) => payload
         ).addMatcher(
-            api.endpoints.setupAccountMFA.matchFulfilled,
+            isaacApi.endpoints.setupAccountMFA.matchFulfilled,
             () => null
         )
     ]

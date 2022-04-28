@@ -3,13 +3,13 @@ import reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
 import {notificationCheckerMiddleware} from "./middleware/notificationManager";
-import {api} from "./slices/api";
+import {isaacApi} from "./slices/api";
 import {configureStore} from "@reduxjs/toolkit";
 
 export const middleware: Middleware[] = [
     userConsistencyCheckerMiddleware,
     notificationCheckerMiddleware,
-    api.middleware,
+    isaacApi.middleware,
 ];
 
 // The typing of `configureStore` and `store.dispatch` doesn't take into account any middleware, most importantly that of thunk,
