@@ -8,9 +8,10 @@
   },
   "engineStrict": true,
   "resolutions": {
-    "async": "2.6.4",
+    "async": "^2.6.4",
+    "highlight.js": "^11.5.1",
     "jest-environment-jsdom": "27.5.1",
-    "minimist": "1.2.6"
+    "minimist": "^1.2.6"
   },
   "dependencies": {
     "axios": "^0.26.0",
@@ -19,7 +20,7 @@
     "core-js": "^3.19.3",
     "dayjs": "^1.10.7",
     "he": "^1.2.0",
-    "highlight.js": "^11.3.1",
+    "highlight.js": "^11.5.1",
     "history": "^4.10.1",
     "html-to-text": "^8.2.0",
     "identity-obj-proxy": "3.0.0",
