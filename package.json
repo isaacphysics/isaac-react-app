@@ -8,6 +8,7 @@
   },
   "engineStrict": true,
   "resolutions": {
+    "async": "2.6.4",
     "jest-environment-jsdom": "27.5.1",
     "minimist": "1.2.6"
   },
