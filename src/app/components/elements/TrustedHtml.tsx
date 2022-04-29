@@ -105,10 +105,8 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
 
 export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string;}) => {
     const user = useSelector(selectors.user.orNull);
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
-    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
-        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
-
     const figureNumbers = useContext(FigureNumberingContext);
 
     const [ htmlRef, setHtmlRef ] = useState<HTMLDivElement>();
@@ -118,7 +116,7 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
         }
     }, []);
 
-    const {manipulatedHtml, tableData} = manipulateHtml(katexify(html, user, booleanNotation, screenReaderHoverText, figureNumbers));
+    const {manipulatedHtml, tableData} = manipulateHtml(katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers));
     html = useClozeDropRegionsInHtml(manipulatedHtml);
 
     const ElementType = span ? "span" : "div";
