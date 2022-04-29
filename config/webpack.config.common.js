@@ -99,9 +99,9 @@ module.exports = (isProd) => {
                                     loader: 'css-loader',
                                     options: {
                                         url: {
-                                            filter: (url, resourcePath) => {
-                                                // Only rewrite URLs for KaTeX fonts or non-Isaac things:
-                                                return url.includes('KaTeX') || resourcePath.includes("node_modules");
+                                            filter: (url) => {
+                                                // The "/assets" directory is a special case and should be ignored:
+                                                return !url.startsWith("/assets");
                                             }
                                         }
                                     }
