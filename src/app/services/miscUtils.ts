@@ -103,16 +103,12 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
     }, [...deps, ref]);
 }
 
-export function isPhy() {
-    return SITE_SUBJECT === SITE.PHY
-}
+export const isPhy = SITE_SUBJECT === SITE.PHY;
 
-export function isCS() {
-    return SITE_SUBJECT === SITE.CS
-}
+export const isCS = SITE_SUBJECT === SITE.CS;
 
 export function siteSpecific<P, C>(phy: P, cs: C) {
-    return isPhy() ? phy : cs;
+    return isPhy ? phy : cs;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
