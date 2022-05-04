@@ -1,0 +1,17 @@
+.isaac-callout {
+  @extend .my-3;
+  padding: 25px 10px 10px;
+  //background-color: #3FFF5533;
+  background-color: $gray-110;
+
+  //.content-chunk > .content-value {
+  //  > .row {
+  //    margin: unset;
+  //    > .col {
+  //      margin-left: unset;
+  //      margin-right: unset;
+  //    }
+  //  }
+  //}
+}
+
