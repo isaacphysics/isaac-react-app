@@ -4,9 +4,7 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     getMyAnsweredQuestionsByDate,
-    getMyProgress,
     getUserAnsweredQuestionsByDate,
-    getUserProgress
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
@@ -24,6 +22,7 @@ import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {notificationsApi} from "../../state/slices/api/notifications";
 
 export const siteSpecific = {
     [SITE.PHY]: {
@@ -57,18 +56,18 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useDispatch();
-    const myProgress = useSelector((state: AppState) => state?.myProgress);
-    const userProgress = useSelector((state: AppState) => state?.userProgress);
+    const [ getMyProgress, { currentData: myProgress } ] = notificationsApi.endpoints.myProgress.useLazyQuery();
+    const [ getUserProgress, { currentData: userProgress } ] = notificationsApi.endpoints.userProgress.useLazyQuery();
     const achievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
     const myAnsweredQuestionsByDate = useSelector((state: AppState) => state?.myAnsweredQuestionsByDate);
     const userAnsweredQuestionsByDate = useSelector((state: AppState) => state?.userAnsweredQuestionsByDate);
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
-            dispatch(getMyProgress());
+            getMyProgress(user);
             dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
         } else if (isTeacher(user)) {
-            dispatch(getUserProgress(userIdOfInterest));
+            getUserProgress(userIdOfInterest);
             dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
     }, [dispatch, userIdOfInterest, viewingOwnData, user]);

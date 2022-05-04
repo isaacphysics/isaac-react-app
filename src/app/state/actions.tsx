@@ -156,10 +156,6 @@ export const logAction = (eventDetails: object) => {
     return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
 };
 
-export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE, userSnapshot: newUserSnapshot});
-};
-
 // TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
     updatedUser: ValidationUser,
@@ -235,36 +231,6 @@ export function setTransientExamBoardPreference(examBoard: EXAM_BOARD) {
 export function setTransientShowOtherContentPreference(showOtherContent: boolean) {
     return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT, showOtherContent};
 }
-
-export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
-    try {
-        const response = await api.users.getProgress();
-        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_SUCCESS, myProgress: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.MY_PROGRESS_RESPONSE_FAILURE});
-    }
-};
-
-export const getUserProgress = (userIdOfInterest?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_PROGRESS_REQUEST});
-    try {
-        const response = await api.users.getProgress(userIdOfInterest);
-        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_SUCCESS, userProgress: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_PROGRESS_RESPONSE_FAILURE});
-    }
-};
-
-export const getSnapshot = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_SNAPSHOT_REQUEST});
-    try {
-        const response = await api.users.getSnapshot();
-        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_SUCCESS, snapshot: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_SNAPSHOT_RESPONSE_FAILURE});
-    }
-};
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_PASSWORD_RESET_REQUEST});
@@ -576,16 +542,6 @@ export const releaseAllAuthorisations = (userId: number) => async (dispatch: Dis
         dispatch(showErrorToastIfNeeded("Revoke operation failed", e));
     }
 };
-
-export const requestNotifications = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.NOTIFICATIONS_REQUEST});
-    try {
-        const response = await api.notifications.get();
-        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS, notifications: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE});
-    }
-}
 
 // Document & topic fetch
 export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {

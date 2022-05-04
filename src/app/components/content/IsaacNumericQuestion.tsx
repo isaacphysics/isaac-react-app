@@ -23,7 +23,7 @@ import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import {v4 as uuid_v4} from 'uuid';
 import {LaTeX} from "../elements/LaTeX";
-import {useGetUnitsQuery} from "../../state/slices/api";
+import {isaacApi, useGetUnitsQuery} from "../../state/slices/api";
 
 interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;
@@ -112,7 +112,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
     const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
-    const { currentData: units } = useGetUnitsQuery();
+    const units = isaacApi.endpoints.getUnits.useQueryState().currentData;
 
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 

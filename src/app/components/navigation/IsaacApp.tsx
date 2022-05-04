@@ -18,8 +18,7 @@ import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
 import {NotFound} from "../pages/NotFound";
 import {
-    openActiveModal,
-    requestNotifications
+    openActiveModal
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
@@ -68,7 +67,6 @@ import {KEY} from "../../services/localStorage";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
-import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
 import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
 import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
 import {QuizDoAssignment} from "../pages/quizzes/QuizDoAssignment";
@@ -80,6 +78,7 @@ import {selectors} from "../../state/selectors";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ContentEmails} from "../pages/ContentEmails";
 import {usePrefetchImmediately, isaacApi} from "../../state/slices/api";
+import {notificationsApi} from "../../state/slices/api/notifications";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -88,22 +87,27 @@ export const IsaacApp = () => {
     const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
     const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
-    const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
+    const [ fetchNotifications, { currentData: notifications } ] = notificationsApi.endpoints.getNotifications.useLazyQuery();
     const user = useSelector(selectors.user.orNull);
 
+    // TODO ~current user, user preferences, and user auth settings need to be added to the store at exactly the same time!!!~ (not sure they do any more actually)
+    //  Could be done with the following pattern if needed:
+    //   https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#performing-multiple-requests-with-a-single-query
+    //   Requires this info too: https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#implementing-a-queryfn
+
     // Prefetch current user and glossary terms
-    usePrefetchImmediately("currentUser"); // TODO current user, user preferences, and user auth settings need to be added to the store at exactly the same time!!!
-    usePrefetchImmediately("getSegueEnvironment")
+    usePrefetchImmediately("currentUser");
+    usePrefetchImmediately("userPreferences");
+    usePrefetchImmediately("userAuthSettings");
+    usePrefetchImmediately("getSegueEnvironment");
+    usePrefetchImmediately("getSegueVersion");
+    usePrefetchImmediately("getUnits");
     usePrefetchImmediately("getGlossaryTerms");
 
     useEffect(() => {
         if (isLoggedIn(user)) {
-            dispatch(requestNotifications());
-            checkForWebSocket(user);
+            fetchNotifications();
         }
-        return () => {
-            closeWebSocket();
-        };
     }, [dispatch, user]);
 
     useEffect(() => {

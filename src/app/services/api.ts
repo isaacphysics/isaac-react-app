@@ -94,16 +94,9 @@ export const api = {
         passwordResetById: (id: number) => {
             return endpoint.post(`/users/${id}/resetpassword`);
         },
-
         getUserIdSchoolLookup: (userIds: number[]): AxiosPromise<AppTypes.UserSchoolLookup> => {
             return endpoint.get(`/users/school_lookup?user_ids=${userIds.join(",")}`);
         },
-        getProgress: (userIdOfInterest = "current_user"): AxiosPromise<AppTypes.UserProgress> => {
-            return endpoint.get(`users/${userIdOfInterest}/progress`);
-        },
-        getSnapshot: (): AxiosPromise<AppTypes.UserSnapshot> => {
-            return endpoint.get(`users/current_user/snapshot`);
-        }
     },
     authentication: {
         getRedirect: (provider: ApiTypes.AuthenticationProvider): AxiosPromise => {
@@ -129,14 +122,6 @@ export const api = {
         sendProvidedEmailWithUserIds: (emailTemplate: EmailTemplateDTO, emailType: string, ids: number[]): AxiosPromise => {
             return endpoint.post(`/email/sendprovidedemailwithuserids/${emailType}`, {userIds: ids, emailTemplate: emailTemplate});
         },
-    },
-    notifications: {
-        get: (): AxiosPromise => {
-            return endpoint.get(`/notifications`)
-        },
-        respond: (id: string, response: string): AxiosPromise => {
-            return endpoint.post(`/notifications/${id}/${response}`)
-        }
     },
     admin: {
         userSearch: {
@@ -471,18 +456,6 @@ export const api = {
     fasttrack: {
         concepts: (gameboardId: string, concept: string, upperQuestionId: string): AxiosPromise<ApiTypes.GameboardItem[]> => {
             return endpoint.get(`/fasttrack/${gameboardId}/concepts`, {params: {concept, "upper_question_id": upperQuestionId}});
-        }
-    },
-    websockets: {
-        userAlerts: (): WebSocket => {
-            const userAlertsURI = "/user-alerts";
-            if (API_PATH.indexOf("http") > -1) {
-                // APP and API on separate domains, urlPrefix is full URL:
-                return new WebSocket(API_PATH.replace(/^http/, "ws") + userAlertsURI);
-            } else {
-                // APP and API on same domain, need window.location.origin for full URL:
-                return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
-            }
         }
     },
     quizzes: {

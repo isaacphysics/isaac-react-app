@@ -1,26 +1,18 @@
-import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import React from "react";
+import {useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
-import {getMyProgress} from "../../state/actions";
 import {selectors} from "../../state/selectors";
+import {notificationsApi} from "../../state/slices/api/notifications";
 
 export const TeacherTools = () => {
-    const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const achievementsSelector = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
-
-    useEffect(() => {
-        if (!achievementsSelector) {
-            dispatch(getMyProgress());
-        }
-    }, [dispatch, user]);
+    const achievementsSelector = notificationsApi.endpoints.myProgress.useQueryState(user).currentData?.userSnapshot?.achievementsRecord;
 
     const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
 

@@ -1,29 +1,37 @@
-import {api} from "./api";
-import {UserSnapshot} from "../../IsaacAppTypes";
-import {UserSummaryDTO} from "../../IsaacApiTypes";
-import {getSnapshot, partiallyUpdateUserSnapshot} from "../state/actions";
-import {store} from "../state/store";
+import {LoggedInUser, UserProgress, UserSnapshot} from "../../../../IsaacAppTypes";
+import {store} from "../../store";
+import {API_PATH} from "../../../services/constants";
+import {PatchCollection, Recipe} from "@reduxjs/toolkit/dist/query/core/buildThunks";
+import {isDefined} from "../../../services/miscUtils";
+import {notificationsApi} from "./notifications";
 
 let notificationWebSocket: WebSocket | null  = null;
 let webSocketCheckTimeout: number | null = null;
 let webSocketErrorCount = 0;
 let lastKnownServerTime: number | null = null;
 
-const openNotificationSocket = function(user: UserSummaryDTO | null): void {
+const createWebSocket = () => {
+    const userAlertsURI = "/user-alerts";
+    if (API_PATH.indexOf("http") > -1) {
+        // APP and API on separate domains, urlPrefix is full URL:
+        return new WebSocket(API_PATH.replace(/^http/, "ws") + userAlertsURI);
+    } else {
+        // APP and API on same domain, need window.location.origin for full URL:
+        return new WebSocket(window.location.origin.replace(/^http/, "ws") + API_PATH + userAlertsURI);
+    }
+};
+
+const openNotificationSocket = function(updateMyProgress: (updateRecipe: Recipe<UserProgress | null>) => PatchCollection): void {
 
     if (notificationWebSocket !== null) {
         return;
     }
 
-    if (!user) {
-        return;
-    }
-
     // Set up websocket and connect to notification endpoint:
-    notificationWebSocket = api.websockets.userAlerts();
-
+    notificationWebSocket = createWebSocket();
 
     notificationWebSocket.onopen = function(_event) {
+        console.log(`Websocket opened`);
         if (webSocketCheckTimeout !== null) {
             clearTimeout(webSocketCheckTimeout);
         }
@@ -32,9 +40,9 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
     }
 
     notificationWebSocket.onmessage = function(event) {
-
         const websocketMessage = JSON.parse(event.data);
-
+        console.log(`Websocket message received:`);
+        console.log(websocketMessage);
         if (websocketMessage.heartbeat) {
             // Update the last known server time from the message heartbeat.
             const newServerTime = websocketMessage.heartbeat;
@@ -46,13 +54,20 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
         }
 
         if (websocketMessage.userSnapshot) {
-            store.dispatch(partiallyUpdateUserSnapshot(websocketMessage.userSnapshot));
+            updateMyProgress((progress) => {
+                if (progress) progress.userSnapshot = websocketMessage.userSnapshot;
+            });
         } else if (websocketMessage.notifications) {
             websocketMessage.notifications.forEach(function(entry: any) {
                 const notificationMessage = JSON.parse(entry.message);
                 // specific user streak update
                 if (notificationMessage.dailyStreakRecord && notificationMessage.weeklyStreakRecord) {
-                    store.dispatch(partiallyUpdateUserSnapshot({dailyStreakRecord: notificationMessage.dailyStreakRecord, weeklyStreakRecord: notificationMessage.weeklyStreakRecord}));
+                    updateMyProgress((progress) => {
+                        if (progress && progress.userSnapshot) {
+                            progress.userSnapshot.dailyStreakRecord = notificationMessage.dailyStreakRecord;
+                            progress.userSnapshot.weeklyStreakRecord = notificationMessage.weeklyStreakRecord;
+                        }
+                    });
                 }
             });
         }
@@ -60,7 +75,8 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
 
     notificationWebSocket.onerror = function(error) {
         console.error("WebSocket error:", error);
-        store.dispatch(getSnapshot());
+        // Initiate poll for latest snapshot info
+        store.dispatch(notificationsApi.endpoints.snapshot.initiate());
     }
 
 
@@ -82,7 +98,7 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
                     // So use the event 'reason' to indicate too many connections, try again in 1 min.
                     console.log("WebSocket endpoint overloaded. Trying again later!")
                     webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 60000);
-                } else if (event.reason === "USER_LOGOUT") {
+                } else if (event.reason === "USER_LOGOUT" || event.reason === "CLOSE_WEBSOCKET_CALLED") {
                     // This was intentional and client generated. Do not attempt to reopen the WebSocket.
                     break;
                 } else {
@@ -110,9 +126,10 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
     }
 }
 
-export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnapshot?: UserSnapshot): void {
+export const checkForWebSocket = function(user: LoggedInUser | null, updateMyProgress: (updateRecipe: Recipe<UserProgress | null>) => PatchCollection, userSnapshot?: UserSnapshot): void {
     try {
         if (notificationWebSocket !== null) {
+            console.log("Pinging websocket...");
             if (!userSnapshot) {
                 // If we don't have a snapshot, request one.
                 notificationWebSocket.send("user-snapshot-nudge");
@@ -124,17 +141,18 @@ export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnap
                 window.clearTimeout(webSocketCheckTimeout);
             }
             webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 60000);
-        } else {
-            openNotificationSocket(user);
+        } else if (isDefined(user)) {
+            console.log(`Checking websocket for user: ${user?.email}`);
+            openNotificationSocket(updateMyProgress);
         }
     } catch (e) {
-        console.log("Error establishing WebSocket connection!", e)
+        console.log("Error establishing WebSocket connection!", e);
     }
 }
 
 export const closeWebSocket = function(): void {
     if (notificationWebSocket !== null) {
-        notificationWebSocket.close(1000, "USER_LOGOUT");
+        notificationWebSocket.close(1000, "CLOSE_WEBSOCKET_CALLED");
         notificationWebSocket = null;
     }
     if (webSocketCheckTimeout !== null) {

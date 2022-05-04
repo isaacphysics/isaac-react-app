@@ -5,13 +5,13 @@ import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
 import {selectors} from "../../../state/selectors";
-import {AppState} from "../../../state/reducers";
 import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
 import {useDeviceSize} from "../../../services/device";
+import {notificationsApi} from "../../../state/slices/api/notifications";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
-    const streakRecord = useSelector((state: AppState) => state?.myProgress?.userSnapshot);
+    const streakRecord = notificationsApi.endpoints.myProgress.useQuery(user).currentData?.userSnapshot;
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     return <header className="light">

@@ -1,7 +1,7 @@
 import {FetchBaseQueryArgs} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {ACTION_TYPE, API_PATH} from "../../services/constants";
+import {ACTION_TYPE, API_PATH} from "../../../services/constants";
 import {
     AuthenticationProvider,
     GlossaryTermDTO,
@@ -9,17 +9,22 @@ import {
     ResultsWrapper,
     TOTPSharedSecretDTO,
     UserAuthenticationSettingsDTO,
-} from "../../../IsaacApiTypes";
+} from "../../../../IsaacApiTypes";
 import {PrefetchOptions} from "@reduxjs/toolkit/dist/query/core/module";
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
-import {CredentialsAuthDTO, PotentialUser, UserPreferencesDTO} from "../../../IsaacAppTypes";
-import {securePadCredentials} from "../../services/credentialPadding";
-import {extractMessage, showErrorToastIfNeeded, showToast} from "../actions";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
-import {history} from "../../services/history";
-import {totpChallenge} from "./user";
+import {
+    CredentialsAuthDTO,
+    PotentialUser,
+    UserPreferencesDTO,
+    UserProgress
+} from "../../../../IsaacAppTypes";
+import {securePadCredentials} from "../../../services/credentialPadding";
+import {showErrorToastIfNeeded, showToast} from "../../actions";
+import * as persistence from "../../../services/localStorage";
+import {KEY} from "../../../services/localStorage";
+import {history} from "../../../services/history";
+import {totpChallenge} from "../user";
 
 // This should be used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -62,7 +67,7 @@ export interface LoginUserArgs {
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 export const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "UserInfo"], // Used to control refetching and caching of collections of data
+    tagTypes: ["GlossaryTerms", "UserInfo", "Notifications", "UserProgress"], // Used to control refetching and caching of collections of data
     reducerPath: 'isaacApi',
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
@@ -337,8 +342,6 @@ export const isaacApi = createApi({
                 }
             },
         })
-
-        // TODO how to implement notifications with Websockets: https://redux-toolkit.js.org/rtk-query/usage/streaming-updates#streaming-update-examples
     })
 });
 
