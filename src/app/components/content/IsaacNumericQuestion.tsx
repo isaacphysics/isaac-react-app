@@ -23,7 +23,7 @@ import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
 import {v4 as uuid_v4} from 'uuid';
 import {LaTeX} from "../elements/LaTeX";
-import {isaacApi, useGetUnitsQuery} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 
 interface IsaacNumericQuestionProps {
     doc: IsaacNumericQuestionDTO;

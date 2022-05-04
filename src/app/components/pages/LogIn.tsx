@@ -7,7 +7,7 @@ import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {useLoginMutation, useTotpChallengeMutation} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 import {MetaDescription} from "../elements/MetaDescription";
 
 
@@ -30,8 +30,8 @@ export const useLoginLogic = () => {
 
     const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
 
-    const [ loginTrigger, { isLoading: loginLoading } ] = useLoginMutation();
-    const [ totpChallengeTrigger, { isLoading: totpChallengeLoading } ] = useTotpChallengeMutation();
+    const [ loginTrigger, { isLoading: loginLoading } ] = isaacApi.endpoints.login.useMutation();
+    const [ totpChallengeTrigger, { isLoading: totpChallengeLoading } ] = isaacApi.endpoints.totpChallenge.useMutation();
     const totpChallengePending = useSelector((state: AppState) => state?.totpChallengePending);
 
     const validateAndLogIn = useCallback((event: React.FormEvent<HTMLFormElement>) => {

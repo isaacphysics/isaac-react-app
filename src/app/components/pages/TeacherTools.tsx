@@ -12,7 +12,7 @@ import {notificationsApi} from "../../state/slices/api/notifications";
 
 export const TeacherTools = () => {
     const user = useSelector(selectors.user.orNull);
-    const achievementsSelector = notificationsApi.endpoints.myProgress.useQueryState(user).currentData?.userSnapshot?.achievementsRecord;
+    const achievementsSelector = notificationsApi.endpoints.myProgress.useQuery(user).currentData?.userSnapshot?.achievementsRecord;
 
     const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
 

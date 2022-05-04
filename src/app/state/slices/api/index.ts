@@ -359,14 +359,3 @@ export function usePrefetchImmediately(
         dispatch(isaacApi.util.prefetch(endpoint, arg as any, options))
     }, []);
 }
-
-export const {
-    useLoginMutation,
-    useTotpChallengeMutation,
-    useSetupAccountMFAMutation,
-    useDisableAccountMFAMutation,
-    useNewMFASecretMutation,
-    useCurrentUserQuery,
-    useGetSegueVersionQuery,
-    useGetUnitsQuery
-} = isaacApi;
