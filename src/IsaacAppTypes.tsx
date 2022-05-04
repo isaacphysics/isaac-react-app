@@ -546,9 +546,7 @@ export interface ShortcutResponse extends ContentSummaryDTO {
     hash?: string;
 }
 
-export interface UserBetaFeaturePreferences {
-    SCREENREADER_HOVERTEXT?: boolean;
-}
+export interface UserBetaFeaturePreferences {}
 
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;

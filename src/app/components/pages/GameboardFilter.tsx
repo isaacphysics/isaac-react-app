@@ -33,7 +33,7 @@ import {debounce} from "lodash";
 import {History} from "history";
 import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {siteSpecific} from "../../services/miscUtils";
+import {isCS, isDefined, isPhy, siteSpecific} from "../../services/miscUtils";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 
@@ -81,16 +81,26 @@ function processQueryString(query: string): QueryStringResponse {
     const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>))
 
     const selectionItems: Item<TAG_ID>[][] = [];
-    let plausibleParentHierarchy = true;
-    [subjects, fields, topics].forEach((tier, index) => {
-        if (tier && plausibleParentHierarchy) {
-            const validTierTags = tags
-                .getSpecifiedTags(tagHierarchy[index], (tier instanceof Array ? tier : tier.split(",")) as TAG_ID[]);
-            // Only allow another layer of specificity if only one parent is selected, or if the site is CS (in which case give all layers)
-            plausibleParentHierarchy = validTierTags.length === 1 || SITE_SUBJECT === SITE.CS;
-            selectionItems.push(validTierTags.map(itemiseTag));
-        }
-    });
+    if (isPhy) {
+        let plausibleParentHierarchy = true;
+        [subjects, fields, topics].forEach((tier, index) => {
+            if (tier && plausibleParentHierarchy) {
+                const validTierTags = tags
+                    .getSpecifiedTags(tagHierarchy[index], (tier instanceof Array ? tier : tier.split(",")) as TAG_ID[]);
+                // Only allow another layer of specificity if only one parent is selected
+                plausibleParentHierarchy = validTierTags.length === 1;
+                selectionItems.push(validTierTags.map(itemiseTag));
+            }
+        });
+    } else {
+        // On CS, the query params do not contain subject and field tag ids, so we set subject to "computer_science" and
+        // populate field tags based on selected topics
+        selectionItems.push([itemiseTag(tags.getById(TAG_ID.computerScience))]);
+        const topicTags = topics ? tags.getSpecifiedTags(tagHierarchy[2], (topics instanceof Array ? topics : topics.split(",")) as TAG_ID[]) : null;
+        const fieldTags = topicTags && Array.from(new Set(topicTags.map(tag => tag.parent).filter(isDefined))).map(tagId => itemiseTag(tags.getById(tagId)));
+        if (fieldTags) selectionItems.push(fieldTags);
+        if (topicTags) selectionItems.push(topicTags.map(itemiseTag));
+    }
 
     return {
         querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems, queryConcepts: conceptItems, queryExamBoards: examBoardItems
@@ -421,6 +431,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (SITE_SUBJECT === SITE.PHY) {params.questionCategories = "quick_quiz,learn_and_practice";}
         params.title = boardTitle;
 
+        // Populate query parameters with the selected subjects, fields, and topics
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
@@ -432,6 +443,11 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         });
 
         dispatch(generateTemporaryGameboard(params));
+        // Don't add subject and strands to CS URL
+        if (isCS) {
+            if (tiers[0]?.id) delete params[tiers[0].id];
+            if (tiers[1]?.id) delete params[tiers[1].id];
+        }
         delete params.questionCategories;
         history.replace({search: queryString.stringify(params, {encode: false})});
     }
