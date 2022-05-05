@@ -1,10 +1,10 @@
 import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
-import {FigureNumberingContext} from "../../../IsaacAppTypes";
+import {ClozeDropRegionContext, FigureNumberingContext} from "../../../IsaacAppTypes";
 import {AppState} from "../../state/reducers";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {katexify} from "./LaTeX";
-import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
+import {ClozeQuestionDropRegionContext, useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import {ScrollShadows} from "./ScrollShadows";
@@ -20,7 +20,7 @@ interface TableData {
 }
 
 const htmlDom = document.createElement("html");
-function manipulateHtml(html: string): {manipulatedHtml: string, tableData: TableData[]} {
+function manipulateHtml(html: string, dropRegionContext?: ClozeQuestionDropRegionContext): {manipulatedHtml: string, tableData: TableData[]} {
     // This can't be quick but it is more robust than writing regular expressions...
     htmlDom.innerHTML = html;
 
@@ -29,25 +29,22 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
     const tableInnerHTMLs: TableData[] = [];
     for (let i = 0; i < tableElements.length; i++) {
         const table = tableElements[i];
-        // Skip if table is marked as ignored - this only happens for cloze question expositions where we possibly
-        // render drop zones inside tables
-        if (table.hasAttribute("data-ignore")) {
-            table.setAttribute("class", classNames("table table-bordered w-100 text-center bg-white m-0", table.className));
-            const parent = table.parentElement as HTMLElement;
-            const div = document.createElement("div");
-            div.setAttribute("class", "overflow-auto mb-4");
-            parent.insertBefore(div, table);
-            div.appendChild(parent.removeChild(table));
-            continue;
-        }
-
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
-        div.setAttribute("id", `table-${i}`);
-        parent.insertBefore(div, table);
-        tableInnerHTMLs.push({id: i, html: table.innerHTML, classes: (table.getAttribute("class") || "").split(/\s+/)});
-        parent.removeChild(table);
+
+        // Skip turning the table into a portal component if we are in a cloze question exposition
+        if (dropRegionContext && dropRegionContext.questionPartId) {
+            table.setAttribute("class", classNames("table table-bordered w-100 text-center bg-white m-0", table.className));
+            div.setAttribute("class", "overflow-auto mb-4");
+            parent.insertBefore(div, table);
+            div.appendChild(parent.removeChild(table));
+        } else {
+            div.setAttribute("id", `table-${i}`);
+            parent.insertBefore(div, table);
+            tableInnerHTMLs.push({id: i, html: table.innerHTML, classes: (table.getAttribute("class") || "").split(/\s+/)});
+            parent.removeChild(table);
+        }
     }
     return {manipulatedHtml: htmlDom.innerHTML, tableData: tableInnerHTMLs};
 }
@@ -128,8 +125,9 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
         }
     }, []);
 
-    const htmlWithClozeDropZones = useClozeDropRegionsInHtml(html);
-    const {manipulatedHtml, tableData} = manipulateHtml(katexify(htmlWithClozeDropZones, user, booleanNotation, segueEnvironment === "DEV", figureNumbers));
+    const dropRegionContext = useContext(ClozeDropRegionContext);
+    const htmlWithClozeDropZones = useClozeDropRegionsInHtml(html, dropRegionContext);
+    const {manipulatedHtml, tableData} = manipulateHtml(katexify(htmlWithClozeDropZones, user, booleanNotation, segueEnvironment === "DEV", figureNumbers), dropRegionContext);
 
     const ElementType = span ? "span" : "div";
     return <>
