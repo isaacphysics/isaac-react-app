@@ -76,7 +76,8 @@ function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt, sho
 export type ClozeQuestionDropRegionContext = {register: (id: string, index: number) => void, questionPartId: string};
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
-export function useClozeDropRegionsInHtml(html: string, dropRegionContext?: ClozeQuestionDropRegionContext): string {
+export function useClozeDropRegionsInHtml(html: string): string {
+    const dropRegionContext = useContext(ClozeDropRegionContext);
     if (dropRegionContext && dropRegionContext.questionPartId) {
         let index = 0;
         html = html.replace(dropZoneRegex, (matchingString, params, widthMatch, heightMatch, offset) => {
