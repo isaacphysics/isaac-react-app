@@ -2,6 +2,11 @@ import {PropsValue} from "react-select";
 
 export interface Item<T> {value: T; label: string;}
 
+export const itemise: <T>(value: T, label?: string) => Item<T> = (v, l) => ({value: v, label: l ?? String(v)});
+export const getValue: <T>(item: Item<T>) => T = ({value}) => value;
+export const getLabel: <T>(item: Item<T>) => string = ({label}) => label;
+export const toTuple: <T>(item: Item<T>) => [T, string] = ({value, label}) => [value, label];
+
 type UnwrapType<T, U> = U extends Item<T> ? false : (U extends T ? true : void);
 
 /* Takes a function that works on either `Item<T>[]` or `T[]` (probably some kind of state-setter function), and

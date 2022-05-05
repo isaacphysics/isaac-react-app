@@ -451,9 +451,9 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
     | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
 
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
 
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}

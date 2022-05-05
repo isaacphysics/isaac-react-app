@@ -83,6 +83,7 @@ import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
+import {getValue, Item, toTuple} from "../services/select";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1604,9 +1605,9 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
     }
 };
 
-export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
-    if (groupId == null) {
-        dispatch(showToast({color: "danger", title: "Board assignment failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
+export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
+    if (groups.length === 0) {
+        dispatch(showToast({color: "danger", title: "Board assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
         return false;
     }
 
@@ -1621,13 +1622,25 @@ export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Dat
         }
     }
 
-    const assignment = {board, groupId, dueDate: dueDateUTC, notes};
+    const groupIds = groups.map(getValue);
+    const assignment = {board, groupIds, dueDate: dueDateUTC, notes};
 
     dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, ...assignment});
     try {
-        await api.boards.assign(board, groupId, dueDateUTC, notes);
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment});
-        dispatch(showToast({color: "success", title: "Assignment saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
+        const {data: {assignedGroupIds, errorGroupIds}} = await api.boards.assign(board, groupIds, dueDateUTC, notes);
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment, groupIds: assignedGroupIds});
+        // Handle user feedback depending on whether some groups failed to assign or not
+        if (errorGroupIds.length !== 0) {
+            const groupLookUp = new Map(groups.map(toTuple));
+            if (assignedGroupIds.length === 0) {
+                dispatch(showToast({color: "success", title: "Some assignments saved", body: `Group(s) that could not be assigned: ${groupIds.map(id => groupLookUp.get(id) ?? "unknown").join(", ")}`, timeout: 5000}) as any);
+            } else {
+                throw new Error("All group assignments failed.");
+            }
+        } else {
+            const successMessage = groups.length > 1 ? "These assignments have been saved successfully." : "This assignment has been saved successfully."
+            dispatch(showToast({color: "success", title: `Assignment${groups.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
+        }
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, ...assignment});

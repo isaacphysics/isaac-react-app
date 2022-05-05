@@ -466,7 +466,7 @@ describe("boards reducer", () => {
     });
 
     it ("can add a board assignee", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupId: 1};
+        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupIds: [1]};
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
@@ -475,4 +475,5 @@ describe("boards reducer", () => {
         });
     });
 
+    // TODO extend to multiple assignees
 });

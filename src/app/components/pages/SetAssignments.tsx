@@ -60,6 +60,8 @@ import {
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import {above, below, useDeviceSize} from "../../services/device";
+import Select from "react-select";
+import {selectOnChange, itemise, Item} from "../../services/select";
 
 enum boardViews {
     "table" = "Table View",
@@ -82,7 +84,7 @@ interface SetAssignmentsPageProps {
     loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
     loadGroupsForBoard: (board: GameboardDTO) => void;
     deleteBoard: (board: GameboardDTO) => void;
-    assignBoard: (board: GameboardDTO, groupId?: number, dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
+    assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
@@ -95,15 +97,15 @@ type BoardProps = SetAssignmentsPageProps & {
 }
 
 const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
-    const [groupId, setGroupId] = useState<number>();
+    const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useSelector(selectors.user.orNull);
 
     function assign() {
-        assignBoard(board, groupId, dueDate, assignmentNotes).then(success => {
+        assignBoard(board, selectedGroups, dueDate, assignmentNotes).then(success => {
             if (success) {
-                setGroupId(-1);
+                setSelectedGroups([]);
                 setDueDate(undefined);
                 setAssignmentNotes('');
             }
@@ -114,11 +116,11 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const currentMonth = (new Date()).getMonth() + 1;
 
     return <Container className="py-2">
-        <Label className="w-100 pb-2">Group:
-            <Input type="select" value={groupId} onChange={(e: ChangeEvent<HTMLInputElement>) => setGroupId(e.target.value ? parseInt(e.target.value, 10) : undefined)}>
-                <option key={undefined} value={undefined} />
-                {groups && sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(group => <option key={group.id} value={group.id}>{group.groupName}</option>)}
-            </Input>
+        <Label className="w-100 pb-2">Group(s):
+            <Select inputId="groups-to-assign" isMulti isClearable placeholder="None"
+                    onChange={selectOnChange(setSelectedGroups, false)}
+                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id, g.groupName))}
+            />
         </Label>
         <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
@@ -140,7 +142,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             className="mt-2 mb-2"
             block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
             onClick={assign}
-            disabled={groupId === null || groupId === -1 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
         >Assign to group</Button>
     </Container>;
 };
