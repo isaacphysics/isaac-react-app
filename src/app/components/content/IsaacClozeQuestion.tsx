@@ -75,7 +75,6 @@ function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt, sho
 
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
-
 export function useClozeDropRegionsInHtml(html: string): string {
     const dropRegionContext = useContext(ClozeDropRegionContext);
     if (dropRegionContext && dropRegionContext.questionPartId) {
@@ -87,6 +86,14 @@ export function useClozeDropRegionsInHtml(html: string): string {
             const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
             return `<div id="${dropId}" class="d-inline-block" style="min-width: ${minWidth}; min-height: ${minHeight}"></div>`;
         });
+        // Make sure all tables inside the cloze question exposition are ignored when being parsed as expandable
+        const htmlDom = document.createElement("html");
+        htmlDom.innerHTML = html;
+        const tableElements = htmlDom.getElementsByTagName("table");
+        for (let i = 0; i < tableElements.length; i++) {
+            tableElements[i].setAttribute("data-ignore", "true");
+        }
+        html = htmlDom.innerHTML;
     }
     return html;
 }

@@ -29,6 +29,18 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
     const tableInnerHTMLs: TableData[] = [];
     for (let i = 0; i < tableElements.length; i++) {
         const table = tableElements[i];
+        // Skip if table is marked as ignored - this only happens for cloze question expositions where we possibly
+        // render drop zones inside tables
+        if (table.hasAttribute("data-ignore")) {
+            table.setAttribute("class", classNames("table table-bordered w-100 text-center bg-white m-0", table.className));
+            const parent = table.parentElement as HTMLElement;
+            const div = document.createElement("div");
+            div.setAttribute("class", "overflow-auto mb-4");
+            parent.insertBefore(div, table);
+            div.appendChild(parent.removeChild(table));
+            continue;
+        }
+
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
@@ -116,12 +128,12 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
         }
     }, []);
 
-    const {manipulatedHtml, tableData} = manipulateHtml(katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers));
-    html = useClozeDropRegionsInHtml(manipulatedHtml);
+    const htmlWithClozeDropZones = useClozeDropRegionsInHtml(html);
+    const {manipulatedHtml, tableData} = manipulateHtml(katexify(htmlWithClozeDropZones, user, booleanNotation, segueEnvironment === "DEV", figureNumbers));
 
     const ElementType = span ? "span" : "div";
     return <>
-        <ElementType ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: html}} />
+        <ElementType ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: manipulatedHtml}} />
         {htmlRef && tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes}/>)}
     </>;
 };
