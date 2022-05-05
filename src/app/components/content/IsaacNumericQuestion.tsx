@@ -1,9 +1,7 @@
 import React, {FormEvent, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Rand from 'rand-seed';
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
 import {
     Button,
@@ -19,18 +17,12 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {selectors} from "../../state/selectors";
-import {selectQuestionPart} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services/questions";
 import {v4 as uuid_v4} from 'uuid';
 import {LaTeX} from "../elements/LaTeX";
 import {isaacApi} from "../../state/slices/api";
-
-interface IsaacNumericQuestionProps {
-    doc: IsaacNumericQuestionDTO;
-    questionId: string;
-    validationResponse?: QuantityValidationResponseDTO;
-    readonly: boolean;
-}
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {selectors} from "../../state/selectors";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -100,21 +92,21 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps): JSX.Element => {
-    const dispatch = useDispatch();
-    const userId = useSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
+type IsaacNumericQuestionProps = IsaacQuestionProps<IsaacNumericQuestionDTO> & {validationResponse?: QuantityValidationResponseDTO};
 
-    const currentAttempt = questionPart?.currentAttempt as QuantityDTO;
+export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
+
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
+
     const currentAttemptValue = currentAttempt?.value;
     const currentAttemptUnits = currentAttempt?.units;
     const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
+    const user = useSelector(selectors.user.orNull);
     const units = isaacApi.endpoints.getUnits.useQueryState().currentData;
 
-    const selectedUnits = selectUnits(doc, questionId, units, userId);
+    const selectedUnits = selectUnits(doc, questionId, units, user?.loggedIn ? user.id : undefined);
 
     function updateValue(event: FormEvent<HTMLInputElement>) {
         const attempt = {
@@ -122,7 +114,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
             value: event.currentTarget.value,
             units: currentAttemptUnits
         };
-        dispatch(setCurrentAttempt(questionId, attempt));
+        dispatchSetCurrentAttempt(attempt);
     }
 
     function updateUnits(units?: string) {
@@ -131,7 +123,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
             value: currentAttemptValue,
             units: units
         };
-        dispatch(setCurrentAttempt(questionId, attempt));
+        dispatchSetCurrentAttempt(attempt);
     }
 
     const [isOpen, setIsOpen] = useState(false);

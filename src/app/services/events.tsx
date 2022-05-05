@@ -4,6 +4,8 @@ import {AugmentedEvent} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
 import React from "react";
 import {Link} from "react-router-dom";
+import {STAGE, STAGES_CS, STAGES_PHY} from "./constants";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     {"This event is aimed at students. If you are not a student but still wish to attend, please "}
@@ -88,3 +90,8 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
         </>;
     }
 };
+
+export const stageExistsForSite = (stage: string) => {
+    const stagesForSite = SITE_SUBJECT === SITE.CS ? STAGES_CS : STAGES_PHY
+    return stagesForSite.has(stage as STAGE)
+}

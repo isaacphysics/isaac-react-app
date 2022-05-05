@@ -11,6 +11,7 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
+    QuestionDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
@@ -445,6 +446,12 @@ export type Action =
 
 export type NOT_FOUND_TYPE = 404;
 
+export interface IsaacQuestionProps<T extends QuestionDTO> {
+    doc: T;
+    questionId: string;
+    readonly?: boolean;
+}
+
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
@@ -466,9 +473,7 @@ export interface ShortcutResponse extends ContentSummaryDTO {
     hash?: string;
 }
 
-export interface UserBetaFeaturePreferences {
-    SCREENREADER_HOVERTEXT?: boolean;
-}
+export interface UserBetaFeaturePreferences {}
 
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;

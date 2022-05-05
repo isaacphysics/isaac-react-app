@@ -102,7 +102,6 @@ const customKatexOptions: KatexOptions = {
     throwOnError: false,
     strict: false,
     colorIsTextColor: true,
-    output: "html"
 };
 
 function patternQuote(s: string) {
@@ -276,30 +275,42 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                         const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
                         return "\\text{" + REF + reference + ENDREF + "}";
                     }};
-                let katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse} as KatexOptions;
+                const katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse, output: "html"} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
                     return createReference(match, "unknown reference " + match);
                 });
 
-                let screenreaderText;
+                let screenReaderText;
                 try {
-                    let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
-                    screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
-                    screenreaderText = screenreaderText.replace(SR_REF_REGEXP, (_, match) => {
+                    const pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
+                    screenReaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
+                    screenReaderText = screenReaderText.replace(SR_REF_REGEXP, (_, match) => {
                         return createReference(match, "unknown reference " + match, false);
                     });
-                } catch (e) {
-                    // eslint-disable-next-line no-console
-                    console.warn(`Unsupported equation for screenreader text: '${latexMunged}'`, e);
-                    screenreaderText = "[[Unsupported equation]]";
+                } catch {
+                    screenReaderText = undefined;
                 }
-                katexRenderResult = katexRenderResult.replace('<span class="katex">',
-                    `<span class="katex"><span class="sr-only">${screenreaderText}</span>`);
+
+                // If katex-a11y fails, generate MathML using KaTeX for accessibility
+                if (screenReaderText) {
+                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                        `<span class="katex"><span class="sr-only">${screenReaderText}</span>`);
+                } else {
+                    const katexMathML = katex.renderToString(latexMunged, {...katexOptions, output: "mathml"})
+                        .replace(`class="katex"`, `class="katex-mathml"`);
+                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                        `<span class="katex">${katexMathML}`);
+                }
 
                 if (screenReaderHoverText) {
-                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
-                        `<span class="katex" title="${screenreaderText.replace(/,/g, "").replace(/\s\s+/g, " ")}">`);
+                    katexRenderResult = katexRenderResult.replace(
+                        '<span class="katex-html"',
+                        `<span class="katex-html" title="${
+                            screenReaderText ? 
+                                "Screenreader text: " + screenReaderText.replace(/,/g, "").replace(/\s\s+/g, " ") : 
+                                "Accessible with a screenreader that supports MathML"
+                        }"`);
                 }
 
                 output += katexRenderResult;
@@ -328,11 +339,11 @@ export function LaTeX({markup, className}: {markup: string, className?: string})
     const user = useSelector(selectors.user.orNull);
     const userPreferences = isaacApi.endpoints.userPreferences.useQueryState().currentData;
     const booleanNotation = userPreferences?.BOOLEAN_NOTATION || null;
-    const screenReaderHoverText = (userPreferences?.BETA_FEATURE && userPreferences?.BETA_FEATURE.SCREENREADER_HOVERTEXT) || false;
+    const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
     const figureNumbers = useContext(FigureNumberingContext);
 
     const escapedMarkup = utils.escapeHtml(markup);
-    const katexHtml = katexify(escapedMarkup, user, booleanNotation, screenReaderHoverText, figureNumbers);
+    const katexHtml = katexify(escapedMarkup, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
 
     return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
 }

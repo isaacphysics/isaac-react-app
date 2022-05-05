@@ -1,18 +1,13 @@
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacStringMatchQuestionDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
-import {selectors} from "../../state/selectors";
-import {selectQuestionPart} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services/questions";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
+export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacStringMatchQuestionDTO>) => {
 
-export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: {doc: IsaacStringMatchQuestionDTO; questionId: string; readonly?: boolean}) => {
-    const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const currentAttemptValue = questionPart?.currentAttempt?.value;
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     return <div className="stringmatch-question">
         <div className="question-content">
@@ -24,9 +19,9 @@ export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: {doc: Isaa
             maxLength={doc.multiLineEntry ? 250 : 75}
             spellCheck={false} className="mb-4"
             rows={doc.multiLineEntry ? 3 : undefined}
-            value={currentAttemptValue || ""}
+            value={currentAttempt?.value || ""}
             onChange={event =>
-                dispatch(setCurrentAttempt(questionId, {type: "stringChoice", value: event.target.value}))
+                dispatchSetCurrentAttempt({type: "stringChoice", value: event.target.value})
             }
             readOnly={readonly}
         />

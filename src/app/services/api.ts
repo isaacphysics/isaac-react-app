@@ -1,5 +1,5 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
+import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     EmailTemplateDTO,
@@ -368,11 +368,18 @@ export const api = {
         },
         getEvents: (
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean, showReservedOnly: boolean,
+            showStageOnly: EventStageFilter | null
         ): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
             return endpoint.get(`/events`, {params: {
-                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, show_reservations_only: showReservedOnly, tags: filterEventsByType
+                start_index: startIndex,
+                limit: eventsPerPage,
+                show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly,
+                show_booked_only: showBookedOnly,
+                show_reservations_only: showReservedOnly,
+                show_stage_only: showStageOnly,
+                tags: filterEventsByType
             }});
         },
         getFirstN: (numberOfActiveEvents: number, active: boolean): AxiosPromise<{results: ApiTypes.IsaacEventPageDTO[]; totalResults: number}> => {
@@ -390,11 +397,16 @@ export const api = {
         },
         getEventMapData: (
             startIndex: number, eventsPerPage: number, filterEventsByType: EventTypeFilter | null,
-            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean
-        ): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
+            showActiveOnly: boolean, showInactiveOnly: boolean, showBookedOnly: boolean,
+            showStageOnly: EventStageFilter | null): AxiosPromise<{results: AppTypes.EventMapData[]; totalResults: number}> => {
             return endpoint.get(`/events/map_data`, {params: {
-                start_index: startIndex, limit: eventsPerPage, show_active_only: showActiveOnly,
-                show_inactive_only: showInactiveOnly, show_booked_only: showBookedOnly, tags: filterEventsByType
+                start_index: startIndex,
+                limit: eventsPerPage,
+                show_active_only: showActiveOnly,
+                show_inactive_only: showInactiveOnly,
+                show_booked_only: showBookedOnly,
+                show_stage_only: showStageOnly,
+                tags: filterEventsByType
             }});
         }
     },

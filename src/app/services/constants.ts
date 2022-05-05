@@ -727,6 +727,7 @@ export enum TAG_ID {
     statistics = "statistics",
     functions = "functions",
     calculus = "calculus",
+    number = "number",
 
     // Physics Topics ---
 
@@ -769,6 +770,11 @@ export enum TAG_ID {
 
     // Maths Topics ---
 
+    // Number
+    arithmetic = "arithmetic",
+    rational = "rational",
+    factors = "factors_powers",
+    complexNumbers = "complex_numbers",
     // Geometry
     geomVectors = "geom_vectors",
     shapes = "shapes",
@@ -780,7 +786,6 @@ export enum TAG_ID {
     series = "series",
     simultaneous = "simultaneous",
     matrices = "matrices",
-    complexNumbers = "complex_numbers",
     // Statistics
     hypothesis = "hypothesis",
     dataAnalysis = "data_analysis",
@@ -936,6 +941,17 @@ export enum EventTypeFilter {
     "Student events" = "student",
     "Teacher events" = "teacher",
     "Online tutorials" = "virtual",
+}
+
+export enum EventStageFilter {
+    "All stages" = "all",
+    "University" = "university",
+    "Further A" = "further_a",
+    "A-Level" = "a_level",
+    "GCSE" = "gcse",
+    "Year 9" = "year_9",
+    "Year 8" = "year_8",
+    "Year 7" = "year_7"
 }
 
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {

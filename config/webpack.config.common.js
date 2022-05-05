@@ -17,7 +17,7 @@ module.exports = (isProd) => {
         stats: {
             errorDetails: true
         },
-        
+
         mode: isProd ? "production" : "development",
 
         devServer: {
@@ -98,7 +98,12 @@ module.exports = (isProd) => {
                                 {
                                     loader: 'css-loader',
                                     options: {
-                                        url: false
+                                        url: {
+                                            filter: (url) => {
+                                                // The "/assets" directory is a special case and should be ignored:
+                                                return !url.startsWith("/assets");
+                                            }
+                                        }
                                     }
                                 },
                                 'sass-loader',
@@ -106,13 +111,16 @@ module.exports = (isProd) => {
                         },
                         {
                             test: /\.(png|gif|jpg|svg)$/,
-                            type: 'asset/resource'
-                        },
-                        {
-                            test: /\.(ttf|woff2?)$/,
                             type: 'asset/resource',
                             generator: {
-                                filename: isProd ? 'static/fonts/[name].[contenthash:8].[ext]' : 'static/fonts/[name].[ext]',
+                                filename: isProd ? 'static/assets/[name].[contenthash:8][ext]' : 'static/assets/[name][ext]',
+                            }
+                        },
+                        {
+                            test: /\.(ttf|woff2?|eot)$/,
+                            type: 'asset/resource',
+                            generator: {
+                                filename: isProd ? 'static/fonts/[name].[contenthash:8][ext]' : 'static/fonts/[name][ext]',
                             }
                         }
                     ],

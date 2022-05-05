@@ -1,22 +1,13 @@
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacMultiChoiceQuestionDTO} from "../../../IsaacApiTypes";
 import {CustomInput, Label} from "reactstrap";
-import {selectors} from "../../state/selectors";
-import {selectQuestionPart} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services/questions";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-interface IsaacMultiChoiceQuestionProps {
-    doc: IsaacMultiChoiceQuestionDTO;
-    questionId: string;
-    readonly?: boolean;
-}
-export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacMultiChoiceQuestionProps) => {
-    const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const currentAttemptValue = questionPart?.currentAttempt?.value;
+export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacMultiChoiceQuestionDTO>) => {
+
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
     return <div className="multichoice-question">
         <div className="question-content">
@@ -29,8 +20,8 @@ export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacMulti
                 <Label className="label-radio multichoice-option d-flex">
                     <CustomInput
                         id={`${questionId}${index}`} color="secondary" type="radio"
-                        checked={currentAttemptValue == choice.value}
-                        onChange={() => dispatch(setCurrentAttempt(questionId, choice))}
+                        checked={currentAttempt?.value === choice.value}
+                        onChange={() => dispatchSetCurrentAttempt(choice)}
                         disabled={readonly}
                     />
                     <div className="flex-fill">

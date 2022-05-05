@@ -1,0 +1,134 @@
+.scroll-shadow {
+  position: absolute;
+  overflow: hidden;
+  height: auto;
+  display: block;
+  z-index: 1;
+  width: 10%;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+
+  &.left {
+    left: 0;
+    background: linear-gradient(to right, $shadow-08 0%, rgba(0,0,0,0) 100%);
+  }
+
+  &.right {
+    left: 90%;
+    background: linear-gradient(to left, $shadow-08 0%, rgba(0,0,0,0) 100%);
+  }
+}
+
+.code-snippet {
+  .scroll-shadow {
+    margin-bottom: 1em;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .expand-outer {
+    &.code-snippet {
+      .scroll-shadow {
+        margin-top: 35px;
+      }
+    }
+    &.isaac-table {
+      .scroll-shadow {
+        margin-top: 35px;
+      }
+    }
+  }
+
+  .expand-outer {
+    .isaac-tab {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+// CSS for expanding out tables and code snippets
+.isaac-expand-bg {
+  position: relative;
+  width: 100%;
+  left: 0;
+  transform: translateX(0);
+  border: solid 1px $gray-103;
+  box-shadow: 0 2px 30px 0 $shadow-08;
+  padding: 0.1rem 1.5rem 1.5rem;
+  &.code-snippet {
+    padding: 0.1rem 1.5rem 0.5rem 1.5rem;
+  }
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+  overflow: auto;
+  background-color: #ffffff55;
+
+  .isaac-tab {
+    //padding: 1.5rem 1.5rem 1.5rem;
+    margin-bottom: 0 !important;
+  }
+
+  @include media-breakpoint-up(md) {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95vw;
+  }
+}
+
+.isaac-expand-bg {
+  @include media-breakpoint-up(md) {
+    &.isaac-table {
+      // This fixes the fact that tables have a weird right "margin", so when
+      // expanding one this needs to be compensated for, to center it properly
+      left: 52.5%;
+    }
+  }
+}
+
+.expand-outer {
+  position: relative;
+  .expand-button {
+    width: 100%;
+    height: 35px;
+    font-family: "Ariel", sans-serif;
+    font-size: 0.9rem;
+    button {
+      margin-top: 4px;
+      opacity: 1;
+      border: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      border-radius: 20px;
+      background: rgb(255,255,255);
+      background: radial-gradient(ellipse, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 70%);
+      z-index: 2;
+      img {
+        width: 1em;
+        margin-right: 6px;
+        height: auto;
+        display: inline-block;
+        margin-top: -4px;
+      }
+      div {
+        overflow: hidden;
+        display: inline-block;
+        span {
+          opacity: 0.3;
+          transition-property: opacity;
+          transition-duration: 0.5s;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.expand-button > button:hover {
+  div {
+    span {
+      opacity: 1;
+    }
+  }
+}
