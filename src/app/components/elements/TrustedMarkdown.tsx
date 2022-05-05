@@ -4,7 +4,6 @@ import {Provider, useStore} from "react-redux";
 import * as RS from "reactstrap";
 
 import {Router} from "react-router-dom"
-import {AppState} from "../../state/reducers";
 import {MARKDOWN_RENDERER} from "../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 import {IsaacGlossaryTerm} from "../content/IsaacGlossaryTerm";

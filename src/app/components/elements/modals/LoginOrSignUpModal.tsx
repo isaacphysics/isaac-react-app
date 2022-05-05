@@ -23,7 +23,7 @@ const LoginOrSignUpBody = () => {
     const {loginFunctions, setStateFunctions, loginValues} = useLoginLogic();
     const {attemptLogIn, signUp, validateAndLogIn, submitTotpChallenge} = loginFunctions;
     const {setEmail, setPassword, setRememberMe, setPasswordResetAttempted} = setStateFunctions;
-    const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword, authPending} = loginValues;
+    const {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, isValidEmail, isValidPassword, authPending} = loginValues;
 
     // When modal is first shown, record the current question page to redirect back to after successful auth
     useEffect(() => {

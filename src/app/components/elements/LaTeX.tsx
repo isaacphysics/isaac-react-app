@@ -1,7 +1,6 @@
 import React, {useContext} from "react";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
-import {AppState} from "../../state/reducers";
 import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
 import he from "he";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
