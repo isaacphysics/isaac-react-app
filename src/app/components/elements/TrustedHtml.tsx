@@ -20,7 +20,7 @@ interface TableData {
 }
 
 const htmlDom = document.createElement("html");
-function manipulateHtml(html: string, dropRegionContext?: ClozeQuestionDropRegionContext): {manipulatedHtml: string, tableData: TableData[]} {
+function manipulateHtml(html: string, renderTablesInPortals = true): {manipulatedHtml: string, tableData: TableData[]} {
     // This can't be quick but it is more robust than writing regular expressions...
     htmlDom.innerHTML = html;
 
@@ -32,9 +32,7 @@ function manipulateHtml(html: string, dropRegionContext?: ClozeQuestionDropRegio
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
-
-        // Skip turning the table into a portal component if we are in a cloze question exposition
-        if (dropRegionContext && dropRegionContext.questionPartId) {
+        if (!renderTablesInPortals) {
             table.setAttribute("class", classNames("table table-bordered w-100 text-center bg-white m-0", table.className));
             div.setAttribute("class", "overflow-auto mb-4");
             parent.insertBefore(div, table);
@@ -127,7 +125,12 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
 
     const dropRegionContext = useContext(ClozeDropRegionContext);
     const htmlWithClozeDropZones = useClozeDropRegionsInHtml(html, dropRegionContext);
-    const {manipulatedHtml, tableData} = manipulateHtml(katexify(htmlWithClozeDropZones, user, booleanNotation, segueEnvironment === "DEV", figureNumbers), dropRegionContext);
+    // Skip turning the table into a portal component if we are in a cloze question exposition. This is because if
+    // the HTML that provides the root element for a drop-zone is put inside a Table component, then the Table might
+    // re-render and not cause the InlineDropZone related to that root element to rerender, since the InlineDropZone
+    // is a child component of IsaacClozeQuestion, and not Table.
+    const renderTablesInPortals = !(dropRegionContext && dropRegionContext.questionPartId);
+    const {manipulatedHtml, tableData} = manipulateHtml(katexify(htmlWithClozeDropZones, user, booleanNotation, segueEnvironment === "DEV", figureNumbers), renderTablesInPortals);
 
     const ElementType = span ? "span" : "div";
     return <>
