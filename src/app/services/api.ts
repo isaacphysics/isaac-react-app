@@ -2,7 +2,6 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
-    AuthenticationProvider,
     EmailTemplateDTO,
     EventBookingDTO,
     GameboardDTO,
@@ -18,7 +17,6 @@ import {
     BoardOrder,
     Choice,
     Concepts,
-    CredentialsAuthDTO,
     EmailUserRoles,
     QuestionSearchQuery,
     QuestionSearchResponse,
@@ -27,7 +25,7 @@ import {
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
-import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
+import {securePadPasswordReset} from "./credentialPadding";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
 
 export const endpoint = axios.create({
@@ -513,5 +511,5 @@ export const api = {
         getQuizAssignmentResultsSummaryCSV: (assignmentId: number) => {
             return endpoint.get(`/quiz/assignment/${assignmentId}/download`);
         }
-    },
+    }
 };

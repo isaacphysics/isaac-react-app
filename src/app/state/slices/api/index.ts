@@ -6,9 +6,6 @@ import {
     GlossaryTermDTO,
     ResultsWrapper
 } from "../../../../IsaacApiTypes";
-import {PrefetchOptions} from "@reduxjs/toolkit/dist/query/core/module";
-import {useDispatch} from "react-redux";
-import {useEffect} from "react";
 
 // This should be used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {

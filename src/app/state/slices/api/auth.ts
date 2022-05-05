@@ -1,3 +1,4 @@
+import {history} from "../../../services/history";
 import {isaacApi} from "./index";
 import {
     AuthenticationProvider,
@@ -9,7 +10,6 @@ import {securePadCredentials} from "../../../services/credentialPadding";
 import * as persistence from "../../../services/localStorage";
 import {KEY} from "../../../services/localStorage";
 import {totpChallenge} from "../user";
-import {history} from "../../../services/history";
 import {showErrorToastIfNeeded, showToast} from "../../actions";
 import {CredentialsAuthDTO, PotentialUser, UserPreferencesDTO} from "../../../../IsaacAppTypes";
 
