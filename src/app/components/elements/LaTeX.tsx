@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {AppState} from "../../state/reducers";
-import {FigureNumberingContext} from "../../../IsaacAppTypes";
+import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
 import he from "he";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import katex, { KatexOptions } from "katex";
@@ -224,13 +224,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function useKatex(html: string) {
-
-    const user = useSelector(selectors.user.orNull);
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
-    const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
-    const figureNumbers = useContext(FigureNumberingContext);
-
+export function katexify(html: string, user: PotentialUser | null, booleanNotation : BooleanNotation | null, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -308,7 +302,7 @@ export function useKatex(html: string) {
                         `<span class="katex">${katexMathML}`);
                 }
 
-                if (segueEnvironment === "DEV") {
+                if (showScreenReaderHoverText) {
                     // Show screenreader text on hover so we can easily tell what's being output by katex-a11y
                     katexRenderResult = katexRenderResult.replace(
                         '<span class="katex-html"',
@@ -339,6 +333,16 @@ export function useKatex(html: string) {
     }
     output += html.substring(index, html.length);
     return output;
+}
+
+// A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
+export const useKatex = (html: string) => {
+    const user = useSelector(selectors.user.orNull);
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
+    const figureNumbers = useContext(FigureNumberingContext);
+
+    return katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers)
 }
 
 export function LaTeX({markup, className}: {markup: string, className?: string}) {
