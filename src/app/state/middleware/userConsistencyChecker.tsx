@@ -2,9 +2,9 @@ import {Action, Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
-import {changePage} from "../actions";
 import {isAnyOf} from "@reduxjs/toolkit";
-import {authApi, is2FARequired} from "../slices/api/auth";
+import {changePage} from "../serviceActions";
+import {is2FARequired, isaacApi} from "../slices/api";
 
 // Generic log action:
 // This is not imported from actions to avoid a circular dependency through store.
@@ -60,11 +60,11 @@ const clearCurrentUser = () => {
 };
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => (action: Action) => {
-    if ((authApi.endpoints.login.matchFulfilled(action) && !is2FARequired(action.payload))
-        || isAnyOf(authApi.endpoints.totpChallenge.matchFulfilled, authApi.endpoints.currentUser.matchFulfilled)(action)) {
+    if ((isaacApi.endpoints.login.matchFulfilled(action) && !is2FARequired(action.payload))
+        || isAnyOf(isaacApi.endpoints.totpChallenge.matchFulfilled, isaacApi.endpoints.currentUser.matchFulfilled)(action)) {
         setCurrentUser(action.payload, api);
     }
-    if (isAnyOf(authApi.endpoints.logout.matchFulfilled, authApi.endpoints.logoutEverywhere.matchFulfilled)(action)
+    if (isAnyOf(isaacApi.endpoints.logout.matchFulfilled, isaacApi.endpoints.logoutEverywhere.matchFulfilled)(action)
         || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         clearCurrentUser();
     }

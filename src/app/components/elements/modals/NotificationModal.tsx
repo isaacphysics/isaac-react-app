@@ -5,12 +5,12 @@ import {Button, Col, Row} from "reactstrap";
 import {closeActiveModal} from "../../../state/actions";
 import {store} from "../../../state/store";
 import {IsaacContent} from "../../content/IsaacContent";
-import {notificationsApi} from "../../../state/slices/api/notifications";
+import {isaacApi} from "../../../state/slices/api";
 
 const NotificationModalBody = (notification: { notification: any }) => {
     const dispatch = useDispatch();
     const user = useSelector((state: AppState) => state && state.user || null);
-    const [ respondToNotification ] =  notificationsApi.endpoints.respondToNotification.useMutation();
+    const [ respondToNotification ] =  isaacApi.endpoints.respondToNotification.useMutation();
 
     const currentNotification = notification.notification;
 

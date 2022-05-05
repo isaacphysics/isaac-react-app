@@ -27,7 +27,7 @@ import {useEffect} from "react";
 import {useQueryParams} from "./reactRouterExtension";
 import {comparatorFromOrderedValues} from "./gameboards";
 import {selectors} from "../state/selectors";
-import {authApi} from "../state/slices/api/auth";
+import {isaacApi} from "../state/slices/api";
 
 export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -46,7 +46,7 @@ export function useUserContext(): UseUserContextReturnType {
     const queryParams = useQueryParams(true);
 
     const user = useSelector((state: AppState) => state && state.user);
-    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} = authApi.endpoints.userPreferences.useQuery().currentData || {};
+    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} = isaacApi.endpoints.userPreferences.useQuery().currentData || {};
     const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
 
     const explanation: UseUserContextReturnType["explanation"] = {};

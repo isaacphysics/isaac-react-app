@@ -3,7 +3,7 @@ import {store} from "../../store";
 import {API_PATH} from "../../../services/constants";
 import {PatchCollection, Recipe} from "@reduxjs/toolkit/dist/query/core/buildThunks";
 import {isDefined} from "../../../services/miscUtils";
-import {notificationsApi} from "./notifications";
+import {isaacApi} from "./index";
 
 let notificationWebSocket: WebSocket | null  = null;
 let webSocketCheckTimeout: number | null = null;
@@ -76,7 +76,7 @@ const openNotificationSocket = function(updateMyProgress: (updateRecipe: Recipe<
     notificationWebSocket.onerror = function(error) {
         console.error("WebSocket error:", error);
         // Initiate poll for latest snapshot info
-        store.dispatch(notificationsApi.endpoints.snapshot.initiate());
+        store.dispatch(isaacApi.endpoints.snapshot.initiate());
     }
 
 

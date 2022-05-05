@@ -7,11 +7,11 @@ import {NavigationBarPhy} from "./NavigationBarPhy";
 import {selectors} from "../../../state/selectors";
 import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
 import {useDeviceSize} from "../../../services/device";
-import {notificationsApi} from "../../../state/slices/api/notifications";
+import {isaacApi} from "../../../state/slices/api";
 
 export const HeaderPhy = () => {
     const user = useSelector(selectors.user.orNull);
-    const streakRecord = notificationsApi.endpoints.myProgress.useQuery(user).currentData?.userSnapshot;
+    const streakRecord = isaacApi.endpoints.myProgress.useQuery(user).currentData?.userSnapshot;
     const mainContentId = useSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     return <header className="light">

@@ -7,7 +7,6 @@ import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {isaacApi} from "../../../state/slices/api";
 import QRCode from 'qrcode'
 import {AppState} from "../../../state/reducers";
-import {authApi} from "../../../state/slices/api/auth";
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
@@ -22,9 +21,9 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
     const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
 
-    const [ newMFASecret , { isLoading: updateMFARequest } ] = authApi.endpoints.newMFASecret.useMutation();
-    const [ setupAccountMFA ] = authApi.endpoints.setupAccountMFA.useMutation();
-    const [ disableAccountMFA ] = authApi.endpoints.disableAccountMFA.useMutation();
+    const [ newMFASecret , { isLoading: updateMFARequest } ] = isaacApi.endpoints.newMFASecret.useMutation();
+    const [ setupAccountMFA ] = isaacApi.endpoints.setupAccountMFA.useMutation();
+    const [ disableAccountMFA ] = isaacApi.endpoints.disableAccountMFA.useMutation();
 
     const authenticatorURL: string | null = useMemo(() => {
         if (totpSharedSecret) {

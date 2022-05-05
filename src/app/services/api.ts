@@ -23,10 +23,10 @@ import {
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
-import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {securePadPasswordReset} from "./credentialPadding";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {handleApiGoneAway, handleServerError} from "../state/serviceActions";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,

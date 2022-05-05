@@ -8,11 +8,11 @@ import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
 import {selectors} from "../../state/selectors";
-import {notificationsApi} from "../../state/slices/api/notifications";
+import {isaacApi} from "../../state/slices/api";
 
 export const TeacherTools = () => {
     const user = useSelector(selectors.user.orNull);
-    const achievementsSelector = notificationsApi.endpoints.myProgress.useQuery(user).currentData?.userSnapshot?.achievementsRecord;
+    const achievementsSelector = isaacApi.endpoints.myProgress.useQuery(user).currentData?.userSnapshot?.achievementsRecord;
 
     const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
 

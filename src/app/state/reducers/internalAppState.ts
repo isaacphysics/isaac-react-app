@@ -1,6 +1,6 @@
 import {Action, PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
-import {authApi} from "../slices/api/auth";
+import {isaacApi} from "../slices/api";
 import {isAnyOf} from "@reduxjs/toolkit";
 
 export type PrintingSettingsState = PrintingSettings | null;
@@ -43,7 +43,7 @@ export const transientUserContext = (transientUserContext: TransientUserContextS
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: any): ErrorState => {
-    if (isAnyOf(authApi.endpoints.login.matchRejected, authApi.endpoints.userAuthSettings.matchRejected, authApi.endpoints.userPreferences.matchRejected)(action)) {
+    if (isAnyOf(isaacApi.endpoints.login.matchRejected, isaacApi.endpoints.userAuthSettings.matchRejected, isaacApi.endpoints.userPreferences.matchRejected)(action) && action.error.name !== "ConditionError") {
         return {type: "generalError", generalError: action.error.message ?? ""};
     }
 

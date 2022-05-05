@@ -8,12 +8,12 @@ import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
-import {authApi} from "../slices/api/auth";
+import {isaacApi} from "../slices/api";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
 
     const state = middlewareApi.getState();
-    if([ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type) || authApi.endpoints.userPreferences.matchFulfilled(action) || authApi.endpoints.currentUser.matchFulfilled(action)) {
+    if([ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type) || isaacApi.endpoints.userPreferences.matchFulfilled(action) || isaacApi.endpoints.currentUser.matchFulfilled(action)) {
         if (
             state && isLoggedIn(state.user) && state?.isaacApi?.queries["userPreferences(undefined)"]?.status === "fulfilled" &&
             !allRequiredInformationIsPresent(state.user, state?.isaacApi?.queries["userPreferences(undefined)"]?.data, state.user.registeredContexts) &&

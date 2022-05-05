@@ -44,7 +44,6 @@ import {
 import {isaacApi} from "../slices/api";
 import {authSlice, totpSharedSecretSlice, totpChallenge} from "../slices/user";
 import {isAnyOf} from "@reduxjs/toolkit";
-import {authApi} from "../slices/api/auth";
 
 const appReducer = combineReducers({
     // User
@@ -138,7 +137,7 @@ const appReducer = combineReducers({
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (isAnyOf(authApi.endpoints.logout.matchFulfilled, authApi.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+    if (isAnyOf(isaacApi.endpoints.logout.matchFulfilled, isaacApi.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);

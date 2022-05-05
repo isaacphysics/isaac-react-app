@@ -22,7 +22,7 @@ import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {notificationsApi} from "../../state/slices/api/notifications";
+import {isaacApi} from "../../state/slices/api";
 
 export const siteSpecific = {
     [SITE.PHY]: {
@@ -56,8 +56,8 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useDispatch();
-    const [ getMyProgress, { currentData: myProgress } ] = notificationsApi.endpoints.myProgress.useLazyQuery();
-    const [ getUserProgress, { currentData: userProgress } ] = notificationsApi.endpoints.userProgress.useLazyQuery();
+    const [ getMyProgress, { currentData: myProgress } ] = isaacApi.endpoints.myProgress.useLazyQuery();
+    const [ getUserProgress, { currentData: userProgress } ] = isaacApi.endpoints.userProgress.useLazyQuery();
     const achievements = myProgress?.userSnapshot?.achievementsRecord;
     const myAnsweredQuestionsByDate = useSelector((state: AppState) => state?.myAnsweredQuestionsByDate);
     const userAnsweredQuestionsByDate = useSelector((state: AppState) => state?.userAnsweredQuestionsByDate);
