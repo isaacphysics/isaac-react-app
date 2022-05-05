@@ -30,13 +30,3 @@ export const activeModals = (activeModals: ActiveModalsState = null, action: Act
             return activeModals;
     }
 };
-
-type NotificationsState = {notifications?: any[]} | null;
-export const notifications = (notifications: NotificationsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS:
-            return {notifications: Array.from(action.notifications)};
-        default:
-            return notifications;
-    }
-};

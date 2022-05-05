@@ -4,7 +4,7 @@ import {checkForWebSocket, closeWebSocket} from "./websockets";
 import {isLoggedIn} from "../../../services/user";
 
 // Endpoints for handling user notifications and my progress
-export const notificationsApi = isaacApi.injectEndpoints({
+export const notificationsApi = isaacApi.enhanceEndpoints({addTagTypes: ["Notifications", "UserProgress"]}).injectEndpoints({
     endpoints: (build) => ({
         getNotifications: build.query<any[], void>({
             query: () => ({

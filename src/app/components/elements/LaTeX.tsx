@@ -10,7 +10,7 @@ import 'katex/dist/contrib/mhchem.mjs';
 import renderA11yString from "../../services/katex-a11y";
 // @ts-ignore
 import { utils } from "remarkable";
-import {isaacApi} from "../../state/slices/api";
+import {authApi} from "../../state/slices/api/auth";
 
 type MathJaxMacro = string|[string, number];
 
@@ -326,7 +326,7 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
 
 export function LaTeX({markup, className}: {markup: string, className?: string}) {
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = isaacApi.endpoints.userPreferences.useQueryState().currentData;
+    const userPreferences = authApi.endpoints.userPreferences.useQueryState().currentData;
     const booleanNotation = userPreferences?.BOOLEAN_NOTATION || null;
     const screenReaderHoverText = (userPreferences?.BETA_FEATURE && userPreferences?.BETA_FEATURE.SCREENREADER_HOVERTEXT) || false;
     const figureNumbers = useContext(FigureNumberingContext);

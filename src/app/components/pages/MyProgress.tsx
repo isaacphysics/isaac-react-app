@@ -58,7 +58,7 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
     const dispatch = useDispatch();
     const [ getMyProgress, { currentData: myProgress } ] = notificationsApi.endpoints.myProgress.useLazyQuery();
     const [ getUserProgress, { currentData: userProgress } ] = notificationsApi.endpoints.userProgress.useLazyQuery();
-    const achievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
+    const achievements = myProgress?.userSnapshot?.achievementsRecord;
     const myAnsweredQuestionsByDate = useSelector((state: AppState) => state?.myAnsweredQuestionsByDate);
     const userAnsweredQuestionsByDate = useSelector((state: AppState) => state?.userAnsweredQuestionsByDate);
 

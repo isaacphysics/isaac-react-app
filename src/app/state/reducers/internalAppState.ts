@@ -1,6 +1,7 @@
 import {Action, PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
-import {isaacApi} from "../slices/api";
+import {authApi} from "../slices/api/auth";
+import {isAnyOf} from "@reduxjs/toolkit";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
@@ -42,7 +43,7 @@ export const transientUserContext = (transientUserContext: TransientUserContextS
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: any): ErrorState => {
-    if (isaacApi.endpoints.login.matchRejected(action)) {
+    if (isAnyOf(authApi.endpoints.login.matchRejected, authApi.endpoints.userAuthSettings.matchRejected, authApi.endpoints.userPreferences.matchRejected)(action)) {
         return {type: "generalError", generalError: action.error.message ?? ""};
     }
 
@@ -51,8 +52,6 @@ export const error = (error: ErrorState = null, action: any): ErrorState => {
         case ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_FAILURE:
         case ACTION_TYPE.USER_PASSWORD_RESET_RESPONSE_FAILURE:
-        case ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_FAILURE:
-        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE:
             return {type: "generalError", generalError: action.errorMessage};
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
             return {type: "consistencyError"};

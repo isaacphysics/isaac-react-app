@@ -1,6 +1,5 @@
 import React, {Dispatch} from "react";
 import {api} from "../services/api";
-import {isaacApi} from "./slices/api";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
 import {AppDispatch, store} from "./store";
@@ -28,14 +27,12 @@ import {
     AppGroupMembership,
     ATTENDANCE,
     BoardOrder,
-    CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
     PotentialUser,
     QuestionSearchQuery,
     Toast,
     UserPreferencesDTO,
-    UserSnapshot,
     ValidatedChoice,
     ValidationUser,
 } from "../../IsaacAppTypes";
@@ -84,6 +81,7 @@ import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookCho
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
 import {authProviderResponse} from "./slices/user";
+import {authApi} from "./slices/api/auth";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -191,7 +189,7 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST});
         const currentUser = await api.users.updateCurrent(updatedUser, updatedUserPreferences, passwordCurrent, userContexts);
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
-        await dispatch(isaacApi.util.invalidateTags(["UserInfo"]));
+        await dispatch(authApi.util.invalidateTags(["UserInfo"]));
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
@@ -287,7 +285,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        await dispatch(isaacApi.util.invalidateTags([{type: "UserInfo", id: "Preferences"}]));
+        await dispatch(authApi.util.invalidateTags([{type: "UserInfo", id: "Preferences"}]));
         dispatch(authProviderResponse(providerResponse.data));
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
@@ -341,7 +339,7 @@ export const handleEmailAlter = (params: ({userid: string | null; token: string 
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_REQUEST});
         await api.email.verify(params);
         dispatch({type: ACTION_TYPE.EMAIL_AUTHENTICATION_RESPONSE_SUCCESS});
-        dispatch(isaacApi.util.invalidateTags(["UserInfo"]));
+        dispatch(authApi.util.invalidateTags(["UserInfo"]));
         dispatch(showToast({
             title: "Email address verified",
             body: "The email address has been verified",

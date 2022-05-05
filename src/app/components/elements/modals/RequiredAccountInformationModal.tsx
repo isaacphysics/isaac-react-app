@@ -20,13 +20,13 @@ import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import { isDefined } from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
-import {isaacApi} from "../../../state/slices/api";
+import {authApi} from "../../../state/slices/api/auth";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = isaacApi.endpoints.userPreferences.useQueryState().currentData;
+    const userPreferences = authApi.endpoints.userPreferences.useQueryState().currentData;
     const student = isStudent({...user, loggedIn: true});
 
     // Local state

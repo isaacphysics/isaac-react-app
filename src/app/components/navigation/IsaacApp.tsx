@@ -77,8 +77,9 @@ import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {ContentEmails} from "../pages/ContentEmails";
-import {usePrefetchImmediately, isaacApi} from "../../state/slices/api";
+import {isaacApi} from "../../state/slices/api";
 import {notificationsApi} from "../../state/slices/api/notifications";
+import {authApi} from "../../state/slices/api/auth";
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -86,23 +87,33 @@ export const IsaacApp = () => {
     const consistencyError = useSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
     const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
-    const segueEnvironment = isaacApi.endpoints.getSegueEnvironment.useQueryState().currentData;
-    const [ fetchNotifications, { currentData: notifications } ] = notificationsApi.endpoints.getNotifications.useLazyQuery();
     const user = useSelector(selectors.user.orNull);
+
+    // Prefetching makes data available in the cache before other components need it
+    const prefetchCurrentUser = authApi.usePrefetch("currentUser");
+    const prefetchUserPreferences = authApi.usePrefetch("userPreferences");
+    const prefetchUserAuthSettings = authApi.usePrefetch("userAuthSettings");
+    const prefetchSegueVersion = isaacApi.usePrefetch("getSegueVersion");
+    const prefetchUnits = isaacApi.usePrefetch("getUnits");
+    const prefetchGlossaryTerms = isaacApi.usePrefetch("getGlossaryTerms");
+    const [ fetchSegueEnvironment, { currentData: segueEnvironment } ] = isaacApi.endpoints.getSegueEnvironment.useLazyQuery();
+    const [ fetchNotifications, { currentData: notifications } ] = notificationsApi.endpoints.getNotifications.useLazyQuery();
 
     // TODO ~current user, user preferences, and user auth settings need to be added to the store at exactly the same time!!!~ (not sure they do any more actually)
     //  Could be done with the following pattern if needed:
     //   https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#performing-multiple-requests-with-a-single-query
     //   Requires this info too: https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#implementing-a-queryfn
 
-    // Prefetch current user and glossary terms
-    usePrefetchImmediately("currentUser");
-    usePrefetchImmediately("userPreferences");
-    usePrefetchImmediately("userAuthSettings");
-    usePrefetchImmediately("getSegueEnvironment");
-    usePrefetchImmediately("getSegueVersion");
-    usePrefetchImmediately("getUnits");
-    usePrefetchImmediately("getGlossaryTerms");
+    // Prefetch current user, user info, glossary terms, units, segue constants etc.
+    useEffect(() => {
+        prefetchCurrentUser();
+        prefetchUserPreferences();
+        prefetchUserAuthSettings();
+        prefetchSegueVersion();
+        fetchSegueEnvironment();
+        prefetchUnits();
+        prefetchGlossaryTerms();
+    }, []);
 
     useEffect(() => {
         if (isLoggedIn(user)) {

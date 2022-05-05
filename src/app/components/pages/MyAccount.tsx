@@ -15,7 +15,7 @@ import {
     TabContent,
     TabPane,
 } from "reactstrap";
-import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
+import {UserContext} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
 import {adminUserGet, resetPassword, updateCurrentUser} from "../../state/actions";
 import {
@@ -50,7 +50,7 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstan
 import {isStaff} from "../../services/user";
 import {ErrorState} from "../../state/reducers/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
-import {isaacApi} from "../../state/slices/api";
+import {authApi} from "../../state/slices/api/auth";
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -97,10 +97,10 @@ const AccountPageComponent = ({user, updateCurrentUser, errorMessage, adminUserG
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
     }, [adminUserToEdit]);
 
-    const userPreferences = isaacApi.endpoints.userPreferences.useQuery().currentData ?? null;
-    const userAuthSettings = isaacApi.endpoints.userAuthSettings.useQuery().currentData ?? null;
+    const userPreferences = authApi.endpoints.userPreferences.useQuery().currentData ?? null;
+    const userAuthSettings = authApi.endpoints.userAuthSettings.useQuery().currentData ?? null;
 
-    const [ getChosenUserAuthSettings, chosenUserAuthSettings ] = isaacApi.endpoints.getSelectedUserAuthSettings.useLazyQuery();
+    const [ getChosenUserAuthSettings, chosenUserAuthSettings ] = authApi.endpoints.getSelectedUserAuthSettings.useLazyQuery();
 
     useEffect(() => {
         if (userOfInterest) {

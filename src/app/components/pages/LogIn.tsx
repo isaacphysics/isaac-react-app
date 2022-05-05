@@ -9,6 +9,7 @@ import {selectors} from "../../state/selectors";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isaacApi} from "../../state/slices/api";
 import {MetaDescription} from "../elements/MetaDescription";
+import {authApi} from "../../state/slices/api/auth";
 
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
@@ -30,8 +31,8 @@ export const useLoginLogic = () => {
 
     const [passwordResetAttempted, setPasswordResetAttempted] = useState(false);
 
-    const [ loginTrigger, { isLoading: loginLoading } ] = isaacApi.endpoints.login.useMutation();
-    const [ totpChallengeTrigger, { isLoading: totpChallengeLoading } ] = isaacApi.endpoints.totpChallenge.useMutation();
+    const [ loginTrigger, { isLoading: loginLoading } ] = authApi.endpoints.login.useMutation();
+    const [ totpChallengeTrigger, { isLoading: totpChallengeLoading } ] = authApi.endpoints.totpChallenge.useMutation();
     const totpChallengePending = useSelector((state: AppState) => state?.totpChallengePending);
 
     const validateAndLogIn = useCallback((event: React.FormEvent<HTMLFormElement>) => {

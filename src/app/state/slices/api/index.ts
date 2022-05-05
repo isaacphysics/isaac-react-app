@@ -3,28 +3,12 @@ import {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/quer
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {ACTION_TYPE, API_PATH} from "../../../services/constants";
 import {
-    AuthenticationProvider,
     GlossaryTermDTO,
-    RegisteredUserDTO,
-    ResultsWrapper,
-    TOTPSharedSecretDTO,
-    UserAuthenticationSettingsDTO,
+    ResultsWrapper
 } from "../../../../IsaacApiTypes";
 import {PrefetchOptions} from "@reduxjs/toolkit/dist/query/core/module";
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
-import {
-    CredentialsAuthDTO,
-    PotentialUser,
-    UserPreferencesDTO,
-    UserProgress
-} from "../../../../IsaacAppTypes";
-import {securePadCredentials} from "../../../services/credentialPadding";
-import {showErrorToastIfNeeded, showToast} from "../../actions";
-import * as persistence from "../../../services/localStorage";
-import {KEY} from "../../../services/localStorage";
-import {history} from "../../../services/history";
-import {totpChallenge} from "../user";
 
 // This should be used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -57,18 +41,10 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
     return result;
 }
 
-export const is2FARequired = <T extends {}>(data: T | null) => data?.hasOwnProperty("2FA_REQUIRED")
-
-export type UserState = PotentialUser | null;
-export interface LoginUserArgs {
-    provider: AuthenticationProvider;
-    credentials: CredentialsAuthDTO;
-}
-
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 export const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "UserInfo", "Notifications", "UserProgress"], // Used to control refetching and caching of collections of data
-    reducerPath: 'isaacApi',
+    tagTypes: ["GlossaryTerms"], // Used to control refetching and caching of collections of data
+    reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
         /* The type parameters of `build.query` are, in order:
@@ -100,152 +76,6 @@ export const isaacApi = createApi({
         // https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#performing-multiple-requests-with-a-single-query !!!
 
         // could use endpoint extensions to separate into different files
-
-        // Login endpoint
-        login: build.mutation<RegisteredUserDTO, LoginUserArgs>({
-            query: ({provider, credentials}: LoginUserArgs) => ({
-                url: `/auth/${provider}/authenticate`,
-                method: "POST",
-                body: securePadCredentials(credentials)
-            }),
-            onQueryStarted: async (loginArgs: LoginUserArgs, { dispatch , queryFulfilled }) => {
-                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-                try {
-                    const { data } = await queryFulfilled;
-                    if (is2FARequired(data)) {
-                        dispatch(totpChallenge.actions.challengeRequired());
-                        return;
-                    }
-                    persistence.remove(KEY.AFTER_AUTH_PATH);
-                    history.push(afterAuthPath);
-                } catch (err: any) {}
-            }
-        }),
-
-        currentUser: build.query<RegisteredUserDTO, void>( {
-            query: () => ({
-                url: "/users/current_user",
-                method: "GET"
-            }),
-            providesTags: [{type: "UserInfo", id: "User"}]
-        }),
-
-        userAuthSettings: build.query<UserAuthenticationSettingsDTO, void>( {
-            query: () => ({
-                url: "/auth/user_authentication_settings",
-                method: "GET"
-            }),
-            providesTags: [{type: "UserInfo", id: "Auth"}]
-        }),
-
-        userPreferences: build.query<UserPreferencesDTO, void>({
-            query: () => ({
-                url: "/users/user_preferences",
-                method: "GET"
-            }),
-            providesTags: [{type: "UserInfo", id: "Preferences"}]
-        }),
-
-        logout: build.mutation<void, void>({
-            query: () => ({
-                url: "/auth/logout",
-                method: "POST",
-            }),
-            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-                try {
-                    await queryFulfilled;
-                } catch (e) {
-                    dispatch(showErrorToastIfNeeded("Logout failed", e));
-                }
-            },
-            invalidatesTags: ["UserInfo"]
-        }),
-
-        logoutEverywhere: build.mutation<void, void>({
-            query: () => ({
-                url: "/auth/logout/everywhere",
-                method: "POST",
-            }),
-            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-                try {
-                    await queryFulfilled;
-                } catch (e) {
-                    dispatch(showErrorToastIfNeeded("Logout everywhere failed", e));
-                }
-            },
-            invalidatesTags: ["UserInfo"]
-        }),
-
-        totpChallenge: build.mutation<RegisteredUserDTO, {mfaVerificationCode: string, rememberMe: boolean}>({
-            query: ({mfaVerificationCode, rememberMe}) => ({
-                url: `/auth/mfa/challenge`,
-                method: "POST",
-                body: {mfaVerificationCode: mfaVerificationCode, rememberMe}
-            }),
-            onQueryStarted: async (args: {mfaVerificationCode: string, rememberMe: boolean}, { dispatch , queryFulfilled }) => {
-                const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
-                try {
-                    await queryFulfilled;
-                    dispatch(totpChallenge.actions.challengeSuccess());
-                    persistence.remove(KEY.AFTER_AUTH_PATH);
-                    history.push(afterAuthPath);
-                } catch (e) {
-                    dispatch(showErrorToastIfNeeded("Error with verification code.", e));
-                }
-            }
-        }),
-
-        setupAccountMFA: build.mutation<void, {sharedSecret: string, mfaVerificationCode: string}>({
-            query: ({sharedSecret, mfaVerificationCode}) => ({
-                url: "/users/current_user/mfa",
-                method: "POST",
-                body: {sharedSecret, mfaVerificationCode}
-            }),
-            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-                try {
-                    await queryFulfilled;
-                    dispatch(showToast({
-                        color: "success",
-                        title: "2FA Configured",
-                        body: "You have enabled 2FA on your account!"
-                    }));
-                } catch (e) {
-                    dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
-                }
-            }
-        }),
-
-        disableAccountMFA: build.mutation<void, number>({
-            query: (userId) => ({
-                url: `/users/${userId}/mfa`,
-                method: "DELETE"
-            }),
-            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-                try {
-                    await queryFulfilled;
-                    dispatch(showToast({
-                        color: "success",
-                        title: "2FA Disabled",
-                        body: "You have disabled 2FA on this account!"
-                    }));
-                } catch (e) {
-                    dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
-                }
-            }
-        }),
-        newMFASecret: build.mutation<TOTPSharedSecretDTO, void>({
-            query: () => ({
-                url: "/users/current_user/mfa/new_secret",
-                method: "GET"
-            }),
-            onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-                try {
-                    await queryFulfilled;
-                } catch (e) {
-                    dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
-                }
-            }
-        }),
 
         // Constants
 
@@ -290,72 +120,9 @@ export const isaacApi = createApi({
                 // This is a way of updating the cache of another endpoint
                 try {
                     await queryFulfilled;
-                    dispatch(isaacApi.util.updateQueryData('getLiveContentVersion', undefined, () => version));
+                    dispatch(isaacApi.util.updateQueryData("getLiveContentVersion", undefined, () => version));
                 } catch {}
             }
-        }),
-
-        // Authentication
-
-        getSelectedUserAuthSettings: build.query<UserAuthenticationSettingsDTO, number>({
-            query: (userId: number) => ({
-                url: `/auth/user_authentication_settings/${userId}`,
-                method: "GET"
-            })
-        }),
-
-        // TODO not sure if the two below work - I need to test Google auth linking and logging in extensively
-
-        linkAccount: build.mutation<{ redirectUrl: string }, AuthenticationProvider>({
-            query: (provider: AuthenticationProvider) => ({
-                url: `/auth/${provider}/link`,
-                method: "GET",
-            }),
-            onQueryStarted: async (provider: AuthenticationProvider, { dispatch, queryFulfilled }) => {
-                try {
-                    const { data } = await queryFulfilled;
-                    window.location.href = data.redirectUrl;
-                } catch (e: any) {
-                    dispatch(showErrorToastIfNeeded("Failed to link account", e));
-                }
-            }
-        }),
-
-        unlinkAccount: build.mutation<void, AuthenticationProvider>({
-            query: (provider: AuthenticationProvider) => ({
-                url: `/auth/${provider}/link`,
-                method: "DELETE",
-            }),
-            invalidatesTags: ["UserInfo"],
-            onQueryStarted: async (provider: AuthenticationProvider, { dispatch, queryFulfilled }) => {
-                try {
-                    await queryFulfilled;
-                    dispatch(showToast({
-                        title: "Account unlinked",
-                        body: "Your account settings were updated successfully.",
-                        color: "success",
-                        timeout: 5000,
-                        closable: false,
-                    }));
-                } catch (e) {
-                    dispatch(showErrorToastIfNeeded("Failed to unlink account", e));
-                }
-            },
         })
     })
 });
-
-// A recipe provided in the RTK Query API docs for immediately prefetching from a given endpoint
-type EndpointNames = keyof typeof isaacApi.endpoints
-
-export function usePrefetchImmediately(
-    endpoint: EndpointNames,
-    arg?: Parameters<typeof isaacApi.endpoints[EndpointNames]['initiate']>[0],
-    options: PrefetchOptions = {}
-) {
-    const dispatch = useDispatch();
-    useEffect(() => {
-        // @ts-ignore  Don't use this hook for mutation endpoints!
-        dispatch(isaacApi.util.prefetch(endpoint, arg as any, options))
-    }, []);
-}

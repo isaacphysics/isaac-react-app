@@ -1,4 +1,3 @@
-
 import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, PotentialUser, AppGroup} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
@@ -7,13 +6,12 @@ import {selectors} from "../../app/state/selectors";
 import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 import {rootReducer} from "../../app/state/reducers";
 import {questions} from "../../app/state/reducers/questionState";
-import {constants} from "../../app/state/reducers/staticState";
 import {toasts} from "../../app/state/reducers/notifiersState";
 import {groups} from "../../app/state/reducers/groupsState";
 import {search} from "../../app/state/reducers/searchState";
 import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
 import {authSlice} from "../../app/state/slices/user";
-import {isaacApi} from "../../app/state/slices/api";
+import {authApi} from "../../app/state/slices/api/auth";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -48,8 +46,6 @@ describe("root reducer", () => {
 
 describe("user reducer", () => {
     const {profWheeler, dameShirley} = registeredUserDTOs;
-
-    console.log(isaacApi.endpoints.login)
 
     const user = authSlice.reducer;
 
@@ -122,33 +118,34 @@ describe("questions reducer", () => {
     });
 });
 
-describe("constants reducer", () => {
-    it("returns null as an initial value", () => {
-        const actualState = constants(undefined, ignoredTestAction);
-        expect(actualState).toBe(null);
-    });
-
-    it("returns the previous state by default", () => {
-        const previousStates = [null, {units: unitsList}];
-        previousStates.map((previousState) => {
-            const actualNextState = constants(previousState, ignoredTestAction);
-            expect(actualNextState).toEqual(previousState);
-        });
-    });
-
-    it("should always add the list of units on units response success", () => {
-        const unitsAction: Action = {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList};
-        const previousStates = [null, {units: ["foo"]}];
-        previousStates.map((previousState) => {
-            const actualNextState = constants(previousState, unitsAction);
-            expect(actualNextState).toEqual({units: unitsList});
-        })
-    })
-});
+// FIXME CP
+// describe("constants reducer", () => {
+//     it("returns null as an initial value", () => {
+//         const actualState = constants(undefined, ignoredTestAction);
+//         expect(actualState).toBe(null);
+//     });
+//
+//     it("returns the previous state by default", () => {
+//         const previousStates = [null, {units: unitsList}];
+//         previousStates.map((previousState) => {
+//             const actualNextState = constants(previousState, ignoredTestAction);
+//             expect(actualNextState).toEqual(previousState);
+//         });
+//     });
+//
+//     it("should always add the list of units on units response success", () => {
+//         const unitsAction: Action = {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList};
+//         const previousStates = [null, {units: ["foo"]}];
+//         previousStates.map((previousState) => {
+//             const actualNextState = constants(previousState, unitsAction);
+//             expect(actualNextState).toEqual({units: unitsList});
+//         })
+//     })
+// });
 
 describe("search reducer", () => {
     it("returns null as an initial value", () => {
-        const actualState = constants(undefined, ignoredTestAction);
+        const actualState = search(undefined, ignoredTestAction);
         expect(actualState).toBe(null);
     });
 

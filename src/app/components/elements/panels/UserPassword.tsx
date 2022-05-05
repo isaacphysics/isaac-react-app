@@ -6,7 +6,7 @@ import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validati
 import {resetPassword} from "../../../state/actions";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../../services/passwordStrength";
 import {useDispatch} from "react-redux";
-import {isaacApi} from "../../../state/slices/api";
+import {authApi} from "../../../state/slices/api/auth";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -28,9 +28,9 @@ export const UserPassword = (
     const dispatch = useDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
-    const [ logoutEverywhere ] = isaacApi.endpoints.logoutEverywhere.useMutation();
-    const [ linkAccount ] = isaacApi.endpoints.linkAccount.useMutation();
-    const [ unlinkAccount ] = isaacApi.endpoints.unlinkAccount.useMutation();
+    const [ logoutEverywhere ] = authApi.endpoints.logoutEverywhere.useMutation();
+    const [ linkAccount ] = authApi.endpoints.linkAccount.useMutation();
+    const [ unlinkAccount ] = authApi.endpoints.unlinkAccount.useMutation();
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);

@@ -17,8 +17,8 @@ import {error, mainContentId, printingSettings, transientUserContext} from "./in
 import {news} from "./staticState";
 import {concepts, doc, fragments} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
-import {activeModals, notifications, toasts} from "./notifiersState";
-import {myAnsweredQuestionsByDate, myProgress, userAnsweredQuestionsByDate, userProgress} from "./progressState";
+import {activeModals, toasts} from "./notifiersState";
+import {myAnsweredQuestionsByDate, userAnsweredQuestionsByDate} from "./progressState";
 import {
     adminContentErrors,
     adminEmailTemplate,
@@ -44,6 +44,7 @@ import {
 import {isaacApi} from "../slices/api";
 import {authSlice, totpSharedSecretSlice, totpChallenge} from "../slices/user";
 import {isAnyOf} from "@reduxjs/toolkit";
+import {authApi} from "../slices/api/auth";
 
 const appReducer = combineReducers({
     // User
@@ -61,7 +62,6 @@ const appReducer = combineReducers({
     // Notifiers
     toasts,
     activeModals,
-    notifications,
 
     // Static Content
     news,
@@ -76,9 +76,7 @@ const appReducer = combineReducers({
     graphSketcherSpec,
 
     // Progress
-    myProgress,
     myAnsweredQuestionsByDate,
-    userProgress,
     userAnsweredQuestionsByDate,
 
     // Admin
@@ -140,7 +138,7 @@ const appReducer = combineReducers({
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
-    if (isAnyOf(isaacApi.endpoints.logout.matchFulfilled, isaacApi.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+    if (isAnyOf(authApi.endpoints.logout.matchFulfilled, authApi.endpoints.logoutEverywhere.matchFulfilled)(action) || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         state = undefined;
     }
     return appReducer(state, action);
