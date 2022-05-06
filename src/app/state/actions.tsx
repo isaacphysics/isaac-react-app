@@ -1635,11 +1635,11 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
             dispatch(showToast({color: "success", title: `Assignment${assignedGroupIds.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
         } else {
             const groupLookUp = new Map(groups.map(toTuple));
-            // Show each group assignment error in a separate modal
+            // Show each group assignment error in a separate toast
             assignmentErrors.forEach(({groupId, reason}) => {
                 dispatch(showToast({color: "danger", title: `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`, body: reason}) as any);
             });
-            // Check whether some group assignments succeeded
+            // Check whether some group assignments succeeded, if so show "partial success" toast
             if (assignmentErrors.length === groups.length) {
                 return false;
             } else {

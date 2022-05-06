@@ -439,7 +439,7 @@ export const api = {
         unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
             return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
         },
-        assign: (assignments: AssignmentDTO[] /*board: ApiTypes.GameboardDTO, groupIds: number[], dueDate?: number, assignmentNotes?: string*/): AxiosPromise<AssignmentSettingResponseDTO> => {
+        assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentSettingResponseDTO> => {
             return endpoint.post(`/assignments/assign_many`, assignments);
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
