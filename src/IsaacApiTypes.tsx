@@ -43,6 +43,16 @@ export interface AssignmentDTO extends IAssignmentLike {
     _id?: number;
 }
 
+export interface AssignmentErrorDTO {
+    groupId: number;
+    reason: string;
+}
+
+export interface AssignmentSettingResponseDTO {
+    assignedGroupIds: number[];
+    assignmentErrors: AssignmentErrorDTO[];
+}
+
 export interface GameboardDTO extends HasTitleOrId {
     contents?: GameboardItem[];
     wildCard?: IsaacWildcard;

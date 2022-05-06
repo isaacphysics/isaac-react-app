@@ -143,7 +143,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
             onClick={assign}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
-        >Assign to group</Button>
+        >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
     </Container>;
 };
 

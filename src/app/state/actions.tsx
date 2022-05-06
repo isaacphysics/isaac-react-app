@@ -1611,7 +1611,7 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
         return false;
     }
 
-    let dueDateUTC = undefined;
+    let dueDateUTC: any = undefined;
     if (dueDate != undefined) {
         dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
         const today = new Date();
@@ -1623,28 +1623,34 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
     }
 
     const groupIds = groups.map(getValue);
-    const assignment = {board, groupIds, dueDate: dueDateUTC, notes};
+    const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: board.id, groupId: id, dueDate: dueDateUTC, notes}));
 
-    dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, ...assignment});
+    dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, assignments});
     try {
-        const {data: {assignedGroupIds, errorGroupIds}} = await api.boards.assign(board, groupIds, dueDateUTC, notes);
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment, groupIds: assignedGroupIds});
+        const { data: { assignedGroupIds, assignmentErrors } } = await api.boards.assign(assignments);
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, groupIds: assignedGroupIds, dueDate: dueDate as any});
         // Handle user feedback depending on whether some groups failed to assign or not
-        if (errorGroupIds.length !== 0) {
-            const groupLookUp = new Map(groups.map(toTuple));
-            if (assignedGroupIds.length === 0) {
-                dispatch(showToast({color: "success", title: "Some assignments saved", body: `Group(s) that could not be assigned: ${groupIds.map(id => groupLookUp.get(id) ?? "unknown").join(", ")}`, timeout: 5000}) as any);
-            } else {
-                throw new Error("All group assignments failed.");
-            }
+        if (assignmentErrors.length === 0) {
+            const successMessage = assignedGroupIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
+            dispatch(showToast({color: "success", title: `Assignment${assignedGroupIds.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
         } else {
-            const successMessage = groups.length > 1 ? "These assignments have been saved successfully." : "This assignment has been saved successfully."
-            dispatch(showToast({color: "success", title: `Assignment${groups.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
+            const groupLookUp = new Map(groups.map(toTuple));
+            // Show each group assignment error in a separate modal
+            assignmentErrors.forEach(({groupId, reason}) => {
+                dispatch(showToast({color: "danger", title: `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`, body: reason}) as any);
+            });
+            // Check whether some group assignments succeeded
+            if (assignmentErrors.length === groups.length) {
+                return false;
+            } else {
+                const partialSuccessMessage = assignedGroupIds.length > 1 ? "Some assignments were saved successfully." : "An assignment was saved successfully."
+                dispatch(showToast({color: "success", title: `Assignment${assignedGroupIds.length > 1 ? "s" : ""} saved`, body: partialSuccessMessage, timeout: 5000}) as any);
+            }
         }
         return true;
     } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, ...assignment});
-        dispatch(showErrorToastIfNeeded("Gameboard assignment failed", e));
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, board, groupIds, dueDate: dueDate as any});
+        dispatch(showErrorToastIfNeeded("Gameboard assignment(s) failed", e));
         return false;
     }
 };

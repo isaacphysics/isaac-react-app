@@ -2,6 +2,8 @@ import axios, {AxiosPromise} from "axios";
 import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
+    AssignmentDTO,
+    AssignmentSettingResponseDTO,
     AuthenticationProvider,
     EmailTemplateDTO,
     EventBookingDTO,
@@ -437,8 +439,8 @@ export const api = {
         unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
             return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
         },
-        assign: (board: ApiTypes.GameboardDTO, groupIds: number[], dueDate?: number, assignmentNotes?: string): AxiosPromise<{assignedGroupIds: number[]; errorGroupIds: number[]}> => {
-            return endpoint.post(`/assignments/assign`, {dueDate, gameboardId: board.id, groupIds, notes: assignmentNotes})
+        assign: (assignments: AssignmentDTO[] /*board: ApiTypes.GameboardDTO, groupIds: number[], dueDate?: number, assignmentNotes?: string*/): AxiosPromise<AssignmentSettingResponseDTO> => {
+            return endpoint.post(`/assignments/assign_many`, assignments);
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${boardId}`);
