@@ -148,6 +148,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         {value: "maths_book", label: "Pre-Uni Maths"},
                         {value: "maths_book_gcse", label: "GCSE Maths"},
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"},
+                        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"}
                     ]}
                 />
             </RS.Col>}
