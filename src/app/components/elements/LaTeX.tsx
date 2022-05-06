@@ -224,7 +224,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: PotentialUser | null, booleanNotation : BooleanNotation | null,  screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: PotentialUser | null, booleanNotation : BooleanNotation | null, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -302,7 +302,8 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                         `<span class="katex">${katexMathML}`);
                 }
 
-                if (screenReaderHoverText) {
+                if (showScreenReaderHoverText) {
+                    // Show screenreader text on hover so we can easily tell what's being output by katex-a11y
                     katexRenderResult = katexRenderResult.replace(
                         '<span class="katex-html"',
                         `<span class="katex-html" title="${
@@ -334,14 +335,18 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
     return output;
 }
 
-export function LaTeX({markup, className}: {markup: string, className?: string}) {
+// A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
+export const useKatex = (html: string) => {
     const user = useSelector(selectors.user.orNull);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const figureNumbers = useContext(FigureNumberingContext);
 
-    const escapedMarkup = utils.escapeHtml(markup);
-    const katexHtml = katexify(escapedMarkup, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
+    return katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers)
+}
 
+export function LaTeX({markup, className}: {markup: string, className?: string}) {
+    const escapedMarkup = utils.escapeHtml(markup);
+    const katexHtml = useKatex(escapedMarkup);
     return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
 }
