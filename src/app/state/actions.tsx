@@ -1607,7 +1607,7 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
 
 export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
     if (groups.length === 0) {
-        dispatch(showToast({color: "danger", title: "Board assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
+        dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
         return false;
     }
 
@@ -1617,7 +1617,7 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
         const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
-            dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
+            dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
             return false;
         }
     }
@@ -1650,7 +1650,7 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, board, groupIds, dueDate: dueDate as any});
-        dispatch(showErrorToastIfNeeded("Gameboard assignment(s) failed", e));
+        dispatch(showErrorToastIfNeeded(`Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, e));
         return false;
     }
 };

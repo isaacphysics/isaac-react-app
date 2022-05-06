@@ -116,7 +116,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const currentMonth = (new Date()).getMonth() + 1;
 
     return <Container className="py-2">
-        <Label className="w-100 pb-2">Group(s):
+        <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
             <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
                     onChange={selectOnChange(setSelectedGroups, false)}
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id, g.groupName))}
