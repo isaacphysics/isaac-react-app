@@ -3,11 +3,9 @@ const path = require('path');
 const BASE_DIRECTORY = path.resolve(__dirname, "..");
 const resolve = (p) => path.resolve(BASE_DIRECTORY, p);
 const configPHY = require('./webpack.config.physics');
-const merge = require('webpack-merge');
+const {merge} = require('webpack-merge');
 
 module.exports = env => {
-
-    let isProd = env['prod'];
 
     let configPHYrenderer = {
         entry: {
@@ -19,7 +17,7 @@ module.exports = env => {
         },
     };
 
-    const nearly = merge(configPHY(isProd), configPHYrenderer);
+    const nearly = merge(configPHY(env), configPHYrenderer);
 
     nearly.entry = configPHYrenderer.entry;
 

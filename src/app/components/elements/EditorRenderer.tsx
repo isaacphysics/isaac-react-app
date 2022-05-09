@@ -35,6 +35,10 @@ function EditorListener() {
 
     useEffect(() => {
         window.addEventListener("message", listener);
+        const source = window.opener || window.parent;
+        if (source) {
+            source.postMessage({ready: true}, "*");
+        }
         return () => window.removeEventListener("message", listener);
     }, [listener]);
 

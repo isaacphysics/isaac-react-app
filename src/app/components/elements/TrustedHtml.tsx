@@ -1,9 +1,6 @@
 import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
-import {FigureNumberingContext} from "../../../IsaacAppTypes";
-import {AppState} from "../../state/reducers";
-import {useSelector} from "react-redux";
-import {selectors} from "../../state/selectors";
-import {katexify} from "./LaTeX";
+import {ClozeDropRegionContext} from "../../../IsaacAppTypes";
+import {useKatex} from "./LaTeX";
 import {useClozeDropRegionsInHtml} from "../content/IsaacClozeQuestion";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
@@ -20,7 +17,14 @@ interface TableData {
 }
 
 const htmlDom = document.createElement("html");
-function manipulateHtml(html: string): {manipulatedHtml: string, tableData: TableData[]} {
+function useAccessibleTables(html: string): {htmlWithModifiedTables: string, tableData: TableData[]} {
+    // Skip turning the table into a portal component if we are in a cloze question exposition. This is because if
+    // the HTML that provides the root element for a drop-zone is put inside a Table component, then the Table might
+    // re-render and not cause the InlineDropZone related to that root element to rerender, since the InlineDropZone
+    // is a child component of IsaacClozeQuestion, and not Table.
+    const dropRegionContext = useContext(ClozeDropRegionContext);
+    const renderTablesInPortals = !(dropRegionContext && dropRegionContext.questionPartId);
+
     // This can't be quick but it is more robust than writing regular expressions...
     htmlDom.innerHTML = html;
 
@@ -32,12 +36,19 @@ function manipulateHtml(html: string): {manipulatedHtml: string, tableData: Tabl
         // Insert parent div to handle table overflow
         const parent = table.parentElement as HTMLElement;
         const div = document.createElement("div");
-        div.setAttribute("id", `table-${i}`);
-        parent.insertBefore(div, table);
-        tableInnerHTMLs.push({id: i, html: table.innerHTML, classes: (table.getAttribute("class") || "").split(/\s+/)});
-        parent.removeChild(table);
+        if (!renderTablesInPortals) {
+            table.setAttribute("class", classNames("table table-bordered w-100 text-center bg-white m-0", table.className));
+            div.setAttribute("class", "overflow-auto mb-4");
+            parent.insertBefore(div, table);
+            div.appendChild(parent.removeChild(table));
+        } else {
+            div.setAttribute("id", `table-${i}`);
+            parent.insertBefore(div, table);
+            tableInnerHTMLs.push({id: i, html: table.innerHTML, classes: (table.getAttribute("class") || "").split(/\s+/)});
+            parent.removeChild(table);
+        }
     }
-    return {manipulatedHtml: htmlDom.innerHTML, tableData: tableInnerHTMLs};
+    return {htmlWithModifiedTables: htmlDom.innerHTML, tableData: tableInnerHTMLs};
 }
 
 export const ExpandableParentContext = React.createContext<boolean>(false);
@@ -104,13 +115,6 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
 }
 
 export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string;}) => {
-    const user = useSelector(selectors.user.orNull);
-    const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
-    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
-        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
-
-    const figureNumbers = useContext(FigureNumberingContext);
-
     const [ htmlRef, setHtmlRef ] = useState<HTMLDivElement>();
     const updateHtmlRef = useCallback(ref => {
         if (ref !== null) {
@@ -118,12 +122,13 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
         }
     }, []);
 
-    const {manipulatedHtml, tableData} = manipulateHtml(katexify(html, user, booleanNotation, screenReaderHoverText, figureNumbers));
-    html = useClozeDropRegionsInHtml(manipulatedHtml);
+    const htmlWithClozeDropZones = useClozeDropRegionsInHtml(html);
+    const katexHtml = useKatex(htmlWithClozeDropZones);
+    const {htmlWithModifiedTables, tableData} = useAccessibleTables(katexHtml);
 
     const ElementType = span ? "span" : "div";
     return <>
-        <ElementType ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: html}} />
+        <ElementType ref={updateHtmlRef} className={className} dangerouslySetInnerHTML={{__html: htmlWithModifiedTables}} />
         {htmlRef && tableData.map(({id, html, classes}) => <Table key={id} rootElement={htmlRef} id={id} html={html} classes={classes}/>)}
     </>;
 };
