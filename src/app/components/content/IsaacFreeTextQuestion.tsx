@@ -50,7 +50,7 @@ function validatedChoiceDtoFromEvent(event: React.ChangeEvent<HTMLInputElement>)
 
 const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
     return validValue ? null
-        : <Alert color="warning">
+        : <Alert color="warning" className={"no-print"}>
             <strong>Warning:</strong>
             <ul>
                 {charLimit.exceeded && <li>Character limit exceeded ({charLimit.current}/{charLimit.limit})</li>}
