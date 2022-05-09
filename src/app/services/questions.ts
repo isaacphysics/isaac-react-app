@@ -59,6 +59,8 @@ export const HUMAN_QUESTION_TAGS = new Map([
     ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
     ["phys_book_gcse", "Mastering Essential GCSE Physics"],
     ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"],
+    ["maths_book_gcse", "Using Essential GCSE Mathematics"],
+    ["phys_book_step_up", "Step up to GCSE Physics"]
 ]);
 
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {

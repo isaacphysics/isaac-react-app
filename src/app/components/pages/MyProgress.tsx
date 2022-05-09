@@ -31,7 +31,7 @@ export const siteSpecific = {
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacClozeQuestion"
         ],
         questionTagsStatsList: [
-            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16"
+            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16", "maths_book_gcse", "phys_book_step_up"
         ],
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
