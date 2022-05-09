@@ -1,8 +1,16 @@
 .isaac-callout {
   @extend .my-3;
   padding: 25px 10px 10px;
-  //background-color: #3FFF5533;
-  background-color: $gray-110;
+  margin-left: 0;
+  margin-right: 0;
+
+  &.t-grey {
+    background-color: $gray-110;
+  }
+
+  &.t-green {
+    background-color: #3FFF5533;
+  }
 
   //.content-chunk > .content-value {
   //  > .row {
@@ -14,4 +22,3 @@
   //  }
   //}
 }
-
