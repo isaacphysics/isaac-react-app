@@ -440,7 +440,7 @@ export const api = {
             return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
         },
         assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentSettingResponseDTO> => {
-            return endpoint.post(`/assignments/assign_many`, assignments);
+            return endpoint.post(`/assignments/assign_bulk`, assignments);
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${boardId}`);
