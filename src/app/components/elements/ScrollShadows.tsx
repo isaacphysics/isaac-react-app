@@ -2,6 +2,10 @@ import React, {Dispatch, RefObject, SetStateAction, useEffect, useState} from "r
 import {isDefined} from "../../services/miscUtils";
 import classNames from "classnames";
 
+// This allows you to listen for changes in an attribute of some HTMLElement when one of a specified list of events occur.
+// It is essentially a setState where the state is also updated by an attribute you are "listening" to.
+// For example, `useEventPropertyState(ref, 0, "scrollLeft", ["scroll"]);` will update the state with `ref.current["scrollLeft"]`
+// whenever a `scroll` event is caught by a listener attached to `ref.current`.
 function useEventPropertyState<T>(ref: RefObject<HTMLElement>, initialState: T, property: string, eventTypes: (keyof HTMLElementEventMap)[], deps: React.DependencyList = []): [T, Dispatch<SetStateAction<T>>] {
     const [state, setState] = useState<T>(initialState);
 
@@ -32,9 +36,9 @@ function useEventPropertyState<T>(ref: RefObject<HTMLElement>, initialState: T, 
 }
 
 export const ScrollShadows = <T extends HTMLElement>({scrollRef} : {scrollRef : RefObject<T>}) => {
-    const [ clientWidth , setClientWidth ] = useState<number>(0);
-    const [ scrollWidth , setScrollWidth ] = useState<number>(0);
-    const [ scrollLeft , setScrollLeft ] = useEventPropertyState(scrollRef, 0, "scrollLeft", ["scroll"]);
+    const [clientWidth, setClientWidth] = useState<number>(0);
+    const [scrollWidth, setScrollWidth] = useState<number>(0);
+    const [scrollLeft, setScrollLeft] = useEventPropertyState(scrollRef, 0, "scrollLeft", ["scroll"]);
 
     useEffect(() => {
         const element = scrollRef?.current;
@@ -52,10 +56,10 @@ export const ScrollShadows = <T extends HTMLElement>({scrollRef} : {scrollRef : 
     }, [scrollRef]);
 
     const leftOpacity = scrollLeft > 1
-        ? (scrollLeft < 60 ? scrollLeft/60 : 1)
+        ? (scrollLeft < 60 ? scrollLeft / 60 : 1)
         : 0;
     const rightOpacity = (scrollWidth - clientWidth) - scrollLeft > 2
-        ? ((scrollWidth - clientWidth) - scrollLeft < 60 ? ((scrollWidth - clientWidth) - scrollLeft)/60 : 1)
+        ? ((scrollWidth - clientWidth) - scrollLeft < 60 ? ((scrollWidth - clientWidth) - scrollLeft) / 60 : 1)
         : 0;
 
     return (scrollWidth - clientWidth) > 5 ? <>
