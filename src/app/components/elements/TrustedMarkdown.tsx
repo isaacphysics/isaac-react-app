@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import ReactDOMServer from "react-dom/server";
 import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
@@ -38,10 +38,11 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 }
 
 export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
+    // Create a unique id which does not change over the lifecycle of the component
+    const componentUuid = useRef(uuid_v4().slice(0, 8)).current;
     const store = useStore();
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const [componentUuid, setComponentUuid] = useState(uuid_v4().slice(0, 8));
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.
@@ -91,7 +92,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
             }
 
             const cssFriendlyTermId = (term.id as string).replace(/\|/g, '-');
-            const tooltipTargetId = `glossary-${componentUuid}-${cssFriendlyTermId}-${offset}`;
+            const tooltipTargetId = cssFriendlyTermId // `glossary-${componentUuid}-${cssFriendlyTermId}-${offset}`;
             // This is properly horrible but it works...
             tooltips.push(
                 <RS.UncontrolledTooltip placement="bottom" target={tooltipTargetId}>
