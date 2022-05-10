@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useRef} from "react";
 import ReactDOMServer from "react-dom/server";
 import {Provider, useSelector, useStore} from "react-redux";
 import * as RS from "reactstrap";
@@ -92,7 +92,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
             }
 
             const cssFriendlyTermId = (term.id as string).replace(/\|/g, '-');
-            const tooltipTargetId = cssFriendlyTermId // `glossary-${componentUuid}-${cssFriendlyTermId}-${offset}`;
+            const tooltipTargetId = `glossary-${componentUuid}-${cssFriendlyTermId}-${offset}`;
             // This is properly horrible but it works...
             tooltips.push(
                 <RS.UncontrolledTooltip placement="bottom" target={tooltipTargetId}>
