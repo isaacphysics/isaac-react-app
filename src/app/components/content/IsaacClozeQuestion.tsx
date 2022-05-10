@@ -80,7 +80,7 @@ export function useClozeDropRegionsInHtml(html: string): string {
     const dropRegionContext = useContext(ClozeDropRegionContext);
     if (dropRegionContext && dropRegionContext.questionPartId) {
         let index = 0;
-        const safeQuestionId = dropRegionContext.questionPartId.replace("_", "-");
+        const safeQuestionId = dropRegionContext.questionPartId.replaceAll("_", "-");
         html = html.replace(dropZoneRegex, (matchingString, params, widthMatch, heightMatch, offset) => {
             const dropId = `drop-region-${safeQuestionId}-${offset}`;
             dropRegionContext.register(dropId, index++); // also increments index
