@@ -1,5 +1,4 @@
 import React from "react";
-import {Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {TrustedHtml} from "../elements/TrustedHtml";
 import {TrustedMarkdown} from "../elements/TrustedMarkdown";
