@@ -158,8 +158,8 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
                             <h4>Isaac Books</h4>
                             <RS.Row>
                                 {siteSpecific.questionTagsStatsList.map((qType: string) => {
-                                    const correct = progress?.correctByTag?.[qType] || null;
-                                    const attempts = progress?.attemptsByTag?.[qType] || null;
+                                    const correct = progress?.correctByTag?.[qType] || 0;
+                                    const attempts = progress?.attemptsByTag?.[qType] || 0;
                                     const percentage = safePercentage(correct, attempts);
                                     return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
@@ -167,7 +167,7 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
                                         </div>
                                         <div className={"px-2"}>
                                             <ProgressBar percentage={percentage || 0} type={qType}>
-                                                {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                                {attempts == 0 ? "No data" : `${correct} of ${attempts}`}
                                             </ProgressBar>
                                         </div>
                                     </RS.Col>;
