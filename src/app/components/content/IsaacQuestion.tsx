@@ -97,7 +97,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </div>}
 
             {/* Lock */}
-            {locked && <RS.Alert color="danger">
+            {locked && <RS.Alert color="danger" className={"no-print"}>
                 This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to prevent repeated guessing.
             </RS.Alert>}
 

@@ -29,7 +29,8 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     return <div ref={expandRef} className={classNames("position-relative code-snippet", outerClasses)}>
         {expandButton}
         <div className={innerClasses}>
-            {SITE_SUBJECT === SITE.CS && <ScrollShadows scrollRef={scrollPromptRef} />}
+            {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
+            {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows scrollRef={scrollPromptRef} />}
             <Row>
                 <Col>
                 <pre ref={scrollPromptRef} className="line-numbers">
