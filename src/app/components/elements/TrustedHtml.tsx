@@ -123,9 +123,9 @@ export const TrustedHtml = ({html, span, className}: {html: string; span?: boole
         }
     }, []);
 
-    const htmlWithClozeDropZones = useClozeDropRegionsInHtml(html);
-    const katexHtml = useKatex(htmlWithClozeDropZones);
-    const {htmlWithModifiedTables, tableData} = useAccessibleTables(katexHtml);
+    const katexHtml = useKatex(html);
+    const katexHtmlWithClozeDropZones = useClozeDropRegionsInHtml(katexHtml);
+    const {htmlWithModifiedTables, tableData} = useAccessibleTables(katexHtmlWithClozeDropZones);
 
     const ElementType = span ? "span" : "div";
     return <>
