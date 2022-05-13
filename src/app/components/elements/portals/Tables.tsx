@@ -87,7 +87,7 @@ interface TableData {
 //
 // Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
 export function useAccessibleTablesInHtml(html: string): {htmlWithModifiedTables: string, renderTables: (ref?: HTMLElement) => JSX.Element[]} {
-    // This can't be quick but it is more robust than writing regular expressions...
+    // This is more robust than writing regex, and is surprisingly very quick!
     const htmlDom = document.createElement("html");
     htmlDom.innerHTML = html;
     // Table manipulation
