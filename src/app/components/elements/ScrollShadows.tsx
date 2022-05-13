@@ -1,4 +1,4 @@
-import React, {Dispatch, RefObject, SetStateAction, useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {isDefined} from "../../services/miscUtils";
 import classNames from "classnames";
 
@@ -46,9 +46,7 @@ export const ScrollShadows = <T extends HTMLElement>({element} : {element : T | 
             setScrollWidth(element.scrollWidth);
             setScrollLeft(element.scrollLeft);
         });
-        if (element) {
-            resizeObserver.observe(element);
-        }
+        resizeObserver.observe(element);
         return () => resizeObserver.disconnect();
     }, [element]);
 
