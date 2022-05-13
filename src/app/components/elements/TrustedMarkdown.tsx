@@ -31,7 +31,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
 
     markdown = markdown.replace(glossaryBlockRegexp, (_match, id) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
-        return `<span data-type="full" id="glossary-term-${cssFriendlyTermId}">Loading glossary...</span>`;
+        return `<div data-type="full" id="glossary-term-${cssFriendlyTermId}">Loading glossary...</div>`;
     });
     markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
@@ -54,6 +54,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string}) => {
     );
 
     const html = MARKDOWN_RENDERER.render(regexProcessedMarkdown);
+
     return <div>
         <TrustedHtml html={html}/>
     </div>;

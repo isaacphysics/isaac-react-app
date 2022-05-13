@@ -12,7 +12,7 @@ const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: strin
     const parentElement = rootElement.querySelector(`#${id}`);
     if (parentElement) {
         return ReactDOM.createPortal(
-            <IsaacGlossaryTerm doc={term}/>,
+            <IsaacGlossaryTerm doc={term} key={id} inPortal/>,
             parentElement
         );
     }
@@ -42,31 +42,32 @@ export const useGlossaryTermsInHtml = (html: string) => {
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid] = useState(uuid_v4().slice(0, 8));
 
-    if (!glossaryTerms) {
-        return {htmlWithGlossaryTerms: html, tooltips: [], renderGlossaryTerms: () => []}
-    }
+    if (!glossaryTerms) return {htmlWithGlossaryTerms: html, tooltips: [], renderGlossaryTerms: () => []};
 
     const tooltips: JSX.Element[] = [];
     const fullTermContainers: {id: string; term: GlossaryTermDTO}[] = [];
 
     const htmlDom = document.createElement("html");
     htmlDom.innerHTML = html;
-    const spans = htmlDom.querySelectorAll("span[id^='glossary-term-']") as NodeListOf<HTMLElement>;
-    for (let i = 0; i < spans.length; i++) {
-        const termId = spans[i].id.slice(14);
+    const termElements = htmlDom.querySelectorAll("[id^='glossary-term-']") as NodeListOf<HTMLElement>;
+    if (termElements.length === 0) return {htmlWithGlossaryTerms: html, tooltips: [], renderGlossaryTerms: () => []};
+
+    for (let i = 0; i < termElements.length; i++) {
+        const termId = termElements[i].id.slice(14);
         const term = getTermFromCandidateTerms(glossaryTerms.filter(term => term.id?.replace(/\|/g, '-') === termId));
 
         if (term) {
             const uniqueId = `${termId}-${componentUuid}-${i}`;
-            if (spans[i].dataset.type === "full") {
+            if (termElements[i].dataset.type === "full") {
                 const fullTermDiv = document.createElement('div');
+                fullTermDiv.setAttribute("class", "glossary_term row");
                 fullTermDiv.setAttribute("id", uniqueId);
-                spans[i].parentNode?.replaceChild(fullTermDiv, spans[i]);
+                termElements[i].parentNode?.replaceChild(fullTermDiv, termElements[i]);
                 fullTermContainers.push({id: fullTermDiv.id, term: {...term}});
-            } else if (spans[i].dataset.type === "inline") { // Assume inline
-                const text = spans[i].dataset.text;
-                spans[i].innerHTML = text ?? term.value ?? "";
-                spans[i].setAttribute("id", uniqueId);
+            } else if (termElements[i].dataset.type === "inline") {
+                const text = termElements[i].dataset.text;
+                termElements[i].innerHTML = text ?? term.value ?? "";
+                termElements[i].setAttribute("id", uniqueId);
                 tooltips.push(
                     <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId}>
                         <TrustedMarkdown markdown={term.explanation?.value || ''} />
