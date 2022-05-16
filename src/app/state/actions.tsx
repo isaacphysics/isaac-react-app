@@ -1627,24 +1627,27 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
 
     dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, assignments});
     try {
-        const { data: { assignedGroupIds, assignmentErrors } } = await api.boards.assign(assignments);
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, groupIds: assignedGroupIds, dueDate: dueDate as any});
+        const { data: assigmentStatuses } = await api.boards.assign(assignments);
+        const successfulIds = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => a.groupId);
+        const failedIds = assigmentStatuses.filter(a => isDefined(a.errorMessage));
+
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, groupIds: successfulIds, dueDate: dueDate as any});
         // Handle user feedback depending on whether some groups failed to assign or not
-        if (assignmentErrors.length === 0) {
-            const successMessage = assignedGroupIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
-            dispatch(showToast({color: "success", title: `Assignment${assignedGroupIds.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
+        if (failedIds.length === 0) {
+            const successMessage = successfulIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
+            dispatch(showToast({color: "success", title: `Assignment${successfulIds.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
         } else {
             const groupLookUp = new Map(groups.map(toTuple));
             // Show each group assignment error in a separate toast
-            assignmentErrors.forEach(({groupId, reason}) => {
-                dispatch(showToast({color: "danger", title: `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`, body: reason}) as any);
+            failedIds.forEach(({groupId, errorMessage}) => {
+                dispatch(showToast({color: "danger", title: `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`, body: errorMessage}) as any);
             });
             // Check whether some group assignments succeeded, if so show "partial success" toast
-            if (assignmentErrors.length === groups.length) {
+            if (failedIds.length === assigmentStatuses.length) {
                 return false;
             } else {
-                const partialSuccessMessage = assignedGroupIds.length > 1 ? "Some assignments were saved successfully." : "An assignment was saved successfully."
-                dispatch(showToast({color: "success", title: `Assignment${assignedGroupIds.length > 1 ? "s" : ""} saved`, body: partialSuccessMessage, timeout: 5000}) as any);
+                const partialSuccessMessage = successfulIds.length > 1 ? "Some assignments were saved successfully." : `Assignment to ${groupLookUp.get(successfulIds[0])} was saved successfully.`
+                dispatch(showToast({color: "success", title: `Assignment${successfulIds.length > 1 ? "s" : ""} saved`, body: partialSuccessMessage, timeout: 5000}) as any);
             }
         }
         return true;

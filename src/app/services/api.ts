@@ -3,7 +3,7 @@ import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AssignmentDTO,
-    AssignmentSettingResponseDTO,
+    AssignmentFeedbackDTO,
     AuthenticationProvider,
     EmailTemplateDTO,
     EventBookingDTO,
@@ -439,7 +439,7 @@ export const api = {
         unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
             return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
         },
-        assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentSettingResponseDTO> => {
+        assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentFeedbackDTO[]> => {
             return endpoint.post(`/assignments/assign_bulk`, assignments);
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {

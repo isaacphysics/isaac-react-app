@@ -43,14 +43,10 @@ export interface AssignmentDTO extends IAssignmentLike {
     _id?: number;
 }
 
-export interface AssignmentErrorDTO {
+export interface AssignmentFeedbackDTO {
     groupId: number;
-    reason: string;
-}
-
-export interface AssignmentSettingResponseDTO {
-    assignedGroupIds: number[];
-    assignmentErrors: AssignmentErrorDTO[];
+    assignmentId?: number;
+    errorMessage?: string;
 }
 
 export interface GameboardDTO extends HasTitleOrId {
