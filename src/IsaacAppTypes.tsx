@@ -31,6 +31,7 @@ import {
     TAG_ID,
     TAG_LEVEL
 } from "./app/services/constants";
+import {DropResult} from "react-beautiful-dnd";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -711,8 +712,9 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
-export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string} | undefined>(undefined);
+export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string, updateAttemptCallback: (dropResult: DropResult) => void, readonly: boolean, inlineDropValueMap: {[p: string]: ClozeItemDTO}, borderMap: {[p: string]: boolean}} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
+export const ExpandableParentContext = React.createContext<boolean>(false);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;

@@ -1,10 +1,12 @@
-import React, {ReactNode, useEffect, useRef, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {LaTeX} from "./LaTeX";
 import {isDefined} from "../../services/miscUtils";
-import {ExpandableParentContext, useExpandContent} from "./TrustedHtml";
 import classNames from "classnames";
+import {useStatefulElementRef} from "./portals/utils";
+import {useExpandContent} from "./portals/Tables";
+import {ExpandableParentContext} from "../../../IsaacAppTypes";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -47,10 +49,10 @@ export const Tabs = (props: TabsProps) => {
         }
     }
 
-    const expandRef = useRef(null);
+    const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLDivElement>();
     const {expandButton, innerClasses, outerClasses} = useExpandContent(expandable ?? false, expandRef);
 
-    return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={expandRef}>
+    return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={updateExpandRef}>
         {expandButton}
         <div
             className={classNames(className, innerClasses, "position-relative")}
