@@ -1,6 +1,5 @@
 import React, {useContext} from "react";
 import {useKatex} from "./LaTeX";
-import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {useGlossaryTermsInHtml} from "./portals/GlossaryTerms";
 import {useAccessibleTablesInHtml} from "./portals/Tables";
 import {useStatefulElementRef} from "./portals/utils";
