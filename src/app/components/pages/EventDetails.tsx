@@ -23,7 +23,7 @@ import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {isLoggedIn, isStaff, isStudent, isTeacher} from "../../services/user";
+import {isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
