@@ -33,7 +33,7 @@ const useRenderClozeDropZones = (html: string) => {
 // glossary terms). The component produced by an element is rendered alongside the component that contains the
 // html of that element (i.e. in this case `tooltips` are rendered next to `ElementType`, whose `dangerouslySetInnerHTML`
 // contains the `span`s that those `UncontrolledTooltip`s refer to).
-export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string; glossaryTerms?: GlossaryTermDTO[]}) => {
+export const TrustedHtml = ({html, span, className}: {html: string; span?: boolean; className?: string}) => {
     const [htmlRef, updateHtmlRef] = useStatefulElementRef<HTMLDivElement>();
 
     const katexHtml = useKatex(html);
