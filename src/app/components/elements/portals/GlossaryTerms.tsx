@@ -7,6 +7,7 @@ import {AppState} from "../../../state/reducers";
 import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
 import {TrustedMarkdown} from "../TrustedMarkdown";
+import {PortalInHtmlHook} from "./utils";
 
 const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: string, rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#${id}`);
@@ -38,11 +39,11 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 // is added to the DOM, a update occurs for all components that take this element as a prop.
 //
 // Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
-export const useGlossaryTermsInHtml = (html: string) => {
+export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const [componentUuid] = useState(uuid_v4().slice(0, 8));
 
-    if (!glossaryTerms) return {htmlWithGlossaryTerms: html, tooltips: [], renderGlossaryTerms: () => []};
+    if (!glossaryTerms) return [html, () => []];
 
     const tooltips: JSX.Element[] = [];
     const fullTermContainers: {id: string; term: GlossaryTermDTO}[] = [];
@@ -50,7 +51,7 @@ export const useGlossaryTermsInHtml = (html: string) => {
     const htmlDom = document.createElement("html");
     htmlDom.innerHTML = html;
     const termElements = htmlDom.querySelectorAll("[id^='glossary-term-']") as NodeListOf<HTMLElement>;
-    if (termElements.length === 0) return {htmlWithGlossaryTerms: html, tooltips: [], renderGlossaryTerms: () => []};
+    if (termElements.length === 0) return [html, () => []];
 
     for (let i = 0; i < termElements.length; i++) {
         const termId = termElements[i].id.slice(14);
@@ -78,9 +79,8 @@ export const useGlossaryTermsInHtml = (html: string) => {
             console.error('No valid term for "' + termId + '" found among the filtered terms: ', glossaryTerms);
         }
     }
-    return {
-        htmlWithGlossaryTerms: htmlDom.innerHTML,
-        tooltips: tooltips,
-        renderGlossaryTerms: (ref?: HTMLElement) => ref ? fullTermContainers.map(({id, term}) => <GlossaryTerm key={id} id={id} term={term} rootElement={ref}/>) : []
-    };
+    return [
+        htmlDom.innerHTML,
+        (ref?: HTMLElement) => ref ? [...tooltips, ...fullTermContainers.map(({id, term}) => <GlossaryTerm key={id} id={id} term={term} rootElement={ref}/>)] : tooltips
+    ];
 }

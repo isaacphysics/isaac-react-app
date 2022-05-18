@@ -336,17 +336,17 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
 }
 
 // A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
-export const useKatex = (html: string) => {
+export const useRenderKatex = () => {
     const user = useSelector(selectors.user.orNull);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const figureNumbers = useContext(FigureNumberingContext);
 
-    return katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers)
+    return (html: string) => katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
 }
 
 export function LaTeX({markup, className}: {markup: string, className?: string}) {
     const escapedMarkup = utils.escapeHtml(markup);
-    const katexHtml = useKatex(escapedMarkup);
-    return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
+    const renderKatex = useRenderKatex();
+    return <span dangerouslySetInnerHTML={{__html: renderKatex(escapedMarkup)}} className={className} />
 }

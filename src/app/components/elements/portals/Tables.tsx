@@ -3,34 +3,34 @@ import classNames from "classnames";
 import ReactDOM from "react-dom";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ScrollShadows} from "../ScrollShadows";
-import {useGlossaryTermsInHtml} from "./GlossaryTerms";
 import {above, isMobile, useDeviceSize} from "../../../services/device";
 import {ExpandableParentContext} from "../../../../IsaacAppTypes";
-import {useClozeDropRegionsInHtml} from "./InlineDropZones";
-import {useStatefulElementRef} from "./utils";
+import {
+    PortalInHtmlHook,
+    TABLE_COMPATIBLE_PORTAL_HOOKS,
+    usePortalInHtmlHooks,
+    useStatefulElementRef
+} from "./utils";
 
 // A portal component to manage table elements from inside the React DOM
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#table-${id}`);
 
     const tableHtml = `<table class="${classNames(classes, "table table-bordered w-100 text-center bg-white m-0")}">${html}</table>`;
-    const {htmlWithDropZones, renderDropZones} = useClozeDropRegionsInHtml(tableHtml);
-    const {htmlWithGlossaryTerms, tooltips, renderGlossaryTerms} = useGlossaryTermsInHtml(htmlWithDropZones);
+    const [modifiedHtml, renderPortalElements] = usePortalInHtmlHooks(tableHtml, TABLE_COMPATIBLE_PORTAL_HOOKS);
 
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();
     const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLElement>();
     const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "overflow-auto mb-4");
 
-    if (htmlWithGlossaryTerms && parentElement) {
+    if (modifiedHtml && parentElement) {
         return ReactDOM.createPortal(
             <div className={classNames(outerClasses, "position-relative isaac-table")} ref={updateExpandRef}>
                 {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
                 {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
                 {expandButton}
-                <div ref={updateScrollRef} className={innerClasses} dangerouslySetInnerHTML={{__html: htmlWithGlossaryTerms}} />
-                {renderDropZones(scrollRef)}
-                {renderGlossaryTerms(scrollRef)}
-                {tooltips}
+                <div ref={updateScrollRef} className={innerClasses} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
+                {renderPortalElements(scrollRef)}
             </div>,
             parentElement
         );
@@ -86,13 +86,13 @@ interface TableData {
 // is added to the DOM, a update occurs for all components that take this element as a prop.
 //
 // Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
-export function useAccessibleTablesInHtml(html: string): {htmlWithModifiedTables: string, renderTables: (ref?: HTMLElement) => JSX.Element[]} {
+export const useAccessibleTablesInHtml: PortalInHtmlHook = (html) => {
     // This is more robust than writing regex, and is surprisingly very quick!
     const htmlDom = document.createElement("html");
     htmlDom.innerHTML = html;
     // Table manipulation
     const tableElements = [...htmlDom.getElementsByTagName("table")];
-    if (tableElements.length === 0) return {htmlWithModifiedTables: html, renderTables: () => []};
+    if (tableElements.length === 0) return [html, () => []];
 
     const tableInnerHTMLs: TableData[] = [];
     for (let i = 0; i < tableElements.length; i++) {
@@ -105,8 +105,8 @@ export function useAccessibleTablesInHtml(html: string): {htmlWithModifiedTables
         tableInnerHTMLs.push({id: i, html: table.innerHTML, classes: (table.getAttribute("class") || "").split(/\s+/)});
         parent.removeChild(table);
     }
-    return {
-        htmlWithModifiedTables: htmlDom.innerHTML,
-        renderTables: (ref?: HTMLElement) => ref ? tableInnerHTMLs.map(({id, html, classes}) => <Table key={id} rootElement={ref} id={id} html={html} classes={classes}/>) : []
-    };
+    return [
+        htmlDom.innerHTML,
+        (ref?: HTMLElement) => ref ? tableInnerHTMLs.map(({id, html, classes}) => <Table key={id} rootElement={ref} id={id} html={html} classes={classes}/>) : []
+    ];
 }

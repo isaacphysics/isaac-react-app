@@ -5,6 +5,7 @@ import React, {useCallback, useContext, useEffect} from "react";
 import {ItemDTO} from "../../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {Badge} from "reactstrap";
+import {PortalInHtmlHook} from "./utils";
 
 export function Item({item}: {item: ItemDTO}) {
     return <Badge className="m-2 p-2">
@@ -73,29 +74,31 @@ export function InlineDropRegion({id, index, rootElement}: {id: string; index: n
 // is added to the DOM, a update occurs for all components that take this element as a prop.
 //
 // Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
-export function useClozeDropRegionsInHtml(html: string): {htmlWithDropZones: string; renderDropZones: (ref?: HTMLElement) => JSX.Element[]} {
+export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
     // If not in a cloze question, don't bother trying to find and render drop-zone divs
     const dropRegionContext = useContext(ClozeDropRegionContext);
-    if (!dropRegionContext) return {htmlWithDropZones: html, renderDropZones: () => []};
+    if (!dropRegionContext) return [html, () => []];
 
     const dropIds: { id: string; index: number }[] = [];
+    const safeQuestionId = dropRegionContext.questionPartId.replaceAll("_", "-");
     const htmlDom = document.createElement("html");
     htmlDom.innerHTML = html;
     // Looks for all div elements with ids starting with "drop-region-". These are the drop-zones that the component
     // using this hook is charged with rendering.
-    const dropZones = htmlDom.querySelectorAll("div[id^='drop-region-']") as NodeListOf<HTMLElement>;
-    if (dropZones.length === 0) return {htmlWithDropZones: html, renderDropZones: () => []};
+    const dropZones = htmlDom.querySelectorAll("span[id^='drop-region-']") as NodeListOf<HTMLElement>;
+    if (dropZones.length === 0) return [html, () => []];
     for (let i = 0; i < dropZones.length; i++) {
         const index = parseInt(dropZones[i].dataset.index ?? "x");
         if (isNaN(index)) {
             console.error("Drop zone div element has invalid index data attribute!", dropZones[i]);
             continue;
         }
+        dropZones[i].setAttribute("id", `${dropZones[i].id}-${safeQuestionId}`);
         dropIds.push({id: dropZones[i].id, index});
     }
 
-    return {
-        htmlWithDropZones: htmlDom.innerHTML,
-        renderDropZones: (ref?: HTMLElement) => ref ? dropIds.map(({id, index}) => <InlineDropRegion key={id} rootElement={ref} id={id} index={index}/>) : []
-    };
+    return [
+        htmlDom.innerHTML,
+        (ref?: HTMLElement) => ref ? dropIds.map(({id, index}) => <InlineDropRegion key={id} rootElement={ref} id={id} index={index}/>) : []
+    ];
 }
