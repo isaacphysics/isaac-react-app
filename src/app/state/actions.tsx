@@ -517,6 +517,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         history.push(nextPage?.replace("#!", "") || "/account");
     } catch (error: any) {
         history.push("/auth_error", { errorMessage: extractMessage(error) });
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };

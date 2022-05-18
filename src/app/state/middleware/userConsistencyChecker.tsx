@@ -24,7 +24,7 @@ const scheduleNextCheck = (middleware: MiddlewareAPI) => {
 const checkUserConsistency = (middleware: MiddlewareAPI) => {
     const storedUserId = getUserId();
     const state = middleware.getState();
-    const appUserId = state && state.user && state.user._id;
+    const appUserId = state?.user?._id;
     if (storedUserId != appUserId) {
         middleware.dispatch(logAction({type: "USER_CONSISTENCY_WARNING_SHOWN", userAgent: navigator.userAgent}));
         // Mark error after this check has finished, else the error will be snuffed by the error reducer.
@@ -51,7 +51,7 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
     }
 };
 
-const clearCurrentUser = () => {
+const clearCurrentUserAndRedirectHome = () => {
     clearTimeout(timeoutHandle);
     setUserId(undefined);
     changePage("/");
@@ -61,14 +61,17 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
-            clearCurrentUser();
+            clearCurrentUserAndRedirectHome();
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS:
             setCurrentUser(action.user, api);
             break;
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
-            clearCurrentUser();
+            clearCurrentUserAndRedirectHome();
+            break;
+        case ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE:
+            setUserId(undefined);
             break;
     }
 
