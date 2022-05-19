@@ -97,16 +97,18 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const expandRef = useRef<HTMLDivElement>(null);
-    const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "overflow-auto mb-4");
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "mb-4");
 
     if (html && parentElement) {
         return ReactDOM.createPortal(
-            <div className={classNames(outerClasses, "position-relative isaac-table")} ref={expandRef}>
-                {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
-                {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows scrollRef={scrollRef} />}
-                {expandButton}
-                <div ref={scrollRef} className={innerClasses}>
-                    <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
+            <div className={classNames(outerClasses, "isaac-table")} ref={expandRef}>
+                <div className={"position-relative"}>
+                    {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
+                    {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows scrollRef={scrollRef} />}
+                    {expandButton}
+                    <div ref={scrollRef} className={classNames(innerClasses, "overflow-auto")}>
+                        <table className={classNames(classes, "table table-bordered w-100 text-center bg-white m-0")} dangerouslySetInnerHTML={{__html: html}}/>
+                    </div>
                 </div>
             </div>,
             parentElement
