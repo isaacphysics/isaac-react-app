@@ -63,7 +63,7 @@ set -e
 
 if [ "${PULL_FAILED}" -ne 0 ] || [ "$FORCE_BUILD" == "1" ]; then
   echo "App image not already available for commit ${APP_COMMIT_SHA}. Building."
-  yarn
+  yarn --frozen-lockfile
   yarn run build-cs
   yarn run build-phy
   docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-cs-app:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
