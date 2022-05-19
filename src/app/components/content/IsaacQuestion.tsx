@@ -18,6 +18,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
+import classNames from "classnames";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -75,7 +76,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             }
         }
     }}>
-        <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
+        <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
             {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
             <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
 
