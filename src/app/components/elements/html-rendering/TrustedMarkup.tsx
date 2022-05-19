@@ -9,7 +9,7 @@ export type TrustedMarkupEncoding = "markdown" | "html" | "latex" | "plaintext" 
 // Encodings:
 //  - `markdown`:  renders markdown syntax into HTML, providing placeholders for portal components (glossary terms, cloze question drop-zones).
 //                 Besides this preprocessing step, `markdown` encoding does the same as `html`.
-//  - `html`:      renders arbitrary HTML, and renders portal components into relevant placeholders.
+//  - `html`:      renders LaTeX using KaTeX, renders arbitrary HTML, and renders portal components into relevant placeholders.
 //  - `latex`:     escapes HTML and renders LaTeX using KaTeX.
 //  - `plaintext`: escapes HTML, doesn't do anything other than injecting text into a `span`.
 //  - `unknown`:   HTML is escaped, and markup is rendered alongside a warning that the encoding is unknown.
