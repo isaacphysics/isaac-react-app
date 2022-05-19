@@ -73,6 +73,7 @@ interface InequalityModalState {
         mathsLogFunctions: MenuItem[];
         mathsDerivatives: MenuItem[];
         chemicalElements: MenuItem[];
+        chemicalParticles: MenuItem[];
         // The following is for the pseudo-text-entry menu on /equality
         parsedChemicalElements: MenuItem[];
         chemicalStates: MenuItem[];
@@ -212,6 +213,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                 letters: [],
                 otherFunctions: [],
                 chemicalElements: [],
+                chemicalParticles: [],
                 parsedChemicalElements: [],
                 chemicalStates: [],
                 chemicalOperations: [],
@@ -432,7 +434,8 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                 this.setState((prevState: InequalityModalState) => ({
                     menuItems: {
                         ...prevState.menuItems,
-                        chemicalElements: [ ...this._chemicalElements, ...Object.keys(this._chemicalParticles) ].map( element => this.makeChemicalElementMenuItem(element) ),
+                        chemicalElements: this._chemicalElements.map( element => this.makeChemicalElementMenuItem(element) ),
+                        chemicalParticles: Object.keys(this._chemicalParticles).map( element => this.makeChemicalElementMenuItem(element)),
                     }
                 }));
             } else {
@@ -1203,6 +1206,11 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                         {this.state.menuItems.chemicalElements.map(this.menuItem)}
                     </ul>
                 </div>}
+                { (!isDefined(this._availableSymbols) || (isDefined(this._availableSymbols) && this._availableSymbols.length === 0)) && this.props.editorMode === 'chemistry' && this.state.activeMenu === 'particles' && <div className="top-menu chemistry particles">
+                    <ul className="sub-menu particles">
+                        {this.state.menuItems.chemicalParticles.map(this.menuItem)}
+                    </ul>
+                </div>}
                 {this.props.editorMode === 'chemistry' && this.state.activeMenu === 'states' && <div className="top-menu chemistry states">
                     <ul className="sub-menu states">
                         {this.state.menuItems.chemicalStates.map(this.menuItem)}
@@ -1244,9 +1252,15 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
                     {/* Chemistry below */}
                     {this.props.editorMode === 'chemistry' &&
                     <li className={this.state.activeMenu === 'elements' ? 'active' : 'inactive'}
-                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('\\text{H He Li}') }}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString(isDefined(this.props.availableSymbols) && this.props.availableSymbols.length > 0 && this.state.menuItems.chemicalElements.map(i => i.type).includes('Particle') ? '\\text{He Li}\\ \\alpha' : '\\text{H He Li}') }}
                         onClick={() => this.onMenuTabClick('elements')}
                         onKeyUp={() => this.onMenuTabClick('elements')}
+                    />}
+                    {this.props.editorMode === 'chemistry' && this.state.menuItems.chemicalParticles.length > 0 &&
+                    <li className={this.state.activeMenu === 'particles' ? 'active' : 'inactive'}
+                        dangerouslySetInnerHTML={{ __html: this._tabTriangle + katex.renderToString('\\alpha\\ \\gamma\\ \\text{e}') }}
+                        onClick={() => this.onMenuTabClick('particles')}
+                        onKeyUp={() => this.onMenuTabClick('particles')}
                     />}
                     {this.props.editorMode === 'chemistry' &&
                     <li className={this.state.activeMenu === 'states' ? 'active' : 'inactive'}

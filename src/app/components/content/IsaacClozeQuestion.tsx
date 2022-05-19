@@ -1,11 +1,6 @@
-import React, {RefObject, useContext, useEffect, useRef, useState} from "react";
-import * as RS from "reactstrap";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Label} from "reactstrap";
-import {
-    IsaacClozeQuestionDTO,
-    ItemChoiceDTO,
-    ItemDTO
-} from "../../../IsaacApiTypes";
+import {IsaacClozeQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {useCurrentQuestionAttempt} from "../../services/questions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
@@ -17,117 +12,48 @@ import {
     DropResult,
     ResponderProvided
 } from "react-beautiful-dnd";
-import ReactDOM from 'react-dom';
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Item} from "../../services/select";
-
-function Item({item}: {item: ItemDTO}) {
-    return <RS.Badge className="m-2 p-2">
-        <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
-            {item.children}
-        </IsaacContentValueOrChildren>
-    </RS.Badge>;
-}
-
-interface InlineDropRegionProps {
-    id: string; item?: ClozeItemDTO; contentHolder: RefObject<HTMLDivElement>; readonly?: boolean; updateAttempt: (dropResult : DropResult) => void; showBorder: boolean;
-}
-function InlineDropRegion({id, item, contentHolder, readonly, updateAttempt, showBorder}: InlineDropRegionProps) {
-
-    function clearInlineDropZone() {
-        updateAttempt({source: {droppableId: id, index: 0}, draggableId: (item?.replacementId as string)} as DropResult);
-    }
-
-    const droppableTarget = contentHolder.current?.querySelector(`#${id}`);
-    if (droppableTarget) {
-        return ReactDOM.createPortal(
-            <div style={{minHeight: "inherit", position: "relative", margin: "2px"}}>
-                <Droppable droppableId={id} isDropDisabled={readonly} direction="vertical" >
-                    {(provided, snapshot) => <div
-                        ref={provided.innerRef} {...provided.droppableProps}
-                        className={`d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden ${showBorder && "border border-dark"}`}
-                        style={{minHeight: "inherit"}}
-                    >
-                        {item && <Draggable key={item.replacementId} draggableId={item?.replacementId as string} index={0} isDragDisabled={true}>
-                            {(provided, snapshot) =>
-                                <div
-                                    className={"cloze-draggable mr-4"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
-                                >
-                                    <Item item={item}/>
-                                </div>
-                            }
-                        </Draggable>}
-                        {!item && "\u00A0"}
-                    </div>}
-                </Droppable>
-                {item && <button aria-label={"Clear drop zone"} className={"cloze-inline-clear"} onClick={clearInlineDropZone}>
-                    <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"
-                         className="cloze-clear-cross">
-                        <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"/>
-                    </svg>
-                </button>}
-            </div>,
-            droppableTarget);
-    }
-    return null;
-}
-
-export type ClozeQuestionDropRegionContext = {register: (id: string, index: number) => void, questionPartId: string};
-// Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
-const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
-export function useClozeDropRegionsInHtml(html: string): string {
-    const dropRegionContext = useContext(ClozeDropRegionContext);
-    if (dropRegionContext && dropRegionContext.questionPartId) {
-        let index = 0;
-        html = html.replace(dropZoneRegex, (matchingString, params, widthMatch, heightMatch, offset) => {
-            const dropId = `drop-region-${dropRegionContext.questionPartId}-${offset}`;
-            dropRegionContext.register(dropId, index++); // also increments index
-            const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
-            const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
-            return `<div id="${dropId}" class="d-inline-block" style="min-width: ${minWidth}; min-height: ${minHeight}"></div>`;
-        });
-    }
-    return html;
-}
+import {Item} from "../elements/portals/InlineDropZones";
 
 export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
-    const questionContentRef = useRef<HTMLDivElement>(null);
     const withReplacement = doc.withReplacement ?? false;
 
     const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
 
     const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
 
-    const registeredDropRegionIDs = useRef<string[]>([]).current;
-    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
+    const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
 
     const [borderMap, setBorderMap] = useState<{[dropId: string]: boolean}>({});
 
+    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
+    // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
+    const inlineDropValueMap = useMemo(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
+
     useEffect(() => {
         if (currentAttempt?.items) {
-            const idvs = currentAttempt.items as (ClozeItemDTO | undefined)[];
-            setInlineDropValues(registeredDropRegionIDs.map((_, i) => idvs[i] ? {...idvs[i], replacementId: `${idvs[i]?.id}-${uuid_v4()}`} : undefined));
-
+            setInlineDropValues(currentAttempt.items.map((idv: ClozeItemDTO | undefined) => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined));
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
             if (!withReplacement) {
-                setNonSelectedItems(nonSelectedItems.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
+                setNonSelectedItems(nsis => nsis.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
             }
         }
         }, [currentAttempt]);
 
-    function registerInlineDropRegion(dropRegionId: string) {
-        if (!registeredDropRegionIDs.includes(dropRegionId)) {
-            registeredDropRegionIDs.push(dropRegionId);
-            setInlineDropValues(registeredDropRegionIDs.map(() => undefined));
-            setBorderMap(registeredDropRegionIDs.reduce((dict: {[dropId: string]: boolean}, id) => Object.assign(dict, {[id]: false}), {}));
+    const registerInlineDropRegion = (dropRegionId: string, index: number) => {
+        if (!registeredDropRegionIDs.has(dropRegionId)) {
+            registeredDropRegionIDs.set(dropRegionId, index);
+            const registeredDropRegionEntries = Array.from(registeredDropRegionIDs.entries());
+            setInlineDropValues(idvs => [...idvs]); // This is messy, but it makes sure that the inlineDropValueMap is recomputed
+            setBorderMap(registeredDropRegionEntries.reduce((dict, [dropId, index]) => Object.assign(dict, {[dropId]: false}), {}));
         }
-    }
+    };
 
     function fixInlineZoneOnStartDrag({source}: DragStart, provided: ResponderProvided) {
         fixInlineZones({destination: source} as DragUpdate, provided);
@@ -136,10 +62,9 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
     // This is run on drag update to highlight the droppable that the user is dragging over
     //  this gives more control over when a droppable is highlighted
     function fixInlineZones({destination}: DragUpdate, provided: ResponderProvided) {
-        registeredDropRegionIDs.map((dropId, i) => {
-            const destinationDropIndex = destination ? registeredDropRegionIDs.indexOf(dropId) : -1;
+        Array.from(registeredDropRegionIDs.entries()).map(([dropId, index]) => {
+            const destinationDropIndex = destination ? index : -1;
             const destinationDragIndex = destination?.index ?? -1;
-
             borderMap[dropId] = (dropId === destination?.droppableId && destinationDropIndex !== -1 && destinationDragIndex === 0);
         });
         // Tell React about the changes to borderMap
@@ -147,8 +72,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
     }
 
     // Run after a drag action ends
-    function updateAttempt({source, destination, draggableId}: DropResult, provided: ResponderProvided) {
-
+    const updateAttempt = useCallback(({source, destination, draggableId}: DropResult, provided: ResponderProvided) => {
         // Make sure borders are removed, since drag has ended
         fixInlineZones({destination: undefined} as DragUpdate, provided);
 
@@ -156,7 +80,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
 
         if (!destination) return; // Drag had no destination
 
-        const inlineDropIndex = (id : string) => registeredDropRegionIDs.indexOf(id)
+        const inlineDropIndex = (id : string) => registeredDropRegionIDs.get(id);
 
         const nsis = [...nonSelectedItems];
         const idvs = [...inlineDropValues];
@@ -179,13 +103,13 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
         } else {
             // Drag was from inline drop section
             // When splicing inline drop values, you always need to delete and replace
-            const sourceDropIndex = inlineDropIndex(source.droppableId);
-            if (sourceDropIndex !== -1) {
+            const sourceDropIndex = inlineDropIndex(source.droppableId) as number;
+            if (sourceDropIndex !== undefined) {
                 const maybeItem = idvs[sourceDropIndex]; // This nastiness is to appease typescript
                 if (maybeItem) {
                     item = maybeItem;
-                    idvs.splice(sourceDropIndex, 1, undefined);
-                    replaceSource = (itemToReplace) => idvs.splice(sourceDropIndex, 1, itemToReplace);
+                    idvs[sourceDropIndex] = undefined;
+                    replaceSource = (itemToReplace) => {idvs[sourceDropIndex] = itemToReplace;};
                     update = true;
                 } else {
                     return;
@@ -206,10 +130,11 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
             }
         } else {
             // Drop is into inline drop section
-            const destinationDropIndex = inlineDropIndex(destination.droppableId);
-            if (destinationDropIndex !== -1 && destination.index === 0) {
+            const destinationDropIndex = inlineDropIndex(destination.droppableId) as number;
+            if (destinationDropIndex !== undefined && destination.index === 0) {
                 replaceSource(idvs[destinationDropIndex]);
-                idvs.splice(destinationDropIndex, 1, withReplacement ? {...item, replacementId: item.id + uuid_v4()} : item);
+                // Important! This extends the array with `undefined`s if `destinationDropIndex` is out of bounds
+                idvs[destinationDropIndex] = withReplacement ? {...item, replacementId: item.id + uuid_v4()} : item
             } else {
                 replaceSource(item);
             }
@@ -235,10 +160,14 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
             };
             dispatchSetCurrentAttempt(itemChoice);
         }
-    }
+    }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
-    return <div ref={questionContentRef} className="question-content cloze-question">
-        <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion}}>
+    const updateAttemptCallback = useCallback((dropResult) => {
+        updateAttempt({...dropResult, destination: {droppableId: itemsSection, index: nonSelectedItems.length}},{announce: (_) => {return;}});
+    }, [itemsSection, nonSelectedItems]);
+
+    return <div className="question-content cloze-question">
+        <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
             <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
@@ -262,17 +191,6 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
                         {provided.placeholder}
                     </div>}
                 </Droppable>
-
-                {/* Inline droppables rendered for each registered drop region */}
-                {registeredDropRegionIDs.map((dropRegionId, index) =>
-                    <InlineDropRegion
-                        key={dropRegionId} contentHolder={questionContentRef} readonly={readonly}
-                        id={dropRegionId} item={inlineDropValues[index]} updateAttempt={(dropResult) => {
-                            updateAttempt({...dropResult, destination: {droppableId: itemsSection, index: nonSelectedItems.length}},{announce: (_) => {return;}});
-                        }}
-                        showBorder={borderMap[dropRegionId]}
-                    />
-                )}
             </DragDropContext>
         </ClozeDropRegionContext.Provider>
     </div>;
