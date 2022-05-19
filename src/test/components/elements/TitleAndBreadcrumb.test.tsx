@@ -1,7 +1,7 @@
 import React from "react";
-import {LaTeX} from "../../../app/components/elements/LaTeX";
 import {formatPageTitle} from "../../../app/components/elements/PageTitle";
 import {formatBreadcrumbItemTitle} from "../../../app/components/elements/TitleAndBreadcrumb";
+import {TrustedMarkup} from "../../../app/components/elements/html-rendering/TrustedMarkup";
 
 describe("Parameter to disallow LaTeX rendering is observed by PageTitle", () => {
     it("Uses a LaTeX component for title by default",
@@ -10,7 +10,8 @@ describe("Parameter to disallow LaTeX rendering is observed by PageTitle", () =>
             const pageTitleElement = formatPageTitle('\\(x^2 + y^2 = z^2\\)')
 
             // Assert
-            expect(pageTitleElement.type).toBe(LaTeX)
+            expect(pageTitleElement.type).toBe(TrustedMarkup)
+            expect(pageTitleElement.props.encoding).toBe("latex")
         }
     )
     it("Uses a plain span element for title when LaTeX is disallowed",
@@ -30,7 +31,8 @@ describe("Parameter to disallow LaTeX rendering is observed by Breadcrumbs", () 
             const breadcrumbTitleElement = formatBreadcrumbItemTitle('\\(x^2 + y^2 = z^2\\)')
 
             // Assert
-            expect(breadcrumbTitleElement.type).toBe(LaTeX)
+            expect(breadcrumbTitleElement.type).toBe(TrustedMarkup)
+            expect(breadcrumbTitleElement.props.encoding).toBe("latex")
         }
     )
     it("Uses a plain span element for breadcrumb title when LaTeX is disallowed",

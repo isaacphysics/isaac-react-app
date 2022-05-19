@@ -1,9 +1,9 @@
-import {ClozeDropRegionContext} from "../../../../IsaacAppTypes";
+import {ClozeDropRegionContext} from "../../../../../IsaacAppTypes";
 import {Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import ReactDOM from "react-dom";
 import React, {useCallback, useContext, useEffect} from "react";
-import {ItemDTO} from "../../../../IsaacApiTypes";
-import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
+import {ItemDTO} from "../../../../../IsaacApiTypes";
+import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
 import {Badge} from "reactstrap";
 import {PortalInHtmlHook} from "./utils";
 

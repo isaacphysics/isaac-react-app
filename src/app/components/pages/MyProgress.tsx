@@ -86,7 +86,7 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
     return <RS.Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX={true} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
         <RS.Card className="mt-4">
             <RS.CardBody>
                 <Tabs>{{

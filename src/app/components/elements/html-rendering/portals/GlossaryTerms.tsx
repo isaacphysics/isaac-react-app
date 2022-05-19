@@ -1,13 +1,13 @@
-import {GlossaryTermDTO} from "../../../../IsaacApiTypes";
+import {GlossaryTermDTO} from "../../../../../IsaacApiTypes";
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
-import {IsaacGlossaryTerm} from "../../content/IsaacGlossaryTerm";
+import {IsaacGlossaryTerm} from "../../../content/IsaacGlossaryTerm";
 import {useSelector} from "react-redux";
-import {AppState} from "../../../state/reducers";
+import {AppState} from "../../../../state/reducers";
 import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
-import {TrustedMarkdown} from "../TrustedMarkdown";
 import {PortalInHtmlHook} from "./utils";
+import {TrustedMarkup} from "../TrustedMarkup";
 
 const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: string, rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#${id}`);
@@ -71,7 +71,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
                 termElements[i].setAttribute("id", uniqueId);
                 tooltips.push(
                     <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId}>
-                        <TrustedMarkdown markdown={term.explanation?.value || ''} />
+                        <TrustedMarkup encoding={"markdown"} markup={term.explanation?.value || ''} />
                     </UncontrolledTooltip>
                 );
             }

@@ -1,15 +1,13 @@
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {useSelector} from "react-redux";
-import {selectors} from "../../state/selectors";
-import {AppState} from "../../state/reducers";
-import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
+import {selectors} from "../../../state/selectors";
+import {AppState} from "../../../state/reducers";
+import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import katex, { KatexOptions } from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
-import renderA11yString from "../../services/katex-a11y";
-// @ts-ignore
-import { utils } from "remarkable";
+import renderA11yString from "../../../services/katex-a11y";
 
 type MathJaxMacro = string|[string, number];
 
@@ -342,11 +340,5 @@ export const useRenderKatex = () => {
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const figureNumbers = useContext(FigureNumberingContext);
 
-    return (html: string) => katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
-}
-
-export function LaTeX({markup, className}: {markup: string, className?: string}) {
-    const escapedMarkup = utils.escapeHtml(markup);
-    const renderKatex = useRenderKatex();
-    return <span dangerouslySetInnerHTML={{__html: renderKatex(escapedMarkup)}} className={className} />
+    return (markup: string) => katexify(markup, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
 }

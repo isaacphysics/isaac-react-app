@@ -1,11 +1,10 @@
 import React from "react";
-import {MARKDOWN_RENDERER} from "../../services/constants";
+import {MARKDOWN_RENDERER} from "../../../services/constants";
 import {TrustedHtml} from "./TrustedHtml";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {compose} from "redux";
-import {useRenderKatex} from "./LaTeX";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     const href = utils.escapeHtml(tokens[idx].href || "");
@@ -74,8 +73,6 @@ const regexProcessMarkdown = (markdown: string) => {
 // drop zones) into HTML, which is then passed to `TrustedHTML`. The Isaac-specific markdown must be processed first,
 // so that it doesn't get incorrectly rendered with Remarkable (the markdown renderer we use).
 export const TrustedMarkdown = ({markdown}: {markdown: string, renderParagraphs?: boolean}) => {
-    const renderKatex = useRenderKatex();
-
     // This combines all of the above functions for markdown processing.
     const html = compose<string>(
         (s: string) => MARKDOWN_RENDERER.render(s), // Remarkable markdown renderer, processes standard markdown syntax
@@ -83,10 +80,7 @@ export const TrustedMarkdown = ({markdown}: {markdown: string, renderParagraphs?
         renderInlineGlossaryTerms, //  |
         renderGlossaryBlocks,      //  | control flow
         renderClozeDropZones,      //  |
-        renderKatex,               //  |
     )(markdown);
 
-    return <div>
-        <TrustedHtml html={html} isMarkdown/>
-    </div>;
+    return <TrustedHtml html={html}/>;
 };

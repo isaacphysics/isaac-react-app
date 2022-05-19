@@ -1,7 +1,6 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
-import {LaTeX} from "../LaTeX";
 import {
     audienceStyle,
     isIntendedAudience,
@@ -16,6 +15,7 @@ import {selectors} from "../../../state/selectors";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../../services/constants";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import classNames from "classnames";
+import {TrustedMarkup} from "../html-rendering/TrustedMarkup";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const userContext = useUserContext();
@@ -50,7 +50,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     </div>
                     <div className="title pl-3 d-flex">
                         <div className="p-3">
-                            <LaTeX markup={item.title || ""} />
+                            <TrustedMarkup encoding={"latex"} markup={item.title || ""} />
                         </div>
                         {item.deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${index}`} className="icon-help mx-1" />

@@ -10,7 +10,7 @@ import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
 import {Hexagon} from "./svg/Hexagon";
 import {HexagonConnection} from "./svg/HexagonConnection";
-import {LaTeX} from "./LaTeX";
+import {TrustedMarkup} from "./html-rendering/TrustedMarkup";
 
 type QuestionLevel = "topTen" | "upper" | "lower";
 
@@ -370,7 +370,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 <div className="d-none d-lg-block">
                     <br className="d-none d-lg-block"/>
                     {currentlyWorkingOn.isConcept && <h4 className="mt-lg-1 mt-xl-3">
-                        <LaTeX markup={`${currentlyWorkingOn.title} Practice`} />
+                        <TrustedMarkup markup={`${currentlyWorkingOn.title} Practice`} encoding={"latex"} />
                     </h4>}
                 </div>
             </RS.Col>
@@ -396,7 +396,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
             <RS.Col cols={12} className="d-block d-lg-none">
                 <div>
                     {currentlyWorkingOn.isConcept && <h4 className="mt-2">
-                        <LaTeX markup={`${currentlyWorkingOn.title} Practice`} />
+                        <TrustedMarkup markup={`${currentlyWorkingOn.title} Practice`} encoding={"latex"} />
                     </h4>}
                 </div>
             </RS.Col>

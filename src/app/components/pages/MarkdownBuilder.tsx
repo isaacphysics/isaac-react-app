@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {TrustedMarkdown} from "../elements/TrustedMarkdown";
+import {TrustedMarkup} from "../elements/html-rendering/TrustedMarkup";
 
 
 export const MarkdownBuilder = () => {
@@ -27,7 +27,7 @@ export const MarkdownBuilder = () => {
                         <h2 className="h4">Rendered markdown</h2>
                         <RS.Card>
                             <RS.CardBody>
-                                <TrustedMarkdown markdown={markdownToTest} />
+                                <TrustedMarkup markup={markdownToTest} encoding={"markdown"} />
                             </RS.CardBody>
                         </RS.Card>
                     </RS.Label>

@@ -6,8 +6,8 @@ import {addLineNumbers} from "../../services/highlightJs";
 import {ScrollShadows} from "../elements/ScrollShadows";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import classNames from "classnames";
-import {useExpandContent} from "../elements/portals/Tables";
-import {useStatefulElementRef} from "../elements/portals/utils";
+import {useExpandContent} from "../elements/html-rendering/portals/Tables";
+import {useStatefulElementRef} from "../elements/html-rendering/portals/utils";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;

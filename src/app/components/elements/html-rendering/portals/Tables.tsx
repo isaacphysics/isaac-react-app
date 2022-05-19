@@ -1,10 +1,10 @@
 import React, {MouseEventHandler, useContext, useState} from "react";
 import classNames from "classnames";
 import ReactDOM from "react-dom";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {ScrollShadows} from "../ScrollShadows";
-import {above, isMobile, useDeviceSize} from "../../../services/device";
-import {ExpandableParentContext} from "../../../../IsaacAppTypes";
+import {SITE, SITE_SUBJECT} from "../../../../services/siteConstants";
+import {ScrollShadows} from "../../ScrollShadows";
+import {above, isMobile, useDeviceSize} from "../../../../services/device";
+import {ExpandableParentContext} from "../../../../../IsaacAppTypes";
 import {
     PortalInHtmlHook,
     TABLE_COMPATIBLE_PORTAL_HOOKS,
