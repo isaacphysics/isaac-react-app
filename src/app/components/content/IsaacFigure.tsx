@@ -39,7 +39,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
                             {doc.children}
                         </IsaacContentValueOrChildren>
                         {doc.attribution && <span className="text-muted">
-                            <TrustedMarkup encoding={"html"} markup={doc.attribution}/>
+                            <TrustedMarkup encoding={"markdown"} markup={doc.attribution}/>
                         </span>}
                     </div>
                 </figure>

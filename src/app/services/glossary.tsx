@@ -86,7 +86,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
             // This is properly horrible but it works...
             tooltips.push(
                 <RS.UncontrolledTooltip placement="bottom" target={tooltipTargetId}>
-                    <TrustedMarkup encoding={"html"} markup={term.explanation && term.explanation.value || ''} />
+                    <TrustedMarkup encoding={"markdown"} markup={term.explanation && term.explanation.value || ''} />
                 </RS.UncontrolledTooltip>
             );
             return `<span class="inline-glossary-term" id="${tooltipTargetId}">${text || term.value}</span>`;
