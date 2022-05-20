@@ -839,15 +839,15 @@ export enum ATTENDANCE {
 }
 
 export interface QuestionSearchQuery {
-    searchString: string;
-    tags: string;
+    searchString?: string;
+    tags?: string;
     levels?: string;
     stages?: string;
     difficulties?: string;
     examBoards?: string;
-    fasttrack: boolean;
-    startIndex: number;
-    limit: number;
+    fasttrack?: boolean;
+    startIndex?: number;
+    limit?: number;
 }
 
 export interface QuestionSearchResponse {

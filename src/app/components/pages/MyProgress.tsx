@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -6,12 +6,12 @@ import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
     getUserAnsweredQuestionsByDate,
-    getUserProgress
+    getUserProgress, searchQuestions
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {PotentialUser} from "../../../IsaacAppTypes";
+import {PotentialUser, QuestionSearchQuery} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
 import {StreakPanel} from "../elements/panels/StreakPanel";
@@ -24,6 +24,7 @@ import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {ShowLoading} from "../handlers/ShowLoading";
 
 export const siteSpecific = {
     [SITE.PHY]: {
@@ -47,6 +48,10 @@ export const siteSpecific = {
     }
 }[SITE_SUBJECT];
 
+const bookQuestionSearch: QuestionSearchQuery = {
+    tags: siteSpecific.questionTagsStatsList.join(" "),
+    limit: -1
+}
 
 interface MyProgressProps extends RouteComponentProps<{userIdOfInterest: string}> {
     user: PotentialUser;
@@ -62,8 +67,15 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
     const achievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
     const myAnsweredQuestionsByDate = useSelector((state: AppState) => state?.myAnsweredQuestionsByDate);
     const userAnsweredQuestionsByDate = useSelector((state: AppState) => state?.userAnsweredQuestionsByDate);
+    const bookQuestions = useSelector((state: AppState) => state?.questionSearchResult);
+    const bookQuestionMap = useMemo<{[bookTag: string]: number}>(() => {
+        let map: {[bookTag: string]: number} = siteSpecific.questionTagsStatsList.reduce((acc, tag) => ({...acc, [tag]: 0}), {});
+        bookQuestions?.flatMap(q => q.tags).forEach(tag => { map[tag as string]++; });
+        return map;
+    }, [bookQuestions]);
 
     useEffect(() => {
+        dispatch(searchQuestions(bookQuestionSearch));
         if (viewingOwnData && user.loggedIn) {
             dispatch(getMyProgress());
             dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
@@ -156,23 +168,28 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
 
                         {SITE_SUBJECT === SITE.PHY && <div className="mt-4">
                             <h4>Isaac Books</h4>
-                            <RS.Row>
-                                {siteSpecific.questionTagsStatsList.map((qType: string) => {
-                                    const correct = progress?.correctByTag?.[qType] || 0;
-                                    const attempts = progress?.attemptsByTag?.[qType] || 0;
-                                    const percentage = safePercentage(correct, attempts);
-                                    return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
-                                        <div className={"px-2"}>
-                                            {HUMAN_QUESTION_TAGS.get(qType)} questions completed correctly of those attempted
-                                        </div>
-                                        <div className={"px-2"}>
-                                            <ProgressBar percentage={percentage || 0} type={qType}>
-                                                {attempts == 0 ? "No data" : `${correct} of ${attempts}`}
-                                            </ProgressBar>
-                                        </div>
-                                    </RS.Col>;
-                                })}
-                            </RS.Row>
+                            Questions completed correctly, displayed against the number of questions attempted, for each of our practice books.
+                            <ShowLoading until={bookQuestions}>
+                                <RS.Row>
+                                    {siteSpecific.questionTagsStatsList.map((qType: string) => {
+                                        const total = bookQuestionMap[qType] || 0;
+                                        const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);
+                                        const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
+                                        const correctPercentage = safePercentage(correct, total) || 0;
+                                        const attemptedPercentage = safePercentage(attempted, total) || 0;
+                                        return total > 0 && <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
+                                            <div className={"px-2"}>
+                                                {HUMAN_QUESTION_TAGS.get(qType)} questions
+                                            </div>
+                                            <div className={"px-2"}>
+                                                <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={qType}>
+                                                    <span aria-hidden>{`${correct} of ${total}`}</span>
+                                                </ProgressBar>
+                                            </div>
+                                        </RS.Col>;
+                                    })}
+                                </RS.Row>
+                            </ShowLoading>
                         </div>}
 
                         {answeredQuestionsByDate && <div className="mt-4">
