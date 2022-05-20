@@ -54,13 +54,11 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
 
     return <React.Fragment>
         {value && <div className="content-value">
-            <Row>
-                <Col>{
-                    (encoding == "markdown" && <TrustedMarkdown markdown={value}/>) ||
-                    (encoding == "html" && <TrustedHtml html={value}/>) ||
-                    (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
-                }</Col>
-            </Row>
+            {
+                (encoding == "markdown" && <TrustedMarkdown markdown={value}/>) ||
+                (encoding == "html" && <TrustedHtml html={value}/>) ||
+                (<div>[CONTENT WITH UNKNOWN ENCODING: <i>{encoding} | {value} </i>]</div>)
+            }
         </div>}
         {contentChunks.map((contentChunk, chunkIndex) => {
             if (contentChunk.isAccordion) {
