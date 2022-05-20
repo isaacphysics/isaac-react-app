@@ -24,7 +24,7 @@ const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: 
         {(provided) => {
             return <div
                 id={`${item.id || index}|reorder-item-${inAvailableItems ? "available" : "choice"}`}
-                className={`parsons-item`}
+                className={`reorder-item`}
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
