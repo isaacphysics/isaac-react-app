@@ -1039,13 +1039,13 @@ export enum EventTypeFilter {
 
 export enum EventStageFilter {
     "All stages" = "all",
-    "University" = "university",
-    "Further A" = "further_a",
-    "A-Level" = "a_level",
-    "GCSE" = "gcse",
-    "Year 9" = "year_9",
+    "Year 7" = "year_7",
     "Year 8" = "year_8",
-    "Year 7" = "year_7"
+    "Year 9" = "year_9",
+    "GCSE" = "gcse",
+    "A-Level" = "a_level",
+    "Further A" = "further_a",
+    "University" = "university"
 }
 
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {
