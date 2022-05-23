@@ -279,7 +279,7 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
 };
 
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
+    dispatch({type: ACTION_TYPE.CURRENT_USER_REQUEST});
     try {
         // Request the user
         const currentUser = await api.users.getCurrent();
@@ -288,9 +288,9 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
+        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE});
     }
 };
 
@@ -518,6 +518,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         history.push(nextPage?.replace("#!", "") || "/account");
     } catch (error: any) {
         history.push("/auth_error", { errorMessage: extractMessage(error) });
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
