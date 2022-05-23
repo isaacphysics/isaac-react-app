@@ -14,7 +14,7 @@ import {
 } from "react-beautiful-dnd";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Item} from "../elements/portals/InlineDropZones";
+import {Item} from "../elements/markup/portals/InlineDropZones";
 
 export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
 
@@ -169,7 +169,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
     return <div className="question-content cloze-question">
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
             <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
-                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                <IsaacContentValueOrChildren value={doc.value} encoding={"markdown" /* doc.encoding  FIXME CP replace this once cloze text questions have been changed to markdown encoding */}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
