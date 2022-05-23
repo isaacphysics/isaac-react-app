@@ -3,6 +3,7 @@ import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {getUserId, setUserId} from "./userConsistencyCheckerCurrentUser";
 import {changePage} from "../actions";
+import {isDefined} from "../../services/miscUtils";
 
 // Generic log action:
 // This is not imported from actions to avoid a circular dependency through store.
@@ -51,27 +52,32 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
     }
 };
 
-const clearCurrentUserAndRedirectHome = () => {
-    clearTimeout(timeoutHandle);
+function clearCurrentUser(redirectHome: boolean) {
+    if (isDefined(timeoutHandle)) {
+        clearTimeout(timeoutHandle);
+    }
     setUserId(undefined);
-    changePage("/");
-};
+    if (redirectHome) {
+        changePage("/");
+    }
+}
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
     switch (action.type) {
+        case ACTION_TYPE.USER_CONSISTENCY_ERROR:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
-            clearCurrentUserAndRedirectHome();
+            clearCurrentUser(true);
+            break;
+        case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
+            // If the current user request returns an error we assume the user is not logged in.
+            // We should therefore, remove any data in local and session storage that might be related to the user.
+            // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
+            clearCurrentUser(false);
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
-        case ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS:
+        case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
             setCurrentUser(action.user, api);
-            break;
-        case ACTION_TYPE.USER_CONSISTENCY_ERROR:
-            clearCurrentUserAndRedirectHome();
-            break;
-        case ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE:
-            setUserId(undefined);
             break;
     }
 
