@@ -2,7 +2,7 @@ import React from "react";
 import {useRenderKatex} from "./katex";
 import {MARKDOWN_RENDERER, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones} from "./markdownRendering";
 // @ts-ignore
-import {Remarkable, utils} from "remarkable";
+import {utils} from "remarkable";
 import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
 import {compose} from "redux";
 import {isDefined} from "../../../services/miscUtils";
