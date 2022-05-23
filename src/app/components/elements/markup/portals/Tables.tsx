@@ -5,19 +5,14 @@ import {SITE, SITE_SUBJECT} from "../../../../services/siteConstants";
 import {ScrollShadows} from "../../ScrollShadows";
 import {above, isMobile, useDeviceSize} from "../../../../services/device";
 import {ExpandableParentContext} from "../../../../../IsaacAppTypes";
-import {
-    PortalInHtmlHook,
-    TABLE_COMPATIBLE_PORTAL_HOOKS,
-    usePortalInHtmlHooks,
-    useStatefulElementRef
-} from "./utils";
+import {PortalInHtmlHook, useStatefulElementRef, useTableCompatiblePortalsInHtml} from "./utils";
 
 // A portal component to manage table elements from inside the React DOM
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#table-${id}`);
 
     const tableHtml = `<table class="${classNames(classes, "table table-bordered w-100 text-center bg-white m-0")}">${html}</table>`;
-    const [modifiedHtml, renderPortalElements] = usePortalInHtmlHooks(tableHtml, TABLE_COMPATIBLE_PORTAL_HOOKS);
+    const [modifiedHtml, renderPortalElements] = useTableCompatiblePortalsInHtml(tableHtml);
 
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();
     const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLElement>();

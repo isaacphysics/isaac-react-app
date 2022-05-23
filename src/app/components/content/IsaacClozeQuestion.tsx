@@ -14,7 +14,7 @@ import {
 } from "react-beautiful-dnd";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Item} from "../elements/html-rendering/portals/InlineDropZones";
+import {Item} from "../elements/markup/portals/InlineDropZones";
 
 export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
 

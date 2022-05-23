@@ -20,8 +20,9 @@ export const PORTAL_HOOKS: PortalInHtmlHook[] = [
 // This looks nasty since it calls other hooks in a loop, but as long as the same hooks are called in the same order each
 // time, React is perfectly happy with it.
 // For this to be guaranteed, **the parameter `hookList` MUST STAY CONSTANT** (i.e. either use one of the `portalHooks` constants
-// above or define an array inline, but make sure that you don't modify the array at any point)
-export function usePortalInHtmlHooks(html: string, hookList?: PortalInHtmlHook[]): [string, (ref?: HTMLElement) => JSX.Element[]] {
+// above or define an array inline, but make sure that you don't modify the array at any point). Most use cases should only
+// need the predefined hooks below this.
+const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]) => function (html: string): [string, (ref?: HTMLElement) => JSX.Element[]] {
     const renderFuncs: ((ref?: HTMLElement) => JSX.Element[])[] = [];
 
     hookList?.forEach(hook => {
@@ -35,6 +36,8 @@ export function usePortalInHtmlHooks(html: string, hookList?: PortalInHtmlHook[]
         ref => renderFuncs.flatMap<JSX.Element>(func => func(ref))
     ];
 }
+export const usePortalsInHtml = portalsInHtmlHookBuilder(PORTAL_HOOKS);
+export const useTableCompatiblePortalsInHtml = portalsInHtmlHookBuilder(TABLE_COMPATIBLE_PORTAL_HOOKS);
 
 // This is a hook that abstracts the callback ref pattern, allowing for updates to a refs value (specifically one
 // referring to an element) to cause component updates

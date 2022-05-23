@@ -7,7 +7,7 @@ import {AppState} from "../../../../state/reducers";
 import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
 import {PortalInHtmlHook} from "./utils";
-import {TrustedMarkup} from "../TrustedMarkup";
+import {Markup} from "../index";
 
 const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: string, rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#${id}`);
@@ -71,7 +71,9 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
                 termElements[i].setAttribute("id", uniqueId);
                 tooltips.push(
                     <UncontrolledTooltip key={uniqueId} placement="bottom" target={uniqueId}>
-                        <TrustedMarkup encoding={"markdown"} markup={term.explanation?.value || ''} />
+                        <Markup trusted-markup-encoding={"markdown"}>
+                            {term.explanation?.value}
+                        </Markup>
                     </UncontrolledTooltip>
                 );
             }

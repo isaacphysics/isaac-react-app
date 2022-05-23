@@ -25,7 +25,7 @@ import {v4 as uuid_v4} from "uuid";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
-import {TrustedMarkup} from "../html-rendering/TrustedMarkup";
+import {Markup} from "../markup";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -110,7 +110,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <TrustedMarkup encoding={"latex"} className={titleTextClass} markup={title ?? ""} />
+                        <Markup encoding={"latex"} className={titleTextClass}>
+                            {title}
+                        </Markup>
                         {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
                             ({typeLabel})
                         </span>}

@@ -11,7 +11,7 @@ import {STAGE, stageLabelMap} from "../../services/constants";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import {Helmet} from "react-helmet";
-import {TrustedMarkup} from "./html-rendering/TrustedMarkup";
+import {Markup} from "./markup";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserContext();
@@ -93,6 +93,4 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     </h1>
 };
 
-export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => {
-   return  disallowLaTeX ? <span> {currentPageTitle} </span> : <TrustedMarkup markup={currentPageTitle} encoding={"latex"} />
-}
+export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"}>{currentPageTitle}</Markup>;

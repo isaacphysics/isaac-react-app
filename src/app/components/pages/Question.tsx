@@ -19,7 +19,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
-import {TrustedMarkup} from "../elements/html-rendering/TrustedMarkup";
+import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
@@ -105,7 +105,11 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                             However, if you were assigned this version, you should complete it.
                         </div>}
 
-                        {doc.attribution && <p className="text-muted"><TrustedMarkup markup={doc.attribution} encoding={"markdown"} /></p>}
+                        {doc.attribution && <p className="text-muted">
+                            <Markup trusted-markup-encoding={"markdown"}>
+                                {doc.attribution}
+                            </Markup>
+                        </p>}
 
                         <NavigationLinks navigation={navigation}/>
 

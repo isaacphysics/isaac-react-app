@@ -3,10 +3,10 @@ import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {isDefined} from "../../services/miscUtils";
 import classNames from "classnames";
-import {useStatefulElementRef} from "./html-rendering/portals/utils";
-import {useExpandContent} from "./html-rendering/portals/Tables";
+import {useStatefulElementRef} from "./markup/portals/utils";
+import {useExpandContent} from "./markup/portals/Tables";
 import {ExpandableParentContext} from "../../../IsaacAppTypes";
-import {TrustedMarkup} from "./html-rendering/TrustedMarkup";
+import {Markup} from "./markup";
 
 type StringOrTabFunction = string | ((tabTitle: string, tabIndex: number) => string);
 
@@ -67,7 +67,9 @@ export const Tabs = (props: TabsProps) => {
                             tag="button" type="button" name={tabTitle.replace(" ", "_")}
                             tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
                         >
-                            <TrustedMarkup markup={tabTitle} encoding={"latex"} />
+                            <Markup encoding={"latex"}>
+                                {tabTitle}
+                            </Markup>
                         </NavLink>
                     </NavItem>;
                 })}

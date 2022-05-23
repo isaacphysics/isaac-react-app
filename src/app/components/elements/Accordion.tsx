@@ -13,7 +13,7 @@ import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
 import {audienceStyle, notRelevantMessage, useUserContext} from "../../services/userContext";
 import classNames from "classnames";
-import {TrustedMarkup} from "./html-rendering/TrustedMarkup";
+import {Markup} from "./markup";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -149,7 +149,11 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <RS.Row>
                         {/* FIXME Revisit this maybe? https://github.com/isaacphysics/isaac-react-app/pull/473#discussion_r841556455 */}
                         <span className="accordion-part p-3 text-secondary">Part {ALPHABET[(index as number) % ALPHABET.length]}  {" "}</span>
-                        {trustedTitle && <div className="p-3"><TrustedMarkup markup={trustedTitle} encoding={"latex"} /></div>}
+                        {trustedTitle && <div className="p-3">
+                            <Markup encoding={"latex"}>
+                                {trustedTitle}
+                            </Markup>
+                        </div>}
                         {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                             <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>

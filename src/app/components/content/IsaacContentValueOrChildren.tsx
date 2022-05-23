@@ -1,7 +1,7 @@
 import React from "react";
 import {Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
-import {TrustedMarkup, TrustedMarkupEncoding} from "../elements/html-rendering/TrustedMarkup";
+import {Markup} from "../elements/markup";
 import {ContentDTO} from "../../../IsaacApiTypes";
 
 type ContentOrAccordionChunk = ContentDTO[] & {isAccordion?: boolean, isFirstChunk?: boolean};
@@ -55,7 +55,9 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
         {value && <div className="content-value">
             <Row>
                 <Col>
-                    <TrustedMarkup markup={value} encoding={(encoding ?? "unknown") as TrustedMarkupEncoding}/>
+                    <Markup trusted-markup-encoding={encoding}>
+                        {value}
+                    </Markup>
                 </Col>
             </Row>
         </div>}

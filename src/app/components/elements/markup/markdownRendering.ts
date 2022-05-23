@@ -1,10 +1,7 @@
-import React from "react";
 import {MARKDOWN_RENDERER} from "../../../services/constants";
-import {TrustedHtml} from "./TrustedHtml";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
-import {compose} from "redux";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     const href = utils.escapeHtml(tokens[idx].href || "");
@@ -16,9 +13,10 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpe
         return `<a href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
     }
 };
+export { MARKDOWN_RENDERER };
 
 // This is used to match and render cloze question drop zones into span elements
-const renderClozeDropZones = (markdown: string) => {
+export const renderClozeDropZones = (markdown: string) => {
     // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
     const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
     let index = 0;
@@ -31,7 +29,7 @@ const renderClozeDropZones = (markdown: string) => {
 }
 
 // This is used to render the full version of a glossary term using the IsaacGlossaryTerm component.
-const renderGlossaryBlocks = (markdown: string) => {
+export const renderGlossaryBlocks = (markdown: string) => {
     // Matches strings such as [glossary:glossary-demo|boolean-algebra] which MUST be at the beginning of the line.
     const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z-|]+?)\]/gm;
     return markdown.replace(glossaryBlockRegexp, (_match, id) => {
@@ -41,7 +39,7 @@ const renderGlossaryBlocks = (markdown: string) => {
 }
 
 // This is used to produce a hoverable element showing the glossary term, and its definition in a tooltip.
-const renderInlineGlossaryTerms = (markdown: string) => {
+export const renderInlineGlossaryTerms = (markdown: string) => {
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
     // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
     const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9 ]+)")?\]/g;
@@ -52,7 +50,7 @@ const renderInlineGlossaryTerms = (markdown: string) => {
 }
 
 // RegEx replacements to match Latex inspired Isaac Physics functionality
-const regexProcessMarkdown = (markdown: string) => {
+export const regexProcessMarkdown = (markdown: string) => {
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
@@ -67,20 +65,3 @@ const regexProcessMarkdown = (markdown: string) => {
     );
     return markdown;
 }
-
-
-// The job of this component is to render standard and Isaac-specific markdown (glossary terms, cloze question
-// drop zones) into HTML, which is then passed to `TrustedHTML`. The Isaac-specific markdown must be processed first,
-// so that it doesn't get incorrectly rendered with Remarkable (the markdown renderer we use).
-export const TrustedMarkdown = ({markdown}: {markdown: string, renderParagraphs?: boolean}) => {
-    // This combines all of the above functions for markdown processing.
-    const html = compose<string>(
-        (s: string) => MARKDOWN_RENDERER.render(s), // Remarkable markdown renderer, processes standard markdown syntax
-        regexProcessMarkdown,      //  ^
-        renderInlineGlossaryTerms, //  |
-        renderGlossaryBlocks,      //  | control flow
-        renderClozeDropZones,      //  |
-    )(markdown);
-
-    return <TrustedHtml html={html}/>;
-};
