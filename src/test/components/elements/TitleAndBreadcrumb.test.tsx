@@ -14,13 +14,14 @@ describe("Parameter to disallow LaTeX rendering is observed by PageTitle", () =>
             expect(pageTitleElement.props.encoding).toBe("latex")
         }
     )
-    it("Uses a plain span element for title when LaTeX is disallowed",
+    it("Uses plaintext (span) element for title when LaTeX is disallowed",
         () => {
             // Act
             const pageTitleElement = formatPageTitle('\\(x^2 + y^2 = z^2\\)', true)
 
             // Assert
-            expect(pageTitleElement.type).toBe("span")
+            expect(pageTitleElement.type).toBe(Markup)
+            expect(pageTitleElement.props.encoding).toBe("plaintext")
         }
     )
 })
@@ -35,13 +36,14 @@ describe("Parameter to disallow LaTeX rendering is observed by Breadcrumbs", () 
             expect(breadcrumbTitleElement.props.encoding).toBe("latex")
         }
     )
-    it("Uses a plain span element for breadcrumb title when LaTeX is disallowed",
+    it("Uses plaintext (span) element for breadcrumb title when LaTeX is disallowed",
         () => {
             // Act
             const breadcrumbTitleElement = formatBreadcrumbItemTitle('\\(x^2 + y^2 = z^2\\)', true)
 
             // Assert
-            expect(breadcrumbTitleElement.type).toBe("span")
+            expect(breadcrumbTitleElement.type).toBe(Markup)
+            expect(breadcrumbTitleElement.props.encoding).toBe("plaintext")
         }
     )
 })
