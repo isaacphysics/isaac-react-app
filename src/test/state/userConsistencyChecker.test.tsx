@@ -15,8 +15,8 @@ const USER_ID2 = "bar";
 const loginAction = {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: {_id: USER_ID1}};
 const logoutAction = {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS};
 const userConsistencyErrorAction = {type: ACTION_TYPE.USER_CONSISTENCY_ERROR};
-const checkForUserAction = {type: ACTION_TYPE.USER_UPDATE_REQUEST};
-const checkForUserFailureAction = {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE};
+const checkForUserAction = {type: ACTION_TYPE.CURRENT_USER_REQUEST};
+const checkForUserFailureAction = {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE};
 
 describe("userConsistencyCheckerMiddleware", () => {
     beforeEach(() => {
