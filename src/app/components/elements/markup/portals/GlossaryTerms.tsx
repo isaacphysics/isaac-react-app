@@ -8,6 +8,7 @@ import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
 import {PortalInHtmlHook} from "./utils";
 import {Markup} from "../index";
+import {selectors} from "../../../../state/selectors";
 
 const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: string, rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#${id}`);
@@ -41,6 +42,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 // Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
 export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const [componentUuid] = useState(uuid_v4().slice(0, 8));
 
     if (!glossaryTerms) return [html, () => []];
@@ -79,6 +81,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
             }
         } else {
             console.error('No valid term for "' + termId + '" found among the filtered terms: ', glossaryTerms);
+            termElements[i].innerHTML = segueEnvironment === "PROD" ? "" : `[Invalid glossary term ID: ${termId}]`;
         }
     }
     return [
