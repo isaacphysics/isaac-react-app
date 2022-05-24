@@ -1,5 +1,5 @@
 import {GlossaryTermDTO} from "../../../../../IsaacApiTypes";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import ReactDOM from "react-dom";
 import {IsaacGlossaryTerm} from "../../../content/IsaacGlossaryTerm";
 import {useSelector} from "react-redux";
@@ -9,6 +9,7 @@ import {UncontrolledTooltip} from "reactstrap";
 import {PortalInHtmlHook} from "./utils";
 import {Markup} from "../index";
 import {selectors} from "../../../../state/selectors";
+import {RegisterContentErrorContext} from "../../../pages/ContentErrorBoundary";
 
 const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: string, rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#${id}`);
@@ -43,6 +44,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const registerContentError = useContext(RegisterContentErrorContext);
     const [componentUuid] = useState(uuid_v4().slice(0, 8));
 
     if (!glossaryTerms) return [html, () => []];
@@ -80,7 +82,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
                 );
             }
         } else {
-            console.error('No valid term for "' + termId + '" found among the filtered terms: ', glossaryTerms);
+            registerContentError('No valid term for "' + termId + `" found among the filtered terms`);
             termElements[i].innerHTML = segueEnvironment === "PROD" ? "" : `[Invalid glossary term ID: ${termId}]`;
         }
     }

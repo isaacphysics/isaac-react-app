@@ -8,7 +8,7 @@ import {
 } from "../../../services/constants";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
-import React, {useRef} from "react";
+import React, {useContext, useRef} from "react";
 import tags from "../../../services/tags";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {
@@ -26,11 +26,13 @@ import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
+import {RegisterContentErrorContext} from "../../pages/ContentErrorBoundary";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserContext();
     const user = useSelector(selectors.user.orNull);
+    const registerContentError = useContext(RegisterContentErrorContext);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
     const hash = item.hash;
 
@@ -98,7 +100,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             break;
         default:
             // Do not render this item if there is no matching DOCUMENT_TYPE
-            console.error("Not able to display item as a ContentSummaryListGroupItem: ", item);
+            registerContentError(`Not able to display item as a ContentSummaryListGroupItem: ${item}`);
             return null;
     }
 

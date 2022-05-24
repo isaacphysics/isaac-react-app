@@ -4,13 +4,14 @@ import {Router} from "react-router-dom";
 import {history} from "./history";
 import {IsaacGlossaryTerm} from "../components/content/IsaacGlossaryTerm";
 import * as RS from "reactstrap";
-import React, {useRef} from "react";
+import React, {useContext, useRef} from "react";
 import {GlossaryTermDTO} from "../../IsaacApiTypes";
 import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
 import {AppState} from "../state/reducers";
 import {Markup} from "../components/elements/markup";
 import {v4 as uuid_v4} from "uuid";
 import {useUserContext} from "./userContext";
+import {RegisterContentErrorContext} from "../components/pages/ContentErrorBoundary";
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     if (candidateTerms.length === 0) {
@@ -31,6 +32,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
     const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+    const registerContentError = useContext(RegisterContentErrorContext);
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.
@@ -58,7 +60,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
         markdown = markdown.replace(glossaryBlockRegexp, (_match, id) => {
             const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
             if (term === null) {
-                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
+                registerContentError('No valid term for "' + id + `" found among the filtered terms`);
                 return "";
             }
 
@@ -77,7 +79,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
             const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
             if (term === null) {
-                console.error('No valid term for "' + id + '" found among the filtered terms: ', filteredTerms);
+                registerContentError('No valid term for "' + id + `" found among the filtered terms`);
                 return "";
             }
 
