@@ -26,6 +26,7 @@ import {determineFastTrackSecondaryAction} from "../../services/fastTrack";
 import uuid from "uuid";
 import {Helmet} from "react-helmet";
 import {generateQuestionTitle} from "../../services/questions";
+import {Markup} from "../elements/markup";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -83,7 +84,11 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
                         {ConfidenceQuestions({hideOptions: hideOptions, setHideOptions: setHideOptions, isVisible: isVisible, setVisible: setVisible, identifier: doc.id, attemptUuid: attemptUuid, type: "concept"})}
 
-                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
+                        {doc.attribution && <p className="text-muted">
+                            <Markup trusted-markup-encoding={"markdown"}>
+                                {doc.attribution}
+                            </Markup>
+                        </p>}
 
                         {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
