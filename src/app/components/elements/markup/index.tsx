@@ -1,6 +1,6 @@
 import React from "react";
-import {useRenderKatex} from "./katex";
-import {MARKDOWN_RENDERER, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones} from "./markdownRendering";
+import {useRenderKatex} from "./latexRendering";
+import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerms, renderGlossaryBlocks, renderClozeDropZones} from "./markdownRendering";
 // @ts-ignore
 import {utils} from "remarkable";
 import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
@@ -30,14 +30,16 @@ const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
 const TrustedMarkdown = ({markdown}: {markdown: string, renderParagraphs?: boolean}) => {
     // This combines all of the above functions for markdown processing.
     const html = compose<string>(
-        (s: string) => MARKDOWN_RENDERER.render(s), // Remarkable markdown renderer, processes standard markdown syntax
+        renderRemarkableMarkdown,  // Remarkable markdown renderer, processes standard markdown syntax
         regexProcessMarkdown,      //  ^
         renderInlineGlossaryTerms, //  |
         renderGlossaryBlocks,      //  | control flow
         renderClozeDropZones,      //  |
     )(markdown);
 
-    return <TrustedHtml html={html}/>;
+    return <Markup trusted-markup-encoding={"html"}>
+        {html}
+    </Markup>;
 };
 
 // --- Types for the Markup component ---
@@ -81,7 +83,7 @@ export function Markup<T extends string>({encoding, "trusted-markup-encoding": t
         case "html":
             return <TrustedHtml html={renderKaTeX(children)}/>;
         case "markdown":
-            return <TrustedMarkdown markdown={renderKaTeX(children)}/>;
+            return <TrustedMarkdown markdown={children}/>;
         case "latex":
             const escapedMarkup = utils.escapeHtml(children);
             return <span dangerouslySetInnerHTML={{__html: renderKaTeX(escapedMarkup)}} className={className} />;

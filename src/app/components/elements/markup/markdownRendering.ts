@@ -13,7 +13,7 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpe
         return `<a href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
     }
 };
-export { MARKDOWN_RENDERER };
+export const renderRemarkableMarkdown = (markdown: string) => MARKDOWN_RENDERER.render(markdown);
 
 // This is used to match and render cloze question drop zones into span elements
 export const renderClozeDropZones = (markdown: string) => {
