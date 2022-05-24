@@ -1,5 +1,4 @@
 import React from "react";
-import {Col, Row} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {Markup} from "../elements/markup";
 import {ContentDTO} from "../../../IsaacApiTypes";
@@ -53,13 +52,9 @@ export const IsaacContentValueOrChildren = ({value, encoding, children}: Content
 
     return <React.Fragment>
         {value && <div className="content-value">
-            <Row>
-                <Col>
-                    <Markup trusted-markup-encoding={encoding}>
-                        {value}
-                    </Markup>
-                </Col>
-            </Row>
+            <Markup trusted-markup-encoding={encoding}>
+                {value}
+            </Markup>
         </div>}
         {contentChunks.map((contentChunk, chunkIndex) => {
             if (contentChunk.isAccordion) {

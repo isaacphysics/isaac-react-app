@@ -76,16 +76,6 @@
   }
 }
 
-.isaac-expand-bg {
-  @include media-breakpoint-up(md) {
-    &.isaac-table {
-      // This fixes the fact that tables have a weird right "margin", so when
-      // expanding one this needs to be compensated for, to center it properly
-      left: 52.5%;
-    }
-  }
-}
-
 .expand-outer {
   position: relative;
   .expand-button {

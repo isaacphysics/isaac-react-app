@@ -16,16 +16,18 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
 
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();
     const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLElement>();
-    const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "overflow-auto mb-4");
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "mb-4");
 
     if (modifiedHtml && parentElement) {
         return ReactDOM.createPortal(
-            <div className={classNames(outerClasses, "position-relative isaac-table")} ref={updateExpandRef}>
-                {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
-                {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
-                {expandButton}
-                <div ref={updateScrollRef} className={innerClasses} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
-                {renderPortalElements(scrollRef)}
+            <div className={classNames(outerClasses, "isaac-table")} ref={updateExpandRef}>
+                <div className={"position-relative"}>
+                    {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
+                    {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
+                    {expandButton}
+                    <div ref={updateScrollRef} className={classNames(innerClasses, "overflow-auto")} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
+                    {renderPortalElements(scrollRef)}
+                </div>
             </div>,
             parentElement
         );
