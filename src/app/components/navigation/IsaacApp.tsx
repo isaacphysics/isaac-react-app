@@ -144,9 +144,6 @@ export const IsaacApp = () => {
                     {/* Site specific pages */}
                     {SiteSpecific.Routes}
 
-                    {/* Special case */}
-                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
-
                     {/* Application pages */}
                     <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
                     <Redirect exact from="/home" to="/" /> {/* historic route which might get reintroduced with the introduction of dashboards */}
