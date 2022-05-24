@@ -86,7 +86,7 @@
         z-index: 255;
 
         &.button {
-            background: theme-color("primary");
+            background: $primary;
             text-indent: -1000px;
             overflow: hidden;
             cursor: pointer;
@@ -186,7 +186,7 @@
             right: 0;
             left: 0;
             overflow: visible;
-            background: theme-color("secondary");
+            background: $secondary;
 
             &.closed {
                 height: 0;
@@ -273,7 +273,7 @@
                                     top: 0;
                                     overflow: visible;
                                     fill: white;
-                                    stroke: darken(theme-color("primary"), 10%);
+                                    stroke: darken($primary, 10%);
                                     stroke-width: 8px;
                                     margin: 0 auto;
                                 }
@@ -324,7 +324,7 @@
                                     top: 0px;
                                     overflow: visible;
                                     fill: white;
-                                    stroke: darken(theme-color("primary"), 10%);
+                                    stroke: darken($primary, 10%);
                                     stroke-width: 8px;
                                 }
                             }
@@ -338,7 +338,7 @@
                     list-style-type: none;
                     white-space: nowrap;
                     margin: 0 auto;
-                    background: darken(theme-color("primary"), 20%);
+                    background: darken($primary, 20%);
 
                     li {
                         position: relative;
@@ -352,7 +352,7 @@
                         font-size: 1.8em;
 
                         &.active {
-                            background: theme-color("primary");
+                            background: $primary;
                         }
 
                         .katex {
@@ -381,13 +381,13 @@
                             top: 4px;
                             overflow: visible;
                             fill: white;
-                            stroke: darken(theme-color("primary"), 10%);
+                            stroke: darken($primary, 10%);
                             stroke-width: 8px;
                         }
                     }
 
                     &.sub-menu {
-                        background: theme-color("primary");
+                        background: $primary;
                     }
                 }
 
@@ -407,7 +407,7 @@
 
                         &.inactive {
                             svg.v-hexagon {
-                                fill: theme-color("primary");
+                                fill: $primary;
                                 stroke-width: 0;
                             }
                         }
@@ -441,10 +441,10 @@
 
                     &.active {
                         color: black;
-                        background: theme-color("primary");
+                        background: $primary;
 
                         svg.tab-triangle {
-                            fill: theme-color("primary");
+                            fill: $primary;
                         }
                     }
 
@@ -494,7 +494,7 @@
         top: 4px;
         overflow: visible;
         fill: white;
-        stroke: darken(theme-color("primary"), 10%);
+        stroke: darken($primary, 10%);
         stroke-width: 8px;
     }
 }

@@ -6,7 +6,7 @@ import {store} from "./store";
 import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE,
+    DOCUMENT_TYPE, EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
     EXAM_BOARD,
@@ -83,6 +83,7 @@ import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
+import {getValue, Item, toTuple} from "../services/select";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -278,7 +279,7 @@ export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
 };
 
 export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_UPDATE_REQUEST});
+    dispatch({type: ACTION_TYPE.CURRENT_USER_REQUEST});
     try {
         // Request the user
         const currentUser = await api.users.getCurrent();
@@ -287,9 +288,9 @@ export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
             dispatch(getUserAuthSettings() as any),
             dispatch(getUserPreferences() as any)
         ]);
-        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: currentUser.data});
+        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE});
+        dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE});
     }
 };
 
@@ -304,7 +305,8 @@ export const updateCurrentUser = (
     updatedUserPreferences: UserPreferencesDTO,
     userContexts: UserContext[] | undefined,
     passwordCurrent: string | null,
-    currentUser: PotentialUser
+    currentUser: PotentialUser,
+    redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
     if (currentUser.loggedIn && currentUser.id == updatedUser.id) {
@@ -336,15 +338,10 @@ export const updateCurrentUser = (
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
-            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '';
+            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH);
             persistence.remove(KEY.AFTER_AUTH_PATH);
-            if ((afterAuthPath).includes('account')) {
-                history.push(afterAuthPath, {firstLogin: isFirstLogin});
-            }
-            history.push('/account', {firstLogin: isFirstLogin});
-        }
-
-        if (!editingOtherUser) {
+            redirect && history.push(afterAuthPath || '/account', {firstLogin: isFirstLogin});
+        } else if (!editingOtherUser) {
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "Your account settings were updated successfully.",
@@ -352,9 +349,8 @@ export const updateCurrentUser = (
                 timeout: 5000,
                 closable: false,
             }) as any);
-        }
-        if (editingOtherUser) {
-            history.push('/');
+        } else if (editingOtherUser) {
+            redirect && history.push('/');
             dispatch(showToast({
                 title: "Account settings updated",
                 body: "The user's account settings were updated successfully.",
@@ -510,22 +506,19 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
         await dispatch(requestCurrentUser() as any); // Request user preferences
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
-        let nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        nextPage = nextPage || "/";
-        nextPage = nextPage.replace("#!", "");
-        if (providerResponse.data.firstLogin && !nextPage.includes("account")) {
+        if (providerResponse.data.firstLogin) {
             ReactGA.event({
                 category: 'user',
                 action: 'registration',
                 label: `Create Account (${provider})`,
             });
-            history.push('/account');
-        } else {
-            history.push(nextPage);
         }
+        const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
+        persistence.remove(KEY.AFTER_AUTH_PATH);
+        history.push(nextPage?.replace("#!", "") || "/account");
     } catch (error: any) {
-        history.push({pathname: "/auth_error", state: {errorMessage: extractMessage(error)}});
+        history.push("/auth_error", { errorMessage: extractMessage(error) });
+        dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: "Login Failed"});
         dispatch(showErrorToastIfNeeded("Login Failed", error));
     }
 };
@@ -1248,7 +1241,7 @@ export const adminUserGet = (userid: number | undefined) => async (dispatch: Dis
 
 export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     try {
-        let confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        const confirmDeletion = window.confirm("Are you sure you want to delete this user?");
         if (confirmDeletion) {
             dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
             await api.admin.userDelete.delete(userid);
@@ -1348,7 +1341,7 @@ export const sendProvidedEmailWithUserIds = (emailTemplate: EmailTemplateDTO, em
 };
 
 export const mergeUsers = (targetId: number, sourceId: number) => async (dispatch: Dispatch<Action>) => {
-    let confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+    const confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
     if (confirmMerge) {
         dispatch({type: ACTION_TYPE.ADMIN_MERGE_USERS_REQUEST});
         try {
@@ -1613,34 +1606,55 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
     }
 };
 
-export const assignBoard = (board: GameboardDTO, groupId?: number, dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
-    if (groupId == null) {
-        dispatch(showToast({color: "danger", title: "Board assignment failed", body: "Error: Please choose a group.", timeout: 5000}) as any);
+export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
+    if (groups.length === 0) {
+        dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
         return false;
     }
 
-    let dueDateUTC = undefined;
+    let dueDateUTC: any = undefined;
     if (dueDate != undefined) {
         dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
-        let today = new Date();
+        const today = new Date();
         today.setUTCHours(0, 0, 0, 0);
         if ((dueDateUTC - today.valueOf()) < 0) {
-            dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
+            dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
             return false;
         }
     }
 
-    const assignment = {board, groupId, dueDate: dueDateUTC, notes};
+    const groupIds = groups.map(getValue);
+    const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: board.id, groupId: id, dueDate: dueDateUTC, notes}));
 
-    dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, ...assignment});
+    dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, assignments});
     try {
-        await api.boards.assign(board, groupId, dueDateUTC, notes);
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, ...assignment});
-        dispatch(showToast({color: "success", title: "Assignment saved", body: "This assignment has been saved successfully.", timeout: 5000}) as any);
+        const { data: assigmentStatuses } = await api.boards.assign(assignments);
+        const successfulIds = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => a.groupId);
+        const failedIds = assigmentStatuses.filter(a => isDefined(a.errorMessage));
+
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, groupIds: successfulIds, dueDate: dueDate as any});
+        // Handle user feedback depending on whether some groups failed to assign or not
+        if (failedIds.length === 0) {
+            const successMessage = successfulIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
+            dispatch(showToast({color: "success", title: `Assignment${successfulIds.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
+        } else {
+            const groupLookUp = new Map(groups.map(toTuple));
+            // Show each group assignment error in a separate toast
+            failedIds.forEach(({groupId, errorMessage}) => {
+                dispatch(showToast({color: "danger", title: `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`, body: errorMessage}) as any);
+            });
+            // Check whether some group assignments succeeded, if so show "partial success" toast
+            if (failedIds.length === assigmentStatuses.length) {
+                return false;
+            } else {
+                const partialSuccessMessage = successfulIds.length > 1 ? "Some assignments were saved successfully." : `Assignment to ${groupLookUp.get(successfulIds[0])} was saved successfully.`
+                dispatch(showToast({color: "success", title: `Assignment${successfulIds.length > 1 ? "s" : ""} saved`, body: partialSuccessMessage, timeout: 5000}) as any);
+            }
+        }
         return true;
     } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, ...assignment});
-        dispatch(showErrorToastIfNeeded("Gameboard assignment failed", e));
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, board, groupIds, dueDate: dueDate as any});
+        dispatch(showErrorToastIfNeeded(`Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, e));
         return false;
     }
 };
@@ -1677,15 +1691,17 @@ export const getEvent = (eventId: string) => async (dispatch: Dispatch<Action>) 
     }
 };
 
-export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter) => async (dispatch: Dispatch<Action>) => {
-    const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
+export const getEventsList = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter, stageFilter: EventStageFilter) => async (dispatch: Dispatch<Action>) => {
+    const typeFilterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
+    const showStageOnly = stageFilter !== EventStageFilter["All stages"] ? stageFilter : null;
     const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
     const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
     const showReservedOnly = statusFilter === EventStatusFilter["My event reservations"];
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENTS_REQUEST});
-        const response = await api.events.getEvents(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly, showReservedOnly);
+        const response = await api.events.getEvents(startIndex, eventsPerPage, typeFilterTags, showActiveOnly,
+            showInactiveOnly, showBookedOnly, showReservedOnly, showStageOnly);
         const augmentedEvents = response.data.results.map(event => augmentEvent(event));
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS, augmentedEvents: augmentedEvents, total: response.data.totalResults});
     } catch (e) {
@@ -1737,14 +1753,16 @@ export const getEventOverviews = (eventOverviewFilter: EventOverviewFilter) => a
     }
 };
 
-export const getEventMapData = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter) => async (dispatch: Dispatch<Action>) => {
+export const getEventMapData = (startIndex: number, eventsPerPage: number, typeFilter: EventTypeFilter, statusFilter: EventStatusFilter, stageFilter: EventStageFilter) => async (dispatch: Dispatch<Action>) => {
     const filterTags = typeFilter !== EventTypeFilter["All events"] ? typeFilter : null;
+    const showStageOnly = stageFilter !== EventStageFilter["All stages"] ? stageFilter : null;
     const showActiveOnly = statusFilter === EventStatusFilter["Upcoming events"];
     const showBookedOnly = statusFilter === EventStatusFilter["My booked events"];
     const showInactiveOnly = false;
     try {
         dispatch({type: ACTION_TYPE.EVENT_MAP_DATA_REQUEST});
-        const response = await api.events.getEventMapData(startIndex, eventsPerPage, filterTags, showActiveOnly, showInactiveOnly, showBookedOnly);
+        const response = await api.events.getEventMapData(startIndex, eventsPerPage, filterTags, showActiveOnly,
+            showInactiveOnly, showBookedOnly, showStageOnly);
         dispatch({
             type: ACTION_TYPE.EVENT_MAP_DATA_RESPONSE_SUCCESS,
             eventMapData: response.data.results,
@@ -1876,7 +1894,7 @@ export const addMyselfToWaitingList = (eventId: string, additionalInformation: A
 };
 
 export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    let cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    const cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
     if (cancel) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});

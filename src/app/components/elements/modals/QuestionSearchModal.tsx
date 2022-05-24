@@ -5,12 +5,10 @@ import {SortableTableHeader} from "../SortableTableHeader";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {debounce, isEqual} from "lodash";
-import Select from "react-select";
+import Select, {MultiValue} from "react-select";
 import {
     groupTagSelectionsByParent,
     logEvent,
-    multiSelectOnChange,
-    selectOnChange,
     sortQuestions
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
@@ -22,6 +20,8 @@ import {isStaff} from "../../../services/user";
 import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {Item, selectOnChange} from "../../../services/select";
+import {GroupBase} from "react-select/dist/declarations/src/types";
 import {siteSpecific} from "../../../services/miscUtils";
 
 const selectStyle = {
@@ -101,8 +101,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         setSortState(newSortState);
     };
 
-    const tagOptions = SITE_SUBJECT === SITE.PHY ? tags.allTags.map(groupTagSelectionsByParent) :
-        tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const tagOptions: { options: Item<string>[]; label: string }[] = SITE_SUBJECT === SITE.PHY ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
 
     useEffect(() => {
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
@@ -139,14 +139,16 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <Select
                     inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
                     onChange={(e) => {
-                        selectOnChange(setSearchBook)(e);
+                        selectOnChange(setSearchBook, true)(e);
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
                     options={[
                         {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
                         {value: "phys_book_gcse", label: "GCSE Physics"},
                         {value: "maths_book", label: "Pre-Uni Maths"},
+                        {value: "maths_book_gcse", label: "GCSE Maths"},
                         {value: "chemistry_16", label: "A-Level Physical Chemistry"},
+                        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"}
                     ]}
                 />
             </RS.Col>}
@@ -154,7 +156,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
-                    options={tagOptions} onChange={multiSelectOnChange(setSearchTopics)}
+                    options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action}) => {
+                        selectOnChange(setSearchTopics, true)(x)
+                    }}
                 />
             </RS.Col>
         </RS.Row>
@@ -163,14 +167,14 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
                 <Select
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={getFilteredStageOptions()} onChange={multiSelectOnChange(setSearchStages)}
+                    options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </RS.Col>
             <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={multiSelectOnChange(setSearchDifficulties)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
             {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
@@ -179,7 +183,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                     value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
-                    onChange={multiSelectOnChange(setSearchExamBoards)}
+                    onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
                 />
             </RS.Col>}
         </RS.Row>

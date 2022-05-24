@@ -1,4 +1,7 @@
-import Remarkable from "remarkable";
+// @ts-ignore
+import {Remarkable} from "remarkable";
+// @ts-ignore
+import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {SITE, SITE_SUBJECT} from "./siteConstants";
@@ -33,6 +36,8 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
     [SITE.CS]: "UA-137475074-1",
 }[SITE_SUBJECT];
 
+export const CODE_EDITOR_BASE_URL = document.location.hostname === "localhost" ? "http://localhost:3000" : "https://editor.isaaccode.org";
+
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
@@ -41,9 +46,8 @@ export const NOT_FOUND: NOT_FOUND_TYPE = 404;
 export const NO_CONTENT = 204;
 
 export const MARKDOWN_RENDERER = new Remarkable({
-    linkify: true,
-    html: true,
-});
+    html: true
+}).use(linkify);
 
 export enum ACTION_TYPE {
     TEST_ACTION = "TEST_ACTION",
@@ -58,9 +62,9 @@ export enum ACTION_TYPE {
     USER_LOG_IN_RESPONSE_SUCCESS = "USER_LOG_IN_RESPONSE_SUCCESS",
     USER_LOG_IN_RESPONSE_FAILURE = "USER_LOG_IN_RESPONSE_FAILURE",
 
-    USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST",
-    USER_UPDATE_RESPONSE_SUCCESS = "USER_UPDATE_RESPONSE_SUCCESS",
-    USER_UPDATE_RESPONSE_FAILURE = "USER_UPDATE_RESPONSE_FAILURE",
+    CURRENT_USER_REQUEST = "CURRENT_USER_REQUEST",
+    CURRENT_USER_RESPONSE_SUCCESS = "CURRENT_USER_RESPONSE_SUCCESS",
+    CURRENT_USER_RESPONSE_FAILURE = "CURRENT_USER_RESPONSE_FAILURE",
 
     USER_DETAILS_UPDATE_REQUEST = "USER_DETAILS_UPDATE",
     USER_DETAILS_UPDATE_RESPONSE_SUCCESS = "USER_DETAILS_UPDATE_RESPONSE_SUCCESS",
@@ -811,6 +815,7 @@ export enum TAG_ID {
     statistics = "statistics",
     functions = "functions",
     calculus = "calculus",
+    number = "number",
 
     // Physics Topics ---
 
@@ -853,6 +858,11 @@ export enum TAG_ID {
 
     // Maths Topics ---
 
+    // Number
+    arithmetic = "arithmetic",
+    rational = "rational",
+    factors = "factors_powers",
+    complexNumbers = "complex_numbers",
     // Geometry
     geomVectors = "geom_vectors",
     shapes = "shapes",
@@ -864,7 +874,6 @@ export enum TAG_ID {
     series = "series",
     simultaneous = "simultaneous",
     matrices = "matrices",
-    complexNumbers = "complex_numbers",
     // Statistics
     hypothesis = "hypothesis",
     dataAnalysis = "data_analysis",
@@ -1026,6 +1035,17 @@ export enum EventTypeFilter {
     "Student events" = "student",
     "Teacher events" = "teacher",
     "Online tutorials" = "virtual",
+}
+
+export enum EventStageFilter {
+    "All stages" = "all",
+    "Year 7" = "year_7",
+    "Year 8" = "year_8",
+    "Year 9" = "year_9",
+    "GCSE" = "gcse",
+    "A-Level" = "a_level",
+    "Further A" = "further_a",
+    "University" = "university"
 }
 
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {

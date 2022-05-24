@@ -55,14 +55,22 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.stage}
                 onChange={e => {
                     const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
+                    const stage = e.target.value as STAGE;
                     if (SITE_SUBJECT === SITE.CS) {
-                        // drive exam board selection so that it is a valid option
-                        const examBoard = getFilteredExamBoardOptions({byUser: user, byStages: [e.target.value as STAGE]})[0]?.value || EXAM_BOARD.ALL;
+                        // Drive exam board selection so that it is a valid option - by default use All.
+                        let examBoard = EXAM_BOARD.ALL;
+                        const possibleExamBoards =
+                            getFilteredExamBoardOptions({byUser: user, byStages: [stage], includeNullOptions: true})
+                                .map(eb => eb.value);
+                        // If we have possible valid exam board options but All is not one of them, use one of those.
+                        if (possibleExamBoards.length > 0 && !possibleExamBoards.includes(EXAM_BOARD.ALL)) {
+                            examBoard = possibleExamBoards[0];
+                        }
                         newParams.examBoard = examBoard;
                         dispatch(setTransientExamBoardPreference(examBoard));
                     }
                     history.push({search: queryString.stringify(newParams, {encode: false})});
-                    dispatch(setTransientStagePreference(e.target.value as STAGE));
+                    dispatch(setTransientStagePreference(stage));
                 }}
             >
                 {filteredStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}

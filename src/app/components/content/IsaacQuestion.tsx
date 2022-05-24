@@ -21,7 +21,7 @@ import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
 import uuid from "uuid";
 
-export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQuestionBaseDTO} & RouteComponentProps) => {
+export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
     const accordion = useContext(AccordionSectionContext);
     const pageQuestions = useSelector(selectors.questions.getQuestions);
@@ -102,7 +102,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.IsaacQu
             </div>}
 
             {/* Lock */}
-            {locked && <RS.Alert color="danger">
+            {locked && <RS.Alert color="danger" className={"no-print"}>
                 This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to prevent repeated guessing.
             </RS.Alert>}
 

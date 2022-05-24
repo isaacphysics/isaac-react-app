@@ -21,16 +21,18 @@ import {
 } from "../../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
-import uuid from "uuid";
-import {LaTeX} from "../LaTeX";
+import {v4 as uuid_v4} from "uuid";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
+import {ShortcutResponse} from "../../../../IsaacAppTypes";
+import {Markup} from "../markup";
 
-export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ContentSummaryDTO; search?: string; displayTopicTitle?: boolean}) => {
-    const componentId = useRef(uuid.v4().slice(0, 4)).current;
+export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
+    const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserContext();
     const user = useSelector(selectors.user.orNull);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
+    const hash = item.hash;
 
     let linkDestination, icon, iconLabel, audienceViews;
     let itemClasses = "p-0 content-summary-link ";
@@ -103,12 +105,14 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const displayStage = audienceViews && audienceViews.length > 0;
 
     return <RS.ListGroupItem className={`p-3 content-summary-item d-md-flex flex-column justify-content-center ${itemClasses}`} key={linkDestination}>
-        <Link to={{pathname: linkDestination, search: search}}>
+        <Link to={{pathname: linkDestination, search: search, hash: hash}}>
             <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <LaTeX className={titleTextClass} markup={title ?? ""} />
+                        <Markup encoding={"latex"} className={titleTextClass}>
+                            {title}
+                        </Markup>
                         {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
                             ({typeLabel})
                         </span>}
@@ -124,7 +128,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
                 {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
                     <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                     <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
-                        {`This content is ${notRelevantMessage(userContext)}.`}
+                        {`This content has ${notRelevantMessage(userContext)}.`}
                     </RS.UncontrolledTooltip>
                 </div>}
                 {audienceViews && displayStage && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}

@@ -7,7 +7,7 @@ import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
 import {RouteComponentProps, withRouter} from "react-router";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import classNames from "classnames";
@@ -19,22 +19,36 @@ export const IsaacQuickQuestion = withRouter(({doc, location}: {doc: ApiTypes.Is
     const [hideOptions, setHideOptions] = useState(false);
     const answer: ContentDTO = doc.answer as ContentDTO;
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
-    const attemptUuid = useRef(uuid.v4().slice(0, 8));
+    const attemptUuid = useRef(uuid_v4().slice(0, 8));
     const showConfidence = doc.showConfidence;
 
     const toggle = (payload?: string) => {
-        const isNowVisible = !isVisible;
-        setVisible(isNowVisible);
-        if (isNowVisible) {
-            const eventDetails = {type: "QUICK_QUESTION_SHOW_ANSWER", questionId: doc.id};
-            dispatch(logAction(eventDetails));
+        if (showConfidence) {
+            if (isVisible) {
+                const eventDetails = {type: "QUICK_QUESTION_CORRECT", questionId: doc.id, attemptUuid: attemptUuid.current, correct: payload};
+                dispatch(logAction(eventDetails));
+                setHideOptions(true);
+                attemptUuid.current = uuid_v4().slice(0, 8);
+            } else {
+                const eventDetails = {type: "QUICK_QUESTION_CONFIDENCE", questionId: doc.id, attemptUuid: attemptUuid.current, confidence: payload};
+                dispatch(logAction(eventDetails));
+                const isNowVisible = !isVisible;
+                setVisible(isNowVisible);
+            }
+        } else {
+            const isNowVisible = !isVisible;
+            setVisible(isNowVisible);
+            if (isNowVisible) {
+                const eventDetails = {type: "QUICK_QUESTION_SHOW_ANSWER", questionId: doc.id};
+                dispatch(logAction(eventDetails));
+            }
         }
     };
 
     const hideAnswer = () => {
         setVisible(false);
         setHideOptions(false);
-        attemptUuid.current = uuid.v4().slice(0, 8);
+        attemptUuid.current = uuid_v4().slice(0, 8);
     };
 
     const defaultOptions = <Row>

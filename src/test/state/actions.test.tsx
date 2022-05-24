@@ -22,6 +22,7 @@ import {
 import {ACTION_TYPE} from "../../app/services/constants";
 import {Action} from "../../IsaacAppTypes";
 import {middleware} from "../../app/state/store";
+import {jest} from "@jest/globals";
 
 const mockStore = configureMockStore(middleware);
 const axiosMock = new MockAdapter(endpoint);
@@ -51,14 +52,14 @@ describe("requestCurrentUser action", () => {
 
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
-        const expectedFirstActions = [{type: ACTION_TYPE.USER_UPDATE_REQUEST}];
+        const expectedFirstActions = [{type: ACTION_TYPE.CURRENT_USER_REQUEST}];
         const expectedAsyncActions = [
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings},
             {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
             {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences}
         ];
-        const expectedFinalActions = [{type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, user: dameShirley}];
+        const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
 
         const actualActions = store.getActions();
         expect(actualActions.length)
@@ -78,8 +79,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
+            {type: ACTION_TYPE.CURRENT_USER_REQUEST},
+            {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -90,8 +91,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
+            {type: ACTION_TYPE.CURRENT_USER_REQUEST},
+            {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
@@ -102,8 +103,8 @@ describe("requestCurrentUser action", () => {
         const store = mockStore();
         await store.dispatch(requestCurrentUser() as any);
         const expectedActions = [
-            {type: ACTION_TYPE.USER_UPDATE_REQUEST},
-            {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
+            {type: ACTION_TYPE.CURRENT_USER_REQUEST},
+            {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);

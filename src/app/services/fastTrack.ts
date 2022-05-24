@@ -1,7 +1,7 @@
 import {getRelatedConcepts} from "./topics";
 import {history} from "./history";
 import * as ApiTypes from "../../IsaacApiTypes";
-import {ContentDTO, IsaacQuestionBaseDTO} from "../../IsaacApiTypes";
+import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {DOCUMENT_TYPE, NOT_FOUND} from "./constants";
 import {useUserContext, UseUserContextReturnType} from "./userContext";
 import {useSelector} from "react-redux";
@@ -96,7 +96,7 @@ function trySupportingQuestion(supportingQuestion: ApiTypes.ContentSummaryDTO, c
     };
 }
 
-function getRelatedUnansweredEasierQuestions(doc: ApiTypes.IsaacQuestionBaseDTO, level: number) {
+function getRelatedUnansweredEasierQuestions(doc: ApiTypes.QuestionDTO, level: number) {
     return doc.relatedContent ? doc.relatedContent.filter((relatedContent) => {
         let isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
         let isEasier = relatedContent.level && (parseInt(relatedContent.level, 10) < level);
@@ -105,7 +105,7 @@ function getRelatedUnansweredEasierQuestions(doc: ApiTypes.IsaacQuestionBaseDTO,
     }) : [];
 }
 
-function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.IsaacQuestionBaseDTO, level: number) {
+function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.QuestionDTO, level: number) {
     return doc.relatedContent ? doc.relatedContent.filter((relatedContent) => {
         let isQuestionPage = relatedContent.type && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].indexOf(relatedContent.type as DOCUMENT_TYPE) >= 0;
         let isEqualOrHarder = relatedContent.level && (parseInt(relatedContent.level, 10) >= level);
@@ -116,7 +116,7 @@ function getRelatedUnansweredSupportingQuestions(doc: ApiTypes.IsaacQuestionBase
 
 interface FastTrackPageProperties {
     isFastTrackPage: boolean;
-    doc: IsaacQuestionBaseDTO;
+    doc: QuestionDTO;
     correct: boolean;
     page: ContentDTO | undefined;
     pageCompleted: boolean;
@@ -128,8 +128,8 @@ interface FastTrackPageProperties {
 }
 
 export function useFastTrackInformation(
-    doc: IsaacQuestionBaseDTO, location: Location<{} | null | undefined>,
-    canSubmit: boolean = true, correct: boolean = false
+    doc: QuestionDTO, location: Location<unknown>,
+    canSubmit = true, correct = false
 ): FastTrackPageProperties {
     const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
     const questionHistory = questionHistoryUrl?.split(",") || [];

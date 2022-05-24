@@ -14,6 +14,10 @@ require('dotenv').config();
 module.exports = (isProd) => {
 
     return {
+        stats: {
+            errorDetails: true
+        },
+
         mode: isProd ? "production" : "development",
 
         devServer: {
@@ -36,7 +40,8 @@ module.exports = (isProd) => {
             extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
             alias: {
                 'p5': 'p5/lib/p5.min.js'
-            }
+            },
+            fallback: { "querystring": require.resolve("querystring-es3") }
         },
 
         module: {
@@ -63,13 +68,13 @@ module.exports = (isProd) => {
                                     }
                                 },
                                 {
-                                loader: 'ts-loader',
-                                options: {
-                                    compilerOptions: {
-                                        noEmit: false,
-                                        jsx: "react",
+                                    loader: 'ts-loader',
+                                    options: {
+                                        compilerOptions: {
+                                            noEmit: false,
+                                            jsx: "react",
+                                        },
                                     },
-                                },
                                 }
                             ],
                         },
@@ -89,24 +94,35 @@ module.exports = (isProd) => {
                             test: /\.scss$/,
                             use: [
                                 'style-loader',
-                                isProd ? MiniCssExtractPlugin.loader : null,
-                                'css-loader',
+                                isProd ? { loader: MiniCssExtractPlugin.loader, options: { esModule: false } } : null,
+                                {
+                                    loader: 'css-loader',
+                                    options: {
+                                        url: {
+                                            filter: (url) => {
+                                                // The "/assets" directory is a special case and should be ignored:
+                                                return !url.startsWith("/assets");
+                                            }
+                                        }
+                                    }
+                                },
                                 'sass-loader',
                             ].filter(Boolean),
                         },
                         {
-                            test: /\.(png|jpg)$/,
-                            loader: 'url-loader'
+                            test: /\.(png|gif|jpg|svg)$/,
+                            type: 'asset/resource',
+                            generator: {
+                                filename: isProd ? 'static/assets/[name].[contenthash:8][ext]' : 'static/assets/[name][ext]',
+                            }
                         },
                         {
-                            include: [/\.ttf$/, /\.woff2?$/,],
-                            use: {
-                                loader: 'file-loader',
-                                options: {
-                                    name: isProd ? 'static/fonts/[name].[contenthash:8].[ext]' : 'static/fonts/[name].[ext]',
-                                },
-                            },
-                        },
+                            test: /\.(ttf|woff2?|eot)$/,
+                            type: 'asset/resource',
+                            generator: {
+                                filename: isProd ? 'static/fonts/[name].[contenthash:8][ext]' : 'static/fonts/[name][ext]',
+                            }
+                        }
                     ],
                 },
             ],

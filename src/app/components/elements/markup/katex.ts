@@ -1,13 +1,13 @@
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {useSelector} from "react-redux";
-import {selectors} from "../../state/selectors";
-import {AppState} from "../../state/reducers";
-import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
+import {selectors} from "../../../state/selectors";
+import {AppState} from "../../../state/reducers";
+import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
-import katex from "katex";
-import renderA11yString from "../../services/katex-a11y";
-import {escapeHtml} from "remarkable/lib/common/utils";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import katex, { KatexOptions } from "katex";
+import 'katex/dist/contrib/mhchem.mjs';
+import renderA11yString from "../../../services/katex-a11y";
 
 type MathJaxMacro = string|[string, number];
 
@@ -95,11 +95,10 @@ const KatexBaseMacros = mathjaxToKatex(BaseMacros);
 const KatexMacrosWithMathsBool = mathjaxToKatex(MacrosWithMathsBoolean);
 const KatexMacrosWithEngineeringBool = mathjaxToKatex(MacrosWithEngineeringBoolean);
 
-const KatexOptions = {
+const customKatexOptions: KatexOptions = {
     throwOnError: false,
     strict: false,
     colorIsTextColor: true,
-    output: "html"
 };
 
 function patternQuote(s: string) {
@@ -223,7 +222,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: PotentialUser | null, booleanNotation : BooleanNotation | null,  screenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: PotentialUser | null, booleanNotation : BooleanNotation | null, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -273,30 +272,43 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                         const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");
                         return "\\text{" + REF + reference + ENDREF + "}";
                     }};
-                let katexOptions = {...KatexOptions, displayMode: search.mode == "display", macros: macrosToUse};
+                const katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse, output: "html"} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
                     return createReference(match, "unknown reference " + match);
                 });
 
-                let screenreaderText;
+                let screenReaderText;
                 try {
-                    let pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
-                    screenreaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
-                    screenreaderText = screenreaderText.replace(SR_REF_REGEXP, (_, match) => {
+                    const pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
+                    screenReaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
+                    screenReaderText = screenReaderText.replace(SR_REF_REGEXP, (_, match) => {
                         return createReference(match, "unknown reference " + match, false);
                     });
-                } catch (e) {
-                    // eslint-disable-next-line no-console
-                    console.warn(`Unsupported equation for screenreader text: '${latexMunged}'`, e);
-                    screenreaderText = "[[Unsupported equation]]";
+                } catch {
+                    screenReaderText = undefined;
                 }
-                katexRenderResult = katexRenderResult.replace('<span class="katex">',
-                    `<span class="katex"><span class="sr-only">${screenreaderText}</span>`);
 
-                if (screenReaderHoverText) {
+                // If katex-a11y fails, generate MathML using KaTeX for accessibility
+                if (screenReaderText) {
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
-                        `<span class="katex" title="${screenreaderText.replace(/,/g, "").replace(/\s\s+/g, " ")}">`);
+                        `<span class="katex"><span class="sr-only">${screenReaderText}</span>`);
+                } else {
+                    const katexMathML = katex.renderToString(latexMunged, {...katexOptions, output: "mathml"})
+                        .replace(`class="katex"`, `class="katex-mathml"`);
+                    katexRenderResult = katexRenderResult.replace('<span class="katex">',
+                        `<span class="katex">${katexMathML}`);
+                }
+
+                if (showScreenReaderHoverText) {
+                    // Show screenreader text on hover so we can easily tell what's being output by katex-a11y
+                    katexRenderResult = katexRenderResult.replace(
+                        '<span class="katex-html"',
+                        `<span class="katex-html" title="${
+                            screenReaderText ? 
+                                "Screenreader text: " + screenReaderText.replace(/,/g, "").replace(/\s\s+/g, " ") : 
+                                "Accessible with a screenreader that supports MathML"
+                        }"`);
                 }
 
                 output += katexRenderResult;
@@ -321,15 +333,12 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
     return output;
 }
 
-export function LaTeX({markup, className}: {markup: string, className?: string}) {
+// A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
+export const useRenderKatex = () => {
     const user = useSelector(selectors.user.orNull);
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
-    const screenReaderHoverText = useSelector((state: AppState) => state && state.userPreferences &&
-        state.userPreferences.BETA_FEATURE && state.userPreferences.BETA_FEATURE.SCREENREADER_HOVERTEXT || false);
     const figureNumbers = useContext(FigureNumberingContext);
 
-    const escapedMarkup = escapeHtml(markup);
-    const katexHtml = katexify(escapedMarkup, user, booleanNotation, screenReaderHoverText, figureNumbers);
-
-    return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
+    return (markup: string) => katexify(markup, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
 }

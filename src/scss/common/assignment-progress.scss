@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .assignment-progress-container {
   padding-right: 15px;
   padding-left: 15px;
@@ -102,21 +104,21 @@ $passed-fill: #2C2C2C;
 $passed-bg-img: linear-gradient(to right, rgba($passed-fill, $status-opacity), rgba($passed-fill, $status-opacity));
 $passed-total-bg-img: linear-gradient(to right, rgba($passed-fill, $total-status-opacity), rgba($passed-fill, $total-status-opacity));
 $passed-cb-bg-img: linear-gradient(
-                to bottom left, rgba($passed-fill, $status-opacity / 1.5) 25%,
-                rgba($passed-fill, $status-opacity / 2) 25%, rgba($passed-fill, $status-opacity / 2) 50%,
-                rgba($passed-fill, $status-opacity / 1.5) 50%, rgba($passed-fill, $status-opacity / 1.5) 75%,
-                rgba($passed-fill, $status-opacity / 2) 75%, rgba($passed-fill, $status-opacity / 2));
+                to bottom left, rgba($passed-fill, math.div($status-opacity, 1.5)) 25%,
+                rgba($passed-fill, $status-opacity * 0.5) 25%, rgba($passed-fill, $status-opacity * 0.5) 50%,
+                rgba($passed-fill, math.div($status-opacity, 1.5)) 50%, rgba($passed-fill, math.div($status-opacity, 1.5)) 75%,
+                rgba($passed-fill, $status-opacity * 0.5) 75%, rgba($passed-fill, $status-opacity * 0.5));
 $passed-bg-size: 50%;
 
 // IN-PROGRESS
 $in-progress-fill: #555;
-$in-progress-bg-img: linear-gradient(to right, rgba($in-progress-fill, $status-opacity / 2), rgba($in-progress-fill, $status-opacity / 2));
-$in-progress-total-bg-img: linear-gradient(to right, rgba($in-progress-fill, $total-status-opacity / 2), rgba($in-progress-fill, $total-status-opacity / 2));
+$in-progress-bg-img: linear-gradient(to right, rgba($in-progress-fill, $status-opacity * 0.5), rgba($in-progress-fill, $status-opacity * 0.5));
+$in-progress-total-bg-img: linear-gradient(to right, rgba($in-progress-fill, $total-status-opacity * 0.5), rgba($in-progress-fill, $total-status-opacity * 0.5));
 $in-progress-cb-bg-img: linear-gradient(
-                to bottom left, rgba($in-progress-fill, $status-opacity / 1.5) 25%,
-                rgba($in-progress-fill, $status-opacity / 4) 25%, rgba($in-progress-fill, $status-opacity / 4) 50%,
-                rgba($in-progress-fill, $status-opacity / 1.5) 50%, rgba($in-progress-fill, $status-opacity / 1.5) 75%,
-                rgba($in-progress-fill, $status-opacity / 4) 75%, rgba($in-progress-fill, $status-opacity / 4));
+                to bottom left, rgba($in-progress-fill, math.div($status-opacity, 1.5)) 25%,
+                rgba($in-progress-fill, $status-opacity * 0.25) 25%, rgba($in-progress-fill, $status-opacity * 0.25) 50%,
+                rgba($in-progress-fill, math.div($status-opacity, 1.5)) 50%, rgba($in-progress-fill, math.div($status-opacity, 1.5)) 75%,
+                rgba($in-progress-fill, $status-opacity * 0.25) 75%, rgba($in-progress-fill, $status-opacity * 0.25));
 $in-progress-bg-size: 100%;
 
 // FAILED
@@ -124,10 +126,10 @@ $failed-fill: $red;
 $failed-bg-img: linear-gradient(to right, rgba($failed-fill, $status-opacity), rgba($failed-fill, $status-opacity));
 $failed-total-bg-img: linear-gradient(to right, rgba($failed-fill, $total-status-opacity), rgba($failed-fill, $total-status-opacity));
 $failed-cb-bg-img:
-        linear-gradient(135deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%),
-        linear-gradient(225deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%),
-        linear-gradient(315deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%),
-        linear-gradient( 45deg, rgba($failed-fill, $status-opacity / 1.5) 25%, rgba($failed-fill, $status-opacity / 6) 25%);
+        linear-gradient(135deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%),
+        linear-gradient(225deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%),
+        linear-gradient(315deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%),
+        linear-gradient( 45deg, rgba($failed-fill, math.div($status-opacity, 1.5)) 25%, rgba($failed-fill, math.div($status-opacity, 6)) 25%);
 $failed-bg-size: 25%;
 
 
@@ -344,18 +346,20 @@ $failed-bg-size: 25%;
 
 @mixin table-sticky() {
   position: sticky !important;
+  position: -webkit-sticky !important;
   background-clip:  padding-box !important;
   background: $gray-103;
   z-index: 2;
 }
 
 @mixin after-border() {
-  content:'';
-  position:absolute;
-  left: 0px;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
+  content: '';
+  position: absolute;
+  margin: -0.5px -0.5px;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .single-download {
@@ -363,18 +367,29 @@ $failed-bg-size: 25%;
   text-align: right;
 }
 
-.progress-table {
+.progress-table-container {
+  width: 100% !important;
+  display: block;
+  overflow-y: auto;
   overflow-x: auto;
-  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Safari 10.1+
+// https://stackoverflow.com/questions/16348489/is-there-a-css-hack-for-safari-only-not-chrome
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) {
+  .progress-table-container {
+    overflow-x: scroll !important;
+  }
+}}
+
+.progress-table {
   padding-bottom: 1px; // Fixes odd broswer bugs around the magic :after borders
 
   th.selected {
     // Fixes Firefox bug with position: relative table cells: https://bugzilla.mozilla.org/show_bug.cgi?id=688556
     background-clip: padding-box !important;
-  }
-
-  table {
-    width: 100%;
   }
 
   tbody tr:nth-of-type(even) {
@@ -394,6 +409,7 @@ $failed-bg-size: 25%;
   font-size: 12px;
   tbody td, tbody th {
     min-width: 40px;
+    z-index: 1;
   }
   .total-column.left {
     right: 40px;
@@ -485,15 +501,21 @@ $failed-bg-size: 25%;
     font-weight: bold;
   }
 
-  th:first-child {
+  .student-name {
+    font-weight: bold;
+    color: $text-muted;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    min-width: 130px;
+
     @include table-sticky;
     left: 0;
     top: 0;
     width: 195px;
-
     &:after {
       @include after-border;
       border-right: 1px solid $gray-118;
+      border-left: 1px solid $gray-118;
       pointer-events: none; // don't intercept clicks as we want links in the th element
     }
   }
@@ -503,21 +525,12 @@ $failed-bg-size: 25%;
     width: 65px;
     right: 0;
     top: 0;
-    button {
-      z-index: 2;
-    }
-    &.left:after{
+    &:after {
       @include after-border;
+      border-right: 1px solid $gray-118;
       border-left: 1px solid $gray-118;
+      pointer-events: none; // don't intercept clicks as we want links in the th element
     }
-  }
-
-  .student-name {
-    font-weight: bold;
-    color: $text-muted;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    min-width: 130px;
   }
 }
 

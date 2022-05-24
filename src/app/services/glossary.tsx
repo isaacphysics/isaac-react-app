@@ -8,8 +8,8 @@ import React, {useRef} from "react";
 import {GlossaryTermDTO} from "../../IsaacApiTypes";
 import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
 import {AppState} from "../state/reducers";
-import {TrustedMarkdown} from "../components/elements/TrustedMarkdown";
-import uuid from "uuid";
+import {Markup} from "../components/elements/markup";
+import {v4 as uuid_v4} from "uuid";
 import {useUserContext} from "./userContext";
 
 function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
@@ -25,7 +25,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Element[]] {
     // Create a unique id which does not change over the lifecycle of the component
-    const componentUuid = useRef(uuid.v4().slice(0, 8)).current;
+    const componentUuid = useRef(uuid_v4().slice(0, 8)).current;
     const store = useStore();
     const {examBoard} = useUserContext();
     const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
@@ -73,7 +73,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
 
         // This is easier: we replace an inline glossary term with a <span> which is later targeted by ReactStrap's UncontrolledTooltip.
         // The tooltip components can be rendered as regular react objects, so we just add them to an array,
-        // and return them inside the JSX.Element that is returned as TrustedMarkdown.
+        // and return them inside the JSX.Element that is returned as Markup.
         markdown = markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
             const term = getTermFromCandidateTerms(filteredTerms.filter(term => (term.id as string) === id || (term.id as string) === `${id}|${examBoardTag}`));
             if (term === null) {
@@ -86,7 +86,9 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
             // This is properly horrible but it works...
             tooltips.push(
                 <RS.UncontrolledTooltip placement="bottom" target={tooltipTargetId}>
-                    <TrustedMarkdown markdown={term.explanation && term.explanation.value || ''} />
+                    <Markup trusted-markup-encoding={"markdown"}>
+                        {term.explanation?.value}
+                    </Markup>
                 </RS.UncontrolledTooltip>
             );
             return `<span class="inline-glossary-term" id="${tooltipTargetId}">${text || term.value}</span>`;

@@ -9,6 +9,8 @@ import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isDefined} from "../../services/miscUtils";
+import {MetaDescription} from "../elements/MetaDescription";
 
 type SupportType = "student" | "teacher";
 
@@ -35,6 +37,7 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
             categories:{
                 general: {category: "general", title: "General questions", icon: "faq"},
                 homework: {category: "homework", title: "Finding homework", icon: "faq"},
+                code: {category: "code", title: "Code and pseudcode", icon: "faq"},
             }
         },
         teacher: {
@@ -43,6 +46,7 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
                 general: { category: "general", title: "General questions", icon: "faq" },
                 assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
                 progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
+                code: {category: "code", title: "Code and pseudcode", icon: "faq"},
             }
         }
     },
@@ -108,10 +112,16 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         return "support-tab-" + section.categories[categoryNames[tabIndex - 1]].icon;
     }
 
+    const metaDescriptionMap = {
+        "student": "Got a question about our GCSE and A Level Computer Science online learning programme? Read our student FAQs.",
+        "teacher": "Got a question about our GCSE and A Level Computer Science online learning programme? Read our teacher FAQs."
+    };
+
     return <Container>
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
+                {SITE_SUBJECT === SITE.CS && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>

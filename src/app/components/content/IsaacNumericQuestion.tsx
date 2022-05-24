@@ -1,7 +1,7 @@
 import React, {FormEvent, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Rand from 'rand-seed';
-import {requestConstantsUnits, setCurrentAttempt} from "../../state/actions";
+import {requestConstantsUnits} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {AppState} from "../../state/reducers";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
@@ -19,17 +19,10 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {selectors} from "../../state/selectors";
-import {selectQuestionPart} from "../../services/questions";
-import uuid from 'uuid';
-import {LaTeX} from "../elements/LaTeX";
-
-interface IsaacNumericQuestionProps {
-    doc: IsaacNumericQuestionDTO;
-    questionId: string;
-    validationResponse?: QuantityValidationResponseDTO;
-    readonly: boolean;
-}
+import {useCurrentQuestionAttempt} from "../../services/questions";
+import {v4 as uuid_v4} from 'uuid';
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {Markup} from "../elements/markup";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -99,20 +92,22 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps): JSX.Element => {
-    const dispatch = useDispatch();
-    const userId = useSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
-    const units = useSelector((state: AppState) => state?.constants?.units || undefined);
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
+type IsaacNumericQuestionProps = IsaacQuestionProps<IsaacNumericQuestionDTO> & {validationResponse?: QuantityValidationResponseDTO};
 
-    const currentAttempt = questionPart?.currentAttempt as QuantityDTO;
+export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
+
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
+
     const currentAttemptValue = currentAttempt?.value;
     const currentAttemptUnits = currentAttempt?.units;
     const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
-    useEffect((): void => {dispatch(requestConstantsUnits());}, [dispatch]);
+    const dispatch = useDispatch();
+    const userId = useSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
+    const units = useSelector((state: AppState) => state?.constants?.units || undefined);
+
+    useEffect(() => {dispatch(requestConstantsUnits());}, [dispatch]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
     function updateValue(event: FormEvent<HTMLInputElement>) {
@@ -121,7 +116,7 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
             value: event.currentTarget.value,
             units: currentAttemptUnits
         };
-        dispatch(setCurrentAttempt(questionId, attempt));
+        dispatch(dispatchSetCurrentAttempt(attempt));
     }
 
     function updateUnits(units?: string) {
@@ -130,12 +125,12 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
             value: currentAttemptValue,
             units: units
         };
-        dispatch(setCurrentAttempt(questionId, attempt));
+        dispatch(dispatchSetCurrentAttempt(attempt));
     }
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const helpTooltipId = useMemo(() => `numeric-input-help-${uuid.v4()}`, []);
+    const helpTooltipId = useMemo(() => `numeric-input-help-${uuid_v4()}`, []);
 
     const noDisplayUnit = doc.displayUnit == null || doc.displayUnit === "";
 
@@ -173,7 +168,9 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                             Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle disabled={readonly || !noDisplayUnit} className={`${noDisplayUnit ? "" : "border-dark display-unit"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
-                                    <LaTeX markup={wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}/>
+                                    <Markup encoding={"latex"}>
+                                        {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
+                                    </Markup>
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     {selectedUnits.map((unit) =>
@@ -181,7 +178,9 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                             data-unit={unit || 'None'}
                                             className={unit === currentAttemptUnits ? "btn bg-grey selected" : ""}
                                             onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
-                                            <LaTeX markup={wrapUnitForSelect(unit)}/>
+                                            <Markup encoding={"latex"}>
+                                                {wrapUnitForSelect(unit)}
+                                            </Markup>
                                         </DropdownItem>
                                     )}
                                 </DropdownMenu>

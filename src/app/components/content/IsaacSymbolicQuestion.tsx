@@ -1,23 +1,18 @@
 import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import {connect} from "react-redux";
 import * as RS from "reactstrap";
-import {setCurrentAttempt} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
+import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {selectors} from "../../state/selectors";
 import {Inequality, makeInequality} from "inequality";
 import {parseMathsExpression, ParsingError} from "inequality-grammar";
-
 import _flattenDeep from 'lodash/flatMapDeep';
-import {parsePseudoSymbolicAvailableSymbols, selectQuestionPart, sanitiseInequalityState} from "../../services/questions";
+import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState, useCurrentQuestionAttempt} from "../../services/questions";
 import {jsonHelper} from "../../services/json";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import { isDefined } from '../../services/miscUtils';
-import {Action, Dispatch} from "redux";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 // Magic starts here
 interface ChildrenMap {
@@ -44,30 +39,10 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions(state);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    const r: {currentAttempt?: FormulaDTO | null} = {};
-    if (questionPart) {
-        r.currentAttempt = questionPart.currentAttempt;
-    }
-    return r;
-};
-const dispatchToProps = (dispatch : Dispatch<Action>) => {
-    return {
-        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
-    }
-};
+export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
 
-interface IsaacSymbolicQuestionProps {
-    doc: IsaacSymbolicQuestionDTO;
-    questionId: string;
-    currentAttempt?: FormulaDTO | null;
-    setCurrentAttempt: (questionId: string, attempt: FormulaDTO) => void;
-    readonly?: boolean;
-}
-const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
+
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const [textInput, setTextInput] = useState('');
@@ -88,7 +63,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         const pythonExpression = newState?.result?.python || "";
         const previousPythonExpression = currentAttemptValue?.result?.python || "";
         if (!previousPythonExpression || previousPythonExpression !== pythonExpression) {
-            setCurrentAttempt(questionId, {type: 'formula', value: JSON.stringify(newState), pythonExpression});
+            dispatchSetCurrentAttempt({type: 'formula', value: JSON.stringify(newState), pythonExpression});
         }
         initialEditorSymbols.current = state.symbols;
     };
@@ -197,7 +172,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                 }
                 if (pycode === '') {
                     const state = {result: {tex: "", python: "", mathml: ""}};
-                    setCurrentAttempt(questionId, { type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
+                    dispatchSetCurrentAttempt({ type: 'formula', value: JSON.stringify(sanitiseInequalityState(state)), pythonExpression: ""});
                     initialEditorSymbols.current = [];
                 } else if (parsedExpression.length === 1) {
                     // This and the next one are using pycode instead of textInput because React will update the state whenever it sees fit
@@ -212,7 +187,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         }, 250);
     };
 
-    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid.v4()}`, []);
+    const helpTooltipId = useMemo(() => `eqn-editor-help-${uuid_v4()}`, []);
     const symbolList = parsePseudoSymbolicAvailableSymbols(doc.availableSymbols)?.map(str => str.trim().replace(/;/g, ',') ).sort().join(", ");
 
     return (
@@ -238,7 +213,7 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
                               placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
-                        <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</RS.Button>
+                        <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>
                         <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
@@ -267,5 +242,3 @@ const IsaacSymbolicQuestionComponent = (props: IsaacSymbolicQuestionProps) => {
         </div>
     );
 };
-
-export const IsaacSymbolicQuestion = connect(stateToProps, dispatchToProps)(IsaacSymbolicQuestionComponent);

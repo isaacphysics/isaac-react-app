@@ -9,12 +9,14 @@ import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLog
 import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
 import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
 import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
-import {AppQuestionDTO} from "../../IsaacAppTypes";
+import {AppQuestionDTO, ValidatedChoice} from "../../IsaacAppTypes";
 import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from '../services/constants';
-import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
+import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
+import {useDispatch, useSelector} from "react-redux";
+import {setCurrentAttempt} from "../state/actions";
+import {selectors} from "../state/selectors";
 
-// @ts-ignore as TypeScript is struggling to infer common type for questions
 export const QUESTION_TYPES = new Map([
     ["isaacMultiChoiceQuestion", IsaacMultiChoiceQuestion],
     ["isaacItemQuestion", IsaacItemQuestion],
@@ -42,6 +44,7 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["isaacFreeTextQuestion", "Free text"],
     ["isaacSymbolicLogicQuestion", "Boolean logic"],
     ["isaacGraphSketcherQuestion", "Graph Sketcher"],
+    ["isaacClozeQuestion", "Cloze drag and drop"],
     ["default", "Multiple choice"]
 ]);
 
@@ -56,11 +59,13 @@ export const HUMAN_QUESTION_TAGS = new Map([
     ["physics_skills_19", "Mastering Essential Pre-University Physics (3rd Edition)"],
     ["phys_book_gcse", "Mastering Essential GCSE Physics"],
     ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"],
+    ["maths_book_gcse", "Using Essential GCSE Mathematics"],
+    ["phys_book_step_up", "Step up to GCSE Physics"]
 ]);
 
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
     if (!availableSymbols) return;
-    let theseSymbols = availableSymbols.slice(0).map(s => s.trim());
+    const theseSymbols = availableSymbols.slice(0).map(s => s.trim());
     let i = 0;
     while (i < theseSymbols.length) {
         if (theseSymbols[i] === '_trigs') {
@@ -109,7 +114,7 @@ export function sanitiseInequalityState(state: any) {
         saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
     }
     if (saneState.symbols) {
-        for (let symbol of saneState.symbols) {
+        for (const symbol of saneState.symbols) {
             if (symbol.expression.latex) {
                 symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
             }
@@ -136,4 +141,19 @@ export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
     }
 
     return title;
+}
+
+/**
+ * Essentially a useState for the current question attempt - used in all question components.
+ * @param questionId  id of the question to return the current attempt of
+ */
+export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: string) {
+    const dispatch = useDispatch();
+    const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const questionPart = selectQuestionPart(pageQuestions, questionId);
+    return {
+        currentAttempt: questionPart?.currentAttempt as (T | undefined),
+        dispatchSetCurrentAttempt: (attempt: T | ValidatedChoice<T>) => dispatch(setCurrentAttempt(questionId, attempt)),
+        questionPart: questionPart
+    };
 }

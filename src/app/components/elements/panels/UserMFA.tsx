@@ -50,7 +50,13 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
         setSuccessfulMFASetup(true);
     }
 
-    function setupMFA(event?: React.FormEvent<HTMLFormElement>) {
+    // NOTE FOR REVIEWER: Instead of having to make overlapping types like
+    // this, can we not refactor the form? Ideally, only the onSubmit action
+    // should be needed (unless React hijacks it, in which case two functions
+    // might be nicer, calling a third, if only a bit convoluted)
+    // 
+    // Just rambling.
+    function setupMFA(event?: React.FormEvent<HTMLButtonElement | HTMLFormElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (totpSharedSecret && mfaVerificationCode) {
             dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode));

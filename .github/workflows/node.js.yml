@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10]
+        node-version: [17]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -30,16 +30,15 @@ jobs:
       env:
         cache-name: cache-node-modules
       with:
-        # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm
+        # yarn cache files are stored in `~/.yarn` on Linux/macOS
+        path: ~/.yarn
         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
-          ${{ runner.os }}-  
-    - run: npm install -g codecov
-    - run: npm ci
-    - run: npm run build-cs
-    - run: npm run test-phy
-    - run: npm run test-cs -- --coverage
-    - run: codecov
+          ${{ runner.os }}-
+    - run: yarn --frozen-lockfile
+    - run: yarn run build-cs
+    - run: yarn run test-phy --silent
+    - run: yarn run test-cs --silent --coverage
+    - uses: codecov/codecov-action@v2

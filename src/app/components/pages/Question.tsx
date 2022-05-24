@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
-import {withRouter} from "react-router-dom";
+import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -19,7 +19,7 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
-import {TrustedMarkdown} from "../elements/TrustedMarkdown";
+import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import tags from "../../services/tags";
@@ -28,11 +28,11 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {determineAudienceViews} from "../../services/userContext";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {generateQuestionTitle} from "../../services/questions";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
-interface QuestionPageProps {
+interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
-    match: {params: {questionId: string}};
-    location: {search: string};
+    match: match & { params: { questionId: string } };
 }
 
 
@@ -76,6 +76,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                 >
                     {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                 </TitleAndBreadcrumb>
+                <CanonicalHrefElement />
                 <div className="no-print d-flex align-items-center mt-3">
                     <EditContentButton doc={doc} />
                     <div className="question-actions ml-auto">
@@ -104,7 +105,11 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                             However, if you were assigned this version, you should complete it.
                         </div>}
 
-                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
+                        {doc.attribution && <p className="text-muted">
+                            <Markup trusted-markup-encoding={"markdown"}>
+                                {doc.attribution}
+                            </Markup>
+                        </p>}
 
                         <NavigationLinks navigation={navigation}/>
 

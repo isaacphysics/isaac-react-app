@@ -18,7 +18,6 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {TrustedMarkdown} from "../elements/TrustedMarkdown";
 import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";

@@ -10,7 +10,7 @@ import {
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
-import {withRouter} from "react-router-dom";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
 import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats";
@@ -28,11 +28,10 @@ import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryLi
 export const siteSpecific = {
     [SITE.PHY]: {
         questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion"
-            // TODO isaacClozeQuestion when it exists
+            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacClozeQuestion"
         ],
         questionTagsStatsList: [
-            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16"
+            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16", "maths_book_gcse", "phys_book_step_up"
         ],
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
@@ -40,8 +39,7 @@ export const siteSpecific = {
     [SITE.CS]: {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
-            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion"
-            // TODO isaacClozeQuestion when it exists
+            "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
         ],
         questionTagsStatsList: [] as string[],
         typeColWidth: "col-lg-4",
@@ -50,11 +48,12 @@ export const siteSpecific = {
 }[SITE_SUBJECT];
 
 
-interface MyProgressProps {
+interface MyProgressProps extends RouteComponentProps<{userIdOfInterest: string}> {
     user: PotentialUser;
-    match: {params: {userIdOfInterest: string}};
 }
-export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}}: MyProgressProps) => {
+export const MyProgress = withRouter((props: MyProgressProps) => {
+    const { user, match } = props;
+    const { userIdOfInterest } = match.params;
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useDispatch();
@@ -87,7 +86,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
     return <RS.Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
         <RS.Card className="mt-4">
             <RS.CardBody>
                 <Tabs>{{
@@ -159,8 +158,8 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                             <h4>Isaac Books</h4>
                             <RS.Row>
                                 {siteSpecific.questionTagsStatsList.map((qType: string) => {
-                                    const correct = progress?.correctByTag?.[qType] || null;
-                                    const attempts = progress?.attemptsByTag?.[qType] || null;
+                                    const correct = progress?.correctByTag?.[qType] || 0;
+                                    const attempts = progress?.attemptsByTag?.[qType] || 0;
                                     const percentage = safePercentage(correct, attempts);
                                     return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
@@ -168,7 +167,7 @@ export const MyProgress = withRouter(({user, match: {params: {userIdOfInterest}}
                                         </div>
                                         <div className={"px-2"}>
                                             <ProgressBar percentage={percentage || 0} type={qType}>
-                                                {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                                {attempts == 0 ? "No data" : `${correct} of ${attempts}`}
                                             </ProgressBar>
                                         </div>
                                     </RS.Col>;

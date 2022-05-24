@@ -1,5 +1,5 @@
 import katex from "katex";
-import {katexify} from "../../app/components/elements/LaTeX";
+import {katexify} from "../../app/components/elements/markup/katex";
 
 
 jest.mock("katex");
@@ -34,6 +34,10 @@ describe('TrustedHtml LaTeX locator', () => {
             const callArgs = katex.renderToString.mock.calls.pop();
             expect(callArgs[0]).toBe(math[0]);
             expect(callArgs[1]).toMatchObject({"displayMode": displayMode});
+            // @ts-ignore katex.__parse is mocked, so katex-a11y can't generate screenreader text - this means
+            // katex.renderToString is called again to generate MathML, so we need to pop a second call off of the
+            // call stack
+            katex.renderToString.mock.calls.pop();
         });
     });
 
@@ -58,6 +62,10 @@ describe('TrustedHtml LaTeX locator', () => {
                 const callArgs = katex.renderToString.mock.calls.pop();
                 expect(callArgs[0]).toBe(dollarMath);
                 expect(callArgs[1]).toMatchObject({"displayMode": displayMode});
+                // @ts-ignore katex.__parse is mocked, so katex-a11y can't generate screenreader text - this means
+                // katex.renderToString is called again to generate MathML, so we need to pop a second call off of the
+                // call stack
+                katex.renderToString.mock.calls.pop();
             });
         });
     });
@@ -72,6 +80,10 @@ describe('TrustedHtml LaTeX locator', () => {
         const callArgs = katex.renderToString.mock.calls.pop();
         expect(callArgs[0]).toBe(env);
         expect(callArgs[1]).toMatchObject({"displayMode": true});
+        // @ts-ignore katex.__parse is mocked, so katex-a11y can't generate screenreader text - this means
+        // katex.renderToString is called again to generate MathML, so we need to pop a second call off of the
+        // call stack
+        katex.renderToString.mock.calls.pop();
     });
 
     it('missing refs show an inline error', () => {

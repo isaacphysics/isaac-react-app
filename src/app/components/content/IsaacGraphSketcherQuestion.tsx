@@ -1,39 +1,15 @@
 import React, {useState, useEffect, useRef} from "react";
-import {connect} from "react-redux";
-import {setCurrentAttempt} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {ChoiceDTO, GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
+import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacTabbedHints} from "./IsaacHints";
-import {selectors} from "../../state/selectors";
 import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
-import {selectQuestionPart} from "../../services/questions";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
-import {Action, Dispatch} from "redux";
+import {useCurrentQuestionAttempt} from "../../services/questions";
+import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-const stateToProps = (state: AppState, {questionId}: {questionId: string}) => {
-    const pageQuestions = selectors.questions.getQuestions(state);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    let r: {currentAttempt?: GraphChoiceDTO | null} = {};
-    if (questionPart) {
-        r.currentAttempt = questionPart.currentAttempt;
-    }
-    return r;
-};
-const dispatchToProps = (dispatch : Dispatch<Action>) => {
-    return {
-        setCurrentAttempt: (questionId: string, attempt: ChoiceDTO) => setCurrentAttempt(questionId, attempt)(dispatch)
-    }
-};
+export const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {
 
-interface IsaacGraphSketcherQuestionProps {
-    doc: IsaacGraphSketcherQuestionDTO;
-    questionId: string;
-    currentAttempt?: GraphChoiceDTO | null;
-    setCurrentAttempt: (questionId: string, attempt: GraphChoiceDTO) => void;
-    readonly?: boolean;
-}
-const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionProps) => {
-    const {doc, questionId, currentAttempt, setCurrentAttempt, readonly} = props;
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<GraphChoiceDTO>(questionId);
+
     const [modalVisible, setModalVisible] = useState(false);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const initialState: GraphSketcherState | undefined = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : undefined;
@@ -62,7 +38,7 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
-        setCurrentAttempt(questionId, {type: 'graphChoice', value: JSON.stringify(newState)});
+        dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(newState)});
         if (previewSketch) {
             previewSketch.state = newState;
             previewSketch.state.curves = previewSketch.state.curves || [];
@@ -104,5 +80,3 @@ const IsaacGraphSketcherQuestionComponent = (props: IsaacGraphSketcherQuestionPr
         <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
 };
-
-export const IsaacGraphSketcherQuestion = connect(stateToProps, dispatchToProps)(IsaacGraphSketcherQuestionComponent);

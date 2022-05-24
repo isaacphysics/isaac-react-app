@@ -1,28 +1,32 @@
-// ISAAC
-#login-page {
-  .login-google {
-    display: inline-block;
-    text-indent: -99999em;
-    width: 191px;
-    height: 46px;
-    background: url(/assets/google-login-sprite-dark.png) no-repeat 0 0;
-    &:hover {
-      background: url(/assets/google-login-sprite-dark-pressed.png) no-repeat 0 0;
-      width: 191px;
-      height: 46px;
-    }
+#google-button-logo {
+  padding-right: 24px;
+  transform: translate(0, -15%);
+}
+
+#login-modal-form {
+  max-height: 800px;
+  @media (min-height: 800px) {
+    max-height: 90vh;
   }
-  @media only screen and (min-resolution: 192dpi) {
-    .login-google {
-      background-image: url(/assets/google-login-sprite-dark@2x.png);
-      background-size: 191px 46px;
-      &:hover {
-        background-image: url(/assets/google-login-sprite-dark-pressed@2x.png);
-        background-size: 191px 46px;
-      }
-    }
+  padding: 20vh 30px;
+  @include media-breakpoint-down(md) {
+    max-height: unset;
+    padding-top: 20px;
+    padding-bottom: 30px;
   }
 }
 
+.hr-or {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  &::before {
+    font-family: "exo_2regular", sans-serif;
+    content: "or";
+    bottom: -12px;
+    background: white;
+    border-bottom: none;
+    width: 50px;
+  }
+}
 
 // NOMENSA login.scss LIVES IN ISAAC'S elements.scss

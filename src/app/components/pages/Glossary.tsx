@@ -17,6 +17,8 @@ import Select from "react-select";
 import {useUserContext} from "../../services/userContext";
 import {useUrlHashValue} from "../../services/reactRouterExtension";
 import {Item} from "../../services/select";
+import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {MetaDescription} from "../elements/MetaDescription";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -188,9 +190,13 @@ export const Glossary = () => {
         }
     });
 
+    const metaDescriptionCS = "Confused about an A level or GCSE Computer Science term? Look it up in our glossary.";
+
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
+            {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS} />}
+
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">
                     <ShareLink linkUrl={`/glossary`} clickAwayClose/>
@@ -254,7 +260,9 @@ export const Glossary = () => {
                     <Col>
                         {terms.map(term => (!isDefined(term.examBoard) || term.examBoard === '' || examBoard === term.examBoard) &&
                             <IsaacGlossaryTerm
-                                ref={(el: HTMLElement) => glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el)}
+                                ref={(el: HTMLElement) => {
+                                    glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
+                                }}
                                 doc={term}
                                 linkToGlossary={true}
                             />

@@ -1,9 +1,13 @@
 import {IsaacEventPageDTO} from "../../IsaacApiTypes";
 import {apiHelper} from "./api";
-import {AugmentedEvent} from "../../IsaacAppTypes";
+import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
 import React from "react";
 import {Link} from "react-router-dom";
+import {STAGE, STAGES_CS, STAGES_PHY} from "./constants";
+import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {isStudent, isTeacher} from "./user";
+import {atLeastOne} from "./validation";
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     {"This event is aimed at students. If you are not a student but still wish to attend, please "}
@@ -88,3 +92,43 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
         </>;
     }
 };
+
+export const stageExistsForSite = (stage: string) => {
+    const stagesForSite = SITE_SUBJECT === SITE.CS ? STAGES_CS : STAGES_PHY
+    return stagesForSite.has(stage as STAGE)
+}
+
+export const userSatisfiesStudentOnlyRestrictionForEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
+    return event.isStudentOnly ? isStudent(user) : true;
+}
+
+export const userIsTeacherAtAStudentEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
+    return event.isAStudentEvent && isTeacher(user);
+}
+
+export const userCanMakeEventBooking = (user: PotentialUser | null, event: AugmentedEvent) => {
+    return event.isNotClosed &&
+        event.isWithinBookingDeadline &&
+        !event.isWaitingListOnly &&
+        event.userBookingStatus !== "CONFIRMED" &&
+        userSatisfiesStudentOnlyRestrictionForEvent(user, event) &&
+        (atLeastOne(event.placesAvailable) || userIsTeacherAtAStudentEvent(user, event) ||
+            event.userBookingStatus === "RESERVED");
+}
+
+export const userCanBeAddedToEventWaitingList = (user: PotentialUser | null, event: AugmentedEvent) => {
+    return !userCanMakeEventBooking(user, event) &&
+        event.isNotClosed &&
+        !event.hasExpired &&
+        (event.userBookingStatus === undefined ||
+            !["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus)) &&
+        userSatisfiesStudentOnlyRestrictionForEvent(user, event)
+}
+
+export const userCanReserveEventSpaces = (user: PotentialUser | null, event: AugmentedEvent) => {
+    return event.allowGroupReservations &&
+        event.isNotClosed &&
+        event.isWithinBookingDeadline &&
+        !event.isWaitingListOnly &&
+        isTeacher(user);
+}

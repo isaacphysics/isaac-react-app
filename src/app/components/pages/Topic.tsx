@@ -14,6 +14,7 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {atLeastOne} from "../../services/validation";
 import {selectors} from '../../state/selectors';
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
+import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
     const dispatch = useDispatch();
@@ -28,12 +29,12 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
         getRelatedDocs(topicPage, {...userContext, showOtherContent: false}, user);
 
     const searchQuery = `?topic=${topicName}`;
-    // TODO REMOVE AUDIENCE_CONTEXT - maybe we don't need to bother with this now
     const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;
 
     return <ShowLoading until={topicPage} thenRender={topicPage =>
         <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
+            <CanonicalHrefElement />
             <Row>
                 <Col md={{size: 8, offset: 2}} className="py-3">
                     <div className="d-flex justify-content-end">
