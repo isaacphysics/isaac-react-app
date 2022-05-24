@@ -22,10 +22,10 @@ import {
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {v4 as uuid_v4} from "uuid";
-import {LaTeX} from "../LaTeX";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
+import {Markup} from "../markup";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -110,7 +110,9 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <LaTeX className={titleTextClass} markup={title ?? ""} />
+                        <Markup encoding={"latex"} className={titleTextClass}>
+                            {title}
+                        </Markup>
                         {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
                             ({typeLabel})
                         </span>}

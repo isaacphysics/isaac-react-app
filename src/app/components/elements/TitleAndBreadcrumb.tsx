@@ -4,7 +4,7 @@ import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import {HOME_CRUMB} from "../../services/constants";
 import {CollectionType, LinkInfo} from "../../services/navigation";
-import {LaTeX} from "./LaTeX";
+import {Markup} from "./markup";
 
 interface BreadcrumbTrailProps {
     currentPageTitle: string;
@@ -34,9 +34,7 @@ const BreadcrumbTrail = ({currentPageTitle, intermediateCrumbs = [], collectionT
     </Breadcrumb>;
 };
 
-export const formatBreadcrumbItemTitle = (title: string, disallowLaTeX?: boolean) => {
-    return disallowLaTeX ? <span> {title} </span> : <LaTeX markup={title} />
-}
+export const formatBreadcrumbItemTitle = (title: string, disallowLaTeX?: boolean) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"}>{title}</Markup>;
 
 export const formatBreadcrumbHistoryItem = (breadcrumb: LinkInfo, disallowLaTeX?: boolean) => {
     const titleElement = formatBreadcrumbItemTitle(breadcrumb.title, disallowLaTeX)

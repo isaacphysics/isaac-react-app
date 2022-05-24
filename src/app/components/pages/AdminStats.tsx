@@ -78,8 +78,9 @@ export const AdminStats = () => {
                                         <ul className="list-unstyled">
                                             <li>Student: {adminStats.userRoles.STUDENT || 0}</li>
                                             <li>Teacher: {adminStats.userRoles.TEACHER || 0}</li>
-                                            <li>Event Manager: {adminStats.userRoles.EVENT_MANAGER || 0}</li>
+                                            <li>Event Leader: {adminStats.userRoles.EVENT_LEADER || 0}</li>
                                             <li>Content Editor: {adminStats.userRoles.CONTENT_EDITOR || 0}</li>
+                                            <li>Event Manager: {adminStats.userRoles.EVENT_MANAGER || 0}</li>
                                             <li>Admin: {adminStats.userRoles.ADMIN || 0}</li>
                                         </ul>
                                     </li>
