@@ -28,18 +28,19 @@ const TrustedHtml = ({html, className}: {html: string; className?: string}) => {
 // drop zones) into HTML, which is then passed to `TrustedHTML`. The Isaac-specific markdown must be processed first,
 // so that it doesn't get incorrectly rendered with Remarkable (the markdown renderer we use).
 const TrustedMarkdown = ({markdown}: {markdown: string, renderParagraphs?: boolean}) => {
+    const renderKatex = useRenderKatex();
+
     // This combines all of the above functions for markdown processing.
     const html = compose<string>(
-        renderRemarkableMarkdown,  // Remarkable markdown renderer, processes standard markdown syntax
-        regexProcessMarkdown,      //  ^
-        renderInlineGlossaryTerms, //  |
-        renderGlossaryBlocks,      //  | control flow
-        renderClozeDropZones,      //  |
-    )(markdown);
+        renderClozeDropZones,      // ^
+        renderKatex,               // |
+        renderRemarkableMarkdown,  // | Remarkable markdown renderer, processes standard markdown syntax
+        regexProcessMarkdown,      // |
+        renderInlineGlossaryTerms, // |
+        renderGlossaryBlocks       // |
+    )(markdown);                   // control flow
 
-    return <Markup trusted-markup-encoding={"html"}>
-        {html}
-    </Markup>;
+    return <TrustedHtml html={html}/>;
 };
 
 // --- Types for the Markup component ---
