@@ -32,14 +32,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
     }
 }
 
-// The component that uses this hook should be using the pattern demonstrated in `TrustedHtml`.
-// This pattern is the following:
-// - The html produced by this hook is rendered within an element using the `dangerouslySetInnerHTML` attribute. Call this the root element.
-// - When calling `renderGlossaryTerms`, *pass the root element*
-// - Ensure that the root element is set and updated using the `useStatefulElementRef` hook. This means that when the element
-// is added to the DOM, a update occurs for all components that take this element as a prop.
-//
-// Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
+// See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);

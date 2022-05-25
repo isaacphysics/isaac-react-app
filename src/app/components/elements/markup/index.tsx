@@ -71,9 +71,7 @@ type TrustedMarkupProps = {
 //  - `plaintext`: escapes HTML, doesn't do anything other than injecting text into a `span`.
 //  - `unknown`:   HTML is escaped, and markup is rendered alongside a warning that the encoding is unknown.
 //
-// You can pass in an encoding other than these, and the encoding will be treated the same as as `unknown`. However, TS will complain,
-// so you will have to cast `string` to `TrustedMarkupEncoding`. Don't do this unless there is no guarantee of the encoding value
-// (for example in `IsaacContentValueOrChildren`), the types are there to help!
+// You can pass in an encoding other than these, and the encoding will be treated the same as as `unknown`.
 export function Markup<T extends string>({encoding, "trusted-markup-encoding": trustedMarkupEncoding, className, children}: MarkupProps<T> | TrustedMarkupProps) {
     const renderKaTeX = useRenderKatex();
 

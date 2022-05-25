@@ -66,14 +66,7 @@ export function InlineDropRegion({id, index, rootElement}: {id: string; index: n
     return null;
 }
 
-// The component that uses this hook should be using the pattern demonstrated in `TrustedHtml`.
-// This pattern is the following:
-// - The html produced by this hook is rendered within an element using the `dangerouslySetInnerHTML` attribute. Call this the root element.
-// - When calling `renderDropZones`, *pass the root element*
-// - Ensure that the root element is set and updated using the `useStatefulElementRef` hook. This means that when the element
-// is added to the DOM, a update occurs for all components that take this element as a prop.
-//
-// Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
+// See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
     // If not in a cloze question, don't bother trying to find and render drop-zone divs
     const dropRegionContext = useContext(ClozeDropRegionContext);
