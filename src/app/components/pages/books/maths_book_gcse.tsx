@@ -58,7 +58,7 @@ export const MathsBookGcse = () => {
                             </Row>
                             <Row className="mb-4">
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch9_boards'} chapterTitle={'Probability Statistics'} chapterIcon={'9'} chapterSubHeading={'(Sections 51-57)'} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch9_boards'} chapterTitle={'Probability and Statistics'} chapterIcon={'9'} chapterSubHeading={'(Sections 51-57)'} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                             </Row>
                         </Col>,
@@ -98,7 +98,7 @@ export const MathsBookGcse = () => {
                             </Row>
                             <Row className="mb-4">
                                 <Col md={6} className="p-2">
-                                    <BookChapter chapterId={'gcse_maths_ch9_full_boards'} chapterTitle={'Probability Statistics'} chapterIcon={'9'} chapterSubHeading={'(Sections 51-57)'} chapterSubject={SUBJECTS.MATHS}/>
+                                    <BookChapter chapterId={'gcse_maths_ch9_full_boards'} chapterTitle={'Probability and Statistics'} chapterIcon={'9'} chapterSubHeading={'(Sections 51-57)'} chapterSubject={SUBJECTS.MATHS}/>
                                 </Col>
                             </Row>
                         </Col>

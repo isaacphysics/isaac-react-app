@@ -37,7 +37,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/gcse">GCSE Resources</LinkItem>
             <LinkItem to="/alevel">A Level Resources</LinkItem>
             <LinkItem to="/gameboards/new">Question Finder</LinkItem>
-            <LinkItem to="/concepts">Concept Reference</LinkItem>
+            <LinkItem to="/concepts">Concepts</LinkItem>
             {/* <LinkItem to="/glossary">Glossary</LinkItem> */}
         </NavigationSection>
 

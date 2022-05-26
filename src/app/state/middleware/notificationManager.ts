@@ -12,7 +12,7 @@ import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUp
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
 
     const state = middlewareApi.getState();
-    if([ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
+    if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
         if (
             state && isLoggedIn(state.user) &&
             !allRequiredInformationIsPresent(state.user, state.userPreferences, state.user.registeredContexts) &&
