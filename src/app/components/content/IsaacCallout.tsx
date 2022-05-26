@@ -3,21 +3,27 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Col, Row} from "reactstrap";
 import classNames from "classnames";
-import {useDemoValue} from "../../services/demoTools";
+import {siteSpecific} from "../../services/miscUtils";
 
 export const IsaacCallout = ({doc}: {doc: ContentDTO}) => {
-    const colourClass = useDemoValue(["t-green", "t-grey", "hi-teal-25", "hi-mustard-25", "hi-navy-25"], "q");
-    const bellIcon = useDemoValue([
-        "https://cdn-icons-png.flaticon.com/512/3602/3602156.png", // black border no vibrations
-        "https://cdn-icons-png.flaticon.com/512/1827/1827370.png", // coloured with notification circle (no number)
-        "https://cdn-icons.flaticon.com/png/512/2326/premium/2326010.png?token=exp=1652103124~hmac=fdd4a111ea2e1712fb27a20a54c74d23", // black border vibrations
-        "https://cdn-icons-png.flaticon.com/512/4371/4371392.png"
-    ], "w");
+    const calloutStyle = siteSpecific({
+        width: "32",
+        height: "32",
+        src: "/assets/notepad-and-pencil.png",
+        extraClasses: "mt-n1 mr-n2",
+        colour: "t-grey"
+    }, {
+        width: "40",
+        height: "40",
+        src: "/assets/puzzle-lightbulb.png",
+        extraClasses: "mt-n2 mr-n2",
+        colour: "hi-teal-25"
+    });
 
-    return <Row className={classNames("isaac-callout", colourClass)}>
+    return <Row className={classNames("isaac-callout", calloutStyle.colour)}>
         <Col>
-            <img className={"float-right m-1 mt-n1 mr-n1"} width="32" height="32" src={bellIcon}/>
-            <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children}/>
+            <img className={classNames("float-right m-1", calloutStyle.extraClasses)} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
+            <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children} />
         </Col>
     </Row>;
 }
