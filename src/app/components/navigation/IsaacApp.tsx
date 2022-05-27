@@ -252,7 +252,7 @@ export const IsaacApp = () => {
                         {/* Error pages */}
                         <TrackedRoute component={NotFound} />
                     </Switch>
-                <Suspense fallback={<div>Loading...</div>}>
+                </Suspense>
             </ErrorBoundary>
         </main>
         <Footer />
