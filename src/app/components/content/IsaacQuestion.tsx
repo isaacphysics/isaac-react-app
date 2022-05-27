@@ -19,7 +19,7 @@ import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
     const [isVisible, setVisible] = useState(false);
     const [hideOptions, setHideOptions] = useState(false);
-    const attemptUuid = useRef(uuid.v4().slice(0, 8));
+    const attemptUuid = useRef(uuid_v4().slice(0, 8));
 
     const tooManySigFigsFeedback = <p>
         Whether your answer is correct or not, it has the wrong number of&nbsp;

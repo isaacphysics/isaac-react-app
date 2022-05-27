@@ -23,7 +23,7 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
 import {determineFastTrackSecondaryAction} from "../../services/fastTrack";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {Helmet} from "react-helmet";
 import {generateQuestionTitle} from "../../services/questions";
 import {Markup} from "../elements/markup";
@@ -41,7 +41,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     const navigation = useNavigation(doc);
     const [isVisible, setVisible] = useState(false);
     const [hideOptions, setHideOptions] = useState(false);
-    const attemptUuid = useRef(uuid.v4().slice(0, 8));
+    const attemptUuid = useRef(uuid_v4().slice(0, 8));
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

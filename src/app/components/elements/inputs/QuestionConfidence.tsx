@@ -2,7 +2,7 @@ import {Button, Col, Row} from "reactstrap";
 import React from "react";
 import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
 import {useDispatch} from "react-redux";
-import uuid from "uuid";
+import {v4 as uuid_v4} from "uuid";
 import {Confidence, UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {confidenceOptions} from "../../../services/confidence";
 import classNames from "classnames";
@@ -51,7 +51,7 @@ export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, set
                 dispatch(logAction(eventDetails));
             }
             setHideOptions(true);
-            attemptUuid.current = uuid.v4().slice(0, 8);
+            attemptUuid.current = uuid_v4().slice(0, 8);
         } else {
             const eventDetails = {type: "QUICK_QUESTION_CONFIDENCE", questionId: identifier, attemptUuid: attemptUuid.current, confidence: payload};
             dispatch(logAction(eventDetails));
@@ -59,7 +59,7 @@ export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, set
             setVisible(isNowVisible);
             if (!twoParts) {
                 setHideOptions(true);
-                attemptUuid.current = uuid.v4().slice(0, 8);
+                attemptUuid.current = uuid_v4().slice(0, 8);
             }
         }
     };
