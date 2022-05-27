@@ -169,7 +169,7 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
     return <div className="question-content cloze-question">
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
             <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
-                <IsaacContentValueOrChildren value={doc.value} encoding={"markdown" /* doc.encoding  FIXME CP replace this once cloze text questions have been changed to markdown encoding */}>
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
