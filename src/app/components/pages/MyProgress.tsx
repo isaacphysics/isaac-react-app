@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    clearQuestionSearch,
     getMyAnsweredQuestionsByDate,
     getMyProgress,
     getUserAnsweredQuestionsByDate,
@@ -75,6 +76,7 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
     }, [bookQuestions]);
 
     useEffect(() => {
+        dispatch(clearQuestionSearch);
         dispatch(searchQuestions(bookQuestionSearch));
         if (viewingOwnData && user.loggedIn) {
             dispatch(getMyProgress());
@@ -168,11 +170,11 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
 
                         {SITE_SUBJECT === SITE.PHY && <div className="mt-4">
                             <h4>Isaac Books</h4>
-                            Questions completed correctly, displayed against the number of questions attempted, for each of our practice books.
+                            Questions completed correctly, against questions attempted for each of our <a href={"/pages/isaac_books"}>skills books</a>.
                             <ShowLoading until={bookQuestions}>
                                 <RS.Row>
                                     {siteSpecific.questionTagsStatsList.map((qType: string) => {
-                                        const total = bookQuestionMap[qType] || 0;
+                                        const total = bookQuestionMap[qType];
                                         const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);
                                         const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
                                         const correctPercentage = safePercentage(correct, total) || 0;
