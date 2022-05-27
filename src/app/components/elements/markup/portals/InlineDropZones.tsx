@@ -35,7 +35,7 @@ export function InlineDropRegion({id, index, rootElement}: {id: string; index: n
 
     if (dropRegionContext && droppableTarget) {
         return ReactDOM.createPortal(
-            <div style={{minHeight: "inherit", position: "relative", margin: "2px"}}>
+            <div style={{minHeight: "inherit", position: "relative", margin: "2px"}} className={"cloze-drop-zone"}>
                 <Droppable droppableId={id} isDropDisabled={dropRegionContext.readonly} direction="vertical" >
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
@@ -54,7 +54,7 @@ export function InlineDropRegion({id, index, rootElement}: {id: string; index: n
                         {!item && "\u00A0"}
                     </div>}
                 </Droppable>
-                {item && <button aria-label={"Clear drop zone"} className={"cloze-inline-clear"} onClick={clearInlineDropZone}>
+                {item && <button aria-label={"Clear drop zone"} className={"cloze-inline-clear no-print"} onClick={clearInlineDropZone}>
                     <svg height="20" width="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false"
                          className="cloze-clear-cross">
                         <path d="M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"/>
