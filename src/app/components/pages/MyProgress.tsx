@@ -170,7 +170,7 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
 
                         {SITE_SUBJECT === SITE.PHY && <div className="mt-4">
                             <h4>Isaac Books</h4>
-                            Questions completed correctly, against questions attempted for each of our <a href={"/pages/isaac_books"}>mastery books</a>.
+                            Questions completed correctly, against questions attempted for each of our <a href={"/pages/order_books"}>mastery books</a>.
                             <ShowLoading until={bookQuestions}>
                                 <RS.Row>
                                     {siteSpecific.questionTagsStatsList.map((qType: string) => {
