@@ -124,7 +124,7 @@ export const fasttrackConcepts = (state: FasttrackConceptsState = null, action: 
 };
 
 type QuestionSearchResultState = ContentSummaryDTO[] | null;
-export const questionSearchResult = (gameboardEditorQuestions: QuestionSearchResultState = null, action: Action) => {
+export const questionSearchResult = (questionSearchResult: QuestionSearchResultState = null, action: Action) => {
     switch(action.type) {
         case ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS: {
             return action.questions.map((question) => {
@@ -135,7 +135,7 @@ export const questionSearchResult = (gameboardEditorQuestions: QuestionSearchRes
             return null;
         }
         default: {
-            return gameboardEditorQuestions;
+            return questionSearchResult;
         }
     }
 };
