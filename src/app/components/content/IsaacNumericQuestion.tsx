@@ -21,8 +21,8 @@ import {
 } from "reactstrap";
 import {useCurrentQuestionAttempt} from "../../services/questions";
 import {v4 as uuid_v4} from 'uuid';
-import {LaTeX} from "../elements/LaTeX";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {Markup} from "../elements/markup";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -168,7 +168,9 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                             Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle disabled={readonly || !noDisplayUnit} className={`${noDisplayUnit ? "" : "border-dark display-unit"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
-                                    <LaTeX markup={wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}/>
+                                    <Markup encoding={"latex"}>
+                                        {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
+                                    </Markup>
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     {selectedUnits.map((unit) =>
@@ -176,7 +178,9 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                             data-unit={unit || 'None'}
                                             className={unit === currentAttemptUnits ? "btn bg-grey selected" : ""}
                                             onClick={(e: FormEvent) => {updateUnits(unit); e.preventDefault();}}>
-                                            <LaTeX markup={wrapUnitForSelect(unit)}/>
+                                            <Markup encoding={"latex"}>
+                                                {wrapUnitForSelect(unit)}
+                                            </Markup>
                                         </DropdownItem>
                                     )}
                                 </DropdownMenu>

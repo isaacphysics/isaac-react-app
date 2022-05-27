@@ -70,7 +70,12 @@ def increment_version(update_type):
     def repl_matcher(match):
         if update_type != 'none':
             version = {'major': int(match.group('major')), 'minor': int(match.group('minor')), 'patch': int(match.group('patch'))}
-            version[update_type] += 1
+            version_order = ['major', 'minor', 'patch']
+            for ver in version_order:
+                if version_order.index(update_type) < version_order.index(ver):
+                    version[ver] = 0
+                elif ver == update_type:
+                    version[ver] += 1
             return f"v{version['major']}.{version['minor']}.{version['patch']}"
         else:
             return match.group(0)

@@ -95,7 +95,13 @@ export const IsaacApp = () => {
 
     // Run once on component mount
     useEffect(() => {
-        dispatch(requestCurrentUser());
+        // We do not check the current user on the /auth/:provider:/callback page.
+        // We clear local storage on a failed check for current user, but on the callback page we need the stored afteAuthPath.
+        // The auth callback will get the logged-in user for us.
+        const pathname = window.location.pathname;
+        if (!(pathname.includes("/auth/") && pathname.includes("/callback"))) {
+            dispatch(requestCurrentUser());
+        }
         dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
