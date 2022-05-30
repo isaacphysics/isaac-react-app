@@ -131,6 +131,7 @@ module.exports = (isProd) => {
         optimization: {
             splitChunks: {
                 chunks: "all",
+                minSize: 100000,
             },
             runtimeChunk: true,
             minimizer: [
