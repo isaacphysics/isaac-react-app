@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {withRouter} from 'react-router-dom';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
@@ -11,7 +10,7 @@ import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
 import {AppState} from "../../state/reducers";
 import {isStaff} from "../../services/user";
 
-const GraphSketcherPage = withRouter(() => {
+const GraphSketcherPage = () => {
     const user = useSelector((state: AppState) => state && state.user || null);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
@@ -102,5 +101,5 @@ const GraphSketcherPage = withRouter(() => {
             </Row>
         </Container>
     </div>;
-});
+};
 export default GraphSketcherPage;
