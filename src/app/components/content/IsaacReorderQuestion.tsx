@@ -12,7 +12,7 @@ import _differenceBy from "lodash/differenceBy";
 import {useCurrentQuestionAttempt} from "../../services/questions";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
-import {TrustedHtml} from "../elements/TrustedHtml";
+import {Markup} from "../elements/markup";
 
 const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: ItemDTO; index: number; inAvailableItems?: boolean; readonly?: boolean}) => {
     return <Draggable
@@ -30,7 +30,9 @@ const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: 
                 {...provided.dragHandleProps}
                 style={provided.draggableProps.style}
             >
-                <TrustedHtml html={item.value ?? ""}/>
+                <Markup trusted-markup-encoding={"html"}>
+                    {item?.value ?? ""}
+                </Markup>
             </div>
         }}
     </Draggable>
