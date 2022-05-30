@@ -141,6 +141,8 @@ export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
 }
 
+export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {}
+
 export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
     withReplacement?: boolean;
 }

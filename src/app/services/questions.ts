@@ -11,6 +11,7 @@ import {setCurrentAttempt} from "../state/actions";
 import {selectors} from "../state/selectors";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
+const IsaacReorderQuestion = lazy(() => import("../components/content/IsaacReorderQuestion"));
 const IsaacParsonsQuestion = lazy(() => import("../components/content/IsaacParsonsQuestion"));
 const IsaacNumericQuestion = lazy(() => import("../components/content/IsaacNumericQuestion"));
 const IsaacStringMatchQuestion = lazy(() => import("../components/content/IsaacStringMatchQuestion"));
@@ -25,6 +26,7 @@ const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQu
 export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacMultiChoiceQuestion": "Multiple choice",
     "isaacItemQuestion": "Item",
+    "isaacReorderQuestion": "Reorder",
     "isaacParsonsQuestion": "Parsons",
     "isaacNumericQuestion": "Numeric",
     "isaacSymbolicQuestion": "Symbolic",
@@ -40,6 +42,7 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
 export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, questionId, readonly}: IsaacQuestionProps<any>) => JSX.Element>} = {
     "isaacMultiChoiceQuestion": IsaacMultiChoiceQuestion,
     "isaacItemQuestion": IsaacItemQuestion,
+    "isaacReorderQuestion": IsaacReorderQuestion,
     "isaacParsonsQuestion": IsaacParsonsQuestion,
     "isaacNumericQuestion": IsaacNumericQuestion,
     "isaacSymbolicQuestion": IsaacSymbolicQuestion,

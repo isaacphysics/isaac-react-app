@@ -28,7 +28,8 @@ import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryLi
 const siteSpecific = {
     [SITE.PHY]: {
         questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacClozeQuestion"
+            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
+            "isaacClozeQuestion", "isaacReorderQuestion"
         ],
         questionTagsStatsList: [
             "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16", "maths_book_gcse", "phys_book_step_up"
