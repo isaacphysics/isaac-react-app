@@ -127,6 +127,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
             const srcItems = [...availableItems];
             const dstItems = [...(currentAttempt?.items || [])];
             moveItem(srcItems, result.source.index, dstItems, result.destination.index, currentIndent || 0);
+            // We can't guarantee that `currentAttempt` is defined, so we have to explicitly state `type: "parsonsChoice"` here.
             dispatchSetCurrentAttempt({type: "parsonsChoice", items: dstItems});
             setAvailableItems(srcItems);
         } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && currentAttempt) {
