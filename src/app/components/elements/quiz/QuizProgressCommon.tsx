@@ -34,7 +34,7 @@ interface ResultRowProps {
 }
 
 export function questionsInSection(section?: IsaacQuizSectionDTO) {
-    return section?.children?.filter(child => isQuestion(child)) || [];
+    return section?.children?.filter(isQuestion) || [];
 }
 
 export const passMark = 0.75;

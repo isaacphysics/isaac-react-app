@@ -94,7 +94,7 @@ function wrapUnitForSelect(unit?: string): string {
 
 type IsaacNumericQuestionProps = IsaacQuestionProps<IsaacNumericQuestionDTO> & {validationResponse?: QuantityValidationResponseDTO};
 
-export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
+const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
 
@@ -192,3 +192,4 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
         </div>
     );
 };
+export default IsaacNumericQuestion;

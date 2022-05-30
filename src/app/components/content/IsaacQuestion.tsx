@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, Suspense} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
@@ -18,6 +18,7 @@ import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
+import {Loading} from "../handlers/IsaacSpinner";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -52,7 +53,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     }, [dispatch, doc.id]);
 
     // Select QuestionComponent from the question part's document type (or default)
-    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
+    const QuestionComponent = QUESTION_TYPES[doc?.type ?? "default"];
 
     // FastTrack buttons should only show up if on a FastTrack-enabled board
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
@@ -76,8 +77,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         }
     }}>
         <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
-            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
-            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
+            <Suspense fallback={Loading}>
+                <QuestionComponent questionId={doc.id as string} doc={doc} {...{validationResponse}} />
+            </Suspense>
 
             {/* CS Hints */}
             {SITE_SUBJECT === SITE.CS && <React.Fragment>
