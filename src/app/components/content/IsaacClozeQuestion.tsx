@@ -14,7 +14,7 @@ import {
 } from "react-beautiful-dnd";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Item} from "../elements/portals/InlineDropZones";
+import {Item} from "../elements/markup/portals/InlineDropZones";
 
 export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
 
@@ -175,22 +175,24 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
 
                 {/* Items section */}
                 <Label htmlFor="non-selected-items" className="mt-3">Items: </Label>
-                <Droppable droppableId={itemsSection} direction="horizontal" isDropDisabled={readonly}>
-                    {(provided, snapshot) => <div
-                        ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
-                        className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-                    >
-                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
-                            {(provided) =>
-                                <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    <Item item={item} />
-                                </div>
-                            }
-                        </Draggable>)}
-                        {nonSelectedItems.length === 0 && "\u00A0"}
-                        {provided.placeholder}
-                    </div>}
-                </Droppable>
+                <div className={"cloze-drop-zone"}>
+                    <Droppable droppableId={itemsSection} direction="horizontal" isDropDisabled={readonly}>
+                        {(provided, snapshot) => <div
+                            ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
+                            className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                        >
+                            {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
+                                {(provided) =>
+                                    <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                        <Item item={item} />
+                                    </div>
+                                }
+                            </Draggable>)}
+                            {nonSelectedItems.length === 0 && "\u00A0"}
+                            {provided.placeholder}
+                        </div>}
+                    </Droppable>
+                </div>
             </DragDropContext>
         </ClozeDropRegionContext.Provider>
     </div>;

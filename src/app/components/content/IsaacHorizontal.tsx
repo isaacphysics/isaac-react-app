@@ -1,29 +1,16 @@
 import React from "react";
-import * as RS from "reactstrap";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
+import {Col, Container, Row} from "reactstrap";
 
-interface IsaacHorizontalProps {
-    doc: {
-        children: {
-            id?: string;
-            title?: string;
-            children?: ContentDTO[];
-        }[];
-    };
-}
-
-export const IsaacHorizontal = (props: any) => {
-    const {doc: {children}} = props as IsaacHorizontalProps;
-    const numberOfColumns = children.length;
-
-    return <RS.Container>
-        <RS.Row>
+export const IsaacHorizontal = ({doc: {children}}: {doc: ContentDTO}) => {
+    return children ? <Container className={"content-value mb-2"}>
+        <Row>
             {children.map((child, index) => (
-                <RS.Col key={index} lg={Math.floor(12/numberOfColumns)}>
+                <Col key={index} lg={Math.floor(12/(children.length))}>
                     <IsaacContent key={index} doc={child} />
-                </RS.Col>
+                </Col>
             ))}
-        </RS.Row>
-    </RS.Container>;
+        </Row>
+    </Container> : null;
 };

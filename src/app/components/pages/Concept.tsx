@@ -18,7 +18,7 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {TrustedMarkdown} from "../elements/TrustedMarkdown";
+import {Markup} from "../elements/markup";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
@@ -73,7 +73,11 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
 
-                        {doc.attribution && <p className="text-muted"><TrustedMarkdown markdown={doc.attribution}/></p>}
+                        {doc.attribution && <p className="text-muted">
+                            <Markup trusted-markup-encoding={"markdown"}>
+                                {doc.attribution}
+                            </Markup>
+                        </p>}
 
                         {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 

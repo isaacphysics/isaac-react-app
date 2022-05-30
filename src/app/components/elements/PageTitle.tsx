@@ -5,13 +5,13 @@ import {closeActiveModal, openActiveModal, setMainContentId} from "../../state/a
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
 import {PageFragment} from "./PageFragment";
-import {LaTeX} from "./LaTeX";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
 import {STAGE, stageLabelMap} from "../../services/constants";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import {Helmet} from "react-helmet";
+import {Markup} from "./markup";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserContext();
@@ -93,6 +93,4 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     </h1>
 };
 
-export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => {
-   return  disallowLaTeX ? <span> {currentPageTitle} </span> : <LaTeX markup={currentPageTitle} />
-}
+export const formatPageTitle = (currentPageTitle: string, disallowLaTeX?: boolean) => <Markup encoding={disallowLaTeX ? "plaintext" : "latex"}>{currentPageTitle}</Markup>;
