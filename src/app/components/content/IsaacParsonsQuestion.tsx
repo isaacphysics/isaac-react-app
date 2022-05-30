@@ -116,25 +116,26 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
             // Reorder currentAttempt
             const items = [...(currentAttempt?.items || [])];
             moveItem(items, result.source.index, items, result.destination.index, currentIndent || 0);
-            dispatchSetCurrentAttempt({...currentAttempt, ...{ items }});
+            dispatchSetCurrentAttempt({...currentAttempt, items});
         } else if (result.source.droppableId === result.destination.droppableId && result.destination.droppableId === 'availableItems') {
             // Reorder availableItems
             const items = [...availableItems];
             moveItem(items, result.source.index, items, result.destination.index, 0);
             setAvailableItems(items);
-        } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems' && currentAttempt) {
+        } else if (result.source.droppableId === 'availableItems' && result.destination.droppableId === 'answerItems') {
             // Move from availableItems to currentAttempt
             const srcItems = [...availableItems];
             const dstItems = [...(currentAttempt?.items || [])];
             moveItem(srcItems, result.source.index, dstItems, result.destination.index, currentIndent || 0);
-            dispatchSetCurrentAttempt({...currentAttempt, ...{ items: dstItems }});
+            // We can't guarantee that `currentAttempt` is defined, so we have to explicitly state `type: "parsonsChoice"` here.
+            dispatchSetCurrentAttempt({type: "parsonsChoice", items: dstItems});
             setAvailableItems(srcItems);
         } else if (result.source.droppableId === 'answerItems' && result.destination.droppableId === 'availableItems' && currentAttempt) {
             // Move from currentAttempt to availableItems
             const srcItems = [...(currentAttempt?.items || [])];
             const dstItems = [...availableItems];
             moveItem(srcItems, result.source.index, dstItems, result.destination.index, 0);
-            dispatchSetCurrentAttempt({...currentAttempt, ...{ items: srcItems }});
+            dispatchSetCurrentAttempt({...currentAttempt, items: srcItems });
             setAvailableItems(dstItems);
         } else {
             console.error("Not sure how we got here...");
@@ -338,7 +339,7 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
                                         }}
                                     </Draggable>
                                 })}
-                                {currentAttempt?.items?.length === 0 &&
+                                {(!currentAttempt || currentAttempt?.items?.length === 0) &&
                                     <div className="text-muted text-center">
                                         {readonly ? "No answer entered" : "Drag items across to build your answer"}
                                     </div>

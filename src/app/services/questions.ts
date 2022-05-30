@@ -1,6 +1,7 @@
 import {IsaacMultiChoiceQuestion} from "../components/content/IsaacMultiChoiceQuestion";
 import {IsaacItemQuestion} from "../components/content/IsaacItemQuestion";
 import {IsaacParsonsQuestion} from "../components/content/IsaacParsonsQuestion";
+import {IsaacReorderQuestion} from "../components/content/IsaacReorderQuestion";
 import {IsaacNumericQuestion} from "../components/content/IsaacNumericQuestion";
 import {IsaacStringMatchQuestion} from "../components/content/IsaacStringMatchQuestion";
 import {IsaacRegexMatchQuestion} from "../components/content/IsaacRegexMatchQuestion";
@@ -21,6 +22,7 @@ export const QUESTION_TYPES = new Map([
     ["isaacMultiChoiceQuestion", IsaacMultiChoiceQuestion],
     ["isaacItemQuestion", IsaacItemQuestion],
     ["isaacParsonsQuestion", IsaacParsonsQuestion],
+    ["isaacReorderQuestion", IsaacReorderQuestion],
     ["isaacNumericQuestion", IsaacNumericQuestion],
     ["isaacSymbolicQuestion", IsaacSymbolicQuestion],
     ["isaacSymbolicChemistryQuestion", IsaacSymbolicChemistryQuestion],
@@ -37,6 +39,7 @@ export const HUMAN_QUESTION_TYPES = new Map([
     ["isaacMultiChoiceQuestion", "Multiple choice"],
     ["isaacItemQuestion", "Item"],
     ["isaacParsonsQuestion", "Parsons"],
+    ["isaacReorderQuestion", "Reorder"],
     ["isaacNumericQuestion", "Numeric"],
     ["isaacSymbolicQuestion", "Symbolic"],
     ["isaacSymbolicChemistryQuestion", "Chemistry"],
