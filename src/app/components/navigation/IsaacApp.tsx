@@ -49,7 +49,6 @@ import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
-import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {RedirectToEvent} from "./RedirectToEvent";
@@ -143,9 +142,6 @@ export const IsaacApp = () => {
 
                     {/* Site specific pages */}
                     {SiteSpecific.Routes}
-
-                    {/* Special case */}
-                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
                     {/* Application pages */}
                     <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
