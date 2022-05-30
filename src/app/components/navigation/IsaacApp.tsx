@@ -49,7 +49,6 @@ import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
-import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {RedirectToEvent} from "./RedirectToEvent";
