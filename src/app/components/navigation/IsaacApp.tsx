@@ -52,7 +52,6 @@ import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {RedirectToEvent} from "./RedirectToEvent";
-import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
@@ -83,6 +82,7 @@ import {Loading} from "../handlers/IsaacSpinner";
 const MyProgress = lazy(() => import('../pages/MyProgress'));
 const Equality = lazy(() => import('../pages/Equality'));
 const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
+const EventDetails = lazy(() => import('../pages/EventDetails'));
 
 export const IsaacApp = () => {
     // Redux state and dispatch
