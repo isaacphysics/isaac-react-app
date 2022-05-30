@@ -136,7 +136,7 @@ export const IsaacApp = () => {
         <EmailVerificationBanner />
         <main id="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ClientError}>
-                <Suspense fallback={Loading}>
+                <Suspense fallback={<Loading/>}>
                     <Switch>
                     {/* Errors; these paths work but aren't really used */}
                     <Route exact path={serverError ? undefined : "/error"} component={ServerError} />

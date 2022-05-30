@@ -78,7 +78,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         }
     }}>
         <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
-            <Suspense fallback={Loading}>
+            <Suspense fallback={<Loading/>}>
                 <QuestionComponent questionId={doc.id as string} doc={doc} {...{validationResponse}} />
             </Suspense>
 

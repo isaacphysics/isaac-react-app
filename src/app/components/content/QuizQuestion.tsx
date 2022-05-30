@@ -40,7 +40,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             {SITE_SUBJECT === SITE.CS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
-            <Suspense fallback={Loading}>
+            <Suspense fallback={<Loading/>}>
                 <QuestionComponent questionId={doc.id as string} doc={doc} readonly={validated} {...{validationResponse}} />
             </Suspense>
 
