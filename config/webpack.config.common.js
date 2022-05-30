@@ -156,6 +156,9 @@ module.exports = (isProd) => {
                     to: 'assets',
                 }
             ]}),
+            new webpack.optimize.MinChunkSizePlugin({
+                minChunkSize: 100000
+            }),
             new webpack.DefinePlugin({
                 REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
                 ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
