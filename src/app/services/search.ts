@@ -9,12 +9,12 @@ import queryString from "query-string";
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     const previousQuery = queryString.parse(history.location.search);
     const newQueryOptions = {
-        query: searchQuery,
-        types: typesFilter.join(",") || undefined,
+        query: encodeURI(searchQuery),
+        types: typesFilter.map(encodeURI).join(",") || undefined,
     };
     history.push({
         pathname: "/search",
-        search: queryString.stringify({...previousQuery, ...newQueryOptions}),
+        search: queryString.stringify({...previousQuery, ...newQueryOptions}, {encode: false}),
     });
 };
 

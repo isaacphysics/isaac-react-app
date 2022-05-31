@@ -59,12 +59,15 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const userContext = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
-    const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(urlFilters.map(itemise))
+
+    let initialFilters = urlFilters;
+    if (SITE_SUBJECT === SITE.CS && urlFilters.length === 0) {
+        initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
+    }
+    const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
 
     useEffect(function triggerSearchOnUrlChange() {
-        setQueryState(urlQuery);
-        setFiltersState(urlFilters.map(itemise));
-        dispatch(fetchSearch(urlQuery || "", urlFilters.length ? urlFilters.join(",") : undefined));
+        dispatch(fetchSearch(queryState ?? "", filtersState.length ? filtersState.map(deitemise).join(",") : undefined));
     }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
