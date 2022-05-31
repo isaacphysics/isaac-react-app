@@ -15,7 +15,7 @@ export const LinkingConcepts = () => {
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="NEW - Linking Concepts - NEW" help={pageHelp} />
-                <img className="book-cover" src="/assets/phy/books/step_up_phys.jpg" alt="Cover of the book."/>
+                <img className="book-cover" src="/assets/phy/books/linking_concepts.jpg" alt="Cover of the book."/>
                 <PageFragment fragmentId="phys_linking_concepts_intro"/>
             </div>
             <div className="book-levels">
