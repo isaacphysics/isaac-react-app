@@ -34,7 +34,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
 
     return <React.Fragment>
         <div className={
-            classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
+            classnames("question-component p-md-5", {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})
         }>
             {SITE_SUBJECT === SITE.CS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 

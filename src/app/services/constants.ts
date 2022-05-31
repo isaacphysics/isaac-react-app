@@ -62,9 +62,9 @@ export enum ACTION_TYPE {
     USER_LOG_IN_RESPONSE_SUCCESS = "USER_LOG_IN_RESPONSE_SUCCESS",
     USER_LOG_IN_RESPONSE_FAILURE = "USER_LOG_IN_RESPONSE_FAILURE",
 
-    USER_UPDATE_REQUEST = "USER_UPDATE_REQUEST",
-    USER_UPDATE_RESPONSE_SUCCESS = "USER_UPDATE_RESPONSE_SUCCESS",
-    USER_UPDATE_RESPONSE_FAILURE = "USER_UPDATE_RESPONSE_FAILURE",
+    CURRENT_USER_REQUEST = "CURRENT_USER_REQUEST",
+    CURRENT_USER_RESPONSE_SUCCESS = "CURRENT_USER_RESPONSE_SUCCESS",
+    CURRENT_USER_RESPONSE_FAILURE = "CURRENT_USER_RESPONSE_FAILURE",
 
     USER_DETAILS_UPDATE_REQUEST = "USER_DETAILS_UPDATE",
     USER_DETAILS_UPDATE_RESPONSE_SUCCESS = "USER_DETAILS_UPDATE_RESPONSE_SUCCESS",
@@ -815,7 +815,7 @@ export enum TAG_ID {
     statistics = "statistics",
     functions = "functions",
     calculus = "calculus",
-    numbers = "numbers",
+    number = "number",
 
     // Physics Topics ---
 
@@ -858,7 +858,7 @@ export enum TAG_ID {
 
     // Maths Topics ---
 
-    // Numbers
+    // Number
     arithmetic = "arithmetic",
     rational = "rational",
     factors = "factors_powers",
@@ -1035,6 +1035,17 @@ export enum EventTypeFilter {
     "Student events" = "student",
     "Teacher events" = "teacher",
     "Online tutorials" = "virtual",
+}
+
+export enum EventStageFilter {
+    "All stages" = "all",
+    "Year 7" = "year_7",
+    "Year 8" = "year_8",
+    "Year 9" = "year_9",
+    "GCSE" = "gcse",
+    "A-Level" = "a_level",
+    "Further A" = "further_a",
+    "University" = "university"
 }
 
 export const GREEK_LETTERS_MAP: { [letter: string]: string } = {

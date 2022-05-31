@@ -44,8 +44,6 @@ export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: 
     } else if (isStaff(user)) {
         return true;
     } else {
-        return content.id != "_regression_test_" &&
-            !content.supersededBy &&
-            !content.tags?.includes("nofilter");
+        return !content.supersededBy && !content.tags?.includes("nofilter");
     }
 };

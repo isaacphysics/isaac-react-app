@@ -23,11 +23,17 @@ import {KEY} from "../../services/localStorage";
 import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {isLoggedIn, isStaff, isStudent, isTeacher} from "../../services/user";
+import {isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
-import {formatEventDetailsDate, studentOnlyEventMessage} from "../../services/events";
+import {formatEventDetailsDate,
+    studentOnlyEventMessage,
+    userCanBeAddedToEventWaitingList,
+    userCanMakeEventBooking,
+    userCanReserveEventSpaces,
+    userSatisfiesStudentOnlyRestrictionForEvent
+} from "../../services/events";
 import {EditContentButton} from "../elements/EditContentButton";
 import { isDefined } from "../../services/miscUtils";
 import { Map, Marker, Popup, TileLayer } from "react-leaflet";
@@ -76,30 +82,11 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
     }
 
     return <ShowLoading until={event} thenRender={event => {
-        const studentOnlyRestrictionSatisfied = event.isStudentOnly ? isStudent(user) : true;
-        const teacherAtAStudentEvent = event.isAStudentEvent && isTeacher(user);
+        const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event)
 
-        const canMakeABooking =
-            event.isNotClosed &&
-            event.isWithinBookingDeadline &&
-            !event.isWaitingListOnly &&
-            event.userBookingStatus !== "CONFIRMED" &&
-            studentOnlyRestrictionSatisfied &&
-            (atLeastOne(event.placesAvailable) || teacherAtAStudentEvent || event.userBookingStatus === "RESERVED");
-
-        const canBeAddedToWaitingList =
-            !canMakeABooking &&
-            event.isNotClosed &&
-            !event.hasExpired &&
-            (event.userBookingStatus === undefined || !["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus)) &&
-            studentOnlyRestrictionSatisfied;
-
-        const canReserveSpaces =
-            event.allowGroupReservations &&
-            event.isNotClosed &&
-            event.isWithinBookingDeadline &&
-            !event.isWaitingListOnly &&
-            isTeacher(user);
+        const canMakeABooking = userCanMakeEventBooking(user, event)
+        const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event)
+        const canReserveSpaces = userCanReserveEventSpaces(user, event)
 
         const submissionTitle = canMakeABooking ?
             "Book now" :

@@ -28,10 +28,11 @@ import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryLi
 export const siteSpecific = {
     [SITE.PHY]: {
         questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion", "isaacClozeQuestion"
+            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
+            "isaacClozeQuestion", "isaacReorderQuestion"
         ],
         questionTagsStatsList: [
-            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16"
+            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16", "maths_book_gcse", "phys_book_step_up"
         ],
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
@@ -86,7 +87,7 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
     return <RS.Container id="my-progress" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX={true} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
         <RS.Card className="mt-4">
             <RS.CardBody>
                 <Tabs>{{
@@ -158,8 +159,8 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
                             <h4>Isaac Books</h4>
                             <RS.Row>
                                 {siteSpecific.questionTagsStatsList.map((qType: string) => {
-                                    const correct = progress?.correctByTag?.[qType] || null;
-                                    const attempts = progress?.attemptsByTag?.[qType] || null;
+                                    const correct = progress?.correctByTag?.[qType] || 0;
+                                    const attempts = progress?.attemptsByTag?.[qType] || 0;
                                     const percentage = safePercentage(correct, attempts);
                                     return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
@@ -167,7 +168,7 @@ export const MyProgress = withRouter((props: MyProgressProps) => {
                                         </div>
                                         <div className={"px-2"}>
                                             <ProgressBar percentage={percentage || 0} type={qType}>
-                                                {percentage == null ? "No data" : `${correct} of ${attempts}`}
+                                                {attempts == 0 ? "No data" : `${correct} of ${attempts}`}
                                             </ProgressBar>
                                         </div>
                                     </RS.Col>;

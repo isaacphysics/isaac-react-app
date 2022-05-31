@@ -20,10 +20,10 @@ import {
     determineAudienceViews,
     filterAudienceViewsByProperties
 } from "../../services/userContext";
-import {LaTeX} from "../elements/LaTeX";
 import {generateQuestionTitle} from "../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
 import { isDefined } from "../../services/miscUtils";
+import {Markup} from "../elements/markup";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -74,7 +74,9 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
             </span>
             <div className={`d-md-flex flex-fill`}>
                 <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
-                    <LaTeX className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""} markup={generateQuestionTitle(question)} />
+                    <Markup encoding={"latex"} className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>
+                        {generateQuestionTitle(question)}
+                    </Markup>
                     {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
                     {questionTags && <div className="hierarchy-tags">
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}

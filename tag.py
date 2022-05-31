@@ -12,7 +12,6 @@ import requests
 import subprocess
 import sys
 import re
-import json
 
 SEMVER_REGEX = re.compile(fr'^v(?P<major>\d+?).(?P<minor>\d+?).(?P<patch>\d+?)$')
 react_api_env_var_name = 'REACT_APP_API_VERSION'
@@ -71,7 +70,12 @@ def increment_version(update_type):
     def repl_matcher(match):
         if update_type != 'none':
             version = {'major': int(match.group('major')), 'minor': int(match.group('minor')), 'patch': int(match.group('patch'))}
-            version[update_type] += 1
+            version_order = ['major', 'minor', 'patch']
+            for ver in version_order:
+                if version_order.index(update_type) < version_order.index(ver):
+                    version[ver] = 0
+                elif ver == update_type:
+                    version[ver] += 1
             return f"v{version['major']}.{version['minor']}.{version['patch']}"
         else:
             return match.group(0)
@@ -87,11 +91,11 @@ def update_versions(previous_versions, update_description, snapshot=False):
             update_versions[service_name] += "-SNAPSHOT"
     return update_versions
 
-def warn_user(warning):
-    print(f'Warning: {warning}')
+def prompt_user(prompt, warning=True, continue_string='Continue anyway?'):
+    print(f'{"Warning: " if warning else ""}{prompt}')
     acknowledged = False
     while not acknowledged:
-        user_response = input('Continue anyway? [y/n]\n')
+        user_response = input(f'{continue_string} [y/n]\n')
         if user_response.lower() == 'n':
             sys.exit(1)
         elif user_response.lower() == 'y':
@@ -102,13 +106,21 @@ def check_app_and_api_are_clean(update_description):
         if update_description[service_name] != 'none':
             branch = subprocess.run("git rev-parse --abbrev-ref HEAD", **subprocess_options[service_name]).stdout.strip()
             if branch != 'master':
-                warn_user(f'The {service_name} repo is not on the "master" branch.')
+                prompt_user(f'The {service_name} repo is not on the "master" branch.')
             diff_with_remote = subprocess.run("git diff origin/master --name-only", **subprocess_options[service_name]).stdout.strip()
             if len(diff_with_remote) > 0:
-                warn_user(f'The {service_name} repo does not have the latest changes from the remote branch (i.e. you are not on master or you need to `git pull`).')
+                prompt_user(f'The {service_name} repo does not have the latest changes from the remote branch (i.e. you are not on master or you need to `git pull`).')
             status = subprocess.run("git status --short", **subprocess_options[service_name]).stdout.strip()
             if len(status) > 0:
-                warn_user(f'The {service_name} repo is reporting the following uncommitted changes or untracked files:\n{status}')
+                prompt_user(f'The {service_name} repo is reporting the following uncommitted changes or untracked files:\n{status}')
+
+def check_user_is_ready_to_release(target_versions, update_description):
+    front_end_only = update_description['api'] == 'none'
+    confirmation_string = [f"Ready to tag a {'front-end-only' if front_end_only else 'full'} release:"]
+    for service_name in ['app', 'api']:
+        if update_description[service_name] != 'none':
+            confirmation_string.append(f"{service_name.upper()} ({update_description[service_name]}) {target_versions[service_name]}")
+    prompt_user("\n".join(confirmation_string), warning=False, continue_string="Continue?")
 
 def set_versions(versions, update_description):
     # Record the App version
@@ -156,11 +168,13 @@ if __name__ == '__main__':
 
     most_recent_versions = get_versions_from_github()
     target_versions = update_versions(most_recent_versions, update_description)
+    check_user_is_ready_to_release(target_versions, update_description)
+
     set_versions(target_versions, update_description)
-    commit_and_tag_changes(target_versions, update_description) 
+    commit_and_tag_changes(target_versions, update_description)
 
     bump_update_description = {service: 'patch' if update != 'none' else 'none' for service, update in update_description.items()}
-    bumped_versions = update_versions(target_versions, bump_update_description, snapshot=True)    
+    bumped_versions = update_versions(target_versions, bump_update_description, snapshot=True)
     set_versions(bumped_versions, update_description)
     commit_and_push_changes(target_versions, update_description)
 

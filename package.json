@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "2.0.1-SNAPSHOT",
+  "version": "2.1.1-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=17",
@@ -8,7 +8,10 @@
   },
   "engineStrict": true,
   "resolutions": {
-    "jest-environment-jsdom": "27.5.1"
+    "async": "^2.6.4",
+    "highlight.js": "^11.5.1",
+    "jest-environment-jsdom": "27.5.1",
+    "minimist": "^1.2.6"
   },
   "dependencies": {
     "axios": "^0.26.0",
@@ -17,9 +20,9 @@
     "core-js": "^3.19.3",
     "dayjs": "^1.10.7",
     "he": "^1.2.0",
-    "highlight.js": "^11.3.1",
+    "highlight.js": "^11.5.1",
     "history": "^4.10.1",
-    "html-to-text": "^8.1.0",
+    "html-to-text": "^8.2.0",
     "identity-obj-proxy": "3.0.0",
     "inequality": "0.9.33",
     "inequality-grammar": "0.11.0",
@@ -67,9 +70,9 @@
     "build-stats-cs": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats-cs.json",
     "analyse-bundle-cs": "webpack-bundle-analyzer bundle-stats-cs.json build-cs",
     "build-cs-renderer": "webpack --env prod --config config/webpack.config.cs.renderer.js",
-    "start-cs-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --disableHostCheck=true",
+    "start-cs-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --allowed-hosts=true",
     "build-phy-renderer": "webpack --env prod --config config/webpack.config.phy.renderer.js",
-    "start-phy-renderer": "webpack-dev-server --hot --port 3002 --history-api-fallback --config config/webpack.config.phy.renderer.js --disableHostCheck=true",
+    "start-phy-renderer": "webpack-dev-server --hot --port 3002 --history-api-fallback --config config/webpack.config.phy.renderer.js --allowed-hosts=true",
     "build-renderer": "yarn run build-cs-renderer && yarn run build-phy-renderer"
   },
   "eslintConfig": {
@@ -138,7 +141,7 @@
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^8.2.5",
     "bootstrap": "^4.6.1",
     "bootstrap-block-grid": "^1.1.7",
     "clean-webpack-plugin": "^4.0.0",
@@ -170,6 +173,6 @@
     "webpack": "^5.64.4",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.6.0"
+    "webpack-dev-server": "^4.8.1"
   }
 }

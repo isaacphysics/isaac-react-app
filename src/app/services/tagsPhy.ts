@@ -30,7 +30,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.organic, title: "Organic", parent: TAG_ID.chemistry, comingSoonDate: "soon"},
         {id: TAG_ID.analytical, title: "Analytical", parent: TAG_ID.chemistry},
         // Maths Fields
-        {id: TAG_ID.numbers, title: "Numbers", parent: TAG_ID.maths},
+        {id: TAG_ID.number, title: "Number", parent: TAG_ID.maths},
         {id: TAG_ID.algebra, title: "Algebra", parent: TAG_ID.maths},
         {id: TAG_ID.geometry, title: "Geometry", parent: TAG_ID.maths},
         {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.maths},
@@ -79,10 +79,10 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // --- Maths Topics ---
 
         // Numbers
-        {id: TAG_ID.arithmetic, title: "Arithmetic", parent: TAG_ID.numbers},
-        {id: TAG_ID.rational, title: "Rational Numbers", parent: TAG_ID.numbers},
-        {id: TAG_ID.factors, title: "Factors & Powers", parent: TAG_ID.numbers},
-        {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.numbers},
+        {id: TAG_ID.arithmetic, title: "Arithmetic", parent: TAG_ID.number},
+        {id: TAG_ID.rational, title: "Rational Numbers", parent: TAG_ID.number},
+        {id: TAG_ID.factors, title: "Factors & Powers", parent: TAG_ID.number},
+        {id: TAG_ID.complexNumbers, title: "Complex Numbers", parent: TAG_ID.number},
         // Algebra
         {id: TAG_ID.manipulation, title: `Manip${softHyphen}ulation`, parent: TAG_ID.algebra},
         {id: TAG_ID.quadratics, title: `Quadra${softHyphen}tics`, parent: TAG_ID.algebra},

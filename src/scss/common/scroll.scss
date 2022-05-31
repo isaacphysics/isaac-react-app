@@ -33,10 +33,7 @@
         margin-top: 35px;
       }
     }
-  }
-
-  .isaac-table {
-    &.expandable {
+    &.isaac-table {
       .scroll-shadow {
         margin-top: 35px;
       }
@@ -76,16 +73,6 @@
     left: 50%;
     transform: translateX(-50%);
     width: 95vw;
-  }
-}
-
-.isaac-expand-bg {
-  @include media-breakpoint-up(md) {
-    &.isaac-table {
-      // This fixes the fact that tables have a weird right "margin", so when
-      // expanding one this needs to be compensated for, to center it properly
-      left: 52.5%;
-    }
   }
 }
 

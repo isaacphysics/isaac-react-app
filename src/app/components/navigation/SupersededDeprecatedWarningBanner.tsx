@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
 import {isStudent, isTeacher} from "../../services/user";
 import {goToSupersededByQuestion} from "../../state/actions";
-import {isDefined} from "../../services/miscUtils";
 
 export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
     const dispatch = useDispatch();
@@ -15,7 +14,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
     const supersededBy = doc.type === "isaacQuestionPage" ? (doc as IsaacQuestionPageDTO).supersededBy : undefined;
 
     // If doc.deprecated or supersededBy is falsey, render nothing
-    if (!doc.deprecated && !isDefined(supersededBy)) {
+    if (!doc.deprecated && !supersededBy) {
         return RenderNothing;
     }
 
@@ -25,7 +24,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
         <span id="superseded-help" className="icon-help" />
         <RS.UncontrolledTooltip placement="bottom" target="superseded-help">
             <div className="text-left">
-                {isDefined(supersededBy) && <>
+                {supersededBy && <>
                     We periodically update questions into new formats.<br />
                     If this question appears on one of your gameboards, you may want to update the gameboard.<br />
                     You can find help for this at Help and support &gt; Teacher Support &gt; Assigning Work.<br /><br />
@@ -45,7 +44,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
         </strong>}
         {doc.deprecated ? <>
             This {contentType} is no longer supported, and may contain errors. {" "}
-            {isDefined(supersededBy) && <>
+            {supersededBy && <>
                 It has been replaced by {" "} <RS.Button role="link" color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
                     this question
                 </RS.Button>.

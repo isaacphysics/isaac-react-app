@@ -43,6 +43,12 @@ export interface AssignmentDTO extends IAssignmentLike {
     _id?: number;
 }
 
+export interface AssignmentFeedbackDTO {
+    groupId: number;
+    assignmentId?: number;
+    errorMessage?: string;
+}
+
 export interface GameboardDTO extends HasTitleOrId {
     contents?: GameboardItem[];
     wildCard?: IsaacWildcard;
@@ -134,6 +140,8 @@ export interface IsaacNumericQuestionDTO extends QuestionDTO {
 export interface IsaacParsonsQuestionDTO extends IsaacItemQuestionDTO {
     disableIndentation?: boolean;
 }
+
+export interface IsaacReorderQuestionDTO extends IsaacItemQuestionDTO {}
 
 export interface IsaacClozeQuestionDTO extends IsaacItemQuestionDTO {
     withReplacement?: boolean;

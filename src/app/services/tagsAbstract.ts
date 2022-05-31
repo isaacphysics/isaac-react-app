@@ -59,6 +59,7 @@ export abstract class AbstractBaseTagService {
 
     public getFieldTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.field);
     public getFieldTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.field);
+    public allFieldTags = this.getFieldTags(this.allTagIds);
 
     public getTopicTag = this.getSpecifiedTag.bind(this, TAG_LEVEL.topic);
     public getTopicTags = this.getSpecifiedTags.bind(this, TAG_LEVEL.topic);
