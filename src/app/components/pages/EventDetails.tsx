@@ -47,7 +47,7 @@ interface EventDetailsProps {
     match: {params: {eventId: string}};
     location: {pathname: string};
 }
-export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
+const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
     const dispatch = useDispatch();
     const event = useSelector((state: AppState) => state && state.currentEvent);
     const user = useSelector(selectors.user.orNull);
@@ -314,3 +314,4 @@ export const EventDetails = ({match: {params: {eventId}}, location: {pathname}}:
         </RS.Container>}
     } />;
 };
+export default EventDetails;

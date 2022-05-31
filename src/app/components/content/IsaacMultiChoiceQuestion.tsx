@@ -5,7 +5,7 @@ import {CustomInput, Label} from "reactstrap";
 import {useCurrentQuestionAttempt} from "../../services/questions";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacMultiChoiceQuestionDTO>) => {
+const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacMultiChoiceQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
@@ -32,3 +32,4 @@ export const IsaacMultiChoiceQuestion = ({doc, questionId, readonly}: IsaacQuest
         </ul>
     </div>;
 };
+export default IsaacMultiChoiceQuestion;

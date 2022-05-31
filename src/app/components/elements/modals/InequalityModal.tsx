@@ -4,7 +4,6 @@ import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
-import _cloneDeep from 'lodash/cloneDeep';
 import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
 import {ACTION_TYPE, GREEK_LETTERS_MAP} from '../../../services/constants';
 import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
@@ -1324,7 +1323,7 @@ class InequalityModalComponent extends React.Component<InequalityModalProps> {
     }
 }
 
-export const InequalityModal = connect(null, dispatch => ({
+const InequalityModal = connect(null, dispatch => ({
     showHelpModal: (editorMode: string) => dispatch(openActiveModal({
         closeAction: () => { store.dispatch(closeActiveModal()) },
         size: 'xl',
@@ -1332,3 +1331,4 @@ export const InequalityModal = connect(null, dispatch => ({
         body: <InequalityHelpModal editorMode={editorMode} />
     }))
 }))(InequalityModalComponent);
+export default InequalityModal;

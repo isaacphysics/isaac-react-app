@@ -1,7 +1,7 @@
 import {useCallback, useState} from "react";
 import {useGlossaryTermsInHtml} from "./GlossaryTerms";
 import {useAccessibleTablesInHtml} from "./Tables";
-import {useClozeDropRegionsInHtml} from "./InlineDropZones";
+import {useClozeDropRegionsInHtml} from "./renderClozeDropRegions";
 
 export type PortalInHtmlHook = (html: string) => [string, (ref?: HTMLElement) => JSX.Element[]];
 
