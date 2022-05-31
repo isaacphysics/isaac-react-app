@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {lazy, useCallback, useEffect, useState} from "react";
 import {clearQuestionSearch, closeActiveModal, searchQuestions} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
@@ -13,7 +13,6 @@ import {
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
-import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
@@ -23,6 +22,7 @@ import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes"
 import {Item, selectOnChange} from "../../../services/select";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {siteSpecific} from "../../../services/miscUtils";
+const GameboardBuilderRow = lazy(() => import("../GameboardBuilderRow"));
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",

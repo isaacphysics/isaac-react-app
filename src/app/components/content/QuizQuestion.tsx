@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {Suspense, useContext, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import classnames from "classnames";
 import {QUESTION_TYPES} from "../../services/questions";
@@ -9,6 +9,7 @@ import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {QuizAttemptContext} from "../../../IsaacAppTypes";
+import {Loading} from "../handlers/IsaacSpinner";
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
     const noAnswer = validated && correct === undefined;
 
-    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
+    const QuestionComponent = QUESTION_TYPES[doc.type || "default"];
 
     return <React.Fragment>
         <div className={
@@ -39,8 +40,9 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             {SITE_SUBJECT === SITE.CS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
-            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
-            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={validated} />
+            <Suspense fallback={<Loading/>}>
+                <QuestionComponent questionId={doc.id as string} doc={doc} readonly={validated} {...{validationResponse}} />
+            </Suspense>
 
             {/* CS Hints */}
             {SITE_SUBJECT === SITE.CS && <React.Fragment>

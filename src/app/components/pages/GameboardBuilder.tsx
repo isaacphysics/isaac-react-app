@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {lazy, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -24,7 +24,6 @@ import {
     loadGameboardSelectedQuestions,
     logEvent
 } from "../../services/gameboardBuilder";
-import {GameboardBuilderRow} from "../elements/GameboardBuilderRow";
 import {history} from "../../services/history"
 import Select from "react-select";
 import {withRouter} from "react-router-dom";
@@ -40,8 +39,9 @@ import {EXAM_BOARD, STAGE} from "../../services/constants";
 import {selectOnChange} from "../../services/select";
 import {siteSpecific} from "../../services/miscUtils";
 import {isFound} from "../../services/miscUtils";
+const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
-export const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
+const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
     const concepts = queryParams && queryParams.concepts as string;
@@ -316,3 +316,4 @@ export const GameboardBuilder = withRouter((props: {location: {search?: string}}
         </RS.Card>
     </RS.Container>;
 });
+export default GameboardBuilder;

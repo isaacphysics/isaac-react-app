@@ -3,9 +3,9 @@ import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
-import QRCode from 'qrcode'
+import QRCode from 'qrcode';
 import {AppState} from "../../../state/reducers";
 import {selectors} from "../../../state/selectors";
 
@@ -15,7 +15,7 @@ interface UserMFAProps {
     editingOtherUser: boolean;
 }
 
-export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
+const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
     const dispatch = useDispatch();
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
@@ -165,3 +165,4 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
 
     </CardBody>
 };
+export default UserMFA;

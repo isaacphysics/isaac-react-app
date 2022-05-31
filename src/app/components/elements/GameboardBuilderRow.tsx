@@ -29,7 +29,7 @@ interface GameboardBuilderRowInterface {
     creationContext?: AudienceContext;
 }
 
-export const GameboardBuilderRow = (
+const GameboardBuilderRow = (
     {provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useDispatch();
@@ -113,3 +113,4 @@ export const GameboardBuilderRow = (
         </td>}
     </tr>
 };
+export default GameboardBuilderRow;

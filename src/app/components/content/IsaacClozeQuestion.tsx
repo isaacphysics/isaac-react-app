@@ -16,7 +16,7 @@ import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../..
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
 
-export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
+const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
@@ -196,4 +196,5 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
             </DragDropContext>
         </ClozeDropRegionContext.Provider>
     </div>;
-}
+};
+export default IsaacClozeQuestion;

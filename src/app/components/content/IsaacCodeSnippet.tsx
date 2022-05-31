@@ -13,7 +13,7 @@ interface IsaacCodeProps {
     doc: CodeSnippetDTO;
 }
 
-export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
+const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const codeSnippetRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -49,3 +49,4 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         </div>
     </div>
 };
+export default IsaacCodeSnippet;

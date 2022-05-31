@@ -38,7 +38,7 @@ const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: 
     </Draggable>
 }
 
-export const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
+const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacReorderQuestionDTO>) => {
 
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
@@ -169,4 +169,5 @@ export const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestion
             </DragDropContext>
         </Row>
     </div>
-}
+};
+export default IsaacReorderQuestion;

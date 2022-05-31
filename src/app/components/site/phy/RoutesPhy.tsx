@@ -1,4 +1,4 @@
-import React from "react";
+import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
 import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
 import {PhysBookGcse} from "../../pages/books/phys_book_gcse";
@@ -18,11 +18,11 @@ import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {GroupProgress} from "../../pages/GroupProgress";
 // import {SingleGroupProgress} from "../../pages/SingleGroupProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {GraphSketcherPage} from "../../pages/GraphSketcher";
 import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
 import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
 import {StepUpPhys} from "../../pages/books/step_up_phys";
 import {PreGcse} from "../../pages/PreGcse";
+const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
 let key = 0;
 export const RoutesPhy = [

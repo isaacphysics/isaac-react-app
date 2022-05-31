@@ -25,7 +25,7 @@ import classNames from "classnames";
 const PARSONS_MAX_INDENT = 3;
 const PARSONS_INDENT_STEP = 45;
 
-export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
+const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<IsaacParsonsQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
 
@@ -352,4 +352,5 @@ export const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestion
             </DragDropContext>
         </Row>
     </div>
-}
+};
+export default IsaacParsonsQuestion;
