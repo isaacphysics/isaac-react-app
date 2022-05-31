@@ -19,7 +19,7 @@ interface ContentEmailsProps {
 
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
-export const ContentEmails = (props: ContentEmailsProps) => {
+const ContentEmails = (props: ContentEmailsProps) => {
     const dispatch = useDispatch();
     const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
@@ -176,3 +176,4 @@ export const ContentEmails = (props: ContentEmailsProps) => {
         </RS.Card>
     </RS.Container>;
 };
+export default ContentEmails;
