@@ -349,4 +349,9 @@ button {
       fill: red;
     }
   }
+  .cloze-inline-clear:focus {
+    .cloze-clear-cross {
+      fill: red;
+    }
+  }
 }

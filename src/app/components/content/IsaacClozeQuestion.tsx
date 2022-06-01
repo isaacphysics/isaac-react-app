@@ -10,11 +10,14 @@ import {
     DragUpdate,
     Droppable,
     DropResult,
-    ResponderProvided
+    ResponderProvided, useKeyboardSensor,
+    useMouseSensor,
+    useTouchSensor
 } from "react-beautiful-dnd";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
+import {buildUseKeyboardSensor} from "../../services/clozeQuestionKeyboardSensor";
 
 const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
@@ -166,9 +169,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
         updateAttempt({...dropResult, destination: {droppableId: itemsSection, index: nonSelectedItems.length}},{announce: (_) => {return;}});
     }, [itemsSection, nonSelectedItems]);
 
-    return <div className="question-content cloze-question">
+    return <div className="question-content cloze-question" id={cssFriendlyQuestionPartId}>
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
-            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
+            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones} enableDefaultSensors={false} sensors={[useMouseSensor, useTouchSensor, buildUseKeyboardSensor(itemsSection, cssFriendlyQuestionPartId, registeredDropRegionIDs)]}>
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
