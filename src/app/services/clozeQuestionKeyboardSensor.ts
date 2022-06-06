@@ -52,9 +52,9 @@ function bindEvents(
 
 let DROPPABLE_INDEX: number = -1;
 
-function getDroppablePosition(cancel: () => void, initialPos: {x: number, y: number}, indexToId: Map<number, string>): {x: number, y: number} | void {
+function getDroppablePosition(cssFriendlyQuestionPartId: string, cancel: () => void, initialPos: {x: number, y: number}, indexToId: Map<number, string>): {x: number, y: number} | void {
     const id = indexToId.get(DROPPABLE_INDEX);
-    const droppable = id ? document.getElementById(id) : null;
+    const droppable = id ? document.getElementById(cssFriendlyQuestionPartId)?.querySelector(`div[data-rbd-droppable-id='${id}']`) : null;
     if (droppable) {
         const rect = droppable.getBoundingClientRect();
         return {x: rect.left, y: rect.top};
@@ -85,7 +85,8 @@ function prevDroppable(indexToId: Map<number, string>) {
 
 // Adapted from react-beautiful-dnd
 function getDraggingBindings(
-    itemsSectionId: string,
+    itemSectionId: string,
+    cssFriendlyQuestionPartId: string,
     idToIndex: Map<string, number>,
     actions: FluidDragActions,
     stop: () => void,
@@ -105,10 +106,10 @@ function getDraggingBindings(
             eventName: 'scroll',
             fn: () => {
                 const indexToId: Map<number, string> = new Map(Array.from(idToIndex.entries()).map(([id, i]) => [i, id]));
-                const itemSectionElement = document.querySelector(`div[data-rbd-droppable-id='${itemsSectionId}']`);
+                const itemSectionElement = document.getElementById(cssFriendlyQuestionPartId)?.querySelector(`div[data-rbd-droppable-id='${itemSectionId}']`);
                 if (itemSectionElement) {
                     const itemBox = itemSectionElement?.getBoundingClientRect();
-                    const newPos = getDroppablePosition(cancel, {x: itemBox.left, y: itemBox.top}, indexToId);
+                    const newPos = getDroppablePosition(cssFriendlyQuestionPartId, cancel, {x: itemBox.left, y: itemBox.top}, indexToId);
                     if (newPos) actions.move(newPos);
                 }
             }
@@ -133,7 +134,7 @@ function getDraggingBindings(
                 // Movement
                 
                 const indexToId: Map<number, string> = new Map(Array.from(idToIndex.entries()).map(([id, i]) => [i, id]));
-                const itemSectionElement = document.querySelector(`div[data-rbd-droppable-id='${itemsSectionId}']`);
+                const itemSectionElement = document.querySelector(`div[data-rbd-droppable-id='${itemSectionId}']`);
 
                 if (itemSectionElement && ["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"].includes(event.key)) {
                     event.preventDefault();
@@ -148,7 +149,7 @@ function getDraggingBindings(
                             break;
                     }
                     const itemBox = itemSectionElement.getBoundingClientRect();
-                    const newPos = getDroppablePosition(cancel,{x: itemBox.left, y: itemBox.top}, indexToId);
+                    const newPos = getDroppablePosition(cssFriendlyQuestionPartId, cancel,{x: itemBox.left, y: itemBox.top}, indexToId);
                     if (newPos) actions.move(newPos);
                 } else {
                     cancel();
@@ -192,7 +193,7 @@ function getDraggingBindings(
 }
 
 // Adapted from react-beautiful-dnd
-export const buildUseKeyboardSensor = (itemsSection: string, cssFriendlyQuestionPartId: string, idToIndex: Map<string, number>) => function useKeyboardSensor(api: SensorAPI) {
+export const buildUseKeyboardSensor = (itemSectionId: string, cssFriendlyQuestionPartId: string, idToIndex: Map<string, number>) => function useKeyboardSensor(api: SensorAPI) {
     const unbindEventsRef = useRef<() => void>(noop);
 
     const startCaptureBinding = useMemo(
@@ -232,7 +233,7 @@ export const buildUseKeyboardSensor = (itemsSection: string, cssFriendlyQuestion
                 let isCapturing: boolean = true;
 
                 // Make sure we only get the draggable element from a specific cloze question
-                const draggableElement = document.querySelector(`div[id=${cssFriendlyQuestionPartId}]`)?.querySelector(`div[data-rbd-draggable-id='${draggableId}']`);
+                const draggableElement = document.getElementById(cssFriendlyQuestionPartId)?.querySelector(`div[data-rbd-draggable-id='${draggableId}']`);
                 if (!draggableElement) {
                     stop();
                     return;
@@ -259,7 +260,7 @@ export const buildUseKeyboardSensor = (itemsSection: string, cssFriendlyQuestion
                 // bind dragging listeners
                 unbindEventsRef.current = bindEvents(
                     window,
-                    getDraggingBindings(itemsSection, idToIndex, actions, stop),
+                    getDraggingBindings(itemSectionId, cssFriendlyQuestionPartId, idToIndex, actions, stop),
                     { capture: true, passive: false },
                 );
             },

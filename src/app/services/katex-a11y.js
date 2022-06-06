@@ -569,9 +569,14 @@ const handleObject = (tree, a11yStrings, atomType) => {
                     modifier = "";
             }
             buildRegion(a11yStrings, function(regionStrings) {
-                regionStrings.push(`start ${modifier} text`.replace(/\s+/, " "));
-                buildA11yStrings(tree.body, regionStrings, atomType);
-                regionStrings.push(`end ${modifier} text`.replace(/\s+/, " "));
+                const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+                if (tree.body.map(a => a.hasOwnProperty("text") ? a.text : "").join("").search(dropZoneRegex) !== -1) {
+                    regionStrings.push("clickable drop zone in la-tech");
+                } else {
+                    regionStrings.push(`start ${modifier} text`.replace(/\s+/, " "));
+                    buildA11yStrings(tree.body, regionStrings, atomType);
+                    regionStrings.push(`end ${modifier} text`.replace(/\s+/, " "));
+                }
             });
             break;
         }

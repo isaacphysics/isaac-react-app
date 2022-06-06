@@ -17,34 +17,38 @@ export function Item({item}: {item: ItemDTO}) {
 // Inline droppables rendered for each registered drop region
 function InlineDropRegion({id, index, rootElement}: {id: string; index: number; rootElement?: HTMLElement}) {
     const dropRegionContext = useContext(ClozeDropRegionContext);
+    const droppableId = `Drop-zone-${index + 1}`;
 
     useEffect(() => {
         // Register with the current cloze question on first render
-        dropRegionContext?.register(id, index);
+        dropRegionContext?.register(droppableId, index);
     }, []);
 
     const clearInlineDropZone = useCallback(() => {
         if (!dropRegionContext) return;
-        dropRegionContext.updateAttemptCallback({source: {droppableId: id, index: 0}, draggableId: (dropRegionContext.inlineDropValueMap[id]?.replacementId as string)} as DropResult);
+        dropRegionContext.updateAttemptCallback({source: {droppableId: droppableId, index: 0}, draggableId: (dropRegionContext.inlineDropValueMap[droppableId]?.replacementId as string)} as DropResult);
     }, [dropRegionContext]);
 
-    const item = dropRegionContext ? dropRegionContext.inlineDropValueMap[id] : undefined;
+    const item = dropRegionContext ? dropRegionContext.inlineDropValueMap[droppableId] : undefined;
 
     const droppableTarget = rootElement?.querySelector(`#${id}`);
 
     if (dropRegionContext && droppableTarget) {
         return ReactDOM.createPortal(
-            <div style={{minHeight: "inherit", position: "relative", margin: "2px"}} className={"cloze-drop-zone"}>
-                <Droppable droppableId={id} isDropDisabled={dropRegionContext.readonly} direction="vertical" >
+            <div style={{minHeight: "inherit", position: "relative", margin: "2px"}} className={"cloze-drop-zone"}  >
+                <Droppable droppableId={droppableId} isDropDisabled={dropRegionContext.readonly} direction="vertical">
                     {(provided, snapshot) => <div
                         ref={provided.innerRef} {...provided.droppableProps}
-                        className={`d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden ${dropRegionContext.borderMap[id] && "border border-dark"}`}
-                        style={{minHeight: "inherit"}}
+                        className={`d-flex justify-content-center align-items-center bg-grey rounded w-100 overflow-hidden ${dropRegionContext.borderMap[droppableId] && "border border-dark"}`}
+                        style={{minHeight: "inherit"}} tabIndex={0}
                     >
-                        {item && <Draggable key={item.replacementId} draggableId={item?.replacementId as string} index={0} isDragDisabled={true}>
+                        {item &&
+                        <Draggable key={item.replacementId} draggableId={item?.replacementId as string} index={0}
+                                   isDragDisabled={true}>
                             {(provided, snapshot) =>
                                 <div
-                                    className={"cloze-draggable mr-4"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
+                                    className={"cloze-draggable mr-4"}
+                                    ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
                                 >
                                     <Item item={item}/>
                                 </div>
