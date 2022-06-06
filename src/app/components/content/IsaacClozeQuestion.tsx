@@ -10,7 +10,7 @@ import {
     DragUpdate,
     Droppable,
     DropResult,
-    ResponderProvided, useKeyboardSensor,
+    ResponderProvided,
     useMouseSensor,
     useTouchSensor
 } from "react-beautiful-dnd";
