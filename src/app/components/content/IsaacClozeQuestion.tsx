@@ -26,7 +26,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
 
-    const itemsSectionId = "Non-selected-items"; // `${cssFriendlyQuestionPartId}-items-section`;
+    const itemsSectionId = "Non-selected-items";
 
     const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
 
