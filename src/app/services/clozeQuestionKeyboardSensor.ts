@@ -52,13 +52,17 @@ function bindEvents(
 
 let DROPPABLE_INDEX: number = -1;
 
-function getDroppablePosition(initialPos: {x: number, y: number}, indexToId: Map<number, string>): {x: number, y: number} {
+function getDroppablePosition(cancel: () => void, initialPos: {x: number, y: number}, indexToId: Map<number, string>): {x: number, y: number} | void {
     const id = indexToId.get(DROPPABLE_INDEX);
-    const el = id ? document.getElementById(id) : null;
-    return id && el ? (() => {
-        const rect = el.getBoundingClientRect()
-        return {x: rect.left, y: rect.top}
-    })() : initialPos;
+    const droppable = id ? document.getElementById(id) : null;
+    if (droppable) {
+        const rect = droppable.getBoundingClientRect();
+        return {x: rect.left, y: rect.top};
+    } else if (DROPPABLE_INDEX === -1) {
+        return initialPos;
+    } else {
+        cancel();
+    }
 }
 
 function nextDroppable(indexToId: Map<number, string>) {
@@ -102,20 +106,16 @@ function getDraggingBindings(
             fn: () => {
                 const indexToId: Map<number, string> = new Map(Array.from(idToIndex.entries()).map(([id, i]) => [i, id]));
                 const itemSectionElement = document.querySelector(`div[data-rbd-droppable-id='${itemsSectionId}']`);
-                const itemBox = itemSectionElement?.getBoundingClientRect();
-                const itemSectionPos = itemBox ? {x: itemBox.left, y: itemBox.top} : {x: 0, y: 0};
-                actions.move(getDroppablePosition(itemSectionPos, indexToId));
+                if (itemSectionElement) {
+                    const itemBox = itemSectionElement?.getBoundingClientRect();
+                    const newPos = getDroppablePosition(cancel, {x: itemBox.left, y: itemBox.top}, indexToId);
+                    if (newPos) actions.move(newPos);
+                }
             }
         },
         {
             eventName: 'keydown',
             fn: (event: KeyboardEvent) => {
-
-                const indexToId: Map<number, string> = new Map(Array.from(idToIndex.entries()).map(([id, i]) => [i, id]));
-                const itemSectionElement = document.querySelector(`div[data-rbd-droppable-id='${itemsSectionId}']`);
-                const itemBox = itemSectionElement?.getBoundingClientRect();
-                const itemSectionPos = itemBox ? {x: itemBox.left, y: itemBox.top} : {x: 0, y: 0};
-
                 if (event.key === "Escape" || event.key === "Esc") {
                     event.preventDefault();
                     cancel();
@@ -131,32 +131,27 @@ function getDraggingBindings(
                 }
 
                 // Movement
+                
+                const indexToId: Map<number, string> = new Map(Array.from(idToIndex.entries()).map(([id, i]) => [i, id]));
+                const itemSectionElement = document.querySelector(`div[data-rbd-droppable-id='${itemsSectionId}']`);
 
-                if (event.key === "ArrowDown") {
+                if (itemSectionElement && ["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"].includes(event.key)) {
                     event.preventDefault();
-                    prevDroppable(indexToId);
-                    actions.move(getDroppablePosition(itemSectionPos, indexToId));
-                    return;
-                }
-
-                if (event.key === "ArrowUp") {
-                    event.preventDefault();
-                    nextDroppable(indexToId);
-                    actions.move(getDroppablePosition(itemSectionPos, indexToId));
-                    return;
-                }
-
-                if (event.key === "ArrowRight") {
-                    event.preventDefault();
-                    prevDroppable(indexToId);
-                    actions.move(getDroppablePosition(itemSectionPos, indexToId));
-                    return;
-                }
-
-                if (event.key === "ArrowLeft") {
-                    event.preventDefault();
-                    nextDroppable(indexToId);
-                    actions.move(getDroppablePosition(itemSectionPos, indexToId));
+                    switch (event.key) {
+                        case "ArrowUp":
+                        case "ArrowLeft":
+                            nextDroppable(indexToId);
+                            break;
+                        case "ArrowDown":
+                        case "ArrowRight":
+                            prevDroppable(indexToId);
+                            break;
+                    }
+                    const itemBox = itemSectionElement.getBoundingClientRect();
+                    const newPos = getDroppablePosition(cancel,{x: itemBox.left, y: itemBox.top}, indexToId);
+                    if (newPos) actions.move(newPos);
+                } else {
+                    cancel();
                     return;
                 }
             },
@@ -230,7 +225,7 @@ export const buildUseKeyboardSensor = (itemsSection: string, cssFriendlyQuestion
                 if (!preDrag) {
                     return;
                 }
-                DROPPABLE_INDEX = -1;
+                DROPPABLE_INDEX = -1; // We know that the drag is starting from the non-selected items section
 
                 // we are consuming the event
                 event.preventDefault();
@@ -238,12 +233,15 @@ export const buildUseKeyboardSensor = (itemsSection: string, cssFriendlyQuestion
 
                 // Make sure we only get the draggable element from a specific cloze question
                 const draggableElement = document.querySelector(`div[id=${cssFriendlyQuestionPartId}]`)?.querySelector(`div[data-rbd-draggable-id='${draggableId}']`);
-                const box = draggableElement?.getBoundingClientRect();
-                const pos = box ? {x: box.left, y: box.top} : {x: 0, y: 0};
+                if (!draggableElement) {
+                    stop();
+                    return;
+                }
+                const box = draggableElement.getBoundingClientRect();
 
                 // There is no pending period for a keyboard drag
                 // We can lift immediately
-                const actions: FluidDragActions = preDrag.fluidLift(pos);
+                const actions: FluidDragActions = preDrag.fluidLift({x: box.left, y: box.top});
 
                 // unbind this listener
                 unbindEventsRef.current();
