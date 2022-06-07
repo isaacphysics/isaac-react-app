@@ -14,4 +14,9 @@ export const IsaacSpinner = ({size = "md", className, color = "primary"} : Isaac
         <img style={SITE_SUBJECT === SITE.PHY ? {width: "auto", height: "5.5rem"} : {}} className={classNames(`isaac-spinner-${size}`, className)} alt="" src={SITE_SUBJECT === SITE.CS ? "/assets/isaac-cs-typer-css.svg" : "/assets/isaac-phy-apple-grow.svg"}/>
         <span className="sr-only">Loading...</span>
     </div>
-}
+};
+
+export const Loading = () => <div className="w-100 text-center pb-2">
+    <h2 aria-hidden="true" className="pt-5">Loading...</h2>
+    <IsaacSpinner />
+</div>;

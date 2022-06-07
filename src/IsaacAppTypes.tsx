@@ -43,9 +43,9 @@ export type Action =
     | {type: ACTION_TYPE.API_SERVER_ERROR}
     | {type: ACTION_TYPE.API_GONE_AWAY}
 
-    | {type: ACTION_TYPE.USER_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
-    | {type: ACTION_TYPE.USER_UPDATE_RESPONSE_FAILURE}
+    | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
+    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
@@ -452,9 +452,9 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
     | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
 
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupId: number; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
 
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}

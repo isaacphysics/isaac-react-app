@@ -102,7 +102,7 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
         case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
             if (boards) {
                 const boardId = action.board.id as string;
-                const assignees = union(boards.boardAssignees && boards.boardAssignees[boardId], [action.groupId]);
+                const assignees = union(boards.boardAssignees && boards.boardAssignees[boardId], action.groupIds);
                 return {
                     ...boards,
                     boardAssignees: {...boards.boardAssignees, [boardId]: assignees}

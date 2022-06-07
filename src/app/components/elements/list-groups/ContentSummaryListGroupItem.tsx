@@ -22,10 +22,10 @@ import {
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {v4 as uuid_v4} from "uuid";
-import {LaTeX} from "../LaTeX";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
+import {Markup} from "../markup";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -73,11 +73,17 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
+            if (SITE_SUBJECT === SITE.CS) {
+                typeLabel = "Question";
+            }
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
             icon = <img src="/assets/concept.svg" alt="Concept page"/>;
             iconLabel = "Concept page icon";
+            if (SITE_SUBJECT === SITE.CS) {
+                typeLabel = "Concept";
+            }
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
@@ -110,8 +116,10 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <LaTeX className={titleTextClass} markup={title ?? ""} />
-                        {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2"}>
+                        <Markup encoding={"latex"} className={titleTextClass}>
+                            {title ?? ""}
+                        </Markup>
+                        {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>
                             ({typeLabel})
                         </span>}
                     </div>

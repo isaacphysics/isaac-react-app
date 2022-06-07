@@ -1,15 +1,13 @@
-import React, {useContext} from "react";
+import {useContext} from "react";
 import {useSelector} from "react-redux";
-import {selectors} from "../../state/selectors";
-import {AppState} from "../../state/reducers";
-import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../IsaacAppTypes";
+import {selectors} from "../../../state/selectors";
+import {AppState} from "../../../state/reducers";
+import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import katex, { KatexOptions } from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
-import renderA11yString from "../../services/katex-a11y";
-// @ts-ignore
-import { utils } from "remarkable";
+import renderA11yString from "../../../services/katex-a11y";
 
 type MathJaxMacro = string|[string, number];
 
@@ -336,17 +334,11 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
 }
 
 // A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
-export const useKatex = (html: string) => {
+export const useRenderKatex = () => {
     const user = useSelector(selectors.user.orNull);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
     const figureNumbers = useContext(FigureNumberingContext);
 
-    return katexify(html, user, booleanNotation, segueEnvironment === "DEV", figureNumbers)
-}
-
-export function LaTeX({markup, className}: {markup: string, className?: string}) {
-    const escapedMarkup = utils.escapeHtml(markup);
-    const katexHtml = useKatex(escapedMarkup);
-    return <span dangerouslySetInnerHTML={{__html: katexHtml}} className={className} />
+    return (markup: string) => katexify(markup, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
 }

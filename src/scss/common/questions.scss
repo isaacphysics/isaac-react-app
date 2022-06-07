@@ -16,16 +16,6 @@
   }
 }
 
-.content-chunk > .content-value {
-  > .row {
-    margin: 0;
-    > .col {
-      margin-left: -15px;
-      margin-right: -15px;
-    }
-  }
-}
-
 .unit-dropdown button {
   min-width: auto;
 }
@@ -169,12 +159,27 @@ button {
 
     &.empty {
       padding: 0.875em 0.5em;
+      &.drag-over {
+        padding-top: 1.1em;
+        padding-bottom: 1.1em;
+      }
     }
 
     .parsons-item > pre {
       margin: 0.5rem 0;
       padding: 0.5em 1em;
       cursor: grab; // Doesn't work?
+    }
+
+    .reorder-item {
+      > * {
+        overflow-x: auto;
+        margin: 0.5rem 0;
+        padding: 0.5em 1em;
+        cursor: grab;
+        background: white;
+        border: solid 1px #00000021;
+      }
     }
 
     // REMINDER: If you change the PARSONS_MAX_INDENT and PARSONS_INDENT_STEP

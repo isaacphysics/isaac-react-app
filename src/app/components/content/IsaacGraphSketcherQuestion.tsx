@@ -1,12 +1,12 @@
 import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacTabbedHints} from "./IsaacHints";
-import {GraphSketcherModal} from "../elements/modals/GraphSketcherModal";
+import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
 import {useCurrentQuestionAttempt} from "../../services/questions";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-export const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {
+const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<GraphChoiceDTO>(questionId);
 
@@ -80,3 +80,4 @@ export const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQue
         <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
 };
+export default IsaacGraphSketcherQuestion;

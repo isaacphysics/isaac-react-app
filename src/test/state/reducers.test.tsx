@@ -466,7 +466,7 @@ describe("boards reducer", () => {
     });
 
     it ("can add a board assignee", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupId: 1};
+        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupIds: [1]};
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
@@ -475,4 +475,13 @@ describe("boards reducer", () => {
         });
     });
 
+    it ("can add multiple board assignees", () => {
+        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupIds: [1, 2]};
+        const previousStates = [simpleState, assignedState];
+        previousStates.map((previousState) => {
+            const actualNextState = boards(previousState, action);
+            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
+            expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1], testGroupsMap[2]])});
+        });
+    });
 });

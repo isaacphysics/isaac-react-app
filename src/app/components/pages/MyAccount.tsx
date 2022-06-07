@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -29,7 +29,6 @@ import {
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
-import {UserMFA} from "../elements/panels/UserMFA";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
     allRequiredInformationIsPresent,
@@ -50,6 +49,8 @@ import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstan
 import {isStaff} from "../../services/user";
 import {ErrorState} from "../../state/reducers/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
+import {Loading} from "../handlers/IsaacSpinner";
+const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -305,12 +306,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
                                 {isStaff(user) && !editingOtherUser &&
-                                    // beta feature just for staff
-                                    <UserMFA
-                                        userAuthSettings={userAuthSettings}
-                                        userToUpdate={userToUpdate}
-                                        editingOtherUser={editingOtherUser}
-                                    />
+                                    // Currently staff only
+                                    <Suspense fallback={<Loading/>}>
+                                        <UserMFA
+                                            userAuthSettings={userAuthSettings}
+                                            userToUpdate={userToUpdate}
+                                            editingOtherUser={editingOtherUser}
+                                        />
+                                    </Suspense>
                                 }
                             </TabPane>
 

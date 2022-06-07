@@ -1,7 +1,6 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {lazy, useEffect, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
-import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {useCurrentQuestionAttempt} from "../../services/questions";
@@ -9,8 +8,9 @@ import _flattenDeep from 'lodash/flattenDeep';
 import {jsonHelper} from "../../services/json";
 import { isDefined } from '../../services/miscUtils';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
-export const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
+const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
 
@@ -66,3 +66,4 @@ export const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: Isaa
         </div>
     );
 };
+export default IsaacSymbolicChemistryQuestion;

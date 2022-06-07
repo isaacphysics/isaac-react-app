@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
-import { connect } from "react-redux";
 import { GraphSketcher, LineType, makeGraphSketcher, GraphSketcherState } from "isaac-graph-sketcher/dist/src/GraphSketcher";
 import { isDefined } from '../../../services/miscUtils';
 import debounce from "lodash/debounce";
@@ -10,7 +9,7 @@ interface GraphSketcherModalProps {
     onGraphSketcherStateChange: (state: GraphSketcherState) => void;
 }
 
-const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
+const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const { onGraphSketcherStateChange, close, initialState } = props;
     const [ , setGraphSketcherElement] = useState<HTMLElement>();
     const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
@@ -106,5 +105,4 @@ const GraphSketcherModalComponent = (props: GraphSketcherModalProps) => {
         </div>
     </div>
 }
-
-export const GraphSketcherModal = connect()(GraphSketcherModalComponent);
+export default GraphSketcherModal;

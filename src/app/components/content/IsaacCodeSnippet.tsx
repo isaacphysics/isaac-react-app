@@ -6,14 +6,14 @@ import {addLineNumbers} from "../../services/highlightJs";
 import {ScrollShadows} from "../elements/ScrollShadows";
 import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import classNames from "classnames";
-import {useExpandContent} from "../elements/portals/Tables";
-import {useStatefulElementRef} from "../elements/portals/utils";
+import {useExpandContent} from "../elements/markup/portals/Tables";
+import {useStatefulElementRef} from "../elements/markup/portals/utils";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
 }
 
-export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
+const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const codeSnippetRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -49,3 +49,4 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         </div>
     </div>
 };
+export default IsaacCodeSnippet;

@@ -5,7 +5,7 @@ import {Input} from "reactstrap";
 import {useCurrentQuestionAttempt} from "../../services/questions";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacStringMatchQuestionDTO>) => {
+const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacStringMatchQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
@@ -27,3 +27,4 @@ export const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuest
         />
     </div>;
 };
+export default IsaacStringMatchQuestion;
