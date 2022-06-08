@@ -68,7 +68,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
-    const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
+    const questions = useSelector((state: AppState) => state && state.questionSearchResult);
     const user = useSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(

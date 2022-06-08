@@ -1,12 +1,12 @@
 import React, {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
     getUserAnsweredQuestionsByDate,
-    getUserProgress
+    getUserProgress,
 } from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
@@ -31,9 +31,15 @@ const siteSpecific = {
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
             "isaacClozeQuestion", "isaacReorderQuestion"
         ],
-        questionTagsStatsList: [
-            "maths_book", "physics_skills_14", "physics_skills_19", "phys_book_gcse", "chemistry_16", "maths_book_gcse", "phys_book_step_up"
-        ],
+        questionCountByTag: {
+            "maths_book": 426,
+            "physics_skills_14": 75,
+            "physics_skills_19": 614,
+            "phys_book_gcse": 541,
+            "chemistry_16": 336,
+            "maths_book_gcse": 639,
+            "phys_book_step_up": 432
+        },
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
     },
@@ -42,12 +48,11 @@ const siteSpecific = {
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
             "isaacStringMatchQuestion", "isaacFreeTextQuestion", "isaacSymbolicLogicQuestion", "isaacClozeQuestion"
         ],
-        questionTagsStatsList: [] as string[],
+        questionCountByTag: {},
         typeColWidth: "col-lg-4",
         tagColWidth: "col-lg-12"
     }
 }[SITE_SUBJECT];
-
 
 interface MyProgressProps extends RouteComponentProps<{userIdOfInterest: string}> {
     user: PotentialUser;
@@ -86,23 +91,23 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
 
-    return <RS.Container id="my-progress" className="mb-5">
+    return <Container id="my-progress" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
-        <RS.Card className="mt-4">
-            <RS.CardBody>
+        <Card className="mt-4">
+            <CardBody>
                 <Tabs>{{
                     "Question activity": <div>
-                        <RS.Row>
-                            <RS.Col>
+                        <Row>
+                            <Col>
                                 <AggregateQuestionStats userProgress={progress} />
-                            </RS.Col>
-                            {SITE_SUBJECT === SITE.PHY && <RS.Col className="align-self-center" xs={12} md={3}>
+                            </Col>
+                            {SITE_SUBJECT === SITE.PHY && <Col className="align-self-center" xs={12} md={3}>
                                 <StreakPanel userProgress={progress} />
-                            </RS.Col>}
-                        </RS.Row>
+                            </Col>}
+                        </Row>
 
-                        <RS.Card className="mt-4">
-                            <RS.CardBody>
+                        <Card className="mt-4">
+                            <CardBody>
                                 <Tabs tabContentClass="mt-4" onActiveTabChange={(tabIndex) => {
                                     const flush = tabRefs[tabIndex - 1].current;
                                     if (flush) {
@@ -131,17 +136,17 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                             flushRef={tabRefs[1]}/>
                                     }}
                                 </Tabs>
-                            </RS.CardBody>
-                        </RS.Card>
+                            </CardBody>
+                        </Card>
 
                         <div className="mt-4">
                             <h4>Question parts correct by Type</h4>
-                            <RS.Row>
+                            <Row>
                                 {siteSpecific.questionTypeStatsList.map((qType: string) => {
                                     const correct = progress?.correctByType?.[qType] || null;
                                     const attempts = progress?.attemptsByType?.[qType] || null;
                                     const percentage = safePercentage(correct, attempts);
-                                    return <RS.Col key={qType} className={`${siteSpecific.typeColWidth} mt-2 type-progress-bar`}>
+                                    return <Col key={qType} className={`${siteSpecific.typeColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
                                             {HUMAN_QUESTION_TYPES[qType]} questions correct
                                         </div>
@@ -150,30 +155,32 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                                 {percentage == null ? "No data" : `${correct} of ${attempts}`}
                                             </ProgressBar>
                                         </div>
-                                    </RS.Col>;
+                                    </Col>;
                                 })}
-                            </RS.Row>
+                            </Row>
                         </div>
 
                         {SITE_SUBJECT === SITE.PHY && <div className="mt-4">
                             <h4>Isaac Books</h4>
-                            <RS.Row>
-                                {siteSpecific.questionTagsStatsList.map((qType: string) => {
-                                    const correct = progress?.correctByTag?.[qType] || 0;
-                                    const attempts = progress?.attemptsByTag?.[qType] || 0;
-                                    const percentage = safePercentage(correct, attempts);
-                                    return <RS.Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
+                            Questions completed correctly, against questions attempted for each of our <a href={"/pages/order_books"}>mastery books</a>.
+                            <Row>
+                                {Object.entries(siteSpecific.questionCountByTag).map(([qType, total]) => {
+                                    const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);
+                                    const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
+                                    const correctPercentage = safePercentage(correct, total) || 0;
+                                    const attemptedPercentage = safePercentage(attempted, total) || 0;
+                                    return total > 0 && <Col key={qType} className={`${siteSpecific.tagColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
-                                            {HUMAN_QUESTION_TAGS.get(qType)} questions completed correctly of those attempted
+                                            {HUMAN_QUESTION_TAGS.get(qType)} questions
                                         </div>
                                         <div className={"px-2"}>
-                                            <ProgressBar percentage={percentage || 0} type={qType}>
-                                                {attempts == 0 ? "No data" : `${correct} of ${attempts}`}
+                                            <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={qType}>
+                                                <span aria-hidden>{`${correct} of ${total}`}</span>
                                             </ProgressBar>
                                         </div>
-                                    </RS.Col>;
+                                    </Col>;
                                 })}
-                            </RS.Row>
+                            </Row>
                         </div>}
 
                         {answeredQuestionsByDate && <div className="mt-4">
@@ -182,16 +189,16 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 <ActivityGraph answeredQuestionsByDate={answeredQuestionsByDate} />
                             </div>
                         </div>}
-                        <RS.Row id="progress-questions">
-                            {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <RS.Col md={12} lg={6} className="mt-4">
+                        <Row id="progress-questions">
+                            {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                                 <h4>Most recently answered questions</h4>
                                 <LinkToContentSummaryList items={progress.mostRecentQuestions}/>
-                            </RS.Col>}
-                            {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <RS.Col md={12} lg={6} className="mt-4">
+                            </Col>}
+                            {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
                                 <h4>Oldest unsolved questions</h4>
                                 <LinkToContentSummaryList items={progress.oldestIncompleteQuestions}/>
-                            </RS.Col>}
-                        </RS.Row>
+                            </Col>}
+                        </Row>
                     </div>,
                     ...(viewingOwnData && isTeacher(user) && SITE_SUBJECT == SITE.PHY && {"Teacher Activity": <div>
                         <TeacherAchievement
@@ -235,8 +242,8 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             iconClassName="cpd-badge"/>
                     </div>}),
                 }}</Tabs>
-            </RS.CardBody>
-        </RS.Card>
-    </RS.Container>
+            </CardBody>
+        </Card>
+    </Container>
 });
 export default MyProgress;
