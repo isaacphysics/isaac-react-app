@@ -21,6 +21,7 @@ import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
 import _orderBy from "lodash/orderBy";
 import {isLoggedIn} from "../../../services/user";
 import {Link} from "react-router-dom";
+import classNames from "classnames";
 
 const ReservationsModal = () => {
     const dispatch = useDispatch();
@@ -272,24 +273,22 @@ const ReservationsModal = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {modifiedBookingsForAllGroups.filter(booking => booking.bookingStatus !== "CANCELLED").map(booking => {
-                                        return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id}>
+                                    {modifiedBookingsForAllGroups.map(booking => {
+                                        const bookingCancelled = booking.bookingStatus === "CANCELLED";
+                                        return (booking.userBooked && booking.userBooked.id && <tr key={booking.userBooked.id} className={classNames({"bg-light text-muted": bookingCancelled})}>
                                             <td className="align-middle text-center">
-                                                {booking.userBooked &&
-                                                (booking.reservedById === user?.id) &&
-                                                (booking.bookingStatus === 'RESERVED') &&
                                                 <CustomInput key={booking.userBooked.id}
                                                     id={`${booking.userBooked.id}`}
                                                     type="checkbox"
                                                     name={`reserved_student-${booking.userBooked.id}`}
-                                                    checked={cancelReservationCheckboxes[booking.userBooked.id] || false}
+                                                    checked={cancelReservationCheckboxes[booking.userBooked.id] ?? false}
                                                     // I'm including the full access autorisation here because we do the same in the next table
-                                                    disabled={!booking.userBooked.authorisedFullAccess && booking.userBooked.emailVerificationStatus !== 'VERIFIED'}
+                                                    disabled={bookingCancelled || (!booking.userBooked.authorisedFullAccess && booking.userBooked.emailVerificationStatus !== 'VERIFIED')}
                                                     onChange={() => toggleCancelReservationCheckboxForUser(booking.userBooked?.id)}
-                                                />}
+                                                />
                                             </td>
                                             <td className="align-middle">
-                                                {booking.userBooked && (booking.userBooked.givenName + " " + booking.userBooked.familyName)}
+                                                {booking.userBooked.givenName + " " + booking.userBooked.familyName}
                                                 {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">E-mail not verified</div>}
                                             </td>
                                             <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
