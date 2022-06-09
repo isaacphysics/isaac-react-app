@@ -96,7 +96,7 @@ export class CsTagService extends AbstractBaseTagService {
         // Software engineering topics
         {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_NEW},
         {id: TAG_ID.testing, title: "Testing", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.softwareProject, title: "A level programming project / NEA", parent: TAG_ID.softwareEngineering, stageOverride: GCSE_HIDDEN},
         // Theory of computation topics
         {id: TAG_ID.computationalThinking, title: "Computational thinking", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_COMING_2022},
