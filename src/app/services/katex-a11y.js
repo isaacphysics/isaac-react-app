@@ -571,7 +571,7 @@ const handleObject = (tree, a11yStrings, atomType) => {
             buildRegion(a11yStrings, function(regionStrings) {
                 const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
                 if (tree.body.map(a => a.hasOwnProperty("text") ? a.text : "").join("").search(dropZoneRegex) !== -1) {
-                    regionStrings.push("clickable drop zone in la-tech");
+                    regionStrings.push("clickable drop zone");
                 } else {
                     regionStrings.push(`start ${modifier} text`.replace(/\s+/, " "));
                     buildA11yStrings(tree.body, regionStrings, atomType);

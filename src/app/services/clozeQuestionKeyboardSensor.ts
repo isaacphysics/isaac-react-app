@@ -2,7 +2,7 @@ import {DraggableId, FluidDragActions, PreDragActions, SensorAPI} from "react-be
 import {useCallback, useLayoutEffect, useMemo, useRef} from "react";
 
 /**
- * This entire file is essentially a hacked version of https://github.com/atlassian/react-beautiful-dnd/blob/master/src/view/use-sensor-marshal/sensors/use-keyboard-sensor.js
+ * This entire file is essentially a hacked version of https://github.com/atlassian/react-beautiful-dnd/blob/24a8e6021600920c0b2a28f89d5ffb17538fe96c/src/view/use-sensor-marshal/sensors/use-keyboard-sensor.js
  *
  * The nasty hack was required to force keyboard navigation of cloze questions to work, because the standard react-beautiful-dnd
  * keyboard sensor is made for long lists of items arranged in a grid, and doesn't consider cases like ours: singleton
