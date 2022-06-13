@@ -37,7 +37,7 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
             categories:{
                 general: {category: "general", title: "General questions", icon: "faq"},
                 homework: {category: "homework", title: "Finding homework", icon: "faq"},
-                code: {category: "code", title: "Code and pseudcode", icon: "faq"},
+                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
             }
         },
         teacher: {
@@ -46,7 +46,7 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
                 general: { category: "general", title: "General questions", icon: "faq" },
                 assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
                 progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
-                code: {category: "code", title: "Code and pseudcode", icon: "faq"},
+                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
             }
         }
     },
