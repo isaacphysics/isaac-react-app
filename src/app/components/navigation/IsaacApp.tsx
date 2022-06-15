@@ -55,7 +55,7 @@ import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
-import SiteSpecific from "../site/siteSpecific";
+import SiteSpecific from "../site/siteSpecificComponents";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
 import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";

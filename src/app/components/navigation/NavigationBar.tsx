@@ -18,7 +18,7 @@ import {
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {selectors} from "../../state/selectors";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS} from "../../services/siteConstants";
 import {loadQuizAssignedToMe} from "../../state/actions/quizzes";
 import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
 import {isFound} from "../../services/miscUtils";
@@ -101,7 +101,7 @@ export const NavigationBar = ({children}: {children: React.ReactNode}) => {
                 Menu
             </NavbarToggler>
 
-            <Collapse isOpen={menuOpen} navbar className={`px-0 mx-0 mx-xl-5 ${SITE_SUBJECT === SITE.CS ? "px-xl-5" : ""}`}>
+            <Collapse isOpen={menuOpen} navbar className={`px-0 mx-0 mx-xl-5 ${isCS ? "px-xl-5" : ""}`}>
                 <Nav navbar className="justify-content-between" id="main-menu">
                     {children}
                 </Nav>

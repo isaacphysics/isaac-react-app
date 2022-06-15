@@ -4,7 +4,7 @@ import {LinkInfo} from "./navigation";
 import {isIntendedAudience, UseUserContextReturnType} from "./userContext";
 import {NOT_FOUND_TYPE, PotentialUser} from "../../IsaacAppTypes";
 import {CurrentTopicState} from "../state/reducers/topicState";
-import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {isPhy} from "./siteConstants";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
@@ -16,7 +16,7 @@ const filterForQuestions = (contents: ContentSummaryDTO[]) => {
 
 export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], userContext: UseUserContextReturnType, user: PotentialUser | null) => {
     const examBoardFilteredContent = contents.filter(c =>
-        SITE_SUBJECT === SITE.PHY ||
+        isPhy ||
         userContext.showOtherContent ||
         isIntendedAudience(c.audience, userContext, user)
     );

@@ -8,7 +8,7 @@ import {history} from "../../services/history";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, siteSpecific} from "../../services/siteConstants";
 import {isDefined} from "../../services/miscUtils";
 import {MetaDescription} from "../elements/MetaDescription";
 
@@ -30,8 +30,8 @@ interface SupportCategories {
     };
 }
 
-const support: {student: SupportCategories; teacher: SupportCategories} = {
-    [SITE.CS]: {
+const support: {student: SupportCategories; teacher: SupportCategories} = siteSpecific(
+    {
         student: {
             title: "Student support",
             categories:{
@@ -50,7 +50,7 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
             }
         }
     },
-    [SITE.PHY]: {
+    {
         student: {
             title: "Student FAQ",
             categories:{
@@ -74,8 +74,8 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
                 legal: { category: "legal", title: "Legal", icon: "faq"}
             }
         }
-    },
-}[SITE_SUBJECT];
+    }
+);
 
 function supportPath(type?: string, category?: string) {
     return `/support/${type || "student"}/${category || "general"}`;
@@ -121,7 +121,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {SITE_SUBJECT === SITE.CS && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
+                {isCS && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>

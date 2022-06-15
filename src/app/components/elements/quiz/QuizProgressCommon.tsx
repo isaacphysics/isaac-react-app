@@ -4,23 +4,23 @@ import { Button } from "reactstrap";
 import { IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO } from "../../../../IsaacApiTypes";
 import { PageSettings } from "../../../../IsaacAppTypes";
 import { isQuestion } from "../../../services/questions";
-import { SITE, SITE_SUBJECT } from "../../../services/siteConstants";
 import { closeActiveModal, openActiveModal } from "../../../state/actions";
 import { returnQuizToStudent } from "../../../state/actions/quizzes";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
+import {siteSpecific} from "../../../services/siteConstants";
 
-export const ICON = {
-    [SITE.CS]: {
-        correct: <img src="/assets/tick-rp.svg" alt="Correct" style={{width: 30}} />,
-        incorrect: <img src="/assets/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
-        notAttempted: <img src="/assets/dash.svg" alt="Not attempted" style={{width: 30}} />,
-    },
-    [SITE.PHY]: {
+export const ICON = siteSpecific(
+    {
         correct: <svg style={{width: 30, height: 30}}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg>,
         incorrect: <svg style={{width: 30, height: 30}}><use href={`/assets/cross-rp-hex.svg#icon`} xlinkHref={`/assets/cross-rp-hex.svg#icon`}/></svg>,
         notAttempted: <svg  style={{width: 30, height: 30}}><use href={`/assets/dash-hex.svg#icon`} xlinkHref={`/assets/dash-hex.svg#icon`}/></svg>,
+    },
+    {
+        correct: <img src="/assets/tick-rp.svg" alt="Correct" style={{width: 30}} />,
+        incorrect: <img src="/assets/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
+        notAttempted: <img src="/assets/dash.svg" alt="Not attempted" style={{width: 30}} />,
     }
-}[SITE_SUBJECT];
+);
 
 interface ResultsTableProps {
     assignment: QuizAssignmentDTO;

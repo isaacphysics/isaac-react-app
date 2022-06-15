@@ -14,7 +14,7 @@ import {
     determineFastTrackSecondaryAction,
     useFastTrackInformation
 } from "../../services/fastTrack";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
@@ -32,7 +32,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
     const canSubmit = questionPart?.canSubmit && !locked || false;
-    const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs") && SITE_SUBJECT === SITE.PHY;
+    const sigFigsError = isPhy && (validationResponse?.explanation?.tags || []).includes("sig_figs");
     const tooManySigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_many");
     const tooFewSigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_few");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
@@ -83,7 +83,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </Suspense>
 
             {/* CS Hints */}
-            {SITE_SUBJECT === SITE.CS && <React.Fragment>
+            {isCS && <React.Fragment>
                 <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
             </React.Fragment>}
 
@@ -121,7 +121,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             }
 
             {/* CS Hint Reminder */}
-            {SITE_SUBJECT === SITE.CS && (!validationResponse || !correct || canSubmit) && <RS.Row>
+            {isCS && (!validationResponse || !correct || canSubmit) && <RS.Row>
                 <RS.Col xl={{size: 10, offset: 1}} >
                     {doc.hints && <p className="no-print text-center pt-2 mb-0">
                         <small>{"Don't forget to use the hints above if you need help."}</small>
@@ -130,7 +130,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </RS.Row>}
 
             {/* Physics Hints */}
-            {SITE_SUBJECT === SITE.PHY && <div className={correct ? "mt-5" : ""}>
+            {isPhy && <div className={correct ? "mt-5" : ""}>
                 <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
             </div>}
         </div>

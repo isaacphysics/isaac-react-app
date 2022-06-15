@@ -1,7 +1,7 @@
 import React, {MouseEventHandler, useContext, useState} from "react";
 import classNames from "classnames";
 import ReactDOM from "react-dom";
-import {SITE, SITE_SUBJECT} from "../../../../services/siteConstants";
+import {isCS} from "../../../../services/siteConstants";
 import {ScrollShadows} from "../../ScrollShadows";
 import {above, isMobile, useDeviceSize} from "../../../../services/device";
 import {ExpandableParentContext} from "../../../../../IsaacAppTypes";
@@ -23,7 +23,7 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
             <div className={classNames(outerClasses, "isaac-table")} ref={updateExpandRef}>
                 <div className={"position-relative"}>
                     {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
-                    {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
+                    {isCS && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
                     {expandButton}
                     <div ref={updateScrollRef} className={classNames(innerClasses, "overflow-auto")} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
                     {renderPortalElements(scrollRef)}
@@ -52,7 +52,7 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
     const expandableParent = useContext(ExpandableParentContext);
     const deviceSize = useDeviceSize();
 
-    const show = SITE_SUBJECT === SITE.CS && expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
+    const show = isCS && expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
 
     const expandButton = (show && <div className={"expand-button position-relative"}>
         <button type={"button"} onClick={toggleExpanded}>

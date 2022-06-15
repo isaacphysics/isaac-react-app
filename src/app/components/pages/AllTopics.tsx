@@ -13,7 +13,7 @@ import * as persistence from "../../services/localStorage";
 import {useQueryParams} from "../../services/reactRouterExtension";
 import {useUserContext} from "../../services/userContext";
 import {RenderNothing} from "../elements/RenderNothing";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 export function AllTopicsWithoutAStage() {
@@ -131,7 +131,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
     return <div className="pattern-02">
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
-            {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionMap[stage]} />}
+            {isCS && <MetaDescription description={metaDescriptionMap[stage]} />}
 
             <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
                 {

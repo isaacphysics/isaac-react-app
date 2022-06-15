@@ -11,16 +11,16 @@ import {
 } from "../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {isFound} from "../../services/miscUtils";
 import { useLocation } from "react-router-dom";
 
-const defaultConceptDisplay = {
-    [SITE.PHY]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
-    [SITE.CS]: {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
-}[SITE_SUBJECT];
+const defaultConceptDisplay = siteSpecific(
+    {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
+    {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
+);
 const defaultQuestionDisplay = {audience: [], nonAudience: []};
 
 interface SectionWithDisplaySettings extends ContentDTO {
@@ -48,7 +48,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
             // For CS we want relevant sections to appear first
             .sort((a, b) => {
-                if (SITE_SUBJECT !== SITE.CS) {return 0;}
+                if (!isCS) {return 0;}
                 return makeIntendedAudienceComparator(user, userContext)(a, b);
             })
 
@@ -67,7 +67,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // If cs have "show other content" set to false hide non-audience content
             .map(section => {
                 if (
-                    SITE_SUBJECT === SITE.CS && userContext.showOtherContent === false &&
+                    isCS && userContext.showOtherContent === false &&
                     !isIntendedAudience(section.audience, userContext, user)
                 ) {
                     section.hidden = true;

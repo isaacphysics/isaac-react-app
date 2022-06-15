@@ -10,7 +10,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
@@ -22,7 +22,7 @@ import {
 } from "../../services/userContext";
 import {generateQuestionTitle} from "../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
-import { isDefined } from "../../services/miscUtils";
+import {isDefined} from "../../services/miscUtils";
 import {Markup} from "../elements/markup";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
@@ -39,7 +39,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
-    let iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/question-hex.svg#icon` : "/assets/question.svg";
+    let iconHref = isPhy ? `/assets/question-hex.svg#icon` : "/assets/question.svg";
     let message = "";
     let messageClasses = "";
 
@@ -47,37 +47,37 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
         case "PERFECT":
             itemClasses += " bg-success";
             message = "perfect!"
-            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/tick-rp-hex.svg#icon` : "/assets/tick-rp.svg";
+            iconHref = isPhy ? `/assets/tick-rp-hex.svg#icon` : "/assets/tick-rp.svg";
             break;
         case "PASSED":
         case "IN_PROGRESS":
             message = "in progress"
-            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/incomplete-hex.svg#icon` : "/assets/incomplete.svg";
+            iconHref = isPhy ? `/assets/incomplete-hex.svg#icon` : "/assets/incomplete.svg";
             break;
         case "FAILED":
             message = "try again!"
-            iconHref = SITE_SUBJECT === SITE.PHY ? `/assets/cross-rp-hex.svg#icon` : "/assets/cross-rp.svg";
+            iconHref = isPhy ? `/assets/cross-rp-hex.svg#icon` : "/assets/cross-rp.svg";
             break;
     }
 
     const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
-        .filter((t, i) => SITE_SUBJECT !== SITE.CS || i !== 0); // CS always has Computer Science at the top level
+        .filter((t, i) => !isCS || i !== 0); // CS always has Computer Science at the top level
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
             <span>
                 {/* TODO bh412 come up with a nicer way of differentiating site icons and also above */}
-                {SITE_SUBJECT === SITE.PHY ?
+                {isPhy ?
                     <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg> :
                     <img src={iconHref} alt=""/>
                 }
             </span>
             <div className={`d-md-flex flex-fill`}>
-                <div className={"flex-grow-1 " + itemSubject?.id || (SITE_SUBJECT === SITE.PHY ? "physics" : "")}>
-                    <Markup encoding={"latex"} className={SITE_SUBJECT === SITE.PHY ? "text-secondary" : ""}>
+                <div className={"flex-grow-1 " + itemSubject?.id || (isPhy ? "physics" : "")}>
+                    <Markup encoding={"latex"} className={isPhy ? "text-secondary" : ""}>
                         {generateQuestionTitle(question)}
                     </Markup>
-                    {message && <span className={"gameboard-item-message" + (SITE_SUBJECT === SITE.PHY ? "-phy " : " ") + messageClasses}>{message}</span>}
+                    {message && <span className={"gameboard-item-message" + (isPhy ? "-phy " : " ") + messageClasses}>{message}</span>}
                     {questionTags && <div className="hierarchy-tags">
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
@@ -150,12 +150,12 @@ export const Gameboard = withRouter(({ location }) => {
         <RS.Row className="col-8 offset-2">
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                    {{[SITE.PHY]: "Set as Assignment", [SITE.CS]: "Set as assignment"}[SITE_SUBJECT]}
+                    {siteSpecific("Set as Assignment", "Set as assignment")}
                 </RS.Button>
             </RS.Col>
             <RS.Col className="mt-4">
                 <RS.Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
-                    {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
+                    {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
                 </RS.Button>
             </RS.Col>
         </RS.Row>
@@ -164,7 +164,7 @@ export const Gameboard = withRouter(({ location }) => {
             {gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
                 <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                     <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                        {{[SITE.PHY]: "Save to My Gameboards", [SITE.CS]: "Save to My gameboards"}[SITE_SUBJECT]}
+                        {siteSpecific("Save to My Gameboards", "Save to My gameboards")}
                     </RS.Button>
                 </RS.Col>
             </RS.Row>}
@@ -176,7 +176,7 @@ export const Gameboard = withRouter(({ location }) => {
             <small>
                 {"We're sorry, we were not able to find a gameboard with the id "}<code>{gameboardId}</code>{"."}
             </small>
-            {SITE.PHY === SITE_SUBJECT && <div className="mt-4 text-center">
+            {isPhy && <div className="mt-4 text-center">
                 <RS.Button tag={Link} to={`/gameboards/new`} color="primary" outline className="btn-lg">
                     Generate a new gameboard
                 </RS.Button>
@@ -202,5 +202,5 @@ export const Gameboard = withRouter(({ location }) => {
             />
         </RS.Container>
         :
-        <Redirect to={{[SITE.PHY]: "/gameboards/new", [SITE.CS]: "/gameboards#example-gameboard"}[SITE_SUBJECT]} />
+        <Redirect to={siteSpecific("/gameboards/new", "/gameboards#example-gameboard")} />
 });

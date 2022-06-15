@@ -4,7 +4,7 @@ import classnames from "classnames";
 import {QUESTION_TYPES} from "../../services/questions";
 import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
 import {isDefined} from "../../services/miscUtils";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isPhy, isCS} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -37,7 +37,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         <div className={
             classnames("question-component p-md-5", {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})
         }>
-            {SITE_SUBJECT === SITE.CS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+            {isCS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             <Suspense fallback={<Loading/>}>
@@ -45,7 +45,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </Suspense>
 
             {/* CS Hints */}
-            {SITE_SUBJECT === SITE.CS && <React.Fragment>
+            {isCS && <React.Fragment>
                 <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
             </React.Fragment>}
 
@@ -60,7 +60,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </div>}
 
             {/* Physics Hints */}
-            {SITE_SUBJECT === SITE.PHY && <div className={correct ? "mt-5" : ""}>
+            {isPhy && <div className={correct ? "mt-5" : ""}>
                 <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
             </div>}
         </div>
