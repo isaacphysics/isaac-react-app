@@ -20,7 +20,6 @@ import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {isPhy} from "../../services/miscUtils";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
