@@ -3,7 +3,7 @@ import {
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
-    EXAM_BOARDS_CS_GCSE,
+    EXAM_BOARDS_CS_GCSE, examBoardBooleanNotationMap,
     examBoardLabelMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
@@ -32,8 +32,8 @@ export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
-    preferredProgrammingLanguage?: string;
-    preferredBooleanNotation?: string;
+    preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
+    preferredBooleanNotation?: BOOLEAN_NOTATION;
     explanation: {stage?: string, examBoard?: string};
 }
 
@@ -53,10 +53,10 @@ export function useUserContext(): UseUserContextReturnType {
     const explanation: UseUserContextReturnType["explanation"] = {};
 
     // Programming Language
-    const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
+    const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).find((key) => programmingLanguage[key as keyof ProgrammingLanguage] === true) as PROGRAMMING_LANGUAGE | undefined;
 
     // Boolean notation preference
-    const preferredBooleanNotation = booleanNotation && Object.keys(BOOLEAN_NOTATION).reduce((val: string | undefined, key) => booleanNotation[key as keyof BooleanNotation] === true ? key as BOOLEAN_NOTATION : val, undefined);
+    let preferredBooleanNotation = booleanNotation && Object.keys(BOOLEAN_NOTATION).find((key) => booleanNotation[key as keyof BooleanNotation] === true) as BOOLEAN_NOTATION | undefined;
 
     // Stage
     let stage: STAGE;
@@ -84,6 +84,11 @@ export function useUserContext(): UseUserContextReturnType {
         examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
     } else {
         examBoard = EXAM_BOARD.ALL;
+    }
+
+    // If the user is anonymous, and we don't have a boolean notation selected, decide it based on the exam board
+    if (!isLoggedIn(user) && !isDefined(preferredBooleanNotation)) {
+        preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
     }
 
     // Gameboard views overrides all context options
