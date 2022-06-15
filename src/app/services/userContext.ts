@@ -55,9 +55,6 @@ export function useUserContext(): UseUserContextReturnType {
     // Programming Language
     const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).find((key) => programmingLanguage[key as keyof ProgrammingLanguage] === true) as PROGRAMMING_LANGUAGE | undefined;
 
-    // Boolean notation preference
-    let preferredBooleanNotation = booleanNotation && Object.keys(BOOLEAN_NOTATION).find((key) => booleanNotation[key as keyof BooleanNotation] === true) as BOOLEAN_NOTATION | undefined;
-
     // Stage
     let stage: STAGE;
     if (queryParams.stage && Object.values(STAGE).includes(queryParams.stage as STAGE) && !STAGE_NULL_OPTIONS.has(queryParams.stage as STAGE)) {
@@ -86,10 +83,8 @@ export function useUserContext(): UseUserContextReturnType {
         examBoard = EXAM_BOARD.ALL;
     }
 
-    // If the user is anonymous, and we don't have a boolean notation selected, decide it based on the exam board
-    if (!isLoggedIn(user) && !isDefined(preferredBooleanNotation)) {
-        preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
-    }
+    // Boolean notation preference - if we don't have a boolean notation preference for the user, then set it based on the exam board
+    const preferredBooleanNotation = (booleanNotation && Object.keys(BOOLEAN_NOTATION).find((key) => booleanNotation[key as keyof BooleanNotation] === true) as BOOLEAN_NOTATION | undefined) ?? examBoardBooleanNotationMap[examBoard];
 
     // Gameboard views overrides all context options
     const currentGameboard = useSelector(selectors.board.currentGameboard);
