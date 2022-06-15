@@ -37,8 +37,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
     const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
     const tooFewSigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_few");
-    const invalidFormatError = validationResponseTags?.includes("nq_format");
-    const invalidFormatErrorStdForm = validationResponseTags?.includes("nq_format_std_form");
+    const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
+    const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
     const tooManySigFigsFeedback = <p>
