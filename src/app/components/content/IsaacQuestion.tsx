@@ -20,6 +20,7 @@ import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import {isPhy} from "../../services/miscUtils";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -29,12 +30,15 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const currentUser = useSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const validationResponse = questionPart?.validationResponse;
+    const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
     const canSubmit = questionPart?.canSubmit && !locked || false;
-    const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs") && SITE_SUBJECT === SITE.PHY;
-    const tooManySigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_many");
-    const tooFewSigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_few");
+    const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
+    const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
+    const tooFewSigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_few");
+    const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
+    const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
     const tooManySigFigsFeedback = <p>
@@ -45,6 +49,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const tooFewSigFigsFeedback = <p>
         We can&apos;t mark this until you provide more&nbsp;
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+    </p>;
+
+    const invalidFormatFeeback = <p>
+        Your answer is not in a format we recognise, please enter your answer as a decimal number.<br/>
+        {invalidFormatErrorStdForm && <>When writing standard form, you must include <code>^</code> or <code>**</code> between the 10 and the exponent.<br/></>}
+        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a></>}.
     </p>;
 
     // Register Question Part in Redux
@@ -93,7 +103,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 {validationResponse.explanation && <div className="mb-2">
-                    {tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
+                    {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
                         <IsaacContent doc={validationResponse.explanation}/>
                     }
                 </div>}
