@@ -24,6 +24,7 @@ import {generateQuestionTitle} from "../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
 import {isDefined} from "../../services/miscUtils";
 import {Markup} from "../elements/markup";
+import classNames from "classnames";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -39,7 +40,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     let itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
-    let iconHref = isPhy ? `/assets/question-hex.svg#icon` : "/assets/question.svg";
+    let iconHref = siteSpecific("/assets/question-hex.svg#icon", "/assets/question.svg");
     let message = "";
     let messageClasses = "";
 
@@ -47,16 +48,16 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
         case "PERFECT":
             itemClasses += " bg-success";
             message = "perfect!"
-            iconHref = isPhy ? `/assets/tick-rp-hex.svg#icon` : "/assets/tick-rp.svg";
+            iconHref = siteSpecific("/assets/tick-rp-hex.svg#icon", "/assets/tick-rp.svg");
             break;
         case "PASSED":
         case "IN_PROGRESS":
             message = "in progress"
-            iconHref = isPhy ? `/assets/incomplete-hex.svg#icon` : "/assets/incomplete.svg";
+            iconHref = siteSpecific("/assets/incomplete-hex.svg#icon", "/assets/incomplete.svg");
             break;
         case "FAILED":
             message = "try again!"
-            iconHref = isPhy ? `/assets/cross-rp-hex.svg#icon` : "/assets/cross-rp.svg";
+            iconHref = siteSpecific("/assets/cross-rp-hex.svg#icon", "/assets/cross-rp.svg");
             break;
     }
 
@@ -66,15 +67,14 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
             <span>
-                {/* TODO bh412 come up with a nicer way of differentiating site icons and also above */}
-                {isPhy ?
-                    <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg> :
+                {siteSpecific(
+                    <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>,
                     <img src={iconHref} alt=""/>
-                }
+                )}
             </span>
             <div className={`d-md-flex flex-fill`}>
                 <div className={"flex-grow-1 " + itemSubject?.id || (isPhy ? "physics" : "")}>
-                    <Markup encoding={"latex"} className={isPhy ? "text-secondary" : ""}>
+                    <Markup encoding={"latex"} className={classNames({"text-secondary": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
                     {message && <span className={"gameboard-item-message" + (isPhy ? "-phy " : " ") + messageClasses}>{message}</span>}

@@ -26,6 +26,7 @@ import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
+import classNames from "classnames";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -40,7 +41,6 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
 
     let title = item.title;
     let titleClasses = "content-summary-link-title flex-grow-1 ";
-    let titleTextClass = isPhy ? "text-secondary" : undefined;
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[]);
     if (itemSubject) {
         titleClasses += itemSubject.id;
@@ -116,7 +116,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <Markup encoding={"latex"} className={titleTextClass}>
+                        <Markup encoding={"latex"} className={classNames({"text-secondary": isPhy})}>
                             {title ?? ""}
                         </Markup>
                         {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>

@@ -26,6 +26,7 @@ import {isPhy, siteSpecific} from "../../services/siteConstants";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
 const siteSpecificStats = siteSpecific(
+    // Physics
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
@@ -43,6 +44,7 @@ const siteSpecificStats = siteSpecific(
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
     },
+    // Computer science
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",

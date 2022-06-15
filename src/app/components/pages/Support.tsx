@@ -33,25 +33,6 @@ interface SupportCategories {
 const support: {student: SupportCategories; teacher: SupportCategories} = siteSpecific(
     {
         student: {
-            title: "Student support",
-            categories:{
-                general: {category: "general", title: "General questions", icon: "faq"},
-                homework: {category: "homework", title: "Finding homework", icon: "faq"},
-                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
-            }
-        },
-        teacher: {
-            title: "Teacher support",
-            categories: {
-                general: { category: "general", title: "General questions", icon: "faq" },
-                assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
-                progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
-                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
-            }
-        }
-    },
-    {
-        student: {
             title: "Student FAQ",
             categories:{
                 general: {category: "general", title: "Get started", icon: "faq"},
@@ -72,6 +53,25 @@ const support: {student: SupportCategories; teacher: SupportCategories} = siteSp
                 direct: { category: "direct", title: "One-to-one support", icon: "teacher-hat"},
                 troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
                 legal: { category: "legal", title: "Legal", icon: "faq"}
+            }
+        }
+    },
+    {
+        student: {
+            title: "Student support",
+            categories:{
+                general: {category: "general", title: "General questions", icon: "faq"},
+                homework: {category: "homework", title: "Finding homework", icon: "faq"},
+                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
+            }
+        },
+        teacher: {
+            title: "Teacher support",
+            categories: {
+                general: { category: "general", title: "General questions", icon: "faq" },
+                assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
+                progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
+                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
             }
         }
     }

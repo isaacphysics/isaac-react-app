@@ -452,14 +452,16 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         </h4>
         <RS.Row className="mb-4">
             <RS.Col md={6} lg={4} className="pt-1">
-                {isPhy ?
+                {siteSpecific(
+                    // Physics
                     <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
                         our GCSE &amp; A Level books
-                    </RS.Button> :
+                    </RS.Button>,
+                    // Computer science
                     <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
                         Pre-made gameboards
                     </RS.Button>
-                }
+                )}
             </RS.Col>
             <RS.Col md={6} lg={4} className="pt-1">
                 <RS.Button tag={Link} to={isaacAssignmentButtons.second.link} color="secondary" block>
@@ -540,7 +542,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                 </Input>
                                                 </Label>
                                             </Col>}
-                                            <Col lg={isPhy ? 2 : {size: 2, offset: 6}}>
+                                            <Col lg={siteSpecific(2, {size: 2, offset: 6})}>
                                                 <Label className="w-100">
                                                     Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
                                                     {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}

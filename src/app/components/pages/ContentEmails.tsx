@@ -6,7 +6,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {debounce} from 'lodash';
 import {convert} from 'html-to-text';
-import {isPhy} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";
 
 interface ContentEmailsProps {
@@ -47,7 +47,7 @@ const ContentEmails = (props: ContentEmailsProps) => {
         })
     }, [emailSubject, plaintextTemplate, htmlTemplate, overrideEnvelopeFrom]);
 
-    const mailgunAddress = isPhy ? "no-reply@mail.isaacphysics.org" : "no-reply@mail.isaaccomputerscience.org";
+    const mailgunAddress = siteSpecific("no-reply@mail.isaacphysics.org", "no-reply@mail.isaaccomputerscience.org");
 
     return <RS.Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Content email sending" />

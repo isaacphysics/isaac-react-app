@@ -6,6 +6,7 @@ import {withRouter} from "react-router";
 import {Collapse, Form, FormGroup, Input, Label, Nav, Navbar, NavbarToggler, NavItem} from "reactstrap";
 import {SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
 import {isPhy} from "../../services/siteConstants";
+import classNames from "classnames";
 
 interface MainSearchProps {
     history: History;
@@ -36,7 +37,7 @@ const MainSearchComponent = ({history}: MainSearchProps) => {
             onClick={() => setShowSearchBox(!showSearchBox)}
         />
         <Collapse navbar isOpen={showSearchBox}>
-            <Nav className={`ml-auto ${isPhy ? "mb-3 mb-md-0" : ""}`} navbar id="search-menu">
+            <Nav className={classNames("ml-auto",{"mb-3 mb-md-0": isPhy})} navbar id="search-menu">
                 <NavItem>
                     <Form inline onSubmit={doSearch}>
                         <FormGroup className='search--main-group'>

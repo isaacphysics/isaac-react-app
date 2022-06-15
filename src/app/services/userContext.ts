@@ -295,7 +295,7 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
 
 export const AUDIENCE_DISPLAY_FIELDS: (keyof ViewingContext)[] = siteSpecific(
     ["stage", "difficulty"],
-    ["stage"],
+    ["stage"]
 );
 
 export function filterAudienceViewsByProperties(views: ViewingContext[], properties: (keyof ViewingContext)[]): ViewingContext[] {

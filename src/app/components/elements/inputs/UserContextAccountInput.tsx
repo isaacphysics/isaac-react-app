@@ -10,6 +10,7 @@ import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
 import {isDefined} from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
+import classNames from "classnames";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -118,6 +119,7 @@ export function UserContextAccountInput({
             )}
         </RS.Label>
         {siteSpecific(
+            // Physics
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
                 <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
@@ -126,6 +128,7 @@ export function UserContextAccountInput({
                     If you prefer to see all content by default, select "All stages".
                 </RS.UncontrolledTooltip>
             </React.Fragment>,
+            // Computer science
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
                 <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
@@ -136,7 +139,7 @@ export function UserContextAccountInput({
                 </RS.UncontrolledTooltip>
             </React.Fragment>
         )}
-        <div id="user-context-selector" className={isPhy ? "d-flex flex-wrap" : ""}>
+        <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
             {userContexts.map((userContext, index) => {
                 const showPlusOption = teacher &&
                     index === userContexts.length - 1 &&
