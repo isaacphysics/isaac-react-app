@@ -11,7 +11,7 @@ import {
 } from "../../services/userContext";
 import {useSelector} from "react-redux";
 import {selectors} from "../../state/selectors";
-import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
+import {isCS, siteSpecific} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {isFound} from "../../services/miscUtils";
