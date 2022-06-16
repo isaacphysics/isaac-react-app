@@ -9,7 +9,7 @@ import {
     setTransientShowOtherContentPreference,
     setTransientStagePreference
 } from "../../../state/actions";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {history} from "../../../services/history";
 import queryString from "query-string";
@@ -27,12 +27,12 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
     const unusual = {
         stage: !filteredStages.map(s => s.value).includes(userContext.stage),
-        examBoard: SITE_SUBJECT === SITE.CS && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
+        examBoard: isCS && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
     };
     const showUnusualContextMessage = unusual.stage || unusual.examBoard;
-    const showHideOtherContentSelector = SITE_SUBJECT === SITE.CS && segueEnvironment === "DEV";
+    const showHideOtherContentSelector = isCS && segueEnvironment === "DEV";
     const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
-    const showExamBoardSelector = SITE_SUBJECT === SITE.CS && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
+    const showExamBoardSelector = isCS && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
 
 
     return <div className="d-flex">
@@ -56,7 +56,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 onChange={e => {
                     const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
                     const stage = e.target.value as STAGE;
-                    if (SITE_SUBJECT === SITE.CS) {
+                    if (isCS) {
                         // Drive exam board selection so that it is a valid option - by default use All.
                         let examBoard = EXAM_BOARD.ALL;
                         const possibleExamBoards =
@@ -112,7 +112,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         {showUnusualContextMessage && <div className="mt-2 ml-1">
             <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
             <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
-                You are seeing {stageLabelMap[userContext.stage]} {SITE_SUBJECT === SITE.CS ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
+                You are seeing {stageLabelMap[userContext.stage]} {isCS ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
                 content, which is different to your account settings. <br />
                 {unusual.stage && unusual.examBoard && <>
                     {userContext.explanation.stage === userContext.explanation.examBoard ?

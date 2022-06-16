@@ -25,7 +25,7 @@ import {useDeviceSize} from "../../services/device";
 import Select, {GroupBase} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
 import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
@@ -33,7 +33,7 @@ import {debounce} from "lodash";
 import {History} from "history";
 import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {isCS, isDefined, isPhy, siteSpecific} from "../../services/miscUtils";
+import {isDefined} from "../../services/miscUtils";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 
@@ -362,7 +362,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
     let i;
-    if (SITE_SUBJECT === SITE.PHY) {
+    if (isPhy) {
         for (i = 0; i < selections.length && i < 2; i++) {
             const selection = selections[i];
             if (selection.length !== 1) break;
@@ -416,7 +416,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     // Title changing states and logic
     const [customBoardTitle, setCustomBoardTitle] = useState<string>();
     const [pendingCustomBoardTitle, setPendingCustomBoardTitle] = useState<string>();
-    const defaultBoardTitle = SITE_SUBJECT === SITE.PHY ? generatePhyBoardName(selections) : generateCSBoardName(selections);
+    const defaultBoardTitle = siteSpecific(generatePhyBoardName, generateCSBoardName)(selections);
     const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
@@ -427,8 +427,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (stages.length) params.stages = toCSV(stages);
         if (difficulties.length) params.difficulties = toCSV(difficulties);
         if (concepts.length) params.concepts = toCSV(concepts);
-        if (SITE_SUBJECT === SITE.CS && examBoards.length) params.examBoards = toCSV(examBoards);
-        if (SITE_SUBJECT === SITE.PHY) {params.questionCategories = "quick_quiz,learn_and_practice";}
+        if (isCS && examBoards.length) params.examBoards = toCSV(examBoards);
+        if (isPhy) {params.questionCategories = "quick_quiz,learn_and_practice";}
         params.title = boardTitle;
 
         // Populate query parameters with the selected subjects, fields, and topics
@@ -502,7 +502,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
-            {SITE_SUBJECT === SITE.PHY && <RS.Row>
+            {isPhy && <RS.Row>
                 <RS.Col sm={8} lg={9}>
                     <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
                         <RS.Row>
@@ -528,7 +528,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 </RS.Col>
             </RS.Row>}
 
-            {SITE_SUBJECT === SITE.CS && (filterExpanded
+            {isCS && (filterExpanded
                 ?
                 <RS.Row className={"mb-3"}>
                     <RS.Col>

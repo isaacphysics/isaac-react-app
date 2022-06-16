@@ -7,7 +7,7 @@ import {requestEmailVerification} from "../../state/actions";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {studentOnlyEventMessage} from "../../services/events";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS} from "../../services/siteConstants";
 import {examBoardLabelMap, stageLabelMap} from "../../services/constants";
 
 interface EventBookingFormProps {
@@ -60,7 +60,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                                 }
                             </RS.FormFeedback>
                         </RS.Col>
-                        {SITE_SUBJECT === SITE.CS && <RS.Col md={6} className="d-none d-md-block" />}
+                        {isCS && <RS.Col md={6} className="d-none d-md-block" />}
                         <RS.Col md={6}>
                             <RS.Label htmlFor="account-stages" className="form-required">
                                 Stage
@@ -69,7 +69,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                                 Array.from(new Set(targetUser.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ") || ""
                             } />
                         </RS.Col>
-                        {SITE_SUBJECT == SITE.CS && <RS.Col md={6}>
+                        {isCS && <RS.Col md={6}>
                             <RS.Label htmlFor="account-examboard" className="form-required">
                                 Exam board
                             </RS.Label>

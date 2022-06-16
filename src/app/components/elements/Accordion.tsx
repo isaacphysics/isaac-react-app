@@ -8,7 +8,7 @@ import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
 import {audienceStyle, notRelevantMessage, useUserContext} from "../../services/userContext";
@@ -35,7 +35,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     // Toggle
     const isFirst = index === 0;
-    const openFirst = SITE_SUBJECT === SITE.CS || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
+    const openFirst = isCS || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
     const [open, setOpen] = useState(startOpen === undefined ? (openFirst && isFirst) : startOpen);
 
     // If start open changes we need to update whether or not the accordion section should be open
@@ -142,7 +142,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 aria-expanded={open ? "true" : "false"}
             >
                 {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
-                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: SITE_SUBJECT === SITE.CS})}>
+                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: isCS})}>
                     {audienceString}
                 </span>}
                 <div className="accordion-title pl-3">
@@ -154,7 +154,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                                 {trustedTitle}
                             </Markup>
                         </div>}
-                        {SITE_SUBJECT === SITE.CS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
+                        {isCS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                             <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                                 {`This content has ${notRelevantMessage(userContext)}.`}
@@ -164,7 +164,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     </RS.Row>
                 </div>
 
-                {accordionIcon && SITE_SUBJECT === SITE.PHY && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
+                {accordionIcon && isPhy && <span className={"accordion-icon align-self-center accordion-icon-" + accordionIcon}>
                     <span className="sr-only">{accordionIcon == "tick" ? "All questions in this part are answered correctly" : "All questions in this part are answered incorrectly"}</span>
                 </span>}
             </RS.Button>

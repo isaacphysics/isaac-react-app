@@ -48,7 +48,7 @@ import {
 import {connect, useDispatch, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isPhy, siteSpecific} from "../../services/siteConstants";
 import {isAdminOrEventManager, isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
 import {
@@ -141,7 +141,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
         </Label>}
         <Button
             className="mt-2 mb-2"
-            block color={{[SITE.CS]: "primary", [SITE.PHY]: "secondary"}[SITE_SUBJECT]}
+            block color={siteSpecific("secondary", "primary")}
             onClick={assign}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
         >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
@@ -381,20 +381,11 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     const isaacAssignmentButtons = {
         second: {
-            link: {
-                [SITE.CS]: "/topics",
-                [SITE.PHY]: "/pages/pre_made_gameboards"
-            },
-            text: {
-                [SITE.CS]: "Topics list",
-                [SITE.PHY]: "our Boards for Lessons"
-            }
+            link: siteSpecific("/pages/pre_made_gameboards", "/topics"),
+            text: siteSpecific("our Boards for Lessons", "Topics list")
         },
         third: {
-            text: {
-                [SITE.CS]: "Create gameboard",
-                [SITE.PHY]: "create a gameboard"
-            }
+            text: siteSpecific("create a gameboard", "Create gameboard")
         }
     };
 
@@ -461,23 +452,25 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         </h4>
         <RS.Row className="mb-4">
             <RS.Col md={6} lg={4} className="pt-1">
-                {SITE_SUBJECT === SITE.PHY ?
+                {siteSpecific(
+                    // Physics
                     <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
                         our GCSE &amp; A Level books
-                    </RS.Button> :
+                    </RS.Button>,
+                    // Computer science
                     <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
                         Pre-made gameboards
                     </RS.Button>
-                }
+                )}
             </RS.Col>
             <RS.Col md={6} lg={4} className="pt-1">
-                <RS.Button tag={Link} to={isaacAssignmentButtons.second.link[SITE_SUBJECT]} color="secondary" block>
-                    {isaacAssignmentButtons.second.text[SITE_SUBJECT]}
+                <RS.Button tag={Link} to={isaacAssignmentButtons.second.link} color="secondary" block>
+                    {isaacAssignmentButtons.second.text}
                 </RS.Button>
             </RS.Col>
             <RS.Col md={12} lg={4} className="pt-1">
                 <RS.Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
-                    {isaacAssignmentButtons.third.text[SITE_SUBJECT]}
+                    {isaacAssignmentButtons.third.text}
                 </RS.Button>
             </RS.Col>
         </RS.Row>
@@ -542,14 +535,14 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            {SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={2}>
+                                            {isPhy && <Col sm={6} lg={2}>
                                                 <Label className="w-100">
                                                     Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as boardSubjects)}>
                                                     {Object.values(boardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
                                                 </Input>
                                                 </Label>
                                             </Col>}
-                                            <Col lg={SITE_SUBJECT == SITE.PHY ? 2 : {size: 2, offset: 6}}>
+                                            <Col lg={siteSpecific(2, {size: 2, offset: 6})}>
                                                 <Label className="w-100">
                                                     Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
                                                     {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}

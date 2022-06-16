@@ -29,7 +29,7 @@ import Select from "react-select";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, siteSpecific} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
@@ -37,7 +37,6 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
 import {EXAM_BOARD, STAGE} from "../../services/constants";
 import {selectOnChange} from "../../services/select";
-import {siteSpecific} from "../../services/miscUtils";
 import {isFound} from "../../services/miscUtils";
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -128,7 +127,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                         <RS.Label htmlFor="gameboard-builder-name">Gameboard title:</RS.Label>
                         <RS.Input id="gameboard-builder-name"
                             type="text"
-                            placeholder={{[SITE.CS]: "e.g. Year 12 Network components", [SITE.PHY]: "e.g. Year 12 Dynamics"}[SITE_SUBJECT]}
+                            placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
                             defaultValue={gameboardTitle}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setGameboardTitle(e.target.value);
@@ -186,7 +185,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                     <th className="w-25">Topic</th>
                                     <th className="w-15">Stage</th>
                                     <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
-                                    {SITE_SUBJECT === SITE.CS && <th className="w-5">Exam boards</th>}
+                                    {isCS && <th className="w-5">Exam boards</th>}
                                 </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -233,7 +232,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                                                     }))
                                                                 }}
                                                             >
-                                                                {{[SITE.CS]: "Add questions", [SITE.PHY]: "Add Questions"}[SITE_SUBJECT]}
+                                                                {siteSpecific("Add Questions", "Add questions")}
                                                             </RS.Button>
                                                         </ShowLoading>
                                                     </div>
@@ -259,7 +258,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
 
                             let subjects = [];
 
-                            if (SITE_SUBJECT == SITE.CS) {
+                            if (isCS) {
                                 subjects.push("computer_science");
                             } else {
                                 const definedSubjects = ["physics", "maths", "chemistry"];
@@ -297,7 +296,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                             dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
                         }}
                     >
-                        {{[SITE.CS]: "Save gameboard", [SITE.PHY]: "Save Gameboard"}[SITE_SUBJECT]}
+                        {siteSpecific("Save Gameboard", "Save gameboard")}
                     </RS.Button>
                 </div>
 

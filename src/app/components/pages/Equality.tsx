@@ -6,7 +6,7 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 import { Inequality, makeInequality } from 'inequality';
 import { sanitiseInequalityState } from '../../services/questions';
 import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'inequality-grammar';
@@ -28,7 +28,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     const [errors, setErrors] = useState<string[]>();
     const user = useSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
-    const [editorMode, setEditorMode] = useState(queryParams.mode || { [SITE.PHY]: 'maths', [SITE.CS]: 'logic' }[SITE_SUBJECT]);
+    const [editorMode, setEditorMode] = useState(queryParams.mode || siteSpecific('maths', 'logic'));
 
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);

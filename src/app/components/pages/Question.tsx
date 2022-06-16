@@ -21,7 +21,7 @@ import {selectors} from "../../state/selectors";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isPhy, siteSpecific} from "../../services/siteConstants";
 import tags from "../../services/tags";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
@@ -38,7 +38,7 @@ interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
 
 
 function getTags(docTags?: string[]) {
-    if (SITE_SUBJECT !== SITE.PHY) {
+    if (!isPhy) {
         return [];
     }
     if (!docTags) return [];
@@ -87,7 +87,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     </div>
                 </div>
                 <Row className="question-content-container">
-                    <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
+                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4 question-panel">
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 

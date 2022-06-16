@@ -46,8 +46,8 @@ import {selectors} from "../../state/selectors";
 import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
+import {isCS, siteSpecific} from "../../services/siteConstants";
 
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),
@@ -233,8 +233,8 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
                     <Button
-                        size="sm" className={SITE_SUBJECT === SITE.CS ? "text-white" : "" + " d-none d-sm-inline"}
-                        color={{[SITE.PHY]: "primary", [SITE.CS]: "secondary"}[SITE_SUBJECT]}
+                        size="sm" className={isCS ? "text-white" : "" + " d-none d-sm-inline"}
+                        color={siteSpecific("primary", "secondary")}
                         onClick={() => showGroupInvitationModal(false)}
                     >
                         Invite users
@@ -242,8 +242,8 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                     {isStaff(user) && usersInGroup.length > 0 &&
                         <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;
                             <Button
-                                size="sm" className={SITE_SUBJECT === SITE.CS ? "text-white" : ""}
-                                color={{[SITE.PHY]: "primary", [SITE.CS]: "secondary"}[SITE_SUBJECT]}
+                                size="sm" className={isCS ? "text-white" : ""}
+                                color={siteSpecific("primary", "secondary")}
                                 onClick={() => showGroupEmailModal(usersInGroup)}
                             >
                                 Email users
@@ -259,7 +259,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                     />
                     {(isUserGroupOwner || group === null) && <InputGroupAddon addonType="append">
                         <Button
-                            color={{[SITE.PHY]: "secondary", [SITE.CS]: "primary"}[SITE_SUBJECT]}
+                            color={siteSpecific("secondary", "primary")}
                             className="p-0 border-dark" disabled={newGroupName == "" || initialGroupName == newGroupName}
                             onClick={saveUpdatedGroup}
                         >

@@ -11,7 +11,7 @@ import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {isEventLeader} from "../../../services/user";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS} from "../../../services/siteConstants";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",
@@ -37,7 +37,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
         <div className="clearfix">
-            {SITE_SUBJECT === SITE.CS && <div className="mb-3 float-left">
+            {isCS && <div className="mb-3 float-left">
                 <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
             </div>}
             <div className="float-right mb-4">

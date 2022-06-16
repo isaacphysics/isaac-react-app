@@ -1,6 +1,6 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {Button, UncontrolledTooltip} from "reactstrap";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {isPhy, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {closeActiveModal, openActiveModal, setMainContentId} from "../../state/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "../../state/reducers";
@@ -46,7 +46,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     const openModal = useSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
-    const showModal = modalId && SITE_SUBJECT === SITE.PHY;
+    const showModal = modalId && isPhy;
 
     useEffect(() => {dispatch(setMainContentId("main-heading"));}, []);
     useEffect(() => {
