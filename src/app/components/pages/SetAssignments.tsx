@@ -455,7 +455,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                 {siteSpecific(
                     // Physics
                     <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
-                        our GCSE &amp; A Level books
+                        our books
                     </RS.Button>,
                     // Computer science
                     <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
