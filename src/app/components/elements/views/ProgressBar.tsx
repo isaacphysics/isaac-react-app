@@ -16,6 +16,8 @@ const BAR_COLOURS = new Map([
     ["physics_skills_19", "bar-alevel"],
     ["phys_book_gcse", "bar-gcse"],
     ["chemistry_16", "bar-chemistry"],
+    ["maths_book_gcse", "bar-maths"],
+    ["phys_book_step_up", "bar-gcse"]
 ]);
 
 export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, secondaryTitle, children, type}: ProgressBarProps) => {
