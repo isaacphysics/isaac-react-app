@@ -520,7 +520,7 @@ export type Action =
 
 export type NOT_FOUND_TYPE = 404;
 
-export type ConfidenceType = "quick_question" | "question" | "concept";
+export type ConfidenceType = "quick_question" | "question";
 
 export interface IsaacQuestionProps<T extends QuestionDTO> {
     doc: T;

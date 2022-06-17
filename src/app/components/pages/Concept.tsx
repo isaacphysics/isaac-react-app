@@ -38,9 +38,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
     const doc = useSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
-    const [isVisible, setVisible] = useState(false);
-    const [hideOptions, setHideOptions] = useState(false);
-    const attemptUuid = useRef(uuid_v4().slice(0, 8));
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
@@ -80,10 +77,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
-
-                        <ConfidenceQuestions hideOptions={hideOptions} setHideOptions={setHideOptions}
-                                             isVisible={isVisible} setVisible={setVisible} identifier={doc.id}
-                                             attemptUuid={attemptUuid} type={"concept"} />
 
                         {doc.attribution && <p className="text-muted">
                             <Markup trusted-markup-encoding={"markdown"}>

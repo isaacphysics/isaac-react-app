@@ -39,7 +39,7 @@ const confidenceInformationModal = () => openActiveModal({
 export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, setVisible, identifier, attemptUuid, type, correct, answer}: ConfidenceQuestionsProps) => {
     const dispatch = useDispatch();
 
-    const confidenceVariables = confidenceOptions(type);
+    const confidenceVariables = confidenceOptions[type];
 
     const twoParts = confidenceVariables?.secondQuestion;
 
