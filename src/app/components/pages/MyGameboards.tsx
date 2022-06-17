@@ -40,7 +40,7 @@ import {above, below, isMobile, useDeviceSize} from "../../services/device";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isPhy} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 
@@ -294,7 +294,7 @@ export const MyGameboards = () => {
         {boards && boards.totalResults == 0 ?
             <React.Fragment>
                 <h3 className="text-center mt-4">You have no gameboards to view.</h3>
-                {SITE_SUBJECT === SITE.PHY && <div className="text-center mt-3 mb-5">
+                {isPhy && <div className="text-center mt-3 mb-5">
                     <Button color="secondary" tag={Link} to="/gameboards/new">Create a gameboard</Button>
                 </div>}
             </React.Fragment>

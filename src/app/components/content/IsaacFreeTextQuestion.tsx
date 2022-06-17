@@ -59,7 +59,7 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
         </Alert>;
 };
 
-export const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacFreeTextQuestionDTO>) => {
+const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacFreeTextQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt(questionId);
 
@@ -88,3 +88,4 @@ export const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestion
         </div>
     );
 };
+export default IsaacFreeTextQuestion;

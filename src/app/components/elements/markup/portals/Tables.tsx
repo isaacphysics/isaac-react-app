@@ -1,7 +1,7 @@
 import React, {MouseEventHandler, useContext, useState} from "react";
 import classNames from "classnames";
 import ReactDOM from "react-dom";
-import {SITE, SITE_SUBJECT} from "../../../../services/siteConstants";
+import {isCS} from "../../../../services/siteConstants";
 import {ScrollShadows} from "../../ScrollShadows";
 import {above, isMobile, useDeviceSize} from "../../../../services/device";
 import {ExpandableParentContext} from "../../../../../IsaacAppTypes";
@@ -16,16 +16,18 @@ const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLE
 
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();
     const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLElement>();
-    const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "overflow-auto mb-4");
+    const {expandButton, innerClasses, outerClasses} = useExpandContent(classes.includes("expandable"), expandRef, "mb-4");
 
     if (modifiedHtml && parentElement) {
         return ReactDOM.createPortal(
-            <div className={classNames(outerClasses, "position-relative isaac-table")} ref={updateExpandRef}>
-                {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
-                {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
-                {expandButton}
-                <div ref={updateScrollRef} className={innerClasses} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
-                {renderPortalElements(scrollRef)}
+            <div className={classNames(outerClasses, "isaac-table")} ref={updateExpandRef}>
+                <div className={"position-relative"}>
+                    {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
+                    {isCS && window.ResizeObserver && <ScrollShadows element={scrollRef} />}
+                    {expandButton}
+                    <div ref={updateScrollRef} className={classNames(innerClasses, "overflow-auto")} dangerouslySetInnerHTML={{__html: modifiedHtml}} />
+                    {renderPortalElements(scrollRef)}
+                </div>
             </div>,
             parentElement
         );
@@ -50,7 +52,7 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
     const expandableParent = useContext(ExpandableParentContext);
     const deviceSize = useDeviceSize();
 
-    const show = SITE_SUBJECT === SITE.CS && expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
+    const show = isCS && expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
 
     const expandButton = (show && <div className={"expand-button position-relative"}>
         <button type={"button"} onClick={toggleExpanded}>
@@ -72,14 +74,7 @@ interface TableData {
     expandable?: boolean;
 }
 
-// The component that uses this hook should be using the pattern demonstrated in `TrustedHtml`.
-// This pattern is the following:
-// - The html produced by this hook is rendered within an element using the `dangerouslySetInnerHTML` attribute. Call this the root element.
-// - When calling `renderTables`, *pass the root element*
-// - Ensure that the root element is set and updated using the `useStatefulElementRef` hook. This means that when the element
-// is added to the DOM, a update occurs for all components that take this element as a prop.
-//
-// Using this pattern, you can safely nest portal components to an arbitrary depth (as far as I can tell)
+// See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useAccessibleTablesInHtml: PortalInHtmlHook = (html) => {
     // This is more robust than writing regex, and is surprisingly very quick!
     const htmlDom = document.createElement("html");

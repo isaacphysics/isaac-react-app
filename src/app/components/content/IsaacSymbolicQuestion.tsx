@@ -1,8 +1,7 @@
-import React, {ChangeEvent, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
-import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {Inequality, makeInequality} from "inequality";
@@ -13,6 +12,7 @@ import {jsonHelper} from "../../services/json";
 import {v4 as uuid_v4} from "uuid";
 import { isDefined } from '../../services/miscUtils';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
 // Magic starts here
 interface ChildrenMap {
@@ -39,7 +39,7 @@ function isError(p: ParsingError | any[]): p is ParsingError {
     return p.hasOwnProperty("error");
 }
 
-export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
+const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
 
@@ -242,3 +242,4 @@ export const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestion
         </div>
     );
 };
+export default IsaacSymbolicQuestion;

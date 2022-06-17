@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {Suspense, lazy, useCallback, useEffect, useState} from "react";
 import {clearQuestionSearch, closeActiveModal, searchQuestions} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
@@ -13,16 +13,19 @@ import {
 } from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
-import {GameboardBuilderRow} from "../GameboardBuilderRow";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {Item, selectOnChange} from "../../../services/select";
 import {GroupBase} from "react-select/dist/declarations/src/types";
-import {siteSpecific} from "../../../services/miscUtils";
+import {Loading} from "../../handlers/IsaacSpinner";
+
+// Immediately load GameboardBuilderRow, but allow splitting
+const importGameboardBuilderRow = import("../GameboardBuilderRow");
+const GameboardBuilderRow = lazy(() => importGameboardBuilderRow);
 
 const selectStyle = {
     className: "basic-multi-select", classNamePrefix: "select",
@@ -64,7 +67,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
-    const questions = useSelector((state: AppState) => state && state.gameboardEditorQuestions);
+    const questions = useSelector((state: AppState) => state && state.questionSearchResult);
     const user = useSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
@@ -101,7 +104,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         setSortState(newSortState);
     };
 
-    const tagOptions: { options: Item<string>[]; label: string }[] = SITE_SUBJECT === SITE.PHY ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
 
     useEffect(() => {
@@ -111,16 +114,16 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const addSelectionsRow = <div className="d-lg-flex align-items-baseline">
         <div className="flex-grow-1 mb-1">
             <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
-                {{
-                    [SITE.PHY]: `${selectedQuestions.size} Question${selectedQuestions.size !== 1 ? "s" : ""} Selected`,
-                    [SITE.CS]: `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
-                }[SITE_SUBJECT]}
+                {siteSpecific(
+                    `${selectedQuestions.size} Question${selectedQuestions.size !== 1 ? "s" : ""} Selected`,
+                    `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
+                )}
             </strong>
         </div>
         <div>
             <RS.Input
                 type="button"
-                value={{[SITE.PHY]: "Add Selections to Gameboard", [SITE.CS]: "Add selections to gameboard"}[SITE_SUBJECT]}
+                value={siteSpecific("Add Selections to Gameboard", "Add selections to gameboard")}
                 disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
@@ -134,7 +137,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     return <div className="mb-4">
         <RS.Row>
-            {SITE_SUBJECT === SITE.PHY && <RS.Col lg={3} className="text-wrap my-2">
+            {isPhy && <RS.Col lg={3} className="text-wrap my-2">
                 <RS.Label htmlFor="question-search-book">Book</RS.Label>
                 <Select
                     inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
@@ -152,7 +155,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     ]}
                 />
             </RS.Col>}
-            <RS.Col lg={SITE_SUBJECT === SITE.CS ? 12 : 9} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
+            <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
@@ -177,7 +180,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
-            {SITE_SUBJECT === SITE.CS && <RS.Col lg={6} className={`text-wrap my-2`}>
+            {isCS && <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -188,7 +191,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             </RS.Col>}
         </RS.Row>
         <RS.Row>
-            {SITE_SUBJECT === SITE.PHY && isStaff(user) && <RS.Col className="text-wrap mb-2">
+            {isPhy && isStaff(user) && <RS.Col className="text-wrap mb-2">
                 <RS.Form>
                     <RS.Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</RS.Label>
                 </RS.Form>
@@ -199,7 +202,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-title">Search</RS.Label>
                 <RS.Input id="question-search-title"
                     type="text"
-                    placeholder={{[SITE.CS]: "e.g. Creating an AST", [SITE.PHY]: "e.g. Man vs. Horse"}[SITE_SUBJECT]}
+                    placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSearchQuestionName(e.target.value);
                     }}
@@ -209,44 +212,46 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         <div className="mt-4">
             {addSelectionsRow}
         </div>
-        <RS.Table bordered responsive className="mt-4">
-            <thead>
-                <tr>
-                    <th className="w-5"> </th>
-                    <SortableTableHeader
-                        className="w-40" title="Question title"
-                        updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
-                        enabled={!isBookSearch}
-                    />
-                    <th className="w-25">Topic</th>
-                    <th className="w-15">Stage</th>
-                    <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
-                    {SITE_SUBJECT === SITE.CS && <th className="w-5">Exam boards</th>}
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    questions &&
-                    sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
-                        questions.filter(question => {
-                            const qIsPublic = searchResultIsPublic(question, user);
-                            if (isBookSearch) return qIsPublic;
-                            const qTopicsMatch =
-                                searchTopics.length == 0 ||
-                                (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
-
-                            return qIsPublic && qTopicsMatch;
-                        })
-                    ).map(question =>
-                        <GameboardBuilderRow
-                            key={`question-search-modal-row-${question.id}`} question={question}
-                            selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} creationContext={creationContext}
+        <Suspense fallback={<Loading/>}>
+            <RS.Table bordered responsive className="mt-4">
+                <thead>
+                    <tr>
+                        <th className="w-5"> </th>
+                        <SortableTableHeader
+                            className="w-40" title="Question title"
+                            updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
+                            enabled={!isBookSearch}
                         />
-                    )
-                }
-            </tbody>
-        </RS.Table>
+                        <th className="w-25">Topic</th>
+                        <th className="w-15">Stage</th>
+                        <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
+                        {isCS && <th className="w-5">Exam boards</th>}
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        questions &&
+                        sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+                            questions.filter(question => {
+                                const qIsPublic = searchResultIsPublic(question, user);
+                                if (isBookSearch) return qIsPublic;
+                                const qTopicsMatch =
+                                    searchTopics.length == 0 ||
+                                    (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
+
+                                return qIsPublic && qTopicsMatch;
+                            })
+                        ).map(question =>
+                            <GameboardBuilderRow
+                                key={`question-search-modal-row-${question.id}`} question={question}
+                                selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
+                                questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} creationContext={creationContext}
+                            />
+                        )
+                    }
+                </tbody>
+            </RS.Table>
+        </Suspense>
         {questions && questions.length > 5 && <div className="mt-2">
             {addSelectionsRow}
         </div>}

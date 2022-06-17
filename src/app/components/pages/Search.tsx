@@ -15,7 +15,7 @@ import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -47,7 +47,7 @@ function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT_TYPE[]
 }
 
 const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUMENT_TYPE>>> = {
-    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: {[SITE.PHY]: "rgba(254, 161, 0, 0.9)", [SITE.CS]: "rgba(255, 181, 63, 0.9)"}[SITE_SUBJECT]}),
+    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: siteSpecific("rgba(254, 161, 0, 0.9)", "rgba(255, 181, 63, 0.9)")}),
     multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
 };
 
@@ -59,12 +59,15 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const userContext = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
-    const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(urlFilters.map(itemise))
+
+    let initialFilters = urlFilters;
+    if (isCS && urlFilters.length === 0) {
+        initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
+    }
+    const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
 
     useEffect(function triggerSearchOnUrlChange() {
-        setQueryState(urlQuery);
-        setFiltersState(urlFilters.map(itemise));
-        dispatch(fetchSearch(urlQuery || "", urlFilters.length ? urlFilters.join(",") : undefined));
+        dispatch(fetchSearch(queryState ?? "", filtersState.length ? filtersState.map(deitemise).join(",") : undefined));
     }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
@@ -86,7 +89,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     // Process results and add shortcut responses
     const filteredSearchResults = searchResults?.results && searchResults.results
         .filter(result => searchResultIsPublic(result, user))
-        .filter(result => SITE_SUBJECT === SITE.PHY || isIntendedAudience(result.audience, userContext, user));
+        .filter(result => isPhy || isIntendedAudience(result.audience, userContext, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
 
@@ -122,7 +125,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                             <RS.Col md={7} sm={12}>
                                 <RS.Form inline className="search-filters">
                                     <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
-                                        {`Filter${{[SITE.CS]: "s", [SITE.PHY]: ""}[SITE_SUBJECT]}:`}
+                                        {`Filter${siteSpecific("","s")}:`}
                                     </RS.Label>
                                     <Select
                                         inputId="document-filter" isMulti
@@ -131,7 +134,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         options={
                                             [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
                                                 DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]
-                                                .filter(v => SITE_SUBJECT === SITE.CS || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
+                                                .filter(v => isCS || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
                                                 .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
@@ -139,7 +142,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         onChange={selectOnChange(setFiltersState, false)}
                                         styles={selectStyle}
                                     />
-                                    {SITE_SUBJECT === SITE.CS && <RS.Label className="mt-2 mb-2 mb-md-0">
+                                    {isCS && <RS.Label className="mt-2 mb-2 mb-md-0">
                                         <UserContextPicker className="text-right" />
                                     </RS.Label>}
                                 </RS.Form>

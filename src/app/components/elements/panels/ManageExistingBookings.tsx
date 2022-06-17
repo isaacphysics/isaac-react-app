@@ -19,7 +19,7 @@ import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "..
 import {DateString} from "../DateString";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {API_PATH, bookingStatusMap, examBoardLabelMap, stageLabelMap} from "../../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 
 export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialUser; eventBookingId: string}) => {
@@ -111,7 +111,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                             <th className="align-middle">
                                 Stage
                             </th>
-                            {SITE_SUBJECT == SITE.CS && <th className="align-middle">
+                            {isCS && <th className="align-middle">
                                 Exam board
                             </th>}
                             <th className="align-middle">
@@ -178,7 +178,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                                     <td className="align-middle">
                                         {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ")}
                                     </td>
-                                    {SITE_SUBJECT == SITE.CS && <td className="align-middle">
+                                    {isCS && <td className="align-middle">
                                         {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => examBoardLabelMap[rc.examBoard!]))).join(", ")}
                                     </td>}
                                     <td className="align-middle text-center">{booking.reservedById || "-"}</td>

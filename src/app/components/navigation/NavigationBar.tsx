@@ -18,11 +18,12 @@ import {
 import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {selectors} from "../../state/selectors";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS} from "../../services/siteConstants";
 import {loadQuizAssignedToMe} from "../../state/actions/quizzes";
 import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
 import {isFound} from "../../services/miscUtils";
 import {RenderNothing} from "../elements/RenderNothing";
+import classNames from "classnames";
 
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
@@ -30,7 +31,7 @@ const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: Rea
 });
 
 export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWithChildren<DropdownItemProps & {muted?: boolean, badgeTitle?: string}>) => (
-    <DropdownItem tag={Link} className={`pl-4 py-3 p-md-3 ${muted ? "text-muted" : ""}`} {...props}>
+    <DropdownItem tag={Link} className={classNames("pl-4 py-3 p-md-3", {"text-muted": muted})} {...props}>
         {children}
         {badgeTitle && <Badge color="light" className="border-secondary border bg-white ml-2 mr-1">{badgeTitle}</Badge>}
     </DropdownItem>
@@ -101,7 +102,7 @@ export const NavigationBar = ({children}: {children: React.ReactNode}) => {
                 Menu
             </NavbarToggler>
 
-            <Collapse isOpen={menuOpen} navbar className={`px-0 mx-0 mx-xl-5 ${SITE_SUBJECT === SITE.CS ? "px-xl-5" : ""}`}>
+            <Collapse isOpen={menuOpen} navbar className={classNames("px-0 mx-0 mx-xl-5", {"px-xl-5": isCS})}>
                 <Nav navbar className="justify-content-between" id="main-menu">
                     {children}
                 </Nav>

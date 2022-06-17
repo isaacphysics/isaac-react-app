@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import * as RS from 'reactstrap';
 import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 
 const WARNING_COOKIE = "warningBannerDismissed";
 
@@ -11,11 +10,6 @@ export const WarningBanner = () => {
         const currentCookieValue = Cookies.get(WARNING_COOKIE);
         return currentCookieValue !== "1";
     });
-
-    const twitterLink = {
-        [SITE.CS]: "https://twitter.com/isaaccompsci",
-        [SITE.PHY]: "https://twitter.com/isaacphysics"
-    }[SITE_SUBJECT];
 
     function clickDismiss() {
         setCookie(false);

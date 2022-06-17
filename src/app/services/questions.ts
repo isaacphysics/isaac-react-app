@@ -1,56 +1,63 @@
-import {IsaacMultiChoiceQuestion} from "../components/content/IsaacMultiChoiceQuestion";
-import {IsaacItemQuestion} from "../components/content/IsaacItemQuestion";
-import {IsaacParsonsQuestion} from "../components/content/IsaacParsonsQuestion";
-import {IsaacNumericQuestion} from "../components/content/IsaacNumericQuestion";
-import {IsaacStringMatchQuestion} from "../components/content/IsaacStringMatchQuestion";
-import {IsaacRegexMatchQuestion} from "../components/content/IsaacRegexMatchQuestion";
-import {IsaacFreeTextQuestion} from "../components/content/IsaacFreeTextQuestion";
-import {IsaacSymbolicLogicQuestion} from "../components/content/IsaacSymbolicLogicQuestion";
-import {IsaacSymbolicQuestion} from "../components/content/IsaacSymbolicQuestion";
-import {IsaacSymbolicChemistryQuestion} from "../components/content/IsaacSymbolicChemistryQuestion";
-import {IsaacGraphSketcherQuestion} from "../components/content/IsaacGraphSketcherQuestion";
-import {AppQuestionDTO, ValidatedChoice} from "../../IsaacAppTypes";
-import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from '../services/constants';
-import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
-import {IsaacClozeQuestion} from "../components/content/IsaacClozeQuestion";
+import React, {lazy} from "react";
+import {AppQuestionDTO, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
+import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from './constants';
+import {
+    ChoiceDTO,
+    ContentDTO,
+    ContentSummaryDTO
+} from "../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {setCurrentAttempt} from "../state/actions";
 import {selectors} from "../state/selectors";
+const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
+const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
+const IsaacReorderQuestion = lazy(() => import("../components/content/IsaacReorderQuestion"));
+const IsaacParsonsQuestion = lazy(() => import("../components/content/IsaacParsonsQuestion"));
+const IsaacNumericQuestion = lazy(() => import("../components/content/IsaacNumericQuestion"));
+const IsaacStringMatchQuestion = lazy(() => import("../components/content/IsaacStringMatchQuestion"));
+const IsaacRegexMatchQuestion = lazy(() => import("../components/content/IsaacRegexMatchQuestion"));
+const IsaacFreeTextQuestion = lazy(() => import("../components/content/IsaacFreeTextQuestion"));
+const IsaacSymbolicLogicQuestion = lazy(() => import("../components/content/IsaacSymbolicLogicQuestion"));
+const IsaacSymbolicQuestion = lazy(() => import("../components/content/IsaacSymbolicQuestion"));
+const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/IsaacSymbolicChemistryQuestion"));
+const IsaacGraphSketcherQuestion = lazy(() => import("../components/content/IsaacGraphSketcherQuestion"));
+const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQuestion"));
 
-export const QUESTION_TYPES = new Map([
-    ["isaacMultiChoiceQuestion", IsaacMultiChoiceQuestion],
-    ["isaacItemQuestion", IsaacItemQuestion],
-    ["isaacParsonsQuestion", IsaacParsonsQuestion],
-    ["isaacNumericQuestion", IsaacNumericQuestion],
-    ["isaacSymbolicQuestion", IsaacSymbolicQuestion],
-    ["isaacSymbolicChemistryQuestion", IsaacSymbolicChemistryQuestion],
-    ["isaacStringMatchQuestion", IsaacStringMatchQuestion],
-    ["isaacRegexMatchQuestion", IsaacRegexMatchQuestion],
-    ["isaacFreeTextQuestion", IsaacFreeTextQuestion],
-    ["isaacSymbolicLogicQuestion", IsaacSymbolicLogicQuestion],
-    ["isaacGraphSketcherQuestion", IsaacGraphSketcherQuestion],
-    ["isaacClozeQuestion", IsaacClozeQuestion],
-    ["default", IsaacMultiChoiceQuestion]
-]);
+export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
+    "isaacMultiChoiceQuestion": "Multiple choice",
+    "isaacItemQuestion": "Item",
+    "isaacReorderQuestion": "Reorder",
+    "isaacParsonsQuestion": "Parsons",
+    "isaacNumericQuestion": "Numeric",
+    "isaacSymbolicQuestion": "Symbolic",
+    "isaacSymbolicChemistryQuestion": "Chemistry",
+    "isaacStringMatchQuestion": "String match",
+    "isaacFreeTextQuestion": "Free text",
+    "isaacSymbolicLogicQuestion": "Boolean logic",
+    "isaacGraphSketcherQuestion": "Graph Sketcher",
+    "isaacClozeQuestion": "Cloze drag and drop",
+    "default": "Multiple choice"
+};
 
-export const HUMAN_QUESTION_TYPES = new Map([
-    ["isaacMultiChoiceQuestion", "Multiple choice"],
-    ["isaacItemQuestion", "Item"],
-    ["isaacParsonsQuestion", "Parsons"],
-    ["isaacNumericQuestion", "Numeric"],
-    ["isaacSymbolicQuestion", "Symbolic"],
-    ["isaacSymbolicChemistryQuestion", "Chemistry"],
-    ["isaacStringMatchQuestion", "String match"],
-    ["isaacFreeTextQuestion", "Free text"],
-    ["isaacSymbolicLogicQuestion", "Boolean logic"],
-    ["isaacGraphSketcherQuestion", "Graph Sketcher"],
-    ["isaacClozeQuestion", "Cloze drag and drop"],
-    ["default", "Multiple choice"]
-]);
-
+export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, questionId, readonly}: IsaacQuestionProps<any>) => JSX.Element>} = {
+    "isaacMultiChoiceQuestion": IsaacMultiChoiceQuestion,
+    "isaacItemQuestion": IsaacItemQuestion,
+    "isaacReorderQuestion": IsaacReorderQuestion,
+    "isaacParsonsQuestion": IsaacParsonsQuestion,
+    "isaacNumericQuestion": IsaacNumericQuestion,
+    "isaacSymbolicQuestion": IsaacSymbolicQuestion,
+    "isaacSymbolicChemistryQuestion": IsaacSymbolicChemistryQuestion,
+    "isaacStringMatchQuestion": IsaacStringMatchQuestion,
+    "isaacRegexMatchQuestion": IsaacRegexMatchQuestion,
+    "isaacFreeTextQuestion": IsaacFreeTextQuestion,
+    "isaacSymbolicLogicQuestion": IsaacSymbolicLogicQuestion,
+    "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
+    "isaacClozeQuestion": IsaacClozeQuestion,
+    "default": IsaacMultiChoiceQuestion
+};
 
 export function isQuestion(doc: ContentDTO) {
-    return QUESTION_TYPES.has(doc.type as string);
+    return doc.type ? doc.type in QUESTION_TYPES : false;
 }
 
 export const HUMAN_QUESTION_TAGS = new Map([

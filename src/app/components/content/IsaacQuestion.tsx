@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, Suspense, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
@@ -14,12 +14,14 @@ import {
     determineFastTrackSecondaryAction,
     useFastTrackInformation
 } from "../../services/fastTrack";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
 import {v4 as uuid_v4} from "uuid";
+import {Loading} from "../handlers/IsaacSpinner";
+import classNames from "classnames";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -29,12 +31,15 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const currentUser = useSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const validationResponse = questionPart?.validationResponse;
+    const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
     const locked = questionPart?.locked;
     const canSubmit = questionPart?.canSubmit && !locked || false;
-    const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs") && SITE_SUBJECT === SITE.PHY;
-    const tooManySigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_many");
-    const tooFewSigFigsError = sigFigsError && (validationResponse?.explanation?.tags || []).includes("sig_figs_too_few");
+    const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
+    const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
+    const tooFewSigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_few");
+    const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
+    const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
     const [isVisible, setVisible] = useState(false);
     const [hideOptions, setHideOptions] = useState(false);
@@ -50,6 +55,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
     </p>;
 
+    const invalidFormatFeeback = <p>
+        Your answer is not in a format we recognise, please enter your answer as a decimal number.<br/>
+        {invalidFormatErrorStdForm && <>When writing standard form, you must include <code>^</code> or <code>**</code> between the 10 and the exponent.<br/></>}
+        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a></>}.
+    </p>;
+
     // Register Question Part in Redux
     useEffect((): (() => void) => {
         dispatch(registerQuestion(doc, accordion.clientId));
@@ -57,7 +68,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     }, [dispatch, doc.id]);
 
     // Select QuestionComponent from the question part's document type (or default)
-    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
+    const QuestionComponent = QUESTION_TYPES[doc?.type ?? "default"];
 
     // FastTrack buttons should only show up if on a FastTrack-enabled board
     const isFastTrack = fastTrackInfo.isFastTrackPage && currentGameboard?.id && fastTrackProgressEnabledBoards.includes(currentGameboard.id);
@@ -80,12 +91,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             }
         }
     }}>
-        <div className={`question-component p-md-5 ${doc.type} ${doc.type === 'isaacParsonsQuestion' ? "parsons-layout" : ""}`}>
-            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
-            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
+        <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
+            <Suspense fallback={<Loading/>}>
+                <QuestionComponent questionId={doc.id as string} doc={doc} {...{validationResponse}} />
+            </Suspense>
 
             {/* CS Hints */}
-            {SITE_SUBJECT === SITE.CS && <React.Fragment>
+            {isCS && <React.Fragment>
                 <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
             </React.Fragment>}
 
@@ -95,7 +107,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 {validationResponse.explanation && <div className="mb-2">
-                    {tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
+                    {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
                         <IsaacContent doc={validationResponse.explanation}/>
                     }
                 </div>}
@@ -117,14 +129,17 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     {primaryAction &&
                         <div className={`m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}>
                             {hideOptions && <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />}
-                            {ConfidenceQuestions({hideOptions: hideOptions, setHideOptions: setHideOptions, isVisible: isVisible, setVisible: setVisible, identifier: doc.id, attemptUuid: attemptUuid, type: "question", correct: correct, answer: questionPart?.currentAttempt})}
+                            <ConfidenceQuestions hideOptions={hideOptions} setHideOptions={setHideOptions}
+                                                 isVisible={isVisible} setVisible={setVisible} identifier={doc.id}
+                                                 attemptUuid={attemptUuid} type={"question"}
+                                                 correct={correct} answer={questionPart?.currentAttempt} />
                         </div>
                     }
                 </div>
             }
 
             {/* CS Hint Reminder */}
-            {SITE_SUBJECT === SITE.CS && (!validationResponse || !correct || canSubmit) && <RS.Row>
+            {isCS && (!validationResponse || !correct || canSubmit) && <RS.Row>
                 <RS.Col xl={{size: 10, offset: 1}} >
                     {doc.hints && <p className="no-print text-center pt-2 mb-0">
                         <small>{"Don't forget to use the hints above if you need help."}</small>
@@ -133,7 +148,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </RS.Row>}
 
             {/* Physics Hints */}
-            {SITE_SUBJECT === SITE.PHY && <div className={correct ? "mt-5" : ""}>
+            {isPhy && <div className={correct ? "mt-5" : ""}>
                 <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
             </div>}
         </div>

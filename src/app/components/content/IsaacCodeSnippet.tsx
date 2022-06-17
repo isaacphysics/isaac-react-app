@@ -4,7 +4,7 @@ import {Col, Row} from "reactstrap";
 import hljs from 'highlight.js/lib/core';
 import {addLineNumbers} from "../../services/highlightJs";
 import {ScrollShadows} from "../elements/ScrollShadows";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS} from "../../services/siteConstants";
 import classNames from "classnames";
 import {useExpandContent} from "../elements/markup/portals/Tables";
 import {useStatefulElementRef} from "../elements/markup/portals/utils";
@@ -13,7 +13,7 @@ interface IsaacCodeProps {
     doc: CodeSnippetDTO;
 }
 
-export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
+const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const codeSnippetRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         {expandButton}
         <div className={innerClasses}>
             {/* ScrollShadows uses ResizeObserver, which doesn't exist on Safari <= 13 */}
-            {SITE_SUBJECT === SITE.CS && window.ResizeObserver && <ScrollShadows element={scrollPromptRef} />}
+            {isCS && window.ResizeObserver && <ScrollShadows element={scrollPromptRef} />}
             <Row>
                 <Col>
                 <pre ref={updateScrollPromptRef} className="line-numbers">
@@ -49,3 +49,4 @@ export const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
         </div>
     </div>
 };
+export default IsaacCodeSnippet;

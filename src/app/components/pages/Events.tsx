@@ -14,7 +14,7 @@ import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 import {stageExistsForSite} from "../../services/events";
 
@@ -62,7 +62,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {SITE_SUBJECT === SITE.CS && <>
+            {isCS && <>
                 <CoronavirusWarningBanner />
                 <MetaDescription description={metaDescriptionCS} />
             </>}

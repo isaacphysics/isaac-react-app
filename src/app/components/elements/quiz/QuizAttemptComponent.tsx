@@ -19,7 +19,7 @@ import {Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
 import {useDispatch} from "react-redux";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {siteSpecific} from "../../../services/siteConstants";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {closeActiveModal, openActiveModal} from "../../../state/actions";
@@ -152,7 +152,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 
     return section ?
         <Row className="question-content-container">
-            <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4 question-panel">
+            <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4 question-panel">
                 <UserContextPicker className="no-print text-right"/>
                 <Row>
                     {rubric && renderRubric && <Col className="text-right">

@@ -1,5 +1,5 @@
 import katex from "katex";
-import {katexify} from "../../app/components/elements/markup/katex";
+import {katexify} from "../../app/components/elements/markup/latexRendering";
 
 
 jest.mock("katex");

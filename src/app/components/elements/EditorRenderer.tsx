@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Col, Row} from "reactstrap";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
@@ -46,7 +46,7 @@ function EditorListener() {
     const colClasses = type === "question" ? "question-panel" : "";
 
     return doc ? <Row className={`${type}-content-container`}>
-            <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className={`py-4 ${colClasses}`}>
+            <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className={`py-4 ${colClasses}`}>
                 <FigureNumberingContext.Provider value={{}}>
                     <WithFigureNumbering doc={doc}>
                         <IsaacContent doc={doc}/>

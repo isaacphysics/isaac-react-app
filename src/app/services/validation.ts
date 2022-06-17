@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {isCS} from "./siteConstants";
 import {EXAM_BOARD, STAGE} from "./constants";
 import {isStudent} from "./user";
 
@@ -59,7 +59,7 @@ export function validateUserContexts(userContexts?: UserContext[]): boolean {
     if (userContexts.length === 0) {return false;}
     return userContexts.every(uc =>
         Object.values(STAGE).includes(uc.stage as STAGE) && //valid stage
-        (SITE_SUBJECT !== SITE.CS || Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD)) // valid exam board for cs
+        (!isCS || Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD)) // valid exam board for cs
     );
 }
 
@@ -89,7 +89,7 @@ export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
 export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences
-        && (SITE_SUBJECT !== SITE.CS || (validateUserSchool(user) && validateUserGender(user)
+        && (!isCS || (validateUserSchool(user) && validateUserGender(user)
         && validateName(user.givenName) && validateName(user.familyName)))
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
         && validateUserContexts(userContexts);

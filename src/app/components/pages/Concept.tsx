@@ -6,7 +6,7 @@ import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
-import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {DocumentSubject} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
@@ -18,15 +18,14 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {Markup} from "../elements/markup";
+import {isCS, isPhy, siteSpecific, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
-import {determineFastTrackSecondaryAction} from "../../services/fastTrack";
 import {v4 as uuid_v4} from "uuid";
 import {Helmet} from "react-helmet";
 import {generateQuestionTitle} from "../../services/questions";
-import {Markup} from "../elements/markup";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -72,7 +71,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                 </div>
 
                 <Row className="concept-content-container">
-                    <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
+                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
@@ -82,7 +81,9 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>
 
-                        {ConfidenceQuestions({hideOptions: hideOptions, setHideOptions: setHideOptions, isVisible: isVisible, setVisible: setVisible, identifier: doc.id, attemptUuid: attemptUuid, type: "concept"})}
+                        <ConfidenceQuestions hideOptions={hideOptions} setHideOptions={setHideOptions}
+                                             isVisible={isVisible} setVisible={setVisible} identifier={doc.id}
+                                             attemptUuid={attemptUuid} type={"concept"} />
 
                         {doc.attribution && <p className="text-muted">
                             <Markup trusted-markup-encoding={"markdown"}>
@@ -90,11 +91,11 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                             </Markup>
                         </p>}
 
-                        {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                        {isCS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
                         <NavigationLinks navigation={navigation} />
 
-                        {SITE_SUBJECT === SITE.PHY && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                        {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

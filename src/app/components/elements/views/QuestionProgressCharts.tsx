@@ -5,7 +5,7 @@ import {bb, Chart} from "billboard.js";
 import tags from "../../../services/tags";
 import Select, { SingleValue } from "react-select";
 import {difficultiesOrdered, difficultyLabelMap, doughnutColours, specificDoughnutColours, STAGE, stageLabelMap, TAG_ID} from "../../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
 import {getFilteredStageOptions} from "../../../services/userContext";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {comparatorFromOrderedValues} from "../../../services/gameboards";
@@ -60,7 +60,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     useEffect(() => {
         const charts: Chart[] = [];
-        if (SITE_SUBJECT === SITE.PHY && !isAllZero(categoryColumns)) {
+        if (isPhy && !isAllZero(categoryColumns)) {
             charts.push(bb.generate({
                 data: {
                     columns: categoryColumns,
@@ -91,7 +91,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             ...OPTIONS
         }));
 
-        if (SITE_SUBJECT === SITE.PHY) {
+        if (isPhy) {
             charts.push(bb.generate({
                 data: {
                     columns: difficultyColumns,
@@ -125,10 +125,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         }
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
 
-    const noCharts = {[SITE.CS]: 2, [SITE.PHY]: 3}[SITE_SUBJECT];
+    const noCharts = siteSpecific(3, 2);
 
     return <RS.Row>
-        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
+        {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 Questions by {topTagLevel}
             </div>
@@ -138,7 +138,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>}
-        {SITE_SUBJECT === SITE.CS && <RS.Col md={3}/>}
+        {isCS && <RS.Col md={3}/>}
         <RS.Col xl={12/noCharts} md={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <Select
@@ -158,8 +158,8 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>
-        {SITE_SUBJECT === SITE.CS && <RS.Col md={3}/>}
-        {SITE_SUBJECT === SITE.PHY && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
+        {isCS && <RS.Col md={3}/>}
+        {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <Select
                     inputId={`${subId}-stage-select`}

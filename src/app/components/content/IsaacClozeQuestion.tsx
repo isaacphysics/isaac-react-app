@@ -16,7 +16,7 @@ import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../..
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
 
-export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
+const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
@@ -169,29 +169,32 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
     return <div className="question-content cloze-question">
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
             <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
-                <IsaacContentValueOrChildren value={doc.value} encoding={"markdown" /* doc.encoding  FIXME CP replace this once cloze text questions have been changed to markdown encoding */}>
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
                 {/* Items section */}
                 <Label htmlFor="non-selected-items" className="mt-3">Items: </Label>
-                <Droppable droppableId={itemsSection} direction="horizontal" isDropDisabled={readonly}>
-                    {(provided, snapshot) => <div
-                        ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
-                        className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-                    >
-                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
-                            {(provided) =>
-                                <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    <Item item={item} />
-                                </div>
-                            }
-                        </Draggable>)}
-                        {nonSelectedItems.length === 0 && "\u00A0"}
-                        {provided.placeholder}
-                    </div>}
-                </Droppable>
+                <div className={"cloze-drop-zone"}>
+                    <Droppable droppableId={itemsSection} direction="horizontal" isDropDisabled={readonly}>
+                        {(provided, snapshot) => <div
+                            ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
+                            className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                        >
+                            {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
+                                {(provided) =>
+                                    <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                        <Item item={item} />
+                                    </div>
+                                }
+                            </Draggable>)}
+                            {nonSelectedItems.length === 0 && "\u00A0"}
+                            {provided.placeholder}
+                        </div>}
+                    </Droppable>
+                </div>
             </DragDropContext>
         </ClozeDropRegionContext.Provider>
     </div>;
-}
+};
+export default IsaacClozeQuestion;

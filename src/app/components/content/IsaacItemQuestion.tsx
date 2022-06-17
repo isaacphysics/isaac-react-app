@@ -5,7 +5,7 @@ import {CustomInput, Label} from "reactstrap";
 import {useCurrentQuestionAttempt} from "../../services/questions";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacItemQuestionDTO>) => {
+const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacItemQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
@@ -54,3 +54,4 @@ export const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
         </div>
     );
 };
+export default IsaacItemQuestion;

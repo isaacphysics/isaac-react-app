@@ -10,7 +10,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
-import {SITE, SITE_SUBJECT, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
+import {isCS, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
@@ -115,7 +115,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={SITE_SUBJECT === SITE.CS}/>
+                                 required={isCS}/>
                 </FormGroup>
             </Col>
         </Row>
@@ -123,7 +123,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={SITE_SUBJECT === SITE.CS}/>
+                                 required={isCS}/>
                 </FormGroup>
             </Col>
             <Col md={6}>
@@ -134,7 +134,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 />
             </Col>
         </Row>
-        {SITE_SUBJECT === SITE.CS && <Row>
+        {isCS && <Row>
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="programming-language-select">

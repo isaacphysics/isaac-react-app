@@ -1,6 +1,6 @@
-import {Confidence} from "../../IsaacAppTypes";
+import {ConfidenceType} from "../../IsaacAppTypes";
 
-export function confidenceOptions(option: Confidence) {
+export function confidenceOptions(option: ConfidenceType) {
     switch (option) {
         case "concept":
             return {

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {Suspense, lazy, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -29,7 +29,6 @@ import {
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
-import {UserMFA} from "../elements/panels/UserMFA";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
     allRequiredInformationIsPresent,
@@ -46,10 +45,12 @@ import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
 import {ErrorState} from "../../state/reducers/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
+import {Loading} from "../handlers/IsaacSpinner";
+const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 const stateToProps = (state: AppState, props: any) => {
     const {location: {search, hash}} = props;
@@ -151,8 +152,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useEffect(() => {
         const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentProgrammingLanguage = SITE_SUBJECT === SITE.CS ? (userPreferences?.PROGRAMMING_LANGUAGE ? userPreferences.PROGRAMMING_LANGUAGE: {}) : undefined;
-        const currentBooleanNotation = SITE_SUBJECT === SITE.CS ? (userPreferences?.BOOLEAN_NOTATION ? userPreferences.BOOLEAN_NOTATION: {}) : undefined;
+        const currentProgrammingLanguage = isCS ? (userPreferences?.PROGRAMMING_LANGUAGE ? userPreferences.PROGRAMMING_LANGUAGE: {}) : undefined;
+        const currentBooleanNotation = isCS ? (userPreferences?.BOOLEAN_NOTATION ? userPreferences.BOOLEAN_NOTATION: {}) : undefined;
         const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
         const currentUserPreferences: UserPreferencesDTO = {
             EMAIL_PREFERENCE: currentEmailPreferences,
@@ -305,12 +306,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     setNewPassword={setNewPassword} setNewPasswordConfirm={setNewPasswordConfirm} editingOtherUser={editingOtherUser}
                                 />
                                 {isStaff(user) && !editingOtherUser &&
-                                    // beta feature just for staff
-                                    <UserMFA
-                                        userAuthSettings={userAuthSettings}
-                                        userToUpdate={userToUpdate}
-                                        editingOtherUser={editingOtherUser}
-                                    />
+                                    // Currently staff only
+                                    <Suspense fallback={<Loading/>}>
+                                        <UserMFA
+                                            userAuthSettings={userAuthSettings}
+                                            userToUpdate={userToUpdate}
+                                            editingOtherUser={editingOtherUser}
+                                        />
+                                    </Suspense>
                                 }
                             </TabPane>
 
