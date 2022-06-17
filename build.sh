@@ -66,16 +66,26 @@ if [ "${PULL_FAILED}" -ne 0 ] || [ "$FORCE_BUILD" == "1" ]; then
   yarn --frozen-lockfile
   yarn run build-cs
   yarn run build-phy
+  yarn run build-cs-renderer
+  yarn run build-phy-renderer
   docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-cs-app:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
   docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-phy-app:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics .
+  docker build -t "docker.isaacscience.org/isaac-cs-app-renderer:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-cs-app-renderer:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs RENDERER_PATH=-renderer .
+  docker build -t "docker.isaacscience.org/isaac-phy-app-renderer:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-phy-app-renderer:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics RENDERER_PATH=-renderer .
   docker push "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
   docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
+  docker push "docker.isaacscience.org/isaac-cs-app-renderer:${VERSION_TO_DEPLOY}"
+  docker push "docker.isaacscience.org/isaac-phy-app-renderer:${VERSION_TO_DEPLOY}"
   docker push "docker.isaacscience.org/isaac-cs-app:${APP_COMMIT_SHA}"
   docker push "docker.isaacscience.org/isaac-phy-app:${APP_COMMIT_SHA}"
+  docker push "docker.isaacscience.org/isaac-cs-app-renderer:${APP_COMMIT_SHA}"
+  docker push "docker.isaacscience.org/isaac-phy-app-renderer:${APP_COMMIT_SHA}"
 else
   echo "App image already built for commit ${APP_COMMIT_SHA}. Skipping build."
   docker pull "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
   docker pull "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
+  docker pull "docker.isaacscience.org/isaac-cs-app-renderer:${VERSION_TO_DEPLOY}"
+  docker pull "docker.isaacscience.org/isaac-phy-app-renderer:${VERSION_TO_DEPLOY}"
 fi
 
 
@@ -114,6 +124,6 @@ cd ..
 rm -rf isaac-api
 echo "Build complete"
 echo "Now run, for example:"
-echo "   ./compose dev $VERSION_TO_DEPLOY up -d"
+echo "   ./compose phy dev $VERSION_TO_DEPLOY up -d"
 echo
 echo "   Er, maybe. That was what we did for Isaac Physics, anyway."
