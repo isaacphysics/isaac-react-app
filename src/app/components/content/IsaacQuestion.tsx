@@ -18,7 +18,7 @@ import {isCS, isPhy} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
-import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
+import {ConfidenceQuestions} from "../elements/inputs/ConfidenceQuestions";
 import {v4 as uuid_v4} from "uuid";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";

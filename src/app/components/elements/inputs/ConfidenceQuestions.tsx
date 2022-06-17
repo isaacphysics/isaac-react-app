@@ -4,10 +4,61 @@ import {closeActiveModal, logAction, openActiveModal} from "../../../state/actio
 import {useDispatch} from "react-redux";
 import {v4 as uuid_v4} from "uuid";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
-import {confidenceOptions} from "../../../services/confidence";
 import classNames from "classnames";
 import {isCS} from "../../../services/siteConstants";
 import {store} from "../../../state/store";
+
+interface ConfidenceVariables {
+    title: string;
+    firstQuestion: string;
+    secondQuestion: string;
+    firstOptions: {
+        negative: string;
+        neutral: string;
+        positive: string;
+    },
+    secondOptions: {
+        negative: string;
+        neutral: string;
+        positive: string;
+    }
+}
+
+const defaultConfidenceVariables: ConfidenceVariables = {
+    title: "Click a button to show the answer",
+    firstQuestion: "What is your level of confidence that your own answer is correct?",
+    secondQuestion: "Is your own answer correct?",
+    firstOptions: {
+        negative: "Low",
+        neutral: "Medium",
+        positive: "high"
+    },
+    secondOptions: {
+        negative: "No",
+        neutral: "Partly",
+        positive: "Yes"
+    }
+}
+
+// Text to show in the confidence component depending on the type of content
+const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
+    "question": {
+        title: "Click a button to check your answer",
+        firstQuestion: "What is your level of confidence that your own answer is correct?",
+        secondQuestion: "Having read the feedback, do you feel more confident in answering this question?",
+        firstOptions: {
+            negative: "Low",
+            neutral: "Medium",
+            positive: "high"
+        },
+        secondOptions: {
+            negative: "No",
+            neutral: "Partly",
+            positive: "Yes"
+        }
+    },
+    "quick_question": defaultConfidenceVariables
+};
 
 
 interface ConfidenceQuestionsProps {
@@ -25,15 +76,11 @@ interface ConfidenceQuestionsProps {
 const confidenceInformationModal = () => openActiveModal({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Information",
-    body: <Row className="mb-3">
-        <Col>
-            <span>
-                We regularly review and update the Isaac platform’s content and would like your input in order to
-                prioritise content and assess the impact of updates. Data captured with these buttons will help us
-                identify priority areas.
-            </span>
-        </Col>
-    </Row>
+    body: <div className="mb-4">
+        We regularly review and update the Isaac platform’s content and would like your input in order to
+        prioritise content and assess the impact of updates. Data captured with these buttons will help us
+        identify priority areas.
+    </div>
 });
 
 export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, setVisible, identifier, attemptUuid, type, correct, answer}: ConfidenceQuestionsProps) => {
@@ -82,6 +129,9 @@ export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, set
             }
         }
     };
+
+    // `isVisible `is a relic from when this was used only for quick questions - it basically means "should I show the
+    // second question and set of options", and should be renamed that way
 
     return <div className={"quick-question-options " + classNames({"quick-question-secondary": isCS && isVisible})}
                 hidden={hideOptions}>

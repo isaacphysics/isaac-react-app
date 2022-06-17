@@ -22,8 +22,6 @@ import {Markup} from "../elements/markup";
 import {isCS, isPhy, siteSpecific, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
-import {ConfidenceQuestions} from "../elements/inputs/QuestionConfidence";
-import {v4 as uuid_v4} from "uuid";
 import {Helmet} from "react-helmet";
 import {generateQuestionTitle} from "../../services/questions";
 
