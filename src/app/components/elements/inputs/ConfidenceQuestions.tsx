@@ -31,7 +31,7 @@ const defaultConfidenceVariables: ConfidenceVariables = {
     firstOptions: {
         negative: "Low",
         neutral: "Medium",
-        positive: "high"
+        positive: "High"
     },
     secondOptions: {
         negative: "No",
@@ -49,7 +49,7 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
         firstOptions: {
             negative: "Low",
             neutral: "Medium",
-            positive: "high"
+            positive: "High"
         },
         secondOptions: {
             negative: "No",

@@ -6,7 +6,6 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
-import {RouteComponentProps, withRouter} from "react-router";
 import {v4 as uuid_v4} from "uuid";
 import {ConfidenceQuestions} from "../elements/inputs/ConfidenceQuestions";
 import {isCS} from "../../services/siteConstants";
