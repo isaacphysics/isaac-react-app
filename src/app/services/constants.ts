@@ -4,7 +4,7 @@ import {Remarkable} from "remarkable";
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
-import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {siteSpecific} from "./siteConstants";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
@@ -23,18 +23,32 @@ export const isTest = document.location.hostname.startsWith("test.");
 
 export const API_PATH: string = apiPath;
 
-const EDITOR_BASE_URL = {
-    [SITE.PHY]: "https://editor.isaacphysics.org",
-    [SITE.CS]: "https://editor.isaaccomputerscience.org",
-}[SITE_SUBJECT];
+const EDITOR_BASE_URL = siteSpecific(
+    "https://editor.isaacphysics.org",
+    "https://editor.isaaccomputerscience.org",
+);
 
 export const EDITOR_URL = EDITOR_BASE_URL + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_BASE_URL + "/#!/compare";
 
-export const GOOGLE_ANALYTICS_ACCOUNT_ID = {
-    [SITE.PHY]: "UA-122616705-1",
-    [SITE.CS]: "UA-137475074-1",
-}[SITE_SUBJECT];
+export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
+    "UA-122616705-1",
+    "UA-137475074-1"
+);
+
+export const SOCIAL_LINKS = siteSpecific(
+    {
+        youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
+        twitter: {name: "Twitter", href: "https://twitter.com/isaacphysics"},
+        facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
+    },
+    {
+        youtube: {name: "YouTube", href: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"},
+        twitter: {name: "Twitter", href: "https://twitter.com/isaaccompsci"},
+        facebook: {name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience"},
+        instagram: {name: "Instagram", href: "https://www.instagram.com/isaaccompsci"}
+    }
+);
 
 export const CODE_EDITOR_BASE_URL = document.location.hostname === "localhost" ? "http://localhost:3000" : "https://editor.isaaccode.org";
 
@@ -991,9 +1005,10 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
-export const ASSIGNMENT_PROGRESS_CRUMB = SITE_SUBJECT === SITE.PHY ?
-    {title: "Assignment Progress", to: "/assignment_progress"} :
-    {title: "My markbook", to: "/my_markbook"};
+export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
+    {title: "Assignment Progress", to: "/assignment_progress"},
+    {title: "My markbook", to: "/my_markbook"}
+);
 
 export enum UserRole {
     ADMIN = "ADMIN",
@@ -1105,8 +1120,8 @@ _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
 
 
-export const specificDoughnutColours: { [key: string]: string } = {
-    [SITE.PHY]: {
+export const specificDoughnutColours: { [key: string]: string } = siteSpecific(
+    {
         "Physics": "#944cbe",
         "Maths": "#007fa9",
         "Chemistry": "#e22e25",
@@ -1117,11 +1132,11 @@ export const specificDoughnutColours: { [key: string]: string } = {
         [difficultyLabelMap.challenge_2]: "#955a0f",
         [difficultyLabelMap.challenge_3]: "#764811"
     },
-    [SITE.CS]: {}
-}[SITE_SUBJECT];
+    {}
+);
 
-export const doughnutColours = {
-    [SITE.PHY]: [
+export const doughnutColours = siteSpecific(
+    [
         "#944cbe",
         "#007fa9",
         "#e22e25",
@@ -1129,7 +1144,7 @@ export const doughnutColours = {
         "#448525",
         "#fea100"
     ],
-    [SITE.CS]: [
+    [
         "#feae42",
         "#000000",
         "#e51f6f",
@@ -1139,12 +1154,12 @@ export const doughnutColours = {
         "#aaaaaa",
         "#dbdbdb"
     ]
-}[SITE_SUBJECT];
+);
 
-export const progressColour = {
-    [SITE.PHY]: '#509E2E',
-    [SITE.CS]: '#000000'
-}[SITE_SUBJECT];
+export const progressColour = siteSpecific(
+    '#509E2E',
+    '#000000'
+);
 
 export const GRAY_120 = '#c9cad1';
 

@@ -5,7 +5,7 @@ import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateS
 import React from "react";
 import {Link} from "react-router-dom";
 import {STAGE, STAGES_CS, STAGES_PHY} from "./constants";
-import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {siteSpecific} from "./siteConstants";
 import {isStudent, isTeacher} from "./user";
 import {atLeastOne} from "./validation";
 
@@ -94,8 +94,8 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
 };
 
 export const stageExistsForSite = (stage: string) => {
-    const stagesForSite = SITE_SUBJECT === SITE.CS ? STAGES_CS : STAGES_PHY
-    return stagesForSite.has(stage as STAGE)
+    const stagesForSite = siteSpecific(STAGES_PHY, STAGES_CS);
+    return stagesForSite.has(stage as STAGE);
 }
 
 export const userSatisfiesStudentOnlyRestrictionForEvent = (user: PotentialUser | null, event: AugmentedEvent) => {

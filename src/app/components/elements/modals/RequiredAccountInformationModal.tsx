@@ -16,10 +16,10 @@ import {isMobile} from "../../../services/device";
 import {isLoggedIn, isStudent} from "../../../services/user";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
+import {isPhy, isCS, SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
-import { isDefined } from "../../../services/miscUtils";
+import {isDefined} from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
 
 const RequiredAccountInfoBody = () => {
@@ -60,8 +60,8 @@ const RequiredAccountInfoBody = () => {
     }
 
     const allUserFieldsAreValid =
-        (SITE_SUBJECT === SITE.PHY && validateUserContexts(initialUserContexts)) ||
-        (SITE_SUBJECT === SITE.CS && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
+        (isPhy && validateUserContexts(initialUserContexts)) ||
+        (isCS && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -79,8 +79,8 @@ const RequiredAccountInfoBody = () => {
             </div>}
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {((SITE_SUBJECT === SITE.CS && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
-                    {SITE_SUBJECT === SITE.CS && !validateUserGender(initialUserValue) && <div className="mb-3">
+                {((isCS && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
+                    {isCS && !validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -95,7 +95,7 @@ const RequiredAccountInfoBody = () => {
                         />
                     </div>}
                 </RS.Col>}
-                {SITE_SUBJECT === SITE.CS && !validateUserSchool(initialUserValue) && <RS.Col>
+                {isCS && !validateUserSchool(initialUserValue) && <RS.Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"

@@ -1,7 +1,7 @@
 import React from "react";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
+import {siteSpecific} from "../../services/siteConstants";
 
 export interface ConceptGameboardButtonProps {
     className?: string;
@@ -11,10 +11,10 @@ export interface ConceptGameboardButtonProps {
 export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboardButtonProps) => {
 
     // Currently PHY doesn't use this
-    const gameboardGenerateHref = {
-        [SITE.PHY]: `/gameboard_builder?concepts=${conceptId}`,
-        [SITE.CS]: `/gameboard_builder?concepts=${conceptId}`
-    }[SITE_SUBJECT]
+    const gameboardGenerateHref = siteSpecific(
+        `/gameboard_builder?concepts=${conceptId}`,
+        `/gameboard_builder?concepts=${conceptId}`
+    );
 
     return <Link className={classNames(className, "btn btn-sm btn-primary")} to={gameboardGenerateHref} >
         Generate a gameboard

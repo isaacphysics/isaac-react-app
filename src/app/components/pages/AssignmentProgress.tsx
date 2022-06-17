@@ -36,7 +36,7 @@ import {Link} from "react-router-dom";
 import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
 import {getQuizAssignmentCSVDownloadLink} from "../../services/quiz";
 import {usePageSettings} from "../../services/progress";
@@ -416,7 +416,7 @@ const AssignmentDetails = (props: AssignmentDetailsProps) => {
     const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const assignmentPath = SITE_SUBJECT == SITE.PHY ? "assignment_progress" : "my_markbook";
+    const assignmentPath = siteSpecific("assignment_progress", "my_markbook");
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) {
         event.stopPropagation();
@@ -690,7 +690,7 @@ export function AssignmentProgress(props: AssignmentProgressPageProps) {
     return <>
         <Container>
             <TitleAndBreadcrumb
-                currentPageTitle={{[SITE.PHY]: "Assignment Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
+                currentPageTitle={siteSpecific("Assignment Progress", "My markbook")}
                 subTitle="Track your group performance by question"
                 help={pageHelp}
                 modalId="assignment_progress_help"

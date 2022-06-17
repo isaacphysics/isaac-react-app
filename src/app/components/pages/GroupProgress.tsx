@@ -27,7 +27,7 @@ import {
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 import {isDefined} from '../../services/miscUtils';
 import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
@@ -458,7 +458,7 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
     return <React.Fragment>
         <Container>
             <TitleAndBreadcrumb
-                currentPageTitle={{[SITE.PHY]: "Group Progress", [SITE.CS]: "My markbook"}[SITE_SUBJECT]}
+                currentPageTitle={siteSpecific("Group Progress", "My markbook")}
                 subTitle="Track your group performance by assignment"
                 help={pageHelp}
             />

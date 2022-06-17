@@ -6,7 +6,7 @@ import {AppState} from "../../state/reducers";
 import {history} from "../../services/history";
 import {Redirect} from "react-router";
 import {selectors} from "../../state/selectors";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
@@ -210,7 +210,7 @@ export const LogIn = () => {
     const metaDescriptionCS = "Log in to your account. Access free GCSE and A level Computer Science resources. Use our materials to learn and revise for your exams.";
 
     return <Container id="login-page" className="my-4">
-        {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS} />}
+        {isCS && <MetaDescription description={metaDescriptionCS} />}
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>

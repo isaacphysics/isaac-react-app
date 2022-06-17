@@ -1,5 +1,4 @@
 import React, {RefObject, useCallback, useEffect, useRef, useState} from "react";
-import {SITE, SITE_SUBJECT} from "./siteConstants";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {NOT_FOUND} from "./constants";
 
@@ -101,14 +100,6 @@ export function useOutsideCallback(ref: RefObject<any>, callback : () => void, d
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [...deps, ref]);
-}
-
-export const isPhy = SITE_SUBJECT === SITE.PHY;
-
-export const isCS = SITE_SUBJECT === SITE.CS;
-
-export function siteSpecific<P, C>(phy: P, cs: C) {
-    return isPhy ? phy : cs;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function

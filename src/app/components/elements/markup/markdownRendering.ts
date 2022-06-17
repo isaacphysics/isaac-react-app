@@ -1,7 +1,7 @@
 import {MARKDOWN_RENDERER} from "../../../services/constants";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isPhy} from "../../../services/siteConstants";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     const href = utils.escapeHtml(tokens[idx].href || "");
@@ -54,7 +54,7 @@ export const regexProcessMarkdown = (markdown: string) => {
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
-    if (SITE_SUBJECT === SITE.PHY) {
+    if (isPhy) {
         Object.assign(regexRules, {
             "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
             "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,

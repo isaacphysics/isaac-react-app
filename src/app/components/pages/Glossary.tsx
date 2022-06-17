@@ -17,7 +17,7 @@ import Select from "react-select";
 import {useUserContext} from "../../services/userContext";
 import {useUrlHashValue} from "../../services/reactRouterExtension";
 import {Item} from "../../services/select";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 /*
@@ -195,7 +195,7 @@ export const Glossary = () => {
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
-            {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS} />}
+            {isCS && <MetaDescription description={metaDescriptionCS} />}
 
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">

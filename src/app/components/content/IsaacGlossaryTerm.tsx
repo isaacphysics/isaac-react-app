@@ -4,7 +4,7 @@ import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import tags from "../../services/tags";
 import { isDefined } from '../../services/miscUtils';
-import { SITE, SITE_SUBJECT } from '../../services/siteConstants';
+import {isCS} from '../../services/siteConstants';
 import { TAG_ID } from '../../services/constants';
 import { Tag } from '../../../IsaacAppTypes';
 import {formatGlossaryTermId} from "../pages/Glossary";
@@ -17,7 +17,7 @@ interface IsaacGlossaryTermProps {
 
 const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<any>) => {
     let _tags: Tag[] = [];
-    if (SITE_SUBJECT === SITE.CS && doc.tags) {
+    if (isCS && doc.tags) {
         _tags = doc.tags.map(id => tags.getById(id as TAG_ID)).filter(tag => isDefined(tag));
     }
 

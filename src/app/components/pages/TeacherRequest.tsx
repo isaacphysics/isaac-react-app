@@ -22,7 +22,7 @@ import {api} from "../../services/api";
 import {Link} from "react-router-dom";
 import {schoolNameWithPostcode, isTeacher} from "../../services/user";
 import {IsaacContent} from "../content/IsaacContent";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {isPhy, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 
 const warningFragmentId = "teacher_registration_warning_message";
@@ -136,7 +136,7 @@ export const TeacherRequest = () => {
                                         {"name of your school should be shown in the 'School' field. If any of the "}
                                         {"information is incorrect or missing, you can amend it on your "}
                                         <Link to="/account">My account</Link>{" page."}
-                                        {SITE_SUBJECT === SITE.PHY && noSchool}
+                                        {isPhy && noSchool}
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>

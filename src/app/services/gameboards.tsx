@@ -3,7 +3,7 @@ import {NOT_FOUND} from "./constants";
 import React from "react";
 import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
-import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {isCS, isPhy} from "./siteConstants";
 import {CurrentGameboardState} from "../state/reducers/gameboardsState";
 import {determineAudienceViews} from "./userContext";
 import {ViewingContext} from "../../IsaacAppTypes";
@@ -89,12 +89,12 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
 
 export const showWildcard = (board: GameboardDTO) => {
     const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
-    const isaacPhysicsBoard = board?.tags?.includes("ISAAC_BOARD") && SITE_SUBJECT === SITE.PHY;
+    const isaacPhysicsBoard = isPhy && board?.tags?.includes("ISAAC_BOARD");
     return board?.id && (re.test(board.id) || isaacPhysicsBoard)
 };
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {
-    if (SITE_SUBJECT === SITE.CS) {
+    if (isCS) {
         return ["compsci"];
     }
     const subjects = ["physics", "maths", "chemistry"];

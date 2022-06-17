@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS} from "../../../services/siteConstants";
 import katex, { KatexOptions } from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 import renderA11yString from "../../../services/katex-a11y";
@@ -259,7 +259,7 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse;
-                if (SITE_SUBJECT == SITE.CS) {
+                if (isCS) {
                     macrosToUse = booleanNotation === BOOLEAN_NOTATION.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
                 } else {
                     macrosToUse = KatexBaseMacros;

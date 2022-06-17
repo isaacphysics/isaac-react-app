@@ -3,7 +3,7 @@ import React from "react";
 import {closeActiveModal, openActiveModal} from "../../../state/actions";
 import {useDispatch} from "react-redux";
 import classNames from "classnames";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS} from "../../../services/siteConstants";
 
 
 interface QuestionConfidenceProps {
@@ -14,7 +14,6 @@ interface QuestionConfidenceProps {
 
 export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionConfidenceProps) => {
     const dispatch = useDispatch();
-    const isCs = SITE_SUBJECT === SITE.CS;
 
     function quickQuestionInformationModal() {
         dispatch(openActiveModal({
@@ -32,7 +31,7 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
         }))
     }
 
-    return <div className={"quick-question-options " + classNames({"quick-question-secondary": isCs && isVisible})} hidden={hideOptions}>
+    return <div className={"quick-question-options " + classNames({"quick-question-secondary": isCS && isVisible})} hidden={hideOptions}>
         <Col>
             {!isVisible && <Row>
                 <Col md="9">
@@ -49,17 +48,17 @@ export const ConfidenceQuestions = ({hideOptions, isVisible, toggle}: QuestionCo
             </Row>
             <Row>
                 <Col className="mx-auto mb-2">
-                    <Button color={isCs && isVisible ? "negative-answer" : "negative"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
+                    <Button color={isCS && isVisible ? "negative-answer" : "negative"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "No" : "Low")}>
                         {isVisible ? "No" : "Low"}
                     </Button>
                 </Col>
                 <Col className="mx-auto mb-2">
-                    <Button color={isCs && isVisible ? "neutral-answer" : "neutral"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
+                    <Button color={isCS && isVisible ? "neutral-answer" : "neutral"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Partly" : "Medium")}>
                         {isVisible ? "Partly" : "Medium"}
                     </Button>
                 </Col>
                 <Col className="mx-auto mb-2">
-                    <Button color={isCs && isVisible ?"positive-answer" : "positive"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
+                    <Button color={isCS && isVisible ? "positive-answer" : "positive"} block className={isVisible ? "active" : ""} onClick={() => toggle(isVisible ? "Yes" : "High")}>
                         {isVisible ? "Yes" : "High"}
                     </Button>
                 </Col>

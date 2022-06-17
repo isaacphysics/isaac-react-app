@@ -20,10 +20,11 @@ import {PotentialUser} from "../../../IsaacAppTypes";
 import {validateEmail} from "../../services/validation";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {isCS, isPhy, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
 import {selectors} from "../../state/selectors";
 import {MetaDescription} from "../elements/MetaDescription";
+import {SOCIAL_LINKS} from "../../services/constants";
 
 const determineUrlQueryPresets = (user?: PotentialUser | null) => {
     const urlQuery = queryString.parse(location.search);
@@ -41,19 +42,6 @@ const determineUrlQueryPresets = (user?: PotentialUser | null) => {
         urlQuery.message as string || presetMessage
     ];
 };
-
-const siteSpecific = {
-    [SITE.PHY]: {social: {
-        twitter: "https://twitter.com/isaacphysics",
-        facebook: "https://www.facebook.com/isaacphysicsUK",
-        youtube: "https://www.youtube.com/user/isaacphysics/",
-    }},
-    [SITE.CS]: {social: {
-        twitter: "https://twitter.com/IsaacCompSci",
-        facebook: "https://www.facebook.com/IsaacComputerScience/",
-        youtube: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ",
-    }}
-}[SITE_SUBJECT];
 
 export const Contact = () => {
     const dispatch = useDispatch();
@@ -91,11 +79,11 @@ export const Contact = () => {
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />
-        {SITE_SUBJECT === SITE.CS && <MetaDescription description={metaDescriptionCS}/>}
+        {isCS && <MetaDescription description={metaDescriptionCS}/>}
         <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
-                    {SITE_SUBJECT === SITE.PHY && <div>
+                    {isPhy && <div>
                         <h3>Frequently Asked Question?</h3>
                         <p> You might like to check our FAQs pages to see if they can help you: <a href="/support/student">student FAQs</a> | <a href="/support/teacher">teacher FAQs</a></p>
                     </div>
@@ -104,17 +92,14 @@ export const Contact = () => {
                     <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a></p>
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a className="small" href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
-                    {SITE_SUBJECT === SITE.PHY && <div>
+                    {isPhy && <div>
                         <h3>Call us</h3>
                         <p>Give us a call on <a href="tel:+441223337066">01223 337066</a></p>
                     </div>
                     }
                     <h3>Follow us</h3>
                     <p>Follow us on:</p>
-                    <a href={siteSpecific.social.youtube}>YouTube</a><br/>
-                    <a href={siteSpecific.social.twitter}>Twitter</a><br/>
-                    <a href={siteSpecific.social.facebook}>Facebook</a><br/>
-                    {(SITE_SUBJECT === SITE.CS) && <a href="https://www.instagram.com/isaaccompsci/">Instagram</a>}
+                    {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
                 </Col>
                 <Col size={12} md={{size: 9, order: 2}} xs={{order: 1}}>
                     <Card>

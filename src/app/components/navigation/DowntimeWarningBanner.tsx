@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import * as RS from 'reactstrap';
 import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SOCIAL_LINKS} from "../../services/constants";
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
@@ -11,11 +12,6 @@ export const DowntimeWarningBanner = () => {
         const currentCookieValue = Cookies.get(DOWNTIME_COOKIE);
         return currentCookieValue != "1";
     });
-
-    const twitterLink = {
-        [SITE.CS]: "https://twitter.com/isaaccompsci",
-        [SITE.PHY]: "https://twitter.com/isaacphysics"
-    }[SITE_SUBJECT];
 
     function clickDismiss() {
         setCookie(false);
@@ -32,7 +28,7 @@ export const DowntimeWarningBanner = () => {
                         <span>Please note Isaac {SITE_SUBJECT_TITLE} will be unavailable for an hour at 5pm BST on Friday 23<sup>rd</sup> July
                             for essential maintenance. You will need to log in again once the maintenance is complete.
                             <br />
-                            <a href={twitterLink} target="_blank" rel="noopener noreferrer">Check our Twitter feed</a> for any updates on the day.
+                            <a href={SOCIAL_LINKS.twitter.href} target="_blank" rel="noopener noreferrer">Check our Twitter feed</a> for any updates on the day.
                         </span>
                     </RS.Col>
                     <RS.Col xs={12} md={3} className="text-center">

@@ -8,7 +8,7 @@ import {history} from "../../services/history";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, siteSpecific} from "../../services/siteConstants";
 import {isDefined} from "../../services/miscUtils";
 import {MetaDescription} from "../elements/MetaDescription";
 
@@ -30,27 +30,8 @@ interface SupportCategories {
     };
 }
 
-const support: {student: SupportCategories; teacher: SupportCategories} = {
-    [SITE.CS]: {
-        student: {
-            title: "Student support",
-            categories:{
-                general: {category: "general", title: "General questions", icon: "faq"},
-                homework: {category: "homework", title: "Finding homework", icon: "faq"},
-                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
-            }
-        },
-        teacher: {
-            title: "Teacher support",
-            categories: {
-                general: { category: "general", title: "General questions", icon: "faq" },
-                assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
-                progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
-                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
-            }
-        }
-    },
-    [SITE.PHY]: {
+const support: {student: SupportCategories; teacher: SupportCategories} = siteSpecific(
+    {
         student: {
             title: "Student FAQ",
             categories:{
@@ -75,7 +56,26 @@ const support: {student: SupportCategories; teacher: SupportCategories} = {
             }
         }
     },
-}[SITE_SUBJECT];
+    {
+        student: {
+            title: "Student support",
+            categories:{
+                general: {category: "general", title: "General questions", icon: "faq"},
+                homework: {category: "homework", title: "Finding homework", icon: "faq"},
+                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
+            }
+        },
+        teacher: {
+            title: "Teacher support",
+            categories: {
+                general: { category: "general", title: "General questions", icon: "faq" },
+                assignments: { category: "assignments", title: "Assigning work", icon: "faq" },
+                progress: { category: "progress", title: "Viewing student progress", icon: "faq" },
+                code: {category: "code", title: "Code and pseudocode", icon: "faq"},
+            }
+        }
+    }
+);
 
 function supportPath(type?: string, category?: string) {
     return `/support/${type || "student"}/${category || "general"}`;
@@ -121,7 +121,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {SITE_SUBJECT === SITE.CS && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
+                {isCS && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>

@@ -8,9 +8,8 @@ import {store} from "../../../state/store";
 import {GoogleSignInButton, PasswordResetButton, TFAInput, EmailPasswordInputs, useLoginLogic} from "../../pages/LogIn";
 import * as persistence from "../../../services/localStorage";
 import {KEY} from "../../../services/localStorage";
-import {siteSpecific} from "../../../services/miscUtils";
 import classNames from "classnames";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS, siteSpecific} from "../../../services/siteConstants";
 
 const LoginOrSignUpBody = () => {
 
@@ -36,7 +35,7 @@ const LoginOrSignUpBody = () => {
     }
 
     return <Row id={"login-page"}>
-        <Col lg={6} className={classNames("content-body", {"pattern-06-inverted": SITE_SUBJECT === SITE.CS})}>
+        <Col lg={6} className={classNames("content-body", {"pattern-06-inverted": isCS})}>
             {siteSpecific(
                 <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
                 <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />

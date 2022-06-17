@@ -10,7 +10,7 @@ import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import React, {useRef} from "react";
 import tags from "../../../services/tags";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
@@ -26,6 +26,7 @@ import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
+import classNames from "classnames";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -40,23 +41,22 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
 
     let title = item.title;
     let titleClasses = "content-summary-link-title flex-grow-1 ";
-    let titleTextClass = SITE_SUBJECT == SITE.PHY ? "text-secondary" : undefined;
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, item.tags as TAG_ID[]);
     if (itemSubject) {
         titleClasses += itemSubject.id;
     }
     const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
-        .filter((t, i) => SITE_SUBJECT !== SITE.CS || i !== 0); // CS always has Computer Science at the top level
+        .filter((t, i) => !isCS || i !== 0); // CS always has Computer Science at the top level
 
-    const questionIcon = {
-        [SITE.CS]: item.correct ?
-            <img src="/assets/tick-rp.svg" alt=""/> :
-            <img src="/assets/question.svg" alt="Question page"/>,
-        [SITE.PHY]: item.correct ?
+    const questionIcon = siteSpecific(
+        item.correct ?
             <svg className={iconClasses}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
-            <svg className={iconClasses}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>
-    }[SITE_SUBJECT];
+            <svg className={iconClasses}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>,
+        item.correct ?
+            <img src="/assets/tick-rp.svg" alt=""/> :
+            <img src="/assets/question.svg" alt="Question page"/>
+    );
 
     let typeLabel;
 
@@ -73,7 +73,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
-            if (SITE_SUBJECT === SITE.CS) {
+            if (isCS) {
                 typeLabel = "Question";
             }
             break;
@@ -81,7 +81,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
             icon = <img src="/assets/concept.svg" alt="Concept page"/>;
             iconLabel = "Concept page icon";
-            if (SITE_SUBJECT === SITE.CS) {
+            if (isCS) {
                 typeLabel = "Concept";
             }
             break;
@@ -116,7 +116,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <Markup encoding={"latex"} className={titleTextClass}>
+                        <Markup encoding={"latex"} className={classNames({"text-secondary": isPhy})}>
                             {title ?? ""}
                         </Markup>
                         {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>
