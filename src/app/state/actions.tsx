@@ -80,7 +80,6 @@ import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
-import {aLevelBookChoiceModal} from "../components/elements/modals/ALevelBookChoiceModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
 import {getValue, Item, toTuple} from "../services/select";
@@ -679,9 +678,6 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
             body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
         }) as any);
     }
-};
-export const openALevelBookChoiceModal = () => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(aLevelBookChoiceModal()) as any);
 };
 export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(isaacBooksModal()) as any);
