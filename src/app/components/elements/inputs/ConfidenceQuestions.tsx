@@ -1,42 +1,26 @@
 import {Button, Col, Row} from "reactstrap";
-import React from "react";
+import React, {useRef} from "react";
 import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
 import {useDispatch} from "react-redux";
-import {v4 as uuid_v4} from "uuid";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import {isCS} from "../../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
 import {store} from "../../../state/store";
+import {v4 as uuid_v4} from "uuid";
+
+type ActiveConfidenceState = "initial" | "followUp"
+export type ConfidenceState = ActiveConfidenceState | "hidden";
 
 interface ConfidenceVariables {
     title: string;
-    firstQuestion: string;
-    secondQuestion: string;
-    firstOptions: {
-        negative: string;
-        neutral: string;
-        positive: string;
-    },
-    secondOptions: {
-        negative: string;
-        neutral: string;
-        positive: string;
-    }
-}
-
-const defaultConfidenceVariables: ConfidenceVariables = {
-    title: "Click a button to show the answer",
-    firstQuestion: "What is your level of confidence that your own answer is correct?",
-    secondQuestion: "Is your own answer correct?",
-    firstOptions: {
-        negative: "Low",
-        neutral: "Medium",
-        positive: "High"
-    },
-    secondOptions: {
-        negative: "No",
-        neutral: "Partly",
-        positive: "Yes"
+    states: {
+        [state in ActiveConfidenceState]: {
+            question: string;
+            options: {
+                label: string;
+                color: string;
+            }[];
+        }
     }
 }
 
@@ -44,29 +28,53 @@ const defaultConfidenceVariables: ConfidenceVariables = {
 const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
     "question": {
         title: "Click a button to check your answer",
-        firstQuestion: "What is your level of confidence that your own answer is correct?",
-        secondQuestion: "Having read the feedback, do you feel more confident in answering this question?",
-        firstOptions: {
-            negative: "Low",
-            neutral: "Medium",
-            positive: "High"
-        },
-        secondOptions: {
-            negative: "No",
-            neutral: "Partly",
-            positive: "Yes"
+        states: {
+            initial: {
+                question: "What is your level of confidence that your own answer is correct?",
+                options: [
+                    {label: "Low", color: "negative"},
+                    {label: "Medium", color: "neutral"},
+                    {label: "High", color: "positive"}
+                ]
+            },
+            followUp: {
+                question: "Having read the feedback, do you feel more confident in answering this question?",
+                options: [
+                    {label: "No", color: siteSpecific("negative", "negative-answer")},
+                    {label: "Partly", color: siteSpecific("neutral", "neutral-answer")},
+                    {label: "Yes", color: siteSpecific("positive", "positive-answer")}
+                ]
+            }
         }
     },
-    "quick_question": defaultConfidenceVariables
+    "quick_question": {
+        title: "Click a button to show the answer",
+        states: {
+            initial: {
+                question: "What is your level of confidence that your own answer is correct?",
+                options: [
+                    {label: "Low", color: "negative"},
+                    {label: "Medium", color: "neutral"},
+                    {label: "High", color: "positive"}
+                ]
+            },
+            followUp: {
+                question: "Is your own answer correct?",
+                options: [
+                    {label: "No", color: siteSpecific("negative", "negative-answer")},
+                    {label: "Partly", color: siteSpecific("neutral", "neutral-answer")},
+                    {label: "Yes", color: siteSpecific("positive", "positive-answer")}
+                ]
+            }
+        }
+    }
 };
 
-
 interface ConfidenceQuestionsProps {
-    hideOptions: boolean;
-    setHideOptions: (e: boolean) => void;
-    isVisible: boolean;
-    setVisible: (e: boolean) => void;
+    state: ConfidenceState;
+    setState: (cs: ConfidenceState) => void;
     identifier: any;
+    disabled?: boolean;
     attemptUuid: React.MutableRefObject<string>;
     type: ConfidenceType;
     correct?: boolean;
@@ -83,96 +91,75 @@ const confidenceInformationModal = () => openActiveModal({
     </div>
 });
 
-export const ConfidenceQuestions = ({hideOptions, setHideOptions, isVisible, setVisible, identifier, attemptUuid, type, correct, answer}: ConfidenceQuestionsProps) => {
+export const ConfidenceQuestions = ({state, setState, attemptUuid, disabled, identifier, type, correct, answer}: ConfidenceQuestionsProps) => {
     const dispatch = useDispatch();
 
-    const confidenceVariables = confidenceOptions[type];
-
-    const twoParts = confidenceVariables?.secondQuestion;
-
-    const toggle = (payload?: string) => {
-        if (isVisible) {
-            if (type === "question") {
-                const eventDetails = {
-                    type: "QUICK_QUESTION_CORRECT",
+    const toggle = (confidence: string, state: ActiveConfidenceState) => {
+        const stateAndType: `${ActiveConfidenceState} & ${ConfidenceType}` = `${state} & ${type}`;
+        switch (stateAndType) {
+            case "initial & question":
+            case "initial & quick_question":
+                dispatch(logAction({
+                    type: "QUESTION_CONFIDENCE_BEFORE",
                     questionId: identifier,
                     attemptUuid: attemptUuid.current,
-                    correct: payload,
+                    questionConfidence: confidence
+                }));
+                setState("followUp");
+                break;
+            case "followUp & question":
+                dispatch(logAction({
+                    type: "QUESTION_CONFIDENCE_AFTER",
+                    questionId: identifier,
+                    attemptUuid: attemptUuid.current,
                     answer: answer,
-                    answerCorrect: correct
-                };
-                dispatch(logAction(eventDetails));
-            } else {
-                const eventDetails = {
-                    type: "QUICK_QUESTION_CORRECT",
+                    answerCorrect: correct,
+                    answerConfidence: confidence
+                }));
+                setState("hidden");
+                break;
+            case "followUp & quick_question":
+                dispatch(logAction({
+                    type: "QUESTION_CONFIDENCE_AFTER",
                     questionId: identifier,
                     attemptUuid: attemptUuid.current,
-                    correct: payload
-                };
-                dispatch(logAction(eventDetails));
-            }
-            setHideOptions(true);
-            attemptUuid.current = uuid_v4().slice(0, 8);
-        } else {
-            const eventDetails = {
-                type: "QUICK_QUESTION_CONFIDENCE",
-                questionId: identifier,
-                attemptUuid: attemptUuid.current,
-                confidence: payload
-            };
-            dispatch(logAction(eventDetails));
-            const isNowVisible = !isVisible;
-            setVisible(isNowVisible);
-            if (!twoParts) {
-                setHideOptions(true);
-                attemptUuid.current = uuid_v4().slice(0, 8);
-            }
+                    answerConfidence: confidence
+                }));
+                setState("hidden");
+                break;
         }
     };
 
-    // `isVisible `is a relic from when this was used only for quick questions - it basically means "should I show the
-    // second question and set of options", and should be renamed that way
+    if (state === "hidden") return null;
 
-    return <div className={"quick-question-options " + classNames({"quick-question-secondary": isCS && isVisible})}
-                hidden={hideOptions}>
-        {!isVisible && <Row>
+    const confidenceVariables = confidenceOptions[type];
+    const confidenceStateVariables = confidenceVariables?.states[state];
+
+    return <div className={classNames("quick-question-options", {"quick-question-secondary": isCS && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isCS})}>
+        {state === "initial" && <Row>
             <Col md="9">
                 <h4>{confidenceVariables?.title}</h4>
             </Col>
-            <Col md="3" className="text-center not-mobile">
+            <Col md="auto" className="ml-auto text-center not-mobile">
                 <Button outline color="primary" className="confidence-help" size="sm"
                         onClick={() => dispatch(confidenceInformationModal())}>
                     <i>i</i>
                 </Button>
             </Col>
         </Row>}
-        <Row className="mb-2">
+        <Row className="mb-3">
             <Col>
-                {isVisible ? confidenceVariables?.secondQuestion : confidenceVariables?.firstQuestion}
+                {confidenceStateVariables.question}
             </Col>
         </Row>
-        <Row>
-            <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color={isCS && isVisible ? "negative-answer" : "negative"} block
-                        className={classNames({"active": isVisible})} type="submit"
-                        onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.negative : confidenceVariables?.firstOptions?.negative)}>
-                    {isVisible ? confidenceVariables?.secondOptions?.negative : confidenceVariables?.firstOptions?.negative}
+        <Row className={"justify-content-center"}>
+            {confidenceStateVariables.options.map(option => <Col className={classNames("mx-auto", {"mb-2": isPhy})}>
+                <Button color={option.color} disabled={state === "initial" && disabled} block
+                        className={classNames({"active": state === "followUp"})} type="submit"
+                        onClick={() => toggle(option.label, state)}>
+                    {option.label}
                 </Button>
-            </Col>
-            <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color={isCS && isVisible ? "neutral-answer" : "neutral"} block
-                        className={classNames({"active": isVisible})} type="submit"
-                        onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.neutral : confidenceVariables?.firstOptions?.neutral)}>
-                    {isVisible ? confidenceVariables?.secondOptions?.neutral : confidenceVariables?.firstOptions?.neutral}
-                </Button>
-            </Col>
-            <Col sm="3" md="3" className="mx-auto mb-2">
-                <Button color={isCS && isVisible ? "positive-answer" : "positive"} block
-                        className={classNames({"active": isVisible})} type="submit"
-                        onClick={() => toggle(isVisible ? confidenceVariables?.secondOptions?.positive : confidenceVariables?.firstOptions?.positive)}>
-                    {isVisible ? confidenceVariables?.secondOptions?.positive : confidenceVariables?.firstOptions?.positive}
-                </Button>
-            </Col>
+            </Col>)}
         </Row>
     </div>;
 };

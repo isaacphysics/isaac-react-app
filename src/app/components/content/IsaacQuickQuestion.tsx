@@ -1,25 +1,24 @@
 import React, {useRef, useState} from "react";
 import {Alert, Button, Col, Row} from "reactstrap";
-import * as ApiTypes from "../../../IsaacApiTypes";
-import {ContentDTO} from "../../../IsaacApiTypes";
+import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
-import {v4 as uuid_v4} from "uuid";
-import {ConfidenceQuestions} from "../elements/inputs/ConfidenceQuestions";
+import {ConfidenceQuestions, ConfidenceState} from "../elements/inputs/ConfidenceQuestions";
 import {isCS} from "../../services/siteConstants";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
+import {v4 as uuid_v4} from "uuid";
 
-export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO}) => {
+export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const dispatch = useDispatch();
     const location = useLocation();
     const fastTrackInfo = useFastTrackInformation(doc, location);
     const [isVisible, setVisible] = useState(false);
-    const [hideOptions, setHideOptions] = useState(false);
     const answer: ContentDTO = doc.answer as ContentDTO;
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
+    const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
     const attemptUuid = useRef(uuid_v4().slice(0, 8));
 
     const toggle = () => {
@@ -31,13 +30,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO})
         }
     };
 
-    const hideAnswer = () => {
-        setVisible(false);
-        setHideOptions(false);
-        attemptUuid.current = uuid_v4().slice(0, 8);
-    };
-
-    // We have 3 possible styles for the Show/Hide options (default, fast-track and confidence check)
+    // We have 3 possible styles for the Show/Hide options (default, fast-track and confidence questions)
 
     const defaultOptions = () => <Row>
         <Col sm="12" md={{size: 10, offset: 1}}>
@@ -59,13 +52,32 @@ export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO})
         </div>
     </div>;
 
-    const confidenceOptions = () => <ConfidenceQuestions isVisible={isVisible} setVisible={setVisible}
-                                                         hideOptions={hideOptions} setHideOptions={setHideOptions}
-                                                         identifier={doc.id} attemptUuid={attemptUuid}
-                                                         type={"quick_question"} />;
+    const confidenceOptions = () => {
+        const hideAnswer = () => {
+            setVisible(false);
+            setConfidenceState("initial");
+        };
+        return <>
+            <ConfidenceQuestions state={confidenceState}
+                                 setState={(newCS) => {
+                                     if (newCS === "followUp") setVisible(true);
+                                     setConfidenceState(newCS);
+                                 }} attemptUuid={attemptUuid}
+                                 identifier={doc.id} type={"quick_question"} />
+            {isVisible && <Row className="mt-3">
+                <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
+                    <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isCS})} onClick={hideAnswer}>
+                        Hide answer
+                    </Button>
+                </Col>
+            </Row>}
+        </>;
+    };
+
+    const showConfidence = doc.showConfidence;
 
     // Select which one of the 3 above options styles we need
-    const Options = !fastTrackInfo.isFastTrackPage ? fastTrackOptions : (doc.showConfidence ? confidenceOptions : defaultOptions)
+    const Options = fastTrackInfo.isFastTrackPage ? fastTrackOptions : (showConfidence ? confidenceOptions : defaultOptions)
 
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">
@@ -79,13 +91,6 @@ export const IsaacQuickQuestion = ({doc}: {doc: ApiTypes.IsaacQuickQuestionDTO})
                     <IsaacContentValueOrChildren {...doc} />
                 </div>
                 {<Options/>}
-                {isVisible && doc.showConfidence && !fastTrackInfo.isFastTrackPage && <Row className="mt-3">
-                    <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
-                        <Button color="secondary" block className={"active " + classNames({"hide-answer": isCS})} onClick={hideAnswer}>
-                            Hide answer
-                        </Button>
-                    </Col>
-                </Row>}
                 {isVisible && <Row>
                     <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
                         <Alert color={isCS ? "hide" : "secondary"}>

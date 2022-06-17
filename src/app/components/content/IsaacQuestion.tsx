@@ -18,10 +18,10 @@ import {isCS, isPhy} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
-import {ConfidenceQuestions} from "../elements/inputs/ConfidenceQuestions";
-import {v4 as uuid_v4} from "uuid";
+import {ConfidenceQuestions, ConfidenceState} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import {v4 as uuid_v4} from "uuid";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -41,8 +41,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
-    const [isVisible, setVisible] = useState(false);
-    const [hideOptions, setHideOptions] = useState(false);
+    const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
+    const showConfidence = isCS; // && doc.showConfidence or some other condition
     const attemptUuid = useRef(uuid_v4().slice(0, 8));
 
     const tooManySigFigsFeedback = <p>
@@ -62,9 +62,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     </p>;
 
     // Register Question Part in Redux
-    useEffect((): (() => void) => {
+    useEffect(() => {
         dispatch(registerQuestion(doc, accordion.clientId));
-        return () => dispatch(deregisterQuestion(doc.id as string));
+        return () => { dispatch(deregisterQuestion(doc.id as string)); }
     }, [dispatch, doc.id]);
 
     // Select QuestionComponent from the question part's document type (or default)
@@ -102,7 +102,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </React.Fragment>}
 
             {/* Validation Response */}
-            {validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
+            {(confidenceState !== "initial" || !showConfidence) && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
                 <div className="pb-1">
                     <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
@@ -120,19 +120,22 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
             {/* Action Buttons */}
             {(!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
-                <div className={`d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row ${correct ? "mt-5 mb-n3" : ""}`}>
+                <div className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
                     {secondaryAction &&
-                        <div className={`m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ${primaryAction ? "pr-sm-2 pr-md-0 pr-lg-3" : ""}`}>
+                        <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pr-sm-2 pr-md-0 pr-lg-3": primaryAction})}>
                             <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
                         </div>
                     }
                     {primaryAction &&
-                        <div className={`m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100 ${secondaryAction ? "pl-sm-2 pl-md-0 pl-lg-3" : ""}`}>
-                            {hideOptions && <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />}
-                            <ConfidenceQuestions hideOptions={hideOptions} setHideOptions={setHideOptions}
-                                                 isVisible={isVisible} setVisible={setVisible} identifier={doc.id}
-                                                 attemptUuid={attemptUuid} type={"question"}
-                                                 correct={correct} answer={questionPart?.currentAttempt} />
+                        <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
+                            {showConfidence ? <>
+                                    {confidenceState === "hidden" && <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />}
+                                    <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disabled={!canSubmit}
+                                                         identifier={doc.id} attemptUuid={attemptUuid} type={"question"}
+                                                         correct={correct} answer={questionPart?.currentAttempt} />
+                                </>
+                                : <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
+                            }
                         </div>
                     }
                 </div>
