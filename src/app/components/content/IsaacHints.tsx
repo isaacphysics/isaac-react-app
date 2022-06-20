@@ -23,12 +23,15 @@ const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
 interface HintsProps {
     hints?: ContentDTO[];
     questionPartId: string;
+    confidenceSessionUuid?: React.MutableRefObject<string>;
 }
-export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
+export const IsaacLinkHints = ({hints, questionPartId, confidenceSessionUuid}: HintsProps) => {
     return <div>
         <ListGroup className="question-hints mb-1 pt-3 mt-3 no-print">
             {hints?.map((hint, index) => <ListGroupItem key={index} className="pl-0 py-1">
-                <IsaacHintModal questionPartId={questionPartId} hintIndex={index} label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`} body={hint} scrollable/>
+                <IsaacHintModal questionPartId={questionPartId} hintIndex={index}
+                                label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
+                                body={hint} scrollable confidenceSessionUuid={confidenceSessionUuid} />
             </ListGroupItem>)}
         </ListGroup>
         <PrintOnlyHints hints={hints} />

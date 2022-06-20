@@ -106,7 +106,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
             {/* CS Hints */}
             {isCS && <React.Fragment>
-                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
+                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} confidenceSessionUuid={confidenceSessionUuid} />
             </React.Fragment>}
 
             {/* Validation Response */}
@@ -158,7 +158,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
             {/* Physics Hints */}
             {isPhy && <div className={correct ? "mt-5" : ""}>
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
+                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
             </div>}
         </div>
     </RS.Form>;

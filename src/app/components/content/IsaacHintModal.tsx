@@ -12,6 +12,7 @@ interface HintModalProps {
     scrollable: boolean;
     questionPartId: string;
     hintIndex: number;
+    confidenceSessionUuid?: React.MutableRefObject<string>;
 }
 export const IsaacHintModal = (props: HintModalProps) => {
     const dispatch = useDispatch();
@@ -22,8 +23,20 @@ export const IsaacHintModal = (props: HintModalProps) => {
         const isNowOpen = !isOpen;
         setIsOpen(isNowOpen);
         if (isNowOpen) {
-            const eventDetails = {type: "VIEW_HINT", questionId: questionPartId, hintIndex: hintIndex};
-            dispatch(logAction(eventDetails));
+            if (restOfProps.confidenceSessionUuid) {
+                dispatch(logAction({
+                    type: "QUESTION_CONFIDENCE_HINT",
+                    questionPartId,
+                    hintIndex,
+                    confidenceSessionUuid: restOfProps.confidenceSessionUuid.current
+                }));
+            } else {
+                dispatch(logAction({
+                    type: "VIEW_HINT",
+                    questionPartId,
+                    hintIndex
+                }));
+            }
         }
     };
 

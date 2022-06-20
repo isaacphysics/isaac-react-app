@@ -101,8 +101,8 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_BEFORE",
                     questionId: identifier,
-                    attemptUuid: confidenceSessionUuid.current,
-                    answer: answer,
+                    confidenceSessionUuid: confidenceSessionUuid.current,
+                    answer,
                     answerCorrect: correct,
                     confidence
                 }));
@@ -112,7 +112,7 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_BEFORE",
                     questionId: identifier,
-                    attemptUuid: confidenceSessionUuid.current,
+                    confidenceSessionUuid: confidenceSessionUuid.current,
                     confidence
                 }));
                 setState("followUp");
@@ -122,7 +122,7 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_AFTER",
                     questionId: identifier,
-                    attemptUuid: confidenceSessionUuid.current,
+                    confidenceSessionUuid: confidenceSessionUuid.current,
                     confidence
                 }));
                 setState("hidden");
