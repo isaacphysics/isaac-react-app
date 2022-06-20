@@ -82,8 +82,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Confidence question specific things
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const showConfidence = isCS; // && doc.showConfidence or some other condition TODO!
+    const showConfidence = doc.type && currentGameboard?.tags?.includes("RESEARCH_BOARD") && ["isaacMultiChoiceQuestion", "isaacNumericQuestion"].includes(doc.type); // && doc.showConfidence or some other condition TODO!
+    const confidenceDisabled = !canSubmit || !currentAttempt || !currentAttempt.value;
     const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
+    const showQuestionFeedback = confidenceState !== "initial" || !showConfidence || correct;
 
     // Reset question confidence on attempt change
     useEffect(() => {
@@ -110,7 +112,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </React.Fragment>}
 
             {/* Validation Response */}
-            {(confidenceState !== "initial" || !showConfidence) && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
+            {showQuestionFeedback && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
                 <div className="pb-1">
                     <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
@@ -137,7 +139,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     {primaryAction &&
                         <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
                             {showConfidence ?
-                                <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={!canSubmit}
+                                <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={confidenceDisabled}
                                                      identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"question"}
                                                      correct={correct} answer={questionPart?.currentAttempt} />
                                 : <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
