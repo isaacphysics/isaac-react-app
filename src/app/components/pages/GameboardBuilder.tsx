@@ -141,10 +141,12 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                         <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
                         <Select inputId="question-search-level"
                             isMulti
-                            options={[
+                            options={siteSpecific([
+                                { value: 'ISAAC_BOARD', label: 'Created by Isaac' },
+                            ], [
                                 { value: 'ISAAC_BOARD', label: 'Created by Isaac' },
                                 { value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board' }
-                            ]}
+                            ])}
                             name="colors"
                             className="basic-multi-select"
                             classNamePrefix="select"

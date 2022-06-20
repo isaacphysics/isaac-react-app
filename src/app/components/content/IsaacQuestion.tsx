@@ -42,7 +42,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
-    const {confidenceState, setConfidenceState, confidenceDisabled, showConfidence, showQuestionFeedback, confidenceSessionUuid} = useConfidenceQuestionsValues("question", undefined, currentAttempt, canSubmit, correct, currentGameboard);
+    const {confidenceState, setConfidenceState, confidenceDisabled, showConfidence, showQuestionFeedback, confidenceSessionUuid} = useConfidenceQuestionsValues(currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"), "question", undefined, currentAttempt, canSubmit, correct, currentGameboard);
 
     const tooManySigFigsFeedback = <p>
         Whether your answer is correct or not, it has the wrong number of&nbsp;
@@ -120,7 +120,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
             {/* Action Buttons */}
             {(!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
-                (showConfidence ?
+                (showConfidence && confidenceSessionUuid ?
                     <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={confidenceDisabled}
                                          identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"question"}
                                          correct={correct} answer={currentAttempt} />
@@ -150,7 +150,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
             {/* Physics Hints */}
             {isPhy && <div className={correct ? "mt-5" : ""}>
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
+                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} confidenceSessionUuid={confidenceSessionUuid} />
             </div>}
         </div>
     </RS.Form>;

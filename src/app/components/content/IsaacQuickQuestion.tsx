@@ -20,8 +20,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
 
     // Confidence questions
-    const {confidenceState, setConfidenceState, confidenceSessionUuid, confidenceDisabled} = useConfidenceQuestionsValues("quick_question", (newCS) => { if (newCS === "followUp") setVisible(true); });
-    const showConfidence = doc.showConfidence;
+    const {confidenceState, setConfidenceState, showConfidence, confidenceSessionUuid, confidenceDisabled} = useConfidenceQuestionsValues(doc.showConfidence, "quick_question", (newCS) => { if (newCS === "followUp") setVisible(true); });
 
     const toggle = () => {
         const isNowVisible = !isVisible;
@@ -55,6 +54,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     </div>;
 
     const confidenceOptions = () => {
+        if (!confidenceSessionUuid) return null;
         const hideAnswer = () => {
             setVisible(false);
             setConfidenceState("initial");

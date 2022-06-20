@@ -38,13 +38,25 @@ export const IsaacLinkHints = ({hints, questionPartId, confidenceSessionUuid}: H
     </div>;
 };
 
-export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
+export const IsaacTabbedHints = ({hints, questionPartId, confidenceSessionUuid}: HintsProps) => {
     const dispatch = useDispatch();
 
     function logHintView(viewedHintIndex: number) {
         if (viewedHintIndex > -1) {
-            const eventDetails = {type: "VIEW_HINT", questionId: questionPartId, hintIndex: viewedHintIndex};
-            dispatch(logAction(eventDetails));
+            if (confidenceSessionUuid) {
+                dispatch(logAction({
+                    type: "QUESTION_CONFIDENCE_HINT",
+                    questionPartId,
+                    hintIndex: viewedHintIndex,
+                    confidenceSessionUuid: confidenceSessionUuid.current
+                }));
+            } else {
+                dispatch(logAction({
+                    type: "VIEW_HINT",
+                    questionId: questionPartId,
+                    hintIndex: viewedHintIndex
+                }));
+            }
         }
     }
 

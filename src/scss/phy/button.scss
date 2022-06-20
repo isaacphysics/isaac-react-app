@@ -30,4 +30,9 @@
 .quick-question-options {
   background: rgba($secondary, 0.5);
   border: 1px solid transparent;
+  transition: opacity 0.2s linear;
+}
+
+.quick-question-muted {
+  opacity: 0.6;
 }

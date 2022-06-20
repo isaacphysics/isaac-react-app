@@ -140,20 +140,20 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
 
     const disabled = state === "initial" && disableInitialState === true;
 
-    return <div className={classNames("quick-question-options", {"quick-question-secondary": isCS && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isCS, "border-muted": disabled})}>
+    return <div className={classNames("quick-question-options", {"quick-question-secondary": isCS && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isCS, "quick-question-muted": disabled})}>
         {state === "initial" && <Row>
             <Col md="9">
-                <h4 className={classNames({"text-muted": disabled})}>{confidenceVariables?.title}</h4>
+                <h4 className={classNames({"text-muted": disabled && isCS})}>{confidenceVariables?.title}</h4>
             </Col>
             <Col md="auto" className="ml-auto text-center not-mobile">
-                <Button outline color="primary" className={classNames("confidence-help", {"border-muted": disabled})} size="sm"
+                <Button outline color="primary" className={classNames("confidence-help", {"border-muted": disabled && isCS})} size="sm"
                         onClick={() => dispatch(confidenceInformationModal())}>
-                    <i className={classNames({"text-muted": disabled})}>i</i>
+                    <i className={classNames({"text-muted": disabled && isCS})}>i</i>
                 </Button>
             </Col>
         </Row>}
         <Row className="mb-3">
-            <Col className={classNames({"text-muted": disabled})}>
+            <Col className={classNames({"text-muted": disabled && isCS})}>
                 {confidenceStateVariables.question}
             </Col>
         </Row>
@@ -172,14 +172,12 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
 // This and ConfidenceQuestions should be used together, with the values managed by this hook passed to an instance of
 // ConfidenceQuestions. This hook just abstracts away confidence-question-specific stuff so it is easy to remove and
 // doesn't have to hang around in IsaacQuestion and IsaacQuickQuestion.
-export const useConfidenceQuestionsValues = (type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, currentGameboard?: GameboardDTO | null) => {
+export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, currentGameboard?: GameboardDTO | null) => {
     // Confidence question specific things
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
     const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
-
-    const showConfidence = type === "quick_question" || currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD");
     const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || !currentAttempt.value);
-    const showQuestionFeedback = confidenceState !== "initial" || !showConfidence || correct;
+    const showQuestionFeedback = confidenceState !== "initial" || !show || correct;
 
     // Reset question confidence on attempt change
     useEffect(() => {
@@ -197,11 +195,11 @@ export const useConfidenceQuestionsValues = (type: ConfidenceType, onConfidenceS
     }, [confidenceState]);
 
     return {
-        showConfidence,
+        showConfidence: show ?? false,
         confidenceState,
         confidenceDisabled,
         setConfidenceState,
         showQuestionFeedback,
-        confidenceSessionUuid,
+        confidenceSessionUuid: show ? confidenceSessionUuid : undefined,
     };
 }
