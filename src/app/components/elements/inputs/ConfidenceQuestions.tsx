@@ -1,5 +1,5 @@
 import {Button, Col, Row} from "reactstrap";
-import React, {useRef} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
 import {useDispatch} from "react-redux";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
@@ -7,6 +7,7 @@ import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
 import {store} from "../../../state/store";
 import {v4 as uuid_v4} from "uuid";
+import {ChoiceDTO, GameboardDTO} from "../../../../IsaacApiTypes";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -38,7 +39,7 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
                 ]
             },
             followUp: {
-                question: "Having read the feedback, do you feel more confident in answering this question?",
+                question: "Having read the feedback, how do you rate your confidence in answering this question again?",
                 options: [
                     {label: "No", color: siteSpecific("negative", "negative-answer")},
                     {label: "Partly", color: siteSpecific("neutral", "neutral-answer")},
@@ -126,6 +127,8 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
                     confidence
                 }));
                 setState("hidden");
+                // Once the user answers the post-question, generate a new session id
+                confidenceSessionUuid.current = uuid_v4().slice(0, 8);
                 break;
         }
     };
@@ -155,7 +158,7 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
             </Col>
         </Row>
         <Row className={"justify-content-center"}>
-            {confidenceStateVariables.options.map(option => <Col className={classNames("mx-auto", {"mb-2": isPhy})}>
+            {confidenceStateVariables.options.map(option => <Col lg={4} md={6} sm={12} className={classNames("mb-2")}>
                 <Button color={option.color} disabled={disabled} block
                         className={classNames({"active": state === "followUp"})} type="submit"
                         onClick={() => toggle(option.label, state)}>
@@ -165,3 +168,40 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
         </Row>
     </div>;
 };
+
+// This and ConfidenceQuestions should be used together, with the values managed by this hook passed to an instance of
+// ConfidenceQuestions. This hook just abstracts away confidence-question-specific stuff so it is easy to remove and
+// doesn't have to hang around in IsaacQuestion and IsaacQuickQuestion.
+export const useConfidenceQuestionsValues = (type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, currentGameboard?: GameboardDTO | null) => {
+    // Confidence question specific things
+    const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
+    const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
+
+    const showConfidence = type === "quick_question" || currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD");
+    const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || !currentAttempt.value);
+    const showQuestionFeedback = confidenceState !== "initial" || !showConfidence || correct;
+
+    // Reset question confidence on attempt change
+    useEffect(() => {
+        if (type === "question") {
+            // If user had answered the question, but is now changing their answer, then generate a new session id
+            if (confidenceState === "followUp") {
+                confidenceSessionUuid.current = uuid_v4().slice(0, 8);
+            }
+            setConfidenceState("initial");
+        }
+    }, [currentAttempt]);
+
+    useEffect(() => {
+        onConfidenceStateChange && onConfidenceStateChange(confidenceState);
+    }, [confidenceState]);
+
+    return {
+        showConfidence,
+        confidenceState,
+        confidenceDisabled,
+        setConfidenceState,
+        showQuestionFeedback,
+        confidenceSessionUuid,
+    };
+}

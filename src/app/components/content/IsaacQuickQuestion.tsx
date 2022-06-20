@@ -1,11 +1,11 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {useDispatch} from "react-redux";
 import {logAction} from "../../state/actions";
 import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
-import {ConfidenceQuestions, ConfidenceState} from "../elements/inputs/ConfidenceQuestions";
+import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {isCS} from "../../services/siteConstants";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
@@ -19,9 +19,9 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const answer: ContentDTO = doc.answer as ContentDTO;
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
 
-    // Confidence question specific
-    const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
+    // Confidence questions
+    const {confidenceState, setConfidenceState, confidenceSessionUuid, confidenceDisabled} = useConfidenceQuestionsValues("quick_question", (newCS) => { if (newCS === "followUp") setVisible(true); });
+    const showConfidence = doc.showConfidence;
 
     const toggle = () => {
         const isNowVisible = !isVisible;
@@ -58,14 +58,12 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
         const hideAnswer = () => {
             setVisible(false);
             setConfidenceState("initial");
+            // Generate a new session id, since user has hidden the answer (so might have another go)
+            confidenceSessionUuid.current = uuid_v4().slice(0, 8);
         };
         return <>
-            <ConfidenceQuestions state={confidenceState}
-                                 setState={(newCS) => {
-                                     if (newCS === "followUp") setVisible(true);
-                                     setConfidenceState(newCS);
-                                 }} confidenceSessionUuid={confidenceSessionUuid}
-                                 identifier={doc.id} type={"quick_question"} />
+            <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={confidenceDisabled}
+                                 identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"quick_question"} />
             {isVisible && <Row className="mt-3">
                 <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
                     <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isCS})} onClick={hideAnswer}>
@@ -75,8 +73,6 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
             </Row>}
         </>;
     };
-
-    const showConfidence = doc.showConfidence;
 
     // Select which one of the 3 above options styles we need
     const Options = fastTrackInfo.isFastTrackPage ? fastTrackOptions : (showConfidence ? confidenceOptions : defaultOptions)

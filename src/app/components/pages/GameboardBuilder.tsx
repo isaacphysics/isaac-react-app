@@ -143,7 +143,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                             isMulti
                             options={[
                                 { value: 'ISAAC_BOARD', label: 'Created by Isaac' },
-                                { value: 'RESEARCH_BOARD', label: 'Research board' }
+                                { value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board' }
                             ]}
                             name="colors"
                             className="basic-multi-select"

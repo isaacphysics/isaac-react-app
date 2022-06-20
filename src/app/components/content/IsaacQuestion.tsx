@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, Suspense, useRef, useState} from "react";
+import React, {useContext, useEffect, Suspense} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
@@ -18,10 +18,9 @@ import {isCS, isPhy} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {isLoggedIn} from "../../services/user";
 import {fastTrackProgressEnabledBoards} from "../../services/constants";
-import {ConfidenceQuestions, ConfidenceState} from "../elements/inputs/ConfidenceQuestions";
+import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {v4 as uuid_v4} from "uuid";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
@@ -42,6 +41,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
+
+    const {confidenceState, setConfidenceState, confidenceDisabled, showConfidence, showQuestionFeedback, confidenceSessionUuid} = useConfidenceQuestionsValues("question", undefined, currentAttempt, canSubmit, correct, currentGameboard);
 
     const tooManySigFigsFeedback = <p>
         Whether your answer is correct or not, it has the wrong number of&nbsp;
@@ -80,20 +81,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         determineFastTrackSecondaryAction(fastTrackInfo) :
         null;
 
-    // Confidence question specific things
-    const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const showConfidence = doc.type && currentGameboard?.tags?.includes("RESEARCH_BOARD") && ["isaacMultiChoiceQuestion", "isaacNumericQuestion"].includes(doc.type); // && doc.showConfidence or some other condition TODO!
-    const confidenceDisabled = !canSubmit || !currentAttempt || !currentAttempt.value;
-    const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
-    const showQuestionFeedback = confidenceState !== "initial" || !showConfidence || correct;
-
-    // Reset question confidence on attempt change
-    useEffect(() => {
-        setConfidenceState("initial");
-    }, [currentAttempt]);
-
     return <RS.Form onSubmit={function submitCurrentAttempt(event) {
         if (event) {event.preventDefault();}
+        console.log("Heree!");
         if (questionPart?.currentAttempt) {
             dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
             if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
@@ -130,23 +120,23 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
             {/* Action Buttons */}
             {(!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
-                <div className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
-                    {secondaryAction &&
-                        <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pr-sm-2 pr-md-0 pr-lg-3": primaryAction})}>
-                            <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
-                        </div>
-                    }
-                    {primaryAction &&
-                        <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
-                            {showConfidence ?
-                                <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={confidenceDisabled}
-                                                     identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"question"}
-                                                     correct={correct} answer={questionPart?.currentAttempt} />
-                                : <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
-                            }
-                        </div>
-                    }
-                </div>
+                (showConfidence ?
+                    <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={confidenceDisabled}
+                                         identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"question"}
+                                         correct={correct} answer={currentAttempt} />
+                    :
+                    <div className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
+                        {secondaryAction &&
+                            <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pr-sm-2 pr-md-0 pr-lg-3": primaryAction})}>
+                                <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
+                            </div>
+                        }
+                        {primaryAction &&
+                            <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
+                                <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
+                            </div>
+                        }
+                    </div>)
             }
 
             {/* CS Hint Reminder */}
