@@ -41,9 +41,9 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
             followUp: {
                 question: "Having read the feedback, how do you rate your confidence in answering this question again?",
                 options: [
-                    {label: "No", color: siteSpecific("negative", "negative-answer")},
-                    {label: "Partly", color: siteSpecific("neutral", "neutral-answer")},
-                    {label: "Yes", color: siteSpecific("positive", "positive-answer")}
+                    {label: "Low", color: siteSpecific("negative", "negative-answer")},
+                    {label: "Medium", color: siteSpecific("neutral", "neutral-answer")},
+                    {label: "High", color: siteSpecific("positive", "positive-answer")}
                 ]
             }
         }
