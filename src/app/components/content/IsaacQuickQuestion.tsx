@@ -18,8 +18,10 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const [isVisible, setVisible] = useState(false);
     const answer: ContentDTO = doc.answer as ContentDTO;
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
+
+    // Confidence question specific
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const attemptUuid = useRef(uuid_v4().slice(0, 8));
+    const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
 
     const toggle = () => {
         const isNowVisible = !isVisible;
@@ -62,7 +64,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                                  setState={(newCS) => {
                                      if (newCS === "followUp") setVisible(true);
                                      setConfidenceState(newCS);
-                                 }} attemptUuid={attemptUuid}
+                                 }} confidenceSessionUuid={confidenceSessionUuid}
                                  identifier={doc.id} type={"quick_question"} />
             {isVisible && <Row className="mt-3">
                 <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>

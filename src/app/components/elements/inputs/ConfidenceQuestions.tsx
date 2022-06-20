@@ -75,7 +75,7 @@ interface ConfidenceQuestionsProps {
     setState: (cs: ConfidenceState) => void;
     identifier: any;
     disableInitialState?: boolean;
-    attemptUuid: React.MutableRefObject<string>;
+    confidenceSessionUuid: React.MutableRefObject<string>;
     type: ConfidenceType;
     correct?: boolean;
     answer?: any;
@@ -91,7 +91,7 @@ const confidenceInformationModal = () => openActiveModal({
     </div>
 });
 
-export const ConfidenceQuestions = ({state, setState, attemptUuid, disableInitialState, identifier, type, correct, answer}: ConfidenceQuestionsProps) => {
+export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, disableInitialState, identifier, type, correct, answer}: ConfidenceQuestionsProps) => {
     const dispatch = useDispatch();
 
     const toggle = (confidence: string, state: ActiveConfidenceState) => {
@@ -101,7 +101,7 @@ export const ConfidenceQuestions = ({state, setState, attemptUuid, disableInitia
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_BEFORE",
                     questionId: identifier,
-                    attemptUuid: attemptUuid.current,
+                    attemptUuid: confidenceSessionUuid.current,
                     answer: answer,
                     answerCorrect: correct,
                     confidence
@@ -112,7 +112,7 @@ export const ConfidenceQuestions = ({state, setState, attemptUuid, disableInitia
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_BEFORE",
                     questionId: identifier,
-                    attemptUuid: attemptUuid.current,
+                    attemptUuid: confidenceSessionUuid.current,
                     confidence
                 }));
                 setState("followUp");
@@ -122,7 +122,7 @@ export const ConfidenceQuestions = ({state, setState, attemptUuid, disableInitia
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_AFTER",
                     questionId: identifier,
-                    attemptUuid: attemptUuid.current,
+                    attemptUuid: confidenceSessionUuid.current,
                     confidence
                 }));
                 setState("hidden");

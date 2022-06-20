@@ -42,9 +42,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
-    const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const showConfidence = isCS; // && doc.showConfidence or some other condition TODO!
-    const attemptUuid = useRef(uuid_v4().slice(0, 8));
 
     const tooManySigFigsFeedback = <p>
         Whether your answer is correct or not, it has the wrong number of&nbsp;
@@ -82,6 +79,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
         null;
+
+    // Confidence question specific things
+    const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
+    const showConfidence = isCS; // && doc.showConfidence or some other condition TODO!
+    const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
 
     // Reset question confidence on attempt change
     useEffect(() => {
@@ -136,7 +138,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                         <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
                             {showConfidence ?
                                 <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={!canSubmit}
-                                                     identifier={doc.id} attemptUuid={attemptUuid} type={"question"}
+                                                     identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"question"}
                                                      correct={correct} answer={questionPart?.currentAttempt} />
                                 : <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
                             }
