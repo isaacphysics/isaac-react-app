@@ -528,7 +528,6 @@ export interface IsaacQuestionProps<T extends QuestionDTO> {
     readonly?: boolean;
 }
 
-
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: ApiTypes.QuestionValidationResponseDTO;
     currentAttempt?: ApiTypes.ChoiceDTO;
