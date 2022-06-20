@@ -30,6 +30,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const currentGameboard = useSelector(selectors.board.currentGameboard);
     const currentUser = useSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
+    const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
@@ -42,7 +43,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const showConfidence = isCS; // && doc.showConfidence or some other condition
+    const showConfidence = isCS; // && doc.showConfidence or some other condition TODO!
     const attemptUuid = useRef(uuid_v4().slice(0, 8));
 
     const tooManySigFigsFeedback = <p>
@@ -81,6 +82,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const secondaryAction = isFastTrack ?
         determineFastTrackSecondaryAction(fastTrackInfo) :
         null;
+
+    // Reset question confidence on attempt change
+    useEffect(() => {
+        setConfidenceState("initial");
+    }, [currentAttempt]);
 
     return <RS.Form onSubmit={function submitCurrentAttempt(event) {
         if (event) {event.preventDefault();}
@@ -128,12 +134,10 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     }
                     {primaryAction &&
                         <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
-                            {showConfidence ? <>
-                                    {confidenceState === "hidden" && <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />}
-                                    <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disabled={!canSubmit}
-                                                         identifier={doc.id} attemptUuid={attemptUuid} type={"question"}
-                                                         correct={correct} answer={questionPart?.currentAttempt} />
-                                </>
+                            {showConfidence ?
+                                <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={!canSubmit}
+                                                     identifier={doc.id} attemptUuid={attemptUuid} type={"question"}
+                                                     correct={correct} answer={questionPart?.currentAttempt} />
                                 : <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
                             }
                         </div>

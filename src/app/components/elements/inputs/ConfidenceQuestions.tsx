@@ -74,7 +74,7 @@ interface ConfidenceQuestionsProps {
     state: ConfidenceState;
     setState: (cs: ConfidenceState) => void;
     identifier: any;
-    disabled?: boolean;
+    disableInitialState?: boolean;
     attemptUuid: React.MutableRefObject<string>;
     type: ConfidenceType;
     correct?: boolean;
@@ -91,39 +91,39 @@ const confidenceInformationModal = () => openActiveModal({
     </div>
 });
 
-export const ConfidenceQuestions = ({state, setState, attemptUuid, disabled, identifier, type, correct, answer}: ConfidenceQuestionsProps) => {
+export const ConfidenceQuestions = ({state, setState, attemptUuid, disableInitialState, identifier, type, correct, answer}: ConfidenceQuestionsProps) => {
     const dispatch = useDispatch();
 
     const toggle = (confidence: string, state: ActiveConfidenceState) => {
         const stateAndType: `${ActiveConfidenceState} & ${ConfidenceType}` = `${state} & ${type}`;
         switch (stateAndType) {
             case "initial & question":
+                dispatch(logAction({
+                    type: "QUESTION_CONFIDENCE_BEFORE",
+                    questionId: identifier,
+                    attemptUuid: attemptUuid.current,
+                    answer: answer,
+                    answerCorrect: correct,
+                    confidence
+                }));
+                setState("followUp");
+                break;
             case "initial & quick_question":
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_BEFORE",
                     questionId: identifier,
                     attemptUuid: attemptUuid.current,
-                    questionConfidence: confidence
+                    confidence
                 }));
                 setState("followUp");
                 break;
             case "followUp & question":
-                dispatch(logAction({
-                    type: "QUESTION_CONFIDENCE_AFTER",
-                    questionId: identifier,
-                    attemptUuid: attemptUuid.current,
-                    answer: answer,
-                    answerCorrect: correct,
-                    answerConfidence: confidence
-                }));
-                setState("hidden");
-                break;
             case "followUp & quick_question":
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_AFTER",
                     questionId: identifier,
                     attemptUuid: attemptUuid.current,
-                    answerConfidence: confidence
+                    confidence
                 }));
                 setState("hidden");
                 break;
@@ -135,26 +135,28 @@ export const ConfidenceQuestions = ({state, setState, attemptUuid, disabled, ide
     const confidenceVariables = confidenceOptions[type];
     const confidenceStateVariables = confidenceVariables?.states[state];
 
-    return <div className={classNames("quick-question-options", {"quick-question-secondary": isCS && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isCS})}>
+    const disabled = state === "initial" && disableInitialState === true;
+
+    return <div className={classNames("quick-question-options", {"quick-question-secondary": isCS && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isCS, "border-muted": disabled})}>
         {state === "initial" && <Row>
             <Col md="9">
-                <h4>{confidenceVariables?.title}</h4>
+                <h4 className={classNames({"text-muted": disabled})}>{confidenceVariables?.title}</h4>
             </Col>
             <Col md="auto" className="ml-auto text-center not-mobile">
-                <Button outline color="primary" className="confidence-help" size="sm"
+                <Button outline color="primary" className={classNames("confidence-help", {"border-muted": disabled})} size="sm"
                         onClick={() => dispatch(confidenceInformationModal())}>
-                    <i>i</i>
+                    <i className={classNames({"text-muted": disabled})}>i</i>
                 </Button>
             </Col>
         </Row>}
         <Row className="mb-3">
-            <Col>
+            <Col className={classNames({"text-muted": disabled})}>
                 {confidenceStateVariables.question}
             </Col>
         </Row>
         <Row className={"justify-content-center"}>
             {confidenceStateVariables.options.map(option => <Col className={classNames("mx-auto", {"mb-2": isPhy})}>
-                <Button color={option.color} disabled={state === "initial" && disabled} block
+                <Button color={option.color} disabled={disabled} block
                         className={classNames({"active": state === "followUp"})} type="submit"
                         onClick={() => toggle(option.label, state)}>
                     {option.label}
