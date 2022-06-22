@@ -36,7 +36,7 @@ const siteSpecificStats = siteSpecific(
             "maths_book": 426,
             "physics_skills_14": 75,
             "physics_skills_19": 614,
-            "phys_book_gcse": 541,
+            "phys_book_gcse": 533,
             "chemistry_16": 336,
             "maths_book_gcse": 639,
             "phys_book_step_up": 432
