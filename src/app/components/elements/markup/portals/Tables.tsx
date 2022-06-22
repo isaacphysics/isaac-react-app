@@ -55,8 +55,8 @@ export const useExpandContent = (expandable: boolean, el?: HTMLElement, unexpand
     const show = isCS && expandable && !isMobile() && above["md"](deviceSize) && !expandableParent;
 
     const expandButton = (show && <div className={"expand-button position-relative"}>
-        <button type={"button"} onClick={toggleExpanded}>
-            <div><span><img aria-hidden alt={"Button to expand content"} src={"/assets/expand-arrow.svg"}/> {expanded ? "Close" : "Expand"}</span></div>
+        <button type={"button"} aria-label={"Expand content"} onClick={toggleExpanded}>
+            <div><span><img aria-hidden src={"/assets/expand-arrow.svg"}/> {expanded ? "Close" : "Expand"}</span></div>
         </button>
     </div>) || null;
 
