@@ -3,7 +3,8 @@ import {
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
-    EXAM_BOARDS_CS_GCSE, examBoardBooleanNotationMap,
+    EXAM_BOARDS_CS_GCSE,
+    examBoardBooleanNotationMap,
     examBoardLabelMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
@@ -18,7 +19,7 @@ import {useLocation, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {isCS, isPhy, siteSpecific} from "./siteConstants";
-import {BooleanNotation, PotentialUser, ProgrammingLanguage, ViewingContext} from "../../IsaacAppTypes";
+import {PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {isDefined} from "./miscUtils";
 import {history} from "./history";
