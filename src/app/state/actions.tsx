@@ -1872,15 +1872,19 @@ export const cancelReservationsOnEvent = (eventId: string, userIds: number[], gr
     }
 };
 
-export const addMyselfToWaitingList = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+export const addMyselfToWaitingList = (eventId: string, additionalInformation: AdditionalInformation, waitingListOnly?: boolean) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST});
         await api.eventBookings.addMyselfToWaitingList(eventId, additionalInformation);
         await dispatch(getEvent(eventId) as any);
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS});
         dispatch(showToast({
-            title: "Waiting list booking confirmed", body: "You have been successfully added to the waiting list for this event.",
-            color: "success", timeout: 5000, closable: false,
+            title: waitingListOnly ? "Booking request received" : "Waiting list booking confirmed",
+            body: waitingListOnly ? "You have requested a place on this event." :
+                "You have been successfully added to the waiting list for this event.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
         }) as any);
         dispatch(getEvent(eventId) as any);
     } catch (error) {

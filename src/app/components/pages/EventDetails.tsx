@@ -27,7 +27,12 @@ import {isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
-import {formatEventDetailsDate,
+import {
+    formatAvailabilityMessage,
+    formatMakeBookingButtonMessage,
+    formatCancelBookingButtonMessage,
+    formatWaitingListBookingStatusMessage,
+    formatEventDetailsDate,
     studentOnlyEventMessage,
     userCanBeAddedToEventWaitingList,
     userCanMakeEventBooking,
@@ -105,7 +110,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                 } else if (canMakeABooking) {
                     dispatch(bookMyselfOnEvent(event.id as string, additionalInformation));
                 } else if (canBeAddedToWaitingList) {
-                    dispatch(addMyselfToWaitingList(event.id as string, additionalInformation));
+                    dispatch(addMyselfToWaitingList(event.id as string, additionalInformation, event.isWaitingListOnly));
                 }
             }
         }
@@ -206,8 +211,8 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                                     <u>Complete your registration below</u>.
                                                 </RS.Button>
                                             </span></span>}
-                                            {canBeAddedToWaitingList && <span> - Waiting list booking is available!</span>}
-                                            {event.userBookingStatus === "WAITING_LIST" && <span> - You are on the waiting list for this event.</span>}
+                                            {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
+                                            {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
                                             {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
                                                 <div className="text-muted font-weight-normal">
                                                     {studentOnlyEventMessage(eventId)}
@@ -273,7 +278,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                     <RS.Button onClick={loginAndReturn}>
                                         {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
                                             "Login to book" :
-                                            "login to apply"
+                                            "Login to apply"
                                         }
                                     </RS.Button>
                                 }
@@ -282,7 +287,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
                                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
                                         <RS.Button onClick={() => {setBookingFormOpen(true)}}>
-                                            {event.userBookingStatus === 'RESERVED' ? 'Confirm your reservation' : 'Book a place'}
+                                            {formatMakeBookingButtonMessage(event)}
                                         </RS.Button>
                                     }
                                     {canReserveSpaces &&
@@ -292,11 +297,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                     }
                                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
                                         <RS.Button color="primary" outline onClick={() => {dispatch(cancelMyBooking(eventId))}}>
-                                            {{
-                                                CONFIRMED: "Cancel your booking",
-                                                WAITING_LIST: "Leave waiting list",
-                                                RESERVED: "Cancel your reservation"
-                                            }[event.userBookingStatus]}
+                                            {formatCancelBookingButtonMessage(event)}
                                         </RS.Button>
                                     }
                                 </React.Fragment>}

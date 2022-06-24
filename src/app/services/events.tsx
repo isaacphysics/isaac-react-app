@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 import {STAGE, STAGES_CS, STAGES_PHY} from "./constants";
 import {siteSpecific} from "./siteConstants";
 import {isStudent, isTeacher} from "./user";
-import {atLeastOne} from "./validation";
+import {atLeastOne, zeroOrLess} from "./validation";
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     {"This event is aimed at students. If you are not a student but still wish to attend, please "}
@@ -92,6 +92,48 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
         </>;
     }
 };
+
+export const formatAvailabilityMessage = (event: AugmentedEvent) => {
+    if (event.isWaitingListOnly) {
+        //  in this case, the waiting list is for booking requests that must be approved
+        return "Bookings available by request!"
+    }
+    // this is an event which can be freely joined, however it happens to be full
+    return "Waiting list booking is available!"
+}
+
+export const formatWaitingListBookingStatusMessage = (event: AugmentedEvent) => {
+    if (event.isWaitingListOnly) {
+        return "You have requested a place on this event."
+    }
+    return "You are on the waiting list for this event."
+}
+
+export const formatMakeBookingButtonMessage = (event: AugmentedEvent) => {
+    if (event.userBookingStatus === "RESERVED") {
+        return "Confirm your reservation"
+    }
+    if (event.isWaitingListOnly) {
+        return "Request a place"
+    }
+    if (zeroOrLess(event.placesAvailable)) {
+        return "Join waiting list"
+    }
+    return "Book a place"
+}
+
+export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
+    if (event.userBookingStatus == "RESERVED"){
+        return "Cancel your reservation"
+    }
+    else if (event.isWaitingListOnly) {
+        return "Cancel place request"
+    }
+    else if (event.userBookingStatus == "WAITING_LIST"){
+        return "Leave waiting list"
+    }
+    return "Cancel your booking"
+}
 
 export const stageExistsForSite = (stage: string) => {
     const stagesForSite = siteSpecific(STAGES_PHY, STAGES_CS);
