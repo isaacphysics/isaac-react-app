@@ -123,16 +123,15 @@ export const formatMakeBookingButtonMessage = (event: AugmentedEvent) => {
 }
 
 export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
-    if (event.userBookingStatus == "RESERVED"){
+    if (event.userBookingStatus == "CONFIRMED") {
+        return "Cancel your booking"
+    }
+    else if (event.userBookingStatus == "RESERVED") {
         return "Cancel your reservation"
     }
-    else if (event.isWaitingListOnly) {
-        return "Cancel place request"
+    else if (event.userBookingStatus == "WAITING_LIST") {
+        return event.isWaitingListOnly ? "Cancel place request" : "Leave waiting list"
     }
-    else if (event.userBookingStatus == "WAITING_LIST"){
-        return "Leave waiting list"
-    }
-    return "Cancel your booking"
 }
 
 export const stageExistsForSite = (stage: string) => {
