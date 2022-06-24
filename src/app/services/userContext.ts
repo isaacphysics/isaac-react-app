@@ -94,7 +94,7 @@ export function useUserContext(): UseUserContextReturnType {
         preferredBooleanNotation = Object.values(BOOLEAN_NOTATION).find(key => booleanNotation[key] === true);
     }
     // if we don't have a boolean notation preference for the user, then set it based on the exam board
-    if (!isDefined(preferredBooleanNotation)) {
+    if (preferredBooleanNotation === undefined) {
         preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
     }
 
