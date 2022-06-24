@@ -53,12 +53,16 @@ export function useUserContext(): UseUserContextReturnType {
     const explanation: UseUserContextReturnType["explanation"] = {};
 
     // Programming Language
-    const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).find((key) => programmingLanguage[key as keyof ProgrammingLanguage] === true) as PROGRAMMING_LANGUAGE | undefined;
+    let preferredProgrammingLanguage;
+    if (programmingLanguage) {
+        preferredProgrammingLanguage = Object.values(PROGRAMMING_LANGUAGE).find(key => programmingLanguage[key] === true);
+    }
 
     // Stage
     let stage: STAGE;
-    if (queryParams.stage && Object.values(STAGE).includes(queryParams.stage as STAGE) && !STAGE_NULL_OPTIONS.has(queryParams.stage as STAGE)) {
-        stage = queryParams.stage as STAGE;
+    const stageQueryParam = queryParams.stage as STAGE | undefined;
+    if (stageQueryParam && Object.values(STAGE).includes(stageQueryParam) && !STAGE_NULL_OPTIONS.has(stageQueryParam)) {
+        stage = stageQueryParam;
         explanation.stage = urlMessage;
     } else if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
@@ -70,10 +74,11 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Exam Board
     let examBoard: EXAM_BOARD;
+    const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined
     if (isPhy) {
         examBoard = EXAM_BOARD.ALL;
-    } else if (queryParams.examBoard && Object.values(EXAM_BOARD).includes(queryParams.examBoard as EXAM_BOARD) && !EXAM_BOARD_NULL_OPTIONS.has(queryParams.examBoard as EXAM_BOARD)) {
-        examBoard = queryParams.examBoard as EXAM_BOARD;
+    } else if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.has(examBoardQueryParam)) {
+        examBoard = examBoardQueryParam;
         explanation.examBoard = urlMessage;
     } else if (isDefined(transientUserContext?.examBoard)) {
         examBoard = transientUserContext?.examBoard;
@@ -83,8 +88,15 @@ export function useUserContext(): UseUserContextReturnType {
         examBoard = EXAM_BOARD.ALL;
     }
 
-    // Boolean notation preference - if we don't have a boolean notation preference for the user, then set it based on the exam board
-    const preferredBooleanNotation = (booleanNotation && Object.keys(BOOLEAN_NOTATION).find((key) => booleanNotation[key as keyof BooleanNotation] === true) as BOOLEAN_NOTATION | undefined) ?? examBoardBooleanNotationMap[examBoard];
+    // Boolean notation preference -
+    let preferredBooleanNotation: BOOLEAN_NOTATION | undefined;
+    if (booleanNotation) {
+        preferredBooleanNotation = Object.values(BOOLEAN_NOTATION).find(key => booleanNotation[key] === true);
+    }
+    // if we don't have a boolean notation preference for the user, then set it based on the exam board
+    if (!isDefined(preferredBooleanNotation)) {
+        preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
+    }
 
     // Gameboard views overrides all context options
     const currentGameboard = useSelector(selectors.board.currentGameboard);
