@@ -36,7 +36,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                     console.error(err);
                     return;
                 }
-                setQrCodeStringBase64SVG(new Buffer(val).toString('base64'));
+                setQrCodeStringBase64SVG(window.btoa(val));
             });
             return authenticatorURL;
         }
@@ -54,7 +54,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
     // this, can we not refactor the form? Ideally, only the onSubmit action
     // should be needed (unless React hijacks it, in which case two functions
     // might be nicer, calling a third, if only a bit convoluted)
-    // 
+    //
     // Just rambling.
     function setupMFA(event?: React.FormEvent<HTMLButtonElement | HTMLFormElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
