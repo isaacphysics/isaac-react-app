@@ -1,13 +1,14 @@
 import {useContext} from "react";
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
-import {AppState} from "../../../state/reducers";
-import {BooleanNotation, FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
+import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
 import {isCS} from "../../../services/siteConstants";
 import katex, { KatexOptions } from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 import renderA11yString from "../../../services/katex-a11y";
+import {useUserContext} from "../../../services/userContext";
+import {BOOLEAN_NOTATION} from "../../../services/constants";
 
 type MathJaxMacro = string|[string, number];
 
@@ -222,7 +223,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: PotentialUser | null, booleanNotation : BooleanNotation | null, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: PotentialUser | null, booleanNotation : BOOLEAN_NOTATION | undefined, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -259,11 +260,7 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse;
                 if (isCS) {
-                    if (user?.loggedIn && booleanNotation) {
-                        macrosToUse = booleanNotation?.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
-                    } else {
-                        macrosToUse = KatexMacrosWithMathsBool;
-                    }
+                    macrosToUse = booleanNotation === BOOLEAN_NOTATION.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
                 } else {
                     macrosToUse = KatexBaseMacros;
                 }
@@ -337,8 +334,8 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
 export const useRenderKatex = () => {
     const user = useSelector(selectors.user.orNull);
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
-    const booleanNotation = useSelector((state: AppState) => state?.userPreferences?.BOOLEAN_NOTATION || null);
+    const {preferredBooleanNotation} = useUserContext();
     const figureNumbers = useContext(FigureNumberingContext);
 
-    return (markup: string) => katexify(markup, user, booleanNotation, segueEnvironment === "DEV", figureNumbers);
+    return (markup: string) => katexify(markup, user, preferredBooleanNotation && BOOLEAN_NOTATION[preferredBooleanNotation], segueEnvironment === "DEV", figureNumbers);
 }

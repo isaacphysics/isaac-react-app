@@ -3,10 +3,15 @@ import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../Isaa
 import {isTeacher} from "../../../services/user";
 import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
-import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD, EXAM_BOARD, STAGE} from "../../../services/constants";
+import {
+    EMPTY_BOOLEAN_NOTATION_RECORD,
+    EXAM_BOARD,
+    examBoardBooleanNotationMap,
+    STAGE
+} from "../../../services/constants";
 import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
-import {isPhy, siteSpecific, isCS, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
-import {ExamBoard, UserContext} from "../../../../IsaacApiTypes";
+import {isCS, isPhy, siteSpecific, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
+import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
 import {isDefined} from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
@@ -20,16 +25,6 @@ interface UserContextRowProps {
     existingUserContexts: UserContext[];
     setBooleanNotation: (bn: BooleanNotation) => void;
     setDisplaySettings: (ds: DisplaySettings) => void;
-}
-
-const examBoardBooleanNotation: {[examBoard in ExamBoard]: BOOLEAN_NOTATION} = {
-    [EXAM_BOARD.AQA]: BOOLEAN_NOTATION.ENG,
-    [EXAM_BOARD.EDUQAS]: BOOLEAN_NOTATION.ENG,
-    [EXAM_BOARD.WJEC]: BOOLEAN_NOTATION.ENG,
-    [EXAM_BOARD.OCR]: BOOLEAN_NOTATION.MATH,
-    [EXAM_BOARD.EDEXCEL]: BOOLEAN_NOTATION.MATH,
-    [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.MATH,
-    [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
 }
 
 function UserContextRow({
@@ -52,7 +47,7 @@ function UserContextRow({
                     examBoard = getFilteredExamBoardOptions(
                         {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
                     })[0]?.value || EXAM_BOARD.ALL;
-                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[examBoard]]: true});
+                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
                     // Set display settings default values
                     setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: true});
@@ -78,7 +73,7 @@ function UserContextRow({
             onChange={e => {
                 setUserContext({...userContext, examBoard: e.target.value as EXAM_BOARD});
                 if (e.target.value) {
-                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotation[e.target.value as EXAM_BOARD]]: true});
+                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[e.target.value as EXAM_BOARD]]: true});
                 }
             }}
         >
@@ -123,9 +118,9 @@ export function UserContextAccountInput({
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
                 <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
-                    Choose a stage here to pre-select the material that is most relevant to your interests.<br />
-                    You will be able to change this preference on relevant pages.<br />
-                    If you prefer to see all content by default, select "All stages".
+                    {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
+                    {"You will be able to change this preference on relevant pages."}<br />
+                    {'If you prefer to see all content by default, select "All stages".'}
                 </RS.UncontrolledTooltip>
             </React.Fragment>,
             // Computer science

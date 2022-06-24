@@ -4,6 +4,7 @@ import {
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
+    examBoardBooleanNotationMap,
     examBoardLabelMap,
     PROGRAMMING_LANGUAGE,
     STAGE,
@@ -18,7 +19,7 @@ import {useLocation, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "../state/reducers";
 import {isCS, isPhy, siteSpecific} from "./siteConstants";
-import {BooleanNotation, PotentialUser, ProgrammingLanguage, ViewingContext} from "../../IsaacAppTypes";
+import {PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {isDefined} from "./miscUtils";
 import {history} from "./history";
@@ -32,8 +33,8 @@ export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
     stage: STAGE;
     showOtherContent?: boolean;
-    preferredProgrammingLanguage?: string;
-    preferredBooleanNotation?: string;
+    preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
+    preferredBooleanNotation?: BOOLEAN_NOTATION;
     explanation: {stage?: string, examBoard?: string};
 }
 
@@ -53,15 +54,16 @@ export function useUserContext(): UseUserContextReturnType {
     const explanation: UseUserContextReturnType["explanation"] = {};
 
     // Programming Language
-    const preferredProgrammingLanguage = programmingLanguage && Object.keys(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] === true ? key as PROGRAMMING_LANGUAGE : val, undefined);
-
-    // Boolean notation preference
-    const preferredBooleanNotation = booleanNotation && Object.keys(BOOLEAN_NOTATION).reduce((val: string | undefined, key) => booleanNotation[key as keyof BooleanNotation] === true ? key as BOOLEAN_NOTATION : val, undefined);
+    let preferredProgrammingLanguage;
+    if (programmingLanguage) {
+        preferredProgrammingLanguage = Object.values(PROGRAMMING_LANGUAGE).find(key => programmingLanguage[key] === true);
+    }
 
     // Stage
     let stage: STAGE;
-    if (queryParams.stage && Object.values(STAGE).includes(queryParams.stage as STAGE) && !STAGE_NULL_OPTIONS.has(queryParams.stage as STAGE)) {
-        stage = queryParams.stage as STAGE;
+    const stageQueryParam = queryParams.stage as STAGE | undefined;
+    if (stageQueryParam && Object.values(STAGE).includes(stageQueryParam) && !STAGE_NULL_OPTIONS.has(stageQueryParam)) {
+        stage = stageQueryParam;
         explanation.stage = urlMessage;
     } else if (isDefined(transientUserContext.stage)) {
         stage = transientUserContext.stage;
@@ -73,10 +75,11 @@ export function useUserContext(): UseUserContextReturnType {
 
     // Exam Board
     let examBoard: EXAM_BOARD;
+    const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined
     if (isPhy) {
         examBoard = EXAM_BOARD.ALL;
-    } else if (queryParams.examBoard && Object.values(EXAM_BOARD).includes(queryParams.examBoard as EXAM_BOARD) && !EXAM_BOARD_NULL_OPTIONS.has(queryParams.examBoard as EXAM_BOARD)) {
-        examBoard = queryParams.examBoard as EXAM_BOARD;
+    } else if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.has(examBoardQueryParam)) {
+        examBoard = examBoardQueryParam;
         explanation.examBoard = urlMessage;
     } else if (isDefined(transientUserContext?.examBoard)) {
         examBoard = transientUserContext?.examBoard;
@@ -84,6 +87,16 @@ export function useUserContext(): UseUserContextReturnType {
         examBoard = user.registeredContexts[0].examBoard as EXAM_BOARD;
     } else {
         examBoard = EXAM_BOARD.ALL;
+    }
+
+    // Boolean notation preference -
+    let preferredBooleanNotation: BOOLEAN_NOTATION | undefined;
+    if (booleanNotation) {
+        preferredBooleanNotation = Object.values(BOOLEAN_NOTATION).find(key => booleanNotation[key] === true);
+    }
+    // if we don't have a boolean notation preference for the user, then set it based on the exam board
+    if (preferredBooleanNotation === undefined) {
+        preferredBooleanNotation = examBoardBooleanNotationMap[examBoard];
     }
 
     // Gameboard views overrides all context options
