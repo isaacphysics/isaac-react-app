@@ -20,7 +20,13 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
 
     // Confidence questions
-    const {confidenceState, setConfidenceState, showConfidence, confidenceSessionUuid, confidenceDisabled} = useConfidenceQuestionsValues(doc.showConfidence, "quick_question", (newCS) => { if (newCS === "followUp") setVisible(true); });
+    const {confidenceState, setConfidenceState, recordConfidence, confidenceDisabled} = useConfidenceQuestionsValues(
+        doc.showConfidence,
+        "quick_question",
+        (newCS) => {
+            if (newCS === "followUp") setVisible(true);
+        }
+    );
 
     const toggle = () => {
         const isNowVisible = !isVisible;
@@ -33,37 +39,41 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
 
     // We have 3 possible styles for the Show/Hide options (default, fast-track and confidence questions)
 
-    const defaultOptions = () => <Row>
-        <Col sm="12" md={{size: 10, offset: 1}}>
-            <Button color="secondary" block className={classNames({"active": isVisible})} onClick={toggle}>
-                {isVisible ? "Hide answer" : "Show answer"}
-            </Button>
-        </Col>
-    </Row>;
+    function DefaultOptions() {
+        return <Row>
+            <Col sm="12" md={{size: 10, offset: 1}}>
+                <Button color="secondary" block className={classNames({"active": isVisible})} onClick={toggle}>
+                    {isVisible ? "Hide answer" : "Show answer"}
+                </Button>
+            </Col>
+        </Row>;
+    }
 
-    const fastTrackOptions = () => <div className={"d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row mb-4"}>
-        {secondaryAction && <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 pr-sm-2 pr-md-0 pr-lg-3"}>
-            <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
-        </div>}
-        <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 pl-sm-2 pl-md-0 pl-lg-3"}>
-            <input
-                onClick={toggle} value={isVisible ? "Hide answer" : "Show answer"}
-                className={classNames("h-100 btn btn-secondary btn-block", {"active": isVisible})}
-            />
-        </div>
-    </div>;
+    function FastTrackOptions() {
+        return <div
+            className={"d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row mb-4"}>
+            {secondaryAction &&
+            <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 pr-sm-2 pr-md-0 pr-lg-3"}>
+                <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
+            </div>}
+            <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 pl-sm-2 pl-md-0 pl-lg-3"}>
+                <input
+                    onClick={toggle} value={isVisible ? "Hide answer" : "Show answer"}
+                    className={classNames("h-100 btn btn-secondary btn-block", {"active": isVisible})}
+                />
+            </div>
+        </div>;
+    }
 
-    const confidenceOptions = () => {
-        if (!confidenceSessionUuid) return null;
+    function ConfidenceOptions() {
         const hideAnswer = () => {
             setVisible(false);
             setConfidenceState("initial");
-            // Generate a new session id, since user has hidden the answer (so might have another go)
-            confidenceSessionUuid.current = uuid_v4().slice(0, 8);
         };
         return <>
-            <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={confidenceDisabled}
-                                 identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"quick_question"} />
+            <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
+                                 disableInitialState={confidenceDisabled}
+                                 identifier={doc.id} type={"quick_question"} />
             {isVisible && <Row className="mt-3">
                 <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
                     <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isCS})} onClick={hideAnswer}>
@@ -72,10 +82,10 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                 </Col>
             </Row>}
         </>;
-    };
+    }
 
     // Select which one of the 3 above options styles we need
-    const Options = fastTrackInfo.isFastTrackPage ? fastTrackOptions : (showConfidence ? confidenceOptions : defaultOptions)
+    const Options = fastTrackInfo.isFastTrackPage ? FastTrackOptions : (recordConfidence ? ConfidenceOptions : DefaultOptions)
 
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">

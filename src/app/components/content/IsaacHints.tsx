@@ -1,12 +1,13 @@
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
-import React from "react";
+import React, {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
 import {useDispatch, useSelector} from "react-redux";
 import {Tabs} from "../elements/Tabs";
 import {logAction} from "../../state/actions";
+import {ConfidenceContext} from "../../../IsaacAppTypes";
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
@@ -23,40 +24,38 @@ const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
 interface HintsProps {
     hints?: ContentDTO[];
     questionPartId: string;
-    confidenceSessionUuid?: React.MutableRefObject<string>;
 }
-export const IsaacLinkHints = ({hints, questionPartId, confidenceSessionUuid}: HintsProps) => {
+export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
     return <div>
         <ListGroup className="question-hints mb-1 pt-3 mt-3 no-print">
             {hints?.map((hint, index) => <ListGroupItem key={index} className="pl-0 py-1">
                 <IsaacHintModal questionPartId={questionPartId} hintIndex={index}
                                 label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
-                                body={hint} scrollable confidenceSessionUuid={confidenceSessionUuid} />
+                                body={hint} scrollable />
             </ListGroupItem>)}
         </ListGroup>
         <PrintOnlyHints hints={hints} />
     </div>;
 };
 
-export const IsaacTabbedHints = ({hints, questionPartId, confidenceSessionUuid}: HintsProps) => {
+export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
     const dispatch = useDispatch();
+    const {recordConfidence} = useContext(ConfidenceContext);
 
     function logHintView(viewedHintIndex: number) {
         if (viewedHintIndex > -1) {
-            if (confidenceSessionUuid) {
+            if (recordConfidence) {
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_HINT",
                     questionPartId,
-                    hintIndex: viewedHintIndex,
-                    confidenceSessionUuid: confidenceSessionUuid.current
-                }));
-            } else {
-                dispatch(logAction({
-                    type: "VIEW_HINT",
-                    questionId: questionPartId,
                     hintIndex: viewedHintIndex
                 }));
             }
+            dispatch(logAction({
+                type: "VIEW_HINT",
+                questionId: questionPartId,
+                hintIndex: viewedHintIndex
+            }));
         }
     }
 

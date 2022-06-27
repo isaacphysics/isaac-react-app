@@ -6,8 +6,7 @@ import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
 import {store} from "../../../state/store";
-import {v4 as uuid_v4} from "uuid";
-import {ChoiceDTO, GameboardDTO} from "../../../../IsaacApiTypes";
+import {ChoiceDTO, GameboardDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -73,12 +72,11 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
 
 interface ConfidenceQuestionsProps {
     state: ConfidenceState;
-    setState: (cs: ConfidenceState) => void;
+    setState: (cs: ConfidenceState | ((cs: ConfidenceState) => ConfidenceState)) => void;
     identifier: any;
     disableInitialState?: boolean;
-    confidenceSessionUuid: React.MutableRefObject<string>;
     type: ConfidenceType;
-    correct?: boolean;
+    validationResponse?: QuestionValidationResponseDTO,
     answer?: any;
 }
 
@@ -92,28 +90,28 @@ const confidenceInformationModal = () => openActiveModal({
     </div>
 });
 
-export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, disableInitialState, identifier, type, correct, answer}: ConfidenceQuestionsProps) => {
+type ValidationPendingState =
+  | {
+    pending: true,
+    confidence: string
+} | {
+    pending: false
+}
+
+export const ConfidenceQuestions = ({state, setState, disableInitialState, identifier, type, validationResponse}: ConfidenceQuestionsProps) => {
     const dispatch = useDispatch();
+    const [validationPending, setValidationPending] = useState<ValidationPendingState>({pending: false});
 
     const toggle = (confidence: string, state: ActiveConfidenceState) => {
         const stateAndType: `${ActiveConfidenceState} & ${ConfidenceType}` = `${state} & ${type}`;
         switch (stateAndType) {
             case "initial & question":
-                dispatch(logAction({
-                    type: "QUESTION_CONFIDENCE_BEFORE",
-                    questionId: identifier,
-                    confidenceSessionUuid: confidenceSessionUuid.current,
-                    answer,
-                    answerCorrect: correct,
-                    confidence
-                }));
-                setState("followUp");
+                setValidationPending({pending: true, confidence});
                 break;
             case "initial & quick_question":
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_BEFORE",
                     questionId: identifier,
-                    confidenceSessionUuid: confidenceSessionUuid.current,
                     confidence
                 }));
                 setState("followUp");
@@ -123,15 +121,28 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
                 dispatch(logAction({
                     type: "QUESTION_CONFIDENCE_AFTER",
                     questionId: identifier,
-                    confidenceSessionUuid: confidenceSessionUuid.current,
                     confidence
                 }));
                 setState("hidden");
-                // Once the user answers the post-question, generate a new session id
-                confidenceSessionUuid.current = uuid_v4().slice(0, 8);
                 break;
         }
     };
+
+    useEffect(() => {
+        // The validation response gets set to undefined whenever the current attempt changes, so I am very sure
+        // that this log action will only run once for a given attempt.
+        if (validationResponse && validationPending.pending) {
+            dispatch(logAction({
+                type: "QUESTION_CONFIDENCE_BEFORE",
+                questionId: identifier,
+                answer: validationResponse.answer,
+                answerCorrect: validationResponse.correct,
+                confidence: validationPending.confidence
+            }));
+            setState((currentState: ConfidenceState) => currentState === "initial" ? "followUp" : currentState);
+        }
+        setValidationPending({pending: false});
+    }, [validationResponse]);
 
     if (state === "hidden") return null;
 
@@ -172,34 +183,32 @@ export const ConfidenceQuestions = ({state, setState, confidenceSessionUuid, dis
 // This and ConfidenceQuestions should be used together, with the values managed by this hook passed to an instance of
 // ConfidenceQuestions. This hook just abstracts away confidence-question-specific stuff so it is easy to remove and
 // doesn't have to hang around in IsaacQuestion and IsaacQuickQuestion.
-export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, currentGameboard?: GameboardDTO | null) => {
+export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, locked?: boolean, currentGameboard?: GameboardDTO | null) => {
     // Confidence question specific things
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const confidenceSessionUuid = useRef(uuid_v4().slice(0, 8));
     const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || !currentAttempt.value);
     const showQuestionFeedback = confidenceState !== "initial" || !show || correct;
 
     // Reset question confidence on attempt change
     useEffect(() => {
-        if (type === "question") {
-            // If user had answered the question, but is now changing their answer, then generate a new session id
-            if (confidenceState === "followUp") {
-                confidenceSessionUuid.current = uuid_v4().slice(0, 8);
-            }
-            setConfidenceState("initial");
-        }
+        if (type === "question") setConfidenceState("initial");
     }, [currentAttempt]);
 
     useEffect(() => {
-        onConfidenceStateChange && onConfidenceStateChange(confidenceState);
+        if (type === "question" && (correct || !canSubmit && !locked)) {
+            setConfidenceState("hidden");
+        }
+    }, [correct, canSubmit, locked]);
+
+    useEffect(() => {
+        if (onConfidenceStateChange) onConfidenceStateChange(confidenceState);
     }, [confidenceState]);
 
     return {
-        showConfidence: show ?? false,
+        recordConfidence: show ?? false,
         confidenceState,
         confidenceDisabled,
         setConfidenceState,
-        showQuestionFeedback,
-        confidenceSessionUuid: show ? confidenceSessionUuid : undefined,
+        showQuestionFeedback
     };
 }

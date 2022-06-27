@@ -7,7 +7,7 @@ import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, ConfidenceContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {
     determineFastTrackPrimaryAction,
@@ -42,7 +42,16 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
-    const {confidenceState, setConfidenceState, confidenceDisabled, showConfidence, showQuestionFeedback, confidenceSessionUuid} = useConfidenceQuestionsValues(currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"), "question", undefined, currentAttempt, canSubmit, correct, currentGameboard);
+    const {confidenceState, setConfidenceState, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
+        currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
+        "question",
+        undefined,
+        currentAttempt,
+        canSubmit,
+        correct,
+        !!locked,
+        currentGameboard
+    );
 
     const tooManySigFigsFeedback = <p>
         Whether your answer is correct or not, it has the wrong number of&nbsp;
@@ -96,9 +105,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </Suspense>
 
             {/* CS Hints */}
-            {isCS && <React.Fragment>
-                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} confidenceSessionUuid={confidenceSessionUuid} />
-            </React.Fragment>}
+            {isCS && <ConfidenceContext.Provider value={{recordConfidence}}>
+                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
+            </ConfidenceContext.Provider>}
 
             {/* Validation Response */}
             {showQuestionFeedback && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
@@ -118,24 +127,28 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </RS.Alert>}
 
             {/* Action Buttons */}
-            {(!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
-                (showConfidence && confidenceSessionUuid ?
-                    <ConfidenceQuestions state={confidenceState} setState={setConfidenceState} disableInitialState={confidenceDisabled}
-                                         identifier={doc.id} confidenceSessionUuid={confidenceSessionUuid} type={"question"}
-                                         correct={correct} answer={currentAttempt} />
-                    :
-                    <div className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
+            {recordConfidence ?
+                <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
+                                     disableInitialState={confidenceDisabled}
+                                     identifier={doc.id} type={"question"}
+                                     validationResponse={validationResponse} />
+                :
+                (!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
+                    <div
+                        className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
                         {secondaryAction &&
-                            <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pr-sm-2 pr-md-0 pr-lg-3": primaryAction})}>
-                                <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block" />
-                            </div>
+                        <div
+                            className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pr-sm-2 pr-md-0 pr-lg-3": primaryAction})}>
+                            <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
+                        </div>
                         }
                         {primaryAction &&
-                            <div className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
-                                <input {...primaryAction} className="h-100 btn btn-secondary btn-block" />
-                            </div>
+                        <div
+                            className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
+                            <input {...primaryAction} className="h-100 btn btn-secondary btn-block"/>
+                        </div>
                         }
-                    </div>)
+                    </div>
             }
 
             {/* CS Hint Reminder */}
@@ -148,9 +161,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             </RS.Row>}
 
             {/* Physics Hints */}
-            {isPhy && <div className={correct ? "mt-5" : ""}>
-                <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} confidenceSessionUuid={confidenceSessionUuid} />
-            </div>}
+            {isPhy && <ConfidenceContext.Provider value={{recordConfidence}}>
+                <div className={correct ? "mt-5" : ""}>
+                    <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
+                </div>
+            </ConfidenceContext.Provider>}
         </div>
     </RS.Form>;
 });
