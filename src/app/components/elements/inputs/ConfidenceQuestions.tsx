@@ -1,5 +1,5 @@
 import {Button, Col, Row} from "reactstrap";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
 import {useDispatch} from "react-redux";
 import {ConfidenceType} from "../../../../IsaacAppTypes";

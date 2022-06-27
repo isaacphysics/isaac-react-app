@@ -9,7 +9,6 @@ import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inp
 import {isCS} from "../../services/siteConstants";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
-import {v4 as uuid_v4} from "uuid";
 
 export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const dispatch = useDispatch();
