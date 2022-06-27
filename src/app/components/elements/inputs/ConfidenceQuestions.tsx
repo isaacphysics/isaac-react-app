@@ -30,7 +30,7 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
         title: "Click a button to check your answer",
         states: {
             initial: {
-                question: "What is your level of confidence that your own answer is correct?",
+                question: "What is your level of confidence that your answer is correct?",
                 options: [
                     {label: "Low", color: "negative"},
                     {label: "Medium", color: "neutral"},
@@ -38,7 +38,7 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
                 ]
             },
             followUp: {
-                question: "Having read the feedback, how do you rate your confidence in answering this question again?",
+                question: "Having read the feedback, how confident do you feel in answering this question now?",
                 options: [
                     {label: "Low", color: siteSpecific("negative", "negative-answer")},
                     {label: "Medium", color: siteSpecific("neutral", "neutral-answer")},
