@@ -130,7 +130,7 @@ export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
         return "Cancel your reservation"
     }
     else if (event.userBookingStatus == "WAITING_LIST") {
-        return event.isWaitingListOnly ? "Cancel place request" : "Leave waiting list"
+        return event.isWaitingListOnly ? "Cancel booking request" : "Leave waiting list"
     }
 }
 

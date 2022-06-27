@@ -1894,7 +1894,7 @@ export const addMyselfToWaitingList = (eventId: string, additionalInformation: A
 };
 
 export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    const cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    const cancel = window.confirm('Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.');
     if (cancel) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});
