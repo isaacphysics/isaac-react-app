@@ -85,10 +85,10 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     const dispatch = useDispatch();
 
-    const { q }: { q?: string } = queryString.parse(location.search)
+    const { filter }: { filter?: string } = queryString.parse(location.search)
 
     const startIndex = 0;
-    const [titleFilter, setTitleFilter] = useState<string|undefined>(q?.replace(/[^a-zA-Z0-9 ]+/g, ''));
+    const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
 
     // Set active tab using hash anchor
     useEffect(() => {
