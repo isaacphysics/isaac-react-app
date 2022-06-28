@@ -90,82 +90,80 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         determineFastTrackSecondaryAction(fastTrackInfo) :
         null;
 
-    return <RS.Form onSubmit={function submitCurrentAttempt(event) {
-        if (event) {event.preventDefault();}
-        if (questionPart?.currentAttempt) {
-            dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
-            if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-                dispatch(addGameboard(currentGameboard.id, currentUser));
+    return <ConfidenceContext.Provider value={{recordConfidence}}>
+        <RS.Form onSubmit={function submitCurrentAttempt(event) {
+            if (event) {event.preventDefault();}
+            if (questionPart?.currentAttempt) {
+                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
+                if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
+                    dispatch(addGameboard(currentGameboard.id, currentUser));
+                }
             }
-        }
-    }}>
-        <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
-            <Suspense fallback={<Loading/>}>
-                <QuestionComponent questionId={doc.id as string} doc={doc} {...{validationResponse}} />
-            </Suspense>
+        }}>
+            <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
+                <Suspense fallback={<Loading/>}>
+                    <QuestionComponent questionId={doc.id as string} doc={doc} {...{validationResponse}} />
+                </Suspense>
 
-            {/* CS Hints */}
-            {isCS && <ConfidenceContext.Provider value={{recordConfidence}}>
-                <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
-            </ConfidenceContext.Provider>}
+                {/* CS Hints */}
+                {isCS && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
 
-            {/* Validation Response */}
-            {showQuestionFeedback && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
-                <div className="pb-1">
-                    <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
-                </div>
-                {validationResponse.explanation && <div className="mb-2">
-                    {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
-                        <IsaacContent doc={validationResponse.explanation}/>
-                    }
-                </div>}
-            </div>}
-
-            {/* Lock */}
-            {locked && <RS.Alert color="danger" className={"no-print"}>
-                This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to prevent repeated guessing.
-            </RS.Alert>}
-
-            {/* Action Buttons */}
-            {recordConfidence ?
-                <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
-                                     disableInitialState={confidenceDisabled}
-                                     identifier={doc.id} type={"question"}
-                                     validationResponse={validationResponse} />
-                :
-                (!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
-                    <div
-                        className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
-                        {secondaryAction &&
-                        <div
-                            className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pr-sm-2 pr-md-0 pr-lg-3": primaryAction})}>
-                            <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
-                        </div>
-                        }
-                        {primaryAction &&
-                        <div
-                            className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
-                            <input {...primaryAction} className="h-100 btn btn-secondary btn-block"/>
-                        </div>
-                        }
+                {/* Validation Response */}
+                {showQuestionFeedback && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
+                    <div className="pb-1">
+                        <h1 className="m-0">{sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                     </div>
-            }
+                    {validationResponse.explanation && <div className="mb-2">
+                        {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
+                            <IsaacContent doc={validationResponse.explanation}/>
+                        }
+                    </div>}
+                </div>}
 
-            {/* CS Hint Reminder */}
-            {isCS && (!validationResponse || !correct || canSubmit) && <RS.Row>
-                <RS.Col xl={{size: 10, offset: 1}} >
-                    {doc.hints && <p className="no-print text-center pt-2 mb-0">
-                        <small>{"Don't forget to use the hints above if you need help."}</small>
-                    </p>}
-                </RS.Col>
-            </RS.Row>}
+                {/* Lock */}
+                {locked && <RS.Alert color="danger" className={"no-print"}>
+                    This question is locked until at least {<DateString formatter={TIME_ONLY}>{locked}</DateString>} to prevent repeated guessing.
+                </RS.Alert>}
 
-            {/* Physics Hints */}
-            {isPhy && <ConfidenceContext.Provider value={{recordConfidence}}>
-                <div className={correct ? "mt-5" : ""}>
+                {/* Action Buttons */}
+                {recordConfidence ?
+                    <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
+                                         disableInitialState={confidenceDisabled}
+                                         identifier={doc.id} type={"question"}
+                                         validationResponse={validationResponse} />
+                    :
+                    (!correct || canSubmit || (fastTrackInfo.isFastTrackPage && (primaryAction || secondaryAction))) && !locked &&
+                        <div
+                            className={classNames("d-flex align-items-stretch flex-column-reverse flex-sm-row flex-md-column-reverse flex-lg-row", {"mt-5 mb-n3": correct})}>
+                            {secondaryAction &&
+                            <div
+                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50", {"pr-sm-2 pr-md-0 pr-lg-3": primaryAction})}>
+                                <input {...secondaryAction} className="h-100 btn btn-outline-primary btn-block"/>
+                            </div>
+                            }
+                            {primaryAction &&
+                            <div
+                                className={classNames("m-auto pt-3 pb-1 w-100 w-sm-100 w-md-100 w-lg-100", {"pl-sm-2 pl-md-0 pl-lg-3": secondaryAction})}>
+                                <input {...primaryAction} className="h-100 btn btn-secondary btn-block"/>
+                            </div>
+                            }
+                        </div>
+                }
+
+                {/* CS Hint Reminder */}
+                {isCS && (!validationResponse || !correct || canSubmit) && <RS.Row>
+                    <RS.Col xl={{size: 10, offset: 1}} >
+                        {doc.hints && <p className="no-print text-center pt-2 mb-0">
+                            <small>{"Don't forget to use the hints above if you need help."}</small>
+                        </p>}
+                    </RS.Col>
+                </RS.Row>}
+
+                {/* Physics Hints */}
+                {isPhy && <div className={correct ? "mt-5" : ""}>
                     <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints} />
-                </div>
-            </ConfidenceContext.Provider>}
-        </div>
-    </RS.Form>;
+                </div>}
+            </div>
+        </RS.Form>
+    </ConfidenceContext.Provider>;
 });
