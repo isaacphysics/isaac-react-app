@@ -69,7 +69,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
     <StaticPageRoute key={key++} exact path="/11_14" pageId="11_14" />,
     <StaticPageRoute key={key++} exact path="/gcse" pageId="gcse" />,
-    <TrackedRoute key={key++} exact path="/alevel" component={Alevel}/>,
+    <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
 
