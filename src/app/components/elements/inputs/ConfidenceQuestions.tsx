@@ -38,7 +38,7 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
                 ]
             },
             followUp: {
-                question: "Having read the feedback, how confident do you feel in answering this question now?",
+                question: "Having read the feedback, what is your level of confidence in answering this question now?",
                 options: [
                     {label: "Low", color: siteSpecific("negative", "negative-answer")},
                     {label: "Medium", color: siteSpecific("neutral", "neutral-answer")},
