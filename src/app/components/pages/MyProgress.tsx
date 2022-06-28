@@ -65,7 +65,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useDispatch();
-    const myProgress = useSelector(selectors.user.myProgress);
+    const myProgress = useSelector(selectors.user.progress);
     const userProgress = useSelector(selectors.teacher.userProgress);
     const achievements = useSelector(selectors.user.achievementsRecord);
     const myAnsweredQuestionsByDate = useSelector(selectors.user.answeredQuestionsByDate);

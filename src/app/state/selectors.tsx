@@ -120,7 +120,7 @@ export const selectors = {
 
     user:  {
         orNull: (state: AppState) => state?.user || null,
-        myProgress: (state: AppState) => state?.myProgress,
+        progress: (state: AppState) => state?.myProgress,
         snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
         achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
         answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate
