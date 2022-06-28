@@ -23,6 +23,7 @@ import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {isEventLeaderOrStaff} from "../../../services/user";
+import { useQueryParams } from "../../../services/reactRouterExtension";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -84,8 +85,10 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     const dispatch = useDispatch();
 
+    const { filter }: { filter?: string } = useQueryParams();
+
     const startIndex = 0;
-    const [titleFilter, setTitleFilter] = useState<string|undefined>();
+    const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
 
     // Set active tab using hash anchor
     useEffect(() => {
