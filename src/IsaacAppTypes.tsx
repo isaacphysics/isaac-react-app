@@ -520,6 +520,8 @@ export type Action =
 
 export type NOT_FOUND_TYPE = 404;
 
+export type ConfidenceType = "quick_question" | "question";
+
 export interface IsaacQuestionProps<T extends QuestionDTO> {
     doc: T;
     questionId: string;
@@ -715,6 +717,7 @@ export const QuestionContext = React.createContext<string | undefined>(undefined
 export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string, updateAttemptCallback: (dropResult: DropResult) => void, readonly: boolean, inlineDropValueMap: {[p: string]: ClozeItemDTO}, borderMap: {[p: string]: boolean}} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
+export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
