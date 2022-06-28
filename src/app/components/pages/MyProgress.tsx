@@ -8,7 +8,6 @@ import {
     getUserAnsweredQuestionsByDate,
     getUserProgress,
 } from "../../state/actions";
-import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
@@ -24,6 +23,7 @@ import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {isPhy, siteSpecific} from "../../services/siteConstants";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {selectors} from "../../state/selectors";
 
 const siteSpecificStats = siteSpecific(
     // Physics
@@ -65,11 +65,11 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
     const dispatch = useDispatch();
-    const myProgress = useSelector((state: AppState) => state?.myProgress);
-    const userProgress = useSelector((state: AppState) => state?.userProgress);
-    const achievements = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
-    const myAnsweredQuestionsByDate = useSelector((state: AppState) => state?.myAnsweredQuestionsByDate);
-    const userAnsweredQuestionsByDate = useSelector((state: AppState) => state?.userAnsweredQuestionsByDate);
+    const myProgress = useSelector(selectors.user.progress);
+    const userProgress = useSelector(selectors.teacher.userProgress);
+    const achievements = useSelector(selectors.user.achievementsRecord);
+    const myAnsweredQuestionsByDate = useSelector(selectors.user.answeredQuestionsByDate);
+    const userAnsweredQuestionsByDate = useSelector(selectors.teacher.userAnsweredQuestionsByDate);
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {
