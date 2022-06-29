@@ -6,6 +6,11 @@ import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
 import {siteSpecific} from "./siteConstants";
 
+export const STAGING_URL = siteSpecific(
+    "https://staging.isaacphysics.org",
+    "https://staging.isaaccomputerscience.org"
+);
+
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 
@@ -16,6 +21,8 @@ export const API_VERSION: string = REACT_APP_API_VERSION || "any";
 let apiPath = `${document.location.origin}/api/${API_VERSION}/api`;
 if (document.location.hostname === "localhost") {
     apiPath = "http://localhost:8080/isaac-api/api";
+} else if (EDITOR_PREVIEW) {
+    apiPath = `${STAGING_URL}/api/any/api`;
 } else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }

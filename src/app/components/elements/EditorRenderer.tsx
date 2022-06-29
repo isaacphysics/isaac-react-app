@@ -4,9 +4,10 @@ import {siteSpecific} from "../../services/siteConstants";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
-import {Provider} from "react-redux";
+import {Provider, useDispatch} from "react-redux";
 import {store} from "../../state/store";
 import {StaticRouter} from "react-router";
+import {fetchGlossaryTerms} from "../../state/actions";
 
 function getType(doc: any) {
     if (!doc) {
@@ -25,6 +26,12 @@ function getType(doc: any) {
 function EditorListener() {
     // Wait for messages and then put doc from message into IsaacContent
     const [doc, setDoc] = useState();
+    const dispatch = useDispatch();
+
+    // Fetch glossary terms so they can be rendered
+    useEffect(() => {
+        dispatch(fetchGlossaryTerms());
+    }, [dispatch]);
 
     const listener = useCallback((message) => {
         const {doc} = message.data;
