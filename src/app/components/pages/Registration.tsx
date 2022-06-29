@@ -263,7 +263,6 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             required
                                             label="I am at least 13 years old"
                                             disabled={(isPhy && dob10To12CheckboxChecked) || registrationUser.dateOfBirth}
-                                            // TODO: Look at DateInput null vs undefined for updating DoB and maybe change this in future
                                             onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
                                         />
                                         {isPhy && <CustomInput
