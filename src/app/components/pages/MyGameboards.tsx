@@ -65,7 +65,7 @@ enum boardCompletions {
 enum BoardLimit {
     "six" = "6",
     "eighteen" = "18",
-    "sixy" = "60",
+    "sixty" = "60",
     "All" = "ALL"
 }
 enum boardViews {

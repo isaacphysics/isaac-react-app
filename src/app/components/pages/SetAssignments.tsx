@@ -324,7 +324,7 @@ enum boardSubjects {
 enum BoardLimit {
     "six" = "6",
     "eighteen" = "18",
-    "sixy" = "60",
+    "sixty" = "60",
     "All" = "ALL"
 }
 function toActual(limit: BoardLimit) {
