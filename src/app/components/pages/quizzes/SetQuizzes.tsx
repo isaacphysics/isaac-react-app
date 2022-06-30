@@ -17,12 +17,13 @@ import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {loadGroups} from "../../../state/actions";
 import {MANAGE_QUIZ_TAB, NOT_FOUND} from "../../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {siteSpecific} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 import {below, useDeviceSize} from "../../../services/device";
 import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {isEventLeaderOrStaff} from "../../../services/user";
+import { useQueryParams } from "../../../services/reactRouterExtension";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -62,10 +63,10 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 
                 <div className="mt-4 text-right">
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
-                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : {[SITE.CS]: "Cancel test", [SITE.PHY]: "Cancel Test"}[SITE_SUBJECT]}
+                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
                     </RS.Button>
                     <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
-                        {{[SITE.CS]: "View results", [SITE.PHY]: "View Results"}[SITE_SUBJECT]}
+                        {siteSpecific("View Results", "View results")}
                     </RS.Button>
                 </div>
             </RS.CardBody>
@@ -79,13 +80,15 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const quizzes = useSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
-    const [pageTitle, setPageTitle] = useState({[SITE.CS]: "Manage tests", [SITE.PHY]: (activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT]);
+    const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     const quizAssignments = useSelector(selectors.quizzes.assignments);
 
     const dispatch = useDispatch();
 
+    const { filter }: { filter?: string } = useQueryParams();
+
     const startIndex = 0;
-    const [titleFilter, setTitleFilter] = useState<string|undefined>();
+    const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
 
     // Set active tab using hash anchor
     useEffect(() => {
@@ -94,7 +97,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
-        setPageTitle({[SITE.CS]: "Manage tests", [SITE.PHY]: (tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT])
+        setPageTitle(siteSpecific((tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     }, [hashAnchor]);
 
     useEffect(() => {
@@ -120,7 +123,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }, [titleFilter, quizzes]);
 
     function activeTabChanged(tabIndex: number) {
-        setPageTitle({[SITE.CS]: "Manage tests", [SITE.PHY]: (tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests"}[SITE_SUBJECT])
+        setPageTitle(siteSpecific((tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"))
     }
 
     const pageHelp = <span>
@@ -140,7 +143,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
             {{
-                [{[SITE.CS]: "Available tests", [SITE.PHY]: "Set Tests"}[SITE_SUBJECT]]:
+                [siteSpecific("Set Tests", "Available tests")]:
                 <ShowLoading until={filteredQuizzes}>
                     {filteredQuizzes && <>
                         <p>The following tests are available to set to your groups.</p>
@@ -158,7 +161,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
                                     <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz))}>
-                                        {{[SITE.CS]: "Set test", [SITE.PHY]: "Set Test"}[SITE_SUBJECT]}
+                                        {siteSpecific("Set Test", "Set test")}
                                     </RS.Button>
                                 </div>
                                 <div className="d-none d-md-flex align-items-center">
@@ -171,7 +174,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                     </>}
                 </ShowLoading>,
 
-                [{[SITE.CS]: "Previously set tests", [SITE.PHY]: "Manage Tests"}[SITE_SUBJECT]]:
+                [siteSpecific("Manage Tests", "Previously set tests")]:
                 <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
                     {quizAssignments && quizAssignments !== NOT_FOUND && <>
                         {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}

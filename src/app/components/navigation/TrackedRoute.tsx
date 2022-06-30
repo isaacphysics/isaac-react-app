@@ -10,7 +10,7 @@ import {Unauthorised} from "../pages/Unauthorised";
 import {isTeacher} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {GOOGLE_ANALYTICS_ACCOUNT_ID} from "../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
 ReactGA.set({ anonymizeIp: true });
@@ -53,7 +53,12 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
                             user && !isTeacher(user) && rest.ifUser && rest.ifUser.name === isTeacher.name ? // TODO we should try to find a more robust way than this
-                                SITE_SUBJECT === SITE.PHY ? <Redirect to="/pages/contact_us_teacher"/> : <Redirect to="/pages/teacher_accounts"/>
+                                siteSpecific(
+                                    // Physics
+                                    <Redirect to="/pages/contact_us_teacher"/>,
+                                    // Computer science
+                                    <Redirect to="/pages/teacher_accounts"/>
+                                )
                                 :
                                 user && user.loggedIn && !ifUser(user) ?
                                     <Unauthorised/>

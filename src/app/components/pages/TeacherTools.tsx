@@ -3,7 +3,6 @@ import {useDispatch, useSelector} from "react-redux";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {AppState} from "../../state/reducers";
 import {isTeacher} from "../../services/user";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
@@ -14,7 +13,7 @@ import {selectors} from "../../state/selectors";
 export const TeacherTools = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const achievementsSelector = useSelector((state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord);
+    const achievementsSelector = useSelector(selectors.user.achievementsRecord);
 
     useEffect(() => {
         if (!achievementsSelector) {

@@ -13,7 +13,7 @@ import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../../services/constants";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isCS} from "../../../services/siteConstants";
 import classNames from "classnames";
 import {Markup} from "../markup";
 
@@ -25,7 +25,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
         {items
             // For CS we want relevant sections to appear first
             .sort((itemA, itemB) => {
-                if (SITE_SUBJECT !== SITE.CS) {return 0;}
+                if (!isCS) {return 0;}
                 return makeIntendedAudienceComparator(user, userContext)(itemA, itemB);
             })
 
@@ -45,7 +45,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
                     block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                 >
-                    <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(stringifyAudience(item.audience, userContext))]: SITE_SUBJECT === SITE.CS})}>
+                    <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(stringifyAudience(item.audience, userContext))]: isCS})}>
                         {stringifyAudience(item.audience, userContext)}
                     </div>
                     <div className="title pl-3 d-flex">

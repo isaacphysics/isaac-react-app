@@ -1,14 +1,15 @@
-import React, {useContext, useEffect} from "react";
+import React, {Suspense, useContext, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import classnames from "classnames";
 import {QUESTION_TYPES} from "../../services/questions";
 import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
 import {isDefined} from "../../services/miscUtils";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isPhy, isCS} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {QuizAttemptContext} from "../../../IsaacAppTypes";
+import {Loading} from "../handlers/IsaacSpinner";
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const dispatch = useDispatch();
@@ -30,20 +31,21 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
     const noAnswer = validated && correct === undefined;
 
-    const QuestionComponent = QUESTION_TYPES.get(doc.type || "default");
+    const QuestionComponent = QUESTION_TYPES[doc.type || "default"];
 
     return <React.Fragment>
         <div className={
-            classnames({"question-component p-md-5": true, "parsons-layout": doc.type === 'isaacParsonsQuestion'})
+            classnames("question-component p-md-5", {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})
         }>
-            {SITE_SUBJECT === SITE.CS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+            {isCS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
-            {/* @ts-ignore as TypeScript is struggling to infer common type for questions */}
-            <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} readonly={validated} />
+            <Suspense fallback={<Loading/>}>
+                <QuestionComponent questionId={doc.id as string} doc={doc} readonly={validated} {...{validationResponse}} />
+            </Suspense>
 
             {/* CS Hints */}
-            {SITE_SUBJECT === SITE.CS && <React.Fragment>
+            {isCS && <React.Fragment>
                 <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
             </React.Fragment>}
 
@@ -58,7 +60,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </div>}
 
             {/* Physics Hints */}
-            {SITE_SUBJECT === SITE.PHY && <div className={correct ? "mt-5" : ""}>
+            {isPhy && <div className={correct ? "mt-5" : ""}>
                 <IsaacTabbedHints questionPartId={doc.id as string} hints={doc.hints}/>
             </div>}
         </div>

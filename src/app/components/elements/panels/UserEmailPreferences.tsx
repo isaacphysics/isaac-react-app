@@ -5,7 +5,7 @@ import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {useSelector} from "react-redux";
 import {AppState} from "../../../state/reducers";
 import {validateEmailPreferences} from "../../../services/validation";
-import {SITE_SUBJECT_TITLE, SITE_SUBJECT, SITE} from "../../../services/siteConstants";
+import {siteSpecific, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences;
@@ -17,18 +17,18 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     const error = useSelector((state: AppState) => state && state.error);
     const defaultEmailPreferences = {ASSIGNMENTS: true};
     const isaacEmailPreferences = {
-        assignments: {
-            [SITE.CS]: "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher.",
-            [SITE.PHY]: "Get notified when your teacher gives your group a new assignment."
-        },
-        news: {
-            [SITE.CS]: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
-            [SITE.PHY]: "New content and website feature updates, as well as interesting news about Isaac."
-        },
-        events: {
-            [SITE.CS]: "Get valuable updates on our free student workshops/teacher CPD events happening near you.",
-            [SITE.PHY]: "Information about new virtual or real world physics events."
-        }
+        assignments: siteSpecific(
+            "Get notified when your teacher gives your group a new assignment.",
+            "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher."
+        ),
+        news: siteSpecific(
+            "New content and website feature updates, as well as interesting news about Isaac.",
+            "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
+        ),
+        events: siteSpecific(
+            "Information about new virtual or real world physics events.",
+            "Get valuable updates on our free student workshops/teacher CPD events happening near you."
+        )
     };
 
     // initially set email preferences to default value
@@ -60,7 +60,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">Assignments</td>
                         <td className="d-none d-sm-table-cell">
-                            {isaacEmailPreferences.assignments[SITE_SUBJECT]}
+                            {isaacEmailPreferences.assignments}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -73,7 +73,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">News</td>
                         <td className="d-none d-sm-table-cell">
-                            {isaacEmailPreferences.news[SITE_SUBJECT]}
+                            {isaacEmailPreferences.news}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -86,7 +86,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
-                            {isaacEmailPreferences.events[SITE_SUBJECT]}
+                            {isaacEmailPreferences.events}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput

@@ -4,7 +4,7 @@ import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {difficultyShortLabelMap, DOCUMENT_TYPE, documentTypePathPrefix, stageLabelMap} from "../../services/constants";
 import {useDispatch, useSelector} from "react-redux";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
 import {
@@ -144,8 +144,8 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const audienceFilteredContent = content.filter(c => SITE_SUBJECT === SITE.PHY || isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isTeacher(useSelector(selectors.user.orNull)) && SITE_SUBJECT === SITE.CS;
+    const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
+    const showConceptGameboardButton = isCS && isTeacher(useSelector(selectors.user.orNull));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent
@@ -181,8 +181,10 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         </ListGroupItem>
     };
 
-    return {
-        [SITE.PHY]: renderConceptsAndQuestions(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
-        [SITE.CS]: renderQuestions(questions, makeListGroupItem, conceptId, showConceptGameboardButton)
-    }[SITE_SUBJECT];
+    return siteSpecific(
+        // Physics
+        renderConceptsAndQuestions(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
+        // Computer Science
+        renderQuestions(questions, makeListGroupItem, conceptId, showConceptGameboardButton)
+    );
 }

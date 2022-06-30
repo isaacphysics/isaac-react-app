@@ -3,9 +3,9 @@ import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {SITE, SITE_SUBJECT, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
-import QRCode from 'qrcode'
+import QRCode from 'qrcode';
 import {AppState} from "../../../state/reducers";
 import {selectors} from "../../../state/selectors";
 
@@ -15,7 +15,7 @@ interface UserMFAProps {
     editingOtherUser: boolean;
 }
 
-export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
+const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
     const dispatch = useDispatch();
     const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
     const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
@@ -36,7 +36,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
                     console.error(err);
                     return;
                 }
-                setQrCodeStringBase64SVG(new Buffer(val).toString('base64'));
+                setQrCodeStringBase64SVG(window.btoa(val));
             });
             return authenticatorURL;
         }
@@ -54,7 +54,7 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
     // this, can we not refactor the form? Ideally, only the onSubmit action
     // should be needed (unless React hijacks it, in which case two functions
     // might be nicer, calling a third, if only a bit convoluted)
-    // 
+    //
     // Just rambling.
     function setupMFA(event?: React.FormEvent<HTMLButtonElement | HTMLFormElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
@@ -165,3 +165,4 @@ export const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: User
 
     </CardBody>
 };
+export default UserMFA;

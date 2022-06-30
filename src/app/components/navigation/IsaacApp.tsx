@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {lazy, Suspense, useEffect} from 'react';
 import "../../services/scrollManager"; // important
 import "../../services/polyfills"; // important
 import {useDispatch, useSelector} from "react-redux";
@@ -44,23 +44,18 @@ import {AdminContentErrors} from "../pages/AdminContentErrors";
 import {isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
-import {Equality} from '../pages/Equality';
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
-import {isTest} from "../../services/constants";
 import {AdminEmails} from "../pages/AdminEmails";
 import {Events} from "../pages/Events";
 import {RedirectToEvent} from "./RedirectToEvent";
-import {EventDetails} from "../pages/EventDetails";
 import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
-import {GameboardBuilder} from "../pages/GameboardBuilder";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
-import {MyProgress} from "../pages/MyProgress";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
-import SiteSpecific from "../site/siteSpecific";
+import SiteSpecific from "../site/siteSpecificComponents";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
 import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
@@ -81,7 +76,12 @@ import {QuizPreview} from "../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {selectors} from "../../state/selectors";
 import {GameboardFilter} from "../pages/GameboardFilter";
-import {ContentEmails} from "../pages/ContentEmails";
+import {Loading} from "../handlers/IsaacSpinner";
+const ContentEmails = lazy(() => import('../pages/ContentEmails'));
+const MyProgress = lazy(() => import('../pages/MyProgress'));
+const Equality = lazy(() => import('../pages/Equality'));
+const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
+const EventDetails = lazy(() => import('../pages/EventDetails'));
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -135,7 +135,8 @@ export const IsaacApp = () => {
         <EmailVerificationBanner />
         <main id="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ClientError}>
-                <Switch>
+                <Suspense fallback={<Loading/>}>
+                    <Switch>
                     {/* Errors; these paths work but aren't really used */}
                     <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
                     <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
@@ -143,9 +144,6 @@ export const IsaacApp = () => {
 
                     {/* Site specific pages */}
                     {SiteSpecific.Routes}
-
-                    {/* Special case */}
-                    <TrackedRoute exact path="/questions/:questionId(_regression_test_)" component={segueEnvironment !== "PROD" || isTest ? Question : NotFound} />
 
                     {/* Application pages */}
                     <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
@@ -238,6 +236,7 @@ export const IsaacApp = () => {
                     */}
 
                     {/* Builder pages */}
+
                     <TrackedRoute exact path="/equality" component={Equality} />
                     <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
                     <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
@@ -248,6 +247,7 @@ export const IsaacApp = () => {
                     {/* Error pages */}
                     <TrackedRoute component={NotFound} />
                 </Switch>
+                </Suspense>
             </ErrorBoundary>
         </main>
         <Footer />

@@ -1,11 +1,11 @@
 import {MARKDOWN_RENDERER} from "../../../services/constants";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
+import {isPhy} from "../../../services/siteConstants";
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     const href = utils.escapeHtml(tokens[idx].href || "");
-    const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:");
+    const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:") || href.startsWith("#");
     const title = tokens[idx].title ? (' title="' + utils.escapeHtml(utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
     if (localLink) {
         return `<a href="${href}" ${title}>`;
@@ -54,7 +54,7 @@ export const regexProcessMarkdown = (markdown: string) => {
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
-    if (SITE_SUBJECT === SITE.PHY) {
+    if (isPhy) {
         Object.assign(regexRules, {
             "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
             "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,

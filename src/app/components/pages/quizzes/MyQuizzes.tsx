@@ -13,9 +13,9 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {extractTeacherName} from "../../../services/user";
 import {isFound} from "../../../services/miscUtils";
 import {Spacer} from "../../elements/Spacer";
-import {SITE, SITE_SUBJECT} from "../../../services/siteConstants";
 import {Tabs} from "../../elements/Tabs";
 import {isAttempt, partitionCompleteAndIncompleteQuizzes} from "../../../services/quiz";
+import {siteSpecific} from "../../../services/siteConstants";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -58,27 +58,27 @@ function QuizItem({item}: QuizAssignmentProps) {
                 <div className="text-center mt-4">
                     {assignment ? <>
                         {status === Status.Unstarted && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
-                            {{[SITE.CS]: "Start test", [SITE.PHY]: "Start Test"}[SITE_SUBJECT]}
+                            {siteSpecific("Start Test", "Start test")}
                         </RS.Button>}
                         {status === Status.Started && <RS.Button tag={Link} to={`/test/assignment/${assignment.id}`}>
-                            {{[SITE.CS]: "Continue test", [SITE.PHY]: "Continue Test"}[SITE_SUBJECT]}
+                            {siteSpecific("Continue Test", "Continue test")}
                         </RS.Button>}
                         {status === Status.Complete && (
                             assignment.quizFeedbackMode !== "NONE" ?
                                 <RS.Button tag={Link} to={`/test/attempt/${assignment.attempt?.id}/feedback`}>
-                                    {{[SITE.CS]: "View feedback", [SITE.PHY]: "View Feedback"}[SITE_SUBJECT]}
+                                    {siteSpecific("View Feedback", "View feedback")}
                                 </RS.Button>
                                 :
                                 <strong>No feedback available</strong>
                         )}
                     </> : attempt && <>
                         {status === Status.Started && <RS.Button tag={Link} to={`/test/attempt/${attempt.quizId}`}>
-                            {{[SITE.CS]: "Continue test", [SITE.PHY]: "Continue Test"}[SITE_SUBJECT]}
+                            {siteSpecific("Continue Test", "Continue test")}
                         </RS.Button>}
                         {status === Status.Complete && (
                             attempt.feedbackMode !== "NONE" ?
                                 <RS.Button tag={Link} to={`/test/attempt/${attempt.id}/feedback`}>
-                                    {{[SITE.CS]: "View feedback", [SITE.PHY]: "View Feedback"}[SITE_SUBJECT]}
+                                    {siteSpecific("View Feedback", "View feedback")}
                                 </RS.Button>
                                 :
                                 <strong>No feedback available</strong>
@@ -143,11 +143,11 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     };
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={{[SITE.CS]: "My tests", [SITE.PHY]: "My Tests"}[SITE_SUBJECT]} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
 
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
             {{
-                [{[SITE.CS]: "In progress tests", [SITE.PHY]: "In Progress Tests"}[SITE_SUBJECT]]:
+                [siteSpecific("In Progress Tests", "In progress tests")]:
                     <ShowLoading
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
@@ -155,7 +155,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         <QuizGrid quizzes={incompleteQuizzes} empty="You don't have any incomplete or assigned tests."/>
                     </ShowLoading>,
 
-                [{[SITE.CS]: "Completed tests", [SITE.PHY]: "Completed Tests"}[SITE_SUBJECT]]:
+                [siteSpecific("Completed Tests", "Completed tests")]:
                     <ShowLoading
                         until={quizAssignments}
                         ifNotFound={<RS.Alert color="warning">Your test assignments failed to load, please try refreshing the page.</RS.Alert>}
@@ -163,7 +163,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                         <QuizGrid quizzes={completedQuizzes} empty="You haven't completed any tests."/>
                     </ShowLoading>,
 
-                [{[SITE.CS]: "Practice tests", [SITE.PHY]: "Practice Tests"}[SITE_SUBJECT]]:
+                [siteSpecific("Practice Tests", "Practice tests")]:
                     <ShowLoading until={quizzes}>
                         {quizzes && <>
                             {quizzes.length === 0 && <p><em>There are no tests currently available.</em></p>}
@@ -174,7 +174,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                         <Spacer />
                                         <RS.Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
-                                            {{[SITE.CS]: "Take test", [SITE.PHY]: "Take Test"}[SITE_SUBJECT]}
+                                            {siteSpecific("Take Test", "Take test")}
                                         </RS.Button>
                                     </div>
                                 </RS.ListGroupItem>)}

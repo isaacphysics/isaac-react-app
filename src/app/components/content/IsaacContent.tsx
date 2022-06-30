@@ -1,4 +1,4 @@
-import React from "react";
+import React, {lazy} from "react";
 import {AnvilApp} from "./AnvilApp"
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacQuestion} from "./IsaacQuestion";
@@ -16,12 +16,13 @@ import {QuestionContext} from "../../../IsaacAppTypes";
 import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeck} from "./IsaacCardDeck";
-import {IsaacCodeSnippet} from "./IsaacCodeSnippet";
 import {QuizQuestion} from "./QuizQuestion";
 import {isQuestion} from "../../services/questions";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
+const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
+
 
 const classBasedLayouts = {
     left: "align-left",

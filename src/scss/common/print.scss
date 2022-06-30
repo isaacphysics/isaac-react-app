@@ -16,6 +16,18 @@
     display: initial !important;
   }
 
+  .cloze-drop-zone {
+    border: black solid 1px;
+    border-radius: 5px;
+  }
+
+  .cloze-draggable {
+    .frac-line {
+      border-color: #aaaaaa;
+      border-top-width: 0.04em;
+    }
+  }
+
   .accordion {
     page-break-inside: avoid;
   }

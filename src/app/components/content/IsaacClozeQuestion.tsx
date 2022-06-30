@@ -10,20 +10,23 @@ import {
     DragUpdate,
     Droppable,
     DropResult,
-    ResponderProvided
+    ResponderProvided,
+    useMouseSensor,
+    useTouchSensor
 } from "react-beautiful-dnd";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
+import {buildUseKeyboardSensor} from "../../services/clozeQuestionKeyboardSensor";
 
-export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) {
+const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
 
-    const itemsSection = `${cssFriendlyQuestionPartId}-items-section`;
+    const itemsSectionId = "Non-selected-items";
 
     const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
 
@@ -93,10 +96,10 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
         let update = false;
 
         // Check source of drag:
-        if (source.droppableId === itemsSection) {
+        if (source.droppableId === itemsSectionId) {
             // Drag was from items section
             item = nonSelectedItems[source.index];
-            if (!withReplacement || destination.droppableId === itemsSection) {
+            if (!withReplacement || destination.droppableId === itemsSectionId) {
                 nsis.splice(source.index, 1);
                 replaceSource = (itemToReplace) => itemToReplace && nsis.splice(source.index, 0, itemToReplace);
             }
@@ -120,9 +123,9 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
         }
 
         // Check destination of drag:
-        if (destination.droppableId === itemsSection) {
+        if (destination.droppableId === itemsSectionId) {
             // Drop is into items section
-            if (!withReplacement || source.droppableId === itemsSection) {
+            if (!withReplacement || source.droppableId === itemsSectionId) {
                 nsis.splice(destination.index, 0, item);
             } else {
                 nsis.splice(nsis.findIndex((x) => x.id === item.id), 1);
@@ -163,35 +166,38 @@ export function IsaacClozeQuestion({doc, questionId, readonly}: IsaacQuestionPro
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
     const updateAttemptCallback = useCallback((dropResult) => {
-        updateAttempt({...dropResult, destination: {droppableId: itemsSection, index: nonSelectedItems.length}},{announce: (_) => {return;}});
-    }, [itemsSection, nonSelectedItems]);
+        updateAttempt({...dropResult, destination: {droppableId: itemsSectionId, index: nonSelectedItems.length}},{announce: (_) => {return;}});
+    }, [itemsSectionId, nonSelectedItems]);
 
-    return <div className="question-content cloze-question">
+    return <div className="question-content cloze-question" id={cssFriendlyQuestionPartId}>
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
-            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones}>
-                <IsaacContentValueOrChildren value={doc.value} encoding={"markdown" /* doc.encoding  FIXME CP replace this once cloze text questions have been changed to markdown encoding */}>
+            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones} enableDefaultSensors={false} sensors={[useMouseSensor, useTouchSensor, buildUseKeyboardSensor(itemsSectionId, cssFriendlyQuestionPartId, registeredDropRegionIDs)]}>
+                <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
                 {/* Items section */}
                 <Label htmlFor="non-selected-items" className="mt-3">Items: </Label>
-                <Droppable droppableId={itemsSection} direction="horizontal" isDropDisabled={readonly}>
-                    {(provided, snapshot) => <div
-                        ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items"
-                        className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-                    >
-                        {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
-                            {(provided) =>
-                                <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    <Item item={item} />
-                                </div>
-                            }
-                        </Draggable>)}
-                        {nonSelectedItems.length === 0 && "\u00A0"}
-                        {provided.placeholder}
-                    </div>}
-                </Droppable>
+                <div className={"cloze-drop-zone"}>
+                    <Droppable droppableId={itemsSectionId} direction="horizontal" isDropDisabled={readonly}>
+                        {(provided, snapshot) => <div
+                            ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items" aria-label={"Non-selected items"}
+                            className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                        >
+                            {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
+                                {(provided) =>
+                                    <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} role={"option"}>
+                                        <Item item={item} />
+                                    </div>
+                                }
+                            </Draggable>)}
+                            {nonSelectedItems.length === 0 && "\u00A0"}
+                            {provided.placeholder}
+                        </div>}
+                    </Droppable>
+                </div>
             </DragDropContext>
         </ClozeDropRegionContext.Provider>
     </div>;
-}
+};
+export default IsaacClozeQuestion;

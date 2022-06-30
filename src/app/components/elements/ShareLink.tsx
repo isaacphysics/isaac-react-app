@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, siteSpecific} from "../../services/siteConstants";
 import {useSelector} from "react-redux";
 import {isMobile} from "../../services/device";
 import {selectors} from "../../state/selectors";
@@ -13,7 +13,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const shareLink = useRef<HTMLInputElement>(null);
     const csUrlOrigin = segueEnvironment !== "DEV" ? "https://isaaccs.org" : window.location.origin;
     let shortenedLinkUrl = linkUrl;
-    if (SITE_SUBJECT == SITE.CS && segueEnvironment !== "DEV") {
+    if (isCS && segueEnvironment !== "DEV") {
         shortenedLinkUrl = shortenedLinkUrl.replace('/questions/', '/q/');
         shortenedLinkUrl = shortenedLinkUrl.replace('/concepts/', '/c/');
         shortenedLinkUrl = shortenedLinkUrl.replace('/pages/', '/p/');
@@ -21,7 +21,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         shortenedLinkUrl = shortenedLinkUrl.replace('/assignments/', '/a/');
     }
 
-    const shareUrl = {[SITE.PHY]: window.location.origin, [SITE.CS]: csUrlOrigin}[SITE_SUBJECT] + shortenedLinkUrl;
+    const shareUrl = siteSpecific(window.location.origin, csUrlOrigin) + shortenedLinkUrl;
 
     function toggleShareLink() {
         setShowShareLink(!showShareLink);
@@ -51,7 +51,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             {showDuplicateAndEdit && <React.Fragment>
                 <hr className="text-center mt-4" />
                 <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
-                    {{[SITE.PHY]: "Duplicate and Edit", [SITE.CS]: "Duplicate and edit"}[SITE_SUBJECT]}
+                    {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
                 </a>
             </React.Fragment>}
         </div>

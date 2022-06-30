@@ -1,7 +1,7 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
-import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
@@ -120,10 +120,19 @@ export const selectors = {
 
     user:  {
         orNull: (state: AppState) => state?.user || null,
+        progress: (state: AppState) => state?.myProgress,
+        snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
+        achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
+        answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate
     },
 
     mainContentId: {
         orDefault: (state: AppState) => state?.mainContentId || "main",
+    },
+
+    teacher: {
+        userProgress: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.userProgress(state?.userProgress) : state?.userProgress,
+        userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
     },
 
     admin: {
@@ -295,19 +304,25 @@ export const anonymisationFunctions = {
             }
         };
     },
-    quizAttempt: (quizAttempt: { studentAttempt: QuizAttemptFeedbackDTO }) => {
-        return {
-            ...quizAttempt,
-            studentAttempt: {
-                ...quizAttempt.studentAttempt,
-                user: {
-                    ...quizAttempt.studentAttempt.user,
-                    familyName: "",
-                    givenName: `Test Student`,
-                }
+    quizAttempt: (quizAttempt: { studentAttempt: QuizAttemptFeedbackDTO }) => ({
+        ...quizAttempt,
+        studentAttempt: {
+            ...quizAttempt.studentAttempt,
+            user: {
+                ...quizAttempt.studentAttempt.user,
+                familyName: "",
+                givenName: "Test Student",
             }
-        };
-    }
+        }
+    }),
+    userProgress: (userProgress: UserProgress | null | undefined): UserProgress | undefined => (userProgress ? {
+        ...userProgress,
+        userDetails: {
+            ...userProgress?.userDetails,
+            familyName: "",
+            givenName: "Test Student",
+        }
+    } : undefined)
 }
 
 // Important type checking to avoid an awkward bug

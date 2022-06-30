@@ -8,7 +8,7 @@ import {useDispatch} from "react-redux";
 import {DraggableProvided} from "react-beautiful-dnd";
 import tags from "../../services/tags";
 import {Question} from "../pages/Question";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, siteSpecific} from "../../services/siteConstants";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {generateQuestionTitle} from "../../services/questions";
 import {
@@ -17,7 +17,6 @@ import {
     filterAudienceViewsByProperties
 } from "../../services/userContext";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
-import {siteSpecific} from "../../services/miscUtils";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
@@ -29,7 +28,7 @@ interface GameboardBuilderRowInterface {
     creationContext?: AudienceContext;
 }
 
-export const GameboardBuilderRow = (
+const GameboardBuilderRow = (
     {provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useDispatch();
@@ -106,10 +105,11 @@ export const GameboardBuilderRow = (
                 {difficulty && <DifficultyIcons difficulty={difficulty} />}
             </div>)}
         </td>
-        {SITE_SUBJECT === SITE.CS && <td className="w-5">
+        {isCS && <td className="w-5">
             {filteredAudienceViews.map(v => v.examBoard).map(examBoard => <div key={examBoard}>
                 {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
             </div>)}
         </td>}
     </tr>
 };
+export default GameboardBuilderRow;

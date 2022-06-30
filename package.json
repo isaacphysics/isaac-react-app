@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "2.1.1-SNAPSHOT",
+  "version": "2.1.6-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=17",
@@ -24,7 +24,7 @@
     "history": "^4.10.1",
     "html-to-text": "^8.2.0",
     "identity-obj-proxy": "3.0.0",
-    "inequality": "0.9.33",
+    "inequality": "^0.9.34",
     "inequality-grammar": "0.11.0",
     "isaac-graph-sketcher": "0.9.4",
     "js-cookie": "^3.0.1",

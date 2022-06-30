@@ -142,15 +142,15 @@ if __name__ == '__main__':
     sites = [Site.CS, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
         if context['env'] == 'test':
-            deploy_test(context['site'], context['app'])
+            deploy_test(site, context['app'])
         if context['env'] in ('staging', 'dev'):
-            deploy_staging_or_dev(context['env'], context['site'], context['app'])
+            deploy_staging_or_dev(context['env'], site, context['app'])
         if context['env'] == 'live':
-            deploy_staging_or_dev('staging', context['site'], context['app'])
-            deploy_live(context['site'], context['app'])
-            deploy_etl(context['site'], context['app'])
+            deploy_staging_or_dev('staging', site, context['app'])
+            deploy_live(site, context['app'])
+            deploy_etl(site, context['app'])
         if context['env'] == 'etl':
-            deploy_etl(context['site'], context['app'])
+            deploy_etl(site, context['app'])
     print('\nDone!')
 
     if context['env'] == 'live':

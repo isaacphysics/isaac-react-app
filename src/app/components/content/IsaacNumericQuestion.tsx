@@ -94,7 +94,7 @@ function wrapUnitForSelect(unit?: string): string {
 
 type IsaacNumericQuestionProps = IsaacQuestionProps<IsaacNumericQuestionDTO> & {validationResponse?: QuantityValidationResponseDTO};
 
-export const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
+const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
 
@@ -155,8 +155,8 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
                                     <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
                                         3.7<br />
-                                        3x10^14<br />
-                                        2.8e12<br /><br />
+                                        -3x10^14<br />
+                                        2.8e-12<br /><br />
                                         Do not use commas or spaces.
                                     </UncontrolledTooltip>
                                 </InputGroupAddon>}
@@ -192,3 +192,4 @@ export const IsaacNumericQuestion = ({doc, questionId, validationResponse, reado
         </div>
     );
 };
+export default IsaacNumericQuestion;

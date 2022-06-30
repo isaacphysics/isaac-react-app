@@ -95,7 +95,7 @@ export const TeacherFeatures = () => {
             </Col>
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">
-            <IsaacCard doc={{ clickUrl: "/pages/isaac_books",
+            <IsaacCard doc={{ clickUrl: "/pages/order_books",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#skills-book-cover"},
                 title: "Isaac Physics Books",
                 verticalContent: true,

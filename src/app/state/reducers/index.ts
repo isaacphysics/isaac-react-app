@@ -35,7 +35,7 @@ import {
 } from "./adminState";
 import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations} from "./groupsState";
 import {currentTopic} from "./topicState";
-import {boards, currentGameboard, fasttrackConcepts, gameboardEditorQuestions, wildcards} from "./gameboardsState";
+import {boards, currentGameboard, fasttrackConcepts, questionSearchResult, wildcards} from "./gameboardsState";
 import {search} from "./searchState";
 import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
 import {
@@ -110,7 +110,7 @@ const appReducer = combineReducers({
     boards,
     currentGameboard,
     wildcards,
-    gameboardEditorQuestions,
+    questionSearchResult,
     fasttrackConcepts,
 
     // Assignments

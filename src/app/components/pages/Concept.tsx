@@ -19,7 +19,7 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {Markup} from "../elements/markup";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
@@ -63,7 +63,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                 </div>
 
                 <Row className="concept-content-container">
-                    <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
+                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
 
                         <SupersededDeprecatedWarningBanner doc={doc} />
 
@@ -79,11 +79,11 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                             </Markup>
                         </p>}
 
-                        {SITE_SUBJECT === SITE.CS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                        {isCS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
                         <NavigationLinks navigation={navigation} />
 
-                        {SITE_SUBJECT === SITE.PHY && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                        {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
                     </Col>
                 </Row>
             </Container>

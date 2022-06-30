@@ -30,7 +30,7 @@ import {
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
-import {SITE, SITE_SUBJECT} from "./siteConstants";
+import {isPhy} from "./siteConstants";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -330,7 +330,7 @@ export const api = {
         },
         generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
             // TODO FILTER: Temporarily force physics to search for problem solving questions
-            if (SITE_SUBJECT === SITE.PHY) {
+            if (isPhy) {
                 if (!Object.keys(params).includes("questionCategories")) {
                     params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
                 }

@@ -1,10 +1,10 @@
-import React, {ReactElement, useEffect, useState} from "react";
+import React, {lazy, ReactElement, useEffect, useState} from "react";
 import {Tabs} from "../elements/Tabs";
 import {CodeSnippetDTO} from "../../../IsaacApiTypes";
-import {IsaacCodeSnippet} from "./IsaacCodeSnippet";
 import {isDefined} from "../../services/miscUtils";
 import {programmingLanguagesMap} from "../../services/constants";
 import {useUserContext} from "../../services/userContext";
+const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 interface IsaacCodeTabsProps {
     doc: {children: {title?: string; children?: CodeSnippetDTO[]}[]};

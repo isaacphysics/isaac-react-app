@@ -1,4 +1,4 @@
-import React from "react";
+import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
 import {PhysicsSkills19} from "../../pages/books/physics_skills_19";
 import {PhysBookGcse} from "../../pages/books/phys_book_gcse";
@@ -8,8 +8,6 @@ import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
 import {isTeacher} from "../../../services/user";
-import {Alevel} from "../../pages/Alevel";
-import {Gcse} from "../../pages/Gcse";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
@@ -18,11 +16,11 @@ import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {GroupProgress} from "../../pages/GroupProgress";
 // import {SingleGroupProgress} from "../../pages/SingleGroupProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {GraphSketcherPage} from "../../pages/GraphSketcher";
 import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
 import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
 import {StepUpPhys} from "../../pages/books/step_up_phys";
-import {PreGcse} from "../../pages/PreGcse";
+import {LinkingConcepts} from "../../pages/books/linking_concepts";
+const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
 let key = 0;
 export const RoutesPhy = [
@@ -43,6 +41,7 @@ export const RoutesPhy = [
     <TrackedRoute key={key++} exact path="/books/maths_book_gcse" component={MathsBookGcse}/>,
     <TrackedRoute key={key++} exact path="/books/phys_book_yr9" component={PhysBookYrNine}/>,
     <TrackedRoute key={key++} exact path="/books/step_up_phys" component={StepUpPhys}/>,
+    <TrackedRoute key={key++} exact path="/books/linking_concepts" component={LinkingConcepts}/>,
 
     // Concepts List
     <TrackedRoute key={key++} exact path="/concepts" component={Concepts} />,
@@ -66,9 +65,9 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/book/question" pageId="book_question" />,
     <StaticPageRoute key={key++} exact path="/exam_uni_help" />,
     <StaticPageRoute key={key++} exact path="/coronavirus" pageId="2020_03_coronavirus" />,
-    <TrackedRoute key={key++} exact path="/11_14" component={PreGcse}/>,
-    <TrackedRoute key={key++} exact path="/gcse" component={Gcse}/>,
-    <TrackedRoute key={key++} exact path="/alevel" component={Alevel}/>,
+    <StaticPageRoute key={key++} exact path="/11_14" pageId="11_14" />,
+    <StaticPageRoute key={key++} exact path="/gcse" pageId="gcse" />,
+    <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
 

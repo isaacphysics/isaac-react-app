@@ -15,7 +15,7 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 interface GenericPageComponentProps {
@@ -47,7 +47,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 </div>
 
                 <Row className="generic-content-container">
-                    <Col md={{[SITE.CS]: {size: 8, offset: 2}, [SITE.PHY]: {size: 12}}[SITE_SUBJECT]} className="py-4">
+                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

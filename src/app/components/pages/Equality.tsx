@@ -1,23 +1,23 @@
-import React, {ChangeEvent, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {InequalityModal} from "../elements/modals/InequalityModal";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
-import {SITE, SITE_SUBJECT} from "../../services/siteConstants";
+import {siteSpecific} from "../../services/siteConstants";
 import { Inequality, makeInequality } from 'inequality';
 import { sanitiseInequalityState } from '../../services/questions';
 import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'inequality-grammar';
+const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
 import { isDefined } from "../../services/miscUtils";
 import { useSelector } from 'react-redux';
 import { selectors } from '../../state/selectors';
 import { isStaff } from '../../services/user';
 
-export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
+const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -28,7 +28,8 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
     const [errors, setErrors] = useState<string[]>();
     const user = useSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
-    const [editorMode, setEditorMode] = useState(queryParams.mode || { [SITE.PHY]: 'maths', [SITE.CS]: 'logic' }[SITE_SUBJECT]);
+    const [editorMode, setEditorMode] = useState(queryParams.mode || siteSpecific('maths', 'logic'));
+    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
 
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);
@@ -42,7 +43,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
 
     interface ChildrenMap {
         children: {[key: string]: ChildrenMap};
-    }    
+    }
 
     function countChildren(root: ChildrenMap) {
         let q = [root];
@@ -50,7 +51,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
         while (q.length > 0) {
             let e = q.shift();
             if (!e) continue;
-    
+
             let c = Object.keys(e.children).length;
             if (c > 0) {
                 count = count + c;
@@ -104,7 +105,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                 }
                 const badCharacters = new RegExp(regexStr);
                 setErrors([]);
-                
+
                 if (isError(parsedExpression) && parsedExpression.error) {
                     _errors.push(`Syntax error: unexpected token "${parsedExpression.error.token.value || ''}"`)
                 }
@@ -175,7 +176,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
             }
         );
         if (!isDefined(sketch)) throw new Error("Unable to initialize Inequality.");
-        
+
         sketch.log = { initialState: [], actions: [] };
         sketch.onNewEditorState = updateState;
         sketch.onCloseMenus = () => { void 0 };
@@ -209,7 +210,7 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
         <Container>
             <Row>
                 <Col>
-                    <TitleAndBreadcrumb currentPageTitle="Inequality demo page" />
+                    <TitleAndBreadcrumb currentPageTitle="Equation editor demo page" />
                 </Col>
             </Row>
             <Row>
@@ -290,22 +291,29 @@ export const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {boa
                     </div>
                 </Col>
             </Row>
-            {currentAttempt && <Row>
+            {currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex && <Row>
                 <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
                     <h4>LaTeX</h4>
-                    <pre>${currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex}$</pre>
-                    {editorMode === 'chemistry' && <h4>MhChem</h4>}
-                    {editorMode === 'chemistry' && <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.mhchem}</pre>}
-                    {editorMode !== 'chemistry' && <h4>Python</h4>}
-                    {editorMode !== 'chemistry' && <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python}</pre>}
+                    <pre>${currentAttemptValue?.result?.tex}$</pre>
+                    {editorMode === 'chemistry' && <>
+                        <h4>MhChem</h4>
+                        <pre>{currentAttemptValue?.result?.mhchem}</pre>
+                    </>}
+                    {editorMode !== 'chemistry' && <>
+                        <h4>Python</h4>
+                        <pre>{currentAttemptValue?.result?.python}</pre>
+                        <h4>MathML</h4>
+                        <pre>{currentAttemptValue?.result?.mathml}</pre>
+                    </>}
                     <h4>Available symbols</h4>
-                    <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.uniqueSymbols}</pre>
-                    <h4>Inequality seed</h4>
-                    <pre>{currentAttemptValue && currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
-                    {editorMode !== 'chemistry' && <h4>MathML</h4>}
-                    {editorMode !== 'chemistry' && <pre>{currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.mathml}</pre>}
+                    <pre>{currentAttemptValue?.result?.uniqueSymbols}</pre>
+                    {(segueEnvironment === "DEV" || isStaff(user)) && <>
+                        <h4>Inequality seed</h4>
+                        <pre>{currentAttemptValue && currentAttemptValue.symbols && JSON.stringify(currentAttemptValue.symbols)}</pre>
+                    </>}
                 </Col>
             </Row>}
         </Container>
     </div>;
 });
+export default Equality;

@@ -1,17 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {withRouter} from 'react-router-dom';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
 import {generateSpecification} from '../../state/actions';
 import {selectors} from '../../state/selectors';
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from 'isaac-graph-sketcher/dist/src/GraphSketcher';
-import {GraphSketcherModal} from '../elements/modals/GraphSketcherModal';
+import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
 import {AppState} from "../../state/reducers";
 import {isStaff} from "../../services/user";
 
-const GraphSketcherPageComponent = () => {
+const GraphSketcherPage = () => {
     const user = useSelector((state: AppState) => state && state.user || null);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
@@ -102,6 +101,5 @@ const GraphSketcherPageComponent = () => {
             </Row>
         </Container>
     </div>;
-}
-
-export const GraphSketcherPage = withRouter(connect()(GraphSketcherPageComponent));
+};
+export default GraphSketcherPage;
