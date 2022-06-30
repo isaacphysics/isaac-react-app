@@ -5,6 +5,8 @@ import {
     Button,
     Card,
     CardBody,
+    CardDeck,
+    CardFooter,
     CardSubtitle,
     CardTitle,
     Col,
@@ -180,11 +182,8 @@ const Board = (props: BoardProps) => {
         }
     }
 
-    const [showAssignments, setShowAssignments] = useState(board.id === hashAnchor);
-    const [modal, setModal] = useState(false);
-
+    const [modal, setModal] = useState(board.id === hashAnchor);
     const toggleAssignModal = () => setModal(s => !s);
-    const toggleAssignCard = () => setShowAssignments(s => !s);
 
     const hexagonId = `board-hex-${board.id}`;
 
@@ -192,9 +191,37 @@ const Board = (props: BoardProps) => {
     const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
     const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
-    return boardView == boardViews.table ?
-        // Table view
-        <>
+    return <>
+        <Modal isOpen={modal} toggle={toggleAssignModal}>
+            <ModalHeader close={
+                <button className="close" onClick={toggleAssignModal}>
+                    {"Close"}
+                </button>
+            }>
+                {board.title}
+            </ModalHeader>
+            <ModalBody>
+                <p className="px-1">Manage assignment of groups to the selected gameboard</p>
+                <hr className="text-center" />
+                <AssignGroup {...props} />
+                <hr className="text-center" />
+                <div className="py-2">
+                    <Label>Board currently assigned to:</Label>
+                    {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
+                        <Row key={group.id} className="px-1">
+                            <span className="flex-grow-1">{group.groupName}</span>
+                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
+                        </Row>
+                    )}</Container>}
+                    {!hasAssignedGroups && <p>No groups.</p>}
+                </div>
+            </ModalBody>
+            <ModalFooter>
+                <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
+            </ModalFooter>
+        </Modal>
+        {boardView == boardViews.table ?
+            // Table view
             <tr key={board.id} className="board-card">
                 <td>
                     <div className="board-subject-hexagon-container table-view">
@@ -231,42 +258,12 @@ const Board = (props: BoardProps) => {
                     </div>
                 </td>
             </tr>
-            <Modal isOpen={modal} toggle={toggleAssignModal}>
-                <ModalHeader close={
-                    <button className="close" onClick={toggleAssignModal}>
-                            {"Close"}
-                    </button>
-                }>
-                    Assign / Unassign
-                </ModalHeader>
-                <ModalBody>
-                    <p className="px-1"> Manage assignment of groups to gameboard: {board.title}</p>
-                    <hr className="text-center" />
-                    <AssignGroup {...props} />
-                    <hr className="text-center" />
-                    <div className="py-2">
-                        <Label>Board currently assigned to:</Label>
-                        {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
-                            <Row key={group.id} className="px-1">
-                                <span className="flex-grow-1">{group.groupName}</span>
-                                <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
-                            </Row>
-                        )}</Container>}
-                        {!hasAssignedGroups && <p>No groups.</p>}
-                    </div>
-                </ModalBody>
-                <ModalFooter>
-                    <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
-                </ModalFooter>
-            </Modal>
-        </>
-        :
-        // Card view
-        <div key={board.id}>
-            <Card className="board-card">
+            :
+            // Card view
+            <Card key={board.id} className="board-card">
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <button onClick={toggleAssignCard} id={hexagonId} className="board-subject-hexagon-container">
+                    <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
                         {generateGameboardSubjectHexagons(boardSubjects)}
                         <span className="groups-assigned">
                             <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
@@ -283,13 +280,17 @@ const Board = (props: BoardProps) => {
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
                         <CardSubtitle>Stages: <strong className="d-inline-flex">{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
-                        {boardDifficulties.length > 1 && <CardSubtitle>
-                            {"Difficulties: "}
-                            <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
-                        </CardSubtitle>}
+                        <CardSubtitle>
+                            {`Difficult${boardDifficulties.length !== 1 ? "ies" : "y"}: `}
+                            <strong>
+                                {boardDifficulties.length > 0 ?
+                                    <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
+                                    : "N/A"
+                                }
+                            </strong>
+                        </CardSubtitle>
                     </aside>
-
-                    <Row className="mt-1 mb-3">
+                    <Row className="mt-1">
                         <Col className={"pr-0"}>
                             <CardTitle><a href={assignmentLink}>{board.title}</a></CardTitle>
                             <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
@@ -298,25 +299,13 @@ const Board = (props: BoardProps) => {
                             <ShareLink linkUrl={assignmentLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
                         </Col>
                     </Row>
-                    {showAssignments && <>
-                        <hr className="text-center" />
-                        <AssignGroup {...props} />
-                        <hr className="text-center" />
-                        <div className="py-2">
-                            <Label>Board currently assigned to:</Label>
-                            {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
-                                <Row key={group.id} className="px-1">
-                                    <span className="flex-grow-1">{group.groupName}</span>
-                                    <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
-                                </Row>
-                            )}</Container>}
-                            {!hasAssignedGroups && <p>No groups.</p>}
-                        </div>
-                    </>}
-                    <Button block color="tertiary" onClick={toggleAssignCard}>{showAssignments ? "Close" : "Assign / Unassign"}</Button>
                 </CardBody>
+                <CardFooter>
+                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>{"Assign / Unassign"}</Button>
+                </CardFooter>
             </Card>
-        </div>;
+        }
+    </>;
 };
 
 enum boardCreators {
@@ -511,92 +500,90 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                         {boardView == boardViews.card ?
                             // Card view
                             <>
-                                <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
+                                <CardDeck>
                                     {boards.boards && boards.boards.map(board =>
                                         <Board {...props}
-                                                   key={board.id}
-                                                   board={board}
-                                                   boardView={boardView}
+                                               key={board.id}
+                                               board={board}
+                                               boardView={boardView}
                                         />)}
-                                </div>
-                                <div className="text-center mt-2 mb-4" style={{clear: "both"}}>
+                                </CardDeck>
+                                <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
+                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner/> : "View more"}</Button>}
                                 </div>
                             </>
                             :
                             // Table view
-                            <>
-                                <Card className="mt-2 mb-5">
-                                    <CardBody id="boards-table">
-                                        <Row>
-                                            <Col lg={4}>
-                                                <Label className="w-100">
-                                                    Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
-                                                </Label>
-                                            </Col>
-                                            {isPhy && <Col sm={6} lg={2}>
-                                                <Label className="w-100">
-                                                    Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as boardSubjects)}>
-                                                    {Object.values(boardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+                            <Card className="mt-2 mb-5">
+                                <CardBody id="boards-table">
+                                    <Row>
+                                        <Col lg={4}>
+                                            <Label className="w-100">
+                                                Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
+                                            </Label>
+                                        </Col>
+                                        {isPhy && <Col sm={6} lg={2}>
+                                            <Label className="w-100">
+                                                Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as boardSubjects)}>
+                                                {Object.values(boardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+                                            </Input>
+                                            </Label>
+                                        </Col>}
+                                        <Col lg={siteSpecific(2, {size: 2, offset: 6})}>
+                                            <Label className="w-100">
+                                                Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
+                                                {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                                                 </Input>
-                                                </Label>
-                                            </Col>}
-                                            <Col lg={siteSpecific(2, {size: 2, offset: 6})}>
-                                                <Label className="w-100">
-                                                    Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
-                                                    {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                                                    </Input>
-                                                </Label>
-                                            </Col>
-                                        </Row>
+                                            </Label>
+                                        </Col>
+                                    </Row>
 
-                                        <div className="overflow-auto mt-3">
-                                            <Table className="mb-0">
-                                                <thead>
-                                                <tr>
-                                                    <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
-                                                    <th className="align-middle pointer-cursor">
-                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                                                            Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </button>
-                                                    </th>
-                                                    <th className="text-center align-middle">Difficulties</th>
-                                                    <th className="text-center align-middle">Creator</th>
-                                                    <th className="text-center align-middle pointer-cursor">
-                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
-                                                            Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </button>
-                                                    </th>
-                                                    <th className="text-center align-middle pointer-cursor">
-                                                        <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                                                            Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
-                                                        </button>
-                                                    </th>
-                                                    <th className="text-center align-middle">Assignments</th>
-                                                    <th className="text-center align-middle">Share</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {boards.boards
-                                                    .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
-                                                        && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
-                                                        && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))))
-                                                    .map(board =>
-                                                        <Board
-                                                            {...props}
-                                                            key={board.id}
-                                                            board={board}
-                                                            boardView={boardView}
-                                                            boards={boards}
-                                                        />)
-                                                }
-                                                </tbody>
-                                            </Table>
-                                        </div>
-                                    </CardBody>
-                                </Card>
-                            </>}
+                                    <div className="overflow-auto mt-3">
+                                        <Table className="mb-0">
+                                            <thead>
+                                            <tr>
+                                                <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
+                                                <th className="align-middle pointer-cursor">
+                                                    <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
+                                                        Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
+                                                    </button>
+                                                </th>
+                                                <th className="text-center align-middle">Difficulties</th>
+                                                <th className="text-center align-middle">Creator</th>
+                                                <th className="text-center align-middle pointer-cursor">
+                                                    <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
+                                                        Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
+                                                    </button>
+                                                </th>
+                                                <th className="text-center align-middle pointer-cursor">
+                                                    <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
+                                                        Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
+                                                    </button>
+                                                </th>
+                                                <th className="text-center align-middle">Assignments</th>
+                                                <th className="text-center align-middle">Share</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {boards.boards
+                                                .filter(board => board.title && board.title.toLowerCase().includes(boardTitleFilter.toLowerCase())
+                                                    && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
+                                                    && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))))
+                                                .map(board =>
+                                                    <Board
+                                                        {...props}
+                                                        key={board.id}
+                                                        board={board}
+                                                        boardView={boardView}
+                                                        boards={boards}
+                                                    />)
+                                            }
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                </CardBody>
+                            </Card>}
                         </div>}
                 </ShowLoading>
             </React.Fragment>}

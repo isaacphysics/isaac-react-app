@@ -8,6 +8,7 @@ import {
     Button,
     Card,
     CardBody,
+    CardDeck,
     CardSubtitle,
     CardTitle,
     Col,
@@ -164,7 +165,7 @@ const Board = (props: BoardTableProps) => {
                         {`Stage${boardStages.length !== 1 ? "s" : ""}: `}<strong>{boardStages.map(s => stageLabelMap[s]).join(', ') || "N/A"}</strong>
                     </CardSubtitle>
                     <CardSubtitle>
-                        {`Difficult${boardStages.length !== 1 ? "ies" : "y"}: `}
+                        {`Difficult${boardDifficulties.length !== 1 ? "ies" : "y"}: `}
                         <strong>
                             {boardDifficulties.length > 0 ?
                                 <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
@@ -292,14 +293,14 @@ export const MyGameboards = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My gameboards" help={pageHelp} />
         {boards && boards.totalResults == 0 ?
-            <React.Fragment>
+            <>
                 <h3 className="text-center mt-4">You have no gameboards to view.</h3>
                 {isPhy && <div className="text-center mt-3 mb-5">
                     <Button color="secondary" tag={Link} to="/gameboards/new">Create a gameboard</Button>
                 </div>}
-            </React.Fragment>
+            </>
             :
-            <React.Fragment>
+            <>
                 <div className="mt-4 mb-2">
                     {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
                         with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
@@ -332,31 +333,29 @@ export const MyGameboards = () => {
                     </Row>}
                 </div>
                 <ShowLoading until={boards}>
-                    {boards && boards.boards && <div>
-                        {boardView == boardViews.card ?
+                    {boards && boards.boards &&
+                        (boardView == boardViews.card ?
                             // Card view
-                            <div>
-                                <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                                    {boards.boards.map(board => <div key={board.id}>
-                                        <Board
-                                            key={board.id}
-                                            board={board}
-                                            selectedBoards={selectedBoards}
-                                            setSelectedBoards={setSelectedBoards}
-                                            boardView={boardView}
-                                            user={user}
-                                            boards={boards}
-                                        />
-                                    </div>)}
-                                </div>
-                                <div className="text-center mt-2 mb-5" style={{clear: "both"}}>
+                            <>
+                                <CardDeck>
+                                    {boards.boards.map(board => <Board
+                                        key={board.id}
+                                        board={board}
+                                        selectedBoards={selectedBoards}
+                                        setSelectedBoards={setSelectedBoards}
+                                        boardView={boardView}
+                                        user={user}
+                                        boards={boards}
+                                    />)}
+                                </CardDeck>
+                                <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
                                     {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}
                                 </div>
-                            </div>
+                            </>
                             :
                             // Table view
-                            <div>
+                            <>
                                 <Row>
                                     <Col sm={6} lg={3} xl={2}>
                                         <Label className="w-100">
@@ -474,9 +473,9 @@ export const MyGameboards = () => {
                                         </div>
                                     </CardBody>
                                 </Card>
-                            </div>}
-                    </div>}
+                            </>
+                        )}
                 </ShowLoading>
-            </React.Fragment>}
+            </>}
     </Container>;
 };
