@@ -29,12 +29,11 @@ const isaacBooks: BookInfo[] = siteSpecific(
             image: "assets/phy/books/physics_skills_19.jpg",
             path: "/books/physics_skills_19"
         },
-        // TODO uncomment when book is released
-        // {
-        //     name: "Linking Concepts in Pre-University Physics",
-        //     uri: "assets/phy/books/linking_concepts.jpg",
-        //     path: "/books/linking_concepts"
-        // },
+        {
+            title: "Linking Concepts in Pre-University Physics",
+            image: "assets/phy/books/linking_concepts.png",
+            path: "/books/linking_concepts"
+        },
         {
             title: "Using Essential GCSE Mathematics",
             image: "assets/phy/books/2021_maths_book_gcse.jpg",
