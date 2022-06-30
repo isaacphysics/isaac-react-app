@@ -1,0 +1,14 @@
+.isaac-callout {
+  @extend .my-3;
+  padding: 25px 10px 10px;
+  margin-left: 0;
+  margin-right: 0;
+
+  &.t-grey {
+    background-color: $gray-110;
+  }
+
+  &.t-green {
+    background-color: #3FFF5533;
+  }
+}

@@ -20,7 +20,9 @@ import {QuizQuestion} from "./QuizQuestion";
 import {isQuestion} from "../../services/questions";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
+import {IsaacCallout} from "./IsaacCallout";
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
+
 
 const classBasedLayouts = {
     left: "align-left",
@@ -63,6 +65,7 @@ export const IsaacContent = withRouter((props: IsaacContentProps) => {
             default:
                 switch (layout) {
                     case "tabs": selectedComponent = <IsaacTabs {...props} />; break;
+                    case "callout": selectedComponent = <IsaacCallout {...props} />; break;
                     case "accordion": selectedComponent = <IsaacAccordion {...props} />; break;
                     case "horizontal": selectedComponent = <IsaacHorizontal {...props} />; break;
                     default: selectedComponent =
