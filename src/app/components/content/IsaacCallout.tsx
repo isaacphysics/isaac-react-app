@@ -3,7 +3,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Col, Row} from "reactstrap";
 import classNames from "classnames";
-import {siteSpecific} from "../../services/miscUtils";
+import {siteSpecific} from "../../services/siteConstants";
 
 const calloutStyle = siteSpecific({
         width: "52",
