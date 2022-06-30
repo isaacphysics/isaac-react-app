@@ -1,5 +1,4 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
-import * as RS from "reactstrap";
 import {
     Alert,
     Button,
@@ -439,33 +438,33 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         <h4 className="mt-4 mb-3">
             Add a gameboard from ...
         </h4>
-        <RS.Row className="mb-4">
-            <RS.Col md={6} lg={4} className="pt-1">
+        <Row className="mb-4">
+            <Col md={6} lg={4} className="pt-1">
                 {siteSpecific(
                     // Physics
-                    <RS.Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
+                    <Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
                         our books
-                    </RS.Button>,
+                    </Button>,
                     // Computer science
-                    <RS.Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
+                    <Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
                         Pre-made gameboards
-                    </RS.Button>
+                    </Button>
                 )}
-            </RS.Col>
-            <RS.Col md={6} lg={4} className="pt-1">
-                <RS.Button tag={Link} to={isaacAssignmentButtons.second.link} color="secondary" block>
+            </Col>
+            <Col md={6} lg={4} className="pt-1">
+                <Button tag={Link} to={isaacAssignmentButtons.second.link} color="secondary" block>
                     {isaacAssignmentButtons.second.text}
-                </RS.Button>
-            </RS.Col>
-            <RS.Col md={12} lg={4} className="pt-1">
-                <RS.Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
+                </Button>
+            </Col>
+            <Col md={12} lg={4} className="pt-1">
+                <Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
                     {isaacAssignmentButtons.third.text}
-                </RS.Button>
-            </RS.Col>
-        </RS.Row>
+                </Button>
+            </Col>
+        </Row>
         {groups && groups.length == 0 && <Alert color="warning">You have not created any groups to assign work to. Please <Link to="/groups">create a group here first.</Link></Alert>}
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
-            <React.Fragment>
+            <>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
                 {!boards && <h4>You have <IsaacSpinner size="sm" /> gameboards ready to assign...</h4>}
                 <Row>
@@ -586,7 +585,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                             </Card>}
                         </div>}
                 </ShowLoading>
-            </React.Fragment>}
+            </>}
     </Container>;
 };
 
