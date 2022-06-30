@@ -5,25 +5,30 @@ import {Col, Row} from "reactstrap";
 import classNames from "classnames";
 import {siteSpecific} from "../../services/miscUtils";
 
-export const IsaacCallout = ({doc}: {doc: ContentDTO}) => {
-    const calloutStyle = siteSpecific({
-        width: "32",
-        height: "32",
-        src: "/assets/notepad-and-pencil.png",
-        extraClasses: "mt-n1 mr-n2",
+const calloutStyle = siteSpecific({
+        width: "52",
+        height: "52",
+        src: "/assets/phy/callout-icon-notepad.svg",
+        style: {
+            marginTop: -12,
+            marginRight: -15
+        },
         colour: "t-grey"
-    }, {
-        width: "40",
-        height: "40",
-        src: "/assets/puzzle-lightbulb.png",
-        extraClasses: "mt-n2 mr-n2",
+    },{
+        width: "50",
+        height: "50",
+        src: "/assets/cs/callout-icon-puzzlebulb.svg",
+        style: {
+            marginTop: -13,
+            marginRight: -15
+        },
         colour: "hi-teal-25"
     });
 
-    return <Row className={classNames("isaac-callout", calloutStyle.colour)}>
+export const IsaacCallout = ({doc}: {doc: ContentDTO}) =>
+    <Row className={classNames("isaac-callout", calloutStyle.colour)}>
         <Col>
-            <img className={classNames("float-right m-1", calloutStyle.extraClasses)} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
+            <img className={"float-right"} style={calloutStyle.style} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
             <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children} />
         </Col>
     </Row>;
-}
