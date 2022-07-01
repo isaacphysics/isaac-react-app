@@ -6,7 +6,7 @@ import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
 import {store} from "../../../state/store";
-import {ChoiceDTO, GameboardDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
+import {ChoiceDTO, GameboardDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -73,6 +73,8 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
 interface ConfidenceQuestionsProps {
     state: ConfidenceState;
     setState: (cs: ConfidenceState | ((cs: ConfidenceState) => ConfidenceState)) => void;
+    validationPending: ValidationPendingState;
+    setValidationPending: (vp: ValidationPendingState | ((vp: ValidationPendingState) => ValidationPendingState)) => void;
     identifier: any;
     disableInitialState?: boolean;
     type: ConfidenceType;
@@ -98,9 +100,8 @@ type ValidationPendingState =
     pending: false
 }
 
-export const ConfidenceQuestions = ({state, setState, disableInitialState, identifier, type, validationResponse}: ConfidenceQuestionsProps) => {
+export const ConfidenceQuestions = ({state, setState, validationPending, setValidationPending, disableInitialState, identifier, type, validationResponse}: ConfidenceQuestionsProps) => {
     const dispatch = useDispatch();
-    const [validationPending, setValidationPending] = useState<ValidationPendingState>({pending: false});
 
     const toggle = (confidence: string, state: ActiveConfidenceState) => {
         const stateAndType: `${ActiveConfidenceState} & ${ConfidenceType}` = `${state} & ${type}`;
@@ -139,7 +140,7 @@ export const ConfidenceQuestions = ({state, setState, disableInitialState, ident
                 answerCorrect: validationResponse.correct,
                 confidence: validationPending.confidence
             }));
-            setState((currentState: ConfidenceState) => currentState === "initial" ? "followUp" : currentState);
+            setState("followUp");
         }
         setValidationPending({pending: false});
     }, [validationResponse]);
@@ -186,12 +187,16 @@ export const ConfidenceQuestions = ({state, setState, disableInitialState, ident
 export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, locked?: boolean, currentGameboard?: GameboardDTO | null) => {
     // Confidence question specific things
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
-    const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || !currentAttempt.value);
+    const [validationPending, setValidationPending] = useState<ValidationPendingState>({pending: false});
+    const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || (currentAttempt.value === "") || ((currentAttempt as ItemChoiceDTO).items === []));
     const showQuestionFeedback = confidenceState !== "initial" || !show || correct;
 
     // Reset question confidence on attempt change
     useEffect(() => {
-        if (type === "question") setConfidenceState("initial");
+        if (type === "question") {
+            setConfidenceState("initial");
+            setValidationPending({pending: false});
+        }
     }, [currentAttempt]);
 
     useEffect(() => {
@@ -207,8 +212,10 @@ export const useConfidenceQuestionsValues = (show: boolean | undefined, type: Co
     return {
         recordConfidence: show ?? false,
         confidenceState,
+        validationPending,
         confidenceDisabled,
         setConfidenceState,
+        setValidationPending,
         showQuestionFeedback
     };
 }

@@ -42,7 +42,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
 
-    const {confidenceState, setConfidenceState, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
+    const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
         "question",
         undefined,
@@ -128,6 +128,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 {/* Action Buttons */}
                 {recordConfidence ?
                     <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
+                                         validationPending={validationPending} setValidationPending={setValidationPending}
                                          disableInitialState={confidenceDisabled}
                                          identifier={doc.id} type={"question"}
                                          validationResponse={validationResponse} />
