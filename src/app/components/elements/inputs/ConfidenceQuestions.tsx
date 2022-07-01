@@ -95,7 +95,8 @@ const confidenceInformationModal = () => openActiveModal({
 type ValidationPendingState =
   | {
     pending: true,
-    confidence: string
+    confidence: string,
+    updateState: boolean
 } | {
     pending: false
 }
@@ -107,7 +108,7 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
         const stateAndType: `${ActiveConfidenceState} & ${ConfidenceType}` = `${state} & ${type}`;
         switch (stateAndType) {
             case "initial & question":
-                setValidationPending({pending: true, confidence});
+                setValidationPending({pending: true, updateState: true, confidence});
                 break;
             case "initial & quick_question":
                 dispatch(logAction({
@@ -140,7 +141,7 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
                 answerCorrect: validationResponse.correct,
                 confidence: validationPending.confidence
             }));
-            setState("followUp");
+            if (validationPending.updateState) setState("followUp");
         }
         setValidationPending({pending: false});
     }, [validationResponse]);
@@ -195,7 +196,7 @@ export const useConfidenceQuestionsValues = (show: boolean | undefined, type: Co
     useEffect(() => {
         if (type === "question") {
             setConfidenceState("initial");
-            setValidationPending({pending: false});
+            setValidationPending(vp => vp.pending ? {...vp, updateState: false} : vp);
         }
     }, [currentAttempt]);
 
