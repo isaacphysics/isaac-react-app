@@ -19,7 +19,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     const secondaryAction = determineFastTrackSecondaryAction(fastTrackInfo);
 
     // Confidence questions
-    const {confidenceState, setConfidenceState, recordConfidence, confidenceDisabled} = useConfidenceQuestionsValues(
+    const {confidenceState, setConfidenceState, validationPending, setValidationPending, recordConfidence, confidenceDisabled} = useConfidenceQuestionsValues(
         doc.showConfidence,
         "quick_question",
         (newCS) => {
@@ -71,6 +71,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
         };
         return <>
             <ConfidenceQuestions state={confidenceState} setState={setConfidenceState}
+                                 validationPending={validationPending} setValidationPending={setValidationPending}
                                  disableInitialState={confidenceDisabled}
                                  identifier={doc.id} type={"quick_question"} />
             {isVisible && <Row className="mt-3">
