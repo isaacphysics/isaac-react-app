@@ -134,6 +134,28 @@ export const formatCancelBookingButtonMessage = (event: AugmentedEvent) => {
     }
 }
 
+export const formatManageBookingActionButtonMessage = (event: AugmentedEvent) => {
+    if (event.userBookingStatus === "RESERVED") {
+        return "Confirm reservation"
+    }
+    if (event.isWaitingListOnly) {
+        return "Make booking request"
+    }
+    if (zeroOrLess(event.placesAvailable)) {
+        return "Add to waiting list"
+    }
+    return "Book a place"
+}
+
+export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanMakeEventBooking?: boolean) => {
+    if (userCanMakeEventBooking) {
+        return "Book now"
+    }
+    else {
+        return event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past"
+    }
+}
+
 export const stageExistsForSite = (stage: string) => {
     const stagesForSite = siteSpecific(STAGES_PHY, STAGES_CS);
     return stagesForSite.has(stage as STAGE);

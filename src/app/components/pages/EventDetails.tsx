@@ -37,7 +37,8 @@ import {
     userCanBeAddedToEventWaitingList,
     userCanMakeEventBooking,
     userCanReserveEventSpaces,
-    userSatisfiesStudentOnlyRestrictionForEvent
+    userSatisfiesStudentOnlyRestrictionForEvent,
+    formatBookingModalConfirmMessage
 } from "../../services/events";
 import {EditContentButton} from "../elements/EditContentButton";
 import { isDefined } from "../../services/miscUtils";
@@ -92,10 +93,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
         const canMakeABooking = userCanMakeEventBooking(user, event)
         const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event)
         const canReserveSpaces = userCanReserveEventSpaces(user, event)
-
-        const submissionTitle = canMakeABooking ?
-            "Book now" :
-            event.isWithinBookingDeadline ? "Apply" : "Apply - deadline past";
 
         const isVirtual = event.tags?.includes("virtual");
 
@@ -263,7 +260,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                                 </p>
 
                                                 <div className="text-center mt-4 mb-2">
-                                                    <RS.Input type="submit" value={submissionTitle} className="btn btn-xl btn-secondary border-0" />
+                                                    <RS.Input type="submit" value={formatBookingModalConfirmMessage(event, canMakeABooking)} className="btn btn-xl btn-secondary border-0" />
                                                 </div>
                                             </div>
                                         </RS.Form>

@@ -1920,13 +1920,13 @@ export const bookUserOnEvent = (eventBookingId: string, userId: number, addition
         dispatch(getEventBookings(eventBookingId) as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
-            title: "Booking successful", body: `A booking has been created.`,
+            title: "Action successful", body: "The action on behalf of the user was successful.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS});
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+        dispatch(showErrorToastIfNeeded("The action on behalf of the user was unsuccessful", error) as any);
     }
 };
 
