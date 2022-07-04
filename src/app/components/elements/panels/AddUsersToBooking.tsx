@@ -9,6 +9,7 @@ import {DateString} from "../DateString";
 import {NOT_FOUND} from "../../../services/constants";
 import {userBookingModal} from "../modals/UserBookingModal";
 import {selectors} from "../../../state/selectors";
+import {formatManageBookingActionButtonMessage} from "../../../services/events";
 
 export const AddUsersToBooking = () => {
     const dispatch = useDispatch();
@@ -92,14 +93,9 @@ export const AddUsersToBooking = () => {
                 <tbody>
                     {selectedEvent && selectedEvent !== NOT_FOUND && userResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
-                            {!userBookings.includes(result.id as number) && selectedEvent.eventStatus != 'WAITING_LIST_ONLY' && atLeastOne(selectedEvent.placesAvailable) &&
+                            {!userBookings.includes(result.id as number) &&
                             <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
-                                Book
-                            </RS.Button>
-                            }
-                            {!userBookings.includes(result.id as number) && (selectedEvent.eventStatus == 'WAITING_LIST_ONLY' || zeroOrLess(selectedEvent.placesAvailable)) &&
-                            <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
-                                Add to WL
+                                {formatManageBookingActionButtonMessage(selectedEvent)}
                             </RS.Button>
                             }
                             {userBookings.includes(result.id as number) && <div className="text-center">Booking exists</div>}

@@ -1872,15 +1872,19 @@ export const cancelReservationsOnEvent = (eventId: string, userIds: number[], gr
     }
 };
 
-export const addMyselfToWaitingList = (eventId: string, additionalInformation: AdditionalInformation) => async (dispatch: Dispatch<Action>) => {
+export const addMyselfToWaitingList = (eventId: string, additionalInformation: AdditionalInformation, waitingListOnly?: boolean) => async (dispatch: Dispatch<Action>) => {
     try {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_REQUEST});
         await api.eventBookings.addMyselfToWaitingList(eventId, additionalInformation);
         await dispatch(getEvent(eventId) as any);
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_WAITING_LIST_RESPONSE_SUCCESS});
         dispatch(showToast({
-            title: "Waiting list booking confirmed", body: "You have been successfully added to the waiting list for this event.",
-            color: "success", timeout: 5000, closable: false,
+            title: waitingListOnly ? "Booking request received" : "Waiting list booking confirmed",
+            body: waitingListOnly ? "You have requested a place on this event." :
+                "You have been successfully added to the waiting list for this event.",
+            color: "success",
+            timeout: 5000,
+            closable: false,
         }) as any);
         dispatch(getEvent(eventId) as any);
     } catch (error) {
@@ -1890,7 +1894,7 @@ export const addMyselfToWaitingList = (eventId: string, additionalInformation: A
 };
 
 export const cancelMyBooking = (eventId: string) => async (dispatch: Dispatch<Action>) => {
-    const cancel = window.confirm('Are you sure you want to cancel your booking on this event. You may not be able to re-book, especially if there is a waiting list.');
+    const cancel = window.confirm('Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.');
     if (cancel) {
         try {
             dispatch({type: ACTION_TYPE.EVENT_BOOKING_SELF_CANCELLATION_REQUEST});
@@ -1916,13 +1920,13 @@ export const bookUserOnEvent = (eventBookingId: string, userId: number, addition
         dispatch(getEventBookings(eventBookingId) as any);
         dispatch(closeActiveModal() as any);
         dispatch(showToast({
-            title: "Booking successful", body: `A booking has been created.`,
+            title: "Action successful", body: "The action on behalf of the user was successful.",
             color: "success", timeout: 5000, closable: false,
         }) as any);
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_SUCCESS});
     } catch (error) {
         dispatch({type: ACTION_TYPE.EVENT_BOOKING_USER_RESPONSE_FAILURE});
-        dispatch(showErrorToastIfNeeded("Event booking failed", error) as any);
+        dispatch(showErrorToastIfNeeded("The action on behalf of the user was unsuccessful", error) as any);
     }
 };
 

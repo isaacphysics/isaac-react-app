@@ -8,6 +8,7 @@ import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {EventBookingForm} from "../EventBookingForm";
 import {useDispatch} from "react-redux";
 import {FAILURE_TOAST} from "../../navigation/Toasts";
+import {formatBookingModalConfirmMessage} from "../../../services/events";
 
 export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, selectedEvent: AugmentedEvent, eventBookingIds: number[]) {
     return {
@@ -71,7 +72,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                     />}
 
                     {(userCanBeBookedOnEvent || userCanBeAddedToWaitingList) && <RS.Input className="btn btn-block btn-secondary border-0 mt-3"
-                        type="submit" value={userCanBeBookedOnEvent ? "Book on event" : "Add to waiting list"}
+                        type="submit" value={formatBookingModalConfirmMessage(selectedEvent, userCanBeBookedOnEvent)}
                     />}
                 </span>
             </RS.Form>
