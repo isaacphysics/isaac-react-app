@@ -60,7 +60,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.sql, title: "SQL", parent: TAG_ID.dataAndInformation},
         {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
         // Data structures and algorithms topics
-        {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_NEW},
+        {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
         {id: TAG_ID.searching, title: "Searching algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.sorting, title: "Sorting algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.pathfinding, title: "Pathfinding algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
@@ -86,10 +86,10 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.ide, title: "IDEs", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_NEW},
+        {id: TAG_ID.ide, title: "IDEs", parent: TAG_ID.programmingFundamentals},
         // Programming paradigms topics:
         {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_NEW},
         {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.eventDrivenProgramming, title: "Event-driven programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.declarativeProgramming, title: "Declarative programming", parent: TAG_ID.programmingParadigms, hidden: true},

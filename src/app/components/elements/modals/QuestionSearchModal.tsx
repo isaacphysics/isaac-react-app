@@ -146,12 +146,13 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
                     }}
                     options={[
-                        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
+                        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
                         {value: "phys_book_gcse", label: "GCSE Physics"},
-                        {value: "maths_book", label: "Pre-Uni Maths"},
+                        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
+                        {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
                         {value: "maths_book_gcse", label: "GCSE Maths"},
-                        {value: "chemistry_16", label: "A-Level Physical Chemistry"},
-                        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"}
+                        {value: "maths_book", label: "Pre-Uni Maths"},
+                        {value: "chemistry_16", label: "A-Level Physical Chemistry"}
                     ]}
                 />
             </RS.Col>}

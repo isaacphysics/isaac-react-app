@@ -1,6 +1,6 @@
 import React, {lazy, useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import * as RS from "reactstrap";
+import {Button, Card, CardBody, Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem} from "../../../IsaacApiTypes";
 import {
@@ -117,15 +117,15 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
         existing gameboard to duplicate and edit it.
     </span>;
 
-    return <RS.Container id="gameboard-builder">
+    return <Container id="gameboard-builder">
         <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp} modalId="gameboard_builder_help"/>
 
-        <RS.Card className="p-3 mt-4 mb-5">
-            <RS.CardBody>
-                <RS.Row>
-                    <RS.Col>
-                        <RS.Label htmlFor="gameboard-builder-name">Gameboard title:</RS.Label>
-                        <RS.Input id="gameboard-builder-name"
+        <Card className="p-3 mt-4 mb-5">
+            <CardBody>
+                <Row>
+                    <Col>
+                        <Label htmlFor="gameboard-builder-name">Gameboard title:</Label>
+                        <Input id="gameboard-builder-name"
                             type="text"
                             placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
                             defaultValue={gameboardTitle}
@@ -133,12 +133,12 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                 setGameboardTitle(e.target.value);
                             }}
                         />
-                    </RS.Col>
-                </RS.Row>
+                    </Col>
+                </Row>
 
-                {isStaff(user) && <RS.Row className="mt-2">
-                    <RS.Col>
-                        <RS.Label htmlFor="gameboard-builder-tag-as">Tag as</RS.Label>
+                {isStaff(user) && <Row className="mt-2">
+                    <Col>
+                        <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
                         <Select inputId="question-search-level"
                             isMulti
                             options={siteSpecific([
@@ -153,10 +153,10 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                             placeholder="None"
                             onChange={selectOnChange(setGameboardTags, true)}
                         />
-                    </RS.Col>
-                    <RS.Col>
-                        <RS.Label htmlFor="gameboard-builder-url">Gameboard ID</RS.Label>
-                        <RS.Input id="gameboard-builder-url"
+                    </Col>
+                    <Col>
+                        <Label htmlFor="gameboard-builder-url">Gameboard ID</Label>
+                        <Input id="gameboard-builder-url"
                             type="text"
                             placeholder="Optional"
                             defaultValue={gameboardURL}
@@ -165,10 +165,10 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                             }}
                             invalid={!isValidGameboardId(gameboardURL)}
                         />
-                    </RS.Col>
-                    <RS.Col>
-                        <RS.Label htmlFor="gameboard-builder-wildcard">Wildcard</RS.Label>
-                        <RS.Input id="gameboard-builder-wildcard"
+                    </Col>
+                    <Col>
+                        <Label htmlFor="gameboard-builder-wildcard">Wildcard</Label>
+                        <Input id="gameboard-builder-wildcard"
                             type="select" defaultValue={wildcardId}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setWildcardId(e.target.value);}}
                         >
@@ -176,13 +176,13 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                             {isFound(wildcards) && wildcards.map((wildcard) => {
                                 return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
                             })}
-                        </RS.Input>
-                    </RS.Col>
-                </RS.Row>}
+                        </Input>
+                    </Col>
+                </Row>}
 
                 <div className="mt-4 responsive">
                     <DragDropContext onDragEnd={reorder}>
-                        <RS.Table bordered>
+                        <Table bordered>
                             <thead>
                                 <tr>
                                     <th className="w-5" />
@@ -217,7 +217,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                                             placeholder={<div className="text-center"><IsaacSpinner /></div>}
                                                             until={!baseGameboardId || baseGameboard}
                                                         >
-                                                            <RS.Button
+                                                            <Button
                                                                 className="plus-button"
                                                                 color="primary" outline
                                                                 onClick={() => {
@@ -238,7 +238,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                                                 }}
                                                             >
                                                                 {siteSpecific("Add Questions", "Add questions")}
-                                                            </RS.Button>
+                                                            </Button>
                                                         </ShowLoading>
                                                     </div>
                                                 </td>
@@ -246,12 +246,12 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                         </tbody>
                                     )}}
                             </Droppable>
-                        </RS.Table>
+                        </Table>
                     </DragDropContext>
                 </div>
 
                 <div className="text-center">
-                    <RS.Button
+                    <Button
                         id="gameboard-save-button" disabled={!canSubmit} color="secondary"
                         className="mt-2" aria-describedby="gameboard-help"
                         onClick={() => {
@@ -302,7 +302,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                         }}
                     >
                         {siteSpecific("Save Gameboard", "Save gameboard")}
-                    </RS.Button>
+                    </Button>
                 </div>
 
                 {!canSubmit && <div
@@ -316,8 +316,8 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                     </div>}
                 </div>}
 
-            </RS.CardBody>
-        </RS.Card>
-    </RS.Container>;
+            </CardBody>
+        </Card>
+    </Container>;
 });
 export default GameboardBuilder;

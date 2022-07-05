@@ -11,13 +11,14 @@ interface ProgressBarProps {
 }
 
 const BAR_COLOURS = new Map([
-    ["maths_book", "bar-maths"],
+    ["phys_book_step_up", "bar-gcse"],
+    ["phys_book_gcse", "bar-gcse"],
     ["physics_skills_14", "bar-alevel"],
     ["physics_skills_19", "bar-alevel"],
-    ["phys_book_gcse", "bar-gcse"],
-    ["chemistry_16", "bar-chemistry"],
+    ["physics_linking_concepts", "bar-alevel"],
     ["maths_book_gcse", "bar-maths"],
-    ["phys_book_step_up", "bar-gcse"]
+    ["maths_book", "bar-maths"],
+    ["chemistry_16", "bar-chemistry"]
 ]);
 
 export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, secondaryTitle, children, type}: ProgressBarProps) => {
