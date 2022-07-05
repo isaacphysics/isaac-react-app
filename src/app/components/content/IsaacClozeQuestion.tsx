@@ -26,7 +26,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
 
-    const itemsSectionId = "Non-selected-items";
+    const itemsSectionId = `${cssFriendlyQuestionPartId}-non-selected-items`;
 
     const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
 
@@ -38,16 +38,25 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
     const inlineDropValueMap = useMemo(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
-    useEffect(() => {
+    useEffect(function updateStateOnCurrentAttemptChange() {
         if (currentAttempt?.items) {
-            setInlineDropValues(currentAttempt.items.map((idv: ClozeItemDTO | undefined) => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined));
+            setInlineDropValues(currentAttempt.items
+                .map(idv => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined));
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
             if (!withReplacement) {
                 setNonSelectedItems(nsis => nsis.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
             }
         }
-        }, [currentAttempt]);
+    }, [currentAttempt, withReplacement]);
+
+    useEffect(function updateStateOnDocChange() { // happens to tests with cloze qz on multiple sections
+        setInlineDropValues((currentAttempt?.items ?? [])
+            .map(idv => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined));
+        setNonSelectedItems(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [doc]);
 
     const registerInlineDropRegion = (dropRegionId: string, index: number) => {
         if (!registeredDropRegionIDs.has(dropRegionId)) {
@@ -177,11 +186,12 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
                 </IsaacContentValueOrChildren>
 
                 {/* Items section */}
-                <Label htmlFor="non-selected-items" className="mt-3">Items: </Label>
                 <div className={"cloze-drop-zone"}>
+                <Label htmlFor={`${cssFriendlyQuestionPartId}-non-selected-items`} className="mt-3">Items: </Label>
                     <Droppable droppableId={itemsSectionId} direction="horizontal" isDropDisabled={readonly}>
                         {(provided, snapshot) => <div
-                            ref={provided.innerRef} {...provided.droppableProps} id="non-selected-items" aria-label={"Non-selected items"}
+                            ref={provided.innerRef} {...provided.droppableProps} id={`${cssFriendlyQuestionPartId}-non-selected-items`}
+                            aria-label={"Non-selected items"}
                             className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                         >
                             {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
