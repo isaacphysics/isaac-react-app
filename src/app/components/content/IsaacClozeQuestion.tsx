@@ -53,7 +53,11 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     useEffect(function updateStateOnDocChange() { // happens to tests with cloze qz on multiple sections
         setInlineDropValues((currentAttempt?.items ?? [])
             .map(idv => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined));
-        setNonSelectedItems(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
+        if (currentAttempt && !withReplacement) {
+            setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
+        } else {
+            setNonSelectedItems(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
+        }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [doc]);
