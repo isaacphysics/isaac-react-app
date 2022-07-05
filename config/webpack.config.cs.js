@@ -27,6 +27,7 @@ module.exports = env => {
             }),
             new webpack.DefinePlugin({
                 ISAAC_SITE: '"cs"',
+                EDITOR_PREVIEW: 'false',
             }),
             new CopyWebpackPlugin({
                 patterns: [{
