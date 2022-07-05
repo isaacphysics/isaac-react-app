@@ -171,7 +171,7 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
             </Col>
         </Row>
         <Row className={"justify-content-center"}>
-            {confidenceStateVariables.options.map(option => <Col lg={4} md={6} sm={12} className={classNames("mb-2")}>
+            {confidenceStateVariables.options.map(option => <Col key={option.label} lg={4} md={6} sm={12} className={classNames("mb-2")}>
                 <Button color={option.color} disabled={disabled} block
                         className={classNames({"active": state === "followUp"})} type="submit"
                         onClick={() => toggle(option.label, state)}>
