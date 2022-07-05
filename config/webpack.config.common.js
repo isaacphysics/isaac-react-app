@@ -159,6 +159,7 @@ module.exports = (isProd) => {
             new webpack.DefinePlugin({
                 REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
                 ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
+                EDITOR_PREVIEW: 'false',
             }),
         ].filter(Boolean),
     };

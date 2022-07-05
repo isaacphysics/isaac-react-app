@@ -27,7 +27,6 @@ module.exports = env => {
             }),
             new webpack.DefinePlugin({
                ISAAC_SITE: '"physics"',
-               EDITOR_PREVIEW: 'false',
             }),
             new CopyWebpackPlugin({
                 patterns: [{
