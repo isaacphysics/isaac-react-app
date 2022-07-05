@@ -33,13 +33,14 @@ const siteSpecificStats = siteSpecific(
             "isaacClozeQuestion", "isaacReorderQuestion"
         ],
         questionCountByTag: {
-            "maths_book": 426,
+            "phys_book_step_up": 432,
+            "phys_book_gcse": 533,
             "physics_skills_14": 75,
             "physics_skills_19": 614,
-            "phys_book_gcse": 533,
-            "chemistry_16": 336,
+            "physics_linking_concepts": 258,
             "maths_book_gcse": 639,
-            "phys_book_step_up": 432
+            "maths_book": 426,
+            "chemistry_16": 336
         },
         typeColWidth: "col-lg-6",
         tagColWidth: "col-lg-12"
