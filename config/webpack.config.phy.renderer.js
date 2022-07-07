@@ -15,6 +15,7 @@ module.exports = env => {
 
         output: {
             path: resolve(`build-phy-renderer`),
+            publicPath: isProd ? "/preview/" : "/",
         },
 
         plugins: [
