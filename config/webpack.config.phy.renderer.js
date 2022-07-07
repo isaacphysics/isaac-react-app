@@ -7,8 +7,6 @@ const {merge} = require('webpack-merge');
 const webpack = require('webpack');
 
 module.exports = env => {
-    let isProd = env['prod'];
-
     let configPHYrenderer = {
         entry: {
             'isaac-phy-renderer': [resolve('src/index-phy-renderer')],
@@ -16,7 +14,6 @@ module.exports = env => {
 
         output: {
             path: resolve(`build-phy-renderer`),
-            publicPath: isProd ? "/preview/" : "/",
         },
 
         plugins: [

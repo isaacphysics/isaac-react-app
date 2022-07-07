@@ -7,8 +7,6 @@ const {merge} = require('webpack-merge');
 const webpack = require('webpack');
 
 module.exports = env => {
-    let isProd = env['prod'];
-
     let configCSrenderer = {
         entry: {
             'isaac-cs-renderer': [resolve('src/index-cs-renderer')],
@@ -16,7 +14,6 @@ module.exports = env => {
 
         output: {
             path: resolve(`build-cs-renderer`),
-            publicPath: isProd ? "/preview/" : "/",
         },
 
         plugins: [
