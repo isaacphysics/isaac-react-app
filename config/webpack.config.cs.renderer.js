@@ -8,6 +8,7 @@ const webpack = require('webpack');
 
 module.exports = env => {
     let isProd = env['prod'];
+
     let configCSrenderer = {
         entry: {
             'isaac-cs-renderer': [resolve('src/index-cs-renderer')],
