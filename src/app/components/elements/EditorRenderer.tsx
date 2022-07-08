@@ -8,6 +8,7 @@ import {Provider, useDispatch} from "react-redux";
 import {store} from "../../state/store";
 import {StaticRouter} from "react-router";
 import {fetchGlossaryTerms} from "../../state/actions";
+import {EDITOR_ORIGIN} from "../../services/constants";
 
 function getType(doc: any) {
     if (!doc) {
@@ -33,8 +34,12 @@ function EditorListener() {
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
-    const listener = useCallback((message) => {
-        const {doc} = message.data;
+    const listener = useCallback((event) => {
+        if (!event.origin?.includes("localhost") && event.origin !== EDITOR_ORIGIN) {
+            console.warn("Ignoring message from unexpected origin (" + event.origin + ")!")
+            return;
+        }
+        const {doc} = event.data;
         if (doc && "type" in doc) {
             setDoc(doc);
         }

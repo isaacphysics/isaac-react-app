@@ -30,13 +30,13 @@ export const isTest = document.location.hostname.startsWith("test.");
 
 export const API_PATH: string = apiPath;
 
-const EDITOR_BASE_URL = siteSpecific(
+export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.isaacphysics.org",
     "https://editor.isaaccomputerscience.org",
 );
 
-export const EDITOR_URL = EDITOR_BASE_URL + "/#!/edit/master/";
-export const EDITOR_COMPARE_URL = EDITOR_BASE_URL + "/#!/compare";
+export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
+export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
 export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
     "UA-122616705-1",
