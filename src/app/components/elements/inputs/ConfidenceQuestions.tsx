@@ -143,7 +143,9 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
             }));
             if (validationPending.updateState) setState("followUp");
         }
-        setValidationPending({pending: false});
+        if (type === "question") {
+            setValidationPending({pending: false});
+        }
     }, [validationResponse]);
 
     if (state === "hidden") return null;
