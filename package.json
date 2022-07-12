@@ -80,7 +80,8 @@
       "eslint:recommended",
       "plugin:react/recommended",
       "plugin:@typescript-eslint/recommended",
-      "plugin:jsx-a11y/strict"
+      "plugin:jsx-a11y/strict",
+      "prettier"
     ],
     "plugins": [
       "react-hooks",
@@ -150,6 +151,7 @@
     "dotenv": "^10.0.0",
     "enzyme": "^3.11.0",
     "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
@@ -160,6 +162,7 @@
     "jest-enzyme": "^7.1.2",
     "jest-watch-typeahead": "^1.0.0",
     "mini-css-extract-plugin": "^2.4.5",
+    "prettier": "2.7.1",
     "react-app-polyfill": "^3.0.0",
     "react-leaflet": "^2.8.0",
     "redux-mock-store": "^1.5.4",
