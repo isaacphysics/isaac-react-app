@@ -113,6 +113,7 @@ def deploy_live(site, app):
         previous_app_version = ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-")
     print("// Bring up the new app and take down the old one:")
     ask_to_run_command(f"./compose-live {site} {app} up -d {site}-app-live-{app} && "
+          "sleep 3 && "             
           f"docker stop {site}-app-live-{previous_app_version} && "
           "../isaac-router/reload-router-config")
 
