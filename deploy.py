@@ -100,8 +100,10 @@ def deploy_live(site, app):
         print("// Bring up the new api ready for the new app:")
         ask_to_run_command(f"./compose-live {site} {app} up -d {site}-api-live-{api_version}")
 
-        print("// Wait until the api is up (i.e. this command stops returning an error page):")
-        ask_to_run_command(f"curl https://isaac{'computerscience' if site == 'cs' else 'physics'}.org/api/{api_version}/api/info/segue_environment")
+        print("// Wait until the api is up:")
+        api_endpoint = f"https://isaac{'computerscience' if site == 'cs' else 'physics'}.org/api/{api_version}/api/info/segue_environment"
+        expected_response = '\'{"segueEnvironment":"PROD"}\''
+        ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 
         print("// Let the monitoring service know there is a new api service to track:")
         ask_to_run_command("cd /local/src/isaac-monitor && ./monitor_services.py --generate --no-prompt && ./monitor_services.py --reload --no-prompt && cd -")
