@@ -61,7 +61,7 @@ def bring_down_any_existing_containers(site, env):
     print(f"// Find running {site} {env} versions:")
     ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-")
     print(f"// Bring them down using:")
-    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs ./compose {site} {env} down -v")
+    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -- bash -c './compose {site} {env} $0 down -v'")
 
 def bring_up_the_new_containers(site, env, app):
     print(f"// Bring up the new {site} {env} containers:")
