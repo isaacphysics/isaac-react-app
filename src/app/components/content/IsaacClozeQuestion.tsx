@@ -155,7 +155,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
             if (destinationDropIndex !== undefined && destination.index === 0) {
                 replaceSource(idvs[destinationDropIndex]);
                 // Important! This extends the array with `undefined`s if `destinationDropIndex` is out of bounds
-                idvs[destinationDropIndex] = withReplacement ? {...item, replacementId: item.id + uuid_v4()} : item
+                idvs[destinationDropIndex] = withReplacement ? augmentInlineItemWithUniqueReplacementID(item) : item
             } else {
                 replaceSource(item);
             }
