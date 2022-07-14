@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import {
     Alert,
     Button,
@@ -25,7 +25,6 @@ import {Link, withRouter} from "react-router-dom";
 import {
     assignBoard,
     deleteBoard,
-    loadBoards,
     loadGroups,
     loadGroupsForBoard,
     openIsaacBooksModal,
@@ -34,7 +33,7 @@ import {
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
+import {AppGameBoard, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
@@ -42,47 +41,40 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
     allPropertiesFromAGameboard,
+    BOARD_ORDER_NAMES,
+    BoardCreators,
+    BoardLimit,
+    BoardSubjects,
+    BoardViews,
     determineGameboardSubjects,
     formatBoardOwner,
-    generateGameboardSubjectHexagons
+    generateGameboardSubjectHexagons,
+    useGameboards
 } from "../../services/gameboards";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {connect, useSelector} from "react-redux";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {isPhy, siteSpecific} from "../../services/siteConstants";
 import {isAdminOrEventManager, isStaff} from "../../services/user";
 import {isDefined} from "../../services/miscUtils";
-import {
-    difficultiesOrdered,
-    sortIcon,
-    stageLabelMap,
-    stagesOrdered
-} from "../../services/constants";
+import {difficultiesOrdered, sortIcon, stageLabelMap, stagesOrdered} from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import {above, below, useDeviceSize} from "../../services/device";
 import Select from "react-select";
-import {selectOnChange, itemise, Item} from "../../services/select";
-
-enum boardViews {
-    "table" = "Table View",
-    "card" = "Card View"
-}
+import {Item, itemise, selectOnChange} from "../../services/select";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
-    groups: selectors.groups.active(state),
-    boards: selectors.boards.boards(state)
+    groups: selectors.groups.active(state)
 });
 
-const dispatchToProps = {loadGroups, loadBoards, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
+const dispatchToProps = {loadGroups, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
 
 interface SetAssignmentsPageProps {
     user: RegisteredUserDTO;
-    boards: Boards | null;
     groups: UserGroupDTO[] | null;
     loadGroups: (getArchived: boolean) => void;
-    loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
     loadGroupsForBoard: (board: GameboardDTO) => void;
     deleteBoard: (board: GameboardDTO) => void;
     assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
@@ -94,7 +86,8 @@ interface SetAssignmentsPageProps {
 
 type BoardProps = SetAssignmentsPageProps & {
     board: AppGameBoard;
-    boardView: boardViews;
+    boardView: BoardViews;
+    boards?: Boards;
 }
 
 const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
@@ -219,7 +212,7 @@ const Board = (props: BoardProps) => {
                 <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
             </ModalFooter>
         </Modal>
-        {boardView == boardViews.table ?
+        {boardView == BoardViews.table ?
             // Table view
             <tr key={board.id} className="board-card">
                 <td>
@@ -307,62 +300,23 @@ const Board = (props: BoardProps) => {
     </>;
 };
 
-enum boardCreators {
-    "all" = "All",
-    "isaac" = "Isaac",
-    "me" = "Me",
-    "someoneelse" = "Someone else"
-}
-
-enum boardSubjects {
-    "all" = "All",
-    "physics" = "Physics",
-    "maths" = "Maths",
-    "chemistry" = "Chemistry"
-}
-
-enum BoardLimit {
-    "six" = "6",
-    "eighteen" = "18",
-    "sixty" = "60",
-    "All" = "ALL"
-}
-function toActual(limit: BoardLimit) {
-    if (limit == "ALL") return "ALL";
-    return parseInt(limit, 10);
-}
-
-const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created Ascending",
-    "-created": "Date Created Descending",
-    "visited": "Date Visited Ascending",
-    "-visited": "Date Visited Descending",
-    "title": "Title Ascending",
-    "-title": "Title Descending",
-    "completion": "Completion Ascending",
-    "-completion": "Completion Descending"
-};
-function orderName(order: BoardOrder) {
-    return orderNames[order];
-}
-
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, boards, loadBoards, openIsaacBooksModal} = props;
+    const {groups, loadGroups, openIsaacBooksModal} = props;
 
     const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     useEffect(() => loadGroups(false), []);
 
-    const [loading, setLoading] = useState(false);
+    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
+    const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
 
-    const [boardLimit, setBoardLimit] = useState<BoardLimit>(BoardLimit.six);
-    const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
-    const [boardView, setBoardView] = useState(boardViews.card);
-    const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
-    const [boardSubject, setBoardSubject] = useState<boardSubjects>(boardSubjects.all);
-    const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
-
-    let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
+    const {
+        boards, loading, viewMore,
+        boardOrder, setBoardOrder,
+        boardView, setBoardView,
+        boardLimit, setBoardLimit,
+        boardTitleFilter, setBoardTitleFilter
+    } = useGameboards(BoardViews.card, BoardLimit.six);
 
     const isaacAssignmentButtons = {
         second: {
@@ -374,55 +328,9 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         }
     };
 
-    function loadInitial() {
-        loadBoards(0, actualBoardLimit, boardOrder);
-        setLoading(true);
-    }
-
-    useEffect( () => {
-        if (actualBoardLimit != boardLimit) {
-            setActualBoardLimit(actualBoardLimit = toActual(boardLimit));
-            loadInitial();
-        }
-    }, [boardLimit]);
-
-    useEffect(() => {
-        if (boardView == boardViews.table) {
-            setBoardLimit(BoardLimit.All)
-        } else if (boardView == boardViews.card) {
-            setBoardLimit(BoardLimit.six)
-        }
-    }, [boardView]);
-
-    useEffect( loadInitial, [boardOrder]);
-
-    function viewMore() {
-        const increment = toActual(boardLimit);
-        if (increment != "ALL" && actualBoardLimit != "ALL") {
-            loadBoards(actualBoardLimit, increment, boardOrder);
-            setLoading(true);
-        }
-    }
-
-    function switchView(e: React.ChangeEvent<HTMLInputElement>) {
-        setBoardView(e.target.value as boardViews);
-    }
-
-    useEffect( () => {
-        if (boards) {
-            const wasLoading = loading;
-            setLoading(false);
-            if (boards.boards) {
-                if (actualBoardLimit != boards.boards.length) {
-                    setActualBoardLimit(actualBoardLimit = boards.boards.length);
-                    if (!wasLoading && boards.boards.length == 0) {
-                        // Through deletion or something we have ended up with no boards, so fetch more.
-                        viewMore();
-                    }
-                }
-            }
-        }
-    }, [boards]);
+    const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setBoardView(e.target.value as BoardViews);
+    }, [setBoardView]);
 
     const pageHelp = <span>
         Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
@@ -468,12 +376,12 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                     <Col sm={6} lg={3} xl={2}>
                         <Label className="w-100">
                             Display in <Input type="select" value={boardView} onChange={switchView}>
-                            {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                            {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                         </Input>
                         </Label>
                     </Col>
                     <div className="d-lg-none w-100" />
-                    {boardView === boardViews.card &&
+                    {boardView === BoardViews.card &&
                     <>
                         <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
                             <Label className="w-100">
@@ -485,7 +393,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
                                 Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
+                                {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                             </Input>
                             </Label>
                         </Col>
@@ -493,7 +401,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                 </Row>
                 <ShowLoading until={boards}>
                     {boards && boards.boards && <div>
-                        {boardView == boardViews.card ?
+                        {boardView == BoardViews.card ?
                             // Card view
                             <>
                                 <CardDeck>
@@ -521,15 +429,15 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                         </Col>
                                         {isPhy && <Col sm={6} lg={2}>
                                             <Label className="w-100">
-                                                Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as boardSubjects)}>
-                                                {Object.values(boardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+                                                Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
+                                                {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
                                             </Input>
                                             </Label>
                                         </Col>}
                                         <Col lg={siteSpecific(2, {size: 2, offset: 6})}>
                                             <Label className="w-100">
-                                                Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
-                                                {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                                                Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+                                                {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                                                 </Input>
                                             </Label>
                                         </Col>

@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteBoard, loadBoards} from "../../state/actions";
+import {deleteBoard} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import * as RS from 'reactstrap';
@@ -19,9 +19,8 @@ import {
     Row,
     Table
 } from 'reactstrap';
-import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
+import {AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     difficultiesOrdered,
@@ -35,7 +34,13 @@ import {
     boardCompletionSelection,
     determineGameboardSubjects,
     formatBoardOwner,
-    generateGameboardSubjectHexagons
+    generateGameboardSubjectHexagons,
+    useGameboards,
+    BoardViews,
+    BoardLimit,
+    BoardCreators,
+    BoardCompletions,
+    BOARD_ORDER_NAMES
 } from "../../services/gameboards";
 import {above, below, isMobile, useDeviceSize} from "../../services/device";
 import {formatDate} from "../elements/DateString";
@@ -50,44 +55,11 @@ interface MyBoardsPageProps {
     boards: Boards | null;
 }
 
-enum boardCreators {
-    "all" = "All",
-    "isaac" = "Isaac",
-    "me" = "Me",
-    "someoneelse" = "Someone else"
-}
-enum boardCompletions {
-    "any" = "Any",
-    "notStarted" = "Not Started",
-    "inProgress" = "In Progress",
-    "completed" = "Completed"
-}
-enum BoardLimit {
-    "six" = "6",
-    "eighteen" = "18",
-    "sixty" = "60",
-    "All" = "ALL"
-}
-enum boardViews {
-    "table" = "Table View",
-    "card" = "Card View"
-}
-const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created Ascending",
-    "-created": "Date Created Descending",
-    "visited": "Date Visited Ascending",
-    "-visited": "Date Visited Descending",
-    "title": "Title Ascending",
-    "-title": "Title Descending",
-    "completion": "Completion Ascending",
-    "-completion": "Completion Descending"
-};
-
 type BoardTableProps = MyBoardsPageProps & {
     board: AppGameBoard;
     setSelectedBoards: (e: any) => void;
     selectedBoards: AppGameBoard[];
-    boardView: boardViews;
+    boardView: BoardViews;
 }
 
 const Board = (props: BoardTableProps) => {
@@ -116,7 +88,7 @@ const Board = (props: BoardTableProps) => {
     const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
     const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
-    return boardView == boardViews.table ?
+    return boardView == BoardViews.table ?
         <tr key={board.id} className="board-card">
             <td>
                 <div className="board-subject-hexagon-container table-view">
@@ -141,10 +113,13 @@ const Board = (props: BoardTableProps) => {
                     <ShareLink linkUrl={boardLink} gameboardId={board.id} />
                 </div>
             </td>
-            <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    board && updateBoardSelection(board, event.target.checked)
-                }} aria-label="Delete gameboard"/></td>
+            <td>
+                <CustomInput id={`board-delete-${board.id}`} type="checkbox"
+                             checked={board && (selectedBoards.some(e => e.id === board.id))}
+                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                 board && updateBoardSelection(board, event.target.checked)
+                             }} aria-label="Delete gameboard"/>
+            </td>
         </tr>
         :
         <Card className="board-card card-neat">
@@ -188,52 +163,28 @@ const Board = (props: BoardTableProps) => {
         </Card>;
 };
 
-function toActual(limit: BoardLimit) {
-    if (limit == "ALL") return "ALL";
-    return parseInt(limit, 10);
-}
-function orderName(order: BoardOrder) {
-    return orderNames[order];
-}
-
 export const MyGameboards = () => {
     //Redux state and dispatch
     const dispatch = useDispatch();
-    const boards = useSelector(selectors.boards.boards) as Boards;
     const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
-    const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
-    const [loading, setLoading] = useState(false);
-    const [boardView, setBoardView] = useState(isMobile() ? boardViews.card : boardViews.table);
-    const [boardLimit, setBoardLimit] = useState<BoardLimit>(boardView == boardViews.table ? BoardLimit.All : BoardLimit.six);
-    const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
-    const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
-    const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
+    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
+    const [boardCompletion, setBoardCompletion] = useState<BoardCompletions>(BoardCompletions.any);
     const [completed, setCompleted] = useState(0);
     const [inProgress, setInProgress] = useState(0);
     const [notStarted, setNotStarted] = useState(0);
 
-    let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
-
-    function loadInitial() {
-        dispatch(loadBoards(0, actualBoardLimit, boardOrder));
-        setLoading(true);
-    }
-    useEffect(loadInitial, [boardOrder]);
-
-    useEffect(() => {
-        actualBoardLimit = toActual(boardLimit);
-        loadInitial();
-    }, [boardLimit]);
-
-    useEffect(() => {
-        if (boardView == boardViews.table) {
-            setBoardLimit(BoardLimit.All)
-        } else if (boardView == boardViews.card) {
-            setBoardLimit(BoardLimit.six)
-        }
-    }, [boardView]);
+    const {
+        boards, loading, viewMore,
+        boardOrder, setBoardOrder,
+        boardView, setBoardView,
+        boardLimit, setBoardLimit,
+        boardTitleFilter, setBoardTitleFilter
+    } = useGameboards(
+        isMobile() ? BoardViews.card : BoardViews.table,
+        isMobile() ? BoardLimit.six : BoardLimit.All
+        );
 
     function confirmDeleteMultipleBoards() {
         if (confirm(`Are you sure you want to remove ${selectedBoards && selectedBoards.length > 1 ? selectedBoards.length + " boards" : selectedBoards[0].title} from your account?`)) {
@@ -242,35 +193,16 @@ export const MyGameboards = () => {
         }
     }
 
-    function switchView(e: React.ChangeEvent<HTMLInputElement>) {
+    const switchViewAndClearSelected = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedBoards([]);
-        setBoardView(e.target.value as boardViews);
-    }
-
-    function viewMore() {
-        const increment = toActual(boardLimit);
-        if (increment != "ALL" && actualBoardLimit != "ALL") {
-            dispatch(loadBoards(actualBoardLimit, increment, boardOrder));
-            setLoading(true);
-        }
-    }
+        setBoardView(e.target.value as BoardViews);
+    }, [setBoardView, setSelectedBoards]);
 
     useEffect( () => {
-        if (boards && boards.totalResults != 0) {
-            const wasLoading = loading;
+        if (boards) {
             let boardsCompleted = 0;
             let boardsNotStarted = 0;
             let boardsInProgress = 0;
-            setLoading(false);
-            if (boards.boards) {
-                if (actualBoardLimit != boards.boards.length) {
-                    actualBoardLimit = (boards.boards.length);
-                    if (!wasLoading && boards.boards.length == 0) {
-                        // Through deletion or something we have ended up with no boards, so fetch more.
-                        viewMore();
-                    }
-                }
-            }
             boards.boards.map(board => {
                 if (board.percentageCompleted === 0) {
                     boardsNotStarted += 1;
@@ -307,11 +239,11 @@ export const MyGameboards = () => {
                     {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved gameboards...</h4>}
                 </div>
                 <div>
-                    {boardView !== boardViews.table && <Row>
+                    {boardView !== BoardViews.table && <Row>
                         <Col sm={6} lg={3} xl={2}>
                             <Label className="w-100">
-                                Display in <Input type="select" value={boardView} onChange={switchView}>
-                                    {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
+                                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                 </Input>
                             </Label>
                         </Col>
@@ -326,7 +258,7 @@ export const MyGameboards = () => {
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
                                 Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
+                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                                 </Input>
                             </Label>
                         </Col>
@@ -334,7 +266,7 @@ export const MyGameboards = () => {
                 </div>
                 <ShowLoading until={boards}>
                     {boards && boards.boards &&
-                        (boardView == boardViews.card ?
+                        (boardView == BoardViews.card ?
                             // Card view
                             <>
                                 <CardDeck>
@@ -359,8 +291,8 @@ export const MyGameboards = () => {
                                 <Row>
                                     <Col sm={6} lg={3} xl={2}>
                                         <Label className="w-100">
-                                            Display in <Input type="select" value={boardView} onChange={e => switchView(e)} className="p-2">
-                                                {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                            Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected} className="p-2">
+                                                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                             </Input>
                                         </Label>
                                     </Col>
@@ -396,15 +328,15 @@ export const MyGameboards = () => {
                                             {/*}*/}
                                             <Col sm={6} lg={{size: 2, offset: 4}}>
                                                 <Label className="w-100">
-                                                    Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
-                                                        {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                                                    Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+                                                        {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                                                     </Input>
                                                 </Label>
                                             </Col>
                                             <Col sm={6} lg={2}>
                                                 <Label className="w-100">
-                                                    Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
-                                                        {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
+                                                    Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
+                                                        {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
                                                     </Input>
                                                 </Label>
                                             </Col>
