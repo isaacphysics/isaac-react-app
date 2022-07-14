@@ -10,8 +10,6 @@ const webpack = require('webpack');
 
 module.exports = env => {
 
-    let isProd = env['prod'];
-
     let configPhysics = {
         entry: {
             'isaac-phy': [resolve('src/index-phy')],
@@ -43,5 +41,5 @@ module.exports = env => {
         ],
     };
 
-    return merge(configCommon(isProd), configPhysics);
+    return merge(configCommon(env), configPhysics);
 };
