@@ -10,8 +10,6 @@ const webpack = require('webpack');
 
 module.exports = env => {
 
-    let isProd = env['prod'];
-
     let configCS = {
         entry: {
             'isaac-cs': [resolve('src/index-cs')],
@@ -43,5 +41,5 @@ module.exports = env => {
         ],
     };
 
-    return merge(configCommon(isProd), configCS);
+    return merge(configCommon(env), configCS);
 };

@@ -11,7 +11,10 @@ const webpack = require('webpack');
 // Read in the .env file and put into `process.env`:
 require('dotenv').config();
 
-module.exports = (isProd) => {
+module.exports = (env) => {
+
+    let isProd = env['prod'] ?? false;
+    let isRenderer = env['renderer'] ?? false;
 
     return {
         stats: {
@@ -159,7 +162,7 @@ module.exports = (isProd) => {
             new webpack.DefinePlugin({
                 REACT_APP_API_VERSION: `"${process.env.REACT_APP_API_VERSION}"`,
                 ENV_QUIZ_FEATURE_FLAG: process.env.QUIZ_FEATURE && process.env.QUIZ_FEATURE.trim() === "true",
-                EDITOR_PREVIEW: 'false',
+                EDITOR_PREVIEW: JSON.stringify(isRenderer)
             }),
         ].filter(Boolean),
     };
