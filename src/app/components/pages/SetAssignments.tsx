@@ -351,7 +351,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
-    useEffect(() => {loadGroups(false);}, []);
+    useEffect(() => loadGroups(false), []);
 
     const [loading, setLoading] = useState(false);
 
@@ -363,9 +363,6 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
-
-    const dispatch = useDispatch();
-
 
     const isaacAssignmentButtons = {
         second: {
@@ -442,7 +439,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
             <Col md={6} lg={4} className="pt-1">
                 {siteSpecific(
                     // Physics
-                    <Button tag={Link} onClick={() => dispatch(openIsaacBooksModal)} color="secondary" block className="px-3">
+                    <Button tag={Link} onClick={openIsaacBooksModal} color="secondary" block className="px-3">
                         our books
                     </Button>,
                     // Computer science
