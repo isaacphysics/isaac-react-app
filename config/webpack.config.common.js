@@ -14,7 +14,7 @@ require('dotenv').config();
 module.exports = (env) => {
 
     let isProd = env['prod'] ?? false;
-    let isRenderer = env['renderer'] ?? false;
+    let isRenderer = env['isRenderer'] ?? false;
 
     return {
         stats: {
