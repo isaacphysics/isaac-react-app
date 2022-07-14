@@ -19,6 +19,10 @@ import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
 import {buildUseKeyboardSensor} from "../../services/clozeQuestionKeyboardSensor";
 
+const augmentInlineItemWithUniqueReplacementID = (idv: ClozeItemDTO) => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
+const augmentNonSelectedItemWithReplacementID = (item: ClozeItemDTO) => ({...item, replacementId: item.id});
+const itemNotInAttempt = (currentAttempt: ItemChoiceDTO) => (i: ClozeItemDTO) => !currentAttempt.items?.map(si => si?.id).includes(i.id);
+
 const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
@@ -26,9 +30,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
 
-    const itemsSectionId = `${cssFriendlyQuestionPartId}-non-selected-items`;
+    const itemsSectionDroppableId = "non-selected-items";
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
+    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
 
     const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
 
@@ -40,23 +44,24 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
 
     useEffect(function updateStateOnCurrentAttemptChange() {
         if (currentAttempt?.items) {
-            setInlineDropValues(currentAttempt.items
-                .map(idv => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined));
+            setInlineDropValues(currentAttempt.items.map(augmentInlineItemWithUniqueReplacementID));
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
             if (!withReplacement) {
-                setNonSelectedItems(nsis => nsis.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
+                setNonSelectedItems(nsis => nsis.filter(itemNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) || []);
             }
         }
     }, [currentAttempt, withReplacement]);
 
-    useEffect(function updateStateOnDocChange() { // happens to tests with cloze qz on multiple sections
-        setInlineDropValues((currentAttempt?.items ?? [])
-            .map(idv => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined));
+    // The following is to fix an issue with tests containing cloze qs across multiple sections - if the doc changes underneath
+    // this component, the inline drop values and non-selected items don't get updated. It's reasonable to assume that
+    // if the doc ever updates in a context other than this issue, reinitialising these values would be a valid behaviour.
+    useEffect(function updateStateOnDocChange() {
+        setInlineDropValues((currentAttempt?.items ?? []).map(augmentInlineItemWithUniqueReplacementID));
         if (currentAttempt && !withReplacement) {
-            setNonSelectedItems(doc.items?.filter(i => !currentAttempt.items?.map(si => si?.id).includes(i.id)).map(x => ({...x, replacementId: x.id})) || []);
+            setNonSelectedItems(doc.items ? [...doc.items].filter(itemNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) : []);
         } else {
-            setNonSelectedItems(doc.items ? [...doc.items].map(x => ({...x, replacementId: x.id})) : []);
+            setNonSelectedItems(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
         }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -109,10 +114,10 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
         let update = false;
 
         // Check source of drag:
-        if (source.droppableId === itemsSectionId) {
+        if (source.droppableId === itemsSectionDroppableId) {
             // Drag was from items section
             item = nonSelectedItems[source.index];
-            if (!withReplacement || destination.droppableId === itemsSectionId) {
+            if (!withReplacement || destination.droppableId === itemsSectionDroppableId) {
                 nsis.splice(source.index, 1);
                 replaceSource = (itemToReplace) => itemToReplace && nsis.splice(source.index, 0, itemToReplace);
             }
@@ -136,9 +141,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
         }
 
         // Check destination of drag:
-        if (destination.droppableId === itemsSectionId) {
+        if (destination.droppableId === itemsSectionDroppableId) {
             // Drop is into items section
-            if (!withReplacement || source.droppableId === itemsSectionId) {
+            if (!withReplacement || source.droppableId === itemsSectionDroppableId) {
                 nsis.splice(destination.index, 0, item);
             } else {
                 nsis.splice(nsis.findIndex((x) => x.id === item.id), 1);
@@ -150,7 +155,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
             if (destinationDropIndex !== undefined && destination.index === 0) {
                 replaceSource(idvs[destinationDropIndex]);
                 // Important! This extends the array with `undefined`s if `destinationDropIndex` is out of bounds
-                idvs[destinationDropIndex] = withReplacement ? {...item, replacementId: item.id + uuid_v4()} : item
+                idvs[destinationDropIndex] = withReplacement ? augmentInlineItemWithUniqueReplacementID(item) : item
             } else {
                 replaceSource(item);
             }
@@ -179,23 +184,22 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
     const updateAttemptCallback = useCallback((dropResult) => {
-        updateAttempt({...dropResult, destination: {droppableId: itemsSectionId, index: nonSelectedItems.length}},{announce: (_) => {return;}});
-    }, [itemsSectionId, nonSelectedItems]);
+        updateAttempt({...dropResult, destination: {droppableId: itemsSectionDroppableId, index: nonSelectedItems.length}},{announce: (_) => {return;}});
+    }, [itemsSectionDroppableId, nonSelectedItems]);
 
     return <div className="question-content cloze-question" id={cssFriendlyQuestionPartId}>
         <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
-            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones} enableDefaultSensors={false} sensors={[useMouseSensor, useTouchSensor, buildUseKeyboardSensor(itemsSectionId, cssFriendlyQuestionPartId, registeredDropRegionIDs)]}>
+            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones} enableDefaultSensors={false} sensors={[useMouseSensor, useTouchSensor, buildUseKeyboardSensor(itemsSectionDroppableId, cssFriendlyQuestionPartId, registeredDropRegionIDs)]}>
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
                 {/* Items section */}
                 <div className={"cloze-drop-zone"}>
-                <Label htmlFor={`${cssFriendlyQuestionPartId}-non-selected-items`} className="mt-3">Items: </Label>
-                    <Droppable droppableId={itemsSectionId} direction="horizontal" isDropDisabled={readonly}>
+                    <Label className="mt-3">Items: </Label>
+                    <Droppable droppableId={itemsSectionDroppableId} direction="horizontal" isDropDisabled={readonly}>
                         {(provided, snapshot) => <div
-                            ref={provided.innerRef} {...provided.droppableProps} id={`${cssFriendlyQuestionPartId}-non-selected-items`}
-                            aria-label={"Non-selected items"}
+                            ref={provided.innerRef} {...provided.droppableProps} id={"non-selected-items"} aria-label={"Non-selected items"}
                             className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                         >
                             {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
