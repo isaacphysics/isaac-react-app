@@ -304,7 +304,7 @@ export const MyGameboards = () => {
                 <div className="mt-4 mb-2">
                     {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
                         with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
-                    {!boards && <h4>You have <IsaacSpinner size="sm" /> saved gameboards...</h4>}
+                    {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved gameboards...</h4>}
                 </div>
                 <div>
                     {boardView !== boardViews.table && <Row>

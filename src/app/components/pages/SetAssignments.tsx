@@ -463,7 +463,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
             <>
                 {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
-                {!boards && <h4>You have <IsaacSpinner size="sm" /> gameboards ready to assign...</h4>}
+                {!boards && <h4>You have <IsaacSpinner size="sm" inline /> gameboards ready to assign...</h4>}
                 <Row>
                     <Col sm={6} lg={3} xl={2}>
                         <Label className="w-100">
