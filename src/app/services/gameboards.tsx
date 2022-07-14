@@ -183,7 +183,7 @@ export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
     "-completion": "Completion Descending"
 };
 
-const parseBoardLimitAsNumber = (limit: BoardLimit) =>
+const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: BoardLimit) =>
     limit === BoardLimit.All
         ? BoardLimit.All
         : parseInt(limit, 10);
