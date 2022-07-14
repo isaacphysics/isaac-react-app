@@ -51,6 +51,8 @@ const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUME
     multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
 };
 
+// Interacting with the page's filters change the query parameters.
+// Whenever the query parameters change we send a search request to the API.
 export const Search = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const dispatch = useDispatch();
@@ -66,8 +68,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
     }
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
 
-    useEffect(function triggerSearchOnUrlChange() {
-        dispatch(fetchSearch(queryState ?? "", filtersState.length ? filtersState.map(deitemise).join(",") : undefined));
+    useEffect(function triggerSearchAndUpdateLocalStateOnUrlChange() {
+        dispatch(fetchSearch(urlQuery ?? "", initialFilters.length ? initialFilters.join(",") : undefined));
+        setQueryState(urlQuery);
+        setFiltersState(initialFilters.map(itemise));
     }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
