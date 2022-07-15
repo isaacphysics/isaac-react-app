@@ -458,9 +458,11 @@ export interface QuantityDTO extends ChoiceDTO {
     units?: string;
 }
 
+export type BestAttemptHidden = null;
+export const BEST_ATTEMPT_HIDDEN: BestAttemptHidden = null;
 export interface QuestionDTO extends ContentDTO {
     hints?: ContentBaseDTO[];
-    bestAttempt?: QuestionValidationResponseDTO;
+    bestAttempt?: QuestionValidationResponseDTO | BestAttemptHidden;
 }
 
 export interface SeguePageDTO extends ContentDTO {
