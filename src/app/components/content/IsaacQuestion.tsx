@@ -22,7 +22,6 @@ import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inp
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
-import {Alert} from "reactstrap";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useDispatch();
