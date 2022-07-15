@@ -760,7 +760,6 @@ export enum TAG_ID {
     security = "security",
     socialEngineering = "social_engineering",
     maliciousCode = "malicious_code",
-    identificationPrevention = "identification_prevention",
     // Data and information topics
     numberRepresentation = "number_representation",
     textRepresentation = "text_representation",
