@@ -4,11 +4,13 @@ import * as reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
 import {notificationCheckerMiddleware} from "./middleware/notificationManager";
+import {hidePreviousQuestionAttempt} from "./middleware/hidePreviousQuestionAttempt";
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export const middleware: Middleware[] = [
+    hidePreviousQuestionAttempt,
     userConsistencyCheckerMiddleware,
     notificationCheckerMiddleware,
     thunk,
