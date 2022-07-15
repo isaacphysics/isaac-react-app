@@ -110,7 +110,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
                 {!currentAttempt && bestAttempt === BEST_ATTEMPT_HIDDEN && <div className={"w-100 text-center"}>
                     <small className={"no-print text-muted"}>
-                        Previous best attempt has been hidden (this can be changed in account settings)
+                        Your previous best attempt has been hidden (this can be changed in account settings)
                     </small>
                 </div>}
 
