@@ -69,12 +69,19 @@ export const Search = withRouter((props: RouteComponentProps) => {
     // Trigger update to search url on query or filter change
     const timer: MutableRefObject<number | undefined> = useRef();
     useEffect(() => {
-        timer.current = window.setTimeout(() => {updateSearchUrl()}, 800);
-        return () => {clearTimeout(timer.current)};
+        if (queryState !== urlQuery) {
+            timer.current = window.setTimeout(() => {updateSearchUrl()}, 800);
+            return () => {clearTimeout(timer.current)};
+        }
     }, [queryState]);
 
     useEffect(() => {
-        updateSearchUrl()
+        const filtersStateMatchesQueryParamFilters =
+            filtersState.length === initialFilters.length &&
+            filtersState.map(deitemise).every(f => initialFilters.includes(f));
+        if (!filtersStateMatchesQueryParamFilters) {
+            updateSearchUrl();
+        }
     }, [filtersState]);
 
     // Process results and add shortcut responses
