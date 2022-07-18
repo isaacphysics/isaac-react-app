@@ -121,7 +121,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                     <Select
                                         inputId="document-filter" isMulti
                                         placeholder="No page type filter"
-                                        defaultValue={filtersState}
+                                        value={filtersState}
                                         options={
                                             [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
                                                 DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]
