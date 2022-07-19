@@ -17,7 +17,6 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO,
     UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";

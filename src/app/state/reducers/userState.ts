@@ -1,6 +1,6 @@
 import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
-import {TOTPSharedSecretDTO, UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
+import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 
 type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
