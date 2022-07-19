@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
@@ -53,9 +53,9 @@ const pageHelp = <span>
 
 const QuizPreviewComponent = ({match: {params: {quizId, page}}}: QuizDoAsssignmentProps) => {
 
-    const {quiz, error} = useSelector(selectors.quizzes.preview);
+    const {quiz, error} = useAppSelector(selectors.quizzes.preview);
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(loadQuizPreview(quizId));

@@ -31,6 +31,7 @@ export const store = configureStore({
     devTools: process.env.NODE_ENV !== 'production',
 });
 
+// TODO AnyAction should be changed to our Action type, unioned with whatever extra actions types we need, if possible
 export type AppDispatch = ThunkDispatch<AppState, never, AnyAction>;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

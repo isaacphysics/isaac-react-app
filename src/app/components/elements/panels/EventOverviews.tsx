@@ -1,4 +1,4 @@
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import React, {useEffect, useState} from "react";
 import {getEventOverviews} from "../../../state/actions";
@@ -20,8 +20,8 @@ export enum EventOverviewFilter {
     "Past events" = "PAST",
 }
 export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser; setSelectedEventId: (eventId: string | null) => void}) => {
-    const dispatch = useDispatch();
-    const eventOverviews = useSelector((state: AppState) => state && state.eventOverviews);
+    const dispatch = useAppDispatch();
+    const eventOverviews = useAppSelector((state: AppState) => state && state.eventOverviews);
 
     const [overviewFilter, setOverviewFilter] = useState(EventOverviewFilter["Upcoming events"]);
     const [sortPredicate, setSortPredicate] = useState("date");

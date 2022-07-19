@@ -5,7 +5,7 @@ import {fetchDoc} from "../../state/actions";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
@@ -26,9 +26,9 @@ interface GenericPageComponentProps {
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.GENERIC, pageId))}, [dispatch, pageId]);
-    const doc = useSelector((state: AppState) => state?.doc || null);
+    const doc = useAppSelector((state: AppState) => state?.doc || null);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;

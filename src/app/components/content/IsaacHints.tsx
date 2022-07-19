@@ -4,13 +4,13 @@ import React, {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
 import {AppState} from "../../state/reducers";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Tabs} from "../elements/Tabs";
 import {logAction} from "../../state/actions";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
-    const printHints = useSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
+    const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
     return <React.Fragment>
         {printHints && hints?.map((hint, index) => (
             <div key={index} className={"question-hints pl-0 py-1 only-print"}>
@@ -39,7 +39,7 @@ export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
 };
 
 export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {recordConfidence} = useContext(ConfidenceContext);
 
     function logHintView(viewedHintIndex: number) {

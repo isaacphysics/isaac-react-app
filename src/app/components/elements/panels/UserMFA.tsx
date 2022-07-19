@@ -2,7 +2,7 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import QRCode from 'qrcode';
 import {AppState} from "../../../state/reducers";
@@ -16,8 +16,8 @@ interface UserMFAProps {
 }
 
 const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
-    const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
+    const totpSharedSecret = useAppSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
     const [showMFAConfig, setShowMFAConfig] = useState(false);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);

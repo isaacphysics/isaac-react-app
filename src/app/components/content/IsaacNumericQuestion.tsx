@@ -1,5 +1,5 @@
 import React, {FormEvent, useEffect, useMemo, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import Rand from 'rand-seed';
 import {requestConstantsUnits} from "../../state/actions";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
@@ -103,9 +103,9 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
-    const dispatch = useDispatch();
-    const userId = useSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
-    const units = useSelector((state: AppState) => state?.constants?.units || undefined);
+    const dispatch = useAppDispatch();
+    const userId = useAppSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
+    const units = useAppSelector((state: AppState) => state?.constants?.units || undefined);
 
     useEffect(() => {dispatch(requestConstantsUnits());}, [dispatch]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
@@ -116,7 +116,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
             value: event.currentTarget.value,
             units: currentAttemptUnits
         };
-        dispatch(dispatchSetCurrentAttempt(attempt));
+        dispatchSetCurrentAttempt(attempt);
     }
 
     function updateUnits(units?: string) {
@@ -125,7 +125,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
             value: currentAttemptValue,
             units: units
         };
-        dispatch(dispatchSetCurrentAttempt(attempt));
+        dispatchSetCurrentAttempt(attempt);
     }
 
     const [isOpen, setIsOpen] = useState(false);

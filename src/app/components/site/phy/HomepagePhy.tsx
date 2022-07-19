@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
@@ -10,7 +10,7 @@ import {above, useDeviceSize} from "../../../services/device";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
     return <div id="homepage" className="pb-5 px-2 px-sm-5 mx-md-5 px-lg-0">

@@ -2,7 +2,7 @@ import {CardBody, FormGroup, Table} from "reactstrap";
 import React, {useEffect} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import {validateEmailPreferences} from "../../../services/validation";
 import {siteSpecific, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
@@ -14,7 +14,7 @@ interface UserEmailPreferencesProps {
     idPrefix?: string;
 }
 export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
-    const error = useSelector((state: AppState) => state && state.error);
+    const error = useAppSelector((state: AppState) => state && state.error);
     const defaultEmailPreferences = {ASSIGNMENTS: true};
     const isaacEmailPreferences = {
         assignments: siteSpecific(

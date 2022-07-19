@@ -16,7 +16,7 @@ import {
 } from "./constants";
 import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../state/store";
 import {AppState} from "../state/reducers";
 import {isCS, isPhy, siteSpecific} from "./siteConstants";
 import {PotentialUser, ViewingContext} from "../../IsaacAppTypes";
@@ -45,11 +45,11 @@ export function useUserContext(): UseUserContextReturnType {
     const existingLocation = useLocation();
     const queryParams = useQueryParams(true);
 
-    const user = useSelector((state: AppState) => state && state.user);
+    const user = useAppSelector((state: AppState) => state && state.user);
     const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
-        useSelector((state: AppState) => state?.userPreferences) || {};
+        useAppSelector((state: AppState) => state?.userPreferences) || {};
 
-    const transientUserContext = useSelector((state: AppState) => state?.transientUserContext) || {};
+    const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 
     const explanation: UseUserContextReturnType["explanation"] = {};
 
@@ -100,7 +100,7 @@ export function useUserContext(): UseUserContextReturnType {
     }
 
     // Gameboard views overrides all context options
-    const currentGameboard = useSelector(selectors.board.currentGameboard);
+    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
     const {questionId} = useParams<{ questionId: string}>();
     if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
         const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];

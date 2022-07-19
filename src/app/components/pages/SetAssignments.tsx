@@ -45,7 +45,8 @@ import {
     formatBoardOwner,
     generateGameboardSubjectHexagons
 } from "../../services/gameboards";
-import {connect, useDispatch, useSelector} from "react-redux";
+import {connect} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {isPhy, siteSpecific} from "../../services/siteConstants";
@@ -100,7 +101,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     function assign() {
         assignBoard(board, selectedGroups, dueDate, assignmentNotes).then(success => {
@@ -361,7 +362,7 @@ function orderName(order: BoardOrder) {
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const {groups, loadGroups, boards, loadBoards, openIsaacBooksModal} = props;
 
-    const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
+    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     useEffect(() => {loadGroups(false);}, []);
 
@@ -376,7 +377,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     let [actualBoardLimit, setActualBoardLimit] = useState<ActualBoardLimit>(toActual(boardLimit));
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
 
     const isaacAssignmentButtons = {

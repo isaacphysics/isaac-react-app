@@ -6,12 +6,12 @@ import {
     NavigationSection,
     useAssignmentsCount
 } from "../../navigation/NavigationBar";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
 
 export const NavigationBarCS = () => {
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>

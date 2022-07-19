@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {getEmailTemplate, sendAdminEmailWithIds} from "../../state/actions";
@@ -19,13 +19,13 @@ interface AdminEmailsProps {
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 export const AdminEmails = (props: AdminEmailsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [contentObjectID, setContentObjectID] = useState("");
     const [emailSent, setEmailSent] = useState(false);
-    const user = useSelector((state: AppState) => state?.user);
-    const emailTemplateSelector = useSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
+    const user = useAppSelector((state: AppState) => state?.user);
+    const emailTemplateSelector = useAppSelector((state: AppState) => state && state.adminEmailTemplate && state.adminEmailTemplate);
 
     const numberOfUsers = csvIDs.length;
     const canSubmit = emailTemplateSelector && emailType != "null" && numberOfUsers > 0;

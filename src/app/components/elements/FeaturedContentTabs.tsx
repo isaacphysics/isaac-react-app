@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Tabs} from "./Tabs";
 import {IsaacContent} from "../content/IsaacContent";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {fetchFragment} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -9,9 +9,9 @@ import {ShowLoading} from "../handlers/ShowLoading";
 const COMPUTER_SCIENTIST_FRAGMENT_ID = "computer-scientist-of-the-month";
 
 export function FeaturedContentTabs() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(fetchFragment(COMPUTER_SCIENTIST_FRAGMENT_ID));}, [dispatch]);
-    const computerScientist = useSelector((state: AppState) => state?.fragments && state.fragments[COMPUTER_SCIENTIST_FRAGMENT_ID]);
+    const computerScientist = useAppSelector((state: AppState) => state?.fragments && state.fragments[COMPUTER_SCIENTIST_FRAGMENT_ID]);
 
     return <div className="tabs-featured-question">
         {/* use tabOverride.current below for random tab on page refresh */}

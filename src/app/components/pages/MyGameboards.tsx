@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {deleteBoard, loadBoards} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -95,7 +95,7 @@ const Board = (props: BoardTableProps) => {
 
     const boardLink = `/gameboards#${board.id}`;
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
         if (checked) {
@@ -197,9 +197,9 @@ function orderName(order: BoardOrder) {
 
 export const MyGameboards = () => {
     //Redux state and dispatch
-    const dispatch = useDispatch();
-    const boards = useSelector(selectors.boards.boards) as Boards;
-    const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
+    const dispatch = useAppDispatch();
+    const boards = useAppSelector(selectors.boards.boards) as Boards;
+    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
     const [loading, setLoading] = useState(false);

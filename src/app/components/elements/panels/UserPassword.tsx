@@ -5,7 +5,7 @@ import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../..
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount} from "../../../state/actions";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../../services/passwordStrength";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 
 interface UserPasswordProps {
     currentPassword?: string;
@@ -24,7 +24,7 @@ interface UserPasswordProps {
 export const UserPassword = (
     {currentPassword, currentUserEmail, setCurrentPassword, myUser, setMyUser, isNewPasswordConfirmed, userAuthSettings, setNewPassword, setNewPasswordConfirm, newPasswordConfirm, editingOtherUser}: UserPasswordProps) => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const authenticationProvidersUsed = (provider: AuthenticationProvider) => userAuthSettings && userAuthSettings.linkedAccounts && userAuthSettings.linkedAccounts.includes(provider);
 
     const [passwordResetRequested, setPasswordResetRequested] = useState(false);
