@@ -1,34 +1,37 @@
-import {AnyAction, applyMiddleware, compose, createStore, Middleware} from "redux";
-import thunk, {ThunkDispatch} from "redux-thunk";
-import * as reduxLogger from "redux-logger";
+import {AnyAction, Middleware} from "redux";
+import {ThunkDispatch} from "redux-thunk";
+import reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
 import {notificationCheckerMiddleware} from "./middleware/notificationManager";
-
-// @ts-ignore
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+import {configureStore} from "@reduxjs/toolkit";
+import {isaacApi} from "./slices/api";
+import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 
 export const middleware: Middleware[] = [
     userConsistencyCheckerMiddleware,
     notificationCheckerMiddleware,
-    thunk,
+    isaacApi.middleware
 ];
 
-const storeFactory = (initialState: object) => {
-    // @ts-ignore
-    if (process.env.NODE_ENV !== 'production' && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-        middleware.push(reduxLogger.createLogger());
-    }
+export const store = configureStore({
+    reducer: rootReducer,
+    // [thunk, immutableStateInvariant, serializableStateInvariant] are all in the default middleware and included by default
+    // in development, with only thunk included in production.
+    // See https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
+    middleware: (getDefaultMiddleware) => {
+        const newMiddleware = getDefaultMiddleware().concat(middleware);
+        // @ts-ignore
+        if (process.env.NODE_ENV !== 'production' && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+            newMiddleware.concat([reduxLogger]);
+        }
+        return newMiddleware;
+    },
+    preloadedState: {},
+    devTools: process.env.NODE_ENV !== 'production',
+});
 
-    const enhancer = composeEnhancers(
-        applyMiddleware(...middleware)
-    );
-
-    return enhancer(createStore)(
-        rootReducer,
-        initialState
-    );
-};
-
-export const store = storeFactory({});
 export type AppDispatch = ThunkDispatch<AppState, never, AnyAction>;
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;

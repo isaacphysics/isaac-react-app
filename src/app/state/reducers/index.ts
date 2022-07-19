@@ -12,7 +12,6 @@ import {
 } from "./eventsState";
 import {
     totpChallengePending,
-    totpSharedSecret,
     user,
     userAuthSettings,
     userPreferences,
@@ -47,6 +46,8 @@ import {
     quizPreview,
     quizzes, studentQuizAttempt,
 } from "./quizState";
+import {isaacApi} from "../slices/api";
+import {totpSharedSecretSlice} from "../slices/user";
 
 const appReducer = combineReducers({
     // User
@@ -54,7 +55,7 @@ const appReducer = combineReducers({
     userAuthSettings,
     userPreferences,
     userSchoolLookup,
-    totpSharedSecret,
+    totpSharedSecret: totpSharedSecretSlice.reducer,
     totpChallengePending,
 
     // Internal App
@@ -140,13 +141,16 @@ const appReducer = combineReducers({
     quizAssignment,
     quizPreview,
     quizAttemptedFreelyByMe,
+
+    // API reducer
+    [isaacApi.reducerPath]: isaacApi.reducer
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
     if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        state = undefined;
+        return appReducer(undefined, action);
     }
     return appReducer(state, action);
 };

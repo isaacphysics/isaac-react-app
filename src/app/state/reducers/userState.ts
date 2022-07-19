@@ -40,18 +40,6 @@ export const userPreferences = (userPreferences: UserPreferencesState = null, ac
     }
 };
 
-type TotpSharedSecretState = TOTPSharedSecretDTO | null;
-export const totpSharedSecret = (totpSharedSecret: TotpSharedSecretState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS:
-            return {...action.totpSharedSecretDTO};
-        case ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS:
-            return null;
-        default:
-            return totpSharedSecret;
-    }
-};
-
 type TotpChallengePendingState = boolean | null;
 export const totpChallengePending = (totpChallengePending: TotpChallengePendingState = null, action: Action) => {
     switch (action.type) {
