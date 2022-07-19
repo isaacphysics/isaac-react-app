@@ -50,10 +50,13 @@ const UserContextReconfimationModalBody = () => {
     }, [userToUpdate, userContexts, userPreferencesToUpdate, user]);
 
     return <Form onSubmit={formSubmission} className={"mb-2"}>
-        <div>
+        <p>
             So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review your
             stage{isCS && ", exam board"} and school account details at the beginning of each academic year.
-        </div>
+        </p>
+        <p>
+            You might also want to <a target={"_blank"} rel="noopener" href={"/account#teacherconnections"}>review who has access to your data <span className={"sr-only"}>(opens in new tab)</span></a> if you've changed school or teachers.
+        </p>
         <div className="text-right text-muted required-before">
             Required
         </div>
