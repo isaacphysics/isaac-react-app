@@ -1,5 +1,4 @@
-import {AnyAction, Middleware} from "redux";
-import {ThunkDispatch} from "redux-thunk";
+import {Middleware} from "redux";
 import reduxLogger from "redux-logger";
 import {AppState, rootReducer} from "./reducers";
 import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
@@ -31,8 +30,7 @@ export const store = configureStore({
     devTools: process.env.NODE_ENV !== 'production',
 });
 
-// TODO AnyAction should be changed to our Action type, unioned with whatever extra actions types we need, if possible
-export type AppDispatch = ThunkDispatch<AppState, never, AnyAction>;
+export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
