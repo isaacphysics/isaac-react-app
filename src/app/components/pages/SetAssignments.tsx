@@ -4,7 +4,6 @@ import {
     Button,
     Card,
     CardBody,
-    CardDeck,
     CardFooter,
     CardSubtitle,
     CardTitle,

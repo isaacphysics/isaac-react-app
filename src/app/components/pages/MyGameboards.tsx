@@ -8,7 +8,6 @@ import {
     Button,
     Card,
     CardBody,
-    CardDeck,
     CardSubtitle,
     CardTitle,
     Col,
