@@ -8,7 +8,8 @@ import {
 } from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
-import {showErrorToastIfNeeded, showToast} from "../../actions";
+import {showErrorToastIfNeeded, showSuccessToast} from "../../actions";
+import {Dispatch} from "redux";
 
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     const baseQueryArgs: FetchBaseQueryArgs = {
@@ -40,8 +41,27 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
     return result;
 }
 
+interface QueryToastSpec {
+    successTitle?: string;
+    successMessage?: string;
+    errorMessage?: string;
+}
+
+const displayToastsOnQueryLifecycleEvents = ({successTitle, successMessage, errorMessage}: QueryToastSpec) => async (arg: any, { dispatch, queryFulfilled }: { dispatch: Dispatch<any>, queryFulfilled: Promise<{data: any, meta: {} | undefined}>}) => {
+    try {
+        await queryFulfilled;
+        if (successTitle && successMessage) {
+            dispatch(showSuccessToast(successTitle, successMessage));
+        }
+    } catch (e) {
+        if (errorMessage) {
+            dispatch(showErrorToastIfNeeded(errorMessage, e));
+        }
+    }
+};
+
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
-let isaacApi = createApi({
+const isaacApi = createApi({
    tagTypes: ["GlossaryTerms"],
    reducerPath: "isaacApi",
    baseQuery: isaacBaseQuery,
@@ -52,18 +72,11 @@ let isaacApi = createApi({
                method: "POST",
                body: {sharedSecret, mfaVerificationCode}
            }),
-           onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-               try {
-                   await queryFulfilled;
-                   dispatch(showToast({
-                       color: "success",
-                       title: "2FA Configured",
-                       body: "You have enabled 2FA on your account!"
-                   }));
-               } catch (e) {
-                   dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
-               }
-           }
+           onQueryStarted: displayToastsOnQueryLifecycleEvents({
+               successTitle: "2FA Configured",
+               successMessage: "You have enabled 2FA on your account!",
+               errorMessage: "Failed to setup 2FA on account."
+           })
        }),
 
        disableAccountMFA: build.mutation<void, number>({
@@ -71,18 +84,11 @@ let isaacApi = createApi({
                url: `/users/${userId}/mfa`,
                method: "DELETE"
            }),
-           onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-               try {
-                   await queryFulfilled;
-                   dispatch(showToast({
-                       color: "success",
-                       title: "2FA Disabled",
-                       body: "You have disabled 2FA on this account!"
-                   }));
-               } catch (e) {
-                   dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
-               }
-           }
+           onQueryStarted: displayToastsOnQueryLifecycleEvents({
+               successTitle: "2FA Disabled",
+               successMessage: "You have disabled 2FA on this account!",
+               errorMessage: "Failed to disable 2FA on account."
+           })
        }),
 
        newMFASecret: build.mutation<TOTPSharedSecretDTO, void>({
@@ -90,13 +96,9 @@ let isaacApi = createApi({
                url: "/users/current_user/mfa/new_secret",
                method: "GET"
            }),
-           onQueryStarted: async (_, { dispatch , queryFulfilled }) => {
-               try {
-                   await queryFulfilled;
-               } catch (e) {
-                   dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
-               }
-           }
+           onQueryStarted: displayToastsOnQueryLifecycleEvents({
+               errorMessage: "Failed to get 2FA secret"
+           })
        }),
    })
 });

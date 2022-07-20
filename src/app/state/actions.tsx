@@ -2,7 +2,7 @@ import React, {Dispatch} from "react";
 import {api} from "../services/api";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
-import {store} from "./store";
+import {AppDispatch, store} from "./store";
 import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
@@ -101,7 +101,7 @@ const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
 };
 
-export const hideToast = (toastId: string) => (dispatch: any) => {
+export const hideToast = (toastId: string) => (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
     setTimeout(() => {
         dispatch(removeToast(toastId));
@@ -109,7 +109,7 @@ export const hideToast = (toastId: string) => (dispatch: any) => {
 };
 
 let nextToastId = 0;
-export const showToast = (toast: Toast) => (dispatch: any) => {
+export const showToast = (toast: Toast) => (dispatch: AppDispatch) => {
     const toastId = toast.id = "toast" + nextToastId++;
     if (toast.timeout) {
         setTimeout(() => {
@@ -121,6 +121,13 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
     return toastId;
 };
+
+export const showSuccessToast = (title: string, body: string) => showToast({
+    color: "success",
+    timeout: 5000,
+    title,
+    body
+});
 
 export function showErrorToastIfNeeded(error: string, e: any) {
     if (e) {
