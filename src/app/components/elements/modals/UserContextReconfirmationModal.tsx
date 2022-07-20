@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useState} from "react";
-import {isMobile} from "../../../services/device";
-import {Button, Col, Form, Input, Row} from "reactstrap";
+import {Button, Col, Form, Row} from "reactstrap";
 import {validateUserContexts, validateUserSchool} from "../../../services/validation";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
@@ -10,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
 import {isLoggedIn} from "../../../services/user";
-import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
+import {closeActiveModal, logAction, updateCurrentUser} from "../../../state/actions";
 import {isCS, SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
 
 const UserContextReconfimationModalBody = () => {
@@ -39,6 +38,12 @@ const UserContextReconfimationModalBody = () => {
         BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
     }), [booleanNotation, displaySettings]);
 
+    const logReviewTeacherConnections = useCallback(() => {
+        dispatch(logAction({
+            type: "REVIEW_TEACHER_CONNECTIONS"
+        }));
+    }, []);
+
     // Form submission
     const formSubmission = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -55,7 +60,7 @@ const UserContextReconfimationModalBody = () => {
             stage{isCS && ", exam board"} and school account details at the beginning of each academic year.
         </p>
         <p>
-            You might also want to <a target={"_blank"} rel="noopener" href={"/account#teacherconnections"}>review who has access to your data <span className={"sr-only"}>(opens in new tab)</span></a> if you've changed school or teachers.
+            You might also want to <a target={"_blank"} onClick={logReviewTeacherConnections} rel="noopener" href={"/account#teacherconnections"}>review who has access to your data <span className={"sr-only"}>(opens in new tab)</span></a> if you've changed school or teachers.
         </p>
         <div className="text-right text-muted required-before">
             Required
