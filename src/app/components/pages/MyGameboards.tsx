@@ -269,17 +269,19 @@ export const MyGameboards = () => {
                         (boardView == BoardViews.card ?
                             // Card view
                             <>
-                                <CardDeck>
-                                    {boards.boards.map(board => <Board
-                                        key={board.id}
-                                        board={board}
-                                        selectedBoards={selectedBoards}
-                                        setSelectedBoards={setSelectedBoards}
-                                        boardView={boardView}
-                                        user={user}
-                                        boards={boards}
-                                    />)}
-                                </CardDeck>
+                                <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
+                                    {boards.boards.map(board => <Col>
+                                        <Board
+                                            key={board.id}
+                                            board={board}
+                                            selectedBoards={selectedBoards}
+                                            setSelectedBoards={setSelectedBoards}
+                                            boardView={boardView}
+                                            user={user}
+                                            boards={boards}
+                                        />
+                                    </Col>)}
+                                </Row>
                                 <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
                                     {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}

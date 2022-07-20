@@ -252,7 +252,7 @@ const Board = (props: BoardProps) => {
             </tr>
             :
             // Card view
-            <Card key={board.id} className="board-card">
+            <Card key={board.id} className="board-card card-neat">
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
                     <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
@@ -404,14 +404,15 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                         {boardView == BoardViews.card ?
                             // Card view
                             <>
-                                <CardDeck>
-                                    {boards.boards && boards.boards.map(board =>
+                                <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
+                                    {boards.boards && boards.boards.map(board => <Col>
                                         <Board {...props}
-                                               key={board.id}
-                                               board={board}
-                                               boardView={boardView}
-                                        />)}
-                                </CardDeck>
+                                           key={board.id}
+                                           board={board}
+                                           boardView={boardView}
+                                        />
+                                    </Col>)}
+                                </Row>
                                 <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
                                     {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner/> : "View more"}</Button>}
