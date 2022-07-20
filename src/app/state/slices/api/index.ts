@@ -1,4 +1,3 @@
-// This should be used by default as the `baseQuery` of our API slice
 import {ACTION_TYPE, API_PATH} from "../../../services/constants";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {
@@ -11,6 +10,7 @@ import {TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
 import {showErrorToastIfNeeded, showSuccessToast} from "../../actions";
 import {Dispatch} from "redux";
 
+// This is used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
     const baseQueryArgs: FetchBaseQueryArgs = {
         baseUrl: API_PATH,
