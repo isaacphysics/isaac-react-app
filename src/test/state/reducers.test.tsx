@@ -446,7 +446,7 @@ describe("boards reducer", () => {
         });
     });
 
-    const assignedState: BoardsState = {...simpleState, boardAssignees: {[testBoards[0].id as string]: testGroups.map(g => g.id as number)}};
+    const assignedState: BoardsState = {...simpleState, boardAssignees: {[testBoards[0].id as string]: testGroups.map(g => ({groupId: g.id as number}))}};
 
     it ("can load up board assignees", () => {
         const action: Action = {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board: testBoards[1], groups: {[testBoards[1].id as string]: testGroups}};
@@ -470,7 +470,7 @@ describe("boards reducer", () => {
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
+            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(assignee => testGroupsMap[assignee.groupId]) || [];
             expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
         });
     });
@@ -480,7 +480,7 @@ describe("boards reducer", () => {
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
+            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(assignee => testGroupsMap[assignee.groupId]) || [];
             expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1], testGroupsMap[2]])});
         });
     });

@@ -1602,25 +1602,47 @@ export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async
     }
 };
 
-export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
+export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, scheduledStartDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
     if (groups.length === 0) {
         dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
         return false;
     }
 
-    let dueDateUTC: any = undefined;
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    // TODO think about whether this can be done in the back-end too?
     if (dueDate != undefined) {
-        dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
-        const today = new Date();
-        today.setUTCHours(0, 0, 0, 0);
-        if ((dueDateUTC - today.valueOf()) < 0) {
+        dueDate?.setUTCHours(0, 0, 0, 0);
+        if ((dueDate.valueOf() - today.valueOf()) < 0) {
             dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
             return false;
         }
     }
 
+    if (scheduledStartDate != undefined) {
+        scheduledStartDate?.setUTCHours(0, 0, 0, 0);
+        if ((scheduledStartDate.valueOf() - today.valueOf()) < 0) {
+            dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}) as any);
+            return false;
+        }
+    }
+
+    if (dueDate != undefined && scheduledStartDate != undefined) {
+        if ((dueDate.valueOf() - scheduledStartDate.valueOf()) <= 0) {
+            dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be strictly after scheduled start date.", timeout: 5000}) as any);
+            return false;
+        }
+    }
+
     const groupIds = groups.map(getValue);
-    const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: board.id, groupId: id, dueDate: dueDateUTC, notes}));
+    const assignments: AssignmentDTO[] = groupIds.map(id => ({
+        gameboardId: board.id,
+        groupId: id,
+        dueDate,
+        scheduledStartDate,
+        notes
+    }));
 
     dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, assignments});
     try {
@@ -1628,7 +1650,7 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
         const successfulIds = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => a.groupId);
         const failedIds = assigmentStatuses.filter(a => isDefined(a.errorMessage));
 
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, groupIds: successfulIds, dueDate: dueDate as any});
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, groupIds: successfulIds, scheduledStartDate});
         // Handle user feedback depending on whether some groups failed to assign or not
         if (failedIds.length === 0) {
             const successMessage = successfulIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
@@ -1649,7 +1671,7 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
         }
         return true;
     } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, board, groupIds, dueDate: dueDate as any});
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, board, groupIds});
         dispatch(showErrorToastIfNeeded(`Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, e));
         return false;
     }

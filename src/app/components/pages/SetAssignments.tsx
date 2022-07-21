@@ -84,7 +84,7 @@ interface SetAssignmentsPageProps {
     loadBoards: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => void;
     loadGroupsForBoard: (board: GameboardDTO) => void;
     deleteBoard: (board: GameboardDTO) => void;
-    assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
+    assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, scheduledStartDate?: Date, assignmentNotes?: string) => Promise<boolean>;
     unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
@@ -99,11 +99,12 @@ type BoardProps = SetAssignmentsPageProps & {
 const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
+    const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useSelector(selectors.user.orNull);
 
     function assign() {
-        assignBoard(board, selectedGroups, dueDate, assignmentNotes).then(success => {
+        assignBoard(board, selectedGroups, dueDate, scheduledStartDate, assignmentNotes).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
@@ -123,9 +124,13 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id, g.groupName))}
             />
         </Label>
-        <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>
+        <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
+        </Label>
+        <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                       onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -249,6 +254,7 @@ const Board = (props: BoardProps) => {
                         {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
                             <Row key={group.id} className="px-1">
                                 <span className="flex-grow-1">{group.groupName}</span>
+                                {group.startDate && <span className="flex-grow-1">🕑 {group.startDate}</span>}
                                 <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
                             </Row>
                         )}</Container>}
@@ -307,6 +313,7 @@ const Board = (props: BoardProps) => {
                             {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
                                 <Row key={group.id} className="px-1">
                                     <span className="flex-grow-1">{group.groupName}</span>
+                                    {group.startDate && <span className="flex-grow-1">🕑 {group.startDate}</span>}
                                     <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
                                 </Row>
                             )}</Container>}
@@ -514,9 +521,9 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                 <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
                                     {boards.boards && boards.boards.map(board =>
                                         <Board {...props}
-                                                   key={board.id}
-                                                   board={board}
-                                                   boardView={boardView}
+                                               key={board.id}
+                                               board={board}
+                                               boardView={boardView}
                                         />)}
                                 </div>
                                 <div className="text-center mt-2 mb-4" style={{clear: "both"}}>

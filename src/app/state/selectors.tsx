@@ -1,7 +1,7 @@
 import {AppState} from "./reducers";
 import {sortBy} from "lodash";
 import {NOT_FOUND} from "../services/constants";
-import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
+import {AppGroup, AppQuizAssignment, BoardAssignee, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
@@ -78,8 +78,11 @@ export const selectors = {
             if (!state) return null;
             if (!state.boards) return null;
             if (!state.boards.boards) return null;
-            function mapGroups(ids?: number[]) {
-                return ids && sortBy(ids.map(id => state && state.groups && state.groups.cache && state.groups.cache[id]), g => g && g.groupName && g.groupName.toLowerCase());
+            function mapGroups(assignees?: BoardAssignee[]) {
+                return assignees && sortBy(
+                    assignees.map(assignee => state && state.groups && state.groups.cache && {...state.groups.cache[assignee.groupId], scheduledStartDate: assignee.startDate}),
+                    g => g && g.groupName && g.groupName.toLowerCase()
+                );
             }
             return {
                 totalResults: state.boards.boards.totalResults,

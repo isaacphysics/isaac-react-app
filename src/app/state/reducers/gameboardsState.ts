@@ -1,7 +1,7 @@
 import {ContentSummaryDTO, GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../IsaacApiTypes";
 import {Action, BoardAssignees, Boards, FasttrackConceptsState, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
-import {difference, differenceBy, mapValues, union, unionWith} from "lodash";
+import {differenceBy, mapValues, union, unionWith} from "lodash";
 
 export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null | {inflight: true; id: string | null};
 export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action): CurrentGameboardState => {
@@ -87,7 +87,7 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
             if (boards) {
                 return {
                     ...boards,
-                    boardAssignees: {...boards.boardAssignees, ...(mapValues(action.groups, groups => groups.map(g => g.id as number)))}
+                    boardAssignees: {...boards.boardAssignees, ...(mapValues(action.groups, groups => groups.map(g => ({groupId: g.id as number}))))}
                 };
             }
             return boards;
@@ -95,14 +95,14 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
             if (boards) {
                 return {
                     ...boards,
-                    boardAssignees: mapValues(boards.boardAssignees, (value, key) => key == action.board.id ? difference(value, [action.group.id as number]) : value)
+                    boardAssignees: mapValues(boards.boardAssignees, (value, key) => key == action.board.id ? value.filter(assignee => assignee.groupId !== action.group.id) : value)
                 };
             }
             return boards;
         case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
             if (boards) {
                 const boardId = action.board.id as string;
-                const assignees = union(boards.boardAssignees && boards.boardAssignees[boardId], action.groupIds);
+                const assignees = union(boards.boardAssignees && boards.boardAssignees[boardId], action.groupIds.map(id => ({groupId: id, startDate: action.scheduledStartDate})));
                 return {
                     ...boards,
                     boardAssignees: {...boards.boardAssignees, [boardId]: assignees}
