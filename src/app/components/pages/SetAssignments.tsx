@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {
     Alert,
     Button,
@@ -24,15 +24,15 @@ import {Link, withRouter} from "react-router-dom";
 import {
     assignBoard,
     deleteBoard,
+    loadAssignmentsOwnedByMe,
     loadGroups,
-    loadGroupsForBoard,
     openIsaacBooksModal,
     showToast,
     unassignBoard
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {AppGameBoard, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
+import {AppGameBoard, BoardAssignee, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
@@ -68,16 +68,16 @@ const stateToProps = (state: AppState) => ({
     groups: selectors.groups.active(state)
 });
 
-const dispatchToProps = {loadGroups, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
+const dispatchToProps = {loadGroups, loadAssignmentsOwnedByMe, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
 
 interface SetAssignmentsPageProps {
     user: RegisteredUserDTO;
     groups: UserGroupDTO[] | null;
     loadGroups: (getArchived: boolean) => void;
-    loadGroupsForBoard: (board: GameboardDTO) => void;
-    deleteBoard: (board: GameboardDTO) => void;
-    assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
-    unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
+    loadAssignmentsOwnedByMe: () => void;
+    deleteBoard: (boardId?: string, boardTitle?: string) => void;
+    assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, assignmentNotes?: string, ownerUserId?: number) => Promise<boolean>;
+    unassignBoard: (boardId?: string, groupId?: number) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
     openIsaacBooksModal: () => void;
@@ -85,6 +85,7 @@ interface SetAssignmentsPageProps {
 
 type BoardProps = SetAssignmentsPageProps & {
     board: AppGameBoard;
+    assignees: BoardAssignee[];
     boardView: BoardViews;
     boards?: Boards;
 }
@@ -96,7 +97,8 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const user = useSelector(selectors.user.orNull);
 
     function assign() {
-        assignBoard(board, selectedGroups, dueDate, assignmentNotes).then(success => {
+        if (!user || !user.loggedIn) return;
+        assignBoard(board, selectedGroups, dueDate, assignmentNotes, user.id).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
@@ -142,15 +144,13 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
 };
 
 const Board = (props: BoardProps) => {
-    const {user, board, boardView, loadGroupsForBoard, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
+    const {user, board, assignees, boardView, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
     const deviceSize = useDeviceSize();
 
-    useEffect(() => {loadGroupsForBoard(board);}, [board.id]);
-
     const assignmentLink = `/assignment/${board.id}`;
 
-    const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+    const hasAssignedGroups = assignees && assignees.length > 0;
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
@@ -163,13 +163,13 @@ const Board = (props: BoardProps) => {
         }
 
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            deleteBoard(board);
+            deleteBoard(board.id, board.title);
         }
     }
 
-    function confirmUnassignBoard(group: UserGroupDTO) {
+    function confirmUnassignBoard(groupId: number) {
         if (confirm("Are you sure you want to unassign this gameboard from this group?")) {
-            unassignBoard(board, group);
+            unassignBoard(board.id, groupId);
         }
     }
 
@@ -198,10 +198,10 @@ const Board = (props: BoardProps) => {
                 <hr className="text-center" />
                 <div className="py-2">
                     <Label>Board currently assigned to:</Label>
-                    {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
-                        <Row key={group.id} className="px-1">
-                            <span className="flex-grow-1">{group.groupName}</span>
-                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
+                    {hasAssignedGroups && <Container className="mb-4">{assignees.map(assignee =>
+                        <Row key={assignee.groupId} className="px-1">
+                            <span className="flex-grow-1">{assignee.groupName}</span>
+                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId)}>×</button>
                         </Row>
                     )}</Container>}
                     {!hasAssignedGroups && <p>No groups.</p>}
@@ -219,12 +219,12 @@ const Board = (props: BoardProps) => {
                         <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
                             {generateGameboardSubjectHexagons(boardSubjects)}
                             <span className="groups-assigned">
-                                <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
-                                group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
-                                {board.assignedGroups &&
-                                <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
+                                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>
+                                group{(!assignees || assignees.length != 1) && "s"}
+                                {isDefined(assignees) &&
+                                <UncontrolledTooltip target={"#" + hexagonId}>{assignees.length === 0 ?
                                     "No groups have been assigned."
-                                    : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
+                                    : ("Gameboard assigned to: " + assignees.map(g => g.groupName).join(", "))}
                                 </UncontrolledTooltip>
                                 }
                             </span>
@@ -257,12 +257,12 @@ const Board = (props: BoardProps) => {
                     <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
                         {generateGameboardSubjectHexagons(boardSubjects)}
                         <span className="groups-assigned">
-                            <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
-                            group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
-                            {board.assignedGroups &&
-                            <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
+                            <strong>{isDefined(assignees) ? assignees.length : <IsaacSpinner size="sm" />}</strong>
+                            group{(!assignees || assignees.length != 1) && "s"}
+                            {isDefined(assignees) &&
+                            <UncontrolledTooltip target={"#" + hexagonId}>{assignees.length === 0 ?
                                 "No groups have been assigned."
-                                : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
+                                : ("Gameboard assigned to: " + assignees.map(g => g.groupName).join(", "))}
                             </UncontrolledTooltip>
                             }
                         </span>
@@ -300,11 +300,26 @@ const Board = (props: BoardProps) => {
 };
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, openIsaacBooksModal} = props;
+    const {groups, loadGroups, loadAssignmentsOwnedByMe, openIsaacBooksModal} = props;
 
     const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
-    useEffect(() => loadGroups(false), []);
+    const assignmentsSetByMe = useSelector(selectors.assignments.setByMe);
+    const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
+        assignmentsSetByMe?.reduce((acc, assignment) => {
+            if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
+            const newAssignee = {groupId: assignment.groupId, groupName: assignment.groupName};
+            if (acc[assignment.gameboardId] == undefined) {
+                return {...acc, [assignment.gameboardId]: [newAssignee]};
+            }
+            return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
+        }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {},
+        [assignmentsSetByMe]);
+
+    useEffect(() => {
+        loadGroups(false);
+        loadAssignmentsOwnedByMe();
+    }, []);
 
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
@@ -409,6 +424,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                            key={board.id}
                                            board={board}
                                            boardView={boardView}
+                                           assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
                                         />
                                     </Col>)}
                                 </Row>
@@ -481,6 +497,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                         board={board}
                                                         boardView={boardView}
                                                         boards={boards}
+                                                        assignees={board.id ? groupsByGameboard[board.id] : []}
                                                     />)
                                             }
                                             </tbody>

@@ -1554,55 +1554,55 @@ export const loadBoards = (startIndex: number, limit: NumberOfBoards, sort: Boar
     }
 };
 
-export const loadGroupsForBoard = (board: GameboardDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.BOARDS_GROUPS_REQUEST, board});
-    try {
-        const result = await api.boards.getGroupsForBoard(board);
-        dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board, groups: result.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE, board});
-        dispatch(showErrorToastIfNeeded("Loading groups for gameboard failed", e));
+export const deleteBoard = (boardId?: string, boardTitle?: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+    if (!isDefined(boardId)) {
+        // This really shouldn't happen!
+        dispatch(showErrorToastIfNeeded("Gameboard deletion failed", "Gameboard ID is missing: please contact us about this error."));
+        return;
     }
-};
-
-export const deleteBoard = (board: AppGameBoard) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const reduxState = getState();
-    dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, board});
+    dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, boardId});
     try {
-        await loadGroupsForBoard(board);
-        const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+        await loadAssignmentsOwnedByMe();
+        const reduxState = getState();
+        // Check if there are any assignments that use this gameboard...
+        const hasAssignedGroups = (reduxState?.assignmentsByMe?.filter(a => a.gameboardId === boardId) ?? []).length > 0;
         if (hasAssignedGroups) {
             if (reduxState && reduxState.user && reduxState.user.loggedIn && isAdminOrEventManager(reduxState.user)) {
-                if (!confirm(`Warning: You currently have groups assigned to ${board.title}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.`)) {
+                if (!confirm(`Warning: You currently have groups assigned to ${boardTitle}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.`)) {
                     return;
                 }
             } else {
-                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: `You have groups assigned to ${board.title}. To delete this gameboard, you must unassign all groups.`, timeout: 5000});
+                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: `You have groups assigned to ${boardTitle}. To delete this gameboard, you must unassign all groups.`, timeout: 5000});
                 return;
             }
         }
-        await api.boards.delete(board);
-        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board});
-        dispatch(showToast({color: "success", title: "Gameboard deleted", body: "You have deleted gameboard " + board.title, timeout: 5000}) as any);
+        await api.boards.delete(boardId);
+        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, boardId});
+        dispatch(showToast({color: "success", title: "Gameboard deleted", body: "You have deleted gameboard " + boardTitle, timeout: 5000}) as any);
     } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE, board});
+        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE, boardId});
         dispatch(showErrorToastIfNeeded("Gameboard deletion failed", e));
     }
 };
 
-export const unassignBoard = (board: GameboardDTO, group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST, board, group});
+export const unassignBoard = (boardId?: string, groupId?: number) => async (dispatch: Dispatch<Action>) => {
+    if (!isDefined(boardId) || !isDefined(groupId)) {
+        // This really shouldn't happen!
+        dispatch(showErrorToastIfNeeded("Assignment deletion failed", "Group or gameboard ID is missing: please contact us about this error."));
+        return;
+    }
+    dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST, boardId, groupId});
     try {
-        await api.boards.unassign(board, group);
-        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board, group});
+        await api.boards.unassign(boardId, groupId);
+        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, boardId, groupId});
         dispatch(showToast({color: "success", title: "Assignment deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
     } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE, board, group});
+        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE, boardId, groupId});
         dispatch(showErrorToastIfNeeded("Assignment deletion failed", e));
     }
 };
 
-export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
+export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string, ownerUserId?: number) => async (dispatch: Dispatch<Action>) => {
     if (groups.length === 0) {
         dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
         return false;
@@ -1624,17 +1624,18 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
 
     dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, assignments});
     try {
+        const groupLookUp = new Map(groups.map(toTuple));
         const { data: assigmentStatuses } = await api.boards.assign(assignments);
-        const successfulIds = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => a.groupId);
+        const newAssignments = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => ({groupId: a.groupId, groupName: groupLookUp.get(a.groupId), assignmentId: a.assignmentId as number}));
+        const successfulIds = newAssignments.map(a => a.groupId);
         const failedIds = assigmentStatuses.filter(a => isDefined(a.errorMessage));
 
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, groupIds: successfulIds, dueDate: dueDate as any});
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, newAssignments, assignmentStub: {dueDate, notes, creationDate: new Date(), ownerUserId}});
         // Handle user feedback depending on whether some groups failed to assign or not
         if (failedIds.length === 0) {
             const successMessage = successfulIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
             dispatch(showToast({color: "success", title: `Assignment${successfulIds.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
         } else {
-            const groupLookUp = new Map(groups.map(toTuple));
             // Show each group assignment error in a separate toast
             failedIds.forEach(({groupId, errorMessage}) => {
                 dispatch(showToast({color: "danger", title: `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`, body: errorMessage}) as any);

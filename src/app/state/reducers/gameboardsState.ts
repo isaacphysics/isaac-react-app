@@ -46,7 +46,7 @@ export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
     }
 };
 
-export type BoardsState = {boards?: Boards} & BoardAssignees | null;
+export type BoardsState = {boards?: Boards} | null;
 
 function mergeBoards(boards: Boards, additional: GameboardListDTO) {
     return {
@@ -69,9 +69,7 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     switch (action.type) {
         case ACTION_TYPE.BOARDS_REQUEST:
             if (!action.accumulate) {
-                return {
-                    boardAssignees: boards && boards.boardAssignees || undefined
-                };
+                return {};
             }
             return boards;
         case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
@@ -81,34 +79,8 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
                 return {...boards, boards: {boards: action.boards.results as GameboardDTO[], totalResults: action.boards.totalResults as number}};
             }
         case ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS:
-            return modifyBoards(existing => differenceBy(existing, [action.board], board => board.id),
+            return modifyBoards(existing => existing.filter(board => board.id !== action.boardId),
                 boards => {boards.totalResults--;});
-        case ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS:
-            if (boards) {
-                return {
-                    ...boards,
-                    boardAssignees: {...boards.boardAssignees, ...(mapValues(action.groups, groups => groups.map(g => g.id as number)))}
-                };
-            }
-            return boards;
-        case ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS:
-            if (boards) {
-                return {
-                    ...boards,
-                    boardAssignees: mapValues(boards.boardAssignees, (value, key) => key == action.board.id ? difference(value, [action.group.id as number]) : value)
-                };
-            }
-            return boards;
-        case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
-            if (boards) {
-                const boardId = action.board.id as string;
-                const assignees = union(boards.boardAssignees && boards.boardAssignees[boardId], action.groupIds);
-                return {
-                    ...boards,
-                    boardAssignees: {...boards.boardAssignees, [boardId]: assignees}
-                };
-            }
-            return boards;
         default:
             return boards;
     }

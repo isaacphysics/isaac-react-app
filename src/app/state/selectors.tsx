@@ -74,23 +74,7 @@ export const selectors = {
     },
 
     boards: {
-        boards: (state: AppState) => {
-            if (!state) return null;
-            if (!state.boards) return null;
-            if (!state.boards.boards) return null;
-            function mapGroups(ids?: number[]) {
-                return ids && sortBy(ids.map(id => state && state.groups && state.groups.cache && state.groups.cache[id]), g => g && g.groupName && g.groupName.toLowerCase());
-            }
-            return {
-                totalResults: state.boards.boards.totalResults,
-                boards: state.boards.boards.boards.map(board => (
-                    {
-                        ...board,
-                        assignedGroups: state.boards && state.boards.boardAssignees && mapGroups(state.boards.boardAssignees[board.id as string]) || undefined
-                    }
-                ))
-            } as Boards;
-        }
+        boards: (state: AppState) => state?.boards?.boards
     },
 
     doc: {
@@ -141,7 +125,8 @@ export const selectors = {
     },
 
     assignments: {
-        progress: (state: AppState) => state?.progress && load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.progressState(state?.progress) : state?.progress
+        progress: (state: AppState) => state?.progress && load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.progressState(state?.progress) : state?.progress,
+        setByMe: (state: AppState) => state?.assignmentsByMe,
     },
 
     quizzes: {

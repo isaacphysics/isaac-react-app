@@ -440,20 +440,16 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS; gameboardId: string}
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
-    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; boardId: string}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; boardId: string}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; boardId: string}
 
-    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
-
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; boardId: string; groupId: number}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; boardId: string; groupId: number}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; boardId: string; groupId: number}
 
     | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; newAssignments: (BoardAssignee & {assignmentId: number})[]; assignmentStub: AssignmentDTO}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
 
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
@@ -677,11 +673,11 @@ export interface Boards {
     totalResults: number;
 }
 
+export type BoardAssignee = {groupId: number, groupName?: string};
+
 export interface BoardAssignees {
-    boardAssignees?: {[key: string]: number[]};
+    boardAssignees?: {[key: string]: BoardAssignee[]};
 }
-
-
 
 // Admin Content Errors:
 export interface ContentErrorItem {

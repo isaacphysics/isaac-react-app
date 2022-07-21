@@ -438,7 +438,7 @@ describe("boards reducer", () => {
 
     it("can delete an existing board", () => {
         const deleteBoard = testBoards[0];
-        const action: Action = {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board: deleteBoard};
+        const action: Action = {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, boardId: deleteBoard.id as string};
         const previousStates = [simpleState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
@@ -446,7 +446,10 @@ describe("boards reducer", () => {
         });
     });
 
-    const assignedState: BoardsState = {...simpleState, boardAssignees: {[testBoards[0].id as string]: testGroups.map(g => g.id as number)}};
+
+    // TODO move to the assignmentsByMe reducer tests
+    /*
+    const assignedState: BoardsState = {...simpleState, boardAssignees: {[testBoards[0].id as string]: testGroups.map(g => ({groupId: g.id as number, groupName: g.groupName}))}};
 
     it ("can load up board assignees", () => {
         const action: Action = {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board: testBoards[1], groups: {[testBoards[1].id as string]: testGroups}};
@@ -459,29 +462,30 @@ describe("boards reducer", () => {
     });
 
     it ("can remove a board assignees", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board: testBoards[0], group: testGroups[0]};
+        const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, boardId: testBoards[0].id as string, groupId: testGroups[0].id as number};
         const actualNextState = boards(assignedState, action);
         expect(selector.boards(actualNextState)).toBeDefined();
         expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: without(testGroups, testGroups[0])});
     });
 
     it ("can add a board assignee", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupIds: [1]};
+        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], newAssignees: [{groupId: 1, groupName: "Test Group 1"}]};
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
+            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(assignee => testGroupsMap[assignee.groupId]) || [];
             expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
         });
     });
 
     it ("can add multiple board assignees", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupIds: [1, 2]};
+        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], newAssignees: [{groupId: 1, groupName: "Test Group 1"}, {groupId: 2, groupName: "Test Group 2"}]};
         const previousStates = [simpleState, assignedState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
+            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(assignee => testGroupsMap[assignee.groupId]) || [];
             expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1], testGroupsMap[2]])});
         });
     });
+    */
 });
