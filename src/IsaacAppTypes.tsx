@@ -658,7 +658,7 @@ export enum BoardOrder {
     "-completion" = "-completion"
 }
 
-export type ActualBoardLimit = number | "ALL";
+export type NumberOfBoards = number | "ALL";
 
 export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
 

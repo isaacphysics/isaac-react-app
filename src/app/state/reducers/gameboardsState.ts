@@ -52,7 +52,7 @@ function mergeBoards(boards: Boards, additional: GameboardListDTO) {
     return {
         ...boards,
         totalResults: additional.totalResults || boards.totalResults,
-        boards: unionWith(additional.results, boards.boards, function(a, b) {return a.id == b.id})
+        boards: unionWith(boards.boards, additional.results, function(a, b) {return a.id == b.id})
     };
 }
 

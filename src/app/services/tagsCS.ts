@@ -41,7 +41,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.hardware, title: "Hardware", parent: TAG_ID.computerSystems},
         {id: TAG_ID.software, title: "Software", parent: TAG_ID.computerSystems},
         {id: TAG_ID.operatingSystems, title: "Operating systems", parent: TAG_ID.computerSystems},
-        {id: TAG_ID.programmingLanguages, title: "High- and low-level languages", parent: TAG_ID.computerSystems, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.programmingLanguages, title: "High- and low-level languages", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         {id: TAG_ID.translators, title: "Translators", parent: TAG_ID.computerSystems, stageOverride: GCSE_NEW},
         // Cyber security topics
         {id: TAG_ID.socialEngineering, title: "Social engineering", parent: TAG_ID.cyberSecurity, stageOverride: GCSE_NEW},
@@ -88,7 +88,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.ide, title: "IDEs", parent: TAG_ID.programmingFundamentals},
         // Programming paradigms topics:
         {id: TAG_ID.proceduralProgramming, title: "Procedural programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_COMING_2022},
-        {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_NEW},
+        {id: TAG_ID.objectOrientedProgramming, title: "Object-oriented programming", parent: TAG_ID.programmingParadigms},
         {id: TAG_ID.functionalProgramming, title: "Functional programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.eventDrivenProgramming, title: "Event-driven programming", parent: TAG_ID.programmingParadigms, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.declarativeProgramming, title: "Declarative programming", parent: TAG_ID.programmingParadigms, hidden: true},

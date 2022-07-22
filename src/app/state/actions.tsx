@@ -20,7 +20,7 @@ import {
 import {
     Action,
     ActiveModal,
-    ActualBoardLimit,
+    NumberOfBoards,
     AdditionalInformation,
     AppGameBoard,
     AppGroup,
@@ -1513,7 +1513,7 @@ export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispat
 };
 
 // Gameboards
-export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
+export const loadBoards = (startIndex: number, limit: NumberOfBoards, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
     const accumulate = startIndex != 0;
     dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
     try {
