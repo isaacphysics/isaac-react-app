@@ -122,6 +122,13 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     return toastId;
 };
 
+export const showErrorToast = (error: string, body: string) => showToast({
+    color: "danger",
+    title: error,
+    timeout: 5000,
+    body
+}) as any;
+
 export function showErrorToastIfNeeded(error: string, e: any) {
     if (e) {
         if (e.response) {
@@ -1557,11 +1564,12 @@ export const loadBoards = (startIndex: number, limit: NumberOfBoards, sort: Boar
 export const deleteBoard = (boardId?: string, boardTitle?: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
     if (!isDefined(boardId)) {
         // This really shouldn't happen!
-        dispatch(showErrorToastIfNeeded("Gameboard deletion failed", "Gameboard ID is missing: please contact us about this error."));
+        dispatch(showErrorToast("Gameboard deletion failed", "Gameboard ID is missing: please contact us about this error."));
         return;
     }
     dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, boardId});
     try {
+        // TODO The following check won't be needed once we build a calendar-list view of assignments
         await loadAssignmentsOwnedByMe();
         const reduxState = getState();
         // Check if there are any assignments that use this gameboard...

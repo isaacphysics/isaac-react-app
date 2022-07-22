@@ -143,14 +143,33 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     </Container>;
 };
 
+interface HexagonGroupsButtonProps {
+    toggleAssignModal: () => void;
+    boardSubjects: string[];
+    assignees: BoardAssignee[];
+    id: string;
+}
+const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
+    <button onClick={toggleAssignModal} id={id} className="board-subject-hexagon-container">
+        {generateGameboardSubjectHexagons(boardSubjects)}
+        <span className="groups-assigned">
+                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>
+                group{(!assignees || assignees.length != 1) && "s"}
+            {isDefined(assignees) &&
+            <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
+                "No groups have been assigned."
+                : ("Gameboard assigned to: " + assignees.map(g => g.groupName).join(", "))}
+            </UncontrolledTooltip>}
+            </span>
+    </button>;
+
 const Board = (props: BoardProps) => {
     const {user, board, assignees, boardView, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
     const deviceSize = useDeviceSize();
 
-    const assignmentLink = `/assignment/${board.id}`;
-
-    const hasAssignedGroups = assignees && assignees.length > 0;
+    const assignmentLink = useMemo(() => `/assignment/${board.id}`, [board]);
+    const hasAssignedGroups = useMemo(() => assignees && assignees.length > 0, [assignees]);
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
@@ -174,13 +193,13 @@ const Board = (props: BoardProps) => {
     }
 
     const [modal, setModal] = useState(board.id === hashAnchor);
-    const toggleAssignModal = () => setModal(s => !s);
+    const toggleAssignModal = useCallback(() => setModal(s => !s), [setModal]);
 
-    const hexagonId = `board-hex-${board.id}`;
+    const hexagonId = useMemo(() => `board-hex-${board.id}`, [board]);
 
-    const boardSubjects = determineGameboardSubjects(board);
-    const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
-    const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
+    const boardSubjects = useMemo(() => determineGameboardSubjects(board), [board]);
+    const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
+    const boardDifficulties = useMemo(() => allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered), [board]);
 
     return <>
         <Modal isOpen={modal} toggle={toggleAssignModal}>
@@ -216,19 +235,8 @@ const Board = (props: BoardProps) => {
             <tr key={board.id} className="board-card">
                 <td>
                     <div className="board-subject-hexagon-container table-view">
-                        <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
-                            {generateGameboardSubjectHexagons(boardSubjects)}
-                            <span className="groups-assigned">
-                                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>
-                                group{(!assignees || assignees.length != 1) && "s"}
-                                {isDefined(assignees) &&
-                                <UncontrolledTooltip target={"#" + hexagonId}>{assignees.length === 0 ?
-                                    "No groups have been assigned."
-                                    : ("Gameboard assigned to: " + assignees.map(g => g.groupName).join(", "))}
-                                </UncontrolledTooltip>
-                                }
-                            </span>
-                        </button>
+                        <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
+                                             assignees={assignees} boardSubjects={boardSubjects} />
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
@@ -254,19 +262,8 @@ const Board = (props: BoardProps) => {
             <Card key={board.id} className="board-card card-neat">
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
-                        {generateGameboardSubjectHexagons(boardSubjects)}
-                        <span className="groups-assigned">
-                            <strong>{isDefined(assignees) ? assignees.length : <IsaacSpinner size="sm" />}</strong>
-                            group{(!assignees || assignees.length != 1) && "s"}
-                            {isDefined(assignees) &&
-                            <UncontrolledTooltip target={"#" + hexagonId}>{assignees.length === 0 ?
-                                "No groups have been assigned."
-                                : ("Gameboard assigned to: " + assignees.map(g => g.groupName).join(", "))}
-                            </UncontrolledTooltip>
-                            }
-                        </span>
-                    </button>
+                    <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
+                                         assignees={assignees} boardSubjects={boardSubjects} />
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
@@ -497,7 +494,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                         board={board}
                                                         boardView={boardView}
                                                         boards={boards}
-                                                        assignees={board.id ? groupsByGameboard[board.id] : []}
+                                                        assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
                                                     />)
                                             }
                                             </tbody>
