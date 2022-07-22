@@ -74,7 +74,7 @@ export const selectors = {
     },
 
     boards: {
-        boards: (state: AppState) => state?.boards?.boards
+        boards: (state: AppState) => state?.boards ?? null
     },
 
     doc: {

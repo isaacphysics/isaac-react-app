@@ -50,7 +50,7 @@ function selectGroups(state: AppState) {
     if (isDefined(state)) {
         const gameboards: {[id: string]: GameboardDTO} = {};
         if (isDefined(state.boards) && isDefined(state.boards.boards)) {
-            for (const board of state.boards.boards.boards) {
+            for (const board of state.boards.boards) {
                 gameboards[board.id as string] = board;
             }
         }

@@ -61,9 +61,7 @@ export const SingleAssignmentProgress = () => {
 
     const assignmentProgress = useSelector(selectors.assignments.progress);
 
-    const boards = useSelector((state: AppState) => {
-        return state?.boards?.boards?.boards;
-    });
+    const boards = useSelector(selectors.boards.boards);
 
     const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
 
@@ -71,8 +69,8 @@ export const SingleAssignmentProgress = () => {
     const [assignment, setAssignment] = useState(myOwnedAssignments?.find(x => x._id == assignmentId));
 
     useEffect(() => {
-        if (boards && (boards[0].id = assignment?.gameboardId)) {
-            setAssignment({...assignment, gameboard: boards[0]})
+        if (boards && (boards.boards[0].id = assignment?.gameboardId)) {
+            setAssignment({...assignment, gameboard: boards.boards[0]})
         }
     }, [boards]);
 

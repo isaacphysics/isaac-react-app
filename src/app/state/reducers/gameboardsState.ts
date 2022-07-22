@@ -46,7 +46,7 @@ export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
     }
 };
 
-export type BoardsState = {boards?: Boards} | null;
+export type BoardsState = Boards | null;
 
 function mergeBoards(boards: Boards, additional: GameboardListDTO) {
     return {
@@ -58,9 +58,9 @@ function mergeBoards(boards: Boards, additional: GameboardListDTO) {
 
 export const boards = (boards: BoardsState = null, action: Action): BoardsState => {
     function modifyBoards(modify: (current: GameboardDTO[]) => GameboardDTO[], tweak?: (boards: Boards) => void) {
-        if (boards && boards.boards) {
-            const result = {...boards, boards: {...boards.boards, boards: modify(boards.boards.boards)}};
-            if (tweak) tweak(result.boards);
+        if (boards) {
+            const result = {...boards, boards: modify(boards.boards)};
+            if (tweak) tweak(result);
             return result;
         }
         return boards;
@@ -69,14 +69,14 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     switch (action.type) {
         case ACTION_TYPE.BOARDS_REQUEST:
             if (!action.accumulate) {
-                return {};
+                return null;
             }
             return boards;
         case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
-            if (boards && boards.boards && action.accumulate) {
-                return {...boards, boards: mergeBoards(boards.boards, action.boards)};
+            if (boards && action.accumulate) {
+                return mergeBoards(boards, action.boards);
             } else {
-                return {...boards, boards: {boards: action.boards.results as GameboardDTO[], totalResults: action.boards.totalResults as number}};
+                return {boards: action.boards.results as GameboardDTO[], totalResults: action.boards.totalResults as number};
             }
         case ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS:
             return modifyBoards(existing => existing.filter(board => board.id !== action.boardId),
