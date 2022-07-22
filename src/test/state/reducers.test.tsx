@@ -10,10 +10,9 @@ import {
 } from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
-import {mapValues, union, without} from "lodash";
+import {mapValues, union} from "lodash";
 import {selectors} from "../../app/state/selectors";
 import {
-    AssignmentDTO,
     UserGroupDTO,
     UserSummaryWithEmailAddressDTO,
     UserSummaryWithGroupMembershipDTO

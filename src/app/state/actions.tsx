@@ -22,7 +22,6 @@ import {
     ActiveModal,
     NumberOfBoards,
     AdditionalInformation,
-    AppGameBoard,
     AppGroup,
     AppGroupMembership,
     ATTENDANCE,
