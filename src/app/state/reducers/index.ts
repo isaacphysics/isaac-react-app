@@ -47,7 +47,6 @@ import {
     quizzes, studentQuizAttempt,
 } from "./quizState";
 import {isaacApi} from "../slices/api";
-import {totpSharedSecretSlice} from "../slices/user";
 
 const appReducer = combineReducers({
     // User
@@ -55,7 +54,6 @@ const appReducer = combineReducers({
     userAuthSettings,
     userPreferences,
     userSchoolLookup,
-    totpSharedSecret: totpSharedSecretSlice.reducer,
     totpChallengePending,
 
     // Internal App
