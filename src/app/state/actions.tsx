@@ -1610,7 +1610,7 @@ export const unassignBoard = (boardId?: string, groupId?: number) => async (disp
     }
 };
 
-export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string, ownerUserId?: number) => async (dispatch: Dispatch<Action>) => {
+export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
     if (groups.length === 0) {
         dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
         return false;
@@ -1638,7 +1638,7 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
         const successfulIds = newAssignments.map(a => a.groupId);
         const failedIds = assigmentStatuses.filter(a => isDefined(a.errorMessage));
 
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, newAssignments, assignmentStub: {dueDate, notes, creationDate: new Date(), ownerUserId}});
+        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, newAssignments, assignmentStub: {dueDate, notes, creationDate: new Date()}});
         // Handle user feedback depending on whether some groups failed to assign or not
         if (failedIds.length === 0) {
             const successMessage = successfulIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
