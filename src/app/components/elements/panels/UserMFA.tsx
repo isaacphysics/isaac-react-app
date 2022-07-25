@@ -26,7 +26,6 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
     const [ disableAccountMFA ] = isaacApi.endpoints.disableAccountMFA.useMutation();
 
     const authenticatorURL: string | null = useMemo(() => {
-        console.log("New secret! Creating QR code...", totpSharedSecret);
         if (totpSharedSecret && totpSharedSecret.sharedSecret) {
             let issuer = encodeURIComponent(`Isaac ${SITE_SUBJECT_TITLE}`);
             if (segueEnvironment === "DEV") {
