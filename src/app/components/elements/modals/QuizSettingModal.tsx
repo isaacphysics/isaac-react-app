@@ -1,7 +1,7 @@
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
 import {AppDispatch} from "../../../state/store";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import React, {useState} from "react";
 import {Item, selectOnChange} from "../../../services/select";
 import {range} from "lodash";
@@ -41,7 +41,7 @@ interface QuizSettingModalProps {
 }
 
 export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
-    const dispatch: AppDispatch = useDispatch();
+    const dispatch: AppDispatch = useAppDispatch();
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
     const [submitting, setSubmitting] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);

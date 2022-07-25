@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import {NOT_FOUND} from "../../../services/constants";
 import {atLeastOne} from "../../../services/validation";
@@ -22,10 +22,10 @@ function displayAttendanceAsSymbol(status?: string) {
 }
 
 export const EventAttendance = ({user, eventId}: {user: PotentialUser; eventId: string}) => {
-    const dispatch = useDispatch();
-    const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
-    const bookings = useSelector((state: AppState) => state && state.eventBookings || []);
-    const userIdToSchoolMapping = useSelector(selectors.admin.userSchoolLookup) || {};
+    const dispatch = useAppDispatch();
+    const selectedEvent = useAppSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
+    const bookings = useAppSelector((state: AppState) => state && state.eventBookings || []);
+    const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup) || {};
 
     const [sortPredicate, setSortPredicate] = useState("bookingDate");
     const [reverse, setReverse] = useState(true);

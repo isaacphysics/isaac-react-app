@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {adminUserSearch, openActiveModal} from "../../../state/actions";
 import {AppState} from "../../../state/reducers";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
@@ -12,10 +12,10 @@ import {selectors} from "../../../state/selectors";
 import {formatManageBookingActionButtonMessage} from "../../../services/events";
 
 export const AddUsersToBooking = () => {
-    const dispatch = useDispatch();
-    const userResults = useSelector(selectors.admin.userSearch) || [];
-    const selectedEvent = useSelector((state: AppState) => state && state.currentEvent || null);
-    const userBookings = useSelector((state: AppState) =>
+    const dispatch = useAppDispatch();
+    const userResults = useAppSelector(selectors.admin.userSearch) || [];
+    const selectedEvent = useAppSelector((state: AppState) => state && state.currentEvent || null);
+    const userBookings = useAppSelector((state: AppState) =>
         state && state.eventBookings && state.eventBookings.map(b => b.userBooked && b.userBooked.id) as number[] || []
     );
 

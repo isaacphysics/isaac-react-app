@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
@@ -9,9 +9,9 @@ import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
 import {useDeviceSize} from "../../../services/device";
 
 export const HeaderPhy = () => {
-    const user = useSelector(selectors.user.orNull);
-    const streakRecord = useSelector(selectors.user.snapshot);
-    const mainContentId = useSelector(selectors.mainContentId.orDefault);
+    const user = useAppSelector(selectors.user.orNull);
+    const streakRecord = useAppSelector(selectors.user.snapshot);
+    const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
     return <header className="light">
         <Container className="container-fluid px-0">

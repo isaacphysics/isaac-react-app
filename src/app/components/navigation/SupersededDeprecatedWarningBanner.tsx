@@ -2,14 +2,14 @@ import React from "react";
 import * as RS from "reactstrap";
 import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {selectors} from "../../state/selectors";
 import {isStudent, isTeacher} from "../../services/user";
 import {goToSupersededByQuestion} from "../../state/actions";
 
 export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
 
     const supersededBy = doc.type === "isaacQuestionPage" ? (doc as IsaacQuestionPageDTO).supersededBy : undefined;
 

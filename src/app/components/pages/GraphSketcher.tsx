@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
@@ -11,14 +11,14 @@ import {AppState} from "../../state/reducers";
 import {isStaff} from "../../services/user";
 
 const GraphSketcherPage = () => {
-    const user = useSelector((state: AppState) => state && state.user || null);
+    const user = useAppSelector((state: AppState) => state && state.user || null);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
-    const graphSpec = useSelector(selectors.questions.graphSketcherSpec);
+    const graphSpec = useAppSelector(selectors.questions.graphSketcherSpec);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const [initialState, setInitialState] = useState<GraphSketcherState>();
     const previewRef = useRef(null);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     function openModal() {
         setModalVisible(true);

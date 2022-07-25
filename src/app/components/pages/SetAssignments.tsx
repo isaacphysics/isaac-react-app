@@ -50,7 +50,8 @@ import {
     generateGameboardSubjectHexagons,
     useGameboards
 } from "../../services/gameboards";
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {isPhy, siteSpecific} from "../../services/siteConstants";
@@ -93,7 +94,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     function assign() {
         assignBoard(board, selectedGroups, dueDate, assignmentNotes).then(success => {
@@ -302,7 +303,7 @@ const Board = (props: BoardProps) => {
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
     const {groups, loadGroups, openIsaacBooksModal} = props;
 
-    const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
+    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     useEffect(() => loadGroups(false), []);
 

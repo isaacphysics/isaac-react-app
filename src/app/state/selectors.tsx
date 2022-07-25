@@ -331,7 +331,7 @@ interface SelectorsWithNoPropArgs {
     // out-of-date. In some cases this can lead to zombie children.
     // A full explanation can be found here: https://react-redux.js.org/next/api/hooks#stale-props-and-zombie-children
     // We avoid this problem by forcing the selectors to be simple, accepting only the app state as an argument.
-    // Filtering using the props can be safely done later during the component's render on useSelector(...)'s result.
+    // Filtering using the props can be safely done later during the component's render on useAppSelector(...)'s result.
     [type: string]: {[name: string]: (state: AppState) => unknown};
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

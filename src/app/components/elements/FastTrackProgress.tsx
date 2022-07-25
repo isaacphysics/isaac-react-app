@@ -1,6 +1,6 @@
 import {GameboardDTO, GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
 import queryString from "query-string";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import React, {useEffect} from "react";
 import {fetchFasttrackConcepts} from "../../state/actions";
@@ -62,10 +62,10 @@ function calculateProgressBarHeight(questionLevel: LevelTag, hexagonQuarterHeigh
 export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPageDTO; search: string}) {
     const {questionHistory: qhs}: {questionHistory?: string} = queryString.parse(search);
     const questionHistory = qhs ? qhs.split(",") : [];
-    const dispatch = useDispatch();
-    const gameboardMaybeNull = useSelector(selectors.board.currentGameboard);
-    const pageQuestionParts = useSelector(selectors.questions.getQuestions);
-    const fastTrackConcepts = useSelector((appState: AppState) => appState && appState.fasttrackConcepts);
+    const dispatch = useAppDispatch();
+    const gameboardMaybeNull = useAppSelector(selectors.board.currentGameboard);
+    const pageQuestionParts = useAppSelector(selectors.questions.getQuestions);
+    const fastTrackConcepts = useAppSelector((appState: AppState) => appState && appState.fasttrackConcepts);
 
     const deviceSize = useDeviceSize();
     const hexagonUnitLength = {xl: 28, lg: 26, md: 22, sm: 22, xs: 12.5}[deviceSize];

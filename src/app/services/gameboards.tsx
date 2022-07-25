@@ -7,9 +7,9 @@ import {isCS, isPhy} from "./siteConstants";
 import {CurrentGameboardState} from "../state/reducers/gameboardsState";
 import {determineAudienceViews} from "./userContext";
 import {NumberOfBoards, BoardOrder, ViewingContext} from "../../IsaacAppTypes";
-import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../state/selectors";
 import {loadBoards} from "../state/actions";
+import {useAppDispatch, useAppSelector} from "../state/store";
 
 export enum BoardCompletions {
     "any" = "Any",
@@ -189,9 +189,9 @@ const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: B
         : parseInt(limit, 10);
 
 export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const boards = useSelector(selectors.boards.boards);
+    const boards = useAppSelector(selectors.boards.boards);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
     const [boardView, setBoardView] = useState<BoardViews>(initialView);

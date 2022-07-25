@@ -19,7 +19,7 @@ import {
     notRelevantMessage,
     useUserContext
 } from "../../../services/userContext";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {selectors} from "../../../state/selectors";
 import {v4 as uuid_v4} from "uuid";
 import {generateQuestionTitle} from "../../../services/questions";
@@ -31,7 +31,7 @@ import classNames from "classnames";
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
     const userContext = useUserContext();
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
     const hash = item.hash;
 

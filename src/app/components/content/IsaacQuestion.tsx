@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, Suspense} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -23,11 +23,11 @@ import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const accordion = useContext(AccordionSectionContext);
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
-    const currentGameboard = useSelector(selectors.board.currentGameboard);
-    const currentUser = useSelector(selectors.user.orNull);
+    const pageQuestions = useAppSelector(selectors.questions.getQuestions);
+    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
+    const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
     const validationResponse = questionPart?.validationResponse;

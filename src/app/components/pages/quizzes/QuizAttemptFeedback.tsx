@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
@@ -70,7 +70,7 @@ const pageHelp = <span>
 const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, studentId, quizAssignmentId}}}: QuizAttemptFeedbackProps) => {
     const {attempt, studentAttempt, studentUser, questions, sections, error, studentError} = useCurrentQuizAttempt();
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         isDefined(quizAttemptId) && dispatch(loadQuizAttemptFeedback(parseInt(quizAttemptId, 10)));

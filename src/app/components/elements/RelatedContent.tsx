@@ -3,7 +3,7 @@ import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {difficultyShortLabelMap, DOCUMENT_TYPE, documentTypePathPrefix, stageLabelMap} from "../../services/constants";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
 import {logAction} from "../../state/actions";
@@ -141,11 +141,11 @@ function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: Co
 }
 
 export function RelatedContent({content, parentPage, conceptId = ""}: RelatedContentProps) {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isCS && isTeacher(useSelector(selectors.user.orNull));
+    const showConceptGameboardButton = isCS && isTeacher(useAppSelector(selectors.user.orNull));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent

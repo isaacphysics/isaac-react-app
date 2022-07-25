@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {ALPHABET, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {logAction} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {scrollVerticallyIntoView} from "../../services/scrollManager";
@@ -28,10 +28,10 @@ interface AccordionsProps extends RouteComponentProps {
 let nextClientId = 0;
 
 export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const userContext = useUserContext();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
-    const page = useSelector((state: AppState) => (state && state.doc) || null);
+    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
 
     // Toggle
     const isFirst = index === 0;
@@ -101,7 +101,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     // Check results of questions in this accordion
     let accordionIcon;
-    const questionsOnPage = useSelector(selectors.questions.getQuestions) || [];
+    const questionsOnPage = useAppSelector(selectors.questions.getQuestions) || [];
     const questionsInsideAccordionSection = questionsOnPage?.filter(q => q.accordionClientId === clientId.current);
     if (questionsInsideAccordionSection.length > 0) {
         let allCorrect = true;

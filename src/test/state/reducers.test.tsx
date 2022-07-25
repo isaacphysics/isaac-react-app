@@ -5,7 +5,7 @@ import {ACTION_TYPE} from "../../app/services/constants";
 import {mapValues, union, without} from "lodash";
 import {selectors} from "../../app/state/selectors";
 import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
-import {rootReducer} from "../../app/state/reducers";
+import {AppState, rootReducer} from "../../app/state/reducers";
 import {user} from "../../app/state/reducers/userState";
 import {questions} from "../../app/state/reducers/questionState";
 import {constants} from "../../app/state/reducers/staticState";
@@ -20,17 +20,26 @@ function q(questions: AppQuestionDTO[]): { questions: AppQuestionDTO[]; pageComp
     return {questions, pageCompleted: false};
 }
 
+function removeRTKProperties(state: AppState) {
+    if (state) {
+        // @ts-ignore
+        delete state["isaacApi"];
+    }
+    return state ?? {} as any;
+}
+
 describe("root reducer", () => {
 
     it("has null as the initial state value for every property", () => {
-        const actualInitialState = rootReducer(undefined, ignoredTestAction);
+        const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
+
         Object.values(actualInitialState).map((actualInitialValue) => {
             expect(actualInitialValue).toBe(null);
         });
     });
 
     it("resets to the initial state on log out regardless of previous state", () => {
-        const actualInitialState = rootReducer(undefined, ignoredTestAction);
+        const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
         actualInitialState.user = {loggedIn: false};
         const previousStates = [
             {'questions': q([{id: 'a_toboggan'}])},
@@ -39,7 +48,7 @@ describe("root reducer", () => {
         ];
         previousStates.map((previousState) => {
             // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
-            const actualNextState = rootReducer(previousState, {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
+            const actualNextState = removeRTKProperties(rootReducer(previousState, {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}));
             expect(actualNextState).toEqual(actualInitialState);
         });
     });

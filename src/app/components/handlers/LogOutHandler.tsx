@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {logOutUser} from "../../state/actions";
 import {IsaacSpinner} from "./IsaacSpinner";
 
 export const LogOutHandler = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(logOutUser())});
     return <React.Fragment>
         <div className="w-100 text-center">

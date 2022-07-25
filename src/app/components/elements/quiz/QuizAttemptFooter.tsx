@@ -1,5 +1,5 @@
 import {QuizAttemptProps, QuizPagination} from "./QuizAttemptComponent";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
 import {markQuizAttemptAsComplete} from "../../../state/actions/quizzes";
@@ -15,7 +15,7 @@ function extractSectionIdFromQuizQuestionId(questionId: string) {
 
 export function QuizAttemptFooter(props: QuizAttemptProps) {
     const {attempt, page, sections, questions, pageLink} = props;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const history = useHistory();
     const [submitting, setSubmitting] = useState(false);
 

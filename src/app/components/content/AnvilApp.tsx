@@ -1,7 +1,7 @@
 import React, {RefObject, useContext, useEffect} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState} from "../../state/reducers";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {selectQuestionPart} from "../../services/questions";
@@ -15,15 +15,15 @@ const sessionIdentifier = Math.random();
 export const AnvilApp = ({doc}: AnvilAppProps) => {
     const baseURL = `https://${doc.appId}.anvil.app/${doc.appAccessKey}?s=new${sessionIdentifier}`;
     const title = doc.value || "Anvil app";
-    const page = useSelector((state: AppState) => (state && state.doc) || null);
-    const user = useSelector(selectors.user.orNull);
+    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const user = useAppSelector(selectors.user.orNull);
 
     const iframeRef = React.useRef() as RefObject<HTMLIFrameElement>;
 
     const accordionSectionId = useContext(AccordionSectionContext).id;
     const questionId = useContext(QuestionContext);
 
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
 
     const appParams: {[s: string]: string} = {};

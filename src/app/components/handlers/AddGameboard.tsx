@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "./ShowLoading";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {addGameboard} from "../../state/actions";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -12,7 +12,7 @@ interface AddGameboardProps extends RouteComponentProps<{ gameboardId: string; g
 
 const AddGameboardComponent = (props: AddGameboardProps) => {
     const {user, match: {params: {gameboardId, gameboardTitle}}} = props;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {dispatch(addGameboard(gameboardId, user, gameboardTitle, true))}, [dispatch, gameboardId]);
 

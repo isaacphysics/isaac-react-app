@@ -1,6 +1,6 @@
 import {setPrintingHints} from "../../state/actions";
 import React, {useState} from "react";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 
 interface PrintProps {
     questionPage?: boolean;
@@ -9,7 +9,7 @@ interface PrintProps {
 export const PrintButton = ({questionPage}: PrintProps ) => {
 
     const [questionPrintOpen, setQuestionPrintOpen] = useState(false);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     return questionPage ?
         <React.Fragment>

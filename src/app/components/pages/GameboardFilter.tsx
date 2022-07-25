@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
@@ -221,10 +221,10 @@ interface CSFilterProps extends FilterProps {
     setConcepts : React.Dispatch<React.SetStateAction<Item<string>[]>>;
 }
 const CSFilter = ({selections, setSelections, stages, setStages, difficulties, setDifficulties, examBoards, setExamBoards, concepts, setConcepts} : CSFilterProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
-    const conceptDTOs = useSelector((state: AppState) => selections[2]?.length > 0 ? state?.concepts?.results : undefined);
+    const conceptDTOs = useAppSelector((state: AppState) => selections[2]?.length > 0 ? state?.concepts?.results : undefined);
     const [conceptChoices, setConceptChoices] = useState<GroupBase<Item<string>>[]>([]);
 
     const selectedTopics = selections[2];
@@ -335,15 +335,15 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
 }
 
 export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
 
     const userContext = useUserContext();
     const {querySelections, queryStages, queryDifficulties, queryConcepts, queryExamBoards} = processQueryString(location.search);
 
     const history = useHistory();
-    const gameboardOrNotFound = useSelector(selectors.board.currentGameboardOrNotFound);
-    const gameboard = useSelector(selectors.board.currentGameboard);
+    const gameboardOrNotFound = useAppSelector(selectors.board.currentGameboardOrNotFound);
+    const gameboard = useAppSelector(selectors.board.currentGameboard);
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
 
     useEffect(() => {

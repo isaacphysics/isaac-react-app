@@ -4,7 +4,7 @@ import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {DOCUMENT_TYPE, NOT_FOUND} from "./constants";
 import {useUserContext, UseUserContextReturnType} from "./userContext";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../state/store";
 import {AppState} from "../state/reducers";
 import queryString from "query-string";
 import {Location} from "history";
@@ -134,11 +134,11 @@ export function useFastTrackInformation(
     const {board, questionHistory: questionHistoryUrl}: {board?: string; questionHistory?: string} = queryString.parse(location.search);
     const questionHistory = questionHistoryUrl?.split(",") || [];
 
-    const page = useSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
+    const page = useAppSelector((state: AppState) => state?.doc && state.doc !== NOT_FOUND ? state.doc : undefined);
     const isFastTrackPage = page?.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
-    const pageCompleted = useSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
+    const pageCompleted = useAppSelector((state: AppState) => state?.questions ? state.questions.pageCompleted : false);
     const userContext = useUserContext();
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     return {isFastTrackPage, doc, correct, page, pageCompleted, questionHistory, board, userContext, user, canSubmit}
 }

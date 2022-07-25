@@ -1,6 +1,6 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from "reactstrap";
 import {Col, Container, Form, Input, Row} from "reactstrap";
 import {fetchSearch} from "../../state/actions";
@@ -42,9 +42,9 @@ const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUME
 // Whenever the query parameters change we send a search request to the API.
 export const Search = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useDispatch();
-    const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const searchResults = useAppSelector((state: AppState) => state?.search?.searchResults || null);
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);

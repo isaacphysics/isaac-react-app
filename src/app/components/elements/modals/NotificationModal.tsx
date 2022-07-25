@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import {Button, Col, Row} from "reactstrap";
 import {closeActiveModal} from "../../../state/actions";
@@ -8,8 +8,8 @@ import {store} from "../../../state/store";
 import {IsaacContent} from "../../content/IsaacContent";
 
 const NotificationModalBody = (notification: { notification: any }) => {
-    const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => state && state.user || null);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state: AppState) => state && state.user || null);
 
     const currentNotification = notification.notification;
 

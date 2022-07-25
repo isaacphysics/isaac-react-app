@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {selectors} from "../../../state/selectors";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
@@ -332,8 +332,8 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
 
 // A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
 export const useRenderKatex = () => {
-    const user = useSelector(selectors.user.orNull);
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const user = useAppSelector(selectors.user.orNull);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const {preferredBooleanNotation} = useUserContext();
     const figureNumbers = useContext(FigureNumberingContext);
 

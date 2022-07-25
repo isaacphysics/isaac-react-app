@@ -5,13 +5,13 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
 import {WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {FallbackProps} from "react-error-boundary";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {selectors} from "../../state/selectors";
 import {logAction} from "../../state/actions";
 
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
     ReactGA.exception({
         description: `client_error: ${error?.message || 'unknown'}`,
         fatal: true
