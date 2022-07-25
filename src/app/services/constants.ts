@@ -781,7 +781,6 @@ export enum TAG_ID {
     gcseBooleanLogic = "gcse_boolean_logic",
     gcseProgrammingConcepts = "gcse_programming_concepts",
     gcseNetworking = "gcse_networking",
-    gcseDataRepresentation = "gcse_data_representation",
     gcseSystems = "gcse_systems",
     // Impacts of digital technology
     legislation = "legislation",

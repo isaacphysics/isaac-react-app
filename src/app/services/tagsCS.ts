@@ -66,7 +66,6 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
         // GCSE to A level transition topics
         {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseDataRepresentation, title: "GCSE Data representation", parent: TAG_ID.gcseToALevel},
         {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
         // Impacts of technology topics
         {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology, stageOverride: GCSE_COMING_2022},

@@ -29,6 +29,7 @@ module.exports = (env) => {
                 "Feature-Policy": "geolocation 'none'; camera 'none'; microphone 'none'; accelerometer 'none';",
                 "X-Clacks-Overhead": "GNU Terry Pratchett",
             },
+            allowedHosts: "all"
         },
 
         output: {

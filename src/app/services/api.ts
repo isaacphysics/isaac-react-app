@@ -14,7 +14,7 @@ import {
 } from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
-    ActualBoardLimit,
+    NumberOfBoards,
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
@@ -427,7 +427,7 @@ export const api = {
         }
     },
     boards: {
-        get: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
+        get: (startIndex: number, limit: NumberOfBoards, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
             return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
         },
         delete: (board: ApiTypes.GameboardDTO) => {
