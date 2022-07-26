@@ -301,7 +301,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
-    const assignmentsSetByMe = useSelector(selectors.assignments.setByMe);
+    const assignmentsSetByMe = useAppSelector(selectors.assignments.setByMe);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
         assignmentsSetByMe?.reduce((acc, assignment) => {
             if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
