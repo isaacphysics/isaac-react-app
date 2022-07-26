@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import {connect, ResolveThunks, useSelector} from "react-redux";
+import {connect, ResolveThunks} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {sortBy} from "lodash";
 import {history} from "../../../services/history";
 import * as RS from "reactstrap";
@@ -70,7 +71,7 @@ export const additionalManagerRemovalModal = ({groupToModify, user, showArchived
 };
 
 const CurrentGroupInviteModal = ({firstTime}: CurrentGroupInviteModalProps) => {
-    const group = useSelector(selectors.groups.current);
+    const group = useAppSelector(selectors.groups.current);
     return group && <React.Fragment>
         {firstTime && <h1>Invite users</h1>}
 

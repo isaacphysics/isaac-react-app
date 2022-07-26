@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Button, Col, Row, CustomInput, Form} from "reactstrap";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {useLocation} from "react-router-dom";
 import {selectors} from "../../../state/selectors";
 import {closeActiveModal} from "../../../state/actions";
@@ -13,10 +13,10 @@ import {isCS, siteSpecific} from "../../../services/siteConstants";
 
 const LoginOrSignUpBody = () => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
 
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const location = useLocation();
 
     const {loginFunctions, setStateFunctions, loginValues} = useLoginLogic();

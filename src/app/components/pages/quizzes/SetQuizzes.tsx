@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
@@ -45,7 +45,7 @@ function formatAssignmentOwner(user: RegisteredUserDTO, assignment: QuizAssignme
 }
 
 function QuizAssignment({user, assignment}: QuizAssignmentProps) {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const cancel = () => {
         if (window.confirm("Are you sure you want to cancel?\r\nStudents will no longer be able to take the test or see any feedback, and all previous attempts will be lost.")) {
             dispatch(markQuizAsCancelled(assignment.id as number));
@@ -77,13 +77,13 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
-    const quizzes = useSelector(selectors.quizzes.available);
+    const quizzes = useAppSelector(selectors.quizzes.available);
     const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
     const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
-    const quizAssignments = useSelector(selectors.quizzes.assignments);
+    const quizAssignments = useAppSelector(selectors.quizzes.assignments);
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { filter }: { filter?: string } = useQueryParams();
 

@@ -18,7 +18,7 @@ import * as RS from "reactstrap";
 import {Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {showQuizSettingModal} from "../../../state/actions/quizzes";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import {siteSpecific} from "../../../services/siteConstants";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
@@ -99,7 +99,7 @@ function QuizContents({attempt, sections, questions, pageLink, studentId, quizAs
 }
 
 function QuizHeader({attempt, preview}: QuizAttemptProps) {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const assignment = attempt.quizAssignment;
     if (preview) {
         return <>
@@ -141,7 +141,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     const section = sections && sections[page - 1];
     const rubric = attempt.quiz?.rubric;
     const renderRubric = (rubric?.children || []).length > 0;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const openQuestionModal = (attempt: QuizAttemptDTO) => {
         dispatch(openActiveModal({

@@ -12,7 +12,7 @@ import {
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt
 } from "../../../state/actions";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
@@ -27,10 +27,10 @@ interface TeacherConnectionsProps {
     userToEdit: AdminUserGetState;
 }
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
-    const dispatch = useDispatch();
-    const activeAuthorisations = useSelector((state: AppState) => state?.activeAuthorisations || null);
-    const studentAuthorisations = useSelector((state: AppState) => state?.otherUserAuthorisations || null);
-    const groupMemberships = useSelector((state: AppState) => state?.groupMemberships || null);
+    const dispatch = useAppDispatch();
+    const activeAuthorisations = useAppSelector((state: AppState) => state?.activeAuthorisations || null);
+    const studentAuthorisations = useAppSelector((state: AppState) => state?.otherUserAuthorisations || null);
+    const groupMemberships = useAppSelector((state: AppState) => state?.groupMemberships || null);
 
     useEffect(() => {
         if (user.loggedIn && user.id) {

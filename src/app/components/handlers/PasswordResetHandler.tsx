@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {handlePasswordReset, verifyPasswordReset} from "../../state/actions";
 import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import {AppState} from "../../state/reducers";
@@ -9,8 +9,8 @@ import {RouteComponentProps} from "react-router";
 
 
 export const ResetPasswordHandler = ({match}: RouteComponentProps<{token?: string}>) => {
-    const dispatch = useDispatch();
-    const errorMessage = useSelector((state: AppState) => state?.error || null);
+    const dispatch = useAppDispatch();
+    const errorMessage = useAppSelector((state: AppState) => state?.error || null);
     const urlToken = match.params.token || null;
 
     const [isValidPassword, setValidPassword] = useState(true);

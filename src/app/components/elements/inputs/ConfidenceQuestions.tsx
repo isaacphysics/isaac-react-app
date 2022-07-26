@@ -1,7 +1,7 @@
 import {Button, Col, Row} from "reactstrap";
 import React, {useEffect, useState} from "react";
 import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
@@ -102,7 +102,7 @@ type ValidationPendingState =
 }
 
 export const ConfidenceQuestions = ({state, setState, validationPending, setValidationPending, disableInitialState, identifier, type, validationResponse}: ConfidenceQuestionsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const toggle = (confidence: string, state: ActiveConfidenceState) => {
         const stateAndType: `${ActiveConfidenceState} & ${ConfidenceType}` = `${state} & ${type}`;

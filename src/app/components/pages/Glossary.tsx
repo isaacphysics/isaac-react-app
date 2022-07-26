@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
@@ -66,7 +66,7 @@ export const Glossary = () => {
     const [searchText, setSearchText] = useState("");
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
-    const rawGlossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+    const rawGlossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
     const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {

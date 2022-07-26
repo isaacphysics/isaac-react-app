@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import queryString from "query-string";
 import {fetchTopicSummary, loadGameboard} from "../state/actions";
-import {useDispatch, useSelector} from 'react-redux'
+import {useAppDispatch, useAppSelector} from "../state/store";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -34,16 +34,16 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     const location = useLocation();
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const queryParams = queryString.parse(location.search);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (queryParams.board) dispatch(loadGameboard(queryParams.board as string));
         if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
     }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
 
-    const currentGameboard = useSelector(selectors.board.currentGameboard);
-    const currentTopic = useSelector(selectors.topic.currentTopic);
-    const user = useSelector(selectors.user.orNull);
+    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
+    const currentTopic = useAppSelector(selectors.topic.currentTopic);
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
     if (doc === null || doc === NOT_FOUND) {

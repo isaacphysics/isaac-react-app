@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Link, withRouter} from "react-router-dom"
 import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
@@ -124,9 +124,9 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 };
 
 export const Gameboard = withRouter(({ location }) => {
-    const dispatch = useDispatch();
-    const gameboard = useSelector(selectors.board.currentGameboardOrNotFound);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const gameboard = useAppSelector(selectors.board.currentGameboardOrNotFound);
+    const user = useAppSelector(selectors.user.orNull);
     const gameboardId = location.hash ? location.hash.slice(1) : null;
 
     // Show filter

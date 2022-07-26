@@ -1,5 +1,6 @@
 import ReactDOMServer from "react-dom/server";
-import {Provider, useSelector, useStore} from "react-redux";
+import {Provider, useStore} from "react-redux";
+import {useAppSelector} from "../state/store";
 import {Router} from "react-router-dom";
 import {history} from "./history";
 import {IsaacGlossaryTerm} from "../components/content/IsaacGlossaryTerm";
@@ -30,7 +31,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
     const {examBoard} = useUserContext();
     const examBoardTag = !EXAM_BOARD_NULL_OPTIONS.has(examBoard) ? examBoard : "";
 
-    const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
+    const glossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
 
     // This tooltips array is necessary later on: it will contain
     // UncontrolledTooltip elements that cannot be pre-rendered as static HTML.

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {withRouter} from "react-router-dom";
 import {handleProviderCallback} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
@@ -11,7 +11,7 @@ interface ProviderCallbackHandlerProps {
 }
 export const ProviderCallbackHandler = withRouter((props: ProviderCallbackHandlerProps) => {
     const {match: {params: {provider}}, location: {search}} = props;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(handleProviderCallback(provider, search))}, [dispatch, provider, search]);
 
     return <React.Fragment>

@@ -3,7 +3,7 @@ import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {Unauthorised} from "../pages/Unauthorised";
@@ -40,7 +40,7 @@ const WrapperComponent = function({component: Component, trackingOptions, ...pro
 };
 
 export const TrackedRoute = function({component, trackingOptions, componentProps, ...rest}: TrackedRouteProps) {
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     if (component) {
         if (rest.ifUser !== undefined) {
             const {ifUser, ...rest$} = rest;

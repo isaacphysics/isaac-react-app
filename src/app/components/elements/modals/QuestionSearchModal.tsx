@@ -2,7 +2,7 @@ import React, {Suspense, lazy, useCallback, useEffect, useState} from "react";
 import {clearQuestionSearch, closeActiveModal, searchQuestions} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import {debounce, isEqual} from "lodash";
 import Select, {MultiValue} from "react-select";
@@ -40,7 +40,7 @@ interface QuestionSearchModalProps {
     eventLog: object[];
 }
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const userContext = useUserContext();
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
@@ -67,8 +67,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
-    const questions = useSelector((state: AppState) => state && state.questionSearchResult);
-    const user = useSelector((state: AppState) => state && state.user);
+    const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
+    const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {

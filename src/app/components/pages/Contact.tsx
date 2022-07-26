@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
     Alert,
     Card,
@@ -44,9 +44,9 @@ const determineUrlQueryPresets = (user?: PotentialUser | null) => {
 };
 
 export const Contact = () => {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const errorMessage = useSelector((state: AppState) => state?.error || null);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const errorMessage = useAppSelector((state: AppState) => state?.error || null);
     const [presetSubject, presetMessage] = determineUrlQueryPresets(user);
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");

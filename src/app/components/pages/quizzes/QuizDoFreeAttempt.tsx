@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
@@ -33,7 +33,7 @@ const pageHelp = <span>
 const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFreeAttemptProps) => {
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(loadFreeQuizAttempt(quizId));

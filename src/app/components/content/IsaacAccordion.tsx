@@ -9,7 +9,7 @@ import {
     stringifyAudience,
     useUserContext
 } from "../../services/userContext";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {selectors} from "../../state/selectors";
 import {isCS, siteSpecific} from "../../services/siteConstants";
 import {AppState} from "../../state/reducers";
@@ -29,8 +29,8 @@ interface SectionWithDisplaySettings extends ContentDTO {
     hidden?: boolean;
 }
 export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
-    const page = useSelector((state: AppState) => (state && state.doc) || null);
-    const user = useSelector(selectors.user.orNull);
+    const page = useAppSelector((state: AppState) => (state && state.doc) || null);
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
     // Select different default display depending on page type

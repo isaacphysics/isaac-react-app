@@ -2,12 +2,12 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
-import {disableTotpForAccount, getNewTotpSecret, setupAccountMFA} from "../../../state/actions";
 import QRCode from 'qrcode';
-import {AppState} from "../../../state/reducers";
 import {selectors} from "../../../state/selectors";
+import {isaacApi} from "../../../state/slices/api";
+import {isDefined} from "../../../services/miscUtils";
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;
@@ -16,21 +16,22 @@ interface UserMFAProps {
 }
 
 const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
-    const dispatch = useDispatch();
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
-    const totpSharedSecret = useSelector((state: AppState) => state?.totpSharedSecret?.sharedSecret);
-    const [updateMFARequest, setUpdateMFARequest] = useState(false);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
     const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);
 
+    const [ newMFASecret, { data: totpSharedSecret, reset: resetMFASecret } ] = isaacApi.endpoints.newMFASecret.useMutation();
+    const [ setupAccountMFA ] = isaacApi.endpoints.setupAccountMFA.useMutation();
+    const [ disableAccountMFA ] = isaacApi.endpoints.disableAccountMFA.useMutation();
+
     const authenticatorURL: string | null = useMemo(() => {
-        if (totpSharedSecret) {
+        if (totpSharedSecret && totpSharedSecret.sharedSecret) {
             let issuer = encodeURIComponent(`Isaac ${SITE_SUBJECT_TITLE}`);
             if (segueEnvironment === "DEV") {
                 issuer += encodeURIComponent(` (${window.location.host})`);
             }
-            const authenticatorURL = `otpauth://totp/${userToUpdate.email}?secret=${totpSharedSecret}&issuer=${issuer}`;
+            const authenticatorURL = `otpauth://totp/${userToUpdate.email}?secret=${totpSharedSecret.sharedSecret}&issuer=${issuer}`;
             QRCode.toString(authenticatorURL, {type:'svg'}, function (err, val) {
                 if (err) {
                     console.error(err);
@@ -43,9 +44,8 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
         return null;
     }, [totpSharedSecret]);
 
-    if (totpSharedSecret == null && mfaVerificationCode) {
+    if (!isDefined(totpSharedSecret) && mfaVerificationCode) {
         // assume we have just completed a successful configuration of MFA as secret is clear and tidy up
-        setUpdateMFARequest(false);
         setMFAVerificationCode(undefined);
         setSuccessfulMFASetup(true);
     }
@@ -59,7 +59,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
     function setupMFA(event?: React.FormEvent<HTMLButtonElement | HTMLFormElement>) {
         if (event) {event.preventDefault(); event.stopPropagation();}
         if (totpSharedSecret && mfaVerificationCode) {
-            dispatch(setupAccountMFA(totpSharedSecret, mfaVerificationCode));
+            setupAccountMFA({sharedSecret: totpSharedSecret.sharedSecret, mfaVerificationCode}).then(resetMFASecret);
         }
     }
 
@@ -73,13 +73,12 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
         {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
             <Row>
                 <Col>
-
                     <Row>
                         <Col md={{size: 6, offset: 3}}>
                             <p><strong>2FA Status: </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? "Enabled" : "Disabled"}</p>
                         </Col>
                     </Row>
-                    {updateMFARequest ?
+                    {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
                         <Form onSubmit={setupMFA}>
                             <Row>
                                 <Col md={{size: 6, offset: 3}}>
@@ -119,48 +118,45 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                 <FormGroup>
                                     <Button
                                         className="btn-secondary"
-                                        onClick={() => {setUpdateMFARequest(true); dispatch(getNewTotpSecret())}}
+                                        onClick={() => newMFASecret()}
                                     >
                                         {userAuthSettings.mfaStatus ? "Change 2FA Device" : "Enable 2FA"}
                                     </Button>
                                 </FormGroup>
                             </Col>
                         </Row>
-
                     }
                 </Col>
             </Row>
-            :   <React.Fragment>
-                <Row className="pt-4">
-                    <Col className="text-center">
-                        {!editingOtherUser && userAuthSettings && userAuthSettings.linkedAccounts && <p>
-                            You do not currently have a password set for this account; you
-                            sign in using {" "}
-                            {(userAuthSettings.linkedAccounts).map((linked, index) => {
-                                return <span key={index} className="text-capitalize">{linked.toLowerCase()}</span>;
-                            })}.
-                        </p>}
-                    </Col>
-                </Row>
-            </React.Fragment>
+            : <Row className="pt-4">
+                <Col className="text-center">
+                    {!editingOtherUser && userAuthSettings && userAuthSettings.linkedAccounts && <p>
+                        You do not currently have a password set for this account; you
+                        sign in using {" "}
+                        {(userAuthSettings.linkedAccounts).map((linked, index) =>
+                            <span key={index} className="text-capitalize">
+                                {linked.toLowerCase()}
+                            </span>
+                        )}.
+                    </p>}
+                </Col>
+            </Row>
         }
         {editingOtherUser &&
-            <React.Fragment>
-                <Row className="pt-4">
-                    <Col className="text-center">
-                        {userAuthSettings && <p>
-                            <FormGroup>
-                                <Button
-                                    className="btn-secondary"
-                                    onClick={() => {userToUpdate.id && dispatch(disableTotpForAccount(userToUpdate.id))}}
-                                >
-                                    Disable 2FA for user
-                                </Button>
-                            </FormGroup>
-                        </p>}
-                    </Col>
-                </Row>
-            </React.Fragment>
+            <Row className="pt-4">
+                <Col className="text-center">
+                    {userAuthSettings && <p>
+                        <FormGroup>
+                            <Button
+                                className="btn-secondary"
+                                onClick={() => userToUpdate.id && disableAccountMFA(userToUpdate.id)}
+                            >
+                                Disable 2FA for user
+                            </Button>
+                        </FormGroup>
+                    </p>}
+                </Col>
+            </Row>
         }
 
     </CardBody>

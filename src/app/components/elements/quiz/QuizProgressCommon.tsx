@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../../state/store";
 import { Button } from "reactstrap";
 import { IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO } from "../../../../IsaacApiTypes";
 import { PageSettings } from "../../../../IsaacAppTypes";
@@ -74,7 +74,7 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
 export function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [working, setWorking] = useState(false);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 

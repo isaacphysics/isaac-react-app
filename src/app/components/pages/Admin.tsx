@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
@@ -14,9 +14,9 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {isAdmin} from "../../services/user";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
-    const dispatch = useDispatch();
-    const segueVersion = useSelector(selectors.segue.versionOrUnknown);
-    const contentVersion = useSelector(selectors.segue.contentVersion);
+    const dispatch = useAppDispatch();
+    const segueVersion = useAppSelector(selectors.segue.versionOrUnknown);
+    const contentVersion = useAppSelector(selectors.segue.contentVersion);
     useEffect(() => {
         dispatch(getContentVersion());
         dispatch(requestConstantsSegueVersion());

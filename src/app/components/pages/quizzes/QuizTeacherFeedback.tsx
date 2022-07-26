@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
@@ -44,9 +44,9 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
 
 const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: QuizTeacherFeedbackProps) => {
     const pageSettings = usePageSettings();
-    const assignmentState = useSelector(selectors.quizzes.assignment);
+    const assignmentState = useAppSelector(selectors.quizzes.assignment);
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const numericQuizAssignmentId = parseInt(quizAssignmentId, 10);
     useEffect(() => {
@@ -91,9 +91,11 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
             try {
                 setSettingDueDate(true);
                 if (confirm("Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.")) {
-                    if (dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate))) {
-                        dispatch(showToast({color: "success", title: "Due date extended successfully", body: `This test is now due ${newDate.toLocaleDateString()}.`, timeout: 5000}));
-                    }
+                    dispatch(updateQuizAssignmentDueDate(numericQuizAssignmentId, newDate)).then((succeeded) => {
+                        if (succeeded) {
+                            dispatch(showToast({color: "success", title: "Due date extended successfully", body: `This test is now due ${newDate.toLocaleDateString()}.`, timeout: 5000}));
+                        }
+                    });
                 } else {
                     setDueDate(assignment.dueDate);
                 }

@@ -2,7 +2,7 @@ import React, {ReactElement, useEffect} from "react";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {NOT_FOUND} from "../../services/constants";
@@ -15,8 +15,8 @@ interface PageFragmentComponentProps {
 }
 
 export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProps) => {
-    const dispatch = useDispatch();
-    const fragment = useSelector((state: AppState) => state && state.fragments && state.fragments[fragmentId] || null);
+    const dispatch = useAppDispatch();
+    const fragment = useAppSelector((state: AppState) => state && state.fragments && state.fragments[fragmentId] || null);
 
     useEffect(() => {
         dispatch(fetchFragment(fragmentId))

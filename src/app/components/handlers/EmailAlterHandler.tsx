@@ -4,14 +4,14 @@ import {AppState} from "../../state/reducers";
 import {Link} from "react-router-dom";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {handleEmailAlter, requestEmailVerification} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 
 export const EmailAlterHandler = () => {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const errorMessage = useSelector((state: AppState) => state && state.error);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const errorMessage = useAppSelector((state: AppState) => state && state.error);
 
     const {userid, token}: {userid?: string; token?: string} = queryString.parse(location.search);
     const [verificationReSent, setVerificationReSent] = useState(false);
