@@ -9,6 +9,7 @@ import 'katex/dist/contrib/mhchem.mjs';
 import renderA11yString from "../../../services/katex-a11y";
 import {useUserContext} from "../../../services/userContext";
 import {BOOLEAN_NOTATION} from "../../../services/constants";
+import {dropZoneRegex} from "./markdownRendering";
 
 type MathJaxMacro = string|[string, number];
 
@@ -292,7 +293,8 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                         `<span class="katex"><span class="sr-only">${screenReaderText}</span>`);
                 } else {
                     const katexMathML = katex.renderToString(latexMunged, {...katexOptions, output: "mathml"})
-                        .replace(`class="katex"`, `class="katex-mathml"`);
+                        .replace(`class="katex"`, `class="katex-mathml"`)
+                        .replace(dropZoneRegex, "drop zone");
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
                         `<span class="katex">${katexMathML}`);
                 }
