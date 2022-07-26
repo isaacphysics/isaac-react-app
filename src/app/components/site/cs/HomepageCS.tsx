@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {useAppSelector} from "../../../state/store";
 import {Link} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
@@ -16,6 +16,8 @@ interface ShowMeButtonsProps {
 export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
+
+    const featuredNewsItemRef = useRef<HTMLDivElement>(null);
 
     const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
         <h3>Show me</h3>
@@ -44,7 +46,7 @@ export const HomepageCS = () => {
                 {user && user.loggedIn ? <>
                         <Row className="pt-4">
                             <Col md="9" lg="7" className="d-none d-sm-block order-last my-lg-4 text-center">
-                                <img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />
+                                <div ref={featuredNewsItemRef} className="d-flex justify-content-center" />
                             </Col>
                             <Col md="3" lg="5">
                                 <Container className="pb-2 d-block">
@@ -119,7 +121,7 @@ export const HomepageCS = () => {
             <Container className="pt-4 pb-5">
                 <div className="eventList pt-5 pattern-03-reverse">
                     <h2 className="h-title mb-4">News</h2>
-                    <NewsCarousel descending={true} subject="news"/>
+                    <NewsCarousel descending={true} subject="news" featuredNewsItemRef={featuredNewsItemRef} />
                 </div>
             </Container>
         </section>
