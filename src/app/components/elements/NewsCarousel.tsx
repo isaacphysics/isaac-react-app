@@ -22,17 +22,13 @@ export const NewsCarousel = (props: NewsCarouselProps) => {
         dispatch(getNewsPodList(subject));
     }, [dispatch, subject]);
 
-    function compare(a: IsaacPodDTO, b: IsaacPodDTO) {
-        if (a.id && b.id) {
-            if (a.id < b.id) {
-                return descending ? 1 : -1;
-            }
-
-            if (a.id > b.id) {
-                return descending ? -1 : 1;
-            }
-        }
-        return 0;
+    function compare(a?: IsaacPodDTO | null, b?: IsaacPodDTO | null) {
+        let value;
+        if (a === b) value = 0;
+        if (!isDefined(a?.id)) value = -1;
+        else if (!isDefined(b?.id)) value = 1;
+        else value = (a?.id as string).localeCompare(b?.id as string); // TS can't figure out the types unfortunately
+        return descending ? value * -1 : value;
     }
 
     return <ShowLoading until={newsState} thenRender={({news}) => <div>
