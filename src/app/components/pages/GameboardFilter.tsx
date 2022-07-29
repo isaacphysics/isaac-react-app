@@ -20,7 +20,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {getValue, isItemEqual, Item, selectOnChange} from "../../services/select";
+import {isItemEqual, Item, selectOnChange} from "../../services/select";
 import {useDeviceSize} from "../../services/device";
 import Select, {GroupBase} from "react-select";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
