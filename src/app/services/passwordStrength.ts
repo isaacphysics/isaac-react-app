@@ -42,7 +42,7 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
         "ComputerScience", "Computer Science", "Computer", "Science", "CompSci", "Computing",
         "Isaac Physics", "Isaac Chemistry", "Isaac Maths", "IsaacPhysics", "IsaacChemistry", "IsaacMaths",
         "Physics", "Chemistry", "Maths", "Biology", "Phy", "Phys", "Math", "Mathematics", "Physical",
-        "isaacphysics.org", "isaacchemistry.org", "isaacmaths.org",
+        "isaacphysics.org", "isaacchemistry.org", "isaacmaths.org", "isaacbiology.org",
         "Quantum", "Relativity", "Pi", "Newton", "Apple", "Hexagon",
         "Cambridge", "University", "Raspberry Pi", "Raspberry",
         "A Level", "ALevel", "A-Level", "Homework", "Classroom", "School", "College", "Lesson", "Revision",
