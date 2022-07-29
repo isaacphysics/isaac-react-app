@@ -701,6 +701,7 @@ export enum SUBJECTS {
     PHYSICS = 'physics',
     MATHS = 'maths',
     CHEMISTRY = 'chemistry',
+    BIOLOGY = 'biology',
     CS = 'computer_science'
 }
 
@@ -809,6 +810,7 @@ export enum TAG_ID {
     physics = "physics",
     maths = "maths",
     chemistry = "chemistry",
+    biology = "biology",
 
     // Fields ---
 

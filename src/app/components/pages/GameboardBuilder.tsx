@@ -35,7 +35,7 @@ import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
-import {EXAM_BOARD, STAGE} from "../../services/constants";
+import {EXAM_BOARD, STAGE, TAG_ID} from "../../services/constants";
 import {selectOnChange} from "../../services/select";
 import {isFound} from "../../services/miscUtils";
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
@@ -266,14 +266,14 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                             if (isCS) {
                                 subjects.push("computer_science");
                             } else {
-                                const definedSubjects = ["physics", "maths", "chemistry"];
+                                const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
                                 selectedQuestions?.forEach((item) => {
                                     const tags = intersection(definedSubjects, item.tags || []);
                                     tags.forEach((tag: string) => subjects.push(tag));
                                 });
                                 // If none of the questions have a subject tag, default to physics
                                 if (subjects.length === 0) {
-                                    subjects.push("physics");
+                                    subjects.push(TAG_ID.physics);
                                 }
                                 subjects = Array.from(new Set(subjects));
                             }

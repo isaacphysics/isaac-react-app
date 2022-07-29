@@ -100,7 +100,7 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
     if (isCS) {
         return ["compsci"];
     }
-    const subjects = ["physics", "maths", "chemistry"];
+    const subjects = ["physics", "maths", "chemistry", "biology"];
     let allSubjects: string[] = [];
     board.contents?.map((item) => {
         let tags = intersection(subjects, item.tags || []);
@@ -162,7 +162,8 @@ export enum BoardSubjects {
     "all" = "All",
     "physics" = "Physics",
     "maths" = "Maths",
-    "chemistry" = "Chemistry"
+    "chemistry" = "Chemistry",
+    "biology" = "Biology"
 }
 
 export enum BoardLimit {

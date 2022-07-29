@@ -13,6 +13,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physics, title: "Physics"},
         {id: TAG_ID.maths, title: "Maths"},
         {id: TAG_ID.chemistry, title: "Chemistry"},
+        {id: TAG_ID.biology, title: "Biology", comingSoonDate: "2023"},
 
         // --- Fields ---
 
