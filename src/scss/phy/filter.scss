@@ -20,6 +20,11 @@ svg {
         stroke: $phy_chemistry;
       }
 
+      &.active.biology {
+        fill: $phy_biology;
+        stroke: $phy_biology;
+      }
+
       &:not(.active) {
         fill: none;
         stroke: $gray-160;
@@ -76,6 +81,9 @@ svg {
     &.active.chemistry {
       stroke: $phy_chemistry;
     }
+    &.active.biology {
+      stroke: $phy_biology;
+    }
     &:not(.active) {
       stroke: $gray-118;
     }
@@ -96,17 +104,23 @@ svg {
   border-radius: 5px;
   font-family: $secondary-font-semi-bold;
   background: white;
+  border-style: solid;
+  border-width: 1px;
 
   &.physics {
-    border: solid 1px $phy_physics;
+    border-color: $phy_physics;
   }
 
   &.maths {
-    border: solid 1px $phy_maths;
+    border-color: $phy_maths;
   }
 
   &.chemistry {
-    border: solid 1px $phy_chemistry;
+    border-color: $phy_chemistry;
+  }
+
+  &.biology {
+    border-color: $phy_biology;
   }
 }
 
