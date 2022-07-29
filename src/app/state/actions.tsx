@@ -2,7 +2,7 @@ import React, {Dispatch} from "react";
 import {api} from "../services/api";
 import {AppState} from "./reducers";
 import {history} from "../services/history";
-import {store} from "./store";
+import {AppDispatch, store} from "./store";
 import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
@@ -20,7 +20,7 @@ import {
 import {
     Action,
     ActiveModal,
-    ActualBoardLimit,
+    NumberOfBoards,
     AdditionalInformation,
     AppGameBoard,
     AppGroup,
@@ -101,7 +101,7 @@ const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
 };
 
-export const hideToast = (toastId: string) => (dispatch: any) => {
+export const hideToast = (toastId: string) => (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
     setTimeout(() => {
         dispatch(removeToast(toastId));
@@ -109,7 +109,7 @@ export const hideToast = (toastId: string) => (dispatch: any) => {
 };
 
 let nextToastId = 0;
-export const showToast = (toast: Toast) => (dispatch: any) => {
+export const showToast = (toast: Toast) => (dispatch: AppDispatch) => {
     const toastId = toast.id = "toast" + nextToastId++;
     if (toast.timeout) {
         setTimeout(() => {
@@ -121,6 +121,13 @@ export const showToast = (toast: Toast) => (dispatch: any) => {
     dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
     return toastId;
 };
+
+export const showSuccessToast = (title: string, body: string) => showToast({
+    color: "success",
+    timeout: 5000,
+    title,
+    body
+});
 
 export function showErrorToastIfNeeded(error: string, e: any) {
     if (e) {
@@ -210,30 +217,6 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
-export const getNewTotpSecret = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST});
-    try {
-        const mfaSetupResponse = await api.authentication.getNewMFASecret();
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS, totpSharedSecretDTO: mfaSetupResponse.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to get 2FA secret", e));
-    }
-};
-
-export const setupAccountMFA = (sharedSecret: string, mfaVerificationCode: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST});
-    try {
-        await api.authentication.setupMFAOnAccount(sharedSecret, mfaVerificationCode);
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS});
-        dispatch(showToast({
-            color: "success", title: "2FA Configured", body: "You have enabled 2FA on your account!"}) as any);
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to setup 2FA on account", e));
-    }
-};
-
 export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
@@ -252,19 +235,6 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         dispatch(showErrorToastIfNeeded("Error with verification code.", e));
     }
     dispatch(requestCurrentUser() as any)
-};
-
-export const disableTotpForAccount = (userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST});
-    try {
-        await api.authentication.disableMFAOnAccount(userId);
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS});
-        dispatch(showToast({
-            color: "success", title: "2FA Disabled", body: "You have disabled 2FA on this account!"}) as any);
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE, errorMessage: extractMessage(e)});
-        dispatch(showErrorToastIfNeeded("Failed to disable 2FA on account.", e));
-    }
 };
 
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
@@ -1543,7 +1513,7 @@ export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispat
 };
 
 // Gameboards
-export const loadBoards = (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
+export const loadBoards = (startIndex: number, limit: NumberOfBoards, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
     const accumulate = startIndex != 0;
     dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
     try {

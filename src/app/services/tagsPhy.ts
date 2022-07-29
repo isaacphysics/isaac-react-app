@@ -92,7 +92,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Geometry
         {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
         {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
-        {id: TAG_ID.geomVectors, title: "Vectors", parent: TAG_ID.geometry},
+        {id: TAG_ID.vectors, title: "Vectors", parent: TAG_ID.geometry},
         {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry, comingSoonDate: "soon"},
         // Functions
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},

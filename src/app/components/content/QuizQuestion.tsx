@@ -1,5 +1,5 @@
 import React, {Suspense, useContext, useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import classnames from "classnames";
 import {QUESTION_TYPES} from "../../services/questions";
 import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
@@ -12,7 +12,7 @@ import {QuizAttemptContext} from "../../../IsaacAppTypes";
 import {Loading} from "../handlers/IsaacSpinner";
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const {quizAttempt, questionNumbers} = useContext(QuizAttemptContext);
 

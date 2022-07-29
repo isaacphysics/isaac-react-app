@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row, CustomInput} from "reactstrap";
 import {handleProviderLoginRedirect, logInUser, resetPassword, submitTotpChallengeResponse} from "../../state/actions";
 import {AppState} from "../../state/reducers";
@@ -16,10 +16,10 @@ import {MetaDescription} from "../elements/MetaDescription";
  */
 export const useLoginLogic = () => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const totpChallengePending = useSelector((state: AppState) => state?.totpChallengePending);
-    const errorMessage = useSelector(selectors.error.general);
+    const totpChallengePending = useAppSelector((state: AppState) => state?.totpChallengePending);
+    const errorMessage = useAppSelector(selectors.error.general);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
@@ -55,7 +55,7 @@ export const useLoginLogic = () => {
 
 // Button prompting the user to sign in via Google
 export const GoogleSignInButton = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const logInWithGoogle = () => {
         dispatch(handleProviderLoginRedirect("GOOGLE"));
@@ -68,7 +68,7 @@ export const GoogleSignInButton = () => {
 
 // Handles display and logic of the two-factor authentication form (usually shown after the first login step)
 export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [mfaVerificationCode, setMfaVerificationCode] = useState("");
 
     return <>
@@ -106,7 +106,7 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
 
 // Component handling the display of "Forgotten your password?" and its relevant interactions
 export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttempted, small}: {email: string, isValidEmail: boolean, setPasswordResetAttempted: (b: boolean) => void, small?: boolean}) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [passwordResetRequest, setPasswordResetRequest] = useState(false);
 
     const attemptPasswordReset = () => {
@@ -179,7 +179,7 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
 // Main login page component, utilises all of the components defined above
 export const LogIn = () => {
 
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     const {loginFunctions, setStateFunctions, loginValues} = useLoginLogic();
     const {attemptLogIn, signUp, validateAndLogIn} = loginFunctions;

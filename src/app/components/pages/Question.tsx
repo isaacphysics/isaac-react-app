@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {match, RouteComponentProps, withRouter} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {fetchDoc, goToSupersededByQuestion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
@@ -49,13 +49,13 @@ function getTags(docTags?: string[]) {
 
 export const Question = withRouter(({questionIdOverride, match, location}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
-    const doc = useSelector(selectors.doc.get);
-    const user = useSelector(selectors.user.orNull);
+    const doc = useAppSelector(selectors.doc.get);
+    const user = useAppSelector(selectors.user.orNull);
     const navigation = useNavigation(doc);
     const query = queryString.parse(location.search);
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
     }, [dispatch, questionId]);

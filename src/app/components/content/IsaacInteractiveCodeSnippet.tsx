@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
 import {useIFrameMessages} from "../../services/miscUtils";
 import { v4 as uuid_v4 } from "uuid";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {selectors} from "../../state/selectors";
 import {logAction} from "../../state/actions";
 import {CODE_EDITOR_BASE_URL} from "../../services/constants";
@@ -10,7 +10,7 @@ import {CODE_EDITOR_BASE_URL} from "../../services/constants";
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
 export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const uid = useRef((doc?.id || "") + uuid_v4().slice(0, 8));
     const {receivedData, sendMessage} = useIFrameMessages(uid.current, iframeRef);
@@ -28,7 +28,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         });
     }
 
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const [iFrameHeight, setIFrameHeight] = useState(100);
 
     useEffect(() => {

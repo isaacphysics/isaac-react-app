@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import {isCS, siteSpecific} from "../../services/siteConstants";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {isMobile} from "../../services/device";
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
@@ -8,8 +8,8 @@ import {useOutsideCallback} from "../../services/miscUtils";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
     const [showShareLink, setShowShareLink] = useState(false);
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
-    const user = useSelector(selectors.user.orNull);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
+    const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
     const csUrlOrigin = segueEnvironment !== "DEV" ? "https://isaaccs.org" : window.location.origin;
     let shortenedLinkUrl = linkUrl;

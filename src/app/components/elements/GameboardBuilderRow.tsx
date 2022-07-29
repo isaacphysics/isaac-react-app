@@ -4,7 +4,7 @@ import {examBoardLabelMap, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../service
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {DraggableProvided} from "react-beautiful-dnd";
 import tags from "../../services/tags";
 import {Question} from "../pages/Question";
@@ -31,7 +31,7 @@ interface GameboardBuilderRowInterface {
 const GameboardBuilderRow = (
     {provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
 ) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const topicTag = () => {
         const tag = question.tags && tags.getSpecifiedTag(TAG_LEVEL.topic, question.tags as TAG_ID[]);

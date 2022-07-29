@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import * as RS from "reactstrap";
 import {sendProvidedEmailWithUserIds} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -20,7 +20,7 @@ interface ContentEmailsProps {
 const RECIPIENT_NUMBER_WARNING_VALUE = 2000;
 
 const ContentEmails = (props: ContentEmailsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [csvIDs, setCSVIDs] = useState(props.location.state?.csvIDs || [] as number[]);
     const [emailType, setEmailType] = useState("null");
     const [emailSent, setEmailSent] = useState(false);

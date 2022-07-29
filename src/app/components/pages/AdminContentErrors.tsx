@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {AppState} from "../../state/reducers";
 import {getAdminContentErrors} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
@@ -38,9 +38,9 @@ enum PUBLISHED_FILTER {
 }
 
 export const AdminContentErrors = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(getAdminContentErrors());}, [dispatch]);
-    const errors = useSelector((state: AppState) => state?.adminContentErrors || null);
+    const errors = useAppSelector((state: AppState) => state?.adminContentErrors || null);
 
     const [errorFilter, setErrorFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || errorStr.toLowerCase().includes(errorFilter.toLowerCase());

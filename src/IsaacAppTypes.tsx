@@ -17,7 +17,6 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO,
     UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
@@ -61,19 +60,10 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS; totpSharedSecretDTO: TOTPSharedSecretDTO}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
@@ -669,7 +659,7 @@ export enum BoardOrder {
     "-completion" = "-completion"
 }
 
-export type ActualBoardLimit = number | "ALL";
+export type NumberOfBoards = number | "ALL";
 
 export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
 

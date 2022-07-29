@@ -1,5 +1,5 @@
 import React, {MouseEvent, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {loadMyAssignments, logAction} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -12,11 +12,11 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {Assignments} from "../elements/Assignments";
 
 export const MyAssignments = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(loadMyAssignments())}, [dispatch]);
     useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
 
-    const assignments = useSelector((state: AppState) => state?.assignments || null);
+    const assignments = useAppSelector((state: AppState) => state?.assignments || null);
     const myAssignments = filterAssignmentsByStatus(assignments);
 
     const [activeTab, setActiveTab] = useState(0);

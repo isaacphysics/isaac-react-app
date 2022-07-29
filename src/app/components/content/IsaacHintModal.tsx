@@ -2,7 +2,7 @@ import React, {useContext, useState} from "react";
 import {Button, Modal, ModalBody, ModalHeader} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {logAction} from "../../state/actions";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
 
@@ -15,7 +15,7 @@ interface HintModalProps {
     hintIndex: number;
 }
 export const IsaacHintModal = (props: HintModalProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {questionPartId, hintIndex, label, title, body, ...restOfProps} = props;
     const [isOpen, setIsOpen] = useState(false);
     const {recordConfidence} = useContext(ConfidenceContext);

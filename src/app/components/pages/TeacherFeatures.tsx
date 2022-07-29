@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {isLoggedIn, isStudent} from "../../services/user";
 import {selectors} from "../../state/selectors";
 import {Link} from "react-router-dom";
@@ -9,7 +9,7 @@ import {IsaacCard} from "../content/IsaacCard";
 
 export const TeacherFeatures = () => {
 
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     const isDisabled = (isStudent(user) || !isLoggedIn(user));
 

@@ -3,7 +3,7 @@ import {FreeTextRule} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {testQuestion} from "../../state/actions";
 import {AppState} from "../../state/reducers";
 import {Tabs} from "../elements/Tabs";
@@ -117,8 +117,8 @@ function isEditableExplanation(explanation?: any) {
 }
 
 export const FreeTextBuilder = () => {
-    const dispatch = useDispatch();
-    const testCaseResponses = useSelector((state: AppState) => state && state.testQuestions || []);
+    const dispatch = useAppDispatch();
+    const testCaseResponses = useAppSelector((state: AppState) => state && state.testQuestions || []);
 
     const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
     const [questionChoicesJson, setQuestionChoicesJson] = useState(convertQuestionChoicesToJson(questionChoices));

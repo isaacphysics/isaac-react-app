@@ -112,18 +112,6 @@ export enum ACTION_TYPE {
     USER_AUTH_MFA_CHALLENGE_SUCCESS = "USER_AUTH_MFA_CHALLENGE_SUCCESS",
     USER_AUTH_MFA_CHALLENGE_FAILURE = "USER_AUTH_MFA_CHALLENGE_FAILURE",
 
-    USER_AUTH_MFA_NEW_SECRET_REQUEST = "USER_AUTH_MFA_NEW_SECRET_REQUEST",
-    USER_AUTH_MFA_NEW_SECRET_SUCCESS = "USER_AUTH_MFA_NEW_SECRET_SUCCESS",
-    USER_AUTH_MFA_NEW_SECRET_FAILURE = "USER_AUTH_MFA_NEW_SECRET_FAILURE",
-
-    USER_AUTH_MFA_SETUP_REQUEST = "USER_AUTH_MFA_SETUP_REQUEST",
-    USER_AUTH_MFA_SETUP_SUCCESS = "USER_AUTH_MFA_SETUP_SUCCESS",
-    USER_AUTH_MFA_SETUP_FAILURE = "USER_AUTH_MFA_SETUP_FAILURE",
-
-    USER_AUTH_MFA_DISABLE_REQUEST = "USER_AUTH_MFA_DISABLE_REQUEST",
-    USER_AUTH_MFA_DISABLE_SUCCESS = "USER_AUTH_MFA_DISABLE_SUCCESS",
-    USER_AUTH_MFA_DISABLE_FAILURE = "USER_AUTH_MFA_DISABLE_FAILURE",
-
     USER_PREFERENCES_REQUEST = "USER_PREFERENCES_REQUEST",
     USER_PREFERENCES_RESPONSE_SUCCESS= "USER_PREFERENCES_RESPONSE_SUCCESS",
     USER_PREFERENCES_RESPONSE_FAILURE = "USER_PREFERENCES_RESPONSE_FAILURE",
@@ -781,7 +769,6 @@ export enum TAG_ID {
     gcseBooleanLogic = "gcse_boolean_logic",
     gcseProgrammingConcepts = "gcse_programming_concepts",
     gcseNetworking = "gcse_networking",
-    gcseDataRepresentation = "gcse_data_representation",
     gcseSystems = "gcse_systems",
     // Impacts of digital technology
     legislation = "legislation",
@@ -894,7 +881,7 @@ export enum TAG_ID {
     factors = "factors_powers",
     complexNumbers = "complex_numbers",
     // Geometry
-    geomVectors = "geom_vectors",
+    vectors = "vectors",
     shapes = "shapes",
     trigonometry = "trigonometry",
     planes = "planes",

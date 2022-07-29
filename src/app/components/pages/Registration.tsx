@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
 import {
@@ -36,9 +36,9 @@ import {selectors} from "../../state/selectors";
 import {MetaDescription} from "../elements/MetaDescription";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const errorMessage = useSelector(selectors.error.general);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const errorMessage = useAppSelector(selectors.error.general);
     const userEmail = location.state?.email || undefined;
     const userPassword = location.state?.password || undefined;
 

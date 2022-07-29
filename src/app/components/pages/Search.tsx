@@ -1,15 +1,14 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from "reactstrap";
 import {Col, Container, Form, Input, Row} from "reactstrap";
-import queryString from "query-string";
 import {fetchSearch} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {DOCUMENT_TYPE, documentDescription, SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
-import {pushSearchToHistory, searchResultIsPublic} from "../../services/search";
+import {parseLocationSearch, pushSearchToHistory, searchResultIsPublic} from "../../services/search";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
@@ -33,29 +32,19 @@ function deitemise(item: Item<DOCUMENT_TYPE>) {
     return item.value;
 }
 
-function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT_TYPE[]] {
-    const searchParsed = queryString.parse(search);
-
-    const parsedQuery = searchParsed.query || "";
-    const query = parsedQuery instanceof Array ? parsedQuery[0] : parsedQuery;
-
-    const parsedFilters = searchParsed.types || "";
-    const possibleFilters = (Array.isArray(parsedFilters) ? parsedFilters[0] || "" : parsedFilters || "").split(",");
-    const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[]
-
-    return [query, filters];
-}
 
 const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUMENT_TYPE>>> = {
     multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: siteSpecific("rgba(254, 161, 0, 0.9)", "rgba(255, 181, 63, 0.9)")}),
     multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
 };
 
+// Interacting with the page's filters change the query parameters.
+// Whenever the query parameters change we send a search request to the API.
 export const Search = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useDispatch();
-    const searchResults = useSelector((state: AppState) => state?.search?.searchResults || null);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const searchResults = useAppSelector((state: AppState) => state?.search?.searchResults || null);
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const [urlQuery, urlFilters] = parseLocationSearch(location.search);
     const [queryState, setQueryState] = useState(urlQuery);
@@ -66,8 +55,10 @@ export const Search = withRouter((props: RouteComponentProps) => {
     }
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
 
-    useEffect(function triggerSearchOnUrlChange() {
-        dispatch(fetchSearch(queryState ?? "", filtersState.length ? filtersState.map(deitemise).join(",") : undefined));
+    useEffect(function triggerSearchAndUpdateLocalStateOnUrlChange() {
+        dispatch(fetchSearch(urlQuery ?? "", initialFilters.length ? initialFilters.join(",") : undefined));
+        setQueryState(urlQuery);
+        setFiltersState(initialFilters.map(itemise));
     }, [dispatch, location.search]);
 
     function updateSearchUrl(e?: FormEvent<HTMLFormElement>) {
@@ -78,12 +69,19 @@ export const Search = withRouter((props: RouteComponentProps) => {
     // Trigger update to search url on query or filter change
     const timer: MutableRefObject<number | undefined> = useRef();
     useEffect(() => {
-        timer.current = window.setTimeout(() => {updateSearchUrl()}, 800);
-        return () => {clearTimeout(timer.current)};
+        if (queryState !== urlQuery) {
+            timer.current = window.setTimeout(() => {updateSearchUrl()}, 800);
+            return () => {clearTimeout(timer.current)};
+        }
     }, [queryState]);
 
     useEffect(() => {
-        updateSearchUrl()
+        const filtersStateMatchesQueryParamFilters =
+            filtersState.length === initialFilters.length &&
+            filtersState.map(deitemise).every(f => initialFilters.includes(f));
+        if (!filtersStateMatchesQueryParamFilters) {
+            updateSearchUrl();
+        }
     }, [filtersState]);
 
     // Process results and add shortcut responses
@@ -130,7 +128,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                     <Select
                                         inputId="document-filter" isMulti
                                         placeholder="No page type filter"
-                                        defaultValue={filtersState}
+                                        value={filtersState}
                                         options={
                                             [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
                                                 DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]

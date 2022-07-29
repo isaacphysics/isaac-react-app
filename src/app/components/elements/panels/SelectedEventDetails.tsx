@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
@@ -9,9 +9,9 @@ import {NOT_FOUND} from "../../../services/constants";
 import {zeroOrLess} from "../../../services/validation";
 
 export const SelectedEventDetails = ({eventId}: {eventId: string}) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(getEvent(eventId))}, [dispatch, eventId]);
-    const selectedEvent = useSelector((state: AppState) => {return state && state.currentEvent;});
+    const selectedEvent = useAppSelector((state: AppState) => {return state && state.currentEvent;});
 
     return <RS.Card>
         <RS.CardBody>

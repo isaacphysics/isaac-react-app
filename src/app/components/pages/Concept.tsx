@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Col, Container, Row} from "reactstrap";
 import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -31,10 +31,10 @@ interface ConceptPageProps {
     location: {search: string};
 }
 export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride}: ConceptPageProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
-    const doc = useSelector((state: AppState) => state?.doc || null);
+    const doc = useAppSelector((state: AppState) => state?.doc || null);
     const navigation = useNavigation(doc);
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {

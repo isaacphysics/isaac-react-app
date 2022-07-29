@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {
     cancelReservationsOnEvent,
     closeActiveModal,
@@ -24,18 +24,18 @@ import {Link} from "react-router-dom";
 import classNames from "classnames";
 
 const ReservationsModal = () => {
-    const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
-    const activeGroups = useSelector(selectors.groups.active);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
+    const activeGroups = useAppSelector(selectors.groups.active);
     const activeFilteredGroups = useMemo(() => activeGroups?.filter(group => !group.archived), [activeGroups])?.sort((a: AppGroup, b: AppGroup): number => {
         if (!a.groupName || !b.groupName || (a.groupName === b.groupName)) return 0;
         if (a.groupName > b.groupName) return 1;
         return -1;
     });
-    const currentGroup = useSelector(selectors.groups.current);
-    const selectedEvent = useSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
-    const eventBookingsForGroup = useSelector((state: AppState) => state && state.eventBookingsForGroup || []);
-    const eventBookingsForAllGroups = useSelector((state: AppState) => state && state.eventBookingsForAllGroups || []);
+    const currentGroup = useAppSelector(selectors.groups.current);
+    const selectedEvent = useAppSelector((state: AppState) => state && state.currentEvent !== NOT_FOUND && state.currentEvent || null);
+    const eventBookingsForGroup = useAppSelector((state: AppState) => state && state.eventBookingsForGroup || []);
+    const eventBookingsForAllGroups = useAppSelector((state: AppState) => state && state.eventBookingsForAllGroups || []);
     const [unbookedUsers, setUnbookedUsers] = useState<AppGroupMembership[]>([]);
     const [userCheckboxes, setUserCheckboxes] = useState<{[key: number]: boolean}>({});
     const [checkAllCheckbox, setCheckAllCheckbox] = useState<boolean>(false);

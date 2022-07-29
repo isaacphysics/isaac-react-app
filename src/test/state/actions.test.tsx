@@ -1,7 +1,7 @@
 import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 
-import thunk from 'redux-thunk';
+import thunk from "redux-thunk";
 import {
     fetchSearch,
     registerQuestion,
@@ -24,7 +24,7 @@ import {Action} from "../../IsaacAppTypes";
 import {middleware} from "../../app/state/store";
 import {jest} from "@jest/globals";
 
-const mockStore = configureMockStore(middleware);
+const mockStore = configureMockStore([thunk, ...middleware]);
 const axiosMock = new MockAdapter(endpoint);
 
 describe("middleware",  () => {

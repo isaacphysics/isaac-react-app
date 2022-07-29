@@ -2,7 +2,7 @@ import {GlossaryTermDTO} from "../../../../../IsaacApiTypes";
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import {IsaacGlossaryTerm} from "../../../content/IsaacGlossaryTerm";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../../state/store";
 import {AppState} from "../../../../state/reducers";
 import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
@@ -34,8 +34,8 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
-    const glossaryTerms = useSelector((state: AppState) => state && state.glossaryTerms);
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const glossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const [componentUuid] = useState(uuid_v4().slice(0, 8));
 
     if (!glossaryTerms) return [html, () => []];

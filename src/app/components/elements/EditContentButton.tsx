@@ -1,5 +1,5 @@
 import React from "react";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {selectors} from "../../state/selectors";
 import {ExternalLink} from "./ExternalLink";
 import {EDITOR_URL} from "../../services/constants";
@@ -11,7 +11,7 @@ export interface EditContentButtonProps {
 }
 
 export const EditContentButton = ({doc, className}: EditContentButtonProps) => {
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     if (segueEnvironment === "DEV" && doc?.canonicalSourceFile) {
         return <div className="not-mobile">
             <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={className || ""}>
