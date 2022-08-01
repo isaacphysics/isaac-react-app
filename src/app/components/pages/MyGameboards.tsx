@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../state/store";
-import {deleteBoard} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import * as RS from 'reactstrap';
 import {
     Button,
@@ -16,6 +14,7 @@ import {
     Input,
     Label,
     Row,
+    Spinner,
     Table
 } from 'reactstrap';
 import {AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
@@ -48,6 +47,8 @@ import {Link} from "react-router-dom";
 import {isPhy} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
+import {unlinkUserFromGameboard} from "../../state/slices/api/gameboards";
+import {selectors} from "../../state/selectors";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -79,7 +80,7 @@ const Board = (props: BoardTableProps) => {
 
     function confirmCardDeleteBoard() {
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            dispatch(deleteBoard(board.id, board.title));
+            dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title}));
         }
     }
 
@@ -165,7 +166,8 @@ const Board = (props: BoardTableProps) => {
 export const MyGameboards = () => {
     //Redux state and dispatch
     const dispatch = useAppDispatch();
-    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
+    // We know the user is logged in to visit this page
+    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
@@ -187,7 +189,7 @@ export const MyGameboards = () => {
 
     function confirmDeleteMultipleBoards() {
         if (confirm(`Are you sure you want to remove ${selectedBoards && selectedBoards.length > 1 ? selectedBoards.length + " boards" : selectedBoards[0].title} from your account?`)) {
-            selectedBoards && selectedBoards.map(board => dispatch(deleteBoard(board.id, board.title)));
+            selectedBoards && selectedBoards.map(board => dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title})));
             setSelectedBoards([]);
         }
     }
@@ -233,7 +235,7 @@ export const MyGameboards = () => {
             :
             <>
                 <div className="mt-4 mb-2">
-                    {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
+                    {boards && boards.totalResults && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
                         with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
                     {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved gameboards...</h4>}
                 </div>
@@ -283,7 +285,7 @@ export const MyGameboards = () => {
                                 </Row>
                                 <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}
+                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
                                 </div>
                             </>
                             :

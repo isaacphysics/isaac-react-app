@@ -15,7 +15,7 @@ import {
 } from '../../services/constants';
 import {Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
-import {fetchConcepts, generateTemporaryGameboard, loadGameboard} from '../../state/actions';
+import {fetchConcepts} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors} from "../../state/selectors";
 import queryString from "query-string";
@@ -36,6 +36,7 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {isDefined} from "../../services/miscUtils";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
+import {isaacApi} from "../../state/slices/api";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -343,8 +344,11 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     const history = useHistory();
     const gameboardOrNotFound = useAppSelector(selectors.board.currentGameboardOrNotFound);
-    const gameboard = useAppSelector(selectors.board.currentGameboard);
+    const gameboard = gameboardOrNotFound === NOT_FOUND ? null : gameboardOrNotFound;
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
+
+    const [ generateTemporaryGameboard ] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
+    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
 
     useEffect(() => {
         if (gameboard && gameboard.id !== gameboardIdAnchor) {
@@ -442,7 +446,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             params[tier.id] = toCSV(selections[i]);
         });
 
-        dispatch(generateTemporaryGameboard(params));
+        generateTemporaryGameboard(params);
         // Don't add subject and strands to CS URL
         if (isCS) {
             if (tiers[0]?.id) delete params[tiers[0].id];
@@ -459,7 +463,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (gameboardIdAnchor && gameboardIdAnchor !== gameboard?.id) {
-            dispatch(loadGameboard(gameboardIdAnchor));
+            loadGameboard(gameboardIdAnchor);
         } else {
             setBoardStack([]);
             loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history, dispatch)
@@ -480,7 +484,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (boardStack.length > 0) {
             const oldBoardId = boardStack.pop() as string;
             setBoardStack(boardStack);
-            dispatch(loadGameboard(oldBoardId));
+            loadGameboard(oldBoardId);
         }
     }
 

@@ -312,35 +312,6 @@ export const api = {
             return endpoint.get(`/pages/topics/${topicName}`);
         }
     },
-    gameboards: {
-        get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
-            return endpoint.get(`/gameboards/${gameboardId}`);
-        },
-        save: (gameboardId: string) => {
-            return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
-        },
-        renameAndSave: (gameboardId: string, newGameboardTitle: string) => {
-            return endpoint.post(`gameboards/${gameboardId}`, {}, {params: {title: newGameboardTitle}});
-        },
-        create: (gameboard: GameboardDTO) => {
-            return endpoint.post(`gameboards`, gameboard);
-        },
-        generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
-            // TODO FILTER: Temporarily force physics to search for problem solving questions
-            if (isPhy) {
-                if (!Object.keys(params).includes("questionCategories")) {
-                    params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
-                }
-                // Swap 'learn_and_practice' to 'problem_solving' and 'books' as that is how the content is tagged
-                // TODO the content should be modified with a script/change of tagging so that this is the case
-                params.questionCategories = params.questionCategories?.split(",")
-                    .map(c => c === QUESTION_CATEGORY.LEARN_AND_PRACTICE ? `${QUESTION_CATEGORY.PROBLEM_SOLVING},${QUESTION_CATEGORY.BOOK_QUESTIONS}` : c)
-                    .join(",")
-            }
-
-            return endpoint.get(`/gameboards`, {params});
-        }
-    },
     assignments: {
         getMyAssignments: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
             return endpoint.get(`/assignments`);
@@ -421,23 +392,6 @@ export const api = {
         },
         groupProgress: (group: ApiTypes.UserGroupDTO): AxiosPromise<ApiTypes.UserGameboardProgressSummaryDTO[]> => {
             return endpoint.get(`/groups/${group.id}/progress`);
-        }
-    },
-    boards: {
-        get: (startIndex: number, limit: NumberOfBoards, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
-            return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
-        },
-        delete: (boardId: string) => {
-            return endpoint.delete(`/gameboards/user_gameboards/${boardId}`);
-        },
-        unassign: (boardId: string, groupId: number) => {
-            return endpoint.delete(`/assignments/assign/${boardId}/${groupId}`);
-        },
-        assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentFeedbackDTO[]> => {
-            return endpoint.post(`/assignments/assign_bulk`, assignments);
-        },
-        getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
-            return endpoint.get(`/gameboards/${boardId}`);
         }
     },
     news: {

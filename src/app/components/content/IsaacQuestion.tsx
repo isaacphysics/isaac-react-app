@@ -21,6 +21,7 @@ import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import {saveGameboard} from "../../state/slices/api/gameboards";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -96,7 +97,11 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
             if (questionPart?.currentAttempt) {
                 dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
                 if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-                    dispatch(addGameboard(currentGameboard.id, currentUser));
+                    dispatch(saveGameboard({
+                        boardId: currentGameboard.id,
+                        user: currentUser,
+                        redirectOnSuccess: false
+                    }));
                 }
             }
         }}>

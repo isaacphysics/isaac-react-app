@@ -4,12 +4,12 @@ import React, {useCallback, useEffect, useState} from "react";
 import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
 import {isCS, isPhy} from "./siteConstants";
-import {CurrentGameboardState} from "../state/reducers/gameboardsState";
 import {determineAudienceViews} from "./userContext";
 import {NumberOfBoards, BoardOrder, ViewingContext} from "../../IsaacAppTypes";
-import {selectors} from "../state/selectors";
-import {loadBoards} from "../state/actions";
 import {useAppDispatch, useAppSelector} from "../state/store";
+import {CurrentGameboardState} from "../state/slices/gameboards";
+import {isaacApi} from "../state/slices/api";
+import {selectors} from "../state/selectors";
 
 export enum BoardCompletions {
     "any" = "Any",
@@ -52,7 +52,7 @@ export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
 
 export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+    if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.contents) {
         currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
             const gameboardContentIds = currentGameboard.contents.map(q => q.id);
@@ -117,7 +117,7 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
 };
 
 export const determineCurrentCreationContext = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
-   if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+   if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.contents) {
         return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
    }
 };
@@ -190,7 +190,7 @@ const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: B
 
 export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit) => {
     const dispatch = useAppDispatch();
-
+    const [ loadGameboards, data ] = isaacApi.endpoints.getGameboards.useLazyQuery();
     const boards = useAppSelector(selectors.boards.boards);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
@@ -204,9 +204,9 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
 
     // Fetch gameboards from server, no aggregation since we want a fresh list
     const loadInitial = useCallback((limit: NumberOfBoards) => {
-        dispatch(loadBoards(0, limit, boardOrder));
+        loadGameboards({startIndex: 0, limit, sort: boardOrder});
         setLoading(true);
-    }, [loadBoards, setLoading, boardOrder]);
+    }, [loadGameboards, setLoading, boardOrder]);
 
     // Refetches the boards when the limit changes - should fetch as many boards
     // as the new value of boardLimit
@@ -229,7 +229,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
     const viewMore = useCallback(() => {
         const increment = parseBoardLimitAsNumber(boardLimit);
         if (increment != "ALL" && numberOfBoards != "ALL") {
-            dispatch(loadBoards(numberOfBoards, increment, boardOrder));
+            loadGameboards({startIndex: numberOfBoards, limit: increment, sort: boardOrder});
             setLoading(true);
         }
     }, [dispatch, setLoading, numberOfBoards, boardLimit, boardOrder]);

@@ -257,15 +257,6 @@ export type Action =
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
-
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS; wildcards: ApiTypes.IsaacWildcard[]}
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE; errorMessage: string}
@@ -418,29 +409,6 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_REQUEST}
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
-    | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
-
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS; gameboardId: string; gameboardTitle?: string}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS; gameboardId: string}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; boardId: string}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; boardId: string}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; boardId: string}
-
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; boardId: string; groupId: number}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; boardId: string; groupId: number}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; boardId: string; groupId: number}
-
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; newAssignments: (BoardAssignee & {assignmentId: number})[]; assignmentStub: AssignmentDTO}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
 
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}

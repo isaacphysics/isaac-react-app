@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import queryString from "query-string";
-import {fetchTopicSummary, loadGameboard} from "../state/actions";
+import {fetchTopicSummary} from "../state/actions";
 import {useAppDispatch, useAppSelector} from "../state/store";
 import {
     determineCurrentCreationContext,
@@ -15,6 +15,7 @@ import {AudienceContext, ContentDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {selectors} from "../state/selectors";
 import {useLocation} from "react-router-dom";
+import {isaacApi} from "../state/slices/api";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
 export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
@@ -35,11 +36,12 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const queryParams = queryString.parse(location.search);
     const dispatch = useAppDispatch();
+    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
 
     useEffect(() => {
-        if (queryParams.board) dispatch(loadGameboard(queryParams.board as string));
+        if (queryParams.board) loadGameboard(queryParams.board as string);
         if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
-    }, [queryParams.board, queryParams.topic, currentDocId, dispatch]);
+    }, [queryParams.board, queryParams.topic, currentDocId, loadGameboard, dispatch]);
 
     const currentGameboard = useAppSelector(selectors.board.currentGameboard);
     const currentTopic = useAppSelector(selectors.topic.currentTopic);

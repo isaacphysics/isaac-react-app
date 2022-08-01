@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "./ShowLoading";
 import {useAppDispatch} from "../../state/store";
-import {addGameboard} from "../../state/actions";
+import {saveGameboard} from "../../state/slices/api/gameboards";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
@@ -14,7 +14,14 @@ const AddGameboardComponent = (props: AddGameboardProps) => {
     const {user, match: {params: {gameboardId, gameboardTitle}}} = props;
     const dispatch = useAppDispatch();
 
-    useEffect(() => {dispatch(addGameboard(gameboardId, user, gameboardTitle, true))}, [dispatch, gameboardId]);
+    useEffect(() => {
+        dispatch(saveGameboard({
+            boardId: gameboardId,
+            user,
+            boardTitle: gameboardTitle,
+            redirectOnSuccess: true
+        }));
+    }, [dispatch, saveGameboard, gameboardId]);
 
     return <ShowLoading until={false}>
         {/* FIXME - why did the line below exist? It was shown every time you added a gameboard, briefly>? */}

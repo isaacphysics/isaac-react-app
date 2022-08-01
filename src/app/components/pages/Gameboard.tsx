@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Link, withRouter} from "react-router-dom"
-import {loadGameboard, logAction} from "../../state/actions";
+import {logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -25,6 +25,7 @@ import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySumm
 import {isDefined} from "../../services/miscUtils";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
+import {isaacApi} from "../../state/slices/api";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -125,6 +126,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();
+    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
     const gameboard = useAppSelector(selectors.board.currentGameboardOrNotFound);
     const user = useAppSelector(selectors.user.orNull);
     const gameboardId = location.hash ? location.hash.slice(1) : null;
@@ -137,7 +139,9 @@ export const Gameboard = withRouter(({ location }) => {
         showFilter = isDefined(filterValue) && filterValue.toLowerCase() === "true";
     }
 
-    useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);
+    useEffect(() => {
+        loadGameboard(gameboardId);
+    }, [dispatch, loadGameboard, gameboardId]);
 
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {

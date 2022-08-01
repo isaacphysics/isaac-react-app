@@ -5,16 +5,11 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem} from "../../../IsaacApiTypes";
 import {
     closeActiveModal,
-    createGameboard,
-    generateTemporaryGameboard,
-    getWildcards,
-    loadGameboard,
     logAction,
     openActiveModal,
 } from "../../state/actions";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
-import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {isStaff} from "../../services/user";
 import {isValidGameboardId} from "../../services/validation";
@@ -37,7 +32,8 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useUserContext} from "../../services/userContext";
 import {EXAM_BOARD, STAGE} from "../../services/constants";
 import {selectOnChange} from "../../services/select";
-import {isFound} from "../../services/miscUtils";
+import {isDefined} from "../../services/miscUtils";
+import {isaacApi} from "../../state/slices/api";
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
 const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
@@ -50,6 +46,9 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const { data: wildcards } = isaacApi.endpoints.getWildcards.useQuery();
+    const [ generateTemporaryGameboard ] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
+    const [ createGameboard ] = isaacApi.endpoints.createGameboard.useMutation();
+    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
     const baseGameboard = useAppSelector(selectors.board.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
@@ -83,10 +82,9 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
         }
     };
 
-    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [dispatch, user, wildcards]);
     useEffect(() => {
         if (baseGameboardId && (!baseGameboard)) {
-            dispatch(loadGameboard(baseGameboardId));
+            loadGameboard(baseGameboardId);
         }
     }, [dispatch, baseGameboardId, baseGameboard]);
     useEffect(() => {
@@ -99,7 +97,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
             if (userContext.examBoard !== EXAM_BOARD.ALL) {
                 params.examBoards = userContext.examBoard;
             }
-            dispatch(generateTemporaryGameboard(params));
+            generateTemporaryGameboard(params);
         }
     }, [dispatch, concepts])
     useEffect(() => {
@@ -173,7 +171,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setWildcardId(e.target.value);}}
                         >
                             <option value="random">Random wildcard</option>
-                            {isFound(wildcards) && wildcards.map((wildcard) => {
+                            {isDefined(wildcards) && wildcards.map((wildcard) => {
                                 return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
                             })}
                         </Input>
@@ -257,7 +255,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                         onClick={() => {
                             // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                             let wildcard = undefined;
-                            if (wildcardId && isFound(wildcards) && wildcards.length > 0) {
+                            if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
                                 wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                             }
 
@@ -278,18 +276,21 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                 subjects = Array.from(new Set(subjects));
                             }
 
-                            dispatch(createGameboard({
-                                id: gameboardURL,
-                                title: gameboardTitle,
-                                contents: questionOrder.map((questionId) => {
-                                    const question = selectedQuestions.get(questionId);
-                                    return question && convertContentSummaryToGameboardItem(question);
-                                }).filter((question) => question !== undefined) as GameboardItem[],
-                                wildCard: wildcard,
-                                wildCardPosition: 0,
-                                gameFilter: {subjects: subjects},
-                                tags: gameboardTags
-                            }, baseGameboardId));
+                            createGameboard({
+                                gameboard: {
+                                    id: gameboardURL,
+                                    title: gameboardTitle,
+                                    contents: questionOrder.map((questionId) => {
+                                        const question = selectedQuestions.get(questionId);
+                                        return question && convertContentSummaryToGameboardItem(question);
+                                    }).filter((question) => question !== undefined) as GameboardItem[],
+                                    wildCard: wildcard,
+                                    wildCardPosition: 0,
+                                    gameFilter: {subjects: subjects},
+                                    tags: gameboardTags
+                                },
+                                previousId: baseGameboardId
+                            });
 
                             dispatch(openActiveModal({
                                 closeAction: () => {dispatch(closeActiveModal())},

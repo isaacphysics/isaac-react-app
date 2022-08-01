@@ -22,18 +22,14 @@ import {
 } from "reactstrap";
 import {Link, withRouter} from "react-router-dom";
 import {
-    assignBoard,
-    deleteBoard,
-    loadAssignmentsOwnedByMe,
     loadGroups,
     openIsaacBooksModal,
-    showToast,
-    unassignBoard
+    showToast
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import {AppGameBoard, BoardAssignee, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
-import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -51,7 +47,7 @@ import {
     useGameboards
 } from "../../services/gameboards";
 import {connect} from "react-redux";
-import {useAppSelector} from "../../state/store";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {isPhy, siteSpecific} from "../../services/siteConstants";
@@ -63,22 +59,20 @@ import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import {above, below, useDeviceSize} from "../../services/device";
 import Select from "react-select";
 import {Item, itemise, selectOnChange} from "../../services/select";
+import {assignGameboard, unlinkUserFromGameboard} from "../../state/slices/api/gameboards";
+import {isaacApi} from "../../state/slices/api";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,
     groups: selectors.groups.active(state)
 });
 
-const dispatchToProps = {loadGroups, loadAssignmentsOwnedByMe, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
+const dispatchToProps = {loadGroups, showToast, openIsaacBooksModal};
 
 interface SetAssignmentsPageProps {
     user: RegisteredUserDTO;
     groups: UserGroupDTO[] | null;
     loadGroups: (getArchived: boolean) => void;
-    loadAssignmentsOwnedByMe: () => void;
-    deleteBoard: (boardId?: string, boardTitle?: string) => void;
-    assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
-    unassignBoard: (boardId?: string, groupId?: number) => void;
     showToast: (toast: Toast) => void;
     location: {hash: string};
     openIsaacBooksModal: () => void;
@@ -91,14 +85,15 @@ type BoardProps = SetAssignmentsPageProps & {
     boards?: Boards;
 }
 
-const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
+const AssignGroup = ({groups, board}: BoardProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useAppSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
 
     function assign() {
-        assignBoard(board, selectedGroups, dueDate, assignmentNotes).then(success => {
+        dispatch(assignGameboard({boardId: board.id as string, groups: selectedGroups, dueDate, notes: assignmentNotes})).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
@@ -164,9 +159,12 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
     </button>;
 
 const Board = (props: BoardProps) => {
-    const {user, board, assignees, boardView, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
+    const {user, board, assignees, boardView, showToast, location: {hash}} = props;
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
     const deviceSize = useDeviceSize();
+    const dispatch = useAppDispatch();
+
+    const [ unassignBoard ] = isaacApi.endpoints.unassignGameboard.useMutation();
 
     const assignmentLink = useMemo(() => `/assignment/${board.id}`, [board]);
     const hasAssignedGroups = useMemo(() => assignees && assignees.length > 0, [assignees]);
@@ -182,13 +180,14 @@ const Board = (props: BoardProps) => {
         }
 
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            deleteBoard(board.id, board.title);
+            dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title}));
         }
     }
 
     function confirmUnassignBoard(groupId: number) {
+        if (!board.id) return; // Shouldn't happen
         if (confirm("Are you sure you want to unassign this gameboard from this group?")) {
-            unassignBoard(board.id, groupId);
+            unassignBoard({boardId: board.id, groupId});
         }
     }
 
@@ -297,11 +296,11 @@ const Board = (props: BoardProps) => {
 };
 
 const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, loadAssignmentsOwnedByMe, openIsaacBooksModal} = props;
+    const {groups, loadGroups, openIsaacBooksModal} = props;
+    // We know the user is logged in and is at least a teacher in order to visit this page
+    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+    const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
 
-    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
-
-    const assignmentsSetByMe = useAppSelector(selectors.assignments.setByMe);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
         assignmentsSetByMe?.reduce((acc, assignment) => {
             if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
@@ -315,7 +314,6 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
 
     useEffect(() => {
         loadGroups(false);
-        loadAssignmentsOwnedByMe();
     }, []);
 
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
