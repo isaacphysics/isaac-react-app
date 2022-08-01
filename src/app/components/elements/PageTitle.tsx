@@ -12,7 +12,7 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
-import {mainContentIdSlice} from "../../state/reducers/internalAppState";
+import {mainContentIdSlice} from "../../state/slices/internalAppState";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserContext();

@@ -75,6 +75,7 @@ import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
 import {createAction} from "@reduxjs/toolkit";
+import {errorSlice} from "./slices/internalAppState";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -346,17 +347,6 @@ export const updateCurrentUser = (
         dispatch({type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
     }
 };
-
-export function setTransientStagePreference(stage: STAGE) {
-    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE, stage};
-}
-export function setTransientExamBoardPreference(examBoard: EXAM_BOARD) {
-    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD, examBoard};
-}
-
-export function setTransientShowOtherContentPreference(showOtherContent: boolean) {
-    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT, showOtherContent};
-}
 
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
@@ -1755,10 +1745,6 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     }
 };
 
-export const setPrintingHints = (hintsEnabled: boolean) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled});
-};
-
 // Concepts
 export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
@@ -1793,9 +1779,9 @@ export const registerPageChange = (path: string) => {
 };
 
 export const handleServerError = () => {
-    store.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
+    store.dispatch(errorSlice.actions.apiServerError);
 };
 
 export const handleApiGoneAway = () => {
-    store.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
+    store.dispatch(errorSlice.actions.apiGoneAway);
 };

@@ -47,7 +47,7 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
-import {ErrorState} from "../../state/reducers/internalAppState";
+import {ErrorState} from "../../state/slices/internalAppState";
 import {AdminUserGetState} from "../../state/reducers/adminState";
 import {Loading} from "../handlers/IsaacSpinner";
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));

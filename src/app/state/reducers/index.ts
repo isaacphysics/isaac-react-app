@@ -17,7 +17,12 @@ import {
     userPreferences,
     userSchoolLookup
 } from "./userState";
-import {error, mainContentIdSlice, printingSettings, transientUserContext} from "./internalAppState";
+import {
+    errorSlice,
+    mainContentIdSlice,
+    printingSettingsSlice,
+    transientUserContextSlice
+} from "../slices/internalAppState";
 import {constants, glossaryTerms, news} from "./staticState";
 import {concepts, doc, fragments} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
@@ -59,10 +64,10 @@ const appReducer = combineReducers({
     totpChallengePending,
 
     // Internal App
-    printingSettings,
+    printingSettings: printingSettingsSlice.reducer,
     mainContentId: mainContentIdSlice.reducer,
-    transientUserContext,
-    error,
+    transientUserContext: transientUserContextSlice.reducer,
+    error: errorSlice.reducer,
 
     // Notifiers
     toasts,

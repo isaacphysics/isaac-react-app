@@ -37,9 +37,6 @@ export type Action =
 
     | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
 
-    | {type: ACTION_TYPE.API_SERVER_ERROR}
-    | {type: ACTION_TYPE.API_GONE_AWAY}
-
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
@@ -65,10 +62,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE; stage: STAGE}
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT; showOtherContent: boolean}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -405,8 +398,6 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
-
-    | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 
     | {type: ACTION_TYPE.QUIZZES_REQUEST}
     | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}

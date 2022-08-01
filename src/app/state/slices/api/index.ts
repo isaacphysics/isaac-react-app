@@ -1,4 +1,4 @@
-import {ACTION_TYPE, API_PATH, API_REQUEST_FAILURE_MESSAGE, QUESTION_CATEGORY} from "../../../services/constants";
+import {API_PATH, API_REQUEST_FAILURE_MESSAGE, QUESTION_CATEGORY} from "../../../services/constants";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {
     FetchArgs,
@@ -26,6 +26,7 @@ import {
     EnhancedAssignment
 } from "../../../../IsaacAppTypes";
 import {isPhy} from "../../../services/siteConstants";
+import {errorSlice} from "../internalAppState";
 import {SerializedError} from "@reduxjs/toolkit";
 import {KEY, load} from "../../../services/localStorage";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
@@ -45,11 +46,11 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
     if (result.error && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
         if (result.error.status === 502) {
             // A '502 Bad Gateway' response means that the API no longer exists:
-            api.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
+            api.dispatch(errorSlice.actions.apiGoneAway);
         } else if (result.error.status === 401) {
             //
         } else {
-            api.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
+            api.dispatch(errorSlice.actions.apiServerError);
         }
         // eslint-disable-next-line no-console
         console.warn("Error from API:", result.error);
