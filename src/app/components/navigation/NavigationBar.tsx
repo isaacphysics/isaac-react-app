@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
 import {
     Badge,
     Collapse,

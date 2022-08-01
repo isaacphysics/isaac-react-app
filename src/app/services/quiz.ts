@@ -2,7 +2,6 @@ import {useEffect, useMemo} from "react";
 import {useAppDispatch, useAppSelector} from "../state/store";
 import {isDefined} from "./miscUtils";
 import {
-    ChoiceDTO,
     ContentDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,

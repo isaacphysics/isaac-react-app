@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from "react";
 import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {Link, useParams, withRouter} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {loadQuizPreview} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";

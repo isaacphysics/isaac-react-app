@@ -11,7 +11,7 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {getGroupProgress, loadGroups, openActiveModal} from "../../state/actions";
+import {getGroupProgress, loadGroups} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {orderBy, sortBy} from "lodash";
 import {
@@ -26,13 +26,11 @@ import {
 } from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
-import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {siteSpecific} from "../../services/siteConstants";
-import {isDefined, isFound} from '../../services/miscUtils';
+import {isDefined} from '../../services/miscUtils';
 import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
-import {isaacApi} from "../../state/slices/api";
 import {useGroupAssignments} from "../../state/slices/api/assignments";
 
 enum SortOrder {

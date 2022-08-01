@@ -11,8 +11,6 @@ import {
     EventTypeFilter,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    NO_CONTENT,
-    NOT_FOUND,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     STAGE,
     TAG_ID
@@ -20,12 +18,10 @@ import {
 import {
     Action,
     ActiveModal,
-    NumberOfBoards,
     AdditionalInformation,
     AppGroup,
     AppGroupMembership,
     ATTENDANCE,
-    BoardOrder,
     CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
@@ -38,12 +34,10 @@ import {
     ValidationUser,
 } from "../../IsaacAppTypes";
 import {
-    AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
     EmailTemplateDTO,
     EmailVerificationStatus,
-    GameboardDTO,
     GlossaryTermDTO,
     GraphChoiceDTO,
     IsaacQuestionPageDTO,
@@ -73,7 +67,6 @@ import {ThunkDispatch} from "redux-thunk";
 import {selectors} from "./selectors";
 import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
-import {isAdminOrEventManager, isTeacher} from "../services/user";
 import ReactGA from "react-ga";
 import {augmentEvent} from "../services/events";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
@@ -81,9 +74,6 @@ import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
-import {getValue, Item, toTuple} from "../services/select";
-import {FetchBaseQueryError, FetchBaseQueryMeta} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
-import {QueryReturnValue} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {

@@ -190,7 +190,7 @@ const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: B
 
 export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit) => {
     const dispatch = useAppDispatch();
-    const [ loadGameboards, data ] = isaacApi.endpoints.getGameboards.useLazyQuery();
+    const [ loadGameboards ] = isaacApi.endpoints.getGameboards.useLazyQuery();
     const boards = useAppSelector(selectors.boards.boards);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);

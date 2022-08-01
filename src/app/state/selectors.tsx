@@ -1,11 +1,10 @@
 import {AppState} from "./reducers";
 import {NOT_FOUND} from "../services/constants";
-import {AppAssignmentProgress, AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
+import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
-import {ChoiceDTO, QuizAssignmentDTO, QuizAttemptFeedbackDTO} from "../../IsaacApiTypes";
-import {extractQuestions} from "../services/quiz";
+import {QuizAssignmentDTO, QuizAttemptFeedbackDTO} from "../../IsaacApiTypes";
 import produce from "immer";
 
 export const selectors = {

@@ -11,7 +11,6 @@ import {
 import {isaacApi, mutationSucceeded} from "./index";
 import {isAdminOrEventManager, isTeacher} from "../../../services/user";
 import {AppState} from "../../reducers";
-import {ACTION_TYPE} from "../../../services/constants";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {history} from "../../../services/history";
 import {AppDispatch} from "../../store";
