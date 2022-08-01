@@ -17,7 +17,7 @@ import {
     userPreferences,
     userSchoolLookup
 } from "./userState";
-import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
+import {error, mainContentIdSlice, printingSettings, transientUserContext} from "./internalAppState";
 import {constants, glossaryTerms, news} from "./staticState";
 import {concepts, doc, fragments} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
@@ -60,7 +60,7 @@ const appReducer = combineReducers({
 
     // Internal App
     printingSettings,
-    mainContentId,
+    mainContentId: mainContentIdSlice.reducer,
     transientUserContext,
     error,
 

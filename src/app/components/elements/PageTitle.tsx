@@ -1,7 +1,7 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {Button, UncontrolledTooltip} from "reactstrap";
 import {isPhy, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {closeActiveModal, openActiveModal, setMainContentId} from "../../state/actions";
+import {closeActiveModal, openActiveModal} from "../../state/actions";
 import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {PageFragment} from "./PageFragment";
@@ -12,6 +12,7 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
+import {mainContentIdSlice} from "../../state/reducers/internalAppState";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserContext();
@@ -48,7 +49,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
 
     const showModal = modalId && isPhy;
 
-    useEffect(() => {dispatch(setMainContentId("main-heading"));}, []);
+    useEffect(() => {dispatch(mainContentIdSlice.actions.set("main-heading"));}, []);
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
         const element = headerRef.current;

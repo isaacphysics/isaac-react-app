@@ -408,8 +408,6 @@ export type Action =
 
     | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
 
-    | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
-
     | {type: ACTION_TYPE.QUIZZES_REQUEST}
     | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS; quizzes: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}

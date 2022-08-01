@@ -1780,12 +1780,9 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
         dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
     }};
 
-// Main anchor
-export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
-
 // SERVICE ACTIONS (w/o dispatch)
 
-export const routerPageChange = createAction<string>("pageChange");
+export const routerPageChange = createAction<string>("routerPageChange");
 
 export const changePage = (path: string) => {
     history.push(path);

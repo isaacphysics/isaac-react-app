@@ -1,6 +1,7 @@
 import {Action, PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
 import {routerPageChange} from "../actions";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
@@ -14,18 +15,19 @@ export const printingSettings = (printingSettingsState: PrintingSettingsState = 
     }
 };
 
-type MainContentIdState = string | null;
-export const mainContentId = (state: MainContentIdState = null, action: Action) => {
-    if (routerPageChange.match(action)) {
-        return null;
+export const mainContentIdSlice = createSlice({
+    name: "mainContentId",
+    initialState: null as string | null,
+    reducers: {
+        set: (state, action: PayloadAction<string>) => action.payload
+    },
+    extraReducers: (builder) => {
+        builder.addCase(
+            routerPageChange,
+            () => null,
+        )
     }
-    switch (action.type) {
-        case ACTION_TYPE.SET_MAIN_CONTENT_ID:
-            return action.id;
-        default:
-            return state;
-    }
-};
+});
 
 export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE, showOtherContent?: boolean} | null;
 export const transientUserContext = (transientUserContext: TransientUserContextState = null, action: Action) => {
