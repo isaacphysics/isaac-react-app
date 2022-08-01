@@ -1109,17 +1109,6 @@ export const createGameboard = (gameboard: GameboardDTO, previousId?: string) =>
     }
 };
 
-export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
-    try {
-        const response = await api.gameboards.getWildcards();
-        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Error loading wildcards", e));
-    }
-};
-
 export const generateTemporaryGameboard = (params: {[key: string]: string}) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
     try {

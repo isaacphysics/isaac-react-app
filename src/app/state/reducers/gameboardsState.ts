@@ -32,19 +32,6 @@ export const currentGameboard = (currentGameboard: CurrentGameboardState = null,
     }
 };
 
-export type WildcardsState = IsaacWildcard[] | NOT_FOUND_TYPE | null;
-export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST:
-            return null;
-        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS:
-            return action.wildcards;
-        case ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE:
-            return NOT_FOUND;
-        default:
-            return wildcards;
-    }
-};
 
 export type BoardsState = Boards | null;
 

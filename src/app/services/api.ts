@@ -325,9 +325,6 @@ export const api = {
         create: (gameboard: GameboardDTO) => {
             return endpoint.post(`gameboards`, gameboard);
         },
-        getWildcards: (): AxiosPromise<ApiTypes.IsaacWildcard[]> => {
-            return endpoint.get(`gameboards/wildcards`);
-        },
         generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
             // TODO FILTER: Temporarily force physics to search for problem solving questions
             if (isPhy) {

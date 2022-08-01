@@ -49,7 +49,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
 
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const wildcards = useAppSelector((state: AppState) => state && state.wildcards);
+    const { data: wildcards } = isaacApi.endpoints.getWildcards.useQuery();
     const baseGameboard = useAppSelector(selectors.board.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
