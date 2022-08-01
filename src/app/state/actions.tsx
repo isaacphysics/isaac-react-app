@@ -1784,6 +1784,7 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
 export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
 
 // SERVICE ACTIONS (w/o dispatch)
+
 export const routerPageChange = createAction<string>("pageChange");
 
 export const changePage = (path: string) => {
