@@ -10,7 +10,7 @@ import {
     AssignmentDTO,
     AssignmentFeedbackDTO, GameboardDTO,
     GameboardListDTO, IsaacWildcard, QuizAssignmentDTO,
-    TOTPSharedSecretDTO,
+    TOTPSharedSecretDTO, UserGameboardProgressSummaryDTO,
 } from "../../../../IsaacApiTypes";
 import {
     logAction,
@@ -251,10 +251,26 @@ const isaacApi = createApi({
             query: (assignmentId) => ({
                 url: `/assignments/assign/${assignmentId}/progress`
             }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading assignment progress failed"
+            }),
             transformResponse: (progress: AppAssignmentProgress[]) =>
                 progress && load(KEY.ANONYMISE_USERS) === "YES"
                     ? anonymisationFunctions.progressState(progress)
                     : progress
+        }),
+
+        getGroupProgress: build.query<UserGameboardProgressSummaryDTO[], number>({
+            query: (groupId) => ({
+                url: `/groups/${groupId}/progress`
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading group progress failed"
+            }),
+            transformResponse: (groupProgress: UserGameboardProgressSummaryDTO[]) =>
+                groupProgress && load(KEY.ANONYMISE_USERS) === "YES"
+                    ? anonymisationFunctions.groupProgress(groupProgress)
+                    : groupProgress
         }),
 
         assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
@@ -350,7 +366,15 @@ const anonymisationFunctions = {
                 userProgress.user.givenName = `Test Student ${i + 1}`;
             }
         });
-    })
+    }),
+    groupProgress: produce<UserGameboardProgressSummaryDTO[]>((groupProgress) => {
+        groupProgress?.forEach((up, i) => {
+            if (up.user) {
+                up.user.familyName = "";
+                up.user.givenName = `Test Student ${i + 1}`;
+            }
+        });
+    }),
 }
 
 export {isaacApi};

@@ -1391,17 +1391,6 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
     }
 };
 
-export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUP_PROGRESS_REQUEST});
-    try {
-        const result = await api.groups.groupProgress(group);
-        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS, groupId: group.id || 0, progress: result.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE, groupId: group.id || 0});
-        dispatch(showAxiosErrorToastIfNeeded("Loading group members failed", e));
-    }
-};
-
 // Events
 export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};
 

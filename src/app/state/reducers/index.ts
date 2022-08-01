@@ -41,7 +41,6 @@ import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations}
 import {currentTopic} from "./topicState";
 import {fasttrackConcepts, questionSearchResult} from "./gameboardsState";
 import {search} from "./searchState";
-import {groupProgress} from "./assignmentsState";
 import {
     quizAssignedToMe,
     quizAssignment,
@@ -117,9 +116,6 @@ const appReducer = combineReducers({
     currentGameboard: currentGameboardSlice.reducer,
     questionSearchResult,
     fasttrackConcepts,
-
-    // Assignments
-    groupProgress,
 
     // Search
     search,

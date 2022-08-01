@@ -32,6 +32,8 @@ import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
 import {useGroupAssignments} from "../../state/slices/api/assignments";
+import {isaacApi} from "../../state/slices/api";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 enum SortOrder {
     "Alphabetical" = "Alphabetical",
@@ -124,14 +126,7 @@ export const GroupProgressLegend = () => {
 };
 
 const GroupSummary = ({group}: {group: AppGroup}) => {
-    const dispatch = useAppDispatch();
-    const groupId = group.id || 0;
-
-    const groupProgress = useAppSelector(selectors.groups.progress)?.[groupId];
-    useEffect(() => {
-        dispatch(getGroupProgress(group));
-    }, [dispatch]);
-
+    const {data: groupProgress} = isaacApi.endpoints.getGroupProgress.useQuery(group.id ?? skipToken);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     type SortOrder = number | "student-name" | "total-questions" | "assignments-completed";
