@@ -16,7 +16,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
 
     const {quizAttempt, questionNumbers} = useContext(QuizAttemptContext);
 
-    useEffect((): (() => void) => {
+    useEffect(() => {
         return () => {
             // Submit answer when unmounting if it is dirty
             if (isDefined(quizAttempt) && quizAttempt.completedDate === undefined) {
@@ -31,7 +31,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
     const noAnswer = validated && correct === undefined;
 
-    const QuestionComponent = QUESTION_TYPES[doc.type || "default"];
+    const QuestionComponent = QUESTION_TYPES[doc?.type ?? "default"];
 
     return <React.Fragment>
         <div className={
