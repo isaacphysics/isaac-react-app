@@ -1,23 +1,18 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
+import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
-    AssignmentDTO,
-    AssignmentFeedbackDTO,
     AuthenticationProvider,
     EmailTemplateDTO,
     EventBookingDTO,
-    GameboardDTO,
     ResultsWrapper,
     TestCaseDTO,
     UserContext
 } from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
-    NumberOfBoards,
     AdditionalInformation,
     ATTENDANCE,
-    BoardOrder,
     Choice,
     Concepts,
     CredentialsAuthDTO,
@@ -30,7 +25,6 @@ import {
 import {handleApiGoneAway, handleServerError} from "../state/actions";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
-import {isPhy} from "./siteConstants";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -301,17 +295,6 @@ export const api = {
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
-        }
-    },
-    assignments: {
-        getMyAssignments: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
-            return endpoint.get(`/assignments`);
-        },
-        getAssignmentsOwnedByMe: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
-            return endpoint.get(`/assignments/assign`);
-        },
-        getProgressForAssignment: (assignment: ApiTypes.AssignmentDTO): AxiosPromise<AppTypes.AppAssignmentProgress[]> => {
-            return endpoint.get(`/assignments/assign/${assignment._id}/progress`);
         }
     },
     contentVersion: {

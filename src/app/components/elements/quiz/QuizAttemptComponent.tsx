@@ -35,8 +35,6 @@ export interface QuizAttemptProps {
     pageLink: PageLinkCreator;
     pageHelp: React.ReactElement;
     preview?: boolean;
-    studentId?: string;
-    quizAssignmentId?: string;
     studentUser?: UserSummaryDTO;
 }
 
@@ -44,7 +42,7 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
     return questions.filter(q => q.id?.startsWith(section.id as string + "|"));
 }
 
-function QuizContents({attempt, sections, questions, pageLink, studentId, quizAssignmentId}: QuizAttemptProps) {
+function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps) {
     if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
             <h4>No feedback available</h4>
@@ -174,7 +172,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 
 export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
 export const teacherQuizzesCrumbs = [{title: "Set tests", to: `/set_tests`}];
-const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentId, quizAssignmentId, studentUser}: QuizAttemptProps) => {
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
@@ -203,7 +201,7 @@ interface QuizPaginationProps {
     finalLabel: string;
 }
 
-export function QuizPagination({attempt, page, sections, pageLink, finalLabel, studentId, quizAssignmentId}: QuizAttemptProps & QuizPaginationProps) {
+export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttemptProps & QuizPaginationProps) {
     const deviceSize = useDeviceSize();
     const sectionCount = Object.keys(sections).length;
     const backLink = pageLink(page > 1 ? page - 1 : undefined);
@@ -226,7 +224,7 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
         <QuizTitle {...props} />
         {page === null ?
             <div className="mt-4">
-                {!isDefined(props.studentId) && <QuizHeader {...props} />}
+                {!isDefined(props.studentUser?.id) && <QuizHeader {...props} />}
                 <QuizRubric {...props}/>
                 <QuizContents {...props} />
             </div>

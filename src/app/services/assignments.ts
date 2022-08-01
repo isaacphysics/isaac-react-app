@@ -1,16 +1,16 @@
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
-import {SingleEnhancedAssignment} from "../../IsaacAppTypes";
+import {EnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH} from "./constants";
 import {extractTeacherName} from "./user";
 
-export function hasGameboard(assignment: AssignmentDTO): assignment is SingleEnhancedAssignment {
+export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
     return assignment.gameboard != undefined;
 }
 export function getAssignmentCSVDownloadLink(assignmentId: number) {
     return `${API_PATH}/assignments/assign/${assignmentId}/progress/download`;
 }
-export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | null) => {
+export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefined | null) => {
     const now = new Date();
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
     // Midnight five days ago:
@@ -69,7 +69,7 @@ export const filterAssignmentsByProperties = (assignments: AssignmentDTO[], assi
     return filteredAssignments
 }
 
-export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | null): Set<string> => {
+export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | undefined | null): Set<string> => {
     const distinctAssignmentGroups = new Set<string>()
 
     if (assignments) {
@@ -80,7 +80,7 @@ export const getDistinctAssignmentGroups = (assignments: AssignmentDTO[] | null)
     return distinctAssignmentGroups
 }
 
-export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | null): Set<string> => {
+export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | undefined | null): Set<string> => {
     const distinctFormattedAssignmentSetters = new Set<string>()
 
     if (assignments) {

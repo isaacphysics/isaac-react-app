@@ -1,4 +1,4 @@
-import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ComponentProps, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
     Button,
@@ -11,16 +11,16 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {getGroupProgress, loadAssignmentsOwnedByMe, loadGroups, openActiveModal} from "../../state/actions";
+import {getGroupProgress, loadGroups, openActiveModal} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {orderBy, sortBy} from "lodash";
-import {AppAssignmentProgress, AppGroup, EnhancedGameboard, PageSettings} from "../../../IsaacAppTypes";
+import {
+    AppGroup,
+    AssignmentProgressPageSettingsContext,
+} from "../../../IsaacAppTypes";
 import {selectors} from "../../state/selectors";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    AssignmentDTO,
-    GameboardDTO,
     GameboardProgressSummaryDTO,
     UserGameboardProgressSummaryDTO
 } from "../../../IsaacApiTypes";
@@ -28,82 +28,17 @@ import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {siteSpecific} from "../../services/siteConstants";
-import {isDefined} from '../../services/miscUtils';
+import {isDefined, isFound} from '../../services/miscUtils';
 import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-
-function selectGroups(state: AppState) {
-    if (state != null) {
-        const gameboards: {[id: string]: GameboardDTO} = {};
-        if (state.boards?.boards) {
-            for (const board of state.boards.boards) {
-                gameboards[board.id as string] = board;
-            }
-        }
-
-        const progress = selectors.assignments.progress(state);
-        const assignments: { [id: number]: EnhancedAssignment[] } = {};
-        if (state.assignmentsByMe) {
-            for (const assignment of state.assignmentsByMe) {
-                const assignmentId = assignment._id as number;
-                const enhancedAssignment: EnhancedAssignment = {
-                    ...assignment,
-                    _id: assignmentId,
-                    gameboard: (assignment.gameboard || gameboards[assignment.gameboardId as string]) as EnhancedGameboard,
-                    progress: (progress && progress[assignmentId]) || undefined,
-                };
-                const groupId = assignment.groupId as number;
-                if (groupId in assignments) {
-                    assignments[groupId].push(enhancedAssignment);
-                } else {
-                    assignments[groupId] = [enhancedAssignment];
-                }
-            }
-        }
-
-        const activeGroups = selectors.groups.active(state);
-        if (activeGroups) {
-            const activeGroupsWithAssignments = activeGroups.map(g => {
-                return {
-                    ...g,
-                    assignments: assignments[g.id as number] || []
-                };
-            });
-            return {
-                groups: activeGroupsWithAssignments
-            };
-        }
-    }
-    return {
-        groups: null
-    };
-}
-
-type EnhancedAssignment = AssignmentDTO & {
-    gameboard: EnhancedGameboard;
-    _id: number;
-    progress?: AppAssignmentProgress[];
-};
-
-type AppGroupWithAssignments = AppGroup & {assignments: EnhancedAssignment[]};
-
-interface GroupProgressPageProps {
-    groups: AppGroupWithAssignments[] | null;
-}
+import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
+import {isaacApi} from "../../state/slices/api";
+import {useGroupAssignments} from "../../state/slices/api/assignments";
 
 enum SortOrder {
     "Alphabetical" = "Alphabetical",
     "Date Created" = "Date Created"
 }
-
-interface GroupProgressLegendProps {
-    pageSettings: PageSettings;
-}
-
-type GroupSummaryProps = GroupProgressPageProps & {
-    group: AppGroupWithAssignments;
-    pageSettings: PageSettings;
-};
 
 const passMark = 0.75;
 
@@ -149,8 +84,8 @@ function formatAssignmentsCompleted(progress: GameboardProgressSummaryDTO[], for
     }
 }
 
-export const GroupProgressLegend = (props: GroupProgressLegendProps): JSX.Element => {
-    const {pageSettings} = props;
+export const GroupProgressLegend = () => {
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     return <div className="p-4"><div className="assignment-progress-legend">
         <ul className="block-grid-xs-5">
             <li className="d-flex flex-wrap">
@@ -190,11 +125,16 @@ export const GroupProgressLegend = (props: GroupProgressLegendProps): JSX.Elemen
     </div></div>
 };
 
-const GroupSummary = (props: GroupSummaryProps) => {
+const GroupSummary = ({group}: {group: AppGroup}) => {
     const dispatch = useAppDispatch();
-    const {group, pageSettings} = props;
     const groupId = group.id || 0;
+
     const groupProgress = useAppSelector(selectors.groups.progress)?.[groupId];
+    useEffect(() => {
+        dispatch(getGroupProgress(group));
+    }, [dispatch]);
+
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     type SortOrder = number | "student-name" | "total-questions" | "assignments-completed";
     const [sortOrder, setSortOrder] = useState<SortOrder>("student-name");
@@ -233,10 +173,6 @@ const GroupSummary = (props: GroupSummaryProps) => {
             }
         }
     }, [selectedGameboardNumber]);
-
-    useEffect(() => {
-        dispatch(getGroupProgress(group));
-    }, [dispatch]);
 
     if (isDefined(groupProgress) && groupProgress.length === 0) {
         return null;
@@ -333,60 +269,59 @@ const GroupSummary = (props: GroupSummaryProps) => {
 
     return <ShowLoading until={groupProgress} placeholder={<div className="w-100 text-center"><IsaacSpinner color="secondary" /></div>}>
         <div className={"group-progress-summary" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <GroupProgressLegend pageSettings={pageSettings}/>
-
-        <div className="progress-questions mx-4">
-            <Button color="tertiary" disabled={selectedGameboardNumber === 0}
-                onClick={() => setSelectedGameboardNumber(selectedGameboardNumber - 1)}>◄</Button>
-            <div><Link
-                to={`/assignment_progress/${selectedGameboard?.assignmentId || -1}?board=${selectedGameboard?.gameboardId}`} target="_blank"><strong>A<span className="d-none d-md-inline">ssignment</span>: </strong>{selectedGameboard?.gameboardTitle}
-            </Link>
-            <span className="ml-3"></span>
-            {selectedGameboard?.dueDate && <small className="font-weight-bold text-muted">(Due date: {formatDate(selectedGameboard?.dueDate)})</small>}
-            {!selectedGameboard?.creationDate && <small>(Date Created: {formatDate(selectedGameboard?.creationDate)})</small>}
+            <GroupProgressLegend/>
+            <div className="progress-questions mx-4">
+                <Button color="tertiary" disabled={selectedGameboardNumber === 0}
+                    onClick={() => setSelectedGameboardNumber(selectedGameboardNumber - 1)}>◄</Button>
+                <div><Link
+                    to={`/assignment_progress/${selectedGameboard?.assignmentId || -1}?board=${selectedGameboard?.gameboardId}`} target="_blank"><strong>A<span className="d-none d-md-inline">ssignment</span>: </strong>{selectedGameboard?.gameboardTitle}
+                </Link>
+                <span className="ml-3"></span>
+                {selectedGameboard?.dueDate && <small className="font-weight-bold text-muted">(Due date: {formatDate(selectedGameboard?.dueDate)})</small>}
+                {!selectedGameboard?.creationDate && <small>(Date Created: {formatDate(selectedGameboard?.creationDate)})</small>}
+                </div>
+                <Button color="tertiary" disabled={selectedGameboardNumber === (groupProgress?.[0]?.progress || []).length - 1}
+                    onClick={() => setSelectedGameboardNumber(selectedGameboardNumber + 1)}>►</Button>
             </div>
-            <Button color="tertiary" disabled={selectedGameboardNumber === (groupProgress?.[0]?.progress || []).length - 1}
-                onClick={() => setSelectedGameboardNumber(selectedGameboardNumber + 1)}>►</Button>
+            <div className="progress-table mx-4">
+                <table ref={tableRef}>
+                    <thead>{tableHeaderFooter}</thead>
+                    <tbody className="">
+                        {(sortedProgress || []).map(userProgress => {
+                            const {user, progress} = userProgress;
+                            const fullAccess = user?.authorisedFullAccess || false;
+                            return <tr className={`user-progress-summary-row ${fullAccess ? '' : 'revoked'}`} key={userProgress.user?.id}>
+                                {user && <th className="student-name py-2">
+                                    <Link to={`/progress/${user.id}`} target="_blank">
+                                        {`${user.givenName} ${user.familyName}`}
+                                    </Link>
+                                </th>}
+                                {(progress ?? []).map((gameboard, index) => {
+                                    /* Do we still base this on question parts or should we move to question pages?
+                                       Do we want to give users the option to switch between the two? (hint: NO) */
+                                    const rateClass = markClasses(fullAccess,
+                                                                gameboard.questionPartsCorrect ?? 0,
+                                                                gameboard.questionPartsIncorrect ?? 0,
+                                                                gameboard.questionPartsTotal ?? 1,
+                                                                gameboard.passMark ?? passMark
+                                                               );
+                                    return <td className={`py-2 ${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.assignmentId}>
+                                        {fullAccess && formatMark(gameboard.questionPagesPerfect ?? 0, gameboard.questionPagesTotal ?? 0, pageSettings.formatAsPercentage)}
+                                    </td>
+                                })}
+                                <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
+                                    {fullAccess && formatPagesCorrect(progress || [], pageSettings.formatAsPercentage)}
+                                </th>
+                                <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
+                                    {fullAccess && formatAssignmentsCompleted(progress || [], pageSettings.formatAsPercentage)}
+                                </th>
+                            </tr>
+                        })}
+                    </tbody>
+                    <tfoot>{tableHeaderFooter}</tfoot>
+                </table>
+            </div>
         </div>
-        <div className="progress-table mx-4">
-            <table ref={tableRef}>
-                <thead>{tableHeaderFooter}</thead>
-                <tbody className="">
-                    {(sortedProgress || []).map(userProgress => {
-                        const {user, progress} = userProgress;
-                        const fullAccess = user?.authorisedFullAccess || false;
-                        return <tr className={`user-progress-summary-row ${fullAccess ? '' : 'revoked'}`} key={userProgress.user?.id}>
-                            {user && <th className="student-name py-2">
-                                <Link to={`/progress/${user.id}`} target="_blank">
-                                    {`${user.givenName} ${user.familyName}`}
-                                </Link>
-                            </th>}
-                            {(progress ?? []).map((gameboard, index) => {
-                                /* Do we still base this on question parts or should we move to question pages?
-                                   Do we want to give users the option to switch between the two? (hint: NO) */
-                                const rateClass = markClasses(fullAccess,
-                                                            gameboard.questionPartsCorrect ?? 0,
-                                                            gameboard.questionPartsIncorrect ?? 0,
-                                                            gameboard.questionPartsTotal ?? 1,
-                                                            gameboard.passMark ?? passMark
-                                                           );
-                                return <td className={`py-2 ${rateClass} ${index === selectedGameboardNumber ? 'selected' : ''} progress-cell text-center`} key={gameboard.assignmentId}>
-                                    {fullAccess && formatMark(gameboard.questionPagesPerfect ?? 0, gameboard.questionPagesTotal ?? 0, pageSettings.formatAsPercentage)}
-                                </td>
-                            })}
-                            <th className="total-column left" title={fullAccess ? undefined : "Not Sharing"}>
-                                {fullAccess && formatPagesCorrect(progress || [], pageSettings.formatAsPercentage)}
-                            </th>
-                            <th className="total-column right" title={fullAccess ? undefined : "Not Sharing"}>
-                                {fullAccess && formatAssignmentsCompleted(progress || [], pageSettings.formatAsPercentage)}
-                            </th>
-                        </tr>
-                    })}
-                </tbody>
-                <tfoot>{tableHeaderFooter}</tfoot>
-            </table>
-        </div>
-    </div>
     </ShowLoading>
 };
 
@@ -394,21 +329,12 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/assignments/assign/group/" + groupId + "/progress/download";
 }
 
-const GroupAssignmentProgress = (props: GroupSummaryProps) => {
-    const dispatch = useAppDispatch();
-    const {group} = props;
-
+const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
     const [isExpanded, setExpanded] = useState(false);
 
-    const assignmentCount = group.assignments.length;
+    const {assignmentCount, openGroupDownloadLink} = useGroupAssignments(group.id);
 
-    function openGroupDownloadLink(event: React.MouseEvent<HTMLAnchorElement>) {
-        event.stopPropagation();
-        event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
-    }
-
-    return <React.Fragment>
+    return <>
         <div onClick={() => setExpanded(!isExpanded)} onKeyPress={() => setExpanded(!isExpanded)} role="button" tabIndex={0} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
@@ -419,48 +345,40 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>
-        {isExpanded && <GroupSummary {...props} />}
-    </React.Fragment>;
+        {isExpanded && <GroupSummary group={group} />}
+    </>;
 };
 
-export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
+export const GroupProgress = () => {
     const dispatch = useAppDispatch();
-    const {groups} = useAppSelector(selectGroups);
 
-    const [colourBlind, setColourBlind] = useState(false);
-    const [formatAsPercentage, setFormatAsPercentage] = useState(false);
+    const groups = useAppSelector(selectors.groups.active);
+    useEffect(() => {
+        dispatch(loadGroups(false));
+    }, [dispatch]);
 
-    const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
+    const pageSettings = useAssignmentProgressAccessibilitySettings();
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    const pageHelp = <span>
-        Click on your groups to see the assignments you have set. View your students' progress by question.
-    </span>;
-
-    let sortedGroups = groups;
-    if (sortedGroups) {
+    const sortedGroups = useMemo(() => {
+        if (!groups) return groups;
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                sortedGroups = sortBy(sortedGroups, g => g.groupName && g.groupName.toLowerCase());
-                break;
+                return sortBy(groups, g => g.groupName && g.groupName.toLowerCase());
             case SortOrder["Date Created"]:
-                sortedGroups = sortBy(sortedGroups, g => g.created).reverse();
-                break;
+                return sortBy(groups, g => g.created).reverse();
         }
-    }
+    }, []);
 
-    useEffect(() => {
-        dispatch(loadGroups(false));
-        dispatch(loadAssignmentsOwnedByMe());
-    }, [dispatch]);
-
-    return <React.Fragment>
+    return <>
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={siteSpecific("Group Progress", "My markbook")}
                 subTitle="Track your group performance by assignment"
-                help={pageHelp}
+                help={<span>
+                    Click on your groups to see the assignments you have set. View your students' progress by question.
+                </span>}
             />
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">
@@ -480,7 +398,9 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
         </Container>
         <div className="assignment-progress-container mb-5">
             <ShowLoading until={sortedGroups}>
-                {sortedGroups && sortedGroups.map(group => <GroupAssignmentProgress key={group.id} {...props} group={group} pageSettings={pageSettings} />)}
+                <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+                    {sortedGroups && sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
+                </AssignmentProgressPageSettingsContext.Provider>
                 {sortedGroups && sortedGroups.length === 0 && <Container className="py-5">
                     <h3 className="text-center">
                         You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
@@ -488,5 +408,5 @@ export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
                 </Container>}
             </ShowLoading>
         </div>
-    </React.Fragment>;
+    </>;
 }

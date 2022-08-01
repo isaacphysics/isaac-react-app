@@ -2,7 +2,7 @@ import {AppState} from "./reducers";
 import {NOT_FOUND} from "../services/constants";
 import {AppAssignmentProgress, AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
-import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
+import {GroupProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
 import {ChoiceDTO, QuizAssignmentDTO, QuizAttemptFeedbackDTO} from "../../IsaacApiTypes";
 import {extractQuestions} from "../services/quiz";
@@ -123,12 +123,6 @@ export const selectors = {
         userSearch: (state: AppState) => state?.adminUserSearch || null,
         userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
     },
-
-    assignments: {
-        progress: (state: AppState) => state?.progress && load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.progressState(state?.progress) : state?.progress,
-        setByMe: (state: AppState) => state?.assignmentsByMe,
-    },
-
     quizzes: {
         preview: (state: AppState) => {
             const qp = state?.quizPreview;
@@ -179,23 +173,6 @@ const anonymisationFunctions = {
                 }
             }),
         }
-    },
-    progressState: (progress: ProgressState): ProgressState => {
-        if (!progress) return null;
-        const anonymousProgress: ProgressState = {};
-        Object.keys(progress).forEach(id  => {
-            anonymousProgress[Number(id)] = progress[Number(id)].map((userProgress, i) => {
-                return {
-                    ...userProgress,
-                    user: {
-                        ...userProgress.user,
-                        familyName: "",
-                        givenName: `Test Student ${i + 1}`,
-                    }
-                }
-            })
-        });
-        return anonymousProgress;
     },
     groupProgress: (groupProgress: GroupProgressState): GroupProgressState => {
         if (!groupProgress) return null;

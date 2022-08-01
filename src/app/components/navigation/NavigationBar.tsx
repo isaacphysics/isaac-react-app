@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
@@ -15,7 +15,6 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import {loadMyAssignments} from "../../state/actions";
 import {filterAssignmentsByStatus} from "../../services/assignments";
 import {selectors} from "../../state/selectors";
 import {isCS} from "../../services/siteConstants";
@@ -24,6 +23,7 @@ import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
 import {isFound} from "../../services/miscUtils";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
+import {isaacApi} from "../../state/slices/api";
 
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
@@ -71,26 +71,23 @@ export function MenuBadge({count, message}: {count: number, message: string}) {
 export function useAssignmentsCount() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const quizzes = useAppSelector(state => state?.quizAssignedToMe);
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery();
 
     useEffect(() => {
         if (user?.loggedIn) {
-            dispatch(loadMyAssignments());
             dispatch(loadQuizAssignedToMe());
         }
     }, [dispatch, user]);
 
-    return useAppSelector((state: AppState) => {
-        const response = {assignmentsCount: 0, quizzesCount: 0};
-        if (state?.assignments) {
-            const {inProgressRecent} = filterAssignmentsByStatus(state.assignments);
-            response.assignmentsCount = inProgressRecent.length;
-        }
-        if (state && isFound(state.quizAssignedToMe)) {
-            const [_completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(state.quizAssignedToMe);
-            response.quizzesCount = incompleteQuizzes.length;
-        }
-        return response;
-    });
+    const assignmentsCount = useMemo(() => assignments ?
+        filterAssignmentsByStatus(assignments).inProgressRecent.length
+        : 0, [assignments]);
+    const quizzesCount = useMemo(() => quizzes && isFound(quizzes)
+        ? partitionCompleteAndIncompleteQuizzes(quizzes)[1].length
+        : 0, [quizzes]);
+
+    return {assignmentsCount, quizzesCount};
 }
 
 export const NavigationBar = ({children}: {children: React.ReactNode}) => {

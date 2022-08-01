@@ -18,8 +18,7 @@ import {useAssignmentProgressAccessibilitySettings} from "../../services/progres
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 
-const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
-    const {assignmentId, assignment, progress, pageSettings} = props;
+const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
     const dispatch = useAppDispatch();
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
@@ -41,60 +40,37 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
 };
 
 export const SingleAssignmentProgress = () => {
-    const dispatch = useAppDispatch();
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
+    const { data: assignment } = isaacApi.endpoints.getSingleSetAssignment.useQuery(assignmentId || skipToken);
+    const { data: assignmentProgress, isError: assignmentProgressError, error } = isaacApi.endpoints.getAssignmentProgress.useQuery(assignmentId || skipToken);
 
-    useEffect(() => {
-        dispatch(loadProgress({_id: assignmentId}));
-        dispatch(loadAssignmentsOwnedByMe());
-    }, [dispatch, assignmentId]);
-
-    const [colourBlind, setColourBlind] = useState(false);
-    const [formatAsPercentage, setFormatAsPercentage] = useState(false);
-
-    const myOwnedAssignments = useAppSelector((state: AppState) => {
-        return state?.assignmentsByMe
-    });
-
-    useEffect(() => {
-        const thisAssignment = myOwnedAssignments?.filter(obj => {
-            return obj._id == assignmentId
-        })[0];
-        const boardId = thisAssignment?.gameboardId;
-        boardId && dispatch(loadBoard(boardId));
-    }, [dispatch, myOwnedAssignments]);
-
-    const assignmentProgress = useAppSelector(selectors.assignments.progress);
-    const boards = useAppSelector(selectors.boards.boards);
-
-
-
-    const [assignment, setAssignment] = useState(myOwnedAssignments?.find(x => x._id == assignmentId));
-
-    useEffect(() => {
-        if (boards && (boards.boards[0].id = assignment?.gameboardId)) {
-            setAssignment({...assignment, gameboard: boards.boards[0]})
+    const assignmentWithProgress = useMemo<EnhancedAssignmentWithProgress | undefined>(() => {
+        if (assignment && assignmentProgress) {
+            return {
+                ...assignment,
+                progress: assignmentProgress
+            };
         }
-    }, [boards]);
+        return undefined;
+    }, [assignment, assignmentProgress]);
 
-    useEffect(() => {
-        setAssignment(myOwnedAssignments?.find(x => x._id == assignmentId));
-    }, [myOwnedAssignments, assignmentId]);
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 
-    return <ShowLoading until={assignment && assignmentProgress}>
+    return <ShowLoading until={assignmentId && assignment && assignmentProgress}>
         <Container>
             <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
                 className="mb-4" />
         </Container>
         <div className="assignment-progress-container mb-5">
-            {assignment && assignmentProgress && hasGameboard(assignment) &&
-            <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
-                progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
-            }
             <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+                {assignmentWithProgress
+                    ? <SingleProgressDetails assignment={assignmentWithProgress} />
+                    : (assignmentProgressError
+                        ? <AssignmentProgressFetchError error={error} />
+                        : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>)
+                }
             </AssignmentProgressPageSettingsContext.Provider>
         </div>
     </ShowLoading>

@@ -34,9 +34,9 @@ import {
 } from "./adminState";
 import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations} from "./groupsState";
 import {currentTopic} from "./topicState";
-import {boards, currentGameboard, fasttrackConcepts, questionSearchResult, wildcards} from "./gameboardsState";
+import {fasttrackConcepts, questionSearchResult} from "./gameboardsState";
 import {search} from "./searchState";
-import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
+import {groupProgress} from "./assignmentsState";
 import {
     quizAssignedToMe,
     quizAssignment,
@@ -44,7 +44,8 @@ import {
     quizAttempt,
     quizAttemptedFreelyByMe,
     quizPreview,
-    quizzes, studentQuizAttempt,
+    quizzes,
+    studentQuizAttempt,
 } from "./quizState";
 import {isaacApi} from "../slices/api";
 import {currentGameboardSlice, gameboardsSlice} from "../slices/gameboards";
@@ -113,9 +114,6 @@ const appReducer = combineReducers({
     fasttrackConcepts,
 
     // Assignments
-    assignments,
-    assignmentsByMe,
-    progress,
     groupProgress,
 
     // Search

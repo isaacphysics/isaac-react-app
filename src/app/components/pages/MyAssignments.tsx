@@ -1,8 +1,7 @@
 import React, {MouseEvent, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {loadMyAssignments, logAction} from "../../state/actions";
+import {useAppDispatch} from "../../state/store";
+import {logAction} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Col, Container, Input, Label, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -10,13 +9,13 @@ import {filterAssignmentsByStatus, filterAssignmentsByProperties,
     getDistinctAssignmentGroups, getDistinctAssignmentSetters} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {Assignments} from "../elements/Assignments";
+import {isaacApi} from "../../state/slices/api";
 
 export const MyAssignments = () => {
     const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(loadMyAssignments())}, [dispatch]);
     useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
 
-    const assignments = useAppSelector((state: AppState) => state?.assignments || null);
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery();
     const myAssignments = filterAssignmentsByStatus(assignments);
 
     const [activeTab, setActiveTab] = useState(0);

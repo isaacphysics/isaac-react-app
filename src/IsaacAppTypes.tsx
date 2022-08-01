@@ -261,16 +261,6 @@ export type Action =
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE; errorMessage: string}
 
-    | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
-
-    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
-
-    | {type: ACTION_TYPE.PROGRESS_REQUEST; assignment: ApiTypes.AssignmentDTO}
-    | {type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS; assignment: ApiTypes.AssignmentDTO; progress: AppAssignmentProgress[]}
-    | {type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE; assignment: ApiTypes.AssignmentDTO}
-
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE}
@@ -912,8 +902,13 @@ export type EnhancedGameboard = GameboardDTO & {
     contents: (GameboardItem & { questionPartsTotal: number })[];
 };
 
-export type SingleEnhancedAssignment = AssignmentDTO & {
+export type EnhancedAssignment = AssignmentDTO & {
+    id: number;
     gameboard: EnhancedGameboard;
+};
+
+export type EnhancedAssignmentWithProgress = EnhancedAssignment & {
+    progress: AppAssignmentProgress[];
 };
 
 export interface PageSettings {
@@ -921,13 +916,6 @@ export interface PageSettings {
     setColourBlind: (newValue: boolean) => void;
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
-}
-
-export interface SingleProgressDetailsProps {
-    assignmentId: number;
-    assignment: SingleEnhancedAssignment;
-    progress: AppAssignmentProgress[];
-    pageSettings: PageSettings;
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
