@@ -59,7 +59,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                 </title>
                             </Hexagon>
                             {[1, 0, -1].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
-                                <g key={difficultyOption.value} transform={`translate(${2 * hexagon.halfWidth - (hexagon.padding + 2 * miniHexagon.halfWidth + miniHexagon.padding)}, ${2 * hexagon.quarterHeight - 2 * miniHexagon.quarterHeight + n * (4 * miniHexagon.quarterHeight + miniHexagon.padding)})`}>
+                                <g key={`${difficultyOption.value}-${n}`} transform={`translate(${2 * hexagon.halfWidth - (hexagon.padding + 2 * miniHexagon.halfWidth + miniHexagon.padding)}, ${2 * hexagon.quarterHeight - 2 * miniHexagon.quarterHeight + n * (4 * miniHexagon.quarterHeight + miniHexagon.padding)})`}>
                                     <Hexagon {...miniHexagon} className={`hex practice difficulty mini ${isSelected ? "" : "active"}`} />
                                 </g>
                             )}
@@ -94,7 +94,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                             </title>
                         </Rectangle>
                         {[0, 1, 2].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
-                            <g key={difficultyOption.value} transform={`translate(${square.width - (square.padding + miniSquare.width + miniSquare.padding)}, ${(square.height + square.padding - miniSquare.padding) - (n + 1) * (miniSquare.height + 2 * miniSquare.padding) })`}>
+                            <g key={`${difficultyOption.value}-${n}`} transform={`translate(${square.width - (square.padding + miniSquare.width + miniSquare.padding)}, ${(square.height + square.padding - miniSquare.padding) - (n + 1) * (miniSquare.height + 2 * miniSquare.padding) })`}>
                                 <Rectangle {...miniSquare} className={`square challenge difficulty mini ${isSelected ? "" : "active"}`} />
                             </g>
                         )}
