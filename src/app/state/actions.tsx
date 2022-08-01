@@ -82,6 +82,8 @@ import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
 import {getValue, Item, toTuple} from "../services/select";
+import {FetchBaseQueryError, FetchBaseQueryMeta} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {QueryReturnValue} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -133,6 +135,22 @@ export const showSuccessToast = (title: string, body: string) => showToast({
     title,
     body
 });
+
+export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
+    if (response) {
+        if (response.error) {
+            if (response.error.status < 500) {
+                return showErrorToast(error, JSON.stringify(response.error.data));
+            }
+        } else {
+            ReactGA.exception({
+                description: `load_fail: ${error}`
+            });
+            return showErrorToast(error, API_REQUEST_FAILURE_MESSAGE);
+        }
+    }
+    return {type: ACTION_TYPE.TEST_ACTION};
+}
 
 export function showAxiosErrorToastIfNeeded(error: string, e: any) {
     if (e) {
