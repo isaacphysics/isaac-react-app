@@ -1,21 +1,27 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useMemo} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
-import {loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal} from "../../state/actions";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
-import {SingleProgressDetailsProps} from "../../../IsaacAppTypes";
+import {openActiveModal} from "../../state/actions";
+import {useAppDispatch} from "../../state/store";
+import {
+    AssignmentProgressPageSettingsContext,
+    EnhancedAssignmentWithProgress
+} from "../../../IsaacAppTypes";
 import {ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
+import {AssignmentProgressFetchError, AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
-import {selectors} from "../../state/selectors";
+import {getAssignmentCSVDownloadLink} from "../../services/assignments";
+import {isaacApi} from "../../state/slices/api";
+import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
     const dispatch = useAppDispatch();
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
@@ -24,12 +30,12 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     }
 
     return <div className={"assignment-progress-details single-assignment" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <AssignmentProgressLegend pageSettings={pageSettings}/>
+        <AssignmentProgressLegend />
         <div className="single-download mb-2 mx-4">
-            <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignmentId)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+            <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
         </div>
         <div className="mx-md-4 mx-sm-2">
-            <ProgressDetails assignmentId={assignmentId} pageSettings={pageSettings} assignment={assignment} progress={progress}/>
+            <ProgressDetails assignment={assignment}/>
         </div>
     </div>;
 };
@@ -62,7 +68,6 @@ export const SingleAssignmentProgress = () => {
     const assignmentProgress = useAppSelector(selectors.assignments.progress);
     const boards = useAppSelector(selectors.boards.boards);
 
-    const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
 
 
     const [assignment, setAssignment] = useState(myOwnedAssignments?.find(x => x._id == assignmentId));
@@ -76,6 +81,7 @@ export const SingleAssignmentProgress = () => {
     useEffect(() => {
         setAssignment(myOwnedAssignments?.find(x => x._id == assignmentId));
     }, [myOwnedAssignments, assignmentId]);
+    const pageSettings = useAssignmentProgressAccessibilitySettings();
 
     return <ShowLoading until={assignment && assignmentProgress}>
         <Container>
@@ -88,6 +94,8 @@ export const SingleAssignmentProgress = () => {
             <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
                 progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
             }
+            <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+            </AssignmentProgressPageSettingsContext.Provider>
         </div>
     </ShowLoading>
 };

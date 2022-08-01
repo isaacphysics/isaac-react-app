@@ -126,7 +126,6 @@ enum SortOrder {
 }
 
 interface AssignmentProgressLegendProps {
-    pageSettings: PageSettings;
     showQuestionKey?: boolean;
 }
 
@@ -169,6 +168,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
             if (studentResults[i] === "PASSED" || studentResults[i] === "PERFECT") {
                 tickCount++;
             }
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
         }
 
         const tickPercent = Math.round(100 * (tickCount / progress.length));

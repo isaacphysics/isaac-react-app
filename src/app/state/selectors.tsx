@@ -1,11 +1,12 @@
 import {AppState} from "./reducers";
 import {NOT_FOUND} from "../services/constants";
-import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
+import {AppAssignmentProgress, AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
 import {ChoiceDTO, QuizAssignmentDTO, QuizAttemptFeedbackDTO} from "../../IsaacApiTypes";
 import {extractQuestions} from "../services/quiz";
+import produce from "immer";
 
 export const selectors = {
     groups: {
@@ -140,59 +141,18 @@ export const selectors = {
         available: (state: AppState) => state?.quizzes?.quizzes,
         assignments: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments),
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
-        currentQuizAttempt: (state: AppState) => {
-            const quizAttempt = state?.quizAttempt;
-            if (!isDefined(quizAttempt)) {
-                return null;
-            }
-            if ('error' in quizAttempt) {
-                return quizAttempt;
-            }
-            if (isDefined(quizAttempt.attempt.quiz)) {
-                const questions = selectors.questions.getQuestions(state);
-                const answerMap = questions?.reduce((map, q) => {
-                    map[q.id as string] = q.currentAttempt;
-                    return map;
-                }, {} as {[id: string]: ChoiceDTO | undefined}) ?? {};
-                const quizQuestions = extractQuestions(quizAttempt.attempt.quiz);
-                quizQuestions.forEach(question => {
-                    if (answerMap[question.id as string] && (question.bestAttempt === null || question.bestAttempt?.correct === undefined)) {
-                        question.bestAttempt = {answer: answerMap[question.id as string]};
-                    }
-                });
-            }
-            return quizAttempt;
-        },
+        currentQuizAttempt: (state: AppState) => state?.quizAttempt,
         /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
-        currentStudentQuizAttempt: (state: AppState) => {
-            const quizAttempt = state?.studentQuizAttempt;
-            if (!isDefined(quizAttempt)) {
-                return null;
-            }
-            if ('error' in quizAttempt) {
-                return quizAttempt;
-            }
-            if (isDefined(quizAttempt?.studentAttempt?.attempt?.quiz)) {
-                const questions = selectors.questions.getQuestions(state);
-                const answerMap = questions?.reduce((map, q) => {
-                    map[q.id as string] = q.currentAttempt;
-                    return map;
-                }, {} as {[id: string]: ChoiceDTO | undefined}) ?? {};
-                const quizQuestions = extractQuestions(quizAttempt?.studentAttempt?.attempt?.quiz);
-                quizQuestions.forEach(question => {
-                    if (answerMap[question.id as string] && (question.bestAttempt === null || question.bestAttempt?.correct === undefined)) {
-                        question.bestAttempt = {answer: answerMap[question.id as string]};
-                    }
-                });
-            }
-            return load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.quizAttempt(quizAttempt) : quizAttempt;
-        },
+        currentStudentQuizAttempt: (state: AppState) =>
+            state?.studentQuizAttempt && 'studentAttempt' in state?.studentQuizAttempt && load(KEY.ANONYMISE_USERS) === "YES"
+                ? anonymisationFunctions.quizAttempt(state?.studentQuizAttempt)
+                : state?.studentQuizAttempt,
         assignment: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignment(state?.quizAssignment) : state?.quizAssignment,
         attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
 };
 
-function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined) {
+function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined): AppQuizAssignment[] | NOT_FOUND_TYPE | undefined | null {
     if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
         return quizAssignments;
     }
@@ -202,11 +162,11 @@ function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAss
         return {
             ...assignment,
             groupName,
-        } as AppQuizAssignment;
+        };
     });
 }
 
-export const anonymisationFunctions = {
+const anonymisationFunctions = {
     appGroup: (appGroup: AppGroup): AppGroup => {
         return {
             ...appGroup,
@@ -288,15 +248,10 @@ export const anonymisationFunctions = {
             }
         };
     },
-    quizAttempt: (quizAttempt: { studentAttempt: QuizAttemptFeedbackDTO }) => ({
-        ...quizAttempt,
-        studentAttempt: {
-            ...quizAttempt.studentAttempt,
-            user: {
-                ...quizAttempt.studentAttempt.user,
-                familyName: "",
-                givenName: "Test Student",
-            }
+    quizAttempt: produce<{ studentAttempt: QuizAttemptFeedbackDTO }>((quizAttempt) => {
+        if (quizAttempt.studentAttempt.user) {
+            quizAttempt.studentAttempt.user.familyName = "";
+            quizAttempt.studentAttempt.user.givenName = "Test Student";
         }
     }),
     userProgress: (userProgress: UserProgress | null | undefined): UserProgress | undefined => (userProgress ? {

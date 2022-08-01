@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
+import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
     loadQuizAssignmentFeedback,
@@ -13,23 +13,19 @@ import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
-import {usePageSettings} from "../../../services/progress";
-import {QuizFeedbackModes} from "../../../../IsaacAppTypes";
+import {useAssignmentProgressAccessibilitySettings} from "../../../services/progress";
+import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
 import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
-import {API_PATH} from "../../../services/constants";
-import {getQuizAssignmentResultsSummaryCSV, showToast} from "../../../state/actions";
+import {showToast} from "../../../state/actions";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import {range} from "lodash";
 import { ResultsTable } from "../../elements/quiz/QuizProgressCommon";
-
-interface QuizTeacherFeedbackProps {
-    match: {params: {quizAssignmentId: string}}
-}
+import {getQuizAssignmentCSVDownloadLink} from "../../../services/quiz";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -42,8 +38,9 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
     DETAILED_FEEDBACK: "Detailed feedback on each question",
 };
 
-const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: QuizTeacherFeedbackProps) => {
-    const pageSettings = usePageSettings();
+export const QuizTeacherFeedback = () => {
+    const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
+    const pageSettings = useAssignmentProgressAccessibilitySettings();
     const assignmentState = useAppSelector(selectors.quizzes.assignment);
 
     const dispatch = useAppDispatch();
@@ -153,7 +150,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                     <RS.Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
                         <RS.Button
                             color="primary" outline className="btn-md mt-1 text-nowrap"
-                            href={`${API_PATH}/quiz/assignment/${assignment.id}/download`}
+                            href={getQuizAssignmentCSVDownloadLink(assignment.id as number)}
                             target="_blank"
                         >
                             Export as CSV
@@ -161,8 +158,10 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                     </RS.Col>
                 </RS.Row>
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-                    <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey />
-                    <ResultsTable assignment={assignment} pageSettings={pageSettings} />
+                    <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+                        <AssignmentProgressLegend showQuestionKey />
+                        <ResultsTable assignment={assignment} />
+                    </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
             {error && <>
@@ -175,5 +174,3 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
         </ShowLoading>
     </RS.Container>;
 };
-
-export const QuizTeacherFeedback = withRouter(QuizTeacherFeedbackComponent);

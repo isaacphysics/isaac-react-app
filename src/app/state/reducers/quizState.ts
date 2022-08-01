@@ -1,6 +1,7 @@
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
 import {
+    ChoiceDTO,
     IsaacQuizDTO,
     QuizAssignmentDTO,
     QuizAttemptDTO,
@@ -8,6 +9,8 @@ import {
     QuizSummaryDTO
 } from "../../../IsaacApiTypes";
 import {isDefined, isFound} from "../../services/miscUtils";
+import produce from "immer";
+import {extractQuestions} from "../../services/quiz";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -121,6 +124,15 @@ export const quizAttemptedFreelyByMe = (quizAttempts: QuizAttemptedFreelyByMeSta
     }
 };
 
+const updateQuizAttemptQuestion = (questionId: string, questionAttempt: ChoiceDTO) => produce<{attempt: QuizAttemptDTO}>((quizAttempt) => {
+    const quizQuestions = extractQuestions(quizAttempt?.attempt.quiz);
+    quizQuestions.forEach(question => {
+        if (question.id === questionId && (question.bestAttempt === null || question.bestAttempt?.correct === undefined)) {
+            question.bestAttempt = {answer: questionAttempt};
+        }
+    });
+})
+
 type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
 export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Action): QuizAttemptState => {
     switch (action.type) {
@@ -146,6 +158,20 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
                 return possibleAttempt;
             }
             return null;
+        // The next two reducer cases update the current quiz attempt when the user answers a question, to keep
+        // the `bestAttempt`s in sync.
+        case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
+            if (possibleAttempt && 'attempt' in possibleAttempt) {
+                const questionAttempt = 'choice' in action.attempt ? action.attempt.choice : action.attempt;
+                return updateQuizAttemptQuestion(action.questionId, questionAttempt)(possibleAttempt);
+            }
+            return possibleAttempt;
+        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
+            const questionAttempt = action.response.answer;
+            if (questionAttempt && possibleAttempt && 'attempt' in possibleAttempt) {
+                return updateQuizAttemptQuestion(action.questionId, questionAttempt)(possibleAttempt);
+            }
+            return possibleAttempt;
         default:
             return possibleAttempt;
     }

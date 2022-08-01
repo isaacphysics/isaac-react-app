@@ -1,8 +1,7 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useAppDispatch} from "../../../state/store";
-import {withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
-
+import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {clearQuizAttempt, loadQuizAssignmentAttempt} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
@@ -12,10 +11,6 @@ import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
-
-interface QuizDoAsssignmentProps {
-    match: {params: {quizAssignmentId: string, page: string}}
-}
 
 const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
     if (page !== undefined) {
@@ -30,14 +25,13 @@ const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete when you are finished.
 </span>;
 
-const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}: QuizDoAsssignmentProps) => {
-    const {attempt, questions, sections, error} = useCurrentQuizAttempt();
-
+export const QuizDoAssignment = () => {
     const dispatch = useAppDispatch();
+    const {page, quizAssignmentId} = useParams<{quizAssignmentId: string; page?: string;}>();
+    const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
     useEffect(() => {
         dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId, 10)));
-
         return () => {
             dispatch(clearQuizAttempt());
         };
@@ -64,5 +58,3 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
         </ShowLoading>
     </RS.Container>;
 };
-
-export const QuizDoAssignment = withRouter(QuizDoAsssignmentComponent);

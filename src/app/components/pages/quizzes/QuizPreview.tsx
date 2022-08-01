@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect, useMemo} from "react";
 import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
+import {Link, useParams, withRouter} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {loadQuizPreview} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
@@ -12,10 +12,6 @@ import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {selectors} from "../../../state/selectors";
-
-interface QuizDoAsssignmentProps {
-    match: {params: {quizId: string, page: string}}
-}
 
 const pageLink = (quizAttempt: QuizAttemptDTO, page?: number) => {
     const url = `/test/preview/${quizAttempt.quizId}`;
@@ -51,22 +47,25 @@ const pageHelp = <span>
     Preview the questions on this test.
 </span>;
 
-const QuizPreviewComponent = ({match: {params: {quizId, page}}}: QuizDoAsssignmentProps) => {
-
+export const QuizPreview = () => {
     const {quiz, error} = useAppSelector(selectors.quizzes.preview);
+    const {page, quizId} = useParams<{quizId: string; page?: string;}>();
 
     const dispatch = useAppDispatch();
-
     useEffect(() => {
         dispatch(loadQuizPreview(quizId));
     }, [dispatch, quizId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
-    const attempt = quiz ? {
-        quiz,
-        quizId,
-    } as QuizAttemptDTO : null;
+    const attempt = useMemo<QuizAttemptDTO | undefined>(() =>
+        quiz
+            ? {
+                quiz,
+                quizId: quiz.id,
+            }
+            : undefined
+    , [quiz]);
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
@@ -89,5 +88,3 @@ const QuizPreviewComponent = ({match: {params: {quizId, page}}}: QuizDoAsssignme
         </ShowLoading>
     </RS.Container>;
 };
-
-export const QuizPreview = withRouter(QuizPreviewComponent);

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { useAppDispatch } from "../../../state/store";
 import { Button } from "reactstrap";
 import { IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO } from "../../../../IsaacApiTypes";
-import { PageSettings } from "../../../../IsaacAppTypes";
+import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
 import { isQuestion } from "../../../services/questions";
 import { closeActiveModal, openActiveModal } from "../../../state/actions";
 import { returnQuizToStudent } from "../../../state/actions/quizzes";
@@ -24,11 +24,9 @@ export const ICON = siteSpecific(
 
 interface ResultsTableProps {
     assignment: QuizAssignmentDTO;
-    pageSettings: PageSettings;
 }
 
 interface ResultRowProps {
-    pageSettings: PageSettings;
     row: QuizUserFeedbackDTO;
     assignment: QuizAssignmentDTO;
 }
@@ -71,10 +69,11 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
     return result;
 }
 
-export function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
+export function ResultRow({row, assignment}: ResultRowProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [working, setWorking] = useState(false);
     const dispatch = useAppDispatch();
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -167,9 +166,8 @@ export function ResultRow({pageSettings, row, assignment}: ResultRowProps) {
     </tr>;
 }
 
-export function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
+export function ResultsTable({assignment}: ResultsTableProps) {
     const sections: IsaacQuizSectionDTO[] = assignment.quiz?.children || [];
-
     return <div className={"progress-table-container mb-5"}>
         <table className="progress-table border">
             <tbody>
@@ -186,7 +184,7 @@ export function ResultsTable({assignment, pageSettings}: ResultsTableProps) {
                     </th>)).flat()}
                 </tr>
                 {assignment.userFeedback?.map(row =>
-                    <ResultRow key={row.user?.id} pageSettings={pageSettings} row={row} assignment={assignment} />
+                    <ResultRow key={row.user?.id} row={row} assignment={assignment} />
                 )}
             </tbody>
         </table>

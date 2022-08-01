@@ -1,8 +1,7 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useAppDispatch} from "../../../state/store";
-import {Link, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
-
+import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
     clearQuizAttempt, clearStudentQuizAttempt,
@@ -21,11 +20,6 @@ import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 
-
-interface QuizAttemptFeedbackProps {
-    match: {params: {quizAttemptId?: string, page: string, studentId?: string, quizAssignmentId?: string}}
-}
-
 const pageLink = (attempt: QuizAttemptDTO, page?: number, studentId?: string, assignmentId?: string) => {
     if (isDefined(studentId) && isDefined(assignmentId) && page !== undefined) {
         return `/test/attempt/feedback/${assignmentId}/${studentId}/${page}`;
@@ -38,9 +32,10 @@ const pageLink = (attempt: QuizAttemptDTO, page?: number, studentId?: string, as
     }
 };
 
+import {Container, Alert, Button} from "reactstrap";
 
 function QuizFooter(props: QuizAttemptProps) {
-    const {attempt, page, pageLink, studentId, quizAssignmentId} = props;
+    const {page, pageLink, studentUser} = props;
 
     let controls;
     let prequel = null;
@@ -67,8 +62,9 @@ const pageHelp = <span>
     See the feedback for this test attempt.
 </span>;
 
-const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, studentId, quizAssignmentId}}}: QuizAttemptFeedbackProps) => {
-    const {attempt, studentAttempt, studentUser, questions, sections, error, studentError} = useCurrentQuizAttempt();
+export const QuizAttemptFeedback = () => {
+    const {quizAttemptId, page, studentId, quizAssignmentId} = useParams<{quizAttemptId?: string; page?: string; studentId?: string; quizAssignmentId?: string;}>();
+    const {attempt, studentUser, questions, sections, error} = useCurrentQuizAttempt(numericStudentId);
 
     const dispatch = useAppDispatch();
 
@@ -87,29 +83,25 @@ const QuizAttemptFeedbackComponent = ({match: {params: {quizAttemptId, page, stu
         };
     }, [dispatch, quizAttemptId, quizAssignmentId, studentId]);
 
-    const attemptToView = isDefined(studentId) ? studentAttempt : attempt;
-    const errorToView = isDefined(studentId) ? studentError : error;
-
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
-    const subProps: QuizAttemptProps = {attempt: attemptToView as QuizAttemptDTO, page: pageNumber,
-        questions, sections, pageLink, pageHelp, studentId, quizAssignmentId, studentUser};
 
-    return <RS.Container className="mb-5">
-        <ShowLoading until={attemptToView}>
-            {isDefined(attemptToView) && <>
+    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
+        questions, sections, pageLink, pageHelp, studentUser};
+
+    return <Container className="mb-5">
+        <ShowLoading until={attempt || error}>
+            {isDefined(attempt) && <>
                 <QuizAttemptComponent {...subProps} />
-                {attemptToView.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
+                {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizFooter {...subProps} />}
             </>}
-            {isDefined(errorToView) && <>
+            {isDefined(error) && <>
                 <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} />
-                <RS.Alert color="danger">
+                <Alert color="danger">
                     <h4 className="alert-heading">Error loading your feedback!</h4>
-                    <p>{errorToView}</p>
-                </RS.Alert>
+                    <p>{error}</p>
+                </Alert>
             </>}
         </ShowLoading>
-    </RS.Container>;
+    </Container>;
 };
-
-export const QuizAttemptFeedback = withRouter(QuizAttemptFeedbackComponent);
