@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../../state/store";
-import * as RS from "reactstrap";
-
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
@@ -25,6 +23,19 @@ import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import {range} from "lodash";
 import { ResultsTable } from "../../elements/quiz/QuizProgressCommon";
+import {
+    Alert,
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Label,
+    Row, UncontrolledDropdown
+} from "reactstrap";
 import {getQuizAssignmentCSVDownloadLink} from "../../../services/quiz";
 
 const pageHelp = <span>
@@ -102,7 +113,7 @@ export const QuizTeacherFeedback = () => {
         }
     }
 
-    return <RS.Container>
+    return <Container>
         <ShowLoading until={assignmentState}>
             {assignment && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
@@ -112,51 +123,51 @@ export const QuizTeacherFeedback = () => {
                     </span>
                     {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
                 </p>
-                <RS.Row>
-                    {assignment.dueDate && <RS.Col xs={12} sm={6} md={4}>
-                        <RS.Label for="dueDate" className="pr-1">Extend the due date:</RS.Label>
+                <Row>
+                    {assignment.dueDate && <Col xs={12} sm={6} md={4}>
+                        <Label for="dueDate" className="pr-1">Extend the due date:</Label>
                         <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined} yearRange={yearRange} defaultYear={currentYear} noClear
                                    defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
                         <div className={"mt-2 w-100 text-center mb-2"}>
-                            {dueDate && (dueDate > assignment.dueDate) && <RS.Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
+                            {dueDate && (dueDate > assignment.dueDate) && <Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
                                 {settingDueDate ? <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></> : "Extend due date"}
-                            </RS.Button>}
-                            {dueDate && (dueDate < assignment.dueDate) && <RS.Card className={"text-left border bg-transparent border-danger"}>
-                                <RS.CardBody className={"p-2 pl-3"}>
+                            </Button>}
+                            {dueDate && (dueDate < assignment.dueDate) && <Card className={"text-left border bg-transparent border-danger"}>
+                                <CardBody className={"p-2 pl-3"}>
                                     Extended due date must be after the current due date!
-                                </RS.CardBody>
-                            </RS.Card>}
+                                </CardBody>
+                            </Card>}
                         </div>
-                    </RS.Col>}
-                    <RS.Col>
-                        <RS.Label for="feedbackMode" className="pr-1">Student feedback mode:</RS.Label><br/>
-                        <RS.UncontrolledDropdown className="d-inline-block">
-                            <RS.DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                    </Col>}
+                    <Col>
+                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
+                        <UncontrolledDropdown className="d-inline-block">
+                            <DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                                 {settingFeedbackMode ?
                                     <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
                                 :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
-                            </RS.DropdownToggle>
-                            <RS.DropdownMenu>
+                            </DropdownToggle>
+                            <DropdownMenu>
                                 {QuizFeedbackModes.map(mode =>
-                                    <RS.DropdownItem key={mode}
+                                    <DropdownItem key={mode}
                                                     onClick={() => setFeedbackMode(mode)}
                                                     active={mode === assignment?.quizFeedbackMode}>
                                         {feedbackNames[mode]}
-                                    </RS.DropdownItem>
+                                    </DropdownItem>
                                 )}
-                            </RS.DropdownMenu>
-                        </RS.UncontrolledDropdown>
-                    </RS.Col>
-                    <RS.Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
-                        <RS.Button
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </Col>
+                    <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
+                        <Button
                             color="primary" outline className="btn-md mt-1 text-nowrap"
                             href={getQuizAssignmentCSVDownloadLink(assignment.id as number)}
                             target="_blank"
                         >
                             Export as CSV
-                        </RS.Button>
-                    </RS.Col>
-                </RS.Row>
+                        </Button>
+                    </Col>
+                </Row>
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
                         <AssignmentProgressLegend showQuestionKey />
@@ -166,11 +177,11 @@ export const QuizTeacherFeedback = () => {
             </>}
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
-                <RS.Alert color="danger">
+                <Alert color="danger">
                     <h4 className="alert-heading">Error loading test feedback</h4>
                     <p>{error}</p>
-                </RS.Alert>
+                </Alert>
             </>}
         </ShowLoading>
-    </RS.Container>;
+    </Container>;
 };

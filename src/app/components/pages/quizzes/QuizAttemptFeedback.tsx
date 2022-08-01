@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect} from "react";
 import {useAppDispatch} from "../../../state/store";
-import * as RS from "reactstrap";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {
@@ -19,19 +18,6 @@ import {
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-
-const pageLink = (attempt: QuizAttemptDTO, page?: number, studentId?: string, assignmentId?: string) => {
-    if (isDefined(studentId) && isDefined(assignmentId) && page !== undefined) {
-        return `/test/attempt/feedback/${assignmentId}/${studentId}/${page}`;
-    } else if (isDefined(studentId) && isDefined(assignmentId)) {
-        return `/test/attempt/feedback/${assignmentId}/${studentId}`;
-    } else if (isDefined(page)) {
-        return `/test/attempt/${attempt.id}/feedback/${page}`;
-    } else {
-        return `/test/attempt/${attempt.id}/feedback`;
-    }
-};
-
 import {Container, Alert, Button} from "reactstrap";
 
 function QuizFooter(props: QuizAttemptProps) {
@@ -40,10 +26,10 @@ function QuizFooter(props: QuizAttemptProps) {
     let controls;
     let prequel = null;
     if (page === null) {
-        prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {studentId && quizAssignmentId ? "their" : "your"} detailed feedback.</p>
+        prequel = <p className="mt-3">Click on a section title or click &lsquo;Next&rsquo; to look at {isDefined(studentUser) ? "their" : "your"} detailed feedback.</p>
         controls = <>
             <Spacer/>
-            <RS.Button tag={Link} replace to={pageLink(attempt, 1, studentId, quizAssignmentId)}>Next</RS.Button>
+            <Button tag={Link} replace to={pageLink(1)}>Next</Button>
         </>;
     } else {
         controls = <QuizPagination {...props} page={page} finalLabel="Back to Overview" />;
@@ -64,6 +50,7 @@ const pageHelp = <span>
 
 export const QuizAttemptFeedback = () => {
     const {quizAttemptId, page, studentId, quizAssignmentId} = useParams<{quizAttemptId?: string; page?: string; studentId?: string; quizAssignmentId?: string;}>();
+    const numericStudentId = studentId ? parseInt(studentId, 10) : undefined;
     const {attempt, studentUser, questions, sections, error} = useCurrentQuizAttempt(numericStudentId);
 
     const dispatch = useAppDispatch();
@@ -71,8 +58,8 @@ export const QuizAttemptFeedback = () => {
     useEffect(() => {
         isDefined(quizAttemptId) && dispatch(loadQuizAttemptFeedback(parseInt(quizAttemptId, 10)));
 
-        if (isDefined(studentId) && isDefined(quizAssignmentId)) {
-            dispatch(loadStudentQuizAttemptFeedback(parseInt(quizAssignmentId, 10), parseInt(studentId, 10)));
+        if (isDefined(numericStudentId) && isDefined(quizAssignmentId)) {
+            dispatch(loadStudentQuizAttemptFeedback(parseInt(quizAssignmentId, 10), numericStudentId));
         }
 
         return () => {
@@ -85,6 +72,14 @@ export const QuizAttemptFeedback = () => {
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
+    const pageLink = useCallback((page?: number) => {
+        const pagePath = isDefined(page) ? `/${page}` : "";
+        if (isDefined(studentId) && isDefined(quizAssignmentId)) {
+            return `/test/attempt/feedback/${quizAssignmentId}/${studentId}` + pagePath;
+        } else {
+            return `/test/attempt/${quizAttemptId}/feedback` + pagePath;
+        }
+    }, [quizAttemptId, quizAssignmentId, studentId]);
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
         questions, sections, pageLink, pageHelp, studentUser};
