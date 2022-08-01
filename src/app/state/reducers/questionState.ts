@@ -35,15 +35,16 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_REGISTRATION: {
             const currentQuestions = qs !== null ? [...qs.questions] : [];
-            const bestAttempt = action.question.bestAttempt;
-            const newQuestion: AppQuestionDTO = bestAttempt ?
-                {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
-                {...action.question, accordionClientId: action.accordionClientId};
-            const newQuestions = [...currentQuestions, newQuestion];
-            return augmentQuestions(newQuestions);
+            const newQuestions = action.questions.map(q => {
+                const bestAttempt = q.bestAttempt;
+                return bestAttempt ?
+                    {...q, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
+                    {...q, accordionClientId: action.accordionClientId};
+            });
+            return augmentQuestions(currentQuestions.concat(newQuestions));
         }
         case ACTION_TYPE.QUESTION_DEREGISTRATION: {
-            const filteredQuestions = qs && qs.questions.filter((q) => q.id != action.questionId);
+            const filteredQuestions = qs && qs.questions.filter((q) => q.id && !action.questionIds.includes(q.id));
             return filteredQuestions && filteredQuestions.length ? augmentQuestions(filteredQuestions) : null;
         }
         // Delegate processing the question matching action.questionId to the question reducer

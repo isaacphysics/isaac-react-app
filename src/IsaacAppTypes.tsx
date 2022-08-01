@@ -217,8 +217,8 @@ export type Action =
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO; accordionClientId?: string}
-    | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string}
+    | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date}

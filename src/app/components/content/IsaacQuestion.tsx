@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, Suspense} from "react";
 import {useAppDispatch, useAppSelector} from "../../state/store";
-import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
+import {attemptQuestion, deregisterQuestions, registerQuestions} from "../../state/actions";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
@@ -71,8 +71,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Register Question Part in Redux
     useEffect(() => {
-        dispatch(registerQuestion(doc, accordion.clientId));
-        return () => { dispatch(deregisterQuestion(doc.id as string)); }
+        dispatch(registerQuestions([doc], accordion.clientId));
+        return () => dispatch(deregisterQuestions([doc.id as string]));
     }, [dispatch, doc.id]);
 
     // Select QuestionComponent from the question part's document type (or default)

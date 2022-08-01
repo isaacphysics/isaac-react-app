@@ -4,7 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from "redux-thunk";
 import {
     fetchSearch,
-    registerQuestion,
+    registerQuestions,
     requestConstantsUnits,
     requestCurrentUser, requestEmailVerification,
     showToast
@@ -114,9 +114,9 @@ describe("requestCurrentUser action", () => {
 describe("registerQuestion action", () => {
     it("dispatches a question registration action", () => {
         const {manVsHorse} = questionDTOs;
-        const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, question: manVsHorse}];
+        const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, questions: [manVsHorse]}];
         const store = mockStore();
-        store.dispatch(registerQuestion(manVsHorse) as any);
+        store.dispatch(registerQuestions([manVsHorse]) as any);
         expect(store.getActions()).toEqual(expectedActions);
     });
 });

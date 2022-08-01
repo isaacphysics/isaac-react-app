@@ -838,12 +838,12 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Questions
-export const registerQuestion = (question: QuestionDTO, accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question, accordionClientId});
+export const registerQuestions = (questions: QuestionDTO[], accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, questions, accordionClientId});
 };
 
-export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionId});
+export const deregisterQuestions = (questionIds: string[]) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionIds});
 };
 
 interface Attempt {

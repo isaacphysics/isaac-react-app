@@ -110,7 +110,7 @@ describe("questions reducer", () => {
     });
 
     it("should register a question correctly", () => {
-        const registerManVsHorse: Action = {type: ACTION_TYPE.QUESTION_REGISTRATION, question: manVsHorse};
+        const registerManVsHorse: Action = {type: ACTION_TYPE.QUESTION_REGISTRATION, questions: [manVsHorse]};
         const testCases = [
             [null, q([manVsHorse])],
             [q([aToboggan]), q([aToboggan, manVsHorse])],
@@ -124,7 +124,7 @@ describe("questions reducer", () => {
 
     it("should deregister questions correctly", () => {
         const deregisterManVsHorse: Action =
-            {type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionId: (manVsHorse.id as string)};
+            {type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionIds: [(manVsHorse.id as string)]};
         const testCases = [
             [null, null],
             [q([manVsHorse]), null],

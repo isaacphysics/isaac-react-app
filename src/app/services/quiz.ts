@@ -3,7 +3,7 @@ import {useAppDispatch, useAppSelector} from "../state/store";
 import {isDefined} from "./miscUtils";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
-import {deregisterQuestion, registerQuestion} from "../state/actions";
+import {deregisterQuestions, registerQuestions} from "../state/actions";
 import {API_PATH} from "./constants";
 import {partition} from "lodash";
 import {isQuestion} from "./questions";
@@ -59,11 +59,9 @@ export function useCurrentQuizAttempt() {
     const dispatch = useAppDispatch();
 
     useEffect( () => {
-        questions.forEach(question => dispatch(registerQuestion(question)));
-        const ids = questions.map(q => q.id as string);
-        return () => {
-            ids.forEach(id => dispatch(deregisterQuestion(id)));
-        };
+        // All register questions does is store the questions in redux WITH SOME EXTRA CALCULATED STRUCTURE
+        dispatch(registerQuestions(questions));
+        return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 
     return {attempt, studentAttempt, studentUser, questions, sections, error, studentError};
