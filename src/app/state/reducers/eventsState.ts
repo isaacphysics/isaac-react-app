@@ -1,6 +1,7 @@
 import {Action, AugmentedEvent, EventMapData, EventOverview, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
 import {EventBookingDTO} from "../../../IsaacApiTypes";
+import {routerPageChange} from "../actions";
 
 type EventsState = {events: AugmentedEvent[]; total: number} | null;
 export const events = (events: EventsState = null, action: Action) => {
@@ -17,12 +18,14 @@ export const events = (events: EventsState = null, action: Action) => {
 
 export type CurrentEventState = AugmentedEvent | NOT_FOUND_TYPE | null;
 export const currentEvent = (currentEvent: CurrentEventState = null, action: Action) => {
+    if (routerPageChange.match(action)) {
+        return null;
+    }
     switch (action.type) {
         case ACTION_TYPE.EVENT_RESPONSE_SUCCESS:
             return {...action.augmentedEvent};
         case ACTION_TYPE.EVENT_RESPONSE_FAILURE:
             return NOT_FOUND;
-        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
         case ACTION_TYPE.EVENT_REQUEST:
             return null;
         default:

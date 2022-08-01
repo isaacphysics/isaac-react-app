@@ -1,7 +1,7 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {ACTION_TYPE} from "../../services/constants";
 import {Action} from "../../../IsaacAppTypes";
-import {logAction, openActiveModal} from "../actions";
+import {logAction, openActiveModal, routerPageChange} from "../actions";
 import {allRequiredInformationIsPresent, withinLast50Minutes, withinLast2Hours} from "../../services/validation";
 import {isLoggedIn} from "../../services/user";
 import * as persistence from "../../services/localStorage";
@@ -12,7 +12,7 @@ import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUp
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
 
     const state = middlewareApi.getState();
-    if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
+    if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
         if (
             state && isLoggedIn(state.user) &&
             !allRequiredInformationIsPresent(state.user, state.userPreferences, state.user.registeredContexts) &&

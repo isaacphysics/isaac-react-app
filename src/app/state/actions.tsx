@@ -74,6 +74,7 @@ import {atLeastOne} from "../services/validation";
 import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../services/miscUtils";
+import {createAction} from "@reduxjs/toolkit";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1783,12 +1784,14 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
 export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
 
 // SERVICE ACTIONS (w/o dispatch)
+export const routerPageChange = createAction<string>("pageChange");
+
 export const changePage = (path: string) => {
     history.push(path);
 };
 
 export const registerPageChange = (path: string) => {
-    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
+    store.dispatch(routerPageChange(path));
 };
 
 export const handleServerError = () => {

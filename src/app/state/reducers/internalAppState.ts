@@ -1,5 +1,6 @@
 import {Action, PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
+import {routerPageChange} from "../actions";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettings = (printingSettingsState: PrintingSettingsState = null, action: Action) => {
@@ -15,11 +16,12 @@ export const printingSettings = (printingSettingsState: PrintingSettingsState = 
 
 type MainContentIdState = string | null;
 export const mainContentId = (state: MainContentIdState = null, action: Action) => {
+    if (routerPageChange.match(action)) {
+        return null;
+    }
     switch (action.type) {
         case ACTION_TYPE.SET_MAIN_CONTENT_ID:
             return action.id;
-        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
-            return null;
         default:
             return state;
     }
@@ -41,6 +43,9 @@ export const transientUserContext = (transientUserContext: TransientUserContextS
 
 export type ErrorState = {type: "generalError"; generalError: string} | {type: "consistencyError"} | {type: "serverError"} | {type: "goneAwayError"} | null;
 export const error = (error: ErrorState = null, action: Action): ErrorState => {
+    if (routerPageChange.match(action)) {
+        return null;
+    }
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE:
@@ -56,8 +61,6 @@ export const error = (error: ErrorState = null, action: Action): ErrorState => {
             return {type: "serverError"};
         case ACTION_TYPE.API_GONE_AWAY:
             return {type: "goneAwayError"};
-        case ACTION_TYPE.ROUTER_PAGE_CHANGE:
-            return null;
         default:
             return error;
     }

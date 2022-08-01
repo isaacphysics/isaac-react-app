@@ -5,6 +5,7 @@ import {GameboardDTO} from "../../../IsaacApiTypes";
 import {unionWith} from "lodash";
 import {saveGameboard} from "./api/gameboards";
 import {NOT_FOUND} from "../../services/constants";
+import {routerPageChange} from "../actions";
 
 const mergeBoards = (boards: Boards, additional: Boards): Boards => ({
     totalResults: additional.totalResults || boards.totalResults,
@@ -44,7 +45,6 @@ export const gameboardsSlice = createSlice({
     }
 });
 
-// TODO CP add case for router page change!!!
 export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null;
 export const currentGameboardSlice = createSlice({
     name: "currentGameboard",
@@ -61,6 +61,9 @@ export const currentGameboardSlice = createSlice({
                     currentGameboard.savedToCurrentUser = true;
                 }
             }
+        ).addCase(
+            routerPageChange,
+            () => null
         ).addMatcher(
             isaacApi.endpoints.getGameboardById.matchFulfilled,
             (_, action) => action.payload
