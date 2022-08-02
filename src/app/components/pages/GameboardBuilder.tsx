@@ -34,7 +34,7 @@ import {EXAM_BOARD, STAGE} from "../../services/constants";
 import {selectOnChange} from "../../services/select";
 import {isDefined} from "../../services/miscUtils";
 import {isaacApi} from "../../state/slices/api";
-import {currentGameboardSlice} from "../../state/slices/gameboards";
+import {skipToken} from "@reduxjs/toolkit/query";
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
 const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
@@ -47,10 +47,9 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const { data: wildcards } = isaacApi.endpoints.getWildcards.useQuery();
+    const { data: baseGameboard }  = isaacApi.endpoints.getGameboardById.useQuery(baseGameboardId ?? skipToken);
     const [ generateTemporaryGameboard ] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
     const [ createGameboard, {isLoading: isWaitingForCreateGameboard} ] = isaacApi.endpoints.createGameboard.useMutation();
-    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
-    const baseGameboard = useAppSelector(selectors.board.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
@@ -84,11 +83,6 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     };
 
     useEffect(() => {
-        if (baseGameboardId && (!baseGameboard)) {
-            loadGameboard(baseGameboardId);
-        }
-    }, [dispatch, baseGameboardId, baseGameboard]);
-    useEffect(() => {
         if (concepts && (!baseGameboardId)) {
             const params: {[key: string]: string} = {};
             params.concepts = concepts;
@@ -100,7 +94,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
             }
             generateTemporaryGameboard(params);
         }
-    }, [dispatch, concepts])
+    }, [dispatch, concepts]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
