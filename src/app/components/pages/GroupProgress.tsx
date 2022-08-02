@@ -11,7 +11,7 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {getGroupProgress, loadGroups} from "../../state/actions";
+import {loadGroups} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {orderBy, sortBy} from "lodash";
 import {
@@ -126,6 +126,7 @@ export const GroupProgressLegend = () => {
 };
 
 const GroupSummary = ({group}: {group: AppGroup}) => {
+    // FIXME not loading because of `Validate.notEmpty(allQuestionPageIds);` in the API
     const {data: groupProgress} = isaacApi.endpoints.getGroupProgress.useQuery(group.id ?? skipToken);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
@@ -362,7 +363,7 @@ export const GroupProgress = () => {
             case SortOrder["Date Created"]:
                 return sortBy(groups, g => g.created).reverse();
         }
-    }, []);
+    }, [groups, sortOrder]);
 
     return <>
         <Container>

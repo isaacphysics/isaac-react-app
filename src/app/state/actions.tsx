@@ -9,10 +9,8 @@ import {
     DOCUMENT_TYPE, EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
-    EXAM_BOARD,
     MEMBERSHIP_STATUS,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    STAGE,
     TAG_ID
 } from "../services/constants";
 import {
