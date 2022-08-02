@@ -19,8 +19,8 @@ export const UserBetaFeatures = ({displaySettings, setDisplaySettings}: UserBeta
                         Hide previous question attempts
                         <span id={`hide-previous-q-info`} className="icon-help mx-2" />
                         <UncontrolledTooltip placement="right-start" target={`hide-previous-q-info`}>
-                            This feature is helpful for revision for example - you can attempt all of the questions
-                            on the platform again, without seeing your previous answers (correct or not).
+                            This feature is helpful for revision, for example - you can attempt all of the questions
+                            on the website again, without seeing your previous answers.
                         </UncontrolledTooltip>
                      </>}
                      id={"hide-previous-q-attempts"}
