@@ -8,7 +8,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
-import {DocumentSubject} from "../../../IsaacAppTypes";
+import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -40,53 +40,55 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
         return <div className={doc.subjectId || ""}>
-            <Container>
-                <TitleAndBreadcrumb
-                    intermediateCrumbs={navigation.breadcrumbHistory}
-                    currentPageTitle={doc.title as string}
-                    collectionType={navigation.collectionType}
-                    subTitle={doc.subtitle as string}
-                />
-                <MetaDescription description={doc.summary} />
-                <CanonicalHrefElement />
-                <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="mt-3 mr-sm-1 ml-auto">
-                        <UserContextPicker className="no-print text-right" />
+            <GameboardContext.Provider value={navigation.currentGameboard}>
+                <Container>
+                    <TitleAndBreadcrumb
+                        intermediateCrumbs={navigation.breadcrumbHistory}
+                        currentPageTitle={doc.title as string}
+                        collectionType={navigation.collectionType}
+                        subTitle={doc.subtitle as string}
+                    />
+                    <MetaDescription description={doc.summary} />
+                    <CanonicalHrefElement />
+                    <div className="no-print d-flex align-items-center">
+                        <EditContentButton doc={doc} />
+                        <div className="mt-3 mr-sm-1 ml-auto">
+                            <UserContextPicker className="no-print text-right" />
+                        </div>
+                        <div className="question-actions">
+                            <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
+                        </div>
+                        <div className="question-actions not-mobile">
+                            <PrintButton />
+                        </div>
                     </div>
-                    <div className="question-actions">
-                        <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-                    </div>
-                    <div className="question-actions not-mobile">
-                        <PrintButton />
-                    </div>
-                </div>
 
-                <Row className="concept-content-container">
-                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
+                    <Row className="concept-content-container">
+                        <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
 
-                        <SupersededDeprecatedWarningBanner doc={doc} />
+                            <SupersededDeprecatedWarningBanner doc={doc} />
 
-                        <IntendedAudienceWarningBanner doc={doc} />
+                            <IntendedAudienceWarningBanner doc={doc} />
 
-                        <WithFigureNumbering doc={doc}>
-                            <IsaacContent doc={doc} />
-                        </WithFigureNumbering>
+                            <WithFigureNumbering doc={doc}>
+                                <IsaacContent doc={doc} />
+                            </WithFigureNumbering>
 
-                        {doc.attribution && <p className="text-muted">
-                            <Markup trusted-markup-encoding={"markdown"}>
-                                {doc.attribution}
-                            </Markup>
-                        </p>}
+                            {doc.attribution && <p className="text-muted">
+                                <Markup trusted-markup-encoding={"markdown"}>
+                                    {doc.attribution}
+                                </Markup>
+                            </p>}
 
-                        {isCS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                            {isCS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
-                        <NavigationLinks navigation={navigation} />
+                            <NavigationLinks navigation={navigation} />
 
-                        {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
-                    </Col>
-                </Row>
-            </Container>
+                            {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                        </Col>
+                    </Row>
+                </Container>
+            </GameboardContext.Provider>
         </div>
     }}/>;
 });

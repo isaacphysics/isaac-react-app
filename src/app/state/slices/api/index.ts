@@ -1,4 +1,4 @@
-import {API_PATH, API_REQUEST_FAILURE_MESSAGE, QUESTION_CATEGORY} from "../../../services/constants";
+import {API_PATH, API_REQUEST_FAILURE_MESSAGE, NOT_FOUND, QUESTION_CATEGORY} from "../../../services/constants";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {
     FetchArgs,
@@ -23,7 +23,7 @@ import {
     BoardOrder,
     Boards,
     NumberOfBoards,
-    EnhancedAssignment
+    EnhancedAssignment, NOT_FOUND_TYPE
 } from "../../../../IsaacAppTypes";
 import {isPhy} from "../../../services/siteConstants";
 import {errorSlice} from "../internalAppState";
@@ -90,6 +90,15 @@ const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessag
 
 export const mutationSucceeded = <T>(response: {data: T} | {error: FetchBaseQueryError | SerializedError}): response is {data: T} => {
     return response.hasOwnProperty("data");
+}
+
+export const extractDataFromQueryResponse = <T>(response: { data?: T; } | { error: FetchBaseQueryError | SerializedError; }): T | NOT_FOUND_TYPE | undefined => {
+    if ('data' in response) {
+        return response.data;
+    } else if ('error' in response && 'status' in response.error && response.error.status === NOT_FOUND) {
+        return NOT_FOUND;
+    }
+    return undefined;
 }
 
 export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError | undefined): {status?: number | string, message: string} => {

@@ -22,10 +22,11 @@ import {
 } from "../../services/userContext";
 import {generateQuestionTitle} from "../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
-import {isDefined} from "../../services/miscUtils";
+import {isDefined, isFound} from "../../services/miscUtils";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {isaacApi} from "../../state/slices/api";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -126,10 +127,9 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();
-    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
-    const gameboard = useAppSelector(selectors.board.currentGameboardOrNotFound);
-    const user = useAppSelector(selectors.user.orNull);
     const gameboardId = location.hash ? location.hash.slice(1) : null;
+    const { data: gameboard } = isaacApi.endpoints.getGameboardById.useQuery(gameboardId ?? skipToken);
+    const user = useAppSelector(selectors.user.orNull);
 
     // Show filter
     const {filter} = queryString.parse(location.search);
@@ -139,13 +139,9 @@ export const Gameboard = withRouter(({ location }) => {
         showFilter = isDefined(filterValue) && filterValue.toLowerCase() === "true";
     }
 
-    useEffect(() => {
-        loadGameboard(gameboardId);
-    }, [dispatch, loadGameboard, gameboardId]);
-
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
-        if (gameboard !== null && gameboard !== NOT_FOUND) {
+        if (isDefined(gameboard) && isFound(gameboard)) {
             dispatch(logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id}));
         }
     }, [dispatch, gameboard]);

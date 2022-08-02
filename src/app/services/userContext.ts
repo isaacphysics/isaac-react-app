@@ -19,15 +19,14 @@ import {useLocation, useParams} from "react-router-dom";
 import {useAppSelector} from "../state/store";
 import {AppState} from "../state/reducers";
 import {isCS, isPhy, siteSpecific} from "./siteConstants";
-import {PotentialUser, ViewingContext} from "../../IsaacAppTypes";
+import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";
 import {isDefined} from "./miscUtils";
 import {history} from "./history";
 import queryString from "query-string";
-import {useEffect} from "react";
+import {useContext, useEffect} from "react";
 import {useQueryParams} from "./reactRouterExtension";
 import {comparatorFromOrderedValues} from "./gameboards";
-import {selectors} from "../state/selectors";
 
 export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -100,7 +99,7 @@ export function useUserContext(): UseUserContextReturnType {
     }
 
     // Gameboard views overrides all context options
-    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
+    const currentGameboard = useContext(GameboardContext);
     const {questionId} = useParams<{ questionId: string}>();
     if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
         const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];

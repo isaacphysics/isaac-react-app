@@ -52,7 +52,7 @@ import {
     studentQuizAttempt,
 } from "./quizState";
 import {isaacApi} from "../slices/api";
-import {currentGameboardSlice, gameboardsSlice} from "../slices/gameboards";
+import {gameboardsSlice} from "../slices/gameboards";
 
 const appReducer = combineReducers({
     // User
@@ -113,7 +113,6 @@ const appReducer = combineReducers({
 
     // Gameboards
     boards: gameboardsSlice.reducer,
-    currentGameboard: currentGameboardSlice.reducer,
     questionSearchResult,
     fasttrackConcepts,
 

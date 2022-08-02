@@ -44,38 +44,3 @@ export const gameboardsSlice = createSlice({
         )
     }
 });
-
-export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null;
-export const currentGameboardSlice = createSlice({
-    name: "currentGameboard",
-    initialState: null as CurrentGameboardState,
-    reducers: {},
-    extraReducers: builder => {
-        builder.addCase(
-            saveGameboard.fulfilled,
-            (currentGameboard, action) => {
-                if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.id === action.payload.boardId) {
-                    if (action.payload.boardTitle) {
-                        currentGameboard.title = action.payload.boardTitle;
-                    }
-                    currentGameboard.savedToCurrentUser = true;
-                }
-            }
-        ).addCase(
-            routerPageChange,
-            () => null
-        ).addMatcher(
-            isaacApi.endpoints.getGameboardById.matchPending,
-            (_, action) => null
-        ).addMatcher(
-            isaacApi.endpoints.getGameboardById.matchFulfilled,
-            (_, action) => action.payload
-        ).addMatcher(
-            isaacApi.endpoints.getGameboardById.matchRejected,
-            () => NOT_FOUND
-        ).addMatcher(
-            isaacApi.endpoints.generateTemporaryGameboard.matchFulfilled,
-            (_, action) => action.payload
-        );
-    }
-})

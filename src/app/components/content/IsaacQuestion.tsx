@@ -7,7 +7,7 @@ import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, ConfidenceContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, ConfidenceContext, GameboardContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {
     determineFastTrackPrimaryAction,
@@ -26,8 +26,8 @@ import {saveGameboard} from "../../state/slices/api/gameboards";
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const accordion = useContext(AccordionSectionContext);
+    const currentGameboard = useContext(GameboardContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
-    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
@@ -50,8 +50,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         currentAttempt,
         canSubmit,
         correct,
-        !!locked,
-        currentGameboard
+        !!locked
     );
 
     const tooManySigFigsFeedback = <p>

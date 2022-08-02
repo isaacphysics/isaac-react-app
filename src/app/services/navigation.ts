@@ -11,11 +11,13 @@ import {
 import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, NOT_FOUND, TAG_ID} from "./constants";
 import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
 import {useUserContext} from "./userContext";
-import {AudienceContext, ContentDTO} from "../../IsaacApiTypes";
+import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {selectors} from "../state/selectors";
-import {useLocation} from "react-router-dom";
 import {isaacApi} from "../state/slices/api";
+import {skipToken} from "@reduxjs/toolkit/query";
+import {useQueryParams} from "./reactRouterExtension";
+import {useLocation} from "react-router-dom";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
 export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
@@ -25,40 +27,39 @@ export interface PageNavigation {
     backToCollection?: LinkInfo;
     nextItem?: LinkInfo;
     previousItem?: LinkInfo;
-    queryParams?: string;
+    search?: string;
     creationContext?: AudienceContext;
+    currentGameboard?: GameboardDTO;
 }
 
-const defaultPageNavigation = {breadcrumbHistory: []};
+const defaultPageNavigation = (currentGameboard?: GameboardDTO) => ({breadcrumbHistory: [], currentGameboard});
 
-export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigation => {
-    const location = useLocation();
+export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
+    const search = useLocation().search;
+    const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
-    const queryParams = queryString.parse(location.search);
     const dispatch = useAppDispatch();
-    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
+    const {data: currentGameboard} = isaacApi.endpoints.getGameboardById.useQuery(gameboardId ?? skipToken);
 
     useEffect(() => {
-        if (queryParams.board) loadGameboard(queryParams.board as string);
-        if (queryParams.topic) dispatch(fetchTopicSummary(queryParams.topic as TAG_ID));
-    }, [queryParams.board, queryParams.topic, currentDocId, loadGameboard, dispatch]);
+        if (topic) dispatch(fetchTopicSummary(topic as TAG_ID));
+    }, [topic, currentDocId, dispatch]);
 
-    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
     const currentTopic = useAppSelector(selectors.topic.currentTopic);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
     if (doc === null || doc === NOT_FOUND) {
-        return defaultPageNavigation;
+        return defaultPageNavigation(currentGameboard);
     }
 
     if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && fastTrackProgressEnabledBoards.includes(currentGameboard?.id || "")) {
-        const gameboardHistory = (currentGameboard && queryParams.board === currentGameboard.id) ?
+        const gameboardHistory = (currentGameboard && gameboardId === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             [];
-        const questionHistoryList = (queryParams.questionHistory as string || "").split(",");
+        const questionHistoryList = (questionHistory as string || "").split(",");
         const previousQuestion = questionHistoryList.pop();
-        const questionHistory = questionHistoryList.length ? questionHistoryList.join(",") : undefined;
+        const modifiedQuestionHistory = questionHistoryList.length ? questionHistoryList.join(",") : undefined;
         const board = currentGameboard?.id;
         return {
             collectionType: "Master Mathematics",
@@ -66,12 +67,12 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             backToCollection: currentGameboard ? {title: "Return to Top 10 Questions", to: `/gameboards#${currentGameboard.id}`} : undefined,
             nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
             previousItem: previousQuestion ? {title: "Return to Previous Question", to: `/questions/${previousQuestion}`} : undefined,
-            queryParams: queryString.stringify(previousQuestion ? {board, questionHistory} : {board}),
+            search: queryString.stringify(previousQuestion ? {board, modifiedQuestionHistory} : {board}),
         };
     }
 
-    if (queryParams.board) {
-        const gameboardHistory = (currentGameboard && queryParams.board === currentGameboard.id) ?
+    if (gameboardId) {
+        const gameboardHistory = (currentGameboard && gameboardId === currentGameboard.id) ?
             determineGameboardHistory(currentGameboard) :
             [];
         return {
@@ -80,13 +81,14 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             backToCollection: gameboardHistory.slice(-1)[0],
             nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
             previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
-            queryParams: location.search,
+            search,
             creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
+            currentGameboard
         }
     }
 
-    if (queryParams.topic) {
-        const topicHistory = (currentTopic &&  queryParams.topic === currentTopic?.id?.slice("topic_summary_".length)) ?
+    if (topic) {
+        const topicHistory = (currentTopic && topic === currentTopic?.id?.slice("topic_summary_".length)) ?
             determineTopicHistory(currentTopic, currentDocId) :
             makeAttemptAtTopicHistory();
         return {
@@ -94,11 +96,12 @@ export const useNavigation = (doc: ContentDTO|NOT_FOUND_TYPE|null): PageNavigati
             breadcrumbHistory: topicHistory,
             backToCollection: topicHistory.slice(-1)[0],
             nextItem: determineNextTopicContentLink(currentTopic, currentDocId, userContext, user),
-            queryParams: location.search,
+            search,
+            currentGameboard
         }
     }
 
-    return defaultPageNavigation;
+    return defaultPageNavigation(currentGameboard);
 };
 
 export const ifKeyIsEnter = (action: () => void) => (event: React.KeyboardEvent) => {

@@ -1,15 +1,14 @@
 import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
-import {NOT_FOUND} from "./constants";
 import React, {useCallback, useEffect, useState} from "react";
 import countBy from "lodash/countBy"
 import intersection from "lodash/intersection"
 import {isCS, isPhy} from "./siteConstants";
 import {determineAudienceViews} from "./userContext";
-import {NumberOfBoards, BoardOrder, ViewingContext} from "../../IsaacAppTypes";
+import {NumberOfBoards, BoardOrder, ViewingContext, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {useAppDispatch, useAppSelector} from "../state/store";
-import {CurrentGameboardState} from "../state/slices/gameboards";
 import {isaacApi} from "../state/slices/api";
 import {selectors} from "../state/selectors";
+import {isFound} from "./miscUtils";
 
 export enum BoardCompletions {
     "any" = "Any",
@@ -50,9 +49,9 @@ export const determineGameboardHistory = (currentGameboard: GameboardDTO) => {
     return createGameboardHistory(currentGameboard.title as string, currentGameboard.id as string);
 };
 
-export const determineNextGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
+export const determineNextGameboardItem = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.contents) {
+    if (isFound(currentGameboard) && currentGameboard.contents) {
         currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
             const gameboardContentIds = currentGameboard.contents.map(q => q.id);
@@ -67,9 +66,9 @@ export const determineNextGameboardItem = (currentGameboard: CurrentGameboardSta
     }
 };
 
-export const determinePreviousGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
+export const determinePreviousGameboardItem = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.contents) {
+    if (isFound(currentGameboard) && currentGameboard.contents) {
         currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
             const gameboardContentIds = currentGameboard.contents.map(q => q.id);
@@ -116,8 +115,8 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
         .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
 };
 
-export const determineCurrentCreationContext = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
-   if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.contents) {
+export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
+   if (isFound(currentGameboard) && currentGameboard.contents) {
         return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
    }
 };

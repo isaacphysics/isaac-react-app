@@ -49,19 +49,6 @@ export const selectors = {
         }
     },
 
-    board: {
-        currentGameboard: (state: AppState) => {
-            if (!state?.currentGameboard) return null;
-            if (state.currentGameboard === NOT_FOUND) return null;
-            return state.currentGameboard;
-        },
-        currentGameboardOrNotFound: (state: AppState) => {
-            if (!state?.currentGameboard) return null;
-            if (state.currentGameboard === NOT_FOUND) return NOT_FOUND;
-            return state.currentGameboard;
-        }
-    },
-
     boards: {
         boards: (state: AppState) => state?.boards ?? null
     },
