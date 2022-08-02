@@ -1,12 +1,11 @@
 import {Button, Col, Row} from "reactstrap";
 import React, {useEffect, useState} from "react";
 import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
-import {useAppDispatch} from "../../../state/store";
+import {store, useAppDispatch} from "../../../state/store";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
-import {store} from "../../../state/store";
-import {ChoiceDTO, GameboardDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
+import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";

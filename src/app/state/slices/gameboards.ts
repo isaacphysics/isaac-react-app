@@ -1,11 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {Boards, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {Boards} from "../../../IsaacAppTypes";
 import {isaacApi} from "./api";
-import {GameboardDTO} from "../../../IsaacApiTypes";
 import {unionWith} from "lodash";
-import {saveGameboard} from "./api/gameboards";
-import {NOT_FOUND} from "../../services/constants";
-import {routerPageChange} from "../actions";
 
 const mergeBoards = (boards: Boards, additional: Boards): Boards => ({
     totalResults: additional.totalResults || boards.totalResults,
