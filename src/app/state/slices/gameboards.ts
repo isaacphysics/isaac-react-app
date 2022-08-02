@@ -65,6 +65,9 @@ export const currentGameboardSlice = createSlice({
             routerPageChange,
             () => null
         ).addMatcher(
+            isaacApi.endpoints.getGameboardById.matchPending,
+            (_, action) => null
+        ).addMatcher(
             isaacApi.endpoints.getGameboardById.matchFulfilled,
             (_, action) => action.payload
         ).addMatcher(

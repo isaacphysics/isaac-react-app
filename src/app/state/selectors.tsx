@@ -51,17 +51,13 @@ export const selectors = {
 
     board: {
         currentGameboard: (state: AppState) => {
-            if (!state) return null;
-            if (!state.currentGameboard) return null;
+            if (!state?.currentGameboard) return null;
             if (state.currentGameboard === NOT_FOUND) return null;
-            if ('inflight' in state.currentGameboard) return null;
             return state.currentGameboard;
         },
         currentGameboardOrNotFound: (state: AppState) => {
-            if (!state) return null;
-            if (!state.currentGameboard) return null;
+            if (!state?.currentGameboard) return null;
             if (state.currentGameboard === NOT_FOUND) return NOT_FOUND;
-            if ('inflight' in state.currentGameboard) return null;
             return state.currentGameboard;
         }
     },

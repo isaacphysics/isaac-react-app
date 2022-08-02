@@ -69,7 +69,7 @@ export const determineNextGameboardItem = (currentGameboard: CurrentGameboardSta
 
 export const determinePreviousGameboardItem = (currentGameboard: CurrentGameboardState | undefined, currentDocId: string) => {
     const boardQuestions: (string | undefined)[] = [];
-    if (currentGameboard && currentGameboard !== NOT_FOUND && !('inflight' in currentGameboard) && currentGameboard.contents) {
+    if (currentGameboard && currentGameboard !== NOT_FOUND && currentGameboard.contents) {
         currentGameboard.contents.map(question => boardQuestions.push(question.id));
         if (boardQuestions.includes(currentDocId)) {
             const gameboardContentIds = currentGameboard.contents.map(q => q.id);
