@@ -74,9 +74,6 @@ export const currentGameboardSlice = createSlice({
             isaacApi.endpoints.getGameboardById.matchRejected,
             () => NOT_FOUND
         ).addMatcher(
-            isaacApi.endpoints.createGameboard.matchFulfilled,
-            (_, action) => ({id: action.payload.id})
-        ).addMatcher(
             isaacApi.endpoints.generateTemporaryGameboard.matchFulfilled,
             (_, action) => action.payload
         );

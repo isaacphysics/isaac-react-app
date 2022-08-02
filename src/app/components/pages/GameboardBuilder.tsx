@@ -1,6 +1,6 @@
 import React, {lazy, useEffect, useRef, useState} from 'react';
 import {useAppDispatch, useAppSelector} from "../../state/store";
-import {Button, Card, CardBody, Col, Container, Input, Label, Row, Table} from "reactstrap";
+import {Button, Card, CardBody, Col, Container, Input, Label, Row, Spinner, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem} from "../../../IsaacApiTypes";
 import {
@@ -34,6 +34,7 @@ import {EXAM_BOARD, STAGE} from "../../services/constants";
 import {selectOnChange} from "../../services/select";
 import {isDefined} from "../../services/miscUtils";
 import {isaacApi} from "../../state/slices/api";
+import {currentGameboardSlice} from "../../state/slices/gameboards";
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
 const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
@@ -47,7 +48,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const userContext = useUserContext();
     const { data: wildcards } = isaacApi.endpoints.getWildcards.useQuery();
     const [ generateTemporaryGameboard ] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
-    const [ createGameboard ] = isaacApi.endpoints.createGameboard.useMutation();
+    const [ createGameboard, {isLoading: isWaitingForCreateGameboard} ] = isaacApi.endpoints.createGameboard.useMutation();
     const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
     const baseGameboard = useAppSelector(selectors.board.currentGameboard);
 
@@ -290,19 +291,21 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                     tags: gameboardTags
                                 },
                                 previousId: baseGameboardId
+                            }).then(gameboardOrError => {
+                                const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
+                                const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
+                                dispatch(openActiveModal({
+                                    closeAction: () => {dispatch(closeActiveModal())},
+                                    title: gameboardId ? "Gameboard created" : "Gameboard creation failed",
+                                    body: <GameboardCreatedModal gameboardId={gameboardId} error={error}/>,
+                                }));
                             });
-
-                            dispatch(openActiveModal({
-                                closeAction: () => {dispatch(closeActiveModal())},
-                                title: "Gameboard created",
-                                body: <GameboardCreatedModal/>
-                            }));
 
                             logEvent(eventLog, "SAVE_GAMEBOARD", {});
                             dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
                         }}
                     >
-                        {siteSpecific("Save Gameboard", "Save gameboard")}
+                        {isWaitingForCreateGameboard ? <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save gameboard")}
                     </Button>
                 </div>
 

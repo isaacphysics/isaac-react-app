@@ -126,11 +126,21 @@ export const showSuccessToast = (title: string, body: string) => showToast({
     body
 });
 
+export function extractRTKErrorMessage(e: any) {
+    if (e && e.error && e.error.data && e.error.data.errorMessage) {
+        return e.error.data.errorMessage;
+    } else if (e && e.message) {
+        return e.message;
+    }
+    return API_REQUEST_FAILURE_MESSAGE;
+}
+
 export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
+    console.log(response);
     if (response) {
         if (response.error) {
             if (response.error.status < 500) {
-                return showErrorToast(error, JSON.stringify(response.error.data));
+                return showErrorToast(error, extractRTKErrorMessage(response));
             }
         } else {
             ReactGA.exception({

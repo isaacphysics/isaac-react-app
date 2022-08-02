@@ -1,16 +1,17 @@
 import React from 'react';
-import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {useAppDispatch} from "../../../state/store";
 import {Link} from "react-router-dom";
-import {closeActiveModal} from "../../../state/actions";
-import {isFound} from "../../../services/miscUtils";
-import {selectors} from "../../../state/selectors";
-import {ShowLoading} from "../../handlers/ShowLoading";
+import {closeActiveModal, extractRTKErrorMessage} from "../../../state/actions";
 import {Button, Col, Label, Row} from "reactstrap";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {SerializedError} from "@reduxjs/toolkit";
 
-const GameboardNotFound = () =>
+const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Row className="mb-2">
         <Label className="mx-3">
             Your gameboard was not successfully created.
+            <br/>
+            {errorMessage}
         </Label>
     </Row>;
 
@@ -35,7 +36,7 @@ const GameboardCreatedModalButtons = ({gameboardId}: {gameboardId: string | unde
         <Col className="mb-1">
             <Button
                 tag={Link} to={`/gameboard_builder`} color="primary" outline
-                onClick={() => {window.location.reload(); dispatch(closeActiveModal());}}
+                onClick={() => dispatch(closeActiveModal())}
             >
                 Create another board
             </Button>
@@ -51,15 +52,13 @@ const GameboardCreatedModalButtons = ({gameboardId}: {gameboardId: string | unde
     </Row>
 }
 
-export const GameboardCreatedModal = () => {
-    const gameboard = useAppSelector(selectors.board.currentGameboardOrNotFound);
+export const GameboardCreatedModal = ({gameboardId, error}: {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined}) => {
+    const errorMessage = extractRTKErrorMessage(error);
     return <div>
-        <ShowLoading until={gameboard}
-                        ifNotFound={<><GameboardNotFound/><GameboardCreatedModalButtons gameboardId={undefined}/></>}>
-            <>
-                <GameboardSuccessfullyCreated/>
-                <GameboardCreatedModalButtons gameboardId={(gameboard && isFound(gameboard) && gameboard.id) as string} />
-            </>
-        </ShowLoading>
-    </div>
+        {gameboardId
+            ? <GameboardSuccessfullyCreated/>
+            : <GameboardNotFound errorMessage={errorMessage}/>
+        }
+        <GameboardCreatedModalButtons gameboardId={gameboardId} />
+    </div>;
 };
