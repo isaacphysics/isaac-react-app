@@ -1,6 +1,5 @@
 import React from "react";
-import {useAppSelector} from "../../state/store";
-import {selectors} from "../../state/selectors";
+import {selectors, useAppSelector} from "../../state";
 import {ExternalLink} from "./ExternalLink";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentDTO} from "../../../IsaacApiTypes";

@@ -2,7 +2,7 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {Action, Concepts, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
 import tags from "../../services/tags";
-import {routerPageChange} from "../actions";
+import {routerPageChange} from "../index";
 
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
 export const doc = (doc: DocState = null, action: Action) => {

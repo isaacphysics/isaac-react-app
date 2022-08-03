@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useAppSelector} from "../../../state/store";
+import {useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
@@ -7,7 +7,7 @@ import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
-import {selectors} from "../../../state/selectors";
+import {selectors} from "../../../state";
 
 interface ShowMeButtonsProps {
     className?: string

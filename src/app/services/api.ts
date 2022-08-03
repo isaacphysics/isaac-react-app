@@ -22,7 +22,7 @@ import {
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
-import {handleApiGoneAway, handleServerError} from "../state/actions";
+import {handleApiGoneAway, handleServerError} from "../state";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
 import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
 

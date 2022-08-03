@@ -1,10 +1,7 @@
 import React, {useEffect} from "react";
 import {Button, Col, Row, CustomInput, Form} from "reactstrap";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {useAppDispatch, useAppSelector, store, selectors, closeActiveModal} from "../../../state";
 import {useLocation} from "react-router-dom";
-import {selectors} from "../../../state/selectors";
-import {closeActiveModal} from "../../../state/actions";
-import {store} from "../../../state/store";
 import {GoogleSignInButton, PasswordResetButton, TFAInput, EmailPasswordInputs, useLoginLogic} from "../../pages/LogIn";
 import * as persistence from "../../../services/localStorage";
 import {KEY} from "../../../services/localStorage";

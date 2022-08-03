@@ -1,11 +1,11 @@
 import {GameboardItem, IsaacFastTrackQuestionPageDTO} from "../../../IsaacApiTypes";
 import queryString from "query-string";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
+import {useAppDispatch, useAppSelector} from "../../state";
+import {AppState} from "../../state";
 import React, {useContext, useEffect} from "react";
-import {fetchFasttrackConcepts} from "../../state/actions";
+import {fetchFasttrackConcepts} from "../../state";
 import * as RS from "reactstrap";
-import {selectors} from "../../state/selectors";
+import {selectors} from "../../state";
 import {Link} from "react-router-dom";
 import {useDeviceSize} from "../../services/device";
 import {Hexagon} from "./svg/Hexagon";

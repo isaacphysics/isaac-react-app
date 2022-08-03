@@ -1,10 +1,9 @@
 import React, {Suspense, useContext, useEffect} from "react";
-import {useAppDispatch} from "../../state/store";
+import {submitQuizQuestionIfDirty, useAppDispatch} from "../../state";
 import classnames from "classnames";
 import {QUESTION_TYPES} from "../../services/questions";
-import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
 import {isDefined} from "../../services/miscUtils";
-import {isPhy, isCS} from "../../services/siteConstants";
+import {isCS, isPhy} from "../../services/siteConstants";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";

@@ -2,11 +2,9 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {useAppSelector} from "../../../state/store";
+import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
 import QRCode from 'qrcode';
-import {selectors} from "../../../state/selectors";
-import {isaacApi} from "../../../state/slices/api";
 import {isDefined} from "../../../services/miscUtils";
 
 interface UserMFAProps {

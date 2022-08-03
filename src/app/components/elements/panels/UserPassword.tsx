@@ -3,9 +3,8 @@ import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
-import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount} from "../../../state/actions";
+import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../../services/passwordStrength";
-import {useAppDispatch} from "../../../state/store";
 
 interface UserPasswordProps {
     currentPassword?: string;

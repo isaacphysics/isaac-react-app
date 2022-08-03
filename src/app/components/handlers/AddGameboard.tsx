@@ -1,8 +1,7 @@
 import React, {useEffect} from "react";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "./ShowLoading";
-import {useAppDispatch} from "../../state/store";
-import {saveGameboard} from "../../state/slices/api/gameboards";
+import {saveGameboard, useAppDispatch} from "../../state";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 

@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Card, CardBody, Col, Container, Row} from "reactstrap";
-import {AppState} from "../../state/reducers";
+import {
+    AppState,
+    useAppDispatch,
+    useAppSelector,
+    handleEmailAlter,
+    requestEmailVerification,
+    selectors
+} from "../../state";
 import {Link} from "react-router-dom";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {handleEmailAlter, requestEmailVerification} from "../../state/actions";
-import {selectors} from "../../state/selectors";
 
 export const EmailAlterHandler = () => {
     const dispatch = useAppDispatch();

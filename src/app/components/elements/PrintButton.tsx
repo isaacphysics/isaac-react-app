@@ -1,6 +1,5 @@
 import React, {useState} from "react";
-import {useAppDispatch} from "../../state/store";
-import {printingSettingsSlice} from "../../state/slices/internalAppState";
+import {printingSettingsSlice, useAppDispatch} from "../../state";
 
 interface PrintProps {
     questionPage?: boolean;

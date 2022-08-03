@@ -1,13 +1,15 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import React, {useEffect, useRef, useState} from 'react';
+import {AppState, generateSpecification, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
-import {generateSpecification} from '../../state/actions';
-import {selectors} from '../../state/selectors';
-import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from 'isaac-graph-sketcher/dist/src/GraphSketcher';
+import {
+    GraphSketcher,
+    GraphSketcherState,
+    LineType,
+    makeGraphSketcher
+} from 'isaac-graph-sketcher/dist/src/GraphSketcher';
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
-import {AppState} from "../../state/reducers";
 import {isStaff} from "../../services/user";
 
 const GraphSketcherPage = () => {

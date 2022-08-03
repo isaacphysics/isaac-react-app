@@ -4,11 +4,13 @@ import configureMockStore from 'redux-mock-store';
 import thunk from "redux-thunk";
 import {
     fetchSearch,
+    middleware,
     registerQuestions,
     requestConstantsUnits,
-    requestCurrentUser, requestEmailVerification,
+    requestCurrentUser,
+    requestEmailVerification,
     showToast
-} from "../../app/state/actions";
+} from "../../app/state";
 import {endpoint} from "../../app/services/api";
 import {
     errorResponses,
@@ -21,7 +23,6 @@ import {
 } from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
 import {Action} from "../../IsaacAppTypes";
-import {middleware} from "../../app/state/store";
 import {jest} from "@jest/globals";
 
 const mockStore = configureMockStore([thunk, ...middleware]);

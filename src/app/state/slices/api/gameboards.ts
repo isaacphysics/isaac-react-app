@@ -2,18 +2,19 @@ import {getValue, Item, toTuple} from "../../../services/select";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {AssignmentDTO} from "../../../../IsaacApiTypes";
 import {isDefined} from "../../../services/miscUtils";
+import {isAdminOrEventManager, isTeacher} from "../../../services/user";
 import {
+    AppDispatch,
+    AppState,
+    isaacApi,
+    mutationSucceeded,
     showAxiosErrorToastIfNeeded,
     showErrorToast,
     showRTKQueryErrorToastIfNeeded,
     showSuccessToast
-} from "../../actions";
-import {isaacApi, mutationSucceeded} from "./index";
-import {isAdminOrEventManager, isTeacher} from "../../../services/user";
-import {AppState} from "../../reducers";
+} from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {history} from "../../../services/history";
-import {AppDispatch} from "../../store";
 
 export interface AssignmentSpec {
     boardId: string;

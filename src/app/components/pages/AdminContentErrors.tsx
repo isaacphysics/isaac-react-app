@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {AppState} from "../../state/reducers";
-import {getAdminContentErrors} from "../../state/actions";
+import {AppState, getAdminContentErrors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {EDITOR_URL} from "../../services/constants";
 import {ContentErrorItem} from "../../../IsaacAppTypes";

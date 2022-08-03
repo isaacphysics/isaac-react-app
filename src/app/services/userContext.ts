@@ -16,8 +16,7 @@ import {
 } from "./constants";
 import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {useAppSelector} from "../state/store";
-import {AppState} from "../state/reducers";
+import {AppState, useAppSelector} from "../state";
 import {isCS, isPhy, siteSpecific} from "./siteConstants";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import {isLoggedIn, roleRequirements} from "./user";

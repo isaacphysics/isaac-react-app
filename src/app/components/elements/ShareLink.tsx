@@ -1,8 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {isCS, siteSpecific} from "../../services/siteConstants";
-import {useAppSelector} from "../../state/store";
+import {selectors, useAppSelector} from "../../state";
 import {isMobile} from "../../services/device";
-import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {useOutsideCallback} from "../../services/miscUtils";
 

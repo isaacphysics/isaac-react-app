@@ -1,13 +1,18 @@
 import React, {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {
+    loadQuizAssignedToMe,
+    loadQuizzes,
+    loadQuizzesAttemptedFreelyByMe,
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {selectors} from "../../../state/selectors";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {loadQuizAssignedToMe, loadQuizzes, loadQuizzesAttemptedFreelyByMe} from "../../../state/actions/quizzes";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {extractTeacherName} from "../../../services/user";

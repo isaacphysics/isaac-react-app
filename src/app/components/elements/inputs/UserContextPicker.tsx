@@ -3,13 +3,11 @@ import * as RS from "reactstrap";
 import {CustomInput, FormGroup, Input, Label} from "reactstrap";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {EXAM_BOARD, examBoardLabelMap, STAGE, stageLabelMap} from "../../../services/constants";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector} from "../../../state";
 import {isCS} from "../../../services/siteConstants";
-import {selectors} from "../../../state/selectors";
 import {history} from "../../../services/history";
 import queryString from "query-string";
 import {useQueryParams} from "../../../services/reactRouterExtension";
-import {transientUserContextSlice} from "../../../state/slices/internalAppState";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useAppDispatch();

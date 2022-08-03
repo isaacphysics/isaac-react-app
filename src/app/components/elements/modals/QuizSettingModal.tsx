@@ -1,7 +1,14 @@
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
-import {AppDispatch} from "../../../state/store";
-import {useAppDispatch} from "../../../state/store";
+import {
+    AppDispatch,
+    closeActiveModal,
+    hideToast,
+    setQuiz,
+    showQuizSettingModal,
+    showToast,
+    useAppDispatch
+} from "../../../state";
 import React, {useState} from "react";
 import {Item, selectOnChange} from "../../../services/select";
 import {range} from "lodash";
@@ -9,8 +16,6 @@ import {currentYear, DateInput} from "../inputs/DateInput";
 import {isDefined} from "../../../services/miscUtils";
 import * as RS from "reactstrap";
 import Select from "react-select";
-import {closeActiveModal, hideToast, showToast} from "../../../state/actions";
-import {setQuiz, showQuizSettingModal} from "../../../state/actions/quizzes";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;

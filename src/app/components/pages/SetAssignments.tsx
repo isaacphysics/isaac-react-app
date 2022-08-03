@@ -22,15 +22,20 @@ import {
 } from "reactstrap";
 import {Link, withRouter} from "react-router-dom";
 import {
+    AppState,
+    assignGameboard,
+    isaacApi,
     loadGroups,
     openIsaacBooksModal,
-    showToast
-} from "../../state/actions";
+    selectors,
+    showToast,
+    unlinkUserFromGameboard,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {AppGameBoard, BoardAssignee, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
 import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
@@ -47,7 +52,6 @@ import {
     useGameboards
 } from "../../services/gameboards";
 import {connect} from "react-redux";
-import {useAppDispatch, useAppSelector} from "../../state/store";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {isPhy, siteSpecific} from "../../services/siteConstants";
@@ -59,8 +63,6 @@ import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import {above, below, useDeviceSize} from "../../services/device";
 import Select from "react-select";
 import {Item, itemise, selectOnChange} from "../../services/select";
-import {assignGameboard, unlinkUserFromGameboard} from "../../state/slices/api/gameboards";
-import {isaacApi} from "../../state/slices/api";
 
 const stateToProps = (state: AppState) => ({
     user: (state && state.user) as RegisteredUserDTO,

@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {useParams} from "react-router-dom";
-import {ShowLoading} from "../../handlers/ShowLoading";
 import {
     loadQuizAssignmentFeedback,
+    selectors,
+    showToast,
     updateQuizAssignmentDueDate,
-    updateQuizAssignmentFeedbackMode
-} from "../../../state/actions/quizzes";
-import {selectors} from "../../../state/selectors";
+    updateQuizAssignmentFeedbackMode,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
+import {useParams} from "react-router-dom";
+import {ShowLoading} from "../../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
@@ -18,11 +20,10 @@ import {extractTeacherName} from "../../../services/user";
 import {isDefined} from "../../../services/miscUtils";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
-import {showToast} from "../../../state/actions";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import {range} from "lodash";
-import { ResultsTable } from "../../elements/quiz/QuizProgressCommon";
+import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
@@ -34,7 +35,8 @@ import {
     DropdownMenu,
     DropdownToggle,
     Label,
-    Row, UncontrolledDropdown
+    Row,
+    UncontrolledDropdown
 } from "reactstrap";
 import {getQuizAssignmentCSVDownloadLink} from "../../../services/quiz";
 

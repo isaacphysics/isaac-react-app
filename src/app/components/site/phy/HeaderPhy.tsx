@@ -1,10 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../state/store";
+import {selectors, useAppSelector} from "../../../state";
 import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
-import {selectors} from "../../../state/selectors";
 import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
 import {useDeviceSize} from "../../../services/device";
 

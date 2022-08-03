@@ -1,16 +1,17 @@
-import React, {Suspense, lazy, useCallback, useEffect, useState} from "react";
-import {clearQuestionSearch, closeActiveModal, searchQuestions} from "../../../state/actions";
+import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
+import {
+    AppState,
+    clearQuestionSearch,
+    closeActiveModal,
+    searchQuestions,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
 import {debounce, isEqual} from "lodash";
 import Select, {MultiValue} from "react-select";
-import {
-    groupTagSelectionsByParent,
-    logEvent,
-    sortQuestions
-} from "../../../services/gameboardBuilder";
+import {groupTagSelectionsByParent, logEvent, sortQuestions} from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
 import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";

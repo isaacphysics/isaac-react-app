@@ -16,8 +16,15 @@ import {
     TabPane,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
-import {AppState} from "../../state/reducers";
-import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
+import {
+    ErrorState,
+    AdminUserGetState,
+    AppState,
+    adminUserGetRequest,
+    getChosenUserAuthSettings,
+    resetPassword,
+    updateCurrentUser
+} from "../../state";
 import {
     BooleanNotation,
     DisplaySettings,
@@ -47,8 +54,6 @@ import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
-import {ErrorState} from "../../state/slices/internalAppState";
-import {AdminUserGetState} from "../../state/reducers/adminState";
 import {Loading} from "../handlers/IsaacSpinner";
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -70,7 +75,7 @@ const stateToProps = (state: AppState, props: any) => {
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
-    adminUserGet,
+    adminUserGetRequest,
     getChosenUserAuthSettings,
 };
 
@@ -92,11 +97,11 @@ interface AccountPageProps {
     hashAnchor: string | null;
     authToken: string | null;
     userOfInterest: string | null;
-    adminUserGet: (userid: number | undefined) => void;
+    adminUserGetRequest: (userid: number | undefined) => void;
     adminUserToEdit?: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
     // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
@@ -105,7 +110,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useEffect(() => {
         if (userOfInterest) {
-            adminUserGet(Number(userOfInterest));
+            adminUserGetRequest(Number(userOfInterest));
             getChosenUserAuthSettings(Number(userOfInterest));
         }
     }, [userOfInterest]);

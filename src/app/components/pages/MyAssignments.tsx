@@ -1,15 +1,17 @@
 import React, {MouseEvent, useEffect, useState} from "react";
-import {useAppDispatch} from "../../state/store";
-import {logAction} from "../../state/actions";
+import {isaacApi, logAction, useAppDispatch} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Col, Container, Input, Label, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {filterAssignmentsByStatus, filterAssignmentsByProperties,
-    getDistinctAssignmentGroups, getDistinctAssignmentSetters} from "../../services/assignments";
+import {
+    filterAssignmentsByProperties,
+    filterAssignmentsByStatus,
+    getDistinctAssignmentGroups,
+    getDistinctAssignmentSetters
+} from "../../services/assignments";
 import {ifKeyIsEnter} from "../../services/navigation";
 import {Assignments} from "../elements/Assignments";
-import {isaacApi} from "../../state/slices/api";
 
 export const MyAssignments = () => {
     const dispatch = useAppDispatch();

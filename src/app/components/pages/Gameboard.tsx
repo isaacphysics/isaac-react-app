@@ -1,7 +1,6 @@
 import React, {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {isaacApi, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Link, withRouter} from "react-router-dom"
-import {logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -12,7 +11,6 @@ import {isTeacher} from "../../services/user";
 import {Redirect} from "react-router";
 import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import tags from "../../services/tags";
-import {selectors} from "../../state/selectors";
 import {showWildcard} from "../../services/gameboards";
 import queryString from "query-string";
 import {
@@ -25,7 +23,6 @@ import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySumm
 import {isDefined, isFound} from "../../services/miscUtils";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
-import {isaacApi} from "../../state/slices/api";
 import {skipToken} from "@reduxjs/toolkit/query";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {

@@ -1,9 +1,15 @@
-import React, {useContext, useEffect, Suspense} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {attemptQuestion, deregisterQuestions, registerQuestions} from "../../state/actions";
+import React, {Suspense, useContext, useEffect} from "react";
+import {
+    attemptQuestion,
+    deregisterQuestions,
+    registerQuestions,
+    saveGameboard,
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
 import {DateString, TIME_ONLY} from "../elements/DateString";
@@ -21,7 +27,6 @@ import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {saveGameboard} from "../../state/slices/api/gameboards";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();

@@ -1,13 +1,15 @@
 import React, {useEffect, useRef} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     getMyAnsweredQuestionsByDate,
     getMyProgress,
     getUserAnsweredQuestionsByDate,
     getUserProgress,
-} from "../../state/actions";
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {isTeacher} from "../../services/user";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
@@ -23,7 +25,6 @@ import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {isPhy, siteSpecific} from "../../services/siteConstants";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {selectors} from "../../state/selectors";
 
 const siteSpecificStats = siteSpecific(
     // Physics

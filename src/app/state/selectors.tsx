@@ -1,4 +1,4 @@
-import {AppState} from "./reducers";
+import {AppState} from "./";
 import {NOT_FOUND} from "../services/constants";
 import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";

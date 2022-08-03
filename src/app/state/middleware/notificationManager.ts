@@ -1,8 +1,8 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {ACTION_TYPE} from "../../services/constants";
 import {Action} from "../../../IsaacAppTypes";
-import {logAction, openActiveModal, routerPageChange} from "../actions";
-import {allRequiredInformationIsPresent, withinLast50Minutes, withinLast2Hours} from "../../services/validation";
+import {logAction, openActiveModal, routerPageChange} from "../index";
+import {allRequiredInformationIsPresent, withinLast2Hours, withinLast50Minutes} from "../../services/validation";
 import {isLoggedIn} from "../../services/user";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";

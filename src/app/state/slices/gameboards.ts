@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {Boards} from "../../../IsaacAppTypes";
-import {isaacApi} from "./api";
+import {isaacApi} from "../index"; // IMPORTANT - must import from index, don't shorten to "./api"
 import {unionWith} from "lodash";
 
 const mergeBoards = (boards: Boards, additional: Boards): Boards => ({

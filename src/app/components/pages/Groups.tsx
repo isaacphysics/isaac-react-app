@@ -1,6 +1,5 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
 import {connect} from "react-redux";
-import {useAppSelector} from "../../state/store";
 import {
     Button,
     ButtonDropdown,
@@ -26,6 +25,7 @@ import {
 } from "reactstrap"
 import {Link} from "react-router-dom";
 import {
+    useAppSelector,
     createGroup,
     deleteGroup,
     deleteMember,
@@ -37,13 +37,13 @@ import {
     showGroupEmailModal,
     showGroupInvitationModal,
     showGroupManagersModal,
-    updateGroup
-} from "../../state/actions";
+    updateGroup,
+    selectors,
+    AppState
+} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
-import {selectors} from "../../state/selectors";
 import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter} from "../../services/navigation";

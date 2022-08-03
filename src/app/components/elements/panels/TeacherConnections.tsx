@@ -10,14 +10,15 @@ import {
     getStudentAuthorisations,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
-    revokeAuthorisationAfterPrompt
-} from "../../../state/actions";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
+    revokeAuthorisationAfterPrompt,
+    useAppDispatch,
+    useAppSelector,
+    AppState,
+    AdminUserGetState
+} from "../../../state";
 import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
 import {extractTeacherName, isLoggedIn, isStudent} from "../../../services/user";
-import {AdminUserGetState} from "../../../state/reducers/adminState";
 
 
 interface TeacherConnectionsProps {

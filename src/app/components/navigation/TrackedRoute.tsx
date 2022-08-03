@@ -3,12 +3,12 @@ import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useAppSelector} from "../../state/store";
+import {useAppSelector} from "../../state";
 import * as persistence from "../../services/localStorage";
 import {KEY} from "../../services/localStorage";
 import {Unauthorised} from "../pages/Unauthorised";
 import {isTeacher} from "../../services/user";
-import {selectors} from "../../state/selectors";
+import {selectors} from "../../state";
 import {GOOGLE_ANALYTICS_ACCOUNT_ID} from "../../services/constants";
 import {siteSpecific} from "../../services/siteConstants";
 

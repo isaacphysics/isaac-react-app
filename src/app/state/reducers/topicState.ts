@@ -1,7 +1,7 @@
 import {IsaacTopicSummaryPageDTO} from "../../../IsaacApiTypes";
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
-import {routerPageChange} from "../actions";
+import {routerPageChange} from "../index";
 
 export type CurrentTopicState = IsaacTopicSummaryPageDTO | NOT_FOUND_TYPE | null;
 export const currentTopic = (currentTopic: CurrentTopicState = null, action: Action) => {

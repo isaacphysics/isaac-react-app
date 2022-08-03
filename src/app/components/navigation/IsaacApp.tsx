@@ -1,7 +1,17 @@
 import React, {lazy, Suspense, useEffect} from 'react';
 import "../../services/scrollManager"; // important
 import "../../services/polyfills"; // important
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {
+    AppState,
+    fetchGlossaryTerms,
+    openActiveModal,
+    requestConstantsSegueEnvironment,
+    requestCurrentUser,
+    requestNotifications,
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {Route, Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Question} from "../pages/Question";
@@ -17,14 +27,6 @@ import {MyAccount} from "../pages/MyAccount";
 import {MyAssignments} from "../pages/MyAssignments";
 import {Gameboard} from "../pages/Gameboard";
 import {NotFound} from "../pages/NotFound";
-import {
-    fetchGlossaryTerms,
-    openActiveModal,
-    requestConstantsSegueEnvironment,
-    requestCurrentUser,
-    requestNotifications
-} from "../../state/actions";
-import {AppState} from "../../state/reducers";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
@@ -74,9 +76,9 @@ import {QuizAttemptFeedback} from "../pages/quizzes/QuizAttemptFeedback";
 import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
 import {QuizPreview} from "../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
-import {selectors} from "../../state/selectors";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {Loading} from "../handlers/IsaacSpinner";
+
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
 const Equality = lazy(() => import('../pages/Equality'));

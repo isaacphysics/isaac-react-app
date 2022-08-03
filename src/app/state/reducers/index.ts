@@ -8,40 +8,38 @@ import {
     eventBookingsForGroup,
     eventMapData,
     eventOverviews,
-    events
-} from "./eventsState";
-import {
+    events,
     totpChallengePending,
     user,
     userAuthSettings,
     userPreferences,
-    userSchoolLookup
-} from "./userState";
-import {
+    userSchoolLookup,
     errorSlice,
     mainContentIdSlice,
     printingSettingsSlice,
-    transientUserContextSlice
-} from "../slices/internalAppState";
-import {constants, glossaryTerms, news} from "./staticState";
-import {concepts, doc, fragments} from "./contentState";
-import {graphSketcherSpec, questions} from "./questionState";
-import {activeModals, notifications, toasts} from "./notifiersState";
-import {myAnsweredQuestionsByDate, myProgress, userAnsweredQuestionsByDate, userProgress} from "./progressState";
-import {
+    transientUserContextSlice,
+    constants,
+    glossaryTerms,
+    news,
+    concepts,
+    doc,
+    fragments,
+    graphSketcherSpec,
+    questions,
+    activeModals,
+    notifications,
+    toasts,
+    myAnsweredQuestionsByDate,
+    myProgress,
+    userAnsweredQuestionsByDate,
+    userProgress,
     adminContentErrors,
     adminEmailTemplate,
     adminStats,
     adminUserGet,
     adminUserSearch,
     contentVersion,
-    testQuestions
-} from "./adminState";
-import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations} from "./groupsState";
-import {currentTopic} from "./topicState";
-import {fasttrackConcepts, questionSearchResult} from "./gameboardsState";
-import {search} from "./searchState";
-import {
+    testQuestions,
     quizAssignedToMe,
     quizAssignment,
     quizAssignments,
@@ -50,9 +48,17 @@ import {
     quizPreview,
     quizzes,
     studentQuizAttempt,
-} from "./quizState";
-import {isaacApi} from "../slices/api";
-import {gameboardsSlice} from "../slices/gameboards";
+    activeAuthorisations,
+    groupMemberships,
+    groups,
+    otherUserAuthorisations,
+    currentTopic,
+    fasttrackConcepts,
+    questionSearchResult,
+    search,
+    isaacApi,
+    gameboardsSlice
+} from "../index";
 
 const appReducer = combineReducers({
     // User

@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect} from "react";
-import {useAppDispatch} from "../../../state/store";
-import {Link, useParams} from "react-router-dom";
-import {ShowLoading} from "../../handlers/ShowLoading";
 import {
-    clearQuizAttempt, clearStudentQuizAttempt,
+    useAppDispatch,
+    clearQuizAttempt,
+    clearStudentQuizAttempt,
     loadQuizAttemptFeedback,
     loadStudentQuizAttemptFeedback
-} from "../../../state/actions/quizzes";
+} from "../../../state";
+import {Link, useParams} from "react-router-dom";
+import {ShowLoading} from "../../handlers/ShowLoading";
 import {isDefined} from "../../../services/miscUtils";
 import {useCurrentQuizAttempt} from "../../../services/quiz";
 import {

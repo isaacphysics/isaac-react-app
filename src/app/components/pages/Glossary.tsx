@@ -1,8 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
-import {AppState} from "../../state/reducers";
+import {AppState, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useAppSelector} from "../../state/store";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";

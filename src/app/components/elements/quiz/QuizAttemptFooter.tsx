@@ -1,9 +1,7 @@
 import {QuizAttemptProps, QuizPagination} from "./QuizAttemptComponent";
-import {useAppDispatch} from "../../../state/store";
+import {markQuizAttemptAsComplete, showToast, useAppDispatch} from "../../../state";
 import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
-import {markQuizAttemptAsComplete} from "../../../state/actions/quizzes";
-import {showToast} from "../../../state/actions";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";

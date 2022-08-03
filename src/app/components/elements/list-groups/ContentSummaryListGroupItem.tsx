@@ -19,8 +19,7 @@ import {
     notRelevantMessage,
     useUserContext
 } from "../../../services/userContext";
-import {useAppSelector} from "../../../state/store";
-import {selectors} from "../../../state/selectors";
+import {selectors, useAppSelector} from "../../../state";
 import {v4 as uuid_v4} from "uuid";
 import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";

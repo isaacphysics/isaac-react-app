@@ -2,19 +2,21 @@ import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {EVENTS_CRUMB, NOT_FOUND} from "../../services/constants";
-import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {
     addMyselfToWaitingList,
+    AppState,
     bookMyselfOnEvent,
     cancelMyBooking,
     getEvent,
     openActiveModal,
-    showToast
-} from "../../state/actions";
+    selectors,
+    showToast,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
+import {ShowLoading} from "../handlers/ShowLoading";
+import {EVENTS_CRUMB, NOT_FOUND} from "../../services/constants";
+import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
@@ -24,25 +26,24 @@ import {history} from "../../services/history";
 import {atLeastOne, validateBookingSubmission, zeroOrLess} from "../../services/validation";
 import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isLoggedIn, isStaff, isTeacher} from "../../services/user";
-import {selectors} from "../../state/selectors";
 import {reservationsModal} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {
     formatAvailabilityMessage,
-    formatMakeBookingButtonMessage,
+    formatBookingModalConfirmMessage,
     formatCancelBookingButtonMessage,
-    formatWaitingListBookingStatusMessage,
     formatEventDetailsDate,
+    formatMakeBookingButtonMessage,
+    formatWaitingListBookingStatusMessage,
     studentOnlyEventMessage,
     userCanBeAddedToEventWaitingList,
     userCanMakeEventBooking,
     userCanReserveEventSpaces,
-    userSatisfiesStudentOnlyRestrictionForEvent,
-    formatBookingModalConfirmMessage
+    userSatisfiesStudentOnlyRestrictionForEvent
 } from "../../services/events";
 import {EditContentButton} from "../elements/EditContentButton";
-import { isDefined } from "../../services/miscUtils";
-import { Map, Marker, Popup, TileLayer } from "react-leaflet";
+import {isDefined} from "../../services/miscUtils";
+import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
 
 function formatDate(date: Date|number) {

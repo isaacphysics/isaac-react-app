@@ -1,7 +1,6 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {closeActiveModal, openActiveModal} from "../../state/actions";
-import {useAppDispatch} from "../../state/store";
+import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
 import {PageFragment} from "./PageFragment";
 import {SUBJECTS} from "../../services/constants";
 

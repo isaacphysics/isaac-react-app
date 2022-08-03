@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import * as RS from 'reactstrap';
 import {
@@ -29,16 +29,16 @@ import {
 } from "../../services/constants";
 import {
     allPropertiesFromAGameboard,
+    BOARD_ORDER_NAMES,
+    BoardCompletions,
     boardCompletionSelection,
+    BoardCreators,
+    BoardLimit,
+    BoardViews,
     determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
-    useGameboards,
-    BoardViews,
-    BoardLimit,
-    BoardCreators,
-    BoardCompletions,
-    BOARD_ORDER_NAMES
+    useGameboards
 } from "../../services/gameboards";
 import {above, below, isMobile, useDeviceSize} from "../../services/device";
 import {formatDate} from "../elements/DateString";
@@ -47,8 +47,6 @@ import {Link} from "react-router-dom";
 import {isPhy} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
-import {unlinkUserFromGameboard} from "../../state/slices/api/gameboards";
-import {selectors} from "../../state/selectors";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;

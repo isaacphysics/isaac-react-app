@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {
+    AppState,
+    fetchFragment,
+    requestEmailVerification,
+    selectors,
+    submitMessage,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {
     Alert,
     Button,
@@ -14,16 +22,13 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {AppState} from "../../state/reducers";
-import {fetchFragment, requestEmailVerification, submitMessage} from "../../state/actions";
 import {validateEmail} from "../../services/validation";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {api} from "../../services/api";
 import {Link} from "react-router-dom";
-import {schoolNameWithPostcode, isTeacher} from "../../services/user";
+import {isTeacher, schoolNameWithPostcode} from "../../services/user";
 import {IsaacContent} from "../content/IsaacContent";
 import {isPhy, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
-import {selectors} from "../../state/selectors";
 
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];

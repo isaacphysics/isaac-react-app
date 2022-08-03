@@ -1,7 +1,6 @@
 import {useEffect} from "react";
-import {useAppDispatch} from "../../../state/store";
+import {logQuizSectionView, useAppDispatch} from "../../../state";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
-import {logQuizSectionView} from "../../../state/actions/quizzes";
 
 export function useSectionViewLogging(attempt: QuizAttemptDTO | undefined, pageNumber: number | null) {
     const dispatch = useAppDispatch();

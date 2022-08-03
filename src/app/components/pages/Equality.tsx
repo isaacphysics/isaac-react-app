@@ -13,8 +13,7 @@ import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'ineq
 const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
 import { isDefined } from "../../services/miscUtils";
-import { useAppSelector } from "../../state/store";
-import { selectors } from '../../state/selectors';
+import { useAppSelector, selectors } from "../../state";
 import { isStaff } from '../../services/user';
 
 const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {

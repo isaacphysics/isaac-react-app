@@ -5,9 +5,9 @@ import {
     closeActiveModal,
     releaseAllAuthorisations,
     releaseAuthorisation,
-    revokeAuthorisation
-} from "../../../state/actions";
-import {store} from "../../../state/store";
+    revokeAuthorisation,
+    store
+} from "../../../state";
 import * as RS from "reactstrap";
 import {extractTeacherName} from "../../../services/user";
 

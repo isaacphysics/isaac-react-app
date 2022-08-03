@@ -1,5 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {
+    AppState,
+    extractDataFromQueryResponse,
+    fetchConcepts,
+    isaacApi,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
@@ -15,7 +22,6 @@ import {
 } from '../../services/constants';
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
-import {fetchConcepts} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
@@ -26,7 +32,6 @@ import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} fr
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
-import {AppState} from "../../state/reducers";
 import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {debounce} from "lodash";
 import {History} from "history";
@@ -34,7 +39,6 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {isDefined, isFound} from "../../services/miscUtils";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
-import {extractDataFromQueryResponse, isaacApi} from "../../state/slices/api";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));

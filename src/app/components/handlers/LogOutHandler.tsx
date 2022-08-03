@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
-import {useAppDispatch} from "../../state/store";
-import {logOutUser} from "../../state/actions";
+import {logOutUser, useAppDispatch} from "../../state";
 import {IsaacSpinner} from "./IsaacSpinner";
 
 export const LogOutHandler = () => {

@@ -1,10 +1,8 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
+import {AppState, getEvent, useAppDispatch, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
-import {getEvent} from "../../../state/actions";
 import {NOT_FOUND} from "../../../services/constants";
 import {zeroOrLess} from "../../../services/validation";
 

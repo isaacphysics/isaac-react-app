@@ -1,10 +1,9 @@
 import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {useAppSelector} from "../../state/store";
+import {useAppSelector, selectors} from "../../state";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
 import {ifKeyIsEnter} from "../../services/navigation";
-import {selectors} from "../../state/selectors";
 import {sanitiseInequalityState, useCurrentQuestionAttempt} from '../../services/questions';
 import _flattenDeep from 'lodash/flattenDeep';
 import {jsonHelper} from "../../services/json";

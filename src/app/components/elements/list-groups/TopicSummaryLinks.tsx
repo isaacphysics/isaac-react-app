@@ -10,8 +10,7 @@ import {
     useUserContext
 } from "../../../services/userContext";
 import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../state/store";
-import {selectors} from "../../../state/selectors";
+import {selectors, useAppSelector} from "../../../state";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../../services/constants";
 import {isCS} from "../../../services/siteConstants";
 import classNames from "classnames";

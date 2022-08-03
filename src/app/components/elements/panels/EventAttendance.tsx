@@ -1,17 +1,14 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
+import {useAppDispatch, useAppSelector, AppState, selectors, recordEventAttendance} from "../../../state";
 import {NOT_FOUND} from "../../../services/constants";
 import {atLeastOne} from "../../../services/validation";
 import {EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
-import {recordEventAttendance} from "../../../state/actions";
 import {ATTENDANCE, PotentialUser} from "../../../../IsaacAppTypes";
 import {sortOnPredicateAndReverse} from "../../../services/sorting";
 import {isEventLeader} from "../../../services/user";
-import {selectors} from "../../../state/selectors";
 
 function displayAttendanceAsSymbol(status?: string) {
     switch (status) {

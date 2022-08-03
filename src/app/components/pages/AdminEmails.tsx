@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {AppState, getEmailTemplate, sendAdminEmailWithIds, useAppDispatch, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
-import {AppState} from "../../state/reducers";
-import {getEmailTemplate, sendAdminEmailWithIds} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {debounce} from 'lodash';

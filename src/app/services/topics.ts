@@ -3,7 +3,7 @@ import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, NOT_FOUND} from
 import {LinkInfo} from "./navigation";
 import {isIntendedAudience, UseUserContextReturnType} from "./userContext";
 import {NOT_FOUND_TYPE, PotentialUser} from "../../IsaacAppTypes";
-import {CurrentTopicState} from "../state/reducers/topicState";
+import {CurrentTopicState} from "../state";
 import {isPhy} from "./siteConstants";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {

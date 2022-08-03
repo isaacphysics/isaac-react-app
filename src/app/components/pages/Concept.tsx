@@ -1,11 +1,9 @@
 import React, {useEffect} from "react";
 import {withRouter} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {useAppDispatch, useAppSelector, fetchDoc, AppState} from "../../state";
 import {Col, Container, Row} from "reactstrap";
-import {fetchDoc} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {AppState} from "../../state/reducers";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {DOCUMENT_TYPE} from "../../services/constants";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";

@@ -1,8 +1,7 @@
 import React from "react";
 import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
-import {closeActiveModal} from "../../../state/actions";
-import {useAppDispatch} from "../../../state/store";
+import {closeActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
 
 interface ActiveModalProps {

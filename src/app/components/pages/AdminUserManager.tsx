@@ -2,24 +2,26 @@ import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {FormGroup} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
     adminModifyUserEmailVerificationStatuses,
     adminModifyUserRoles,
     adminUserDelete,
-    adminUserSearch,
+    adminUserSearchRequest,
+    AppState,
     getUserIdSchoolLookup,
-    mergeUsers, resetPassword
-} from "../../state/actions";
-import {AppState} from "../../state/reducers";
+    mergeUsers,
+    resetPassword,
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {EmailVerificationStatus, Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB} from "../../services/constants";
 import {Link} from "react-router-dom";
 import {isAdmin} from "../../services/user";
-import {selectors} from "../../state/selectors";
-import { isDefined } from "../../services/miscUtils";
+import {isDefined} from "../../services/miscUtils";
 
 export const AdminUserManager = () => {
     const dispatch = useAppDispatch();
@@ -95,7 +97,7 @@ export const AdminUserManager = () => {
         if (confirmed) {
             setUserUpdating(true);
             await dispatch(adminModifyUserRoles(role, selectedUserIds));
-            dispatch(adminUserSearch(searchQuery));
+            dispatch(adminUserSearchRequest(searchQuery));
             setSelectedUserIds([]);
             setUserUpdating(false);
         }
@@ -105,7 +107,7 @@ export const AdminUserManager = () => {
         setUserUpdating(true);
         const selectedEmails = searchResults?.filter(user => user.id && selectedUserIds.includes(user.id)).map(user => user.email || '') || [];
         await dispatch(adminModifyUserEmailVerificationStatuses(status, selectedEmails));
-        dispatch(adminUserSearch(searchQuery));
+        dispatch(adminUserSearchRequest(searchQuery));
         setSelectedUserIds([]);
         setUserUpdating(false);
     };
@@ -113,7 +115,7 @@ export const AdminUserManager = () => {
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSearchRequested(true);
-        dispatch(adminUserSearch(searchQuery));
+        dispatch(adminUserSearchRequest(searchQuery));
     };
 
     const editUser = (userid: number | undefined) => {
@@ -122,7 +124,7 @@ export const AdminUserManager = () => {
 
     const deleteUser = async (userid: number | undefined) => {
         await dispatch(adminUserDelete(userid));
-        dispatch(adminUserSearch(searchQuery));
+        dispatch(adminUserSearchRequest(searchQuery));
     };
 
     const attemptPasswordReset = (email: string | undefined) => {

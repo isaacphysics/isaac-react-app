@@ -1,7 +1,6 @@
 import {Button, Col, Row} from "reactstrap";
 import React, {useEffect, useState} from "react";
-import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
-import {store, useAppDispatch} from "../../../state/store";
+import {closeActiveModal, logAction, openActiveModal, store, useAppDispatch} from "../../../state";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";

@@ -5,10 +5,8 @@ import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {Provider} from "react-redux";
-import {useAppDispatch} from "../../state/store";
-import {store} from "../../state/store";
+import {useAppDispatch, store, fetchGlossaryTerms} from "../../state";
 import {StaticRouter} from "react-router";
-import {fetchGlossaryTerms} from "../../state/actions";
 import {EDITOR_ORIGIN} from "../../services/constants";
 
 function getType(doc: any) {

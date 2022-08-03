@@ -1,14 +1,18 @@
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {adminUserSearch, openActiveModal} from "../../../state/actions";
-import {AppState} from "../../../state/reducers";
+import {
+    adminUserSearchRequest,
+    openActiveModal,
+    useAppDispatch,
+    useAppSelector,
+    selectors,
+    AppState
+} from "../../../state";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {DateString} from "../DateString";
 import {NOT_FOUND} from "../../../services/constants";
 import {userBookingModal} from "../modals/UserBookingModal";
-import {selectors} from "../../../state/selectors";
 import {formatManageBookingActionButtonMessage} from "../../../services/events";
 
 export const AddUsersToBooking = () => {
@@ -25,7 +29,7 @@ export const AddUsersToBooking = () => {
     function userSearch(formEvent: React.FormEvent<HTMLFormElement>) {
         if (formEvent) {formEvent.preventDefault()}
         setSearched(true);
-        dispatch(adminUserSearch(queryParams));
+        dispatch(adminUserSearchRequest(queryParams));
     }
 
     function nullIfDefault(value: string, defaultValue: string) {

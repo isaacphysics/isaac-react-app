@@ -1,6 +1,6 @@
 import ReactDOMServer from "react-dom/server";
 import {Provider, useStore} from "react-redux";
-import {useAppSelector} from "../state/store";
+import {AppState, useAppSelector} from "../state";
 import {Router} from "react-router-dom";
 import {history} from "./history";
 import {IsaacGlossaryTerm} from "../components/content/IsaacGlossaryTerm";
@@ -8,7 +8,6 @@ import * as RS from "reactstrap";
 import React, {useRef} from "react";
 import {GlossaryTermDTO} from "../../IsaacApiTypes";
 import {EXAM_BOARD_NULL_OPTIONS} from "./constants";
-import {AppState} from "../state/reducers";
 import {Markup} from "../components/elements/markup";
 import {v4 as uuid_v4} from "uuid";
 import {useUserContext} from "./userContext";

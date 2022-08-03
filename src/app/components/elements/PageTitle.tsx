@@ -1,9 +1,14 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {Button, UncontrolledTooltip} from "reactstrap";
 import {isPhy, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {closeActiveModal, openActiveModal} from "../../state/actions";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
+import {
+    AppState,
+    closeActiveModal,
+    mainContentIdSlice,
+    openActiveModal,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
@@ -12,7 +17,6 @@ import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
-import {mainContentIdSlice} from "../../state/slices/internalAppState";
 
 function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const userContext = useUserContext();

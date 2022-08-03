@@ -2,13 +2,11 @@ import {GlossaryTermDTO} from "../../../../../IsaacApiTypes";
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import {IsaacGlossaryTerm} from "../../../content/IsaacGlossaryTerm";
-import {useAppSelector} from "../../../../state/store";
-import {AppState} from "../../../../state/reducers";
+import {useAppSelector, AppState, selectors} from "../../../../state";
 import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
 import {PortalInHtmlHook} from "./utils";
 import {Markup} from "../index";
-import {selectors} from "../../../../state/selectors";
 
 const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: string, rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#${id}`);

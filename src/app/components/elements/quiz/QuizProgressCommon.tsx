@@ -1,11 +1,9 @@
 import React, {useContext, useState} from "react";
-import { useAppDispatch } from "../../../state/store";
+import { useAppDispatch, closeActiveModal, openActiveModal, returnQuizToStudent } from "../../../state";
 import { Button } from "reactstrap";
 import { IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO } from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
 import { isQuestion } from "../../../services/questions";
-import { closeActiveModal, openActiveModal } from "../../../state/actions";
-import { returnQuizToStudent } from "../../../state/actions/quizzes";
 import { IsaacSpinner } from "../../handlers/IsaacSpinner";
 import {siteSpecific} from "../../../services/siteConstants";
 

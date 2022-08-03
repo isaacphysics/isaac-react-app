@@ -16,12 +16,10 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
-import {showQuizSettingModal} from "../../../state/actions/quizzes";
-import {useAppDispatch} from "../../../state/store";
+import {closeActiveModal, openActiveModal, showQuizSettingModal, useAppDispatch} from "../../../state";
 import {siteSpecific} from "../../../services/siteConstants";
 import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
-import {closeActiveModal, openActiveModal} from "../../../state/actions";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {EditContentButton} from "../EditContentButton";
 

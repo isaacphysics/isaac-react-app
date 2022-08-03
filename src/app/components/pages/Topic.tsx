@@ -1,8 +1,6 @@
 import React, {useEffect} from "react"
 import {Link, withRouter} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
-import {fetchTopicSummary} from "../../state/actions";
+import {selectors, useAppDispatch, useAppSelector, AppState, fetchTopicSummary} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {getRelatedDocs} from "../../services/topics";
@@ -12,7 +10,6 @@ import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {atLeastOne} from "../../services/validation";
-import {selectors} from '../../state/selectors';
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 

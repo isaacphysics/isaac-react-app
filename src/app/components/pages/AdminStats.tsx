@@ -1,9 +1,7 @@
 import React, {useEffect} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {AppState, getAdminSiteStats, useAppDispatch, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
-import {getAdminSiteStats} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 
 function asPercentage(value: number | undefined, total: number)  {

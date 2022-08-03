@@ -5,9 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
 import {WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {FallbackProps} from "react-error-boundary";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {selectors} from "../../state/selectors";
-import {logAction} from "../../state/actions";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     const dispatch = useAppDispatch();

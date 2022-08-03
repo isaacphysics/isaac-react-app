@@ -1,5 +1,5 @@
 import React, {ComponentProps, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {isaacApi, loadGroups, selectors, useAppDispatch, useAppSelector, useGroupAssignments} from "../../state";
 import {
     Button,
     Col,
@@ -11,19 +11,11 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {loadGroups} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {orderBy, sortBy} from "lodash";
-import {
-    AppGroup,
-    AssignmentProgressPageSettingsContext,
-} from "../../../IsaacAppTypes";
-import {selectors} from "../../state/selectors";
+import {AppGroup, AssignmentProgressPageSettingsContext,} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {
-    GameboardProgressSummaryDTO,
-    UserGameboardProgressSummaryDTO
-} from "../../../IsaacApiTypes";
+import {GameboardProgressSummaryDTO, UserGameboardProgressSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {API_PATH} from "../../services/constants";
 import {siteSpecific} from "../../services/siteConstants";
@@ -31,8 +23,6 @@ import {isDefined} from '../../services/miscUtils';
 import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
-import {useGroupAssignments} from "../../state/slices/api/assignments";
-import {isaacApi} from "../../state/slices/api";
 import {skipToken} from "@reduxjs/toolkit/query";
 
 enum SortOrder {

@@ -1,9 +1,7 @@
 import React, {ReactElement, useEffect} from "react";
-import {AppState} from "../../state/reducers";
+import {AppState, fetchFragment, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {NOT_FOUND} from "../../services/constants";
 import {EditContentButton} from "./EditContentButton";

@@ -1,8 +1,6 @@
 import React, {Dispatch} from "react";
-import {api} from "../services/api";
-import {AppState} from "./reducers";
-import {history} from "../services/history";
-import {AppDispatch, store} from "./store";
+import {api} from "../../services/api";
+import {history} from "../../services/history";
 import {
     ACTION_TYPE,
     API_REQUEST_FAILURE_MESSAGE,
@@ -12,10 +10,9 @@ import {
     MEMBERSHIP_STATUS,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID
-} from "../services/constants";
+} from "../../services/constants";
 import {
     Action,
-    ActiveModal,
     AdditionalInformation,
     AppGroup,
     AppGroupMembership,
@@ -25,12 +22,11 @@ import {
     FreeTextRule,
     PotentialUser,
     QuestionSearchQuery,
-    Toast,
     UserPreferencesDTO,
     UserSnapshot,
     ValidatedChoice,
     ValidationUser,
-} from "../../IsaacAppTypes";
+} from "../../../IsaacAppTypes";
 import {
     AuthenticationProvider,
     ChoiceDTO,
@@ -47,33 +43,31 @@ import {
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
-} from "../../IsaacApiTypes";
+} from "../../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
     releaseConfirmationModal,
     revocationConfirmationModal,
     tokenVerificationModal
-} from "../components/elements/modals/TeacherConnectionModalCreators";
-import * as persistence from "../services/localStorage";
-import {KEY} from "../services/localStorage";
+} from "../../components/elements/modals/TeacherConnectionModalCreators";
+import * as persistence from "../../services/localStorage";
+import {KEY} from "../../services/localStorage";
 import {
     additionalManagerRemovalModal,
     groupInvitationModal,
     groupManagersModal
-} from "../components/elements/modals/GroupsModalCreators";
+} from "../../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
-import {selectors} from "./selectors";
-import {isFirstLoginInPersistence} from "../services/firstLogin";
+import {isFirstLoginInPersistence} from "../../services/firstLogin";
 import {AxiosError} from "axios";
 import ReactGA from "react-ga";
-import {augmentEvent} from "../services/events";
-import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
-import {atLeastOne} from "../services/validation";
-import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
-import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
-import {isDefined} from "../services/miscUtils";
-import {createAction} from "@reduxjs/toolkit";
-import {errorSlice} from "./slices/internalAppState";
+import {augmentEvent} from "../../services/events";
+import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
+import {atLeastOne} from "../../services/validation";
+import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
+import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
+import {isDefined} from "../../services/miscUtils";
+import {AppState, store, selectors, errorSlice, routerPageChange, closeActiveModal, openActiveModal, showToast, logAction} from "../index";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -85,71 +79,6 @@ export function extractMessage(e: Error) {
         return e.response.data.errorMessage;
     }
     return API_REQUEST_FAILURE_MESSAGE;
-}
-
-// Toasts
-const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
-};
-
-export const hideToast = (toastId: string) => (dispatch: AppDispatch) => {
-    dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
-    setTimeout(() => {
-        dispatch(removeToast(toastId));
-    }, 1000);
-};
-
-let nextToastId = 0;
-export const showToast = (toast: Toast) => (dispatch: AppDispatch) => {
-    const toastId = toast.id = "toast" + nextToastId++;
-    if (toast.timeout) {
-        setTimeout(() => {
-            dispatch(hideToast(toastId));
-        }, toast.timeout);
-    }
-    if (toast.closable === undefined) toast.closable = true;
-    toast.showing = true;
-    dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
-    return toastId;
-};
-
-export const showErrorToast = (error: string, body: string) => showToast({
-    color: "danger",
-    title: error,
-    timeout: 5000,
-    body
-});
-export const showSuccessToast = (title: string, body: string) => showToast({
-    color: "success",
-    timeout: 5000,
-    title,
-    body
-});
-
-export function extractRTKErrorMessage(e: any) {
-    if (e && e.error && e.error.data && e.error.data.errorMessage) {
-        return e.error.data.errorMessage;
-    } else if (e && e.message) {
-        return e.message;
-    }
-    return API_REQUEST_FAILURE_MESSAGE;
-}
-
-export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
-    console.log(response);
-    if (response) {
-        if (response.error) {
-            if (response.error.status < 500) {
-                return showErrorToast(error, extractRTKErrorMessage(response));
-            }
-        } else {
-            ReactGA.exception({
-                description: `load_fail: ${error}`
-            });
-            return showErrorToast(error, API_REQUEST_FAILURE_MESSAGE);
-        }
-    }
-    return {type: ACTION_TYPE.TEST_ACTION};
 }
 
 export function showAxiosErrorToastIfNeeded(error: string, e: any) {
@@ -173,17 +102,6 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
     }
     return {type: ACTION_TYPE.TEST_ACTION};
 }
-
-// ActiveModal
-export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
-
-export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
-
-// Generic log action:
-export const logAction = (eventDetails: object) => {
-    api.logger.log(eventDetails); // We do not care whether this completes or not
-    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
-};
 
 // User authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -1077,7 +995,7 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 };
 
 // Admin
-export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+export const adminUserSearchRequest = (queryParams: {}) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST});
     try {
         const searchResponse = await api.admin.userSearch.get(queryParams);
@@ -1092,7 +1010,7 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
     }
 };
 
-export const adminUserGet = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+export const adminUserGetRequest = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_USER_GET_REQUEST});
     try {
         const searchResponse = await api.admin.userGet.get(userid);
@@ -1764,8 +1682,6 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
     }};
 
 // SERVICE ACTIONS (w/o dispatch)
-
-export const routerPageChange = createAction<string>("routerPageChange");
 
 export const changePage = (path: string) => {
     history.push(path);

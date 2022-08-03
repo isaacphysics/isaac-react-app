@@ -1,7 +1,5 @@
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
+import {useAppDispatch, useAppSelector, AppState, getEventOverviews} from "../../../state";
 import React, {useEffect, useState} from "react";
-import {getEventOverviews} from "../../../state/actions";
 import {Accordion} from "../Accordion";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";

@@ -6,9 +6,8 @@ import {
     useAssignmentsCount
 } from "../../navigation/NavigationBar";
 import React from "react";
-import {useAppSelector} from "../../../state/store";
+import {selectors, useAppSelector} from "../../../state";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
-import {selectors} from "../../../state/selectors";
 
 export const NavigationBarPhy = () => {
     const user = useAppSelector(selectors.user.orNull);

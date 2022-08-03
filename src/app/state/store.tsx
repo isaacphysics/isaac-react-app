@@ -1,10 +1,7 @@
 import {Middleware} from "redux";
 import reduxLogger from "redux-logger";
-import {AppState, rootReducer} from "./reducers";
-import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
-import {notificationCheckerMiddleware} from "./middleware/notificationManager";
+import {AppState, isaacApi, rootReducer, userConsistencyCheckerMiddleware, notificationCheckerMiddleware} from "./";
 import {configureStore} from "@reduxjs/toolkit";
-import {isaacApi} from "./slices/api";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 
 export const middleware: Middleware[] = [

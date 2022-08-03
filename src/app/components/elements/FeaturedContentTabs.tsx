@@ -1,9 +1,7 @@
 import React, {useEffect} from "react";
 import {Tabs} from "./Tabs";
 import {IsaacContent} from "../content/IsaacContent";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
-import {fetchFragment} from "../../state/actions";
+import {AppState, fetchFragment, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 
 const COMPUTER_SCIENTIST_FRAGMENT_ID = "computer-scientist-of-the-month";

@@ -1,15 +1,18 @@
 import React, {useCallback, useEffect, useMemo} from "react";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {loadQuizPreview, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {loadQuizPreview} from "../../../state/actions/quizzes";
 import {isDefined} from "../../../services/miscUtils";
 import {useQuizQuestions, useQuizSections} from "../../../services/quiz";
-import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
+import {
+    myQuizzesCrumbs,
+    QuizAttemptComponent,
+    QuizAttemptProps,
+    QuizPagination
+} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {selectors} from "../../../state/selectors";
 import {Alert, Button, Container} from "reactstrap";
 
 const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>

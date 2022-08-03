@@ -1,16 +1,21 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
+import {
+    AppState,
+    clearEventsList,
+    getEventMapData,
+    getEventsList,
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {clearEventsList, getEventMapData, getEventsList} from "../../state/actions";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
 import {EventStageFilter, EventStatusFilter, EventTypeFilter} from "../../services/constants";
-import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
 import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";

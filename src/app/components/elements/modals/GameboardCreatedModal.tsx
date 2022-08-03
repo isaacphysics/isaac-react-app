@@ -1,7 +1,6 @@
 import React from 'react';
-import {useAppDispatch} from "../../../state/store";
+import {closeActiveModal, getRTKQueryErrorMessage, useAppDispatch} from "../../../state";
 import {Link} from "react-router-dom";
-import {closeActiveModal, extractRTKErrorMessage} from "../../../state/actions";
 import {Button, Col, Label, Row} from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
@@ -53,7 +52,7 @@ const GameboardCreatedModalButtons = ({gameboardId}: {gameboardId: string | unde
 }
 
 export const GameboardCreatedModal = ({gameboardId, error}: {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined}) => {
-    const errorMessage = extractRTKErrorMessage(error);
+    const errorMessage = getRTKQueryErrorMessage(error).message;
     return <div>
         {gameboardId
             ? <GameboardSuccessfullyCreated/>
