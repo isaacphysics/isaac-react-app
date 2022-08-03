@@ -12,7 +12,14 @@ import {
     TOTPSharedSecretDTO,
     UserGameboardProgressSummaryDTO,
 } from "../../../../IsaacApiTypes";
-import {errorSlice, logAction, showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../index";
+import {
+    anonymisationFunctions,
+    anonymiseIfNeededWith,
+    errorSlice,
+    logAction,
+    showRTKQueryErrorToastIfNeeded,
+    showSuccessToast
+} from "../../index";
 import {Dispatch} from "redux";
 import {
     AppAssignmentProgress,
@@ -24,9 +31,7 @@ import {
 } from "../../../../IsaacAppTypes";
 import {isPhy} from "../../../services/siteConstants";
 import {SerializedError} from "@reduxjs/toolkit";
-import {KEY, load} from "../../../services/localStorage";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
-import produce from "immer";
 
 // This is used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -357,27 +362,5 @@ const isaacApi = createApi({
         }),
     })
 });
-
-const anonymiseIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T) => T) => (nonanonymousData: T) =>
-    load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData) : nonanonymousData;
-
-const anonymisationFunctions = {
-    progressState: produce<AppAssignmentProgress[]>((progress) => {
-        progress.forEach((userProgress, i) => {
-            if (userProgress.user) {
-                userProgress.user.familyName = "";
-                userProgress.user.givenName = `Test Student ${i + 1}`;
-            }
-        });
-    }),
-    groupProgress: produce<UserGameboardProgressSummaryDTO[]>((groupProgress) => {
-        groupProgress.forEach((up, i) => {
-            if (up.user) {
-                up.user.familyName = "";
-                up.user.givenName = `Test Student ${i + 1}`;
-            }
-        });
-    }),
-}
 
 export {isaacApi};

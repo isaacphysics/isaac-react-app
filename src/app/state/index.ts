@@ -8,6 +8,7 @@
 // for a more detailed explanation of the process.
 export * from "./actions/routing";
 export * from "./reducers/eventsState";
+export * from "./slices/api/utils";
 export * from "./reducers/topicState";
 export * from "./reducers/contentState";
 export * from "./slices/internalAppState";
