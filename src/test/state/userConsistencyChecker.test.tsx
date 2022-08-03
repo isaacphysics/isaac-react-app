@@ -3,6 +3,7 @@ import {ACTION_TYPE} from "../../app/services/constants";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
 import {jest} from "@jest/globals";
 
+jest.mock("../../app/services/api");
 jest.mock("../../app/state/middleware/userConsistencyCheckerCurrentUser");
 
 let fakeDispatch: Dispatch, fakeGetState, fakeStore: MiddlewareAPI, fakeNext: Dispatch<AnyAction>;
