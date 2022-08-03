@@ -116,7 +116,6 @@ export const GroupProgressLegend = () => {
 };
 
 const GroupSummary = ({group}: {group: AppGroup}) => {
-    // FIXME not loading because of `Validate.notEmpty(allQuestionPageIds);` in the API
     const {data: groupProgress} = isaacApi.endpoints.getGroupProgress.useQuery(group.id ?? skipToken);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
