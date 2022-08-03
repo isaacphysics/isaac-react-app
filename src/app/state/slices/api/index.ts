@@ -1,25 +1,26 @@
 import {API_PATH, API_REQUEST_FAILURE_MESSAGE, NOT_FOUND, QUESTION_CATEGORY} from "../../../services/constants";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
-import {
-    FetchArgs,
-    FetchBaseQueryArgs,
-    FetchBaseQueryError
-} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {
     AssignmentDTO,
-    AssignmentFeedbackDTO, GameboardDTO,
-    GameboardListDTO, IsaacWildcard, QuizAssignmentDTO,
-    TOTPSharedSecretDTO, UserGameboardProgressSummaryDTO,
+    AssignmentFeedbackDTO,
+    GameboardDTO,
+    GameboardListDTO,
+    IsaacWildcard,
+    QuizAssignmentDTO,
+    TOTPSharedSecretDTO,
+    UserGameboardProgressSummaryDTO,
 } from "../../../../IsaacApiTypes";
-import {showRTKQueryErrorToastIfNeeded, showSuccessToast, logAction, errorSlice} from "../../index";
+import {errorSlice, logAction, showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../index";
 import {Dispatch} from "redux";
 import {
     AppAssignmentProgress,
     BoardOrder,
     Boards,
-    NumberOfBoards,
-    EnhancedAssignment, NOT_FOUND_TYPE
+    EnhancedAssignment,
+    NOT_FOUND_TYPE,
+    NumberOfBoards
 } from "../../../../IsaacAppTypes";
 import {isPhy} from "../../../services/siteConstants";
 import {SerializedError} from "@reduxjs/toolkit";
@@ -126,7 +127,6 @@ const isaacApi = createApi({
                 boards: response.results ?? [],
                 totalResults: response.totalResults ?? 0
             }),
-            //providesTags: results => ({}),
             onQueryStarted: onQueryLifecycleEvents({
                errorTitle: "Loading gameboards failed"
             })
@@ -258,10 +258,7 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading assignment progress failed"
             }),
-            transformResponse: (progress: AppAssignmentProgress[]) =>
-                progress && load(KEY.ANONYMISE_USERS) === "YES"
-                    ? anonymisationFunctions.progressState(progress)
-                    : progress
+            transformResponse: anonymiseIfNeededWith<AppAssignmentProgress[]>(anonymisationFunctions.progressState)
         }),
 
         getGroupProgress: build.query<UserGameboardProgressSummaryDTO[], number>({
@@ -271,10 +268,7 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading group progress failed"
             }),
-            transformResponse: (groupProgress: UserGameboardProgressSummaryDTO[]) =>
-                groupProgress && load(KEY.ANONYMISE_USERS) === "YES"
-                    ? anonymisationFunctions.groupProgress(groupProgress)
-                    : groupProgress
+            transformResponse: anonymiseIfNeededWith<UserGameboardProgressSummaryDTO[]>(anonymisationFunctions.groupProgress)
         }),
 
         assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
@@ -296,6 +290,8 @@ const isaacApi = createApi({
                 onQuerySuccess: ({boardId, groupId}, _, {dispatch}) => {
                     // TODO could make these optimistic updates, and revert them on failure? Might require ditching
                     //  onQueryLifecycleEvents for this endpoint
+
+                    // Update getMySetAssignments cache data, removing any assignments with this group and gameboard id
                     dispatch(isaacApi.util.updateQueryData(
                         "getMySetAssignments",
                         undefined,
@@ -362,6 +358,9 @@ const isaacApi = createApi({
     })
 });
 
+const anonymiseIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T) => T) => (nonanonymousData: T) =>
+    load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData) : nonanonymousData;
+
 const anonymisationFunctions = {
     progressState: produce<AppAssignmentProgress[]>((progress) => {
         progress.forEach((userProgress, i) => {
@@ -372,7 +371,7 @@ const anonymisationFunctions = {
         });
     }),
     groupProgress: produce<UserGameboardProgressSummaryDTO[]>((groupProgress) => {
-        groupProgress?.forEach((up, i) => {
+        groupProgress.forEach((up, i) => {
             if (up.user) {
                 up.user.familyName = "";
                 up.user.givenName = `Test Student ${i + 1}`;
