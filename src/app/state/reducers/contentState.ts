@@ -19,6 +19,18 @@ export const doc = (doc: DocState = null, action: Action) => {
     }
 };
 
+type FragmentsState = {[name: string]: (ContentDTO | NOT_FOUND_TYPE)} | null;
+export const fragments = (fragments: FragmentsState = null, action: Action) => {
+    switch (action.type) {
+        case ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS:
+            return {...fragments, [action.id]: action.doc};
+        case ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE:
+            return {...fragments, [action.id]: NOT_FOUND};
+        default:
+            return fragments;
+    }
+};
+
 export type ConceptsState = Concepts | null;
 export const concepts = (concepts: ConceptsState = null, action: Action) => {
     switch (action.type) {

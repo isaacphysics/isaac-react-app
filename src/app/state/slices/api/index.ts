@@ -1,4 +1,4 @@
-import {ACTION_TYPE, API_PATH, FEATURED_NEWS_TAG} from "../../../services/constants";
+import {ACTION_TYPE, API_PATH} from "../../../services/constants";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {
     FetchArgs,
@@ -6,7 +6,7 @@ import {
     FetchBaseQueryError
 } from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {IsaacConceptPageDTO, IsaacPodDTO, TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
+import {TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
 import {showErrorToastIfNeeded, showSuccessToast} from "../../actions";
 import {Dispatch} from "redux";
 
@@ -100,34 +100,6 @@ const isaacApi = createApi({
                errorMessage: "Failed to get 2FA secret"
            })
        }),
-
-       getNewsPodList: build.query<IsaacPodDTO[], {subject: string; orderDecending?: boolean}>({
-           query: ({subject}) => ({
-               url: `/pages/pods/${subject}`
-           }),
-           transformResponse: (response: {results: IsaacPodDTO[]; totalResults: number}, meta, arg) => {
-               // Sort news pods in order of id (asc or desc depending on orderDecending), with ones tagged "featured"
-               // placed first
-               return response.results.sort((a, b) => {
-                   const aIsFeatured = a.tags?.includes(FEATURED_NEWS_TAG);
-                   const bIsFeatured = b.tags?.includes(FEATURED_NEWS_TAG);
-                   if (aIsFeatured && !bIsFeatured) return -1;
-                   if (!aIsFeatured && bIsFeatured) return 1;
-                   return a.id && b.id
-                       ? a.id.localeCompare(b.id) * (arg.orderDecending ? -1 : 1)
-                       : 0;
-               });
-           },
-           onQueryStarted: displayToastsOnQueryLifecycleEvents({
-               errorMessage: "Unable to display news"
-           })
-       }),
-
-       getPageFragment: build.query<IsaacConceptPageDTO, string>({
-           query: (fragmentId) => ({
-               url: `/pages/fragments/${fragmentId}`
-           })
-       })
    })
 });
 

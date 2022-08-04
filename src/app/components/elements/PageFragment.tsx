@@ -1,10 +1,12 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, useEffect} from "react";
+import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
+import {useAppDispatch, useAppSelector} from "../../state/store";
+import {fetchFragment} from "../../state/actions";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {NOT_FOUND} from "../../services/constants";
 import {EditContentButton} from "./EditContentButton";
-import {isaacApi} from "../../state/slices/api";
 
 
 interface PageFragmentComponentProps {
@@ -13,8 +15,12 @@ interface PageFragmentComponentProps {
 }
 
 export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProps) => {
-    const {data: fragment, error} = isaacApi.endpoints.getPageFragment.useQuery(fragmentId);
-    const fragmentOrNotFound = error && 'status' in error && error.status === NOT_FOUND ? NOT_FOUND : fragment;
+    const dispatch = useAppDispatch();
+    const fragment = useAppSelector((state: AppState) => state && state.fragments && state.fragments[fragmentId] || null);
+
+    useEffect(() => {
+        dispatch(fetchFragment(fragmentId))
+    }, [dispatch, fragmentId]);
 
     const defaultNotFoundComponent = <div>
         <h2>Content not found</h2>
@@ -26,10 +32,14 @@ export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProp
         </h3>
     </div>;
 
-    return <ShowLoading until={fragmentOrNotFound} ifNotFound={ifNotFound || defaultNotFoundComponent} thenRender={fragment =>
-        <WithFigureNumbering doc={fragment}>
-            <EditContentButton doc={fragment} />
-            <IsaacContent doc={fragment} />
-        </WithFigureNumbering>}
-    />;
+    return <React.Fragment>
+        {fragment !== NOT_FOUND && <ShowLoading
+            until={fragment}
+            thenRender={fragment => <WithFigureNumbering doc={fragment}>
+                <EditContentButton doc={fragment} />
+                <IsaacContent doc={fragment} />
+            </WithFigureNumbering>}
+            ifNotFound={ifNotFound || defaultNotFoundComponent}
+        />}
+    </React.Fragment>;
 };
