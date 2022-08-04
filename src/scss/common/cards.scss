@@ -57,6 +57,11 @@
   }
 }
 
+.featured-news-item {
+  background: #dddddd55;
+  max-width: 450px;
+}
+
 .sign-up-tabs {
   .tab-pane {
     .signtab-image {
@@ -173,12 +178,19 @@
     }
   }
 }
-.news-carousel {
-  @include media-breakpoint-up(md) {
+.carousel {
+  .news-card {
     max-width: 322px;
+    @include respond-above(sm) {
+      margin: 1.5rem;
+    }
+    @include respond-below(sm) {
+      left: 50%;
+      transform: translate(-50%);
+    }
   }
 }
-.news-carousel + a,
+.news-card + a,
 .events-carousel + a {
   display: block;
   font-family: $primary-font;
