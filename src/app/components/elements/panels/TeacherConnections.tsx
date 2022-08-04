@@ -18,6 +18,7 @@ import classnames from "classnames";
 import {MEMBERSHIP_STATUS} from "../../../services/constants";
 import {extractTeacherName, isLoggedIn, isStudent} from "../../../services/user";
 import {AdminUserGetState} from "../../../state/reducers/adminState";
+import {selectors} from "../../../state/selectors";
 
 
 interface TeacherConnectionsProps {
@@ -28,9 +29,9 @@ interface TeacherConnectionsProps {
 }
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useAppDispatch();
-    const activeAuthorisations = useAppSelector((state: AppState) => state?.activeAuthorisations || null);
-    const studentAuthorisations = useAppSelector((state: AppState) => state?.otherUserAuthorisations || null);
-    const groupMemberships = useAppSelector((state: AppState) => state?.groupMemberships || null);
+    const activeAuthorisations = useAppSelector(selectors.connections.activeAuthorisations);
+    const studentAuthorisations = useAppSelector(selectors.connections.otherUserAuthorisations);
+    const groupMemberships = useAppSelector(selectors.connections.groupMemberships);
 
     useEffect(() => {
         if (user.loggedIn && user.id) {
