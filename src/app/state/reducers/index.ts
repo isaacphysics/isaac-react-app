@@ -18,8 +18,8 @@ import {
     userSchoolLookup
 } from "./userState";
 import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
-import {constants, glossaryTerms, news} from "./staticState";
-import {concepts, doc, fragments} from "./contentState";
+import {constants, glossaryTerms} from "./staticState";
+import {concepts, doc} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
 import {activeModals, notifications, toasts} from "./notifiersState";
 import {myAnsweredQuestionsByDate, myProgress, userAnsweredQuestionsByDate, userProgress} from "./progressState";
@@ -69,12 +69,10 @@ const appReducer = combineReducers({
 
     // Static Content
     constants,
-    news,
     glossaryTerms,
 
     // Content
     doc,
-    fragments,
     concepts,
 
     // Question
