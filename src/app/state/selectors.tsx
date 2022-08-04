@@ -1,10 +1,11 @@
-import {AppState} from "./";
+import {anonymisationFunctions, anonymiseIfNeededWith, AppState} from "./index";
 import {NOT_FOUND} from "../services/constants";
-import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
+import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {isDefined} from "../services/miscUtils";
-import {QuizAssignmentDTO, QuizAttemptFeedbackDTO} from "../../IsaacApiTypes";
-import produce from "immer";
+import {
+    QuizAssignmentDTO
+} from "../../IsaacApiTypes";
 
 export const selectors = {
     groups: {
@@ -14,30 +15,30 @@ export const selectors = {
             if (!state.groups.cache) return null;
             const activeId = state.groups.selectedGroupId;
             if (!activeId) return null;
-            return load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(state.groups.cache[activeId]) : state.groups.cache[activeId];
+            return anonymiseIfNeededWith(anonymisationFunctions.appGroup)(state.groups.cache[activeId]);
         },
         active: (state: AppState) => {
             if (!state) return null;
             if (!state.groups) return null;
             if (!state.groups.cache) return null;
             if (!state.groups.active) return null;
-            // @ts-ignore - typescript can't pass the non-null inside the map function here
-            return state.groups.active.map(groupId => state.groups.cache[groupId]).map(group => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(group): group);
+            // typescript can't pass the non-null inside the first map function here, so we use optional chaining to
+            // appease it (but it's unneeded really)
+            return state.groups.active.map(groupId => state?.groups?.cache?.[groupId]).filter(isDefined).map(anonymiseIfNeededWith(anonymisationFunctions.appGroup));
         },
         archived: (state: AppState) => {
             if (!state) return null;
             if (!state.groups) return null;
             if (!state.groups.cache) return null;
             if (!state.groups.archived) return null;
-            // @ts-ignore - typescript can't pass the non-null inside the map function here
-            return state.groups.archived.map(groupId => state.groups.cache[groupId]).map(group => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.appGroup(group) : group);
+            // typescript can't pass the non-null inside the first map function here, so we use optional chaining to
+            // appease it (but it's unneeded really)
+            return state.groups.archived.map(groupId => state?.groups?.cache?.[groupId]).filter(isDefined).map(anonymiseIfNeededWith(anonymisationFunctions.appGroup));
         },
-        groups: (state: AppState) => {
-            return {
-                active: selectors.groups.active(state),
-                archived: selectors.groups.archived(state)
-            }
-        },
+        groups: (state: AppState) => ({
+            active: selectors.groups.active(state),
+            archived: selectors.groups.archived(state)
+        }),
     },
 
     topic: {
@@ -91,7 +92,7 @@ export const selectors = {
     },
 
     teacher: {
-        userProgress: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.userProgress(state?.userProgress) : state?.userProgress,
+        userProgress: (state: AppState) => state?.userProgress && anonymiseIfNeededWith(anonymisationFunctions.userProgress)(state.userProgress),
         userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
     },
 
@@ -99,6 +100,13 @@ export const selectors = {
         userSearch: (state: AppState) => state?.adminUserSearch || null,
         userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
     },
+
+    connections: {
+        activeAuthorisations: (state: AppState) => state?.activeAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations)(state?.activeAuthorisations),
+        otherUserAuthorisations: (state: AppState) => state?.otherUserAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations)(state?.otherUserAuthorisations),
+        groupMemberships: (state: AppState) => state?.groupMemberships && anonymiseIfNeededWith(anonymisationFunctions.groupMemberships)(state?.groupMemberships)
+    },
+
     quizzes: {
         preview: (state: AppState) => {
             const qp = state?.quizPreview;
@@ -109,15 +117,12 @@ export const selectors = {
         },
         assignedToMe: (state: AppState) => state?.quizAssignedToMe,
         available: (state: AppState) => state?.quizzes?.quizzes,
-        assignments: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments),
+        assignments: (state: AppState) => state?.quizAssignments && (load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments)),
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,
         /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */
-        currentStudentQuizAttempt: (state: AppState) =>
-            state?.studentQuizAttempt && 'studentAttempt' in state?.studentQuizAttempt && load(KEY.ANONYMISE_USERS) === "YES"
-                ? anonymisationFunctions.quizAttempt(state?.studentQuizAttempt)
-                : state?.studentQuizAttempt,
-        assignment: (state: AppState) => load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignment(state?.quizAssignment) : state?.quizAssignment,
+        currentStudentQuizAttempt: (state: AppState) => state?.studentQuizAttempt && 'studentAttempt' in state?.studentQuizAttempt ? anonymiseIfNeededWith(anonymisationFunctions.quizAttempt)(state.studentQuizAttempt) : state?.studentQuizAttempt,
+        assignment: (state: AppState) => state?.quizAssignment && anonymiseIfNeededWith(anonymisationFunctions.assignment)(state.quizAssignment),
         attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
 };
@@ -134,70 +139,6 @@ function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAss
             groupName,
         };
     });
-}
-
-const anonymisationFunctions = {
-    appGroup: (appGroup: AppGroup): AppGroup => {
-        return {
-            ...appGroup,
-            groupName: `Demo Group ${appGroup.id}`,
-            members: appGroup.members?.map((member, i) => {
-                return {
-                    ...member,
-                    familyName: "",
-                    givenName: `Test Student ${i + 1}`,
-                }
-            }),
-        }
-    },
-    assignments: (quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined) => {
-        if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
-            return quizAssignments;
-        }
-        return quizAssignments.map(assignment => {
-            const groupName = `Demo Group ${assignment.groupId}`;
-            return {
-                // @ts-ignore we know an assignment will be returned from this, since we pass in an assignment
-                ...anonymisationFunctions.assignment({assignment: assignment}).assignment,
-                groupName,
-            } as AppQuizAssignment;
-        });
-    },
-    assignment: (assignmentState: {assignment: QuizAssignmentDTO} | {error: string} | null | undefined) => {
-        if (!isDefined(assignmentState) || "error" in assignmentState) {
-            return assignmentState;
-        }
-        return {
-            assignment: {
-                ...assignmentState.assignment,
-                userFeedback: assignmentState.assignment.userFeedback?.map((uf, i) => {
-                    return {
-                        ...uf,
-                        user: {
-                            ...uf.user,
-                            familyName: "",
-                            givenName: `Test Student ${i + 1}`,
-                        }
-                    }
-                }),
-                quizAttempt: assignmentState.assignment
-            }
-        };
-    },
-    quizAttempt: produce<{ studentAttempt: QuizAttemptFeedbackDTO }>((quizAttempt) => {
-        if (quizAttempt.studentAttempt.user) {
-            quizAttempt.studentAttempt.user.familyName = "";
-            quizAttempt.studentAttempt.user.givenName = "Test Student";
-        }
-    }),
-    userProgress: (userProgress: UserProgress | null | undefined): UserProgress | undefined => (userProgress ? {
-        ...userProgress,
-        userDetails: {
-            ...userProgress?.userDetails,
-            familyName: "",
-            givenName: "Test Student",
-        }
-    } : undefined)
 }
 
 // Important type checking to avoid an awkward bug
