@@ -48,7 +48,7 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
     if (response) {
         if (response.error) {
             if (response.error.status < 500) {
-                return showErrorToast(error, getRTKQueryErrorMessage(response).message);
+                return showErrorToast(error, getRTKQueryErrorMessage(response.error).message);
             }
         } else {
             ReactGA.exception({
