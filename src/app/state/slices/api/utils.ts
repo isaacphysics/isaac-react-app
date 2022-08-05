@@ -8,7 +8,7 @@ import {
     UserProgress
 } from "../../../../IsaacAppTypes";
 import {
-    QuizAssignmentDTO, QuizAttemptFeedbackDTO, QuizUserFeedbackDTO,
+    QuizAssignmentDTO, QuizAttemptFeedbackDTO,
     UserGameboardProgressSummaryDTO, UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";
