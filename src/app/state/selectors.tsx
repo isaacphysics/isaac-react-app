@@ -1,10 +1,23 @@
 import {AppState} from "./reducers";
 import {NOT_FOUND} from "../services/constants";
-import {AppGroup, AppQuizAssignment, NOT_FOUND_TYPE, UserProgress} from "../../IsaacAppTypes";
+import {
+    AppGroup,
+    AppQuizAssignment,
+    Boards,
+    GroupMembershipDetailDTO,
+    NOT_FOUND_TYPE,
+    UserProgress
+} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {GroupProgressState, ProgressState} from "./reducers/assignmentsState";
 import {isDefined} from "../services/miscUtils";
-import {ChoiceDTO, QuizAssignmentDTO, QuizAttemptFeedbackDTO} from "../../IsaacApiTypes";
+import {
+    ChoiceDTO,
+    QuizAssignmentDTO,
+    QuizAttemptFeedbackDTO,
+    UserSummaryDTO,
+    UserSummaryWithEmailAddressDTO
+} from "../../IsaacApiTypes";
 import {extractQuestions} from "../services/quiz";
 
 export const selectors = {
@@ -128,6 +141,12 @@ export const selectors = {
         setByMe: (state: AppState) => state?.assignmentsByMe,
     },
 
+    connections: {
+        activeAuthorisations: (state: AppState) => (load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.activeAuthorisations(state?.activeAuthorisations) : state?.activeAuthorisations) || null,
+        otherUserAuthorisations: (state: AppState) => (load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.otherUserAuthorisations(state?.otherUserAuthorisations) : state?.otherUserAuthorisations) || null,
+        groupMemberships: (state: AppState) => (load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.groupMemberships(state?.groupMemberships) : state?.groupMemberships) || null,
+    },
+
     quizzes: {
         preview: (state: AppState) => {
             const qp = state?.quizPreview;
@@ -207,19 +226,21 @@ function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAss
 }
 
 export const anonymisationFunctions = {
-    appGroup: (appGroup: AppGroup): AppGroup => {
+    userSummary: (overrideGivenName?: string, overrideFamilyName?: string) => function userSummary<T extends UserSummaryWithEmailAddressDTO>(userSummary: T, index?: number): T {
         return {
-            ...appGroup,
-            groupName: `Demo Group ${appGroup.id}`,
-            members: appGroup.members?.map((member, i) => {
-                return {
-                    ...member,
-                    familyName: "",
-                    givenName: `Test Student ${i + 1}`,
-                }
-            }),
-        }
+            ...userSummary,
+            familyName: overrideFamilyName ?? "",
+            givenName: overrideGivenName ?? ("Test Student" + (index ? ` ${index + 1}` : "")),
+            email: "hidden@test.demo"
+        };
     },
+    appGroup: (appGroup: AppGroup): AppGroup => ({
+        ...appGroup,
+        ownerSummary: appGroup.ownerSummary && anonymisationFunctions.userSummary("Group", "Manager 1")(appGroup.ownerSummary),
+        additionalManagers: appGroup.additionalManagers?.map((us, i) => anonymisationFunctions.userSummary("Group", `Manager ${i + 2}`)(us)),
+        groupName: `Demo Group ${appGroup.id}`,
+        members: appGroup.members?.map(anonymisationFunctions.userSummary())
+    }),
     progressState: (progress: ProgressState): ProgressState => {
         if (!progress) return null;
         const anonymousProgress: ProgressState = {};
@@ -227,11 +248,7 @@ export const anonymisationFunctions = {
             anonymousProgress[Number(id)] = progress[Number(id)].map((userProgress, i) => {
                 return {
                     ...userProgress,
-                    user: {
-                        ...userProgress.user,
-                        familyName: "",
-                        givenName: `Test Student ${i + 1}`,
-                    }
+                    user: anonymisationFunctions.userSummary()(userProgress.user, i)
                 }
             })
         });
@@ -244,11 +261,7 @@ export const anonymisationFunctions = {
             anonymousGroupProgress[Number(groupId)] = (groupProgress[Number(groupId)] || []).map((userProgressSummary, i) => {
                 return {
                     ...userProgressSummary,
-                    user : {
-                        ...userProgressSummary.user,
-                        familyName: "",
-                        givenName: `Test Student ${i + 1}`,
-                    }
+                    user: userProgressSummary.user && anonymisationFunctions.userSummary()(userProgressSummary.user, i)
                 }
             })
         });
@@ -277,11 +290,7 @@ export const anonymisationFunctions = {
                 userFeedback: assignmentState.assignment.userFeedback?.map((uf, i) => {
                     return {
                         ...uf,
-                        user: {
-                            ...uf.user,
-                            familyName: "",
-                            givenName: `Test Student ${i + 1}`,
-                        }
+                        user: uf.user && anonymisationFunctions.userSummary()(uf.user, i)
                     }
                 }),
                 quizAttempt: assignmentState.assignment
@@ -292,21 +301,24 @@ export const anonymisationFunctions = {
         ...quizAttempt,
         studentAttempt: {
             ...quizAttempt.studentAttempt,
-            user: {
-                ...quizAttempt.studentAttempt.user,
-                familyName: "",
-                givenName: "Test Student",
-            }
+            user: quizAttempt.studentAttempt.user && anonymisationFunctions.userSummary()(quizAttempt.studentAttempt.user)
         }
     }),
     userProgress: (userProgress: UserProgress | null | undefined): UserProgress | undefined => (userProgress ? {
         ...userProgress,
-        userDetails: {
-            ...userProgress?.userDetails,
-            familyName: "",
-            givenName: "Test Student",
-        }
-    } : undefined)
+        userDetails: userProgress?.userDetails && anonymisationFunctions.userSummary()(userProgress?.userDetails)
+    } : undefined),
+    activeAuthorisations: (activeAuthorisations: UserSummaryWithEmailAddressDTO[] | null | undefined): UserSummaryWithEmailAddressDTO[] | undefined =>
+        activeAuthorisations?.map((a, i) => anonymisationFunctions.userSummary("Demo", `Teacher ${i + 1}`)(a)),
+    otherUserAuthorisations: (otherUserAuthorisations: UserSummaryDTO[] | null | undefined): UserSummaryDTO[] | undefined =>
+        otherUserAuthorisations?.map(anonymisationFunctions.userSummary()),
+    groupMemberships: (groupMemberships: GroupMembershipDetailDTO[] | null | undefined): GroupMembershipDetailDTO[] | undefined =>
+        groupMemberships
+            ? groupMemberships.map(g => ({
+                ...g,
+                group: anonymisationFunctions.appGroup(g.group),
+            }))
+            : undefined
 }
 
 // Important type checking to avoid an awkward bug

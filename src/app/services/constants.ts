@@ -877,7 +877,7 @@ export enum TAG_ID {
     factors = "factors_powers",
     complexNumbers = "complex_numbers",
     // Geometry
-    geomVectors = "geom_vectors",
+    vectors = "vectors",
     shapes = "shapes",
     trigonometry = "trigonometry",
     planes = "planes",
