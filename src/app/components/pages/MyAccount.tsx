@@ -55,6 +55,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {isStaff} from "../../services/user";
 import {Loading} from "../handlers/IsaacSpinner";
+import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 const stateToProps = (state: AppState, props: any) => {
@@ -199,8 +200,13 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         setMyUserPreferences({...myUserPreferences, BOOLEAN_NOTATION: newBooleanNotation});
     }
 
-    function setDisplaySettings(newDisplaySettings: DisplaySettings) {
-        setMyUserPreferences({...myUserPreferences, DISPLAY_SETTING: newDisplaySettings});
+    function setDisplaySettings(newDisplaySettings: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) {
+        setMyUserPreferences(oldPref => ({
+            ...myUserPreferences,
+            DISPLAY_SETTING: typeof newDisplaySettings === "function"
+                ? newDisplaySettings(oldPref.DISPLAY_SETTING)
+                : newDisplaySettings
+        }));
     }
 
     // Form's submission method
@@ -285,11 +291,19 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <span className="d-block d-lg-none">Emails</span>
                             </NavLink>
                         </NavItem>}
+                        {!editingOtherUser && <NavItem>
+                            <NavLink
+                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.betafeatures})} tabIndex={0}
+                                onClick={() => setActiveTab(ACCOUNT_TAB.betafeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.betafeatures))}
+                            >
+                                <span className="d-none d-lg-block">Beta features</span>
+                                <span className="d-block d-lg-none">Other</span>
+                            </NavLink>
+                        </NavItem>}
                     </Nav>
 
                     <Form name="my-account" onSubmit={updateAccount}>
                         <TabContent activeTab={activeTab}>
-
                             <TabPane tabId={ACCOUNT_TAB.account}>
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
@@ -334,6 +348,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 />
                             </TabPane>}
 
+                            {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
+                                <UserBetaFeatures displaySettings={myUserPreferences.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings} />
+                            </TabPane>}
                         </TabContent>
 
                         <CardFooter className="py-4">

@@ -27,6 +27,7 @@ import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
+    const bestAttempt = questionPart?.bestAttempt;
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
@@ -113,6 +115,12 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} {...{validationResponse}} />
                 </Suspense>
+
+                {!currentAttempt && bestAttempt === BEST_ATTEMPT_HIDDEN && <div className={"w-100 text-center"}>
+                    <small className={"no-print text-muted"}>
+                        A previous attempt at this question part has been hidden.
+                    </small>
+                </div>}
 
                 {/* CS Hints */}
                 {isCS && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}

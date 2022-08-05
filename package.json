@@ -26,7 +26,7 @@
     "html-to-text": "^8.2.0",
     "identity-obj-proxy": "3.0.0",
     "immer": "^9.0.15",
-    "inequality": "^0.9.36",
+    "inequality": "^0.9.37",
     "inequality-grammar": "0.11.0",
     "isaac-graph-sketcher": "0.9.4",
     "js-cookie": "^3.0.1",

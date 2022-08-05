@@ -16,6 +16,7 @@ export * from "./actions/logging";
 export * from "./reducers/staticState";
 export * from "./reducers/searchState";
 export * from "./middleware/userConsistencyCheckerCurrentUser";
+export * from "./middleware/hidePreviousQuestionAttempt";
 export * from "./reducers/quizState";
 export * from "./reducers/questionState";
 export * from "./reducers/notifiersState";
