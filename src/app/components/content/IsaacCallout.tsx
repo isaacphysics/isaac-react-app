@@ -6,13 +6,13 @@ import classNames from "classnames";
 import {siteSpecific} from "../../services/siteConstants";
 
 const calloutStyle = siteSpecific({
-        width: "50",
-        height: "50",
-        src: "/assets/phy/callout-speech-bubble-2.svg",
+        width: "45",
+        height: "45",
+        src: "/assets/phy/callout-speech-bubble.svg",
         style: {
-            marginTop: -10,
-            marginLeft: -5,
-            marginRight: 18,
+            marginTop: -7,
+            marginLeft: -2,
+            marginRight: 18
         },
         colour: "t-grey"
     },{
