@@ -19,7 +19,9 @@ import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
 import {buildUseKeyboardSensor} from "../../services/clozeQuestionKeyboardSensor";
 
-const augmentInlineItemWithUniqueReplacementID = (idv: ClozeItemDTO | undefined) => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
+import {isDefined} from "../../services/miscUtils";
+
+const augmentInlineItemWithUniqueReplacementID = (idv: ClozeItemDTO | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
 const augmentNonSelectedItemWithReplacementID = (item: ClozeItemDTO) => ({...item, replacementId: item.id});
 const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (ItemDTO | undefined)[]}) => (i: ClozeItemDTO | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
 
