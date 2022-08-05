@@ -25,7 +25,7 @@ interface UserDetailsProps {
     booleanNotation: BooleanNotation;
     setBooleanNotation: (bn: BooleanNotation) => void;
     displaySettings: DisplaySettings;
-    setDisplaySettings: (ds: DisplaySettings) => void;
+    setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
     userAuthSettings: UserAuthenticationSettingsDTO | null;

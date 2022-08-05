@@ -575,6 +575,7 @@ export interface BooleanNotation {
 
 export interface DisplaySettings {
     HIDE_NON_AUDIENCE_CONTENT?: boolean;
+    HIDE_QUESTION_ATTEMPTS?: boolean;
 }
 
 export interface UserPreferencesDTO {
