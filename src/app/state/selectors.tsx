@@ -3,7 +3,6 @@ import {NOT_FOUND} from "../services/constants";
 import {
     AppGroup,
     AppQuizAssignment,
-    Boards,
     GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
     UserProgress
