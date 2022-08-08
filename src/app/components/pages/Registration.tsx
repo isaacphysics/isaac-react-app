@@ -309,7 +309,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                         <CustomInput
                             id="consent-checkbox" name="consent-checkbox" type="checkbox"
                             checked={parentalConsentCheckboxChecked}
-                            label="Please confirm that you have read and understood this message."
+                            label="Please check the box to confirm that you have read and understood this message."
                             onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
                         />
                     </Alert>}
