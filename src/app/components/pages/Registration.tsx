@@ -299,18 +299,17 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
 
                     {/* 10-12 parental consent box */}
                     {isPhy && confirmedTenToTwelve && <Alert color={"warning"}>
-                        <h2>Attention young'un</h2>
-                        <hr/>
                         <p>
-                            You're under 13 and you wanna use Isaac Phy? You better make sure that you ask your mum or dad or guardian or whoever because there's some really scary stuff on this platform that they might want to know about beforehand.
-                        </p>
-                        <p>
-                            Tick the box below if you accept the (possibly dire) consequences.
+                            Before signing up to any online programme or website you should ask for permission from a
+                            parent or carer so they may check that it is appropriate for you to use. Often websites
+                            store some information about you to give you the best possible experience on the site but
+                            you should always check what data is being kept to do this - you can read how we use your
+                            data to provide our service <Link to="/privacy" target="_blank">here</Link>.
                         </p>
                         <CustomInput
                             id="consent-checkbox" name="consent-checkbox" type="checkbox"
                             checked={parentalConsentCheckboxChecked}
-                            label="I have consent from my parent or guardian"
+                            label="Please confirm that you have read and understood this message."
                             onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
                         />
                     </Alert>}
