@@ -69,7 +69,7 @@ def bring_up_the_new_containers(site, env, app):
 
 
 def deploy_test(site, app):
-    print("\n[DEPLOY {site.upper()} TEST]")
+    print(f"\n[DEPLOY {site.upper()} TEST]")
     bring_down_any_existing_containers(site, 'test')
     print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
     print("# Reset the test database.")
@@ -84,7 +84,7 @@ def deploy_staging_or_dev(env, site, app):
     bring_up_the_new_containers(site, env, app)
 
 def deploy_live(site, app):
-    print("\n[DEPLOY {site.upper()} LIVE]")
+    print(f"\n[DEPLOY {site.upper()} LIVE]")
     front_end_only_release = 'y' == input("Is this a front-end-only release? [y/n]").lower()
     if not front_end_only_release:
         # TODO figure out penultimate version
