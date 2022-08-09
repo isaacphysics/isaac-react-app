@@ -32,7 +32,7 @@ import {
 } from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
-import {AppGameBoard, BoardAssignee, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
+import {BoardAssignee, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
@@ -85,7 +85,7 @@ interface SetAssignmentsPageProps {
 }
 
 type BoardProps = SetAssignmentsPageProps & {
-    board: AppGameBoard;
+    board: GameboardDTO;
     assignees: BoardAssignee[];
     boardView: BoardViews;
     boards?: Boards;
@@ -338,14 +338,12 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         assignmentsSetByMe?.reduce((acc, assignment) => {
             if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
             const newAssignee = {groupId: assignment.groupId, groupName: assignment.groupName, startDate: assignment.scheduledStartDate};
-            if (assignment.gameboardId in acc) {
-                return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
+            if (!(assignment.gameboardId in acc)) {
+                return {...acc, [assignment.gameboardId]: [newAssignee]};
             }
-            return {...acc, [assignment.gameboardId]: [newAssignee]};
-        }, {} as { [gameboardId: string]: BoardAssignee[] }) ?? {},
+            return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
+        }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {},
         [assignmentsSetByMe]);
-    console.log(assignmentsSetByMe);
-    console.log(groupsByGameboard);
     useEffect(() => {
         loadGroups(false);
         loadAssignmentsOwnedByMe();
@@ -413,17 +411,22 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                 </Button>
             </Col>
         </Row>
-        {groups && groups.length == 0 &&
-        <Alert color="warning">You have not created any groups to assign work to. Please <Link to="/groups">create a
-            group here first.</Link></Alert>}
-        {boards && boards.totalResults == 0 ?
-            <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find
-                one.</h3> :
-            <>
-                {boards && boards.totalResults > 0 &&
-                <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to
-                    assign...</h4>}
-                {!boards && <h4>You have <IsaacSpinner size="sm" inline/> gameboards ready to assign...</h4>}
+        {groups && groups.length === 0 && <Alert color="warning">
+            You have not created any groups to assign work to.
+            Please <Link to="/groups">create a group here first.</Link>
+        </Alert>}
+        {boards && boards.totalResults === 0
+            ? <h3 className="text-center mt-4 mb-5">
+                You have no gameboards to assign; use one of the options above to find one.
+            </h3>
+            : <>
+                {boards && boards.totalResults > 0 && <h4>
+                    You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"}
+                    ready to assign...
+                </h4>}
+                {!boards && <h4>
+                    You have <IsaacSpinner size="sm" inline/> gameboards ready to assign...
+                </h4>}
                 <Row>
                     <Col sm={6} lg={3} xl={2}>
                         <Label className="w-100">
@@ -437,19 +440,15 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                     <>
                         <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
                             <Label className="w-100">
-                                Show <Input type="select" value={boardLimit}
-                                            onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                {Object.values(BoardLimit).map(limit => <option key={limit}
-                                                                                value={limit}>{limit}</option>)}
+                                Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
+                                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                             </Input>
                             </Label>
                         </Col>
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
-                                Sort by <Input type="select" value={boardOrder}
-                                               onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                {Object.values(BoardOrder).map(order => <option key={order}
-                                                                                value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                                Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
+                                {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                             </Input>
                             </Label>
                         </Col>

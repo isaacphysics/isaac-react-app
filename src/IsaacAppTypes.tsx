@@ -439,7 +439,6 @@ export type Action =
     | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; boardId: string; groupId: number}
 
     | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
-
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; newAssignments: (BoardAssignee & {assignmentId: number})[]; assignmentStub: AssignmentDTO}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]}
 
@@ -657,8 +656,6 @@ export enum BoardOrder {
 }
 
 export type NumberOfBoards = number | "ALL";
-
-export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: (ApiTypes.UserGroupDTO & {startDate?: Date})[]};
 
 export interface Boards {
     boards: GameboardDTO[];

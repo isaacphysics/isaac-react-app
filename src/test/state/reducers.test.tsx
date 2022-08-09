@@ -1,7 +1,5 @@
-
 import {
     Action,
-    AppGameBoard,
     AppGroupMembership,
     AppQuestionDTO,
     PotentialUser,
@@ -15,7 +13,8 @@ import {selectors} from "../../app/state/selectors";
 import {
     UserGroupDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
+    UserSummaryWithGroupMembershipDTO,
+    GameboardDTO
 } from "../../IsaacApiTypes";
 import {AppState, rootReducer} from "../../app/state/reducers";
 import {user} from "../../app/state/reducers/userState";
@@ -424,7 +423,7 @@ describe("boards reducer", () => {
     // @ts-ignore It's not a complete state
     const selector = mapValues(selectors.boards, f => (boardsState: BoardsState) => f({boards: boardsState, groups: groupsState}));
 
-    const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
+    const testBoards: GameboardDTO[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
 
     const simpleState: BoardsState = {totalResults: 42, boards: testBoards};
 
@@ -438,7 +437,7 @@ describe("boards reducer", () => {
     });
 
     it ("can add to the set of boards", () => {
-        const newBoards: AppGameBoard[] = [{id: "ghi", title: "Ghi Board"}, {id: "jkl", title: "JKL Board"}];
+        const newBoards: GameboardDTO[] = [{id: "ghi", title: "Ghi Board"}, {id: "jkl", title: "JKL Board"}];
         const action: Action = {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: {results: newBoards, totalResults: 40}, accumulate: true};
         const withDupes = {totalResults: 38, boards: [...testBoards, newBoards[1]]};
         const previousStates = [null, simpleState, withDupes];
@@ -480,7 +479,7 @@ describe("assignmentsByMe reducer", () => {
 
     const testGroupsMap: {[index: number]: UserGroupDTO} = {1: userGroupDTOs.one, 2: userGroupDTOs.two, 3: userGroupDTOs.three, 4: userGroupDTOs.four};
     const testGroups = Object.values(testGroupsMap);
-    const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
+    const testBoards: GameboardDTO[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
 
     const assignedState: AssignmentsState = [{
         id: 0,
