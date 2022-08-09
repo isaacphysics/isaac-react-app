@@ -46,6 +46,7 @@ def update_config(env, site):
     # TODO check if there have been any new config values since last release
     print("# If necessary, update config:")
     ask_to_run_command(f"sudo nano /local/data/isaac-config/{site}/segue-config.{env}.properties")
+    print("# Remember to also update isaac-3 so that it remains in-sync.")
 
 def run_db_migrations(env, site):
     # TODO check if there are any migrations since the last release
