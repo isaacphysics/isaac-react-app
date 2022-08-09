@@ -191,8 +191,8 @@ const Board = (props: BoardProps) => {
         }
     }
 
-    function confirmUnassignBoard(groupId: number) {
-        if (confirm("Are you sure you want to unassign this gameboard from this group?")) {
+    function confirmUnassignBoard(groupId: number, groupName?: string) {
+        if (confirm(`Are you sure you want to unassign this gameboard from ${groupName ? `group ${groupName}` : "this group"}?`)) {
             unassignBoard(board.id, groupId);
         }
     }
@@ -234,7 +234,7 @@ const Board = (props: BoardProps) => {
                                     The date this assignment is scheduled to begin. On this date students will be able to see the assignment set to them, and will receive an email notification.
                                 </UncontrolledTooltip>
                             </>}
-                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId)}>×</button>
+                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
                         </Row>
                     )}</Container>}
                     {!hasAssignedGroups && <p>No groups.</p>}
