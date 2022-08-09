@@ -168,8 +168,8 @@ const Board = (props: BoardProps) => {
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
     const deviceSize = useDeviceSize();
 
-    const assignmentLink = useMemo(() => `/assignment/${board.id}`, [board]);
-    const hasAssignedGroups = useMemo(() => assignees && assignees.length > 0, [assignees]);
+    const assignmentLink = `/assignment/${board.id}`;
+    const hasAssignedGroups = assignees && assignees.length > 0;
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
