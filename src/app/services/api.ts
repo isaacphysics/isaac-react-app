@@ -425,14 +425,11 @@ export const api = {
         get: (startIndex: number, limit: NumberOfBoards, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
             return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
         },
-        delete: (board: ApiTypes.GameboardDTO) => {
-            return endpoint.delete(`/gameboards/user_gameboards/${board.id}`);
+        delete: (boardId: string) => {
+            return endpoint.delete(`/gameboards/user_gameboards/${boardId}`);
         },
-        getGroupsForBoard: (board: ApiTypes.GameboardDTO): AxiosPromise<{[key: string]: ApiTypes.UserGroupDTO[]}> => {
-            return endpoint.get(`/assignments/assign/groups`, {params: {"gameboard_ids": board.id}});
-        },
-        unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
-            return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
+        unassign: (boardId: string, groupId: number) => {
+            return endpoint.delete(`/assignments/assign/${boardId}/${groupId}`);
         },
         assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentFeedbackDTO[]> => {
             return endpoint.post(`/assignments/assign_bulk`, assignments);

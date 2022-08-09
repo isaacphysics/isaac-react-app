@@ -1,10 +1,22 @@
 
-import {Action, AppGameBoard, AppGroupMembership, AppQuestionDTO, PotentialUser, AppGroup} from "../../IsaacAppTypes";
+import {
+    Action,
+    AppGameBoard,
+    AppGroupMembership,
+    AppQuestionDTO,
+    PotentialUser,
+    AppGroup,
+    BoardAssignee
+} from "../../IsaacAppTypes";
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services/constants";
-import {mapValues, union, without} from "lodash";
+import {mapValues, union} from "lodash";
 import {selectors} from "../../app/state/selectors";
-import {UserGroupDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
+import {
+    UserGroupDTO,
+    UserSummaryWithEmailAddressDTO,
+    UserSummaryWithGroupMembershipDTO
+} from "../../IsaacApiTypes";
 import {AppState, rootReducer} from "../../app/state/reducers";
 import {user} from "../../app/state/reducers/userState";
 import {questions} from "../../app/state/reducers/questionState";
@@ -13,6 +25,7 @@ import {toasts} from "../../app/state/reducers/notifiersState";
 import {groups} from "../../app/state/reducers/groupsState";
 import {search} from "../../app/state/reducers/searchState";
 import {boards, BoardsState} from "../../app/state/reducers/gameboardsState";
+import {assignmentsByMe, AssignmentsState} from "../../app/state/reducers/assignmentsState";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -413,11 +426,11 @@ describe("boards reducer", () => {
 
     const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
 
-    const simpleState: BoardsState = {boards: {totalResults: 42, boards: testBoards}};
+    const simpleState: BoardsState = {totalResults: 42, boards: testBoards};
 
     it ("can get a new set of boards", () => {
         const action: Action = {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: {results: testBoards, totalResults: 42}, accumulate: false};
-        const previousStates = [{}, null];
+        const previousStates = [null];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
             expect(selector.boards(actualNextState)).toEqual({totalResults: 42, boards: testBoards});
@@ -427,70 +440,91 @@ describe("boards reducer", () => {
     it ("can add to the set of boards", () => {
         const newBoards: AppGameBoard[] = [{id: "ghi", title: "Ghi Board"}, {id: "jkl", title: "JKL Board"}];
         const action: Action = {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: {results: newBoards, totalResults: 40}, accumulate: true};
-        const withDupes = {boards: {totalResults: 38, boards: [...testBoards, newBoards[1]]}};
-        const previousStates = [{}, null, simpleState, withDupes];
+        const withDupes = {totalResults: 38, boards: [...testBoards, newBoards[1]]};
+        const previousStates = [null, simpleState, withDupes];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            const priorBoards = previousState && previousState.boards && previousState.boards.boards || [];
+            const priorBoards = previousState && previousState.boards || [];
             expect(selector.boards(actualNextState)).toEqual({totalResults: 40, boards: union(priorBoards, newBoards)});
         });
     });
 
     it ("getting a new set of boards clears the current boards", () => {
         const action: Action = {type: ACTION_TYPE.BOARDS_REQUEST, accumulate: false};
-        const previousStates = [{}, null, simpleState];
+        const previousStates = [null, simpleState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
-            expect(selector.boards(actualNextState)).toEqual(null);
+            expect(selector.boards(actualNextState)).toBeNull();
         });
     });
 
     it("can delete an existing board", () => {
         const deleteBoard = testBoards[0];
-        const action: Action = {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, board: deleteBoard};
+        const action: Action = {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, boardId: deleteBoard.id as string};
         const previousStates = [simpleState];
         previousStates.map((previousState) => {
             const actualNextState = boards(previousState, action);
             expect(selector.boards(actualNextState)).toEqual({totalResults: 41, boards: [testBoards[1]]});
         });
     });
+});
 
-    const assignedState: BoardsState = {...simpleState, boardAssignees: {[testBoards[0].id as string]: testGroups.map(g => g.id as number)}};
-
-    it ("can load up board assignees", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS, board: testBoards[1], groups: {[testBoards[1].id as string]: testGroups}};
-        const previousStates = [simpleState, assignedState];
-        previousStates.map((previousState) => {
-            const actualNextState = boards(previousState, action);
-            expect(selector.boards(actualNextState)).toBeDefined();
-            expect(selector.boards(actualNextState)?.boards[1]).toEqual({...testBoards[1], assignedGroups: testGroups});
-        });
+describe("assignmentsByMe reducer", () => {
+    it("returns null as an initial value", () => {
+        const actualState = assignmentsByMe(undefined, ignoredTestAction);
+        expect(actualState).toBe(null);
     });
 
-    it ("can remove a board assignees", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, board: testBoards[0], group: testGroups[0]};
-        const actualNextState = boards(assignedState, action);
-        expect(selector.boards(actualNextState)).toBeDefined();
-        expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: without(testGroups, testGroups[0])});
+    // @ts-ignore It's not a complete state
+    const selector = (assignmentsByMe: AssignmentsState) => selectors.assignments.setByMe({assignmentsByMe});
+
+    const testGroupsMap: {[index: number]: UserGroupDTO} = {1: userGroupDTOs.one, 2: userGroupDTOs.two, 3: userGroupDTOs.three, 4: userGroupDTOs.four};
+    const testGroups = Object.values(testGroupsMap);
+    const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
+
+    const assignedState: AssignmentsState = [{
+        id: 0,
+        gameboardId: testBoards[0].id,
+        groupId: testGroups[0].id,
+    }, {
+        id: 1,
+        gameboardId: testBoards[1].id,
+        groupId: testGroups[0].id,
+    }, {
+        id: 2,
+        gameboardId: testBoards[0].id,
+        groupId: testGroups[1].id,
+    }, {
+        id: 3,
+        gameboardId: testBoards[1].id,
+        groupId: testGroups[1].id,
+    }];
+
+    it ("can remove an assignment when a board is unassigned", () => {
+        const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, boardId: testBoards[0].id as string, groupId: testGroups[0].id as number};
+        const actualNextState = assignmentsByMe(assignedState, action);
+        expect(selector(actualNextState)).toBeDefined();
+        expect(selector(actualNextState)).toEqual(assignedState.filter(a => (a.groupId !== testGroups[0].id) || (a.gameboardId !== testBoards[0].id)));
     });
 
-    it ("can add a board assignee", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupIds: [1]};
-        const previousStates = [simpleState, assignedState];
+    it ("can add assignments when a board is successfully assigned to one or more groups", () => {
+        const newAssignments: (BoardAssignee & {assignmentId: number})[] = [{groupId: testGroups[2].id as number, groupName: testGroups[2].groupName, assignmentId: 4}, {groupId: testGroups[2].id as number, groupName: testGroups[2].groupName, assignmentId: 5}];
+        const action: Action = {
+            type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS,
+            board: testBoards[0],
+            newAssignments,
+            assignmentStub: {}
+        };
+        const previousStates = [null, [], assignedState];
         previousStates.map((previousState) => {
-            const actualNextState = boards(previousState, action);
-            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
-            expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1]])});
-        });
-    });
-
-    it ("can add multiple board assignees", () => {
-        const action: Action = {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board: testBoards[0], groupIds: [1, 2]};
-        const previousStates = [simpleState, assignedState];
-        previousStates.map((previousState) => {
-            const actualNextState = boards(previousState, action);
-            const assignedGroups: UserGroupDTO[] = previousState.boardAssignees && previousState.boardAssignees[testBoards[0].id as string].map(gId => testGroupsMap[gId]) || [];
-            expect(selector.boards(actualNextState)?.boards[0]).toEqual({...testBoards[0], assignedGroups: union(assignedGroups, [testGroupsMap[1], testGroupsMap[2]])});
+            const actualNextState = assignmentsByMe(previousState, action);
+            const testNextState = (previousState ?? []).concat(newAssignments.map(a => ({
+                id: a.assignmentId,
+                gameboardId: testBoards[0].id,
+                groupId: a.groupId,
+                groupName: a.groupName
+            })))
+            expect(selector(actualNextState)).toEqual(testNextState);
         });
     });
 });

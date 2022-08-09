@@ -50,7 +50,7 @@ function selectGroups(state: AppState) {
     if (isDefined(state)) {
         const gameboards: {[id: string]: GameboardDTO} = {};
         if (isDefined(state.boards) && isDefined(state.boards.boards)) {
-            for (const board of state.boards.boards.boards) {
+            for (const board of state.boards.boards) {
                 gameboards[board.id as string] = board;
             }
         }
@@ -76,8 +76,9 @@ function selectGroups(state: AppState) {
         }
 
         const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
-        if (isFound(state.quizAssignments)) { // assigned by me
-            for (const qa of state.quizAssignments) {
+        const quizAssignmentsState = selectors.quizzes.assignments(state);
+        if (isFound(quizAssignmentsState)) { // assigned by me
+            for (const qa of quizAssignmentsState) {
                 if (!isDefined(qa.groupId)) {
                     continue;
                 }
