@@ -119,13 +119,13 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id, g.groupName))}
             />
         </Label>
-        <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
-        </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                        onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
+        </Label>
+        <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
+            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -206,6 +206,11 @@ const Board = (props: BoardProps) => {
     const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
     const boardDifficulties = useMemo(() => allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered), [board]);
 
+    const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
+
+    const startedAssignees = useMemo(() => assignees.filter(hasStarted), [assignees]);
+    const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
+
     return <>
         <Modal isOpen={modal} toggle={toggleAssignModal}>
             <ModalHeader close={
@@ -220,24 +225,37 @@ const Board = (props: BoardProps) => {
                 <hr className="text-center" />
                 <AssignGroup {...props} />
                 <hr className="text-center" />
-                <div className="py-2">
+                <div className="py-2 border-bottom">
                     <Label>Board currently assigned to:</Label>
-                    {hasAssignedGroups && <Container className="mb-4">{assignees.map(assignee =>
-                        <Row key={assignee.groupId} className="px-1">
-                            <span className="flex-grow-1">{assignee.groupName}</span>
-                            {assignee.startDate && <>
-                                <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"
-                                    ? new Date(assignee.startDate)
-                                    : assignee.startDate).toDateString()}
-                                </span>
-                                <UncontrolledTooltip placement="left" autohide={false} target={`start-date-${assignee.groupId}`}>
-                                    The date this assignment is scheduled to begin. On this date students will be able to see the assignment set to them, and will receive an email notification.
-                                </UncontrolledTooltip>
-                            </>}
-                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                        </Row>
-                    )}</Container>}
-                    {!hasAssignedGroups && <p>No groups.</p>}
+                    {startedAssignees.length > 0
+                        ? <Container className="mb-4">{startedAssignees.map(assignee =>
+                            <Row key={assignee.groupId} className="px-1">
+                                <span className="flex-grow-1">{assignee.groupName}</span>
+                                <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                            </Row>
+                        )}</Container>
+                        : <p>No groups.</p>}
+                </div>
+                <div className="py-2">
+                    <Label>Pending assignments: <span className="icon-help mx-1" id={`pending-assignments-help-${board.id}`}/></Label>
+                    <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board.id}`}>
+                        Assignments that are scheduled to begin at a future date. Once the start date passes, students
+                        will be able to see the assignment, and will receive a notification email.
+                    </UncontrolledTooltip>
+                    {scheduledAssignees.length > 0
+                        ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
+                            <Row key={assignee.groupId} className="px-1">
+                                <span className="flex-grow-1">{assignee.groupName}</span>
+                                {assignee.startDate && <>
+                                    <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"
+                                        ? new Date(assignee.startDate)
+                                        : assignee.startDate).toDateString()}
+                                    </span>
+                                </>}
+                                <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                            </Row>
+                        )}</Container>
+                        : <p>No groups.</p>}
                 </div>
             </ModalBody>
             <ModalFooter>
