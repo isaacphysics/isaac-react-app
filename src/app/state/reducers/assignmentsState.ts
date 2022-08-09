@@ -2,7 +2,7 @@ import {AssignmentDTO, UserGameboardProgressSummaryDTO} from "../../../IsaacApiT
 import {Action, AppAssignmentProgress} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 
-type AssignmentsState = AssignmentDTO[] | null;
+export type AssignmentsState = AssignmentDTO[] | null;
 export const assignments = (assignments: AssignmentsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.ASSIGNMENTS_REQUEST:
@@ -20,6 +20,16 @@ export const assignmentsByMe = (assignments: AssignmentsState = null, action: Ac
             return null;
         case ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS:
             return action.assignments;
+        case ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS:
+            return assignments ? assignments.filter(a => (a.groupId !== action.groupId) && (a.gameboardId !== action.boardId)) : [];
+        case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
+            return (assignments ?? []).concat(action.newAssignments.map(assignmentStatus => ({
+                ...action.assignmentStub,
+                gameboardId: action.board.id,
+                id: assignmentStatus.assignmentId,
+                groupId: assignmentStatus.groupId,
+                groupName: assignmentStatus.groupName
+            })));
         default:
             return assignments;
     }

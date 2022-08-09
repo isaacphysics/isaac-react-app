@@ -1,7 +1,7 @@
 import {ContentSummaryDTO, GameboardDTO, GameboardListDTO, IsaacWildcard} from "../../../IsaacApiTypes";
-import {Action, BoardAssignees, Boards, FasttrackConceptsState, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {Action, Boards, FasttrackConceptsState, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
-import {difference, differenceBy, mapValues, union, unionWith} from "lodash";
+import {unionWith} from "lodash";
 
 export type CurrentGameboardState = GameboardDTO | NOT_FOUND_TYPE | null | {inflight: true; id: string | null};
 export const currentGameboard = (currentGameboard: CurrentGameboardState = null, action: Action): CurrentGameboardState => {
@@ -46,7 +46,7 @@ export const wildcards = (wildcards: WildcardsState = null, action: Action) => {
     }
 };
 
-export type BoardsState = {boards?: Boards} & BoardAssignees | null;
+export type BoardsState = Boards | null;
 
 function mergeBoards(boards: Boards, additional: GameboardListDTO) {
     return {
@@ -58,9 +58,9 @@ function mergeBoards(boards: Boards, additional: GameboardListDTO) {
 
 export const boards = (boards: BoardsState = null, action: Action): BoardsState => {
     function modifyBoards(modify: (current: GameboardDTO[]) => GameboardDTO[], tweak?: (boards: Boards) => void) {
-        if (boards && boards.boards) {
-            const result = {...boards, boards: {...boards.boards, boards: modify(boards.boards.boards)}};
-            if (tweak) tweak(result.boards);
+        if (boards) {
+            const result = {...boards, boards: modify(boards.boards)};
+            if (tweak) tweak(result);
             return result;
         }
         return boards;
@@ -69,46 +69,18 @@ export const boards = (boards: BoardsState = null, action: Action): BoardsState 
     switch (action.type) {
         case ACTION_TYPE.BOARDS_REQUEST:
             if (!action.accumulate) {
-                return {
-                    boardAssignees: boards && boards.boardAssignees || undefined
-                };
+                return null;
             }
             return boards;
         case ACTION_TYPE.BOARDS_RESPONSE_SUCCESS:
-            if (boards && boards.boards && action.accumulate) {
-                return {...boards, boards: mergeBoards(boards.boards, action.boards)};
+            if (boards && action.accumulate) {
+                return mergeBoards(boards, action.boards);
             } else {
-                return {...boards, boards: {boards: action.boards.results as GameboardDTO[], totalResults: action.boards.totalResults as number}};
+                return {boards: action.boards.results as GameboardDTO[], totalResults: action.boards.totalResults as number};
             }
         case ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS:
-            return modifyBoards(existing => differenceBy(existing, [action.board], board => board.id),
+            return modifyBoards(existing => existing.filter(board => board.id !== action.boardId),
                 boards => {boards.totalResults--;});
-        case ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS:
-            if (boards) {
-                return {
-                    ...boards,
-                    boardAssignees: {...boards.boardAssignees, ...(mapValues(action.groups, groups => groups.map(g => g.id as number)))}
-                };
-            }
-            return boards;
-        case ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS:
-            if (boards) {
-                return {
-                    ...boards,
-                    boardAssignees: mapValues(boards.boardAssignees, (value, key) => key == action.board.id ? difference(value, [action.group.id as number]) : value)
-                };
-            }
-            return boards;
-        case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
-            if (boards) {
-                const boardId = action.board.id as string;
-                const assignees = union(boards.boardAssignees && boards.boardAssignees[boardId], action.groupIds);
-                return {
-                    ...boards,
-                    boardAssignees: {...boards.boardAssignees, [boardId]: assignees}
-                };
-            }
-            return boards;
         default:
             return boards;
     }

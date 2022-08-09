@@ -36,7 +36,7 @@ function selectGroups(state: AppState) {
     if (state != null) {
         const gameboards: {[id: string]: GameboardDTO} = {};
         if (state.boards?.boards) {
-            for (const board of state.boards.boards.boards) {
+            for (const board of state.boards.boards) {
                 gameboards[board.id as string] = board;
             }
         }

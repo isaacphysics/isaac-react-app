@@ -7,7 +7,7 @@ import {
 } from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
-import {showErrorToastIfNeeded, showSuccessToast} from "../../actions";
+import {showAxiosErrorToastIfNeeded, showSuccessToast} from "../../actions";
 import {Dispatch} from "redux";
 
 // This is used by default as the `baseQuery` of our API slice
@@ -55,7 +55,7 @@ const displayToastsOnQueryLifecycleEvents = ({successTitle, successMessage, erro
         }
     } catch (e) {
         if (errorMessage) {
-            dispatch(showErrorToastIfNeeded(errorMessage, e));
+            dispatch(showAxiosErrorToastIfNeeded(errorMessage, e));
         }
     }
 };

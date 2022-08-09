@@ -60,10 +60,7 @@ export const SingleAssignmentProgress = () => {
     }, [dispatch, myOwnedAssignments]);
 
     const assignmentProgress = useAppSelector(selectors.assignments.progress);
-
-    const boards = useAppSelector((state: AppState) => {
-        return state?.boards?.boards?.boards;
-    });
+    const boards = useAppSelector(selectors.boards.boards);
 
     const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
 
@@ -71,8 +68,8 @@ export const SingleAssignmentProgress = () => {
     const [assignment, setAssignment] = useState(myOwnedAssignments?.find(x => x._id == assignmentId));
 
     useEffect(() => {
-        if (boards && (boards[0].id = assignment?.gameboardId)) {
-            setAssignment({...assignment, gameboard: boards[0]})
+        if (boards && (boards.boards[0].id = assignment?.gameboardId)) {
+            setAssignment({...assignment, gameboard: boards.boards[0]})
         }
     }, [boards]);
 
@@ -80,21 +77,17 @@ export const SingleAssignmentProgress = () => {
         setAssignment(myOwnedAssignments?.find(x => x._id == assignmentId));
     }, [myOwnedAssignments, assignmentId]);
 
-    return <React.Fragment>
-        <ShowLoading until={assignment && assignmentProgress}>
-            <Container>
-                <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
-                    currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
-                    className="mb-4" />
-            </Container>
-
-            <div className="assignment-progress-container mb-5">
-                {assignment && assignmentProgress && hasGameboard(assignment) &&
-                <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
-                    progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
-                }
-            </div>
-
-        </ShowLoading>
-    </React.Fragment>
+    return <ShowLoading until={assignment && assignmentProgress}>
+        <Container>
+            <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
+                currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
+                className="mb-4" />
+        </Container>
+        <div className="assignment-progress-container mb-5">
+            {assignment && assignmentProgress && hasGameboard(assignment) &&
+            <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
+                progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
+            }
+        </div>
+    </ShowLoading>
 };
