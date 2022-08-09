@@ -360,8 +360,6 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(BoardViews.card, BoardLimit.six);
 
-    console.log(boards);
-
     const isaacAssignmentButtons = {
         second: {
             link: siteSpecific("/pages/pre_made_gameboards", "/topics"),
