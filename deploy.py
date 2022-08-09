@@ -16,9 +16,9 @@ def assert_using_a_tty():
         print("Error: Must run this method with a tty. If you're using windows try:\n" + f"winpty {' '.join(sys.argv)}")
         sys.exit(1)
 
-def check_react_app_is_up_to_date():
-    print("# Git pull for the latest version of the deploy script:")
-    ask_to_run_command("git pull")
+def check_repos_are_up_to_date():
+    print("# Git pull for the latest version of the deploy script and db schema:")
+    ask_to_run_command("git pull && cd ../isaac-api && git pull && cd -")
 
 def parse_command_line_arguments():
     parser = argparse.ArgumentParser(description='Deploy the site')
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     print("\n# ! THIS SCRIPT IS STILL EXPERIMENTAL SO CHECK EACH COMMAND BEFORE EXECUTING IT !\n")
     print("# Go to isaac-react-app on the live machine:")
     ask_to_run_command("cd /local/src/isaac-react-app")
-    check_react_app_is_up_to_date()
+    check_repos_are_up_to_date()
 
     build_docker_image_for_version(context['app'], context['api'])
 
