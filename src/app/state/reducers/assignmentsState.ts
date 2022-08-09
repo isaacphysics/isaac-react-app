@@ -21,7 +21,7 @@ export const assignmentsByMe = (assignments: AssignmentsState = null, action: Ac
         case ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS:
             return action.assignments;
         case ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS:
-            return assignments ? assignments.filter(a => (a.groupId !== action.groupId) && (a.gameboardId !== action.boardId)) : [];
+            return assignments ? assignments.filter(a => (a.groupId !== action.groupId) || (a.gameboardId !== action.boardId)) : [];
         case ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS:
             return (assignments ?? []).concat(action.newAssignments.map(assignmentStatus => ({
                 ...action.assignmentStub,
