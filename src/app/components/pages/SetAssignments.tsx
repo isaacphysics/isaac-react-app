@@ -168,8 +168,8 @@ const Board = (props: BoardProps) => {
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
     const deviceSize = useDeviceSize();
 
-    const assignmentLink = useMemo(() => `/assignment/${board.id}`, [board]);
-    const hasAssignedGroups = useMemo(() => assignees && assignees.length > 0, [assignees]);
+    const assignmentLink = `/assignment/${board.id}`;
+    const hasAssignedGroups = assignees && assignees.length > 0;
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
@@ -195,7 +195,7 @@ const Board = (props: BoardProps) => {
     const [modal, setModal] = useState(board.id === hashAnchor);
     const toggleAssignModal = useCallback(() => setModal(s => !s), [setModal]);
 
-    const hexagonId = useMemo(() => `board-hex-${board.id}`, [board]);
+    const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = useMemo(() => determineGameboardSubjects(board), [board]);
     const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
