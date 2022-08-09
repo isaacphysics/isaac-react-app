@@ -1,5 +1,5 @@
 import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -51,7 +51,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
     const {preferredBooleanNotation} = useUserContext();
     const [textInput, setTextInput] = useState('');
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     function currentAttemptPythonExpression(): string {
         return (currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.python) || "";

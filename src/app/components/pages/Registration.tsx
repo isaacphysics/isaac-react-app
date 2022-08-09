@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
 import {
+    Alert,
     Card,
     CardBody,
     CardTitle,
@@ -19,6 +20,7 @@ import {
 import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {updateCurrentUser} from "../../state/actions";
 import {
+    isDobOverTen,
     isDobOverThirteen,
     validateEmail,
     validateName,
@@ -31,14 +33,14 @@ import {DateInput} from "../elements/inputs/DateInput";
 import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services/passwordStrength"
 import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect, RouteComponentProps, withRouter} from "react-router";
-import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {isCS, isPhy, SITE_SUBJECT_TITLE, siteSpecific} from "../../services/siteConstants";
 import {selectors} from "../../state/selectors";
 import {MetaDescription} from "../elements/MetaDescription";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const errorMessage = useSelector(selectors.error.general);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const errorMessage = useAppSelector(selectors.error.general);
     const userEmail = location.state?.email || undefined;
     const userPassword = location.state?.password || undefined;
 
@@ -56,7 +58,9 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     loadZxcvbnIfNotPresent();
 
     const [unverifiedPassword, setUnverifiedPassword] = useState(userPassword);
-    const [dobCheckboxChecked, setDobCheckboxChecked] = useState(false);
+    const [dobOver13CheckboxChecked, setDobOver13CheckboxChecked] = useState(false);
+    const [dob10To12CheckboxChecked, setDob10To12CheckboxChecked] = useState(false);
+    const [parentalConsentCheckboxChecked, setParentalConsentCheckboxChecked] = useState(false);
     const [attemptedSignUp, setAttemptedSignUp] = useState(false);
     const [passwordFeedback, setPasswordFeedback] = useState<PasswordFeedback | null>(null);
 
@@ -67,14 +71,17 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const familyNameIsValid = validateName(registrationUser.familyName);
     const passwordIsValid =
         (registrationUser.password == unverifiedPassword) && validatePassword(registrationUser.password || "");
-    const confirmedOverThirteen = dobCheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
+    const confirmedOverThirteen = dobOver13CheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
+    const confirmedOverTen = dob10To12CheckboxChecked || isDobOverTen(registrationUser.dateOfBirth);
+    const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
+    const consentGivenOrNotRequired = isCS || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
 
     // Form's submission method
     const register = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOverThirteen ) {
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && siteSpecific(confirmedOverTen, confirmedOverThirteen) && consentGivenOrNotRequired) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
@@ -237,31 +244,36 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                     Date of birth
                                 </Label>
                                 <Row>
-                                    <Col lg={6}>
+                                    <Col lg={siteSpecific(12, 6)} xs={12}>
                                         <DateInput
                                             id="dob-input" name="date-of-birth"
-                                            invalid={!confirmedOverThirteen && attemptedSignUp}
-                                            disabled={dobCheckboxChecked}
+                                            invalid={!siteSpecific(confirmedOverTen, confirmedOverThirteen) && attemptedSignUp}
+                                            disabled={(isPhy && dob10To12CheckboxChecked) || dobOver13CheckboxChecked}
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                 assignToRegistrationUser({dateOfBirth: event.target.valueAsDate});
                                             }}
                                             labelSuffix=" of birth"
                                         />
                                     </Col>
-                                    <Col lg={6} className="pt-2">
+                                    <Col lg={siteSpecific(12, 6)} xs={12} className="pt-2">
                                         <CustomInput
-                                            id="age-confirmation-input" name="age-confirmation" type="checkbox"
+                                            id="age-over-13-confirmation-input" name="age-over-13-confirmation" type="checkbox"
                                             className="ml-1 ml-md-0"
                                             checked={confirmedOverThirteen}
                                             required
                                             label="I am at least 13 years old"
-                                            disabled={registrationUser.dateOfBirth}
-                                            // TODO: Look at DateInput null vs undefined for updating DoB and maybe
-                                            // change this in future
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                setDobCheckboxChecked(!dobCheckboxChecked);
-                                            }}
+                                            disabled={(isPhy && dob10To12CheckboxChecked) || registrationUser.dateOfBirth}
+                                            onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
                                         />
+                                        {isPhy && <CustomInput
+                                            id="age-10-to-12-confirmation-input" name="age-10-to-12-confirmation" type="checkbox"
+                                            className="ml-1 ml-md-0"
+                                            checked={confirmedTenToTwelve}
+                                            required
+                                            label="I am aged 10 to 12 years old"
+                                            disabled={dobOver13CheckboxChecked || registrationUser.dateOfBirth}
+                                            onChange={(e) => setDob10To12CheckboxChecked(e?.target.checked)}
+                                        />}
                                     </Col>
                                 </Row>
                             </FormGroup>
@@ -278,12 +290,30 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 </h4>
                             }
                             <h4 role="alert" className="text-danger text-left">
-                                {!confirmedOverThirteen && attemptedSignUp ?
-                                    "You must be over 13 years old to create an account." :
+                                {!siteSpecific(confirmedOverTen, confirmedOverThirteen) && attemptedSignUp ?
+                                    `You must be over ${siteSpecific("10", "13")} years old to create an account.` :
                                     errorMessage}
                             </h4>
                         </Col>
                     </Row>
+
+                    {/* 10-12 parental consent box */}
+                    {isPhy && confirmedTenToTwelve && <Alert color={"warning"}>
+                        <p>
+                            Before signing up to any online programme or website you should ask for permission from a
+                            parent or carer so they may check that it is appropriate for you to use. Often websites
+                            store some information about you to give you the best possible experience on the site but
+                            you should always check what data is being kept to do this - you can read how we use your
+                            data to provide our service <Link to="/privacy" target="_blank">here</Link>.
+                        </p>
+                        <CustomInput
+                            id="consent-checkbox" name="consent-checkbox" type="checkbox"
+                            checked={parentalConsentCheckboxChecked}
+                            label="Please check the box to confirm that you have read and understood this message."
+                            onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
+                        />
+                    </Alert>}
+
                     <Row>
                         <Col className="text-center">
                             By clicking Register now, you accept our <Link to="/terms" target="_blank">Terms of Use</Link>.
@@ -294,7 +324,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     {/* Submit */}
                     <Row className="mt-4 mb-2">
                         <Col md={{size: 6, offset: 3}}>
-                            <Input type="submit" value="Register now" className="btn btn-block btn-secondary border-0" />
+                            <Input disabled={!consentGivenOrNotRequired} type="submit" value="Register now" className="btn btn-block btn-secondary border-0" />
                         </Col>
                     </Row>
 

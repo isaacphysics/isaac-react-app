@@ -3,6 +3,8 @@ import {MARKDOWN_RENDERER} from "../../../services/constants";
 import {Remarkable, utils} from "remarkable";
 import {isPhy} from "../../../services/siteConstants";
 
+export const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     const href = utils.escapeHtml(tokens[idx].href || "");
     const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:") || href.startsWith("#");
@@ -18,7 +20,6 @@ export const renderRemarkableMarkdown = (markdown: string) => MARKDOWN_RENDERER.
 // This is used to match and render cloze question drop zones into span elements
 export const renderClozeDropZones = (markdown: string) => {
     // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
-    const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
     let index = 0;
     return markdown.replace(dropZoneRegex, (_match, params, widthMatch, heightMatch) => {
         const dropId = `drop-region-${index}`;

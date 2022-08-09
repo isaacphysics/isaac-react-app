@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {FormGroup} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
     adminModifyUserEmailVerificationStatuses,
     adminModifyUserRoles,
@@ -22,8 +22,8 @@ import {selectors} from "../../state/selectors";
 import { isDefined } from "../../services/miscUtils";
 
 export const AdminUserManager = () => {
-    const dispatch = useDispatch();
-    const searchResults = useSelector(selectors.admin.userSearch);
+    const dispatch = useAppDispatch();
+    const searchResults = useAppSelector(selectors.admin.userSearch);
     const [userUpdating, setUserUpdating] = useState(false);
     const [searchRequested, setSearchRequested] = useState(false);
     const [searchQuery, setSearchQuery] = useState({
@@ -38,8 +38,8 @@ export const AdminUserManager = () => {
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
     const [mergeTargetId, setMergeTargetId] = useState<string>("");
     const [mergeSourceId, setMergeSourceId] = useState<string>("");
-    const userIdToSchoolMapping = useSelector(selectors.admin.userSchoolLookup);
-    const currentUser = useSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
+    const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup);
+    const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
     let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
     const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
     if (currentUser && currentUser.role == "ADMIN") {

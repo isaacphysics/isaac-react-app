@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {
     Badge,
@@ -69,8 +69,8 @@ export function MenuBadge({count, message}: {count: number, message: string}) {
 }
 
 export function useAssignmentsCount() {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
 
     useEffect(() => {
         if (user?.loggedIn) {
@@ -79,7 +79,7 @@ export function useAssignmentsCount() {
         }
     }, [dispatch, user]);
 
-    return useSelector((state: AppState) => {
+    return useAppSelector((state: AppState) => {
         const response = {assignmentsCount: 0, quizzesCount: 0};
         if (state?.assignments) {
             const {inProgressRecent} = filterAssignmentsByStatus(state.assignments);

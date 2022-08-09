@@ -24,7 +24,7 @@ interface UserContextRowProps {
     submissionAttempted: boolean;
     existingUserContexts: UserContext[];
     setBooleanNotation: (bn: BooleanNotation) => void;
-    setDisplaySettings: (ds: DisplaySettings) => void;
+    setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
 }
 
 function UserContextRow({
@@ -50,7 +50,7 @@ function UserContextRow({
                     setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
                     // Set display settings default values
-                    setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: true});
+                    setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
                 }
                 setUserContext({...userContext, stage, examBoard});
             }}
@@ -97,7 +97,7 @@ interface UserContextAccountInputProps {
     setUserContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
     displaySettings: DisplaySettings;
-    setDisplaySettings: (ds: DisplaySettings) => void;
+    setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
 }
 export function UserContextAccountInput({
@@ -170,7 +170,7 @@ export function UserContextAccountInput({
                         <CustomInput
                             type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
                             checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
-                            onChange={e => setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: !e.target.checked})}
+                            onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}
                         />{" "}
                         <span>Show other content that is not for my selected qualification(s). <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
                         <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>

@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import ResponsiveCarousel from "./Carousel";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {getNewsPodList} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -16,8 +16,8 @@ interface NewsCarouselProps {
 
 export const NewsCarousel = (props: NewsCarouselProps) => {
     const {descending, subject, showTitle, className} = props;
-    const dispatch = useDispatch();
-    const newsState = useSelector((state: AppState) => state && state.news);
+    const dispatch = useAppDispatch();
+    const newsState = useAppSelector((state: AppState) => state && state.news);
     useEffect(() => {
         dispatch(getNewsPodList(subject));
     }, [dispatch, subject]);

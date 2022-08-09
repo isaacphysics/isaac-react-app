@@ -2,7 +2,7 @@ import React from "react";
 import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal} from "../../../state/actions";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import classNames from "classnames";
 
 interface ActiveModalProps {
@@ -11,7 +11,7 @@ interface ActiveModalProps {
 
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
     const ModalBody = activeModal && activeModal.body;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const toggle = () => {
         dispatch(closeActiveModal());

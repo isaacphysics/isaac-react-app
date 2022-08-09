@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
@@ -11,9 +11,9 @@ import {getMyProgress} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 
 export const TeacherTools = () => {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const achievementsSelector = useSelector(selectors.user.achievementsRecord);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const achievementsSelector = useAppSelector(selectors.user.achievementsRecord);
 
     useEffect(() => {
         if (!achievementsSelector) {

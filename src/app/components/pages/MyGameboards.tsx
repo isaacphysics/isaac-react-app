@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {deleteBoard} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
@@ -67,7 +67,7 @@ const Board = (props: BoardTableProps) => {
 
     const boardLink = `/gameboards#${board.id}`;
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
         if (checked) {
@@ -79,7 +79,7 @@ const Board = (props: BoardTableProps) => {
 
     function confirmCardDeleteBoard() {
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            dispatch(deleteBoard(board));
+            dispatch(deleteBoard(board.id, board.title));
         }
     }
 
@@ -164,8 +164,8 @@ const Board = (props: BoardTableProps) => {
 
 export const MyGameboards = () => {
     //Redux state and dispatch
-    const dispatch = useDispatch();
-    const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
     const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
@@ -187,7 +187,7 @@ export const MyGameboards = () => {
 
     function confirmDeleteMultipleBoards() {
         if (confirm(`Are you sure you want to remove ${selectedBoards && selectedBoards.length > 1 ? selectedBoards.length + " boards" : selectedBoards[0].title} from your account?`)) {
-            selectedBoards && selectedBoards.map(board => dispatch(deleteBoard(board)));
+            selectedBoards && selectedBoards.map(board => dispatch(deleteBoard(board.id, board.title)));
             setSelectedBoards([]);
         }
     }

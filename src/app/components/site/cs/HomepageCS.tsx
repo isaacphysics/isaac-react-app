@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {Link} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
@@ -15,7 +15,7 @@ interface ShowMeButtonsProps {
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
         <h3>Show me</h3>

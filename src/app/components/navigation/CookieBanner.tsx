@@ -2,13 +2,13 @@ import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import Cookies from 'js-cookie';
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {logAction} from "../../state/actions";
 
 const COOKIE_COOKIE = "isaacCookiesAccepted";
 
 export const CookieBanner = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [show, setShown] = useState(() => {
         const currentCookieValue = Cookies.get(COOKIE_COOKIE);
         return currentCookieValue != "1";

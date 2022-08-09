@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
@@ -65,12 +65,12 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const { userIdOfInterest } = match.params;
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
-    const dispatch = useDispatch();
-    const myProgress = useSelector(selectors.user.progress);
-    const userProgress = useSelector(selectors.teacher.userProgress);
-    const achievements = useSelector(selectors.user.achievementsRecord);
-    const myAnsweredQuestionsByDate = useSelector(selectors.user.answeredQuestionsByDate);
-    const userAnsweredQuestionsByDate = useSelector(selectors.teacher.userAnsweredQuestionsByDate);
+    const dispatch = useAppDispatch();
+    const myProgress = useAppSelector(selectors.user.progress);
+    const userProgress = useAppSelector(selectors.teacher.userProgress);
+    const achievements = useAppSelector(selectors.user.achievementsRecord);
+    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
+    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
 
     useEffect(() => {
         if (viewingOwnData && user.loggedIn) {

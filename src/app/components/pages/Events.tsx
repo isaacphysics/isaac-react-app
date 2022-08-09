@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
@@ -32,10 +32,10 @@ const EVENTS_PER_PAGE = 6;
 export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
-    const dispatch = useDispatch();
-    const eventsState = useSelector((state: AppState) => state?.events);
-    // const eventMapData = useSelector((state: AppState) => state?.eventMapData);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const eventsState = useAppSelector((state: AppState) => state?.events);
+    // const eventMapData = useAppSelector((state: AppState) => state?.eventMapData);
+    const user = useAppSelector(selectors.user.orNull);
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
     const statusFilter =

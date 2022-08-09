@@ -1,5 +1,5 @@
 import React from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from 'reactstrap';
 import {AppState} from "../../state/reducers";
 import {hideToast} from "../../state/actions";
@@ -9,8 +9,8 @@ export const FAILURE_TOAST: Toast = {color: "danger", title: "Validation error",
 export const SUCCESS_TOAST: Toast = {color: "success", title: "Action completed", timeout: 5000, body: "Action completed successfully."};
 
 export const Toasts = () => {
-    const dispatch = useDispatch();
-    const toasts = useSelector((state: AppState) => state?.toasts || []);
+    const dispatch = useAppDispatch();
+    const toasts = useAppSelector((state: AppState) => state?.toasts || []);
     return <div className="toasts-container">{
         toasts.map((toast) => <RS.Toast key={toast.id} isOpen={toast.showing}>
             <RS.ToastHeader icon={toast.color} className="py-2 px-3"

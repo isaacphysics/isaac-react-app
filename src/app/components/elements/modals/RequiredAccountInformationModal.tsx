@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
@@ -24,9 +24,9 @@ import {Link} from "react-router-dom";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const userPreferences = useSelector((state: AppState) => state?.userPreferences);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
     const student = isStudent({...user, loggedIn: true});
 
     // Local state

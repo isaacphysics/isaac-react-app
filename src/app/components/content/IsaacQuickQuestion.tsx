@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {logAction} from "../../state/actions";
 import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
@@ -11,7 +11,7 @@ import classNames from "classnames";
 import {useLocation} from "react-router-dom";
 
 export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const location = useLocation();
     const fastTrackInfo = useFastTrackInformation(doc, location);
     const [isVisible, setVisible] = useState(false);

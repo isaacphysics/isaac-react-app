@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import {CustomInput, FormGroup, Input, Label} from "reactstrap";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {EXAM_BOARD, examBoardLabelMap, STAGE, stageLabelMap} from "../../../services/constants";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {
     setTransientExamBoardPreference,
     setTransientShowOtherContentPreference,
@@ -16,11 +16,11 @@ import queryString from "query-string";
 import {useQueryParams} from "../../../services/reactRouterExtension";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const qParams = useQueryParams();
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});

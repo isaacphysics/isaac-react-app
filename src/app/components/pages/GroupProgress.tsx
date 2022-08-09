@@ -1,5 +1,5 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
     Button,
     Col,
@@ -36,7 +36,7 @@ function selectGroups(state: AppState) {
     if (state != null) {
         const gameboards: {[id: string]: GameboardDTO} = {};
         if (state.boards?.boards) {
-            for (const board of state.boards.boards.boards) {
+            for (const board of state.boards.boards) {
                 gameboards[board.id as string] = board;
             }
         }
@@ -191,10 +191,10 @@ export const GroupProgressLegend = (props: GroupProgressLegendProps): JSX.Elemen
 };
 
 const GroupSummary = (props: GroupSummaryProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {group, pageSettings} = props;
     const groupId = group.id || 0;
-    const groupProgress = useSelector(selectors.groups.progress)?.[groupId];
+    const groupProgress = useAppSelector(selectors.groups.progress)?.[groupId];
 
     type SortOrder = number | "student-name" | "total-questions" | "assignments-completed";
     const [sortOrder, setSortOrder] = useState<SortOrder>("student-name");
@@ -395,7 +395,7 @@ function getGroupProgressCSVDownloadLink(groupId: number) {
 }
 
 const GroupAssignmentProgress = (props: GroupSummaryProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {group} = props;
 
     const [isExpanded, setExpanded] = useState(false);
@@ -424,8 +424,8 @@ const GroupAssignmentProgress = (props: GroupSummaryProps) => {
 };
 
 export function GroupProgress(props: GroupProgressPageProps): JSX.Element {
-    const dispatch = useDispatch();
-    const {groups} = useSelector(selectGroups);
+    const dispatch = useAppDispatch();
+    const {groups} = useAppSelector(selectGroups);
 
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);

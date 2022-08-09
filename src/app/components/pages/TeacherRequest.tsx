@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
     Alert,
     Button,
@@ -29,10 +29,10 @@ const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
 export const TeacherRequest = () => {
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const errorMessage = useSelector((state: AppState) => (state && state.error) || null);
-    const warningFragment = useSelector((state: AppState) => state && state.fragments && state.fragments[warningFragmentId] || null);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
+    const warningFragment = useAppSelector((state: AppState) => state && state.fragments && state.fragments[warningFragmentId] || null);
 
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");

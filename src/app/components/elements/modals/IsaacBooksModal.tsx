@@ -3,7 +3,7 @@ import {closeActiveModal} from "../../../state/actions";
 import React from "react";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import {siteSpecific} from "../../../services/siteConstants";
 
 interface BookInfo {
@@ -55,7 +55,7 @@ const isaacBooks: BookInfo[] = siteSpecific(
 
 
 export const BookModalBody = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     return <Row className={"pb-2 justify-content-center"}>
         {isaacBooks.map((book: BookInfo) => <Col className="mb-3" lg={3} sm={6}>

@@ -2,7 +2,7 @@ import React, {ReactElement, useEffect, useRef} from "react";
 import {Button, UncontrolledTooltip} from "reactstrap";
 import {isPhy, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {closeActiveModal, openActiveModal, setMainContentId} from "../../state/actions";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
@@ -42,8 +42,8 @@ export interface PageTitleProps {
     modalId?: string;
 }
 export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId}: PageTitleProps) => {
-    const dispatch = useDispatch();
-    const openModal = useSelector((state: AppState) => Boolean(state?.activeModals?.length));
+    const dispatch = useAppDispatch();
+    const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
     const showModal = modalId && isPhy;
