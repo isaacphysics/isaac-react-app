@@ -503,7 +503,7 @@ describe("assignmentsByMe reducer", () => {
         const action: Action = {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, boardId: testBoards[0].id as string, groupId: testGroups[0].id as number};
         const actualNextState = assignmentsByMe(assignedState, action);
         expect(selector(actualNextState)).toBeDefined();
-        expect(selector(actualNextState)).toEqual(assignedState.filter(a => (a.groupId !== testGroups[0].id) && (a.gameboardId !== testBoards[0].id)));
+        expect(selector(actualNextState)).toEqual(assignedState.filter(a => (a.groupId !== testGroups[0].id) || (a.gameboardId !== testBoards[0].id)));
     });
 
     it ("can add assignments when a board is successfully assigned to one or more groups", () => {
