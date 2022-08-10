@@ -8,60 +8,80 @@ import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {AppState} from "../../../state/reducers";
-import {isLoggedIn} from "../../../services/user";
+import {isLoggedIn, isTeacher} from "../../../services/user";
 import {closeActiveModal, logAction, updateCurrentUser} from "../../../state/actions";
 import {isCS, SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
+
+const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
+    teacher: {
+        intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
+        connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
+        privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+    },
+    student: {
+        intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
+        connections: <span>If you have changed school or have a different teacher, you might also want to {buildConnectionsLink("review your teacher connections")}.</span>,
+        privacyPolicy: <span>Updating this information helps us continue to show you relevant content throughout your educational journey. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+    }
+});
 
 const UserContextReconfimationModalBody = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = useSelector((state: AppState) => state?.userPreferences);
+    const userPreferences = useSelector(selectors.user.preferences);
 
+    const [userToUpdate, setUserToUpdate] = useState({...user, password: null});
+    const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
+    const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
-
-    const initialUserValue = useMemo(() => ({...user, password: null}), [user]);
-    const [userToUpdate, setUserToUpdate] = useState(initialUserValue);
 
     const initialUserContexts = useMemo(() =>
         user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : []
     , [user]);
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
-    const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
-    const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
-
     const allFieldsAreValid = useMemo(() =>
         validateUserContexts(userContexts) && validateUserSchool(userToUpdate)
     , [userContexts, userToUpdate]);
 
-    const userPreferencesToUpdate = useMemo(() => ({
-        BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
-    }), [booleanNotation, displaySettings]);
-
-    const logReviewTeacherConnections = useCallback(() => {
+    const logReviewTeacherConnections = () =>
         dispatch(logAction({
             type: "REVIEW_TEACHER_CONNECTIONS"
         }));
-    }, []);
+
+    const modalText = useMemo(() => buildModalText(
+        function buildConnectionsLink(text: string) {
+            return <a target={"_blank"} onClick={logReviewTeacherConnections} rel={"noopener"}
+                      href={"/account#teacherconnections"}>
+                {text}
+                <span className={"sr-only"}> (opens in new tab) </span>
+            </a>;
+        },
+        function buildPrivacyPolicyLink(text: string) {
+            return <a target={"_blank"} rel={"noopener"} href={"/privacy"}>
+                {text}
+                <span className={"sr-only"}> (opens in new tab) </span>
+            </a>;
+        })[isTeacher(user) ? "teacher" : "student"]
+    , [user]);
 
     // Form submission
     const formSubmission = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmissionAttempted(true);
         if (user && isLoggedIn(user) && allFieldsAreValid) {
+            const userPreferencesToUpdate = {
+                BOOLEAN_NOTATION: booleanNotation,
+                DISPLAY_SETTING: displaySettings
+            };
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
             dispatch(closeActiveModal());
         }
-    }, [userToUpdate, userContexts, userPreferencesToUpdate, user]);
+    }, [dispatch, setSubmissionAttempted, userToUpdate, allFieldsAreValid, userContexts, booleanNotation, displaySettings, user]);
 
     return <Form onSubmit={formSubmission} className={"mb-2"}>
-        <p>
-            So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review your
-            stage{isCS && ", exam board"} and school account details at the beginning of each academic year.
-        </p>
-        <p>
-            You might also want to <a target={"_blank"} onClick={logReviewTeacherConnections} rel="noopener" href={"/account#teacherconnections"}>review who has access to your data <span className={"sr-only"}>(opens in new tab)</span></a> if you've changed school or teachers.
-        </p>
+        <p>{modalText.intro}</p>
+        <p>{modalText.connections}</p>
         <div className="text-right text-muted required-before">
             Required
         </div>
@@ -81,10 +101,7 @@ const UserContextReconfimationModalBody = () => {
                 />
             </Col>
         </Row>
-        <div className="text-muted small pb-2">
-            Updating this information helps us continue to show you relevant content throughout your educational journey.
-            Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
-        </div>
+        <div className="text-muted small pb-2">{modalText.privacyPolicy}</div>
 
         {submissionAttempted && !allFieldsAreValid && <div>
             <h4 role="alert" className="text-danger text-center mb-4">
