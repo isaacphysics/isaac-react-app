@@ -103,6 +103,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
+                setScheduledStartDate(undefined);
                 setAssignmentNotes('');
             }
         });
@@ -114,9 +115,10 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     return <Container className="py-2">
         <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
             <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
+                    value={selectedGroups}
                     closeMenuOnSelect={!isStaff(user)}
                     onChange={selectOnChange(setSelectedGroups, false)}
-                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id, g.groupName))}
+                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
         <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
