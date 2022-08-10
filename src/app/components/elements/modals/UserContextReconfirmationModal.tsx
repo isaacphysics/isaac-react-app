@@ -7,10 +7,9 @@ import {isDefined} from "../../../services/miscUtils";
 import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
-import {AppState} from "../../../state/reducers";
 import {isLoggedIn, isTeacher} from "../../../services/user";
 import {closeActiveModal, logAction, updateCurrentUser} from "../../../state/actions";
-import {isCS, SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
