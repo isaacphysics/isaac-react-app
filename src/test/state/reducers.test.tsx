@@ -1,7 +1,3 @@
-import {Action, AppGameBoard, AppGroup, AppGroupMembership, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
-import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
-import {ACTION_TYPE} from "../../app/services/constants";
-import {mapValues, union} from "lodash";
 import {
     AppState,
     BoardsState,
@@ -9,15 +5,17 @@ import {
     gameboardsSlice,
     groups,
     questions,
-    rootReducer,
-    search,
-    selectors,
+    rootReducer, search,
     toasts,
     user
 } from "../../app/state";
-import {UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
-import {AnyAction} from "redux";
+import {union} from "lodash"
+import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
+import {ACTION_TYPE} from "../../app/services/constants";
+import {Action, AppGroup, AppGroupMembership, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
+import {GameboardDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 import {createMockAPIAction} from "./utils";
+import {AnyAction} from "redux";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
@@ -411,7 +409,7 @@ describe("boards reducer", () => {
     // @ts-ignore It's not a complete state
     const selector = mapValues(selectors.boards, f => (boardsState: BoardsState) => f({boards: boardsState}));
 
-    const testBoards: AppGameBoard[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
+    const testBoards: GameboardDTO[] = [{id: "abc", title: "ABC Board"}, {id: "def", title: "DEF Board"}];
 
     const simpleState: BoardsState = {totalResults: 42, boards: testBoards};
 
@@ -425,7 +423,7 @@ describe("boards reducer", () => {
     });
 
     it ("can add to the set of boards", () => {
-        const newBoards: AppGameBoard[] = [{id: "ghi", title: "Ghi Board"}, {id: "jkl", title: "JKL Board"}];
+        const newBoards: GameboardDTO[] = [{id: "ghi", title: "Ghi Board"}, {id: "jkl", title: "JKL Board"}];
         const action: AnyAction = createMockAPIAction("getGameboards", "query", "fulfilled", {boards: newBoards, totalResults: 40}, {startIndex: 2});
         const withDupes = {totalResults: 38, boards: [...testBoards, newBoards[1]]};
         const previousStates = [null, simpleState, withDupes];

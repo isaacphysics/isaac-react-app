@@ -17,8 +17,8 @@ import {
     Spinner,
     Table
 } from 'reactstrap';
-import {AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {BoardOrder, Boards} from "../../../IsaacAppTypes";
+import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     difficultiesOrdered,
@@ -54,9 +54,9 @@ interface MyBoardsPageProps {
 }
 
 type BoardTableProps = MyBoardsPageProps & {
-    board: AppGameBoard;
+    board: GameboardDTO;
     setSelectedBoards: (e: any) => void;
-    selectedBoards: AppGameBoard[];
+    selectedBoards: GameboardDTO[];
     boardView: BoardViews;
 }
 
@@ -68,7 +68,7 @@ const Board = (props: BoardTableProps) => {
 
     const dispatch = useAppDispatch();
 
-    const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
+    const updateBoardSelection = (board: GameboardDTO, checked: boolean) => {
         if (checked) {
             setSelectedBoards([...selectedBoards, board]);
         } else {
@@ -167,7 +167,7 @@ export const MyGameboards = () => {
     // We know the user is logged in to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
-    const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
+    const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardCompletion, setBoardCompletion] = useState<BoardCompletions>(BoardCompletions.any);
     const [completed, setCompleted] = useState(0);

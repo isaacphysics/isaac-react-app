@@ -599,14 +599,12 @@ export enum BoardOrder {
 
 export type NumberOfBoards = number | "ALL";
 
-export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
-
 export interface Boards {
     boards: GameboardDTO[];
     totalResults: number;
 }
 
-export type BoardAssignee = {groupId: number, groupName?: string};
+export type BoardAssignee = {groupId: number, groupName?: string; startDate?: Date | number};
 
 export interface BoardAssignees {
     boardAssignees?: {[key: string]: BoardAssignee[]};

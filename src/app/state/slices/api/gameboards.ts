@@ -11,7 +11,7 @@ import {
     showAxiosErrorToastIfNeeded,
     showErrorToast,
     showRTKQueryErrorToastIfNeeded,
-    showSuccessToast
+    showSuccessToast, showToast
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {history} from "../../../services/history";
@@ -20,12 +20,13 @@ export interface AssignmentSpec {
     boardId: string;
     groups: Item<number>[];
     dueDate?: Date;
+    scheduledStartDate?: Date;
     notes?: string;
 }
 
 export const assignGameboard = createAsyncThunk(
     "gameboards/assignBoard",
-    async ({boardId, groups, dueDate, notes}: AssignmentSpec, {dispatch, rejectWithValue}) => {
+    async ({boardId, groups, dueDate, scheduledStartDate, notes}: AssignmentSpec, {dispatch, rejectWithValue}) => {
         const appDispatch = dispatch as AppDispatch;
         if (groups.length === 0) {
             appDispatch(showErrorToast(
@@ -35,22 +36,35 @@ export const assignGameboard = createAsyncThunk(
             return rejectWithValue(null);
         }
 
-        let dueDateUTC: any = undefined;
-        if (dueDate != undefined) {
-            dueDateUTC = Date.UTC(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
-            const today = new Date();
-            today.setUTCHours(0, 0, 0, 0);
-            if ((dueDateUTC - today.valueOf()) < 0) {
-                appDispatch(showErrorToast(
-                    `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`,
-                    "Error: Due date cannot be in the past."
-                ));
-                return rejectWithValue(null);
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
+
+        // TODO think about whether this can be done in the back-end too?
+        if (dueDate !== undefined) {
+            dueDate?.setUTCHours(0, 0, 0, 0);
+            if ((dueDate.valueOf() - today.valueOf()) < 0) {
+                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}) );
+                return false;
+            }
+        }
+
+        if (scheduledStartDate !== undefined) {
+            scheduledStartDate?.setUTCHours(0, 0, 0, 0);
+            if ((scheduledStartDate.valueOf() - today.valueOf()) < 0) {
+                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
+                return false;
+            }
+        }
+
+        if (dueDate !== undefined && scheduledStartDate !== undefined) {
+            if ((dueDate.valueOf() - scheduledStartDate.valueOf()) <= 0) {
+                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be strictly after scheduled start date.", timeout: 5000}));
+                return false;
             }
         }
 
         const groupIds = groups.map(getValue);
-        const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: boardId, groupId: id, dueDate: dueDateUTC, notes}));
+        const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: boardId, groupId: id, dueDate, scheduledStartDate, notes}));
 
         const response = await dispatch(isaacApi.endpoints.assignGameboard.initiate(assignments));
         if (mutationSucceeded(response)) {
@@ -62,7 +76,8 @@ export const assignGameboard = createAsyncThunk(
                 groupName: groupLookUp.get(a.groupId),
                 assignmentId: a.assignmentId as number,
                 creationDate: new Date(),
-                dueDate: dueDateUTC,
+                dueDate,
+                scheduledStartDate,
                 notes
             }));
             const successfulIds = newAssignments.map(a => a.groupId);
