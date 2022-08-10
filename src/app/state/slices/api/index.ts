@@ -301,7 +301,7 @@ const isaacApi = createApi({
                         "getMySetAssignments",
                         undefined,
                         (assignments) => {
-                            return (assignments ?? []).filter(a => (a.groupId !== groupId) && (a.gameboardId !== boardId));
+                            return (assignments ?? []).filter(a => (a.groupId !== groupId) || (a.gameboardId !== boardId));
                         }
                     ));
                     dispatch(isaacApi.util.updateQueryData(

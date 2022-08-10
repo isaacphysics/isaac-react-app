@@ -168,8 +168,8 @@ const Board = (props: BoardProps) => {
 
     const [ unassignBoard ] = isaacApi.endpoints.unassignGameboard.useMutation();
 
-    const assignmentLink = useMemo(() => `/assignment/${board.id}`, [board]);
-    const hasAssignedGroups = useMemo(() => assignees && assignees.length > 0, [assignees]);
+    const assignmentLink = `/assignment/${board.id}`;
+    const hasAssignedGroups = assignees && assignees.length > 0;
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
@@ -196,7 +196,7 @@ const Board = (props: BoardProps) => {
     const [modal, setModal] = useState(board.id === hashAnchor);
     const toggleAssignModal = useCallback(() => setModal(s => !s), [setModal]);
 
-    const hexagonId = useMemo(() => `board-hex-${board.id}`, [board]);
+    const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = useMemo(() => determineGameboardSubjects(board), [board]);
     const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
@@ -307,7 +307,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         assignmentsSetByMe?.reduce((acc, assignment) => {
             if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
             const newAssignee = {groupId: assignment.groupId, groupName: assignment.groupName};
-            if (acc[assignment.gameboardId] == undefined) {
+            if (!(assignment.gameboardId in acc)) {
                 return {...acc, [assignment.gameboardId]: [newAssignee]};
             }
             return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};

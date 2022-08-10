@@ -26,16 +26,19 @@ export const isValidGameboardId = (gameboardId?: string) => {
     return !gameboardId || /^[a-z0-9_-]+$/.test(gameboardId);
 };
 
-export const isDobOverThirteen = (dateOfBirth?: Date) => {
+const isDobOverN = (n: number, dateOfBirth?: Date) => {
     if (dateOfBirth) {
         const today = new Date();
-        const thirteenYearsAgo = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+        const nYearsAgo = new Date(today.getFullYear() - n, today.getMonth(), today.getDate());
         const hundredAndTwentyYearsAgo = new Date(today.getFullYear() - 120, today.getMonth(), today.getDate());
-        return hundredAndTwentyYearsAgo <= dateOfBirth && dateOfBirth <= thirteenYearsAgo;
+        return hundredAndTwentyYearsAgo <= dateOfBirth && dateOfBirth <= nYearsAgo;
     } else {
         return false;
     }
 };
+
+export const isDobOverThirteen = (dateOfBirth?: Date) => isDobOverN(13, dateOfBirth);
+export const isDobOverTen = (dateOfBirth?: Date) => isDobOverN(10, dateOfBirth);
 
 export const MINIMUM_PASSWORD_LENGTH = 6;
 export const validatePassword = (password: string) => {

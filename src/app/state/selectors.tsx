@@ -3,9 +3,7 @@ import {NOT_FOUND} from "../services/constants";
 import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {KEY, load} from "../services/localStorage";
 import {isDefined} from "../services/miscUtils";
-import {
-    QuizAssignmentDTO
-} from "../../IsaacApiTypes";
+import {QuizAssignmentDTO} from "../../IsaacApiTypes";
 
 export const selectors = {
     groups: {

@@ -117,3 +117,6 @@ div.maths {
 div.chemistry {
   @include apply-subject-classes($phy_chemistry);
 }
+div.biology {
+  @include apply-subject-classes($phy_biology);
+}

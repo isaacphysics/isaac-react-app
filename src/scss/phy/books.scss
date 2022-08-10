@@ -44,6 +44,17 @@
         background-color: $phy_maths;
       }
     }
+    .biology & {
+      color: $phy_biology;
+      &:hover {
+        color: #fff;
+        background-color: $phy_biology;
+      }
+      &:focus {
+        color: #fff;
+        background-color: $phy_biology;
+      }
+    }
   }
 }
 
@@ -58,6 +69,9 @@ svg.book-page-icon {
     }
     .maths & {
       fill: $phy_maths;
+    }
+    .biology & {
+      fill: $phy_biology;
     }
   }
 }
