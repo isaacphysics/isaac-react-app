@@ -1,3 +1,10 @@
+import {union, mapValues} from "lodash"
+import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
+import {ACTION_TYPE} from "../../app/services/constants";
+import {Action, AppGroup, AppGroupMembership, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
+import {GameboardDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
+import {createMockAPIAction} from "./utils";
+import {AnyAction} from "redux";
 import {
     AppState,
     BoardsState,
@@ -9,13 +16,6 @@ import {
     toasts,
     user
 } from "../../app/state";
-import {union} from "lodash"
-import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
-import {ACTION_TYPE} from "../../app/services/constants";
-import {Action, AppGroup, AppGroupMembership, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
-import {GameboardDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
-import {createMockAPIAction} from "./utils";
-import {AnyAction} from "redux";
 
 const ignoredTestAction: Action = {type: ACTION_TYPE.TEST_ACTION};
 
