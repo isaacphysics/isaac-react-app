@@ -1,0 +1,26 @@
+.bg-timeline {
+  position: absolute;
+  top: 0;
+  left: 18px;
+  height: 100%;
+  z-index: 1;
+  width: 4px;
+  border-left: solid $secondary 4px;
+  opacity: 0.5;
+}
+
+.timeline {
+  z-index: 0;
+  background-color: transparent;
+  position: relative;
+  .year-label, .month-label, .hexagon-date {
+    position: relative;
+    background-color: transparent;
+    z-index: 4;
+  }
+  .date-assignment-list {
+    position: relative;
+    z-index: 4;
+    background: white;
+  }
+}

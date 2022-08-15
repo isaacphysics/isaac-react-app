@@ -1095,3 +1095,6 @@ export const GRAY_120 = '#c9cad1';
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 
 export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
+
+export const MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December" ];
