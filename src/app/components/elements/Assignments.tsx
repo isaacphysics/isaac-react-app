@@ -20,6 +20,12 @@ interface AssignmentsProps {
     showOld?: (event: MouseEvent) => void;
 }
 
+const midnightOf = (date: Date | number) => {
+    let d = new Date(date);
+    d.setHours(11, 59, 59, 999);
+    return d;
+};
+
 export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
     const now = new Date();
 
@@ -86,7 +92,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             View Assignment
                         </Link>
-                        {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > assignment.dueDate && assignment.gameboard.percentageCompleted !== 100 &&
+                        {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100 &&
                         <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
                     </Col>
                 </Row>
