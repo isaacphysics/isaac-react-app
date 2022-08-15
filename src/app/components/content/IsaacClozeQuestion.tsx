@@ -27,7 +27,7 @@ const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (ItemDTO | undefine
 
 const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
 const NULL_CLOZE_ITEM: ItemDTO = {
-    type: "itemChoice",
+    type: "item",
     id: NULL_CLOZE_ITEM_ID
 };
 const replaceNullItems = (items: ItemDTO[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
