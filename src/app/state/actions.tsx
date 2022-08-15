@@ -815,17 +815,6 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
     }
 };
 
-// Page fragments
-export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, id});
-    try {
-        const response = await api.fragments.get(id);
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, id, doc: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, id});
-    }
-};
-
 // Glossary Terms
 export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
@@ -1699,18 +1688,6 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
     } catch (e) {
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Unable to display events", e));
-    }
-};
-
-export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.NEWS_REQUEST});
-        const response = await api.news.get(subject);
-        const newsList = response.data.results;
-        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS, theNews: newsList})
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Unable to display news", e));
     }
 };
 

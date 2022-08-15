@@ -1,4 +1,4 @@
-import {ACTION_TYPE, API_PATH} from "../../../services/constants";
+import {ACTION_TYPE, API_PATH, FEATURED_NEWS_TAG, NOT_FOUND} from "../../../services/constants";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {
     FetchArgs,
@@ -6,9 +6,10 @@ import {
     FetchBaseQueryError
 } from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
-import {TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
+import {IsaacConceptPageDTO, IsaacPodDTO, TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
 import {showAxiosErrorToastIfNeeded, showSuccessToast} from "../../actions";
 import {Dispatch} from "redux";
+import {SerializedError} from "@reduxjs/toolkit";
 
 // This is used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -39,6 +40,10 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
         }
     }
     return result;
+}
+
+export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | SerializedError | undefined) => {
+    return error && 'status' in error && error.status === NOT_FOUND ? NOT_FOUND : result;
 }
 
 interface QueryToastSpec {
@@ -100,6 +105,34 @@ const isaacApi = createApi({
                errorMessage: "Failed to get 2FA secret"
            })
        }),
+
+       getNewsPodList: build.query<IsaacPodDTO[], {subject: string; orderDecending?: boolean}>({
+           query: ({subject}) => ({
+               url: `/pages/pods/${subject}`
+           }),
+           transformResponse: (response: {results: IsaacPodDTO[]; totalResults: number}, meta, arg) => {
+               // Sort news pods in order of id (asc or desc depending on orderDecending), with ones tagged "featured"
+               // placed first
+               return response.results.sort((a, b) => {
+                   const aIsFeatured = a.tags?.includes(FEATURED_NEWS_TAG);
+                   const bIsFeatured = b.tags?.includes(FEATURED_NEWS_TAG);
+                   if (aIsFeatured && !bIsFeatured) return -1;
+                   if (!aIsFeatured && bIsFeatured) return 1;
+                   return a.id && b.id
+                       ? a.id.localeCompare(b.id) * (arg.orderDecending ? -1 : 1)
+                       : 0;
+               });
+           },
+           onQueryStarted: displayToastsOnQueryLifecycleEvents({
+               errorMessage: "Unable to display news"
+           })
+       }),
+
+       getPageFragment: build.query<IsaacConceptPageDTO, string>({
+           query: (fragmentId) => ({
+               url: `/pages/fragments/${fragmentId}`
+           })
+       })
    })
 });
 
