@@ -330,9 +330,6 @@ export const api = {
         }
     },
     groups: {
-        get: (archivedGroupsOnly: boolean): AxiosPromise<ApiTypes.UserGroupDTO[]> => {
-            return endpoint.get(`/groups?archived_groups_only=${archivedGroupsOnly}`);
-        },
         create: (groupName: string): AxiosPromise<ApiTypes.UserGroupDTO> => {
             return endpoint.post(`/groups`, {groupName});
         },

@@ -5,8 +5,7 @@ import {
     closeActiveModal,
     getEventBookingsForAllGroups,
     getEventBookingsForGroup,
-    getGroupMembers,
-    loadGroups,
+    getGroupMembers, isaacApi,
     reserveUsersOnEvent,
     selectGroup,
     selectors,
@@ -27,6 +26,7 @@ import classNames from "classnames";
 const ReservationsModal = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
+    isaacApi.endpoints.getGroups.useQuery(false);
     const activeGroups = useAppSelector(selectors.groups.active);
     const activeFilteredGroups = useMemo(() => activeGroups?.filter(group => !group.archived), [activeGroups])?.sort((a: AppGroup, b: AppGroup): number => {
         if (!a.groupName || !b.groupName || (a.groupName === b.groupName)) return 0;
@@ -52,10 +52,6 @@ const ReservationsModal = () => {
     }, [unbookedUsers]);
 
     const [modifiedBookingsForAllGroups, setModifiedBookingsForAllGroups] = useState(eventBookingsForAllGroups);
-
-    useEffect(() => {
-        dispatch(loadGroups(false));
-    }, [dispatch]);
 
     useEffect(() => {
         if (selectedEvent && selectedEvent.id) {

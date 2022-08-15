@@ -1,5 +1,5 @@
-import React, {ComponentProps, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import {isaacApi, loadGroups, selectors, useAppDispatch, useAppSelector, useGroupAssignments} from "../../state";
+import React, {ComponentProps, useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
+import {isaacApi, selectors, useAppSelector, useGroupAssignments} from "../../state";
 import {
     Button,
     Col,
@@ -333,12 +333,8 @@ const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 };
 
 export const GroupProgress = () => {
-    const dispatch = useAppDispatch();
-
+    isaacApi.endpoints.getGroups.useQuery(false);
     const groups = useAppSelector(selectors.groups.active);
-    useEffect(() => {
-        dispatch(loadGroups(false));
-    }, [dispatch]);
 
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 

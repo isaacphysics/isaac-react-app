@@ -30,7 +30,6 @@ import {
     deleteGroup,
     deleteMember,
     getGroupInfo,
-    loadGroups,
     resetMemberPassword,
     selectGroup,
     showAdditionalManagerSelfRemovalModal,
@@ -39,7 +38,7 @@ import {
     showGroupManagersModal,
     updateGroup,
     selectors,
-    AppState
+    AppState, isaacApi
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
@@ -56,13 +55,12 @@ const stateFromProps = (state: AppState) => (state && {
     user: state.user as RegisteredUserDTO
 });
 
-const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal, showAdditionalManagerSelfRemovalModal};
+const dispatchFromProps = {selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal, showAdditionalManagerSelfRemovalModal};
 
 interface GroupsPageProps {
     groups: {active: AppGroup[] | null; archived: AppGroup[] | null};
     group: AppGroup | null;
     user: RegisteredUserDTO;
-    loadGroups: (getArchived: boolean) => void;
     selectGroup: (group: UserGroupDTO | null) => void;
     createGroup: (groupName: string) => Promise<AppGroup>;
     deleteGroup: (group: AppGroup) => void;
@@ -337,9 +335,10 @@ const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorPro
 };
 
 const GroupsPageComponent = (props: GroupsPageProps) => {
-    const {group, groups, user, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal, showAdditionalManagerSelfRemovalModal} = props;
+    const {group, groups, user, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal, showAdditionalManagerSelfRemovalModal} = props;
 
     const [showArchived, setShowArchived] = useState(false);
+    isaacApi.endpoints.getGroups.useQuery(showArchived);
 
     const tabs = [
         {
@@ -396,9 +395,8 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
         }
     };
 
+    // Clear the selected group when switching between tabs
     useEffect(() => {
-        loadGroups(showArchived);
-        // Clear the selected group when switching between tabs
         selectGroup(null);
     }, [showArchived]);
 

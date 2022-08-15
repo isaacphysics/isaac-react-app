@@ -7,6 +7,7 @@ import {
 import {Action, AppGroup, AppGroupMembership, GroupMembershipDetailDTO} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {mapValues, union, without} from "lodash";
+import {isaacApi} from "../slices/api";
 
 export type ActiveAuthorisationsState = UserSummaryWithEmailAddressDTO[] | null;
 export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsState = null, action: Action) => {
@@ -156,15 +157,15 @@ function update(groups: GroupsState, what: AppGroup) {
 export type GroupsState = {active?: number[]; archived?: number[]; cache?: {[groupId: number]: AppGroup}; selectedGroupId?: number} | null;
 
 export const groups = (groups: GroupsState = null, action: Action): GroupsState => {
-    switch (action.type) {
-        case ACTION_TYPE.GROUPS_RESPONSE_SUCCESS: {
-            groups = updateGroupsCache(groups, action.groups);
-            if (action.archivedGroupsOnly) {
-                return {...groups, archived: action.groups.map(g => g.id as number)};
-            } else {
-                return {...groups, active: action.groups.map(g => g.id as number)};
-            }
+    if (isaacApi.endpoints.getGroups.matchFulfilled(action)) {
+        groups = updateGroupsCache(groups, action.payload);
+        if (action.meta.arg.originalArgs) {
+            return {...groups, archived: action.payload.map(g => g.id as number)};
+        } else {
+            return {...groups, active: action.payload.map(g => g.id as number)};
         }
+    }
+    switch (action.type) {
         case ACTION_TYPE.GROUPS_SELECT:
             return {...groups, selectedGroupId: action.group && action.group.id || undefined};
         case ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS:

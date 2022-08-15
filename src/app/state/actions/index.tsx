@@ -67,7 +67,19 @@ import {atLeastOne} from "../../services/validation";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
 import {isDefined} from "../../services/miscUtils";
-import {AppState, store, selectors, errorSlice, routerPageChange, closeActiveModal, openActiveModal, showToast, logAction} from "../index";
+import {
+    AppState,
+    store,
+    selectors,
+    errorSlice,
+    routerPageChange,
+    closeActiveModal,
+    openActiveModal,
+    showToast,
+    logAction,
+    isaacApi, AppDispatch
+} from "../index";
+import {AnyAction} from "redux";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -1143,16 +1155,6 @@ export const mergeUsers = (targetId: number, sourceId: number) => async (dispatc
 };
 
 // Groups
-export const loadGroups = (archivedGroupsOnly: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_REQUEST});
-    try {
-        const groups = await api.groups.get(archivedGroupsOnly);
-        dispatch({type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: groups.data, archivedGroupsOnly});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading groups failed", e));
-    }
-};
-
 export const selectGroup = (group: UserGroupDTO | null) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_SELECT, group});
 };
@@ -1254,13 +1256,13 @@ export const addGroupManager = (group: AppGroup, managerEmail: string) => async 
     }
 };
 
-export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmailAddressDTO, showArchived?: boolean) => async (dispatch: Dispatch<Action>) => {
+export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmailAddressDTO, showArchived?: boolean) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST, group, manager});
     try {
         await api.groups.deleteManager(group, manager);
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
         if (isDefined(showArchived)) {
-            dispatch(loadGroups(showArchived) as any);
+            dispatch(isaacApi.endpoints.getGroups.initiate(showArchived));
         }
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});

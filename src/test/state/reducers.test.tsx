@@ -240,7 +240,7 @@ describe("groups reducer", () => {
 
     it("can get new active groups", () => {
         const testGroups = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
-        const action: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(testGroups), archivedGroupsOnly: false};
+        const action: AnyAction = createMockAPIAction("getGroups", "query", "fulfilled", Object.values(testGroups), false);
         const previousStates = [{}, null, {active: undefined, cache: testGroups}, {active: [3, 4], cache: testGroups}];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
@@ -249,7 +249,8 @@ describe("groups reducer", () => {
     });
     it("can get new archived groups", () => {
         const testGroups = {10: userGroupDTOs.archivedX};
-        const action: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(testGroups), archivedGroupsOnly: true};
+
+        const action: AnyAction = createMockAPIAction("getGroups", "query", "fulfilled", Object.values(testGroups), true);
         const previousStates = [{}, null, {active: undefined, cache: {}}, {active: [3, 4], cache: testGroups}, {active: undefined, archived: [3, 4], cache: testGroups}, {archived: [1], active: [3, 4], cache: {}}];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);
@@ -259,7 +260,7 @@ describe("groups reducer", () => {
     it("can merge new archived groups", () => {
         const cache = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
         const testGroups = {10: userGroupDTOs.archivedX};
-        const action: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(testGroups), archivedGroupsOnly: true};
+        const action: AnyAction = createMockAPIAction("getGroups", "query", "fulfilled", Object.values(testGroups), true);
         const previousStates = [{active: undefined, cache: cache}, {active: [3, 4], cache: cache}, {active: undefined, archived: [3, 4], cache: cache}, {archived: [1], active: [3, 4], cache: cache}];
         previousStates.map((previousState) => {
             const actualNextState = groups(previousState, action);

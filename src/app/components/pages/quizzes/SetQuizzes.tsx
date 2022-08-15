@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
-    loadGroups,
+    isaacApi,
     loadQuizAssignments,
     loadQuizzes,
     markQuizAsCancelled,
@@ -102,7 +102,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }, [hashAnchor]);
 
     useEffect(() => {
-        dispatch(loadGroups(false));
         dispatch(loadQuizzes(startIndex));
         dispatch(loadQuizAssignments());
     }, [dispatch, startIndex]);

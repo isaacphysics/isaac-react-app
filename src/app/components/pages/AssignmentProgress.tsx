@@ -2,7 +2,6 @@ import React, {ComponentProps, useContext, useEffect, useLayoutEffect, useMemo, 
 import {
     getRTKQueryErrorMessage,
     isaacApi,
-    loadGroups,
     loadQuizAssignmentFeedback,
     loadQuizAssignments,
     openActiveModal,
@@ -556,6 +555,7 @@ const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 export function AssignmentProgress() {
     const dispatch = useAppDispatch();
 
+    isaacApi.endpoints.getGroups.useQuery(false);
     const groups = useAppSelector(selectors.groups.active);
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 
@@ -574,7 +574,6 @@ export function AssignmentProgress() {
     }
 
     useEffect(() => {
-        dispatch(loadGroups(false));
         dispatch(loadQuizAssignments());
     }, [dispatch]);
 
