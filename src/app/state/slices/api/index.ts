@@ -1,4 +1,4 @@
-import {ACTION_TYPE, API_PATH, FEATURED_NEWS_TAG} from "../../../services/constants";
+import {ACTION_TYPE, API_PATH, FEATURED_NEWS_TAG, NOT_FOUND} from "../../../services/constants";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {
     FetchArgs,
@@ -9,6 +9,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IsaacConceptPageDTO, IsaacPodDTO, TOTPSharedSecretDTO} from "../../../../IsaacApiTypes";
 import {showAxiosErrorToastIfNeeded, showSuccessToast} from "../../actions";
 import {Dispatch} from "redux";
+import {SerializedError} from "@reduxjs/toolkit";
 
 // This is used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -39,6 +40,10 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
         }
     }
     return result;
+}
+
+export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | SerializedError | undefined) => {
+    return error && 'status' in error && error.status === NOT_FOUND ? NOT_FOUND : result;
 }
 
 interface QueryToastSpec {
