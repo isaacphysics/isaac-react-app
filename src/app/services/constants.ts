@@ -626,7 +626,7 @@ export const STAGES_PHY = new Set([STAGE.ALL, STAGE.YEAR_7_AND_8, STAGE.YEAR_9, 
 export const STAGES_CS = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL]);
 export const stagesOrdered: Stage[] = ["year_7_and_8", "year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
 export const stageLabelMap: {[stage in Stage]: string} = {
-    year_7_and_8: "Year\u00A07\u00A0or\u00A08",
+    year_7_and_8: "Year\u00A07/8",
     year_7: "Year\u00A07",
     year_8: "Year\u00A08",
     year_9: "Year\u00A09",
