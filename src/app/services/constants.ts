@@ -1047,7 +1047,6 @@ export enum EventTypeFilter {
 
 export enum EventStageFilter {
     "All stages" = "all",
-    "Year 7 or 8" = "year_7_and_8",
     "Year 9" = "year_9",
     "GCSE" = "gcse",
     "A-Level" = "a_level",
