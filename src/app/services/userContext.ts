@@ -208,6 +208,8 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
 }
 
 const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
+    {label: "Year 7/8", value: STAGE.YEAR_7_AND_8},
+    {label: "Year 9", value: STAGE.YEAR_9},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
