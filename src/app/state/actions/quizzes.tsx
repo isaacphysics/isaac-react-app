@@ -37,7 +37,7 @@ export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, due
         closeAction: () => {
             dispatch(closeActiveModal())
         },
-        title: "Setting quiz " + (quiz.title ?? quiz.id),
+        title: `Setting test '${quiz.title ?? quiz.id}'`,
         body: <WithLoadedSelector
             selector={selectors.groups.active}
             loadingThunk={() => dispatch(loadGroups(false))}
