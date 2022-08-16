@@ -117,7 +117,7 @@ export function UserContextAccountInput({
             // Physics
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
-                <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
+                <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
                     {"You will be able to change this preference on relevant pages."}<br />
                     {'If you prefer to see all content by default, select "All stages".'}
@@ -126,7 +126,7 @@ export function UserContextAccountInput({
             // Computer science
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
-                <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
+                <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {teacher ?
                         <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
                         <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
