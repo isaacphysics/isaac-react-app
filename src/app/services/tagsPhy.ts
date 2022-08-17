@@ -13,6 +13,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physics, title: "Physics"},
         {id: TAG_ID.maths, title: "Maths"},
         {id: TAG_ID.chemistry, title: "Chemistry"},
+        {id: TAG_ID.biology, title: "Biology", hidden: true},
 
         // --- Fields ---
 
@@ -156,7 +157,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
             return this.getById(globalSubjectTagId as TAG_ID);
         }
 
-        const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray);
+        const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray, true);
         for (const i in subjectTags) {
             if (subjectTags[i].id == globalSubjectTagId) {
                 return subjectTags[i];
