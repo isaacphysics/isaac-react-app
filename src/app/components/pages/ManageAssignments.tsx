@@ -58,7 +58,7 @@ const AssignmentListEntry = ({assignment, group}: AssignmentListEntryProps) => {
             <h4>{assignment.gameboard?.title ?? "No gameboard title"}</h4>
             <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
-                    Edit
+                    Copy
                 </Button>
                 <Button color="link" size="sm" onClick={deleteAssignment}>
                     Delete
@@ -89,8 +89,6 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
     return <>
         <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyPress={(e) => {
             if (e.key === "Enter") {
-                e.preventDefault();
-                e.stopPropagation();
                 setOpen(o => !o);
                 setCollapsed(false);
             }
@@ -133,8 +131,6 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
         <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
              className={"month-label w-100 text-right d-flex"} onKeyPress={(e) => {
             if (e.key === "Enter") {
-                e.preventDefault();
-                e.stopPropagation();
                 setOpen(o => !o);
                 setCollapsed(false);
             }
@@ -177,9 +173,9 @@ interface AssignmentModalProps {
     refetchAssignmentsSetByMe: () => void;
     showAssignmentModal: boolean;
     toggleAssignModal: () => void;
-    assignmentToModify: ValidAssignmentWithListingDate | undefined;
+    assignmentToCopy: ValidAssignmentWithListingDate | undefined;
 }
-const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, toggleAssignModal, assignmentToModify}: AssignmentModalProps) => {
+const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, toggleAssignModal, assignmentToCopy}: AssignmentModalProps) => {
     const dispatch = useAppDispatch();
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
@@ -190,13 +186,19 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     const toggleGameboardPreview = () => setShowGameboardPreview(o => !o);
 
     const [selectedGameboard, setSelectedGameboard] = useState<Item<string>[]>();
-    const isEditMode = !!assignmentToModify;
 
     const {boardsById, groups, gameboards} = useContext(ManageAssignmentContext);
 
     useEffect(() => {
-        if (!assignmentToModify) {
-            // create mode
+        if (assignmentToCopy) {
+            // copy existing assignment
+            setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: boardsById[assignmentToCopy.gameboardId]?.title ?? "No gameboard title"}]);
+            setScheduledStartDate(assignmentToCopy.scheduledStartDate);
+            setDueDate(assignmentToCopy.dueDate);
+            setAssignmentNotes(assignmentToCopy.notes);
+            setSelectedGroups([{value: assignmentToCopy.groupId, label: assignmentToCopy.groupName ?? "No group name"}])
+        } else {
+            // edit mode
             setSelectedGameboard(undefined);
             setScheduledStartDate(() => {
                 let d = new Date();
@@ -205,14 +207,8 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
             });
             setDueDate(undefined);
             setAssignmentNotes(undefined);
-        } else {
-            // edit mode
-            setSelectedGameboard([{value: assignmentToModify.gameboardId, label: boardsById[assignmentToModify.gameboardId]?.title ?? "No gameboard title"}]);
-            setScheduledStartDate(assignmentToModify.scheduledStartDate);
-            setDueDate(assignmentToModify.dueDate);
-            setAssignmentNotes(assignmentToModify.notes);
         }
-    }, [assignmentToModify]);
+    }, [assignmentToCopy]);
 
     const assign = useCallback(() => {
         if (!selectedGameboard) return;
@@ -227,13 +223,6 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     }, [selectedGameboard, dueDate, scheduledStartDate, assignmentNotes, setSelectedGroups, setDueDate,
         setScheduledStartDate, setAssignmentNotes]);
 
-    const modify = useCallback(() => {
-        if (!assignmentToModify) return;
-        if (!selectedGameboard) return;
-        dispatch(showSuccessToast("Assignment modified", "Syke! That endpoint doesn't exist yet"));
-    }, [assignmentToModify, selectedGameboard, dueDate, scheduledStartDate, assignmentNotes, setSelectedGroups,
-        setDueDate, setScheduledStartDate, setAssignmentNotes]);
-
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getUTCMonth() + 1;
 
@@ -247,20 +236,17 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
                 {"Close"}
             </button>
         }>
-            {isEditMode ? "Modify assignment" : "Create new assignment"}
+            {"Create new assignment"}
         </ModalHeader>
         <ModalBody>
-            {isEditMode
-                ? <p>Modify assignment to group {assignmentToModify?.groupName}</p>
-                : <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
-                    <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
-                            value={selectedGroups}
-                            closeMenuOnSelect={!isStaff(user)}
-                            onChange={selectOnChange(setSelectedGroups, false)}
-                            options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                    />
-                </Label>
-            }
+            <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
+                <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
+                        value={selectedGroups}
+                        closeMenuOnSelect={!isStaff(user)}
+                        onChange={selectOnChange(setSelectedGroups, false)}
+                        options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                />
+            </Label>
             <Label className="w-100 pb-2">Gameboard:
                 <Select inputId="gameboard-to-assign" isClearable placeholder="None"
                         value={selectedGameboard}
@@ -293,24 +279,14 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
                 <p className="mt-0 mb-0 text-danger"><small>You have exceeded the maximum length.</small></p>
                 }
             </Label>}
-            {!isEditMode
-                ? <Button
-                    className="mt-2 mb-2"
-                    block color={siteSpecific("secondary", "primary")}
-                    onClick={assign}
-                    disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard)}
-                >
-                    Assign to group{selectedGroups.length > 1 ? "s" : ""}
-                </Button>
-                : <Button
-                    className="mt-2 mb-2"
-                    block color={siteSpecific("secondary", "primary")}
-                    onClick={modify}
-                    disabled={(isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard)}
-                >
-                    Modify assignment{assignmentToModify.groupName ? ` to group ${assignmentToModify.groupName}` : ""}
-                </Button>
-            }
+            <Button
+                className="mt-2 mb-2"
+                block color={siteSpecific("secondary", "primary")}
+                onClick={assign}
+                disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard)}
+            >
+                Assign to group{selectedGroups.length > 1 ? "s" : ""}
+            </Button>
         </ModalBody>
         <ModalFooter>
             <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
@@ -381,12 +357,12 @@ export const ManageAssignments = () => {
         )).map(parseNumericKey);
     }, [assignmentsSetByMe, groupFilter, earliestShowDate]);
 
-    const [assignmentToModify, setAssignmentToModify] = useState<ValidAssignmentWithListingDate | undefined>();
+    const [assignmentToCopy, setAssignmentToCopy] = useState<ValidAssignmentWithListingDate | undefined>();
     const [showAssignmentModal, setShowAssignmentModal] = useState<boolean>(false);
     const openAssignmentModal = useCallback((assignment?: ValidAssignmentWithListingDate) => {
-        setAssignmentToModify(assignment);
+        setAssignmentToCopy(assignment);
         setShowAssignmentModal(true);
-    }, [setAssignmentToModify, setShowAssignmentModal]);
+    }, [setAssignmentToCopy, setShowAssignmentModal]);
     const toggleAssignModal = () => setShowAssignmentModal(o => !o);
 
     const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -483,7 +459,7 @@ export const ManageAssignments = () => {
             </div>
             <AssignmentModal user={user} refetchAssignmentsSetByMe={refetchAssignmentsSetByMe}
                              showAssignmentModal={showAssignmentModal} toggleAssignModal={toggleAssignModal}
-                             assignmentToModify={assignmentToModify}/>
+                             assignmentToCopy={assignmentToCopy}/>
         </ManageAssignmentContext.Provider>
     </Container>;
 }
