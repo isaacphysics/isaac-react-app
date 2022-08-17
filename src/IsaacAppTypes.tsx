@@ -656,12 +656,13 @@ export const ManageAssignmentContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO};
     groupsById: {[id: number]: UserGroupDTO};
     groupFilter: {[id: number]: boolean};
+    boardIdsByGroupId: {[id: number]: string[]};
     groups: UserGroupDTO[];
     gameboards: GameboardDTO[];
     openAssignmentModal: (assignment: ValidAssignmentWithListingDate) => void;
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
-}>({boardsById: {}, groupsById: {}, groupFilter: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}});
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}});
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;

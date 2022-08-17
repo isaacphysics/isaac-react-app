@@ -1,4 +1,4 @@
-import {assignGameboard, isaacApi, selectors, showSuccessToast, useAppDispatch, useAppSelector} from "../../state";
+import {assignGameboard, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {sortBy, groupBy, mapValues, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -25,7 +25,8 @@ import {
     ModalBody,
     ModalFooter,
     Modal,
-    CardFooter
+    CardFooter,
+    Alert
 } from "reactstrap";
 import {BoardLimit, formatBoardOwner} from "../../services/gameboards";
 import {BoardOrder, ManageAssignmentContext, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
@@ -187,18 +188,18 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
 
     const [selectedGameboard, setSelectedGameboard] = useState<Item<string>[]>();
 
-    const {boardsById, groups, gameboards} = useContext(ManageAssignmentContext);
+    const {boardsById, groups, gameboards, boardIdsByGroupId} = useContext(ManageAssignmentContext);
 
     useEffect(() => {
+        setSelectedGroups([]);
         if (assignmentToCopy) {
-            // copy existing assignment
+            // Copy existing assignment
             setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: boardsById[assignmentToCopy.gameboardId]?.title ?? "No gameboard title"}]);
             setScheduledStartDate(assignmentToCopy.scheduledStartDate);
             setDueDate(assignmentToCopy.dueDate);
             setAssignmentNotes(assignmentToCopy.notes);
-            setSelectedGroups([{value: assignmentToCopy.groupId, label: assignmentToCopy.groupName ?? "No group name"}])
         } else {
-            // edit mode
+            // Create from scratch
             setSelectedGameboard(undefined);
             setScheduledStartDate(() => {
                 let d = new Date();
@@ -212,14 +213,16 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
 
     const assign = useCallback(() => {
         if (!selectedGameboard) return;
-        dispatch(assignGameboard({boardId: selectedGameboard[0]?.value, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
+        // FIXME Strange error with copying and assigning
+        dispatch(assignGameboard({boardId: selectedGameboard[0]?.value, groups: [...selectedGroups], dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
+            refetchAssignmentsSetByMe();
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
             }
-        }).then(refetchAssignmentsSetByMe);
+        });
     }, [selectedGameboard, dueDate, scheduledStartDate, assignmentNotes, setSelectedGroups, setDueDate,
         setScheduledStartDate, setAssignmentNotes]);
 
@@ -229,6 +232,11 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     useEffect(() => {
         if (showAssignmentModal) setShowGameboardPreview(false);
     }, [showAssignmentModal]);
+
+    const alreadyAssignedGroupNames = useMemo<string[]>(() => {
+        if (!selectedGameboard || selectedGameboard.length === 0 || !selectedGroups || selectedGroups.length === 0) return [];
+        return selectedGroups.filter(g => g.value && boardIdsByGroupId[g.value].includes(selectedGameboard[0]?.value)).map(g => g.label);
+    }, [selectedGroups, boardIdsByGroupId, selectedGameboard]);
 
     return <Modal isOpen={showAssignmentModal} toggle={toggleAssignModal}>
         <ModalHeader close={
@@ -253,6 +261,9 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
                         onChange={selectOnChange(setSelectedGameboard, false)}
                         options={gameboards.map(g => itemise(g.id ?? "", g.title ?? "No gameboard title"))}
                 />
+                {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
+                    This gameboard is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
+                </Alert>}
                 {selectedGameboard && selectedGameboard?.[0]?.value && boardsById[selectedGameboard[0].value] && boardsById[selectedGameboard[0].value]?.contents && <Card className={"my-1"} >
                     <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"} gameboard preview</Button></CardHeader>
                     {showGameboardPreview && <GameboardViewerInner gameboard={boardsById[selectedGameboard[0].value]}/>}
@@ -283,7 +294,7 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
                 className="mt-2 mb-2"
                 block color={siteSpecific("secondary", "primary")}
                 onClick={assign}
-                disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard)}
+                disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length}
             >
                 Assign to group{selectedGroups.length > 1 ? "s" : ""}
             </Button>
@@ -318,21 +329,30 @@ export const ManageAssignments = () => {
         return groupsToInclude.reduce((acc, n) => ({...acc, [n.value]: true}), {});
     }, [groupsToInclude, groupsById]);
 
+    // Map from group id -> ids of boards they are assigned to
+    const boardIdsByGroupId = useMemo<{[id: number]: string[]}>(() => {
+        return assignmentsSetByMe?.reduce((acc, a) => {
+            if (!a.groupId || !a.gameboardId) return acc;
+            return a.groupId in acc ? {...acc, [a.groupId]: [...acc[a.groupId], a.gameboardId]} : {...acc, [a.groupId]: [a.gameboardId]};
+        }, {} as {[id: number]: string[]}) ?? {}
+    }, [assignmentsSetByMe]);
+
+    // Logic to handle showing older assignments - we show the "load older assignments" button if we haven't shown
+    // the oldest assignment yet
     const [earliestShowDate, setEarliestShowDate] = useState<Date>(() => {
         let d = new Date();
         d.setUTCDate(d.getUTCDate() - 29) // initially show assignment up to 4 weeks old
         return d;
     });
-
     const oldestAssignmentDate = useMemo<Date>(() => new Date(
-        assignmentsSetByMe?.reduce(
-            (oldest, a) => {
+        assignmentsSetByMe?.filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId])
+            .reduce((oldest, a) => {
                 const assignmentTimestamp = a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? Date.now();
                 return assignmentTimestamp < oldest
                     ? assignmentTimestamp : oldest;
             }, Date.now()) ?? Date.now()
         )
-    , [assignmentsSetByMe]);
+    , [assignmentsSetByMe, groupFilter]);
     const extendBackSixMonths = () => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
         d.setUTCMonth(d.getUTCMonth() - 6);
@@ -390,7 +410,6 @@ export const ManageAssignments = () => {
             }
         }
     }
-
     useEffect(() => {
         if (headerScrollerSentinel.current && !headerScrollerObserver.current && !headerScrollerFlag.current) {
             const options = {
@@ -441,7 +460,7 @@ export const ManageAssignments = () => {
             <br/>
             Students in the group will be emailed when you set a new assignment.
         </span>} modalId={"manage_assignments_help"}/>
-        <ManageAssignmentContext.Provider value={{boardsById, groupsById, groupFilter, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed}}>
+        <ManageAssignmentContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed}}>
             <div className={"px-md-4 pl-2 pr-2 timeline-column mb-4"}>
                 <div className="no-print">
                     <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
