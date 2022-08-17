@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectors} from "../../../state/selectors";
 import {isLoggedIn, isTeacher} from "../../../services/user";
 import {closeActiveModal, logAction, updateCurrentUser} from "../../../state/actions";
-import {SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
+import {isCS, isPhy, SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
@@ -40,7 +40,7 @@ const UserContextReconfimationModalBody = () => {
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
     const allFieldsAreValid = useMemo(() =>
-        validateUserContexts(userContexts) && validateUserSchool(userToUpdate)
+        validateUserContexts(userContexts) && (isPhy || validateUserSchool(userToUpdate))
     , [userContexts, userToUpdate]);
 
     const logReviewTeacherConnections = () =>
@@ -96,7 +96,7 @@ const UserContextReconfimationModalBody = () => {
                 <SchoolInput
                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                     submissionAttempted={submissionAttempted} idPrefix="modal"
-                    required
+                    required={isCS}
                 />
             </Col>
         </Row>
