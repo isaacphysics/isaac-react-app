@@ -111,7 +111,7 @@ export const assignGameboard = createAsyncThunk(
             appDispatch(isaacApi.util.updateQueryData(
                 "getMySetAssignments",
                 undefined,
-                (assignmentsByMe) => assignmentsByMe.concat(newAssignments)
+                (assignmentsByMe) => [...assignmentsByMe, ...newAssignments]
             ));
             return newAssignments;
         } else {

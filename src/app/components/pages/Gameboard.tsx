@@ -107,18 +107,22 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
     </RS.ListGroupItem>
 }
 
+export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
+    return <RS.ListGroup className="link-list list-group-links list-gameboard">
+        {gameboard?.wildCard && showWildcard(gameboard) &&
+        <Wildcard wildcard={gameboard.wildCard} />
+        }
+        {gameboard?.contents && gameboard.contents.map(q =>
+            <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
+        )}
+    </RS.ListGroup>
+};
+
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
 
     return <RS.Row className={className}>
         <RS.Col lg={{size: 10, offset: 1}}>
-            <RS.ListGroup className="link-list list-group-links list-gameboard">
-                {gameboard?.wildCard && showWildcard(gameboard) &&
-                    <Wildcard wildcard={gameboard.wildCard} />
-                }
-                {gameboard?.contents && gameboard.contents.map(q =>
-                    <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
-                )}
-            </RS.ListGroup>
+            <GameboardViewerInner gameboard={gameboard}/>
         </RS.Col>
     </RS.Row>;
 };

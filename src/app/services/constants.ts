@@ -1098,3 +1098,5 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const MONTH_NAMES = [ "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December" ];
+
+export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
