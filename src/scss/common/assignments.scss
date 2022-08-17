@@ -31,6 +31,24 @@
     position: relative;
     z-index: 4;
   }
+  .month-label:hover, .hexagon-date:hover {
+    background: linear-gradient(
+                    to left,
+                    transparent 0,
+                    rgba(#636c73, 0.1) 90%,
+                    transparent 100%
+    );
+    .date-assignment-count, .date-toggle-arrow {
+      opacity: 1 !important;
+      color: black !important;
+    }
+  }
+  .date-toggle-arrow {
+    opacity: 0.5;
+    &.open {
+      opacity: 1;
+    }
+  }
 }
 
 .timeline-column {

@@ -49,11 +49,10 @@ const AssignmentListEntry = ({assignment, group}: AssignmentListEntryProps) => {
             unassignGameboard({boardId: assignment.gameboardId, groupId: assignment.groupId});
         }
     }
-
     return <Card className={"my-1"}>
-        <CardHeader className={"pt-2 pb-0 d-flex"}>
+        <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
             <h4>{assignment.gameboard?.title ?? "No gameboard title"}</h4>
-            <div className={"ml-auto"}>
+            <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Edit
                 </Button>
@@ -78,17 +77,17 @@ const AssignmentListEntry = ({assignment, group}: AssignmentListEntryProps) => {
 // If the hexagon proportions change, the CSS class bg-timeline needs revisiting
 const dateHexagon = calculateHexagonProportions(20, 1);
 const DateAssignmentList = ({date, assignments}: {date: number; assignments: ValidAssignmentWithListingDate[]}) => {
-    const [open, setOpen] = useState<boolean>(true); // FIXME close
+    const [open, setOpen] = useState<boolean>(false);
     const {boardsById, groupsById} = useContext(ManageAssignmentContext);
     return <>
         <div onClick={() => setOpen(o => !o)} className={"hexagon-date"}>
             <svg height={dateHexagon.quarterHeight * 4} width={"100%"}>
                 <Hexagon className={"fill-secondary"} {...dateHexagon}/>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={"100%"} y={11} x={dateHexagon.halfWidth * 2.5 + 12}>
-                    <p className={classNames({"text-muted": !open})}>{assignments.length} assignment{assignments.length > 1 ? "s" : ""}</p>
+                    <p className={classNames("date-assignment-count", {"text-muted": !open})}>{assignments.length} assignment{assignments.length > 1 ? "s" : ""}</p>
                 </foreignObject>}
                 <svg x={2.5 * dateHexagon.halfWidth - (open ? 7 : 3)} y={dateHexagon.quarterHeight * 2 - (open ? 3 : 6.5)}>
-                    <polygon className={"fill-secondary"} style={{opacity: open ? 1 : 0.5}} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
+                    <polygon className={classNames("date-toggle-arrow fill-secondary", {"open": open})} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
                              transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}/>
                 </svg>
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
@@ -105,9 +104,10 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
 }
 
 const monthHexagon = calculateHexagonProportions(12, 1);
+const MAX_DAYS_TO_OPEN_MONTH_LIST = 10;
 const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
-    const [open, setOpen] = useState<boolean>(true); // FIXME close
-    const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [d, as]) => n + as.length, 0), [datesAndAssignments]);
+    const [open, setOpen] = useState<boolean>(datesAndAssignments.length <= MAX_DAYS_TO_OPEN_MONTH_LIST);
+    const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [_, as]) => n + as.length, 0), [datesAndAssignments]);
     return <>
         <div className={"month-label w-100 text-right d-flex"} onClick={() => setOpen(o => !o)}>
             <div className={"h-100 text-center position-relative"} style={{width: dateHexagon.halfWidth * 2, paddingTop: 3}}>
@@ -164,13 +164,34 @@ export const ManageAssignments = () => {
         return groupsToInclude.reduce((acc, n) => ({...acc, [n.value]: true}), {});
     }, [groupsToInclude, groupsById]);
 
+    const [earliestShowDate, setEarliestShowDate] = useState<Date>(() => {
+        let d = new Date();
+        d.setUTCDate(d.getUTCDate() - 29) // initially show assignment up to 4 weeks old
+        return d;
+    });
+
+    const oldestAssignmentDate = useMemo<Date>(() => new Date(
+        assignmentsSetByMe?.reduce(
+            (oldest, a) => {
+                const assignmentTimestamp = a.scheduledStartDate?.valueOf() ?? a.creationDate?.valueOf() ?? Date.now();
+                return assignmentTimestamp < oldest
+                    ? assignmentTimestamp : oldest;
+            }, Date.now()) ?? Date.now()
+        )
+    , [assignmentsSetByMe]);
+    const extendBackSixMonths = () => setEarliestShowDate(esd => {
+        const d = new Date(esd.valueOf());
+        d.setUTCMonth(d.getUTCMonth() - 6);
+        return d;
+    })
+
     const assignmentsGroupedByDate = useMemo<AssignmentsGroupedByDate>(() => {
         if (!assignmentsSetByMe) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
             assignmentsSetByMe
-            // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate is valid
-            .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId])
             .map((a) => ({...a, listingDate: new Date((a.scheduledStartDate ?? a.creationDate ?? 0).valueOf())} as ValidAssignmentWithListingDate))
+            // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
+            .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && a.listingDate.valueOf() >= earliestShowDate.valueOf())
             , a => a.listingDate.valueOf());
         function parseNumericKey<T>([k, v]: [string, T]): [number, T] { return [parseInt(k), v]; }
         return Object.entries(mapValues(
@@ -180,10 +201,7 @@ export const ManageAssignments = () => {
                 _as => Object.entries(groupBy(_as, a => a.listingDate.getUTCDate())).map(parseNumericKey)
             )).map(parseNumericKey)
         )).map(parseNumericKey);
-    }, [assignmentsSetByMe, groupFilter]);
-
-    // const latestDate = assignmentsGroupedByDate[0][0];
-    // const earliestDate = assignmentsGroupedByDate[0][0];
+    }, [assignmentsSetByMe, groupFilter, earliestShowDate]);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -322,7 +340,7 @@ export const ManageAssignments = () => {
         setDueDate, setScheduledStartDate, setAssignmentNotes]);
 
     const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getMonth() + 1;
+    const currentMonth = (new Date()).getUTCMonth() + 1;
 
     const [showAssignmentModal, setShowAssignmentModal] = useState<boolean>(false);
     const openAssignmentModal = useCallback((assignment?: ValidAssignmentWithListingDate) => {
@@ -347,6 +365,11 @@ export const ManageAssignments = () => {
                     </div>
                     {header}
                 </div>
+                {(earliestShowDate.valueOf() >= oldestAssignmentDate.valueOf()) && <div>
+                    <Button size={"sm"} className={"mt-3"} onClick={extendBackSixMonths}>
+                        Load assignments before {earliestShowDate.toDateString()}
+                    </Button>
+                </div>}
                 <AssignmentTimeline assignmentsGroupedByDate={assignmentsGroupedByDate}/>
             </div>
             {/* Create/modify assignment modal */}
@@ -407,7 +430,7 @@ export const ManageAssignments = () => {
                             className="mt-2 mb-2"
                             block color={siteSpecific("secondary", "primary")}
                             onClick={assign}
-                            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
+                            disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard)}
                         >
                             Assign to group{selectedGroups.length > 1 ? "s" : ""}
                         </Button>
@@ -415,7 +438,7 @@ export const ManageAssignments = () => {
                             className="mt-2 mb-2"
                             block color={siteSpecific("secondary", "primary")}
                             onClick={modify}
-                            disabled={isDefined(assignmentNotes) && assignmentNotes.length > 500}
+                            disabled={(isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard)}
                         >
                             Modify assignment{assignmentToModify.groupName ? ` to group ${assignmentToModify.groupName}` : ""}
                         </Button>
