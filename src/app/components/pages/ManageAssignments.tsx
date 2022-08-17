@@ -21,7 +21,11 @@ import {
     CardBody,
     Label,
     Input,
-    ModalHeader, ModalBody, ModalFooter, Modal, CardFooter
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Modal,
+    CardFooter
 } from "reactstrap";
 import {BoardLimit, formatBoardOwner} from "../../services/gameboards";
 import {BoardOrder, ManageAssignmentContext, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
@@ -149,7 +153,7 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
             </div>
             <h4>{`${MONTH_NAMES[month]}`}</h4>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
-            <span className={"pt-1"}>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}</span>
+            <span className={"pt-1 month-assignment-count"}>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}</span>
         </div>
         {open && datesAndAssignments.map(([d, as]) => <DateAssignmentList key={d} date={d} assignments={as}/>)}
     </>;

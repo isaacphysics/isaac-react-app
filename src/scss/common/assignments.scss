@@ -31,7 +31,8 @@
     position: relative;
     z-index: 4;
   }
-  .month-label:hover, .hexagon-date:hover {
+  .month-label:hover, .hexagon-date:hover, .month-label:focus, .hexagon-date:focus {
+    outline: none;
     background: linear-gradient(
                     to left,
                     transparent 0,
@@ -42,6 +43,11 @@
       opacity: 1 !important;
       color: black !important;
     }
+  }
+  .month-label:focus, .hexagon-date:focus {
+    .date-assignment-count, .month-assignment-count {
+      font-weight: bold;
+    } 
   }
   .date-toggle-arrow {
     opacity: 0.5;
