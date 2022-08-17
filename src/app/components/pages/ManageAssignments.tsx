@@ -425,9 +425,15 @@ export const ManageAssignments = () => {
             </Col>
             <Col xs={6} className={"py-1"}>
                 <Button size={"sm"} block onClick={() => openAssignmentModal()}>
-                    Create new assignment
+                    <span className={"d-block d-md-none"}>Create new</span>
+                    <span className={"d-none d-md-block"}>Create new assignment</span>
                 </Button>
-                <Button size={"sm"} block onClick={() => setCollapsed(true)}>
+                <Button size={"sm"} block onClick={() => {
+                    setCollapsed(true);
+                    if (headerScrollerSentinel.current && headerScrollerSentinel.current.getBoundingClientRect().top < 0) {
+                        headerScrollerSentinel.current?.scrollIntoView();
+                    }
+                }}>
                     Collapse all
                 </Button>
             </Col>
