@@ -83,7 +83,14 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div onClick={() => {
+        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyPress={(e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen(o => !o);
+                setCollapsed(false);
+            }
+        }} onClick={() => {
             setOpen(o => !o);
             setCollapsed(false);
         }} className={"hexagon-date"}>
@@ -119,7 +126,15 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div className={"month-label w-100 text-right d-flex"} onClick={() => {
+        <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for ${MONTH_NAMES[month]}`}
+             className={"month-label w-100 text-right d-flex"} onKeyPress={(e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                e.stopPropagation();
+                setOpen(o => !o);
+                setCollapsed(false);
+            }
+        }} onClick={() => {
             setOpen(o => !o);
             setCollapsed(false);
         }}>
