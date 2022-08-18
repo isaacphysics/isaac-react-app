@@ -55,6 +55,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     }
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
+            {/*make this a link to the board, or have a "view board" link*/}
             <h4>{assignment.gameboard?.title ?? "No gameboard title"}</h4>
             <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
@@ -69,7 +70,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             <div>Assigned to: <strong>{assignment.groupName}</strong></div>
             {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
             {assignment.gameboard && <div>By: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
-            <div>
+            <div>{/* Dont show this unless the date has passed */}
                 <a color="link" target={"_blank"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
                     View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
                 </a>
@@ -241,7 +242,7 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
                 {"Close"}
             </button>
         }>
-            {"Create new assignment"}
+            Set new assignment
         </ModalHeader>
         <ModalBody>
             <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
@@ -302,7 +303,7 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     </Modal>;
 }
 
-export const AssignmentTimelinePage = () => {
+export const AssignmentSchedule = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const { data: assignmentsSetByMe, refetch: refetchAssignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
@@ -442,8 +443,8 @@ export const AssignmentTimelinePage = () => {
             </Col>
             <Col xs={6} className={"py-1"}>
                 <Button size={"sm"} block onClick={() => openAssignmentModal()}>
-                    <span className={"d-block d-md-none"}>Create new</span>
-                    <span className={"d-none d-md-block"}>Create new assignment</span>
+                    <span className={"d-block d-md-none"}>Set assignment</span>
+                    <span className={"d-none d-md-block"}>Set new assignment</span>
                 </Button>
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <Button size={"sm"} block onClick={() => {
                     setCollapsed(true);
@@ -465,7 +466,7 @@ export const AssignmentTimelinePage = () => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Assignment Timeline"} help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle={"Assignment Schedule"} help={pageHelp}/>
         <AssignmentTimelineContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed}}>
             <div className={"px-md-4 pl-2 pr-2 timeline-column mb-4"}>
                 <div className="no-print">
