@@ -162,7 +162,7 @@ const AssignmentTimeline = ({assignmentsGroupedByDate}: {assignmentsGroupedByDat
     return <div className={"timeline w-100"}>
         {assignmentsGroupedByDate.map(([y, ms]) =>
             <>
-                <div key={y} className={"year-label w-100 text-right"}><h3 className={"mb-n3"}>{`${y}`}</h3><hr/></div>
+                <div key={y} className={"year-label w-100 text-right"}><h3 className={"mb-n3"}>{`${y}`}</h3><hr className={"ml-4"}/></div>
                 {ms.map(([m, ds]) => <MonthAssignmentList key={m} month={m} datesAndAssignments={ds}/>)}
             </>
         )}
@@ -465,12 +465,14 @@ export const AssignmentTimelinePage = () => {
         </Row>
     </Card>;
 
+    const pageHelp = <span>
+        Use this page to set and manage assignments to your groups. You can assign any gameboard you have saved to your account.
+        <br/>
+        Students in the group will be emailed when you set a new assignment.
+    </span>;
+
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Assignment Timeline"} help={<span>
-            Use this page to set and manage assignments to your groups. You can assign any gameboard you have saved to your account.
-            <br/>
-            Students in the group will be emailed when you set a new assignment.
-        </span>} modalId={"manage_assignments_help"}/>
+        <TitleAndBreadcrumb currentPageTitle={"Assignment Timeline"} help={pageHelp}/>
         <AssignmentTimelineContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed}}>
             <div className={"px-md-4 pl-2 pr-2 timeline-column mb-4"}>
                 <div className="no-print">
@@ -480,12 +482,16 @@ export const AssignmentTimelinePage = () => {
                     </div>
                     {header}
                 </div>
-                {(earliestShowDate.valueOf() >= oldestAssignmentDate.valueOf()) && <div>
-                    <Button size={"sm"} className={"mt-3"} onClick={extendBackSixMonths}>
-                        Load assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
-                    </Button>
-                </div>}
-                <AssignmentTimeline assignmentsGroupedByDate={assignmentsGroupedByDate}/>
+                <Card className={"mt-2"}>
+                    <CardBody className={"pt-0"}>
+                        {(earliestShowDate.valueOf() >= oldestAssignmentDate.valueOf()) && <div className={"mt-3"}>
+                            <Button size={"sm"} onClick={extendBackSixMonths}>
+                                Load assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
+                            </Button>
+                        </div>}
+                        <AssignmentTimeline assignmentsGroupedByDate={assignmentsGroupedByDate}/>
+                    </CardBody>
+                </Card>
             </div>
             <AssignmentModal user={user} refetchAssignmentsSetByMe={refetchAssignmentsSetByMe}
                              showAssignmentModal={showAssignmentModal} toggleAssignModal={toggleAssignModal}
