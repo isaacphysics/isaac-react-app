@@ -1,5 +1,5 @@
 import {assignGameboard, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {sortBy, groupBy, mapValues, range} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import React, {
@@ -158,18 +158,6 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
 }
 
 type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
-const AssignmentTimeline = ({assignmentsGroupedByDate}: {assignmentsGroupedByDate: AssignmentsGroupedByDate}) => {
-    return <div className={"timeline w-100"}>
-        {assignmentsGroupedByDate.map(([y, ms]) =>
-            <>
-                <div key={y} className={"year-label w-100 text-right"}><h3 className={"mb-n3"}>{`${y}`}</h3><hr className={"ml-4"}/></div>
-                {ms.map(([m, ds]) => <MonthAssignmentList key={m} month={m} datesAndAssignments={ds}/>)}
-            </>
-        )}
-        <div className={"bg-timeline"}/>
-    </div>;
-}
-
 interface AssignmentModalProps {
     user: RegisteredUserDTO;
     refetchAssignmentsSetByMe: () => void;
@@ -388,6 +376,8 @@ export const AssignmentTimelinePage = () => {
         )).map(parseNumericKey);
     }, [assignmentsSetByMe, groupFilter, earliestShowDate]);
 
+    const notAllPastAssignmentsAreListed = earliestShowDate.valueOf() >= oldestAssignmentDate.valueOf();
+
     const [assignmentToCopy, setAssignmentToCopy] = useState<ValidAssignmentWithListingDate | undefined>();
     const [showAssignmentModal, setShowAssignmentModal] = useState<boolean>(false);
     const openAssignmentModal = useCallback((assignment?: ValidAssignmentWithListingDate) => {
@@ -439,30 +429,33 @@ export const AssignmentTimelinePage = () => {
     const header = <Card className={"container py-2 px-3 w-100"}>
         <Row>
             <Col xs={6}>
-                <Label className={"w-100"}>Filter by group:
-                    <Select inputId="groups-filter" isMulti isClearable placeholder="All"
-                            value={groupsToInclude}
-                            closeMenuOnSelect={!isStaff(user)}
-                            onChange={selectOnChange(setGroupsToInclude, false)}
-                            options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
-                    />
-                </Label>
+                {assignmentsSetByMe && assignmentsSetByMe.length > 0
+                    ? <Label className={"w-100"}>Filter by group:
+                        <Select inputId="groups-filter" isMulti isClearable placeholder="All"
+                                value={groupsToInclude}
+                                closeMenuOnSelect={!isStaff(user)}
+                                onChange={selectOnChange(setGroupsToInclude, false)}
+                                options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
+                        />
+                    </Label>
+                    : <div className={"mt-2"}>You have no assignments</div>}
             </Col>
             <Col xs={6} className={"py-1"}>
                 <Button size={"sm"} block onClick={() => openAssignmentModal()}>
                     <span className={"d-block d-md-none"}>Create new</span>
                     <span className={"d-none d-md-block"}>Create new assignment</span>
                 </Button>
-                <Button size={"sm"} block onClick={() => {
+                {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <Button size={"sm"} block onClick={() => {
                     setCollapsed(true);
                     if (headerScrollerSentinel.current && headerScrollerSentinel.current.getBoundingClientRect().top < 0) {
                         headerScrollerSentinel.current?.scrollIntoView();
                     }
                 }}>
                     Collapse all
-                </Button>
+                </Button>}
             </Col>
         </Row>
+        {groupsToInclude.length > 0 && <div className={"mt-2"}>You have no assignments to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}</div>}
     </Card>;
 
     const pageHelp = <span>
@@ -482,16 +475,24 @@ export const AssignmentTimelinePage = () => {
                     </div>
                     {header}
                 </div>
-                <Card className={"mt-2"}>
-                    <CardBody className={"pt-0"}>
-                        {(earliestShowDate.valueOf() >= oldestAssignmentDate.valueOf()) && <div className={"mt-3"}>
+                {assignmentsGroupedByDate.length > 0 && <Card className={"mt-2"}>
+                    <CardBody className={classNames({"pt-0": assignmentsGroupedByDate.length > 0})}>
+                        {notAllPastAssignmentsAreListed && <div className={"mt-3"}>
                             <Button size={"sm"} onClick={extendBackSixMonths}>
                                 Load assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
                             </Button>
                         </div>}
-                        <AssignmentTimeline assignmentsGroupedByDate={assignmentsGroupedByDate}/>
+                        <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
+                            {assignmentsGroupedByDate.map(([y, ms]) =>
+                                <>
+                                    <div key={y} className={"year-label w-100 text-right"}><h3 className={"mb-n3"}>{`${y}`}</h3><hr className={"ml-4"}/></div>
+                                    {ms.map(([m, ds]) => <MonthAssignmentList key={m} month={m} datesAndAssignments={ds}/>)}
+                                </>
+                            )}
+                            <div className={classNames("bg-timeline", {"fade-in": !notAllPastAssignmentsAreListed})}/>
+                        </div>
                     </CardBody>
-                </Card>
+                </Card>}
             </div>
             <AssignmentModal user={user} refetchAssignmentsSetByMe={refetchAssignmentsSetByMe}
                              showAssignmentModal={showAssignmentModal} toggleAssignModal={toggleAssignModal}

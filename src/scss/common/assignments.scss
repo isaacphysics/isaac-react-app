@@ -13,6 +13,15 @@
                       $secondary 0 calc(100% - 20px),
                       rgba(0, 0, 0, 0)
       ) 1 100%;
+  &.fade-in {
+    border-image:
+            linear-gradient(
+                            to bottom,
+                            rgba(0, 0, 0, 0),
+                            $secondary 60px calc(100% - 20px),
+                            rgba(0, 0, 0, 0)
+            ) 1 100% !important;
+  }
 }
 
 .timeline {
