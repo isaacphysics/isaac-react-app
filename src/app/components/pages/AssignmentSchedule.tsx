@@ -73,7 +73,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         <CardBody>
             <div>Assigned to: <strong>{assignment.groupName}</strong></div>
             {viewBy === "startDate" && assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
-            {viewBy === "dueDate" && assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong></div>}
+            {viewBy === "dueDate" && assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
             {assignment.gameboard && <div>By: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
             {assignment.listingDate <= TODAY() && <div>
                 <a color="link" target={"_blank"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
