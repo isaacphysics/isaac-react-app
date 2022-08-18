@@ -662,7 +662,8 @@ export const AssignmentTimelineContext = React.createContext<{
     openAssignmentModal: (assignment: ValidAssignmentWithListingDate) => void;
     collapsed: boolean;
     setCollapsed: (b: boolean) => void;
-}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}});
+    viewBy: "startDate" | "dueDate";
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;

@@ -1100,3 +1100,9 @@ export const MONTH_NAMES = [ "January", "February", "March", "April", "May", "Ju
     "July", "August", "September", "October", "November", "December" ];
 
 export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+
+export const TODAY = () => {
+    const d = new Date();
+    d.setUTCHours(0,0,0,0);
+    return d;
+}

@@ -15,6 +15,7 @@ import {
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {history} from "../../../services/history";
+import {TODAY} from "../../../services/constants";
 
 export interface AssignmentSpec {
     boardId: string;
@@ -26,7 +27,7 @@ export interface AssignmentSpec {
 
 export const assignGameboard = createAsyncThunk(
     "gameboards/assignBoard",
-    async ({boardId, groups, dueDate, scheduledStartDate, notes}: AssignmentSpec, {dispatch, rejectWithValue}) => {
+    async ({boardId, groups, dueDate, scheduledStartDate: scheduledStartDateOrToday, notes}: AssignmentSpec, {dispatch, rejectWithValue}) => {
         const appDispatch = dispatch as AppDispatch;
         if (groups.length === 0) {
             appDispatch(showErrorToast(
@@ -36,10 +37,9 @@ export const assignGameboard = createAsyncThunk(
             return rejectWithValue(null);
         }
 
-        const today = new Date();
-        today.setUTCHours(0, 0, 0, 0);
+        const today = TODAY();
+        const scheduledStartDate = scheduledStartDateOrToday === today ? undefined : scheduledStartDateOrToday;
 
-        // TODO think about whether this can be done in the back-end too?
         if (dueDate !== undefined) {
             dueDate?.setUTCHours(0, 0, 0, 0);
             if ((dueDate.valueOf() - today.valueOf()) < 0) {
