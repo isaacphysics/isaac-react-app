@@ -482,7 +482,7 @@ export const AssignmentTimelinePage = () => {
                 </div>
                 {(earliestShowDate.valueOf() >= oldestAssignmentDate.valueOf()) && <div>
                     <Button size={"sm"} className={"mt-3"} onClick={extendBackSixMonths}>
-                        Load assignments before {earliestShowDate.toDateString()}
+                        Load assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
                     </Button>
                 </div>}
                 <AssignmentTimeline assignmentsGroupedByDate={assignmentsGroupedByDate}/>
