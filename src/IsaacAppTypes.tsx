@@ -652,7 +652,7 @@ export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
 export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
-export const ManageAssignmentContext = React.createContext<{
+export const AssignmentTimelineContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO};
     groupsById: {[id: number]: UserGroupDTO};
     groupFilter: {[id: number]: boolean};

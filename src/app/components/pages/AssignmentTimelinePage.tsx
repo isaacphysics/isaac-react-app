@@ -29,7 +29,7 @@ import {
     Alert
 } from "reactstrap";
 import {BoardLimit, formatBoardOwner} from "../../services/gameboards";
-import {BoardOrder, ManageAssignmentContext, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
+import {BoardOrder, AssignmentTimelineContext, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import {ASSIGNMENT_PROGRESS_PATH, MONTH_NAMES} from "../../services/constants";
 import classNames from "classnames";
@@ -43,11 +43,10 @@ import {GameboardViewerInner} from "./Gameboard";
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
-    group?: UserGroupDTO;
 }
-const AssignmentListEntry = ({assignment, group}: AssignmentListEntryProps) => {
+const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const {openAssignmentModal} = useContext(ManageAssignmentContext);
+    const {openAssignmentModal} = useContext(AssignmentTimelineContext);
     const [ unassignGameboard ] = isaacApi.endpoints.unassignGameboard.useMutation();
     const deleteAssignment = () => {
         if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? "this gameboard"} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
@@ -83,7 +82,7 @@ const AssignmentListEntry = ({assignment, group}: AssignmentListEntryProps) => {
 const dateHexagon = calculateHexagonProportions(20, 1);
 const DateAssignmentList = ({date, assignments}: {date: number; assignments: ValidAssignmentWithListingDate[]}) => {
     const [open, setOpen] = useState<boolean>(false);
-    const {boardsById, groupsById, collapsed, setCollapsed} = useContext(ManageAssignmentContext);
+    const {boardsById, collapsed, setCollapsed} = useContext(AssignmentTimelineContext);
     useEffect(() => {
         if (collapsed) setOpen(false);
     }, [collapsed]);
@@ -114,17 +113,19 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
             </svg>
         </div>
         {open && <div className={"date-assignment-list"}>
-            {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboardId ? boardsById[a.gameboardId] : undefined}} group={a.groupId ? groupsById[a.groupId] : undefined} /> )}
+            {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboardId ? boardsById[a.gameboardId] : undefined}}/> )}
         </div>}
     </>
 }
 
 const monthHexagon = calculateHexagonProportions(12, 1);
-const MAX_DAYS_TO_OPEN_MONTH_LIST = 10;
+const shouldOpenMonth = (month: number) => {
+    return (new Date()).getUTCMonth() === month;
+}
 const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
-    const [open, setOpen] = useState<boolean>(datesAndAssignments.length <= MAX_DAYS_TO_OPEN_MONTH_LIST);
+    const [open, setOpen] = useState<boolean>(shouldOpenMonth(month));
     const assignmentCount = useMemo(() => datesAndAssignments.reduce((n, [_, as]) => n + as.length, 0), [datesAndAssignments]);
-    const {collapsed, setCollapsed} = useContext(ManageAssignmentContext);
+    const {collapsed, setCollapsed} = useContext(AssignmentTimelineContext);
     useEffect(() => {
         if (collapsed) setOpen(false);
     }, [collapsed]);
@@ -188,15 +189,16 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
 
     const [selectedGameboard, setSelectedGameboard] = useState<Item<string>[]>();
 
-    const {boardsById, groups, gameboards, boardIdsByGroupId} = useContext(ManageAssignmentContext);
+    const {boardsById, groups, gameboards, boardIdsByGroupId} = useContext(AssignmentTimelineContext);
 
     useEffect(() => {
         setSelectedGroups([]);
         if (assignmentToCopy) {
             // Copy existing assignment
             setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: boardsById[assignmentToCopy.gameboardId]?.title ?? "No gameboard title"}]);
-            setScheduledStartDate(assignmentToCopy.scheduledStartDate);
-            setDueDate(assignmentToCopy.dueDate);
+            setScheduledStartDate(assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : undefined);
+            //setScheduledStartDate(assignmentToCopy.scheduledStartDate);
+            setDueDate(assignmentToCopy.dueDate ? new Date(assignmentToCopy.dueDate.valueOf()) : undefined);
             setAssignmentNotes(assignmentToCopy.notes);
         } else {
             // Create from scratch
@@ -212,19 +214,26 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     }, [assignmentToCopy]);
 
     const assign = useCallback(() => {
-        if (!selectedGameboard) return;
-        // FIXME Strange error with copying and assigning
-        dispatch(assignGameboard({boardId: selectedGameboard[0]?.value, groups: [...selectedGroups], dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
-            refetchAssignmentsSetByMe();
-            if (success) {
+        if (!selectedGameboard || !selectedGameboard[0]?.value) return;
+        dispatch(assignGameboard({
+            boardId: selectedGameboard[0]?.value,
+            groups: [...selectedGroups],
+            dueDate,
+            scheduledStartDate,
+            notes: assignmentNotes
+        })).then((result) => {
+            if (assignGameboard.fulfilled.match(result)) {
+                refetchAssignmentsSetByMe();
                 setSelectedGroups([]);
                 setDueDate(undefined);
                 setScheduledStartDate(undefined);
                 setAssignmentNotes('');
             }
+            // Fails silently if assignGameboard throws an error - we let it handle opening toasts for errors
         });
-    }, [selectedGameboard, dueDate, scheduledStartDate, assignmentNotes, setSelectedGroups, setDueDate,
-        setScheduledStartDate, setAssignmentNotes]);
+    }, [selectedGameboard, selectedGroups, dueDate,
+        scheduledStartDate, assignmentNotes, setSelectedGroups,
+        setDueDate, setScheduledStartDate, setAssignmentNotes]);
 
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getUTCMonth() + 1;
@@ -305,7 +314,7 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     </Modal>;
 }
 
-export const ManageAssignments = () => {
+export const AssignmentTimelinePage = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const { data: assignmentsSetByMe, refetch: refetchAssignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
@@ -341,7 +350,9 @@ export const ManageAssignments = () => {
     // the oldest assignment yet
     const [earliestShowDate, setEarliestShowDate] = useState<Date>(() => {
         let d = new Date();
-        d.setUTCDate(d.getUTCDate() - 29) // initially show assignment up to 4 weeks old
+        d.setUTCMonth(d.getUTCMonth() - 1);
+        d.setUTCDate(1);
+        d.setUTCHours(0, 0, 0, 0);
         return d;
     });
     const oldestAssignmentDate = useMemo<Date>(() => new Date(
@@ -455,12 +466,12 @@ export const ManageAssignments = () => {
     </Card>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Manage assignments"} help={<span>
+        <TitleAndBreadcrumb currentPageTitle={"Assignment Timeline"} help={<span>
             Use this page to set and manage assignments to your groups. You can assign any gameboard you have saved to your account.
             <br/>
             Students in the group will be emailed when you set a new assignment.
         </span>} modalId={"manage_assignments_help"}/>
-        <ManageAssignmentContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed}}>
+        <AssignmentTimelineContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed}}>
             <div className={"px-md-4 pl-2 pr-2 timeline-column mb-4"}>
                 <div className="no-print">
                     <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
@@ -479,6 +490,6 @@ export const ManageAssignments = () => {
             <AssignmentModal user={user} refetchAssignmentsSetByMe={refetchAssignmentsSetByMe}
                              showAssignmentModal={showAssignmentModal} toggleAssignModal={toggleAssignModal}
                              assignmentToCopy={assignmentToCopy}/>
-        </ManageAssignmentContext.Provider>
+        </AssignmentTimelineContext.Provider>
     </Container>;
 }

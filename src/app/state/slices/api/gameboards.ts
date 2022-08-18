@@ -44,7 +44,7 @@ export const assignGameboard = createAsyncThunk(
             dueDate?.setUTCHours(0, 0, 0, 0);
             if ((dueDate.valueOf() - today.valueOf()) < 0) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}) );
-                return false;
+                return rejectWithValue(null);
             }
         }
 
@@ -52,14 +52,14 @@ export const assignGameboard = createAsyncThunk(
             scheduledStartDate?.setUTCHours(0, 0, 0, 0);
             if ((scheduledStartDate.valueOf() - today.valueOf()) < 0) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
-                return false;
+                return rejectWithValue(null);
             }
         }
 
         if (dueDate !== undefined && scheduledStartDate !== undefined) {
             if ((dueDate.valueOf() - scheduledStartDate.valueOf()) <= 0) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be strictly after scheduled start date.", timeout: 5000}));
-                return false;
+                return rejectWithValue(null);
             }
         }
 
