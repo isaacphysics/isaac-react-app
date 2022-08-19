@@ -13,7 +13,6 @@ import {EventStageFilter, EventStatusFilter, EventTypeFilter} from "../../servic
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
-import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 import {stageExistsForSite} from "../../services/events";
