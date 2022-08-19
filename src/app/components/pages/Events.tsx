@@ -62,10 +62,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {isCS && <>
-                <CoronavirusWarningBanner />
-                <MetaDescription description={metaDescriptionCS} />
-            </>}
+            {isCS && <MetaDescription description={metaDescriptionCS} />}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
