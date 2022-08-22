@@ -432,7 +432,7 @@ export type Action =
 
     | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
     | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; newAssignments: (BoardAssignee & {assignmentId: number})[]; assignmentStub: AssignmentDTO}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]}
 
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
@@ -649,14 +649,12 @@ export enum BoardOrder {
 
 export type NumberOfBoards = number | "ALL";
 
-export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
-
 export interface Boards {
     boards: GameboardDTO[];
     totalResults: number;
 }
 
-export type BoardAssignee = {groupId: number, groupName?: string};
+export type BoardAssignee = {groupId: number, groupName?: string; startDate?: Date | number};
 
 export interface BoardAssignees {
     boardAssignees?: {[key: string]: BoardAssignee[]};

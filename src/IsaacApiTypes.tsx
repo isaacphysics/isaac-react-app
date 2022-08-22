@@ -40,6 +40,7 @@ export interface AssignmentDTO extends IAssignmentLike {
     notes?: string;
     creationDate?: Date;
     dueDate?: Date;
+    scheduledStartDate?: Date;
     _id?: number;
 }
 
