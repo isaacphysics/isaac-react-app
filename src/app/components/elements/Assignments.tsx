@@ -87,15 +87,16 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             </Col>
         </Row>
     </>
-}
+};
 
 export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
-    return <ShowLoading until={assignments}>
-        {isDefined(assignments) && assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
-        {isDefined(assignments) && assignments.length === 0 &&
-        (showOld ?
-            <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older assignments</a></strong></p> :
-            <p className="text-center py-4"><strong>There are no assignments to display.</strong></p>
-        )}
-    </ShowLoading>;
+    return <>
+        {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
+        {assignments.length === 0 &&
+            (showOld
+                ? <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older assignments</a></strong></p>
+                : <p className="text-center py-4"><strong>There are no assignments to display.</strong></p>
+            )
+        }
+    </>;
 };
