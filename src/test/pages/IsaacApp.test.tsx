@@ -134,6 +134,7 @@ describe("IsaacApp", () => {
         expect(history.location.pathname).toBe("/");
     });
 
+    // For each role (including a not-logged-in user), test whether the user sees the correct links in the navbar menu
     ["ANONYMOUS"].concat(ROLES).forEach((r) => {
         const role = r as Role | "ANONYMOUS";
         it (`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
