@@ -3367,6 +3367,83 @@ export const mockSetAssignments = [
     }
 ];
 
+export const mockQuizAssignments = [
+    {
+        id: 9,
+        quizId: "test-quiz-assignment-1",
+        groupId: 2,
+        ownerUserId: 1,
+        assignerSummary: {
+            givenName: "Test",
+            familyName: "Teacher",
+            role: "ADMIN",
+            authorisedFullAccess: false,
+            emailVerificationStatus: "VERIFIED",
+            registeredContexts: [
+                {
+                    stage: "all",
+                    examBoard: "all"
+                }
+            ],
+            id: 1
+        },
+        creationDate: DAYS_AGO(5),
+        dueDate: DAYS_AGO(-5),
+        quizFeedbackMode: "DETAILED_FEEDBACK",
+        attempt: {
+            id: 6,
+            userId: 1,
+            quizId: "test-quiz-assignment-1",
+            quizAssignmentId: 9,
+            startDate: DAYS_AGO(3),
+            completedDate: DAYS_AGO(2)
+        }
+    },
+    {
+        id: 10,
+        quizId: "test-quiz-assignment-2",
+        quizSummary: {
+            id: "test-quiz-assignment-2",
+            title: "Test Quiz Assignment 2",
+            type: "isaacQuiz",
+            tags: [],
+            url: "/isaac-api/api/quiz/test-quiz-assignment-2",
+            visibleToStudents: false,
+            hiddenFromRoles: [
+                "TEACHER",
+                "STUDENT"
+            ]
+        },
+        groupId: 2,
+        ownerUserId: 1,
+        assignerSummary: {
+            givenName: "Test",
+            familyName: "Teacher",
+            role: "ADMIN",
+            authorisedFullAccess: false,
+            emailVerificationStatus: "VERIFIED",
+            registeredContexts: [
+                {
+                    stage: "all",
+                    examBoard: "all"
+                }
+            ],
+            id: 1
+        },
+        creationDate: DAYS_AGO(5),
+        dueDate: DAYS_AGO(-5),
+        quizFeedbackMode: "DETAILED_FEEDBACK",
+        attempt: {
+            id: 7,
+            userId: 1,
+            quizId: "test-quiz-assignment-2",
+            quizAssignmentId: 10,
+            startDate: DAYS_AGO(3),
+            completedDate: DAYS_AGO(2)
+        }
+    }
+]
+
 export const mockGroups = [
     {
         id: 2,

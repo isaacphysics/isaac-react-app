@@ -5,8 +5,13 @@ import {
     mockAssignmentsGroup6,
     mockGameboards,
     mockGroups,
-    mockMyAssignments, mockNewsPods,
-    mockSetAssignments, mockUser, mockUserAuthSettings, mockUserPreferences
+    mockMyAssignments,
+    mockNewsPods,
+    mockQuizAssignments,
+    mockSetAssignments,
+    mockUser,
+    mockUserAuthSettings,
+    mockUserPreferences
 } from "./data";
 
 export const handlers = [
@@ -28,6 +33,12 @@ export const handlers = [
         return res(
             ctx.status(200),
             ctx.json(mockMyAssignments)
+        );
+    }),
+    rest.get(API_PATH + "/quiz/assignments", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json(mockQuizAssignments)
         );
     }),
     rest.get(API_PATH + "/assignments/assign/:assignmentId", (req, res, ctx) => {
