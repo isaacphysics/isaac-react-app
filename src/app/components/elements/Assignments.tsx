@@ -31,7 +31,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
     return <>
         <hr />
-        <Row className="board-card">
+        <Row data-testid={"my-assignment"} className="board-card">
             <Col xs={4} md={2} lg={1}>
                 <div className="board-subject-hexagon-container">
                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCompleted === 100) ?

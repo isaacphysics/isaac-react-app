@@ -23,7 +23,7 @@ export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
             />
         </div>}
         <RS.CardBody className="d-flex flex-column">
-            <RS.CardText className="m-0 mb-auto">
+            <div className="m-0 mb-auto">
                 <span className="d-block my-2">
                     {showTitle ?
                         <div>
@@ -39,7 +39,7 @@ export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
                         </h3>
                     }
                 </span>
-            </RS.CardText>
+            </div>
             <RS.CardText>
                 {!url?.startsWith("http") ?
                     <Link className="focus-target" to={`${url}`}>

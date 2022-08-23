@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {HTMLProps, useEffect, useMemo, useState} from "react";
 import {Link} from "react-router-dom";
 import {useAppDispatch, useAppSelector, isaacApi, loadQuizAssignedToMe, selectors} from "../../state";
 import {
@@ -53,14 +53,14 @@ export const NavigationSection = ({children, title, topLevelLink, to}: Navigatio
     </MenuOpenContext.Consumer>
 );
 
-export function MenuBadge({count, message}: {count: number, message: string}) {
+export function MenuBadge({count, message, ...rest}: {count: number, message: string} & HTMLProps<HTMLDivElement>) {
     if (count == 0) {
         return RenderNothing;
     }
-    return <React.Fragment>
+    return <div {...rest}>
         <span className="badge badge-pill bg-grey ml-2">{count}</span>
-        <span className="sr-only">{message}</span>
-    </React.Fragment>;
+        <span className="sr-only"> {message}</span>
+    </div>;
 }
 
 export function useAssignmentsCount() {

@@ -4,7 +4,7 @@ module.exports = {
         "!src/**/*.d.ts"
     ],
     "resolver": "jest-pnp-resolver",
-    "setupFiles": [
+    "setupFilesAfterEnv": [
         "<rootDir>src/test/setupTests.ts",
         "react-app-polyfill/jsdom"
     ],

@@ -11,6 +11,14 @@ const webpack = require('webpack');
 // Read in the .env file and put into `process.env`:
 require('dotenv').config();
 
+// Loader to remove test ids (only used in production builds)
+const removeTestPropsLoader = {
+    loader: "react-remove-props-loader",
+    options: {
+        props: ["data-testid", "data-test-id"]
+    },
+};
+
 module.exports = (env) => {
 
     let isProd = env['prod'] ?? false;
@@ -80,7 +88,7 @@ module.exports = (env) => {
                                         },
                                     },
                                 }
-                            ],
+                            ].concat(isProd ? [removeTestPropsLoader] : []),
                         },
                         {
                             test: /node_modules[\/\\](query-string|split-on-first|strict-uri-encode|d3.*)[\/\\].*\.js$/,
