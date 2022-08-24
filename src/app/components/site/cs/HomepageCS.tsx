@@ -52,7 +52,7 @@ export const HomepageCS = () => {
                                 <ShowMeButtons className={"pt-xl-2"}/>
                                 {/*<img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />*/}
                             </Col>
-                            <Col md="12" lg="7" className="d-none d-lg-block">
+                            <Col data-testid={"featured-news-item"} md="12" lg="7" className="d-none d-lg-block">
                                 <FeaturedNewsItem item={news?.[0]} />
                             </Col>
                         </Row>

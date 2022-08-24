@@ -159,7 +159,8 @@ describe("IsaacApp", () => {
 
     it('should show featured news pods before non-featured ones, and order pods correctly based on id', async () => {
         const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
-        const newsPods = within(await screen.findByTestId("carousel-inner")).queryAllByTestId("news-pod");
+        const newsPods = screen.queryAllByTestId("featured-news-item") // picks up the CS featured news item first
+            .concat(within(await screen.findByTestId("carousel-inner")).queryAllByTestId("news-pod"));
         const newsPodLinks = newsPods.map(p => within(p).queryAllByRole("link")[0]?.getAttribute("href"));
         expect(newsPods).toHaveLength(5);
         const featuredNewsPodLinks = transformPodList(
