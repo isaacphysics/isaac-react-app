@@ -9,6 +9,7 @@ import "@testing-library/jest-dom/extend-expect";
 import {zip} from "lodash";
 import {Role, ROLES} from "../../IsaacApiTypes";
 import {resetWithUserRole} from "./utils";
+import {isPhy} from "../../app/services/siteConstants";
 
 type NavBarTitle = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 
@@ -98,7 +99,7 @@ describe("IsaacApp", () => {
     });
 
     // For each role (including a not-logged-in user), test whether the user sees the correct links in the navbar menu
-    ["ANONYMOUS"].concat(ROLES).forEach((r) => {
+    isPhy && ["ANONYMOUS"].concat(ROLES).forEach((r) => {
         const role = r as Role | "ANONYMOUS";
         it (`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
             resetWithUserRole(role);
