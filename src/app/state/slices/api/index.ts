@@ -181,8 +181,8 @@ const isaacApi = createApi({
         // TODO CP need to make this only fetch if we don't already have the board in state (and the board
         //  contains all question data) : this should be easily do-able with tags.
         // TODO CP could actually do ^this^ by inserting each gameboard fetched by `getGameboards` into the cache
-        // for this endpoint, which will be easy if RTK Query dev implement the requested `upsertQueryData` util
-        // function
+        //  for this endpoint, which will be easy if RTK Query dev implement the requested `upsertQueryData` util
+        //  function
         // TODO MT handle local storage load if gameboardId == null
         // TODO MT handle requesting new gameboard if local storage is also null
         getGameboardById: build.query<GameboardDTO, string | null>({
