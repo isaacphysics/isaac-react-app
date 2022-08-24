@@ -87,7 +87,7 @@ const Board = (props: BoardTableProps) => {
     const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
     return boardView == BoardViews.table ?
-        <tr key={board.id} className="board-card">
+        <tr className="board-card" data-testid={"my-gameboard-table-row"}>
             <td>
                 <div className="board-subject-hexagon-container table-view">
                     {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
@@ -120,7 +120,7 @@ const Board = (props: BoardTableProps) => {
             </td>
         </tr>
         :
-        <Card className="board-card card-neat">
+        <Card className="board-card card-neat" data-testid={"my-gameboard-card"}>
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
                 <div className="board-subject-hexagon-container">
@@ -269,9 +269,8 @@ export const MyGameboards = () => {
                             // Card view
                             <>
                                 <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
-                                    {boards.boards.map(board => <Col>
+                                    {boards.boards.map(board => <Col key={board.id}>
                                         <Board
-                                            key={board.id}
                                             board={board}
                                             selectedBoards={selectedBoards}
                                             setSelectedBoards={setSelectedBoards}

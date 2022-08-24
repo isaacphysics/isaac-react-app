@@ -8,11 +8,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/extend-expect";
 import {zip} from "lodash";
 import {Role, ROLES} from "../../IsaacApiTypes";
-import {server} from "../../mocks/server";
-import {rest} from "msw";
-import {API_PATH} from "../../app/services/constants";
-import {mockUser} from "../../mocks/data";
-import produce from "immer";
+import {resetWithUserRole} from "./utils";
 
 type NavBarTitle = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 
@@ -83,39 +79,6 @@ const navigationBarLinksPerRole: {[p in (Role | "ANONYMOUS")]: {[title in NavBar
 };
 
 describe("IsaacApp", () => {
-
-    const resetWithUserRole = (role?: Role | "ANONYMOUS") => {
-        cleanup();
-        server.resetHandlers();
-        if (role) {
-            server.use(
-                rest.get(API_PATH + "/users/current_user", (req, res, ctx) => {
-                    if (role === "ANONYMOUS") {
-                        return res(
-                            ctx.status(401),
-                            ctx.json({
-                                responseCode: 401,
-                                responseCodeType: "Unauthorized",
-                                errorMessage: "You must be logged in to access this resource.",
-                                bypassGenericSiteErrorPage: false
-                            })
-                        );
-                    }
-                    const userWithRole = produce(mockUser, user => {
-                        user.role = role;
-                    });
-                    return res(
-                        ctx.status(200),
-                        ctx.json(userWithRole)
-                    );
-                })
-            );
-        }
-        store.dispatch(isaacApi.util.resetApiState());
-        render(<Provider store={store}>
-            <IsaacApp/>
-        </Provider>);
-    };
 
     beforeAll(() => {
         render(<Provider store={store}>

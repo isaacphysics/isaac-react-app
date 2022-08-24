@@ -13,13 +13,25 @@ import {
     mockUserAuthSettings,
     mockUserPreferences
 } from "./data";
+import produce from "immer";
 
 export const handlers = [
     rest.get(API_PATH + "/gameboards/user_gameboards", (req, res, ctx) => {
-        // req.url.searchParams contains query params, going to ignore these even those this endpoint uses them
+        const startIndexStr = req.url.searchParams.get("start_index");
+        const startIndex = (startIndexStr && parseInt(startIndexStr)) || 0;
+        const limitStr = req.url.searchParams.get("limit");
+        const limit = (limitStr && parseInt(limitStr)) || mockGameboards.totalResults;
+
+        const limitedGameboards = produce(mockGameboards, g => {
+            if (startIndex === 0 && limitStr === "ALL") return g;
+            g.results = g.results.slice(startIndex, Math.min(startIndex + limit, mockGameboards.totalResults));
+            g.totalNotStarted = g.results.length;
+            g.totalResults = g.results.length;
+        });
+
         return res(
             ctx.status(200),
-            ctx.json(mockGameboards)
+            ctx.json(limitedGameboards)
         )
     }),
     rest.get(API_PATH + "/groups", (req, res, ctx) => {
@@ -84,6 +96,15 @@ export const handlers = [
         return res(
             ctx.status(200),
             ctx.json(mockUserPreferences)
+        );
+    }),
+    rest.get(API_PATH + "/users/current_user/snapshot", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json({
+                dailyStreakRecord: {currentStreak: 0, largestStreak: 0, currentActivity: 0},
+                weeklyStreakRecord: {currentStreak: 0, currentActivity: 0, largestWeeklyStreak: 0}
+            })
         );
     }),
     rest.get(API_PATH + "/auth/user_authentication_settings", (req, res, ctx) => {

@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments} from "../../mocks/data";
 import {Provider} from "react-redux";
-import {isaacApi, store} from "../../app/state";
+import {isaacApi, requestCurrentUser, store} from "../../app/state";
 import {MemoryRouter} from "react-router";
 import {augmentErrorMessage} from "./utils";
 import {server} from "../../mocks/server";
@@ -16,6 +16,7 @@ import produce from "immer";
 describe("MyAssignments", () => {
 
     beforeAll(() => {
+        store.dispatch(requestCurrentUser());
         render(<Provider store={store}>
             <MemoryRouter initialEntries={["/assignments"]}>
                 <MyAssignments/>
