@@ -124,7 +124,7 @@ describe("IsaacApp", () => {
         });
     });
 
-    it('should show the users number of current assignments in the navigation menu', async () => {
+    isPhy && it('should show the users number of current assignments in the navigation menu', async () => {
         resetWithUserRole();
         const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
         expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
