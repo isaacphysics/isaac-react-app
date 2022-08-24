@@ -20,10 +20,8 @@ import {
     transientUserContextSlice,
     constants,
     glossaryTerms,
-    news,
     concepts,
     doc,
-    fragments,
     graphSketcherSpec,
     questions,
     activeModals,
@@ -81,12 +79,10 @@ const appReducer = combineReducers({
 
     // Static Content
     constants,
-    news,
     glossaryTerms,
 
     // Content
     doc,
-    fragments,
     concepts,
 
     // Question

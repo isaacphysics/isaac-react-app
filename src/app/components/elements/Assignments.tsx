@@ -1,6 +1,5 @@
 import {AssignmentDTO, Difficulty, Stage} from "../../../IsaacApiTypes";
 import React, {MouseEvent} from "react";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {extractTeacherName} from "../../services/user";
@@ -15,12 +14,14 @@ import tags from "../../services/tags";
 import {difficultiesOrdered, stageLabelMap, stagesOrdered, TAG_ID} from "../../services/constants";
 import {AggregateDifficultyIcons} from "./svg/DifficultyIcons";
 
-interface AssignmentsProps {
-    assignments: AssignmentDTO[];
-    showOld?: (event: MouseEvent) => void;
-}
+const midnightOf = (date: Date | number) => {
+    let d = new Date(date);
+    d.setHours(11, 59, 59, 999);
+    return d;
+};
 
 export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
+    const now = new Date();
     const stages = allPropertiesFromAGameboard(assignment.gameboard, "stage", stagesOrdered);
     const difficulties = allPropertiesFromAGameboard(assignment.gameboard, "difficulty", difficultiesOrdered);
     const topics = tags.getTopicTags(Array.from((assignment.gameboard?.contents || []).reduce((a, c) => {
@@ -31,7 +32,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
     }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
     return <>
         <hr />
-        <Row data-testid={"my-assignment"} className="board-card">
+        <Row className="board-card">
             <Col xs={4} md={2} lg={1}>
                 <div className="board-subject-hexagon-container">
                     {isDefined(assignment.gameboard) && ((assignment.gameboard.percentageCompleted === 100) ?
@@ -82,20 +83,25 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 <Link to={`/gameboards#${assignment.gameboardId}`}>
                     View Assignment
                 </Link>
-                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && Date.now() > assignment.dueDate.valueOf() && assignment.gameboard.percentageCompleted !== 100 &&
+                {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100 &&
                 <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
             </Col>
         </Row>
     </>
-};
+}
 
+interface AssignmentsProps {
+    assignments: AssignmentDTO[];
+    showOld?: (event: MouseEvent) => void;
+}
 export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
     return <>
         {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
         {assignments.length === 0 &&
             (showOld
-                ? <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older assignments</a></strong></p>
-                : <p className="text-center py-4"><strong>There are no assignments to display.</strong></p>
+                    ? <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older
+                        assignments</a></strong></p>
+                    : <p className="text-center py-4"><strong>There are no assignments to display.</strong></p>
             )
         }
     </>;

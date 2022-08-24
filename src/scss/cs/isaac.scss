@@ -272,7 +272,7 @@ body {
     }
     @include respond-above(md) {
         background-image: url('/assets/pattern01.svg');
-        background-position: right 0;
+        background-position: right 8px;
         background-repeat: no-repeat;
     }
 }

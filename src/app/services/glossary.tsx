@@ -43,7 +43,7 @@ export function useGlossaryTermsInMarkdown(markdown: string): [string, JSX.Eleme
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
     // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
     // This is used to produce a hoverable element showing the glossary term, and its definition in a tooltip.
-    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9- ]+)")?\]/g;
+    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9-() ]+)")?\]/g;
 
     const glossaryIdsInMarkdown = Array.from(new Set([
         ...Array.from(markdown.matchAll(glossaryBlockRegexp)).filter(m => m.groups && m.groups.id),

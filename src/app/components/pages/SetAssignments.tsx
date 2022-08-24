@@ -101,10 +101,11 @@ const AssignGroup = ({groups, board}: BoardProps) => {
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
-        <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+        {/* TODO remove staff role requirement */}
+        {isStaff(user) && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                        onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
-        </Label>
+        </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
@@ -194,7 +195,8 @@ const Board = (props: BoardProps) => {
 
     const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
-    const startedAssignees = useMemo(() => assignees.filter(hasStarted), [assignees]);
+    // TODO remove is staff role requirement
+    const startedAssignees = useMemo(() => isStaff(user) ? assignees.filter(hasStarted) : assignees, [assignees]);
     const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
 
     return <>
@@ -222,7 +224,8 @@ const Board = (props: BoardProps) => {
                         )}</Container>
                         : <p>No groups.</p>}
                 </div>
-                <div className="py-2">
+                {/* TODO remove staff role requirement */}
+                {isStaff(user) && <div className="py-2">
                     <Label>Pending assignments: <span className="icon-help mx-1" id={`pending-assignments-help-${board.id}`}/></Label>
                     <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board.id}`}>
                         Assignments that are scheduled to begin at a future date. Once the start date passes, students
@@ -242,7 +245,7 @@ const Board = (props: BoardProps) => {
                             </Row>
                         )}</Container>
                         : <p>No groups.</p>}
-                </div>
+                </div>}
             </ModalBody>
             <ModalFooter>
                 <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
@@ -250,7 +253,7 @@ const Board = (props: BoardProps) => {
         </Modal>
         {boardView == BoardViews.table ?
             // Table view
-            <tr key={board.id} className="board-card">
+            <tr className="board-card">
                 <td>
                     <div className="board-subject-hexagon-container table-view">
                         <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
@@ -277,7 +280,7 @@ const Board = (props: BoardProps) => {
             </tr>
             :
             // Card view
-            <Card key={board.id} className="board-card card-neat">
+            <Card className="board-card card-neat">
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
                     <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
@@ -445,11 +448,10 @@ export const SetAssignments = () => {
                             <>
                                 <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
                                     {boards.boards && boards.boards.map(board =>
-                                        <Col>
+                                        <Col key={board.id}>
                                             <Board
                                                 user={user}
                                                 groups={groups ?? []}
-                                                key={board.id}
                                                 board={board}
                                                 boardView={boardView}
                                                 assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}

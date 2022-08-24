@@ -60,7 +60,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
         // Data structures and algorithms topics
         {id: TAG_ID.dataStructures, title: "Data structures", parent: TAG_ID.dataStructuresAndAlgorithms},
-        {id: TAG_ID.searching, title: "Searching algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.searching, title: "Searching algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_NEW},
         {id: TAG_ID.sorting, title: "Sorting algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.pathfinding, title: "Pathfinding algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
@@ -80,7 +80,7 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.mathsFunctions, title: "Mathematical functions", parent: TAG_ID.mathsForCs, stageOverride: GCSE_COMING_2022},
         // Programming  fundamentals topics
         {id: TAG_ID.programmingConcepts, title: "Programming concepts", parent: TAG_ID.programmingFundamentals},
-        {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_COMING_2022},
+        {id: TAG_ID.stringHandling, title: "String handling", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_NEW},
         {id: TAG_ID.subroutines, title: "Subroutines", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.files, title: "File handling", parent: TAG_ID.programmingFundamentals},
         {id: TAG_ID.recursion, title: "Recursion", parent: TAG_ID.programmingFundamentals, stageOverride: GCSE_HIDDEN},

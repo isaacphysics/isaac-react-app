@@ -319,14 +319,6 @@ export enum ACTION_TYPE {
     EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS = "EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS",
     EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE = "EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE",
 
-    NEWS_REQUEST = "NEWS_REQUEST",
-    NEWS_RESPONSE_SUCCESS = "NEWS_RESPONSE_SUCCESS",
-    NEWS_RESPONSE_FAILURE = "NEWS_RESPONSE_FAILURE",
-
-    FRAGMENT_REQUEST = "FRAGMENT_REQUEST",
-    FRAGMENT_RESPONSE_SUCCESS = "FRAGMENT_RESPONSE_SUCCESS",
-    FRAGMENT_RESPONSE_FAILURE = "FRAGMENT_RESPONSE_FAILURE",
-
     GLOSSARY_TERMS_REQUEST = "GLOSSARY_TERMS_REQUEST",
     GLOSSARY_TERMS_RESPONSE_SUCCESS = "GLOSSARY_TERMS_RESPONSE_SUCCESS",
     GLOSSARY_TERMS_RESPONSE_FAILURE = "GLOSSARY_TERMS_RESPONSE_FAILURE",
@@ -562,8 +554,7 @@ export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOT
 
 // STAGES
 export enum STAGE {
-    YEAR_7 = "year_7",
-    YEAR_8 = "year_8",
+    YEAR_7_AND_8 = "year_7_and_8",
     YEAR_9 = "year_9",
     GCSE = "gcse",
     A_LEVEL = "a_level",
@@ -572,12 +563,11 @@ export enum STAGE {
     ALL = "all",
 }
 export const STAGE_NULL_OPTIONS = new Set([STAGE.ALL]);
-export const STAGES_PHY = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
+export const STAGES_PHY = new Set([STAGE.ALL, STAGE.YEAR_7_AND_8, STAGE.YEAR_9, STAGE.GCSE, STAGE.A_LEVEL, STAGE.FURTHER_A, STAGE.UNIVERSITY]);
 export const STAGES_CS = new Set([STAGE.ALL, STAGE.GCSE, STAGE.A_LEVEL]);
-export const stagesOrdered: Stage[] = ["year_7", "year_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
+export const stagesOrdered: Stage[] = ["year_7_and_8", "year_9", "gcse", "a_level", "further_a", "university", "all"];
 export const stageLabelMap: {[stage in Stage]: string} = {
-    year_7: "Year\u00A07",
-    year_8: "Year\u00A08",
+    year_7_and_8: "Year\u00A07&8",
     year_9: "Year\u00A09",
     gcse: "GCSE",
     a_level: "A\u00A0Level",
@@ -748,6 +738,7 @@ export enum TAG_ID {
     physics = "physics",
     maths = "maths",
     chemistry = "chemistry",
+    biology = "biology",
 
     // Fields ---
 
@@ -996,9 +987,6 @@ export enum EventTypeFilter {
 
 export enum EventStageFilter {
     "All stages" = "all",
-    "Year 7" = "year_7",
-    "Year 8" = "year_8",
-    "Year 9" = "year_9",
     "GCSE" = "gcse",
     "A-Level" = "a_level",
     "Further A" = "further_a",
@@ -1098,3 +1086,5 @@ export const GRAY_120 = '#c9cad1';
 export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 
 export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
+
+export const FEATURED_NEWS_TAG = "featured";

@@ -46,7 +46,7 @@ def update_config(env, site):
     # TODO check if there have been any new config values since last release
     print("# If necessary, update config:")
     ask_to_run_command(f"sudo nano /local/data/isaac-config/{site}/segue-config.{env}.properties")
-    print("# Remember to also update isaac-3 so that it remains in-sync.")
+    print("# Remember to also update isaac-3 so that it remains in-sync! \n")
 
 def run_db_migrations(env, site):
     # TODO check if there are any migrations since the last release
@@ -75,6 +75,7 @@ def deploy_test(site, app):
     print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
     print("# Reset the test database.")
     ask_to_run_command(f"./clean-test-db.sh {site}")
+    update_config("test", site)
     bring_up_the_new_containers(site, 'test', app)
 
 def deploy_staging_or_dev(env, site, app):

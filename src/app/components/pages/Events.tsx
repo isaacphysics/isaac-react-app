@@ -18,7 +18,6 @@ import {PageFragment} from "../elements/PageFragment";
 import {EventStageFilter, EventStatusFilter, EventTypeFilter} from "../../services/constants";
 import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
-import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 import {stageExistsForSite} from "../../services/events";
@@ -67,10 +66,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {isCS && <>
-                <CoronavirusWarningBanner />
-                <MetaDescription description={metaDescriptionCS} />
-            </>}
+            {isCS && <MetaDescription description={metaDescriptionCS} />}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">
