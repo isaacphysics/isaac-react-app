@@ -115,7 +115,7 @@ export const HomepageCS = () => {
 
         <section id="news">
             <Container className={classNames("pt-4 pb-5", {"mt-lg-n5 pt-lg-0": user?.loggedIn ?? false})}>
-                <div className="eventList pt-5 pattern-03-reverse">
+                <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
                     <h2 className="h-title mb-4">News</h2>
                     {user?.loggedIn && <div className={"d-block d-lg-none mb-4 mb-lg-0"}>
                         <FeaturedNewsItem item={news?.[0]} />

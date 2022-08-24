@@ -125,10 +125,15 @@ export const handlers = [
             ctx.json([])
         );
     }),
-    rest.get(API_PATH + "/pages/pods/physics", (req, res, ctx) => {
+    rest.get(API_PATH + "/pages/pods/:tag", (req, res, ctx) => {
+        const {tag} = req.params;
+        const podsFilteredByTag = produce(mockNewsPods, pods => {
+            pods.results = pods.results.filter(p => p.tags.includes(tag as string))
+            pods.totalResults = pods.results.length;
+        });
         return res(
             ctx.status(200),
-            ctx.json(mockNewsPods)
+            ctx.json(podsFilteredByTag)
         );
     }),
     rest.get(API_PATH + "/glossary/terms", (req, res, ctx) => {

@@ -1,6 +1,6 @@
 import React from "react";
-import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
+import {Card, CardBody, CardImg, CardText} from "reactstrap";
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
 import {apiHelper} from "../../../services/api";
 
@@ -12,16 +12,16 @@ interface NewsCardProps {
 export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
 
-    return <RS.Card className={"card-neat news-card"}>
+    return <Card data-testid={"news-pod"} className={"card-neat news-card"}>
         {image && <a href={url}>
-            <RS.CardImg
+            <CardImg
                 className={'news-card-image'}
                 top
                 src={image.src && apiHelper.determineImageUrl(image.src)}
                 alt={image.altText || `Illustration for ${title}`}
             />
         </a>}
-        <RS.CardBody className="d-flex flex-column">
+        <CardBody className="d-flex flex-column">
             <div className="m-0 mb-auto">
                 <span className="d-block my-2">
                     {showTitle ?
@@ -39,7 +39,7 @@ export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
                     }
                 </span>
             </div>
-            <RS.CardText>
+            <CardText>
                 {!url?.startsWith("http") ?
                     <Link className="focus-target" to={`${url}`}>
                         Read more
@@ -49,7 +49,7 @@ export const NewsCard = ({newsItem, showTitle}: NewsCardProps) => {
                         Find out more
                     </a>
                 }
-            </RS.CardText>
-        </RS.CardBody>
-    </RS.Card>
+            </CardText>
+        </CardBody>
+    </Card>
 };

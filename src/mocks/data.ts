@@ -1,3 +1,6 @@
+import {siteSpecific} from "../app/services/siteConstants";
+import {FEATURED_NEWS_TAG} from "../app/services/constants";
+
 const NOW = Date.now(); // Use same "now" for all time relative calculations
 const DAYS_AGO = (n: number) => {
     let d = new Date(NOW);
@@ -4614,7 +4617,7 @@ export const mockUser = {
     email: "test-teacher@test.com",
     dateOfBirth: 777777777777,
     gender: "MALE",
-    registrationDate: 1634291538091,
+    registrationDate: DAYS_AGO(100),
     role: "ADMIN",
     schoolOther: "N/A",
     registeredContexts: [
@@ -4623,10 +4626,10 @@ export const mockUser = {
             examBoard: "all"
         }
     ],
-    registeredContextsLastConfirmed: 1657889708872,
+    registeredContextsLastConfirmed: DAYS_AGO(3),
     firstLogin: false,
-    lastUpdated: 1658242698482,
-    lastSeen: 1660843523694,
+    lastUpdated: DAYS_AGO(1),
+    lastSeen: DAYS_AGO(1),
     emailVerificationStatus: "VERIFIED",
     id: 1
 };
@@ -4656,6 +4659,7 @@ export const mockUserAuthSettings = {
     id: 1
 };
 
+const newsPodTag = siteSpecific("physics", "news");
 export const mockNewsPods = {
     results: [
         {
@@ -4666,7 +4670,7 @@ export const mockNewsPods = {
             children: [],
             value: "Isaac provides a free topic-based learning plan for Yr 10-13 students working independently from home and for schools offering support.",
             tags: [
-                "physics"
+                newsPodTag
             ],
             image: {
                 type: "image",
@@ -4686,7 +4690,8 @@ export const mockNewsPods = {
             children: [],
             value: "These quizzes will help you to revise, rearrange equations, change units and practise extracting the correct information from a question.",
             tags: [
-                "physics"
+                newsPodTag,
+                FEATURED_NEWS_TAG
             ],
             image: {
                 type: "image",
@@ -4706,7 +4711,7 @@ export const mockNewsPods = {
             children: [],
             value: "Use these boards as they are, customise them, or create your own boards to meet your own needs.",
             tags: [
-                "physics"
+                newsPodTag
             ],
             image: {
                 type: "image",
@@ -4726,7 +4731,8 @@ export const mockNewsPods = {
             children: [],
             value: "Announcing our new computer science collaboration!",
             tags: [
-                "physics"
+                newsPodTag,
+                FEATURED_NEWS_TAG
             ],
             image: {
                 type: "image",
@@ -4746,7 +4752,7 @@ export const mockNewsPods = {
             children: [],
             value: "Order and explore our new books for GCSE Maths, pre-GCSE Physics, and linking concepts at A Level Physics.",
             tags: [
-                "physics"
+                newsPodTag
             ],
             image: {
                 type: "image",

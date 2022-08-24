@@ -112,7 +112,7 @@ export const ResponsiveCarousel = ({groupingLimit, children, collectionTag = 'di
                     {children}
                 </ControlledCarouselInstance>
             </div>
-            <div className={`d-none d-md-block ${className ?? ""}`}>
+            <div data-testid={"carousel-inner"} className={`d-none d-md-block ${className ?? ""}`}>
                 <ControlledCarouselInstance collectionTag={collectionTag}>
                     {tuple}
                 </ControlledCarouselInstance>
