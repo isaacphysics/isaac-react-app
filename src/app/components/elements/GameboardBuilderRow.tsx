@@ -14,7 +14,7 @@ import {generateQuestionTitle} from "../../services/questions";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
-    filterAudienceViewsByProperties
+    filterAudienceViewsByProperties, findAudienceRecordsMatchingPartial
 } from "../../services/userContext";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 
@@ -106,9 +106,15 @@ const GameboardBuilderRow = (
             </div>)}
         </td>
         {isCS && <td className="w-5">
-            {filteredAudienceViews.map(v => v.examBoard).map(examBoard => <div key={examBoard}>
-                {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
-            </div>)}
+            {filteredAudienceViews.map((audienceView, i, collection) => <>
+                {findAudienceRecordsMatchingPartial(question.audience, audienceView)
+                    .map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => <div key={examBoard}>
+                        {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
+                    </div>))
+                }
+                {/* When this becomes more common we should solve separation via a new row and merge other columns */}
+                {i + 1 < collection.length && <hr className="text-center" />}
+            </>)}
         </td>}
     </tr>
 };
