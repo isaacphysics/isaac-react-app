@@ -210,7 +210,7 @@ const Board = (props: BoardProps) => {
     const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
 
     return <>
-        <Modal isOpen={modal} toggle={toggleAssignModal}>
+        <Modal isOpen={modal} data-testid={"set-assignment-modal"} toggle={toggleAssignModal}>
             <ModalHeader close={
                 <button className="close" onClick={toggleAssignModal}>
                     {"Close"}
@@ -263,7 +263,7 @@ const Board = (props: BoardProps) => {
         </Modal>
         {boardView == BoardViews.table ?
             // Table view
-            <tr className="board-card">
+            <tr className="board-card" data-testid={"assignment-gameboard-table-row"}>
                 <td>
                     <div className="board-subject-hexagon-container table-view">
                         <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
@@ -290,7 +290,7 @@ const Board = (props: BoardProps) => {
             </tr>
             :
             // Card view
-            <Card className="board-card card-neat">
+            <Card className="board-card card-neat" data-testid={"assignment-gameboard-card"}>
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
                     <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
