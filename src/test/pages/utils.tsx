@@ -2,7 +2,7 @@ import {Role} from "../../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../../mocks/server";
 import {rest, RestHandler} from "msw";
-import {API_PATH} from "../../app/services";
+import {ACTION_TYPE, API_PATH} from "../../app/services";
 import produce from "immer";
 import {mockUser} from "../../mocks/data";
 import {isaacApi, logOutUser, requestCurrentUser, store} from "../../app/state";
@@ -35,7 +35,7 @@ interface RenderTestEnvironmentOptions {
 // defaults (those in handlers.ts).
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
     const {role, modifyUser, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
-    store.dispatch(logOutUser());
+    store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch(isaacApi.util.resetApiState());
     server.resetHandlers();
     if (role || modifyUser) {
@@ -65,7 +65,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     if (extraEndpoints) {
         server.use(...extraEndpoints);
     }
-    if (!isDefined(PageComponent) || PageComponent.name !== "IsaacApp") {
+    if (isDefined(PageComponent) && PageComponent.name !== "IsaacApp") {
         store.dispatch(requestCurrentUser());
     }
     render(<Provider store={store}>

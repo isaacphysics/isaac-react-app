@@ -1,7 +1,7 @@
 import {rest} from "msw";
 import {
     mockAssignmentsGroup2,
-    mockAssignmentsGroup6,
+    mockAssignmentsGroup6, mockFragment,
     mockGameboards,
     mockGroups,
     mockMyAssignments,
@@ -139,6 +139,13 @@ export const handlers = [
             ctx.json(podsFilteredByTag)
         );
     }),
+    rest.get(API_PATH + "/pages/fragments/:fragmentId", (req, res, ctx) => {
+        const {fragmentId} = req.params;
+        return res(
+            ctx.status(200),
+            ctx.json(mockFragment(fragmentId as string))
+        );
+    }),
     rest.get(API_PATH + "/glossary/terms", (req, res, ctx) => {
         return res(
             ctx.status(200),
@@ -161,4 +168,10 @@ export const handlers = [
             ctx.json({})
         );
     }),
+    rest.get(API_PATH + "/events", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json({results: [], totalResults: 0})
+        );
+    })
 ];

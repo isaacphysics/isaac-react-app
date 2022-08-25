@@ -2,7 +2,6 @@ import React from "react";
 // Importing "/pure" means that tests ARE NOT CLEANED UP automatically
 import {cleanup, screen, waitFor} from "@testing-library/react/pure";
 import userEvent from "@testing-library/user-event";
-import {isaacApi, store} from "../../app/state";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockGameboards} from "../../mocks/data";
 import {renderTestEnvironment} from "./utils";
@@ -29,5 +28,6 @@ describe("SetAssignments", () => {
         // Make sure that all gameboards are listed
         const gameboardRows = await screen.findAllByTestId("assignment-gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
+        cleanup();
     });
 });
