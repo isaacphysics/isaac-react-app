@@ -1,5 +1,5 @@
 import {FormGroup, Input, Label} from "reactstrap";
-import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD} from "../../../services/constants";
+import {BOOLEAN_NOTATION, EMPTY_BOOLEAN_NOTATION_RECORD} from "../../../services";
 import {BooleanNotation} from "../../../../IsaacAppTypes";
 import React, {ChangeEvent} from "react";
 

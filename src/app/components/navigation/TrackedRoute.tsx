@@ -3,14 +3,9 @@ import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useAppSelector} from "../../state";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
+import {selectors, useAppSelector} from "../../state";
+import {GOOGLE_ANALYTICS_ACCOUNT_ID, isTeacher, KEY, persistence, siteSpecific} from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
-import {isTeacher} from "../../services/user";
-import {selectors} from "../../state";
-import {GOOGLE_ANALYTICS_ACCOUNT_ID} from "../../services/constants";
-import {siteSpecific} from "../../services/siteConstants";
 
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
 ReactGA.set({ anonymizeIp: true });
@@ -46,13 +41,14 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
             const {ifUser, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
+                const userNeedsToBeTeacher = rest.ifUser && rest.ifUser.name === isTeacher.name; // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
                     {user && ifUser(user) ?
                         <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
-                        user && !user.loggedIn && !isTeacher(user) && rest.ifUser && rest.ifUser.name === isTeacher.name ? // TODO we should try to find a more robust way than this
+                        user && !user.loggedIn && !isTeacher(user) && userNeedsToBeTeacher ?
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
-                            user && !isTeacher(user) && rest.ifUser && rest.ifUser.name === isTeacher.name ? // TODO we should try to find a more robust way than this
+                            user && !isTeacher(user) && userNeedsToBeTeacher ?
                                 siteSpecific(
                                     // Physics
                                     <Redirect to="/pages/contact_us_teacher"/>,

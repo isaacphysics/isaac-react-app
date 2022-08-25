@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {SortOrder} from "../../services/constants";
+import {SortOrder} from "../../services";
 
 interface SortableTableHeaderProps {
     className: string;

@@ -1,37 +1,21 @@
 import React from "react";
 import {rest} from "msw";
-import {API_PATH} from "../../app/services/constants";
+import {API_PATH} from "../../app/services";
 // Importing "/pure" means that tests ARE NOT CLEANED UP automatically
-import {cleanup, render, screen, waitFor} from "@testing-library/react/pure";
+import {cleanup, screen, waitFor} from "@testing-library/react/pure";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments} from "../../mocks/data";
-import {Provider} from "react-redux";
-import {isaacApi, requestCurrentUser, store} from "../../app/state";
-import {MemoryRouter} from "react-router";
-import {augmentErrorMessage} from "./utils";
-import {server} from "../../mocks/server";
+import {augmentErrorMessage, renderTestEnvironment} from "./utils";
 import produce from "immer";
 
 describe("MyAssignments", () => {
 
-    beforeAll(() => {
-        store.dispatch(requestCurrentUser());
-        render(<Provider store={store}>
-            <MemoryRouter initialEntries={["/assignments"]}>
-                <MyAssignments/>
-            </MemoryRouter>
-        </Provider>);
-    });
-
-    afterAll(() => {
-        // We have to do this manually because we imported /pure and we
-        // don't want to affect the next test suite
-        cleanup();
-        store.dispatch(isaacApi.util.resetApiState());
-    });
-
     it('should show my current assignments on render', async () => {
+        renderTestEnvironment({
+            PageComponent: MyAssignments,
+            initalRouteEntries: ["/assignments"]
+        });
         const assignments = await screen.findAllByTestId("my-assignment");
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
@@ -67,34 +51,30 @@ describe("MyAssignments", () => {
             expect(completedTab.classList).not.toContain("active");
         }, {onTimeout: augmentErrorMessage("Tabs did not change to the correct state fast enough")});
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
+        cleanup();
     });
 
     it('should contain assignments with undefined due date and older than a month in the "Older Assignments" tab', async () => {
-        cleanup();
-        // Important to dispatch this because RTK Query caches requests for 30 seconds
-        store.dispatch(isaacApi.util.resetApiState());
-        // Override current "/assignments" mock endpoint
-        server.use(
-            rest.get(API_PATH + "/assignments", (req, res, ctx) => {
-                let d = new Date();
-                d.setUTCDate(d.getUTCDate() - 1);
-                d.setUTCMonth(d.getUTCMonth() - 1);
-                const assignmentsWithOneOld = produce<any[]>(mockMyAssignments, as => {
-                    as[0].creationDate = d.valueOf();
-                    as[0].scheduledStartDate = d.valueOf();
-                    delete as[0].dueDate;
-                });
-                return res(
-                    ctx.status(200),
-                    ctx.json(assignmentsWithOneOld)
-                );
-            }),
-        );
-        render(<Provider store={store}>
-            <MemoryRouter initialEntries={["/assignments"]}>
-                <MyAssignments/>
-            </MemoryRouter>
-        </Provider>);
+        renderTestEnvironment({
+            PageComponent: MyAssignments,
+            initalRouteEntries: ["/assignments"],
+            extraEndpoints: [
+                rest.get(API_PATH + "/assignments", (req, res, ctx) => {
+                    let d = new Date();
+                    d.setUTCDate(d.getUTCDate() - 1);
+                    d.setUTCMonth(d.getUTCMonth() - 1);
+                    const assignmentsWithOneOld = produce<any[]>(mockMyAssignments, as => {
+                        as[0].creationDate = d.valueOf();
+                        as[0].scheduledStartDate = d.valueOf();
+                        delete as[0].dueDate;
+                    });
+                    return res(
+                        ctx.status(200),
+                        ctx.json(assignmentsWithOneOld)
+                    );
+                })
+            ]
+        });
         // Wait for the 3 "To Do" assignments to show up
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(3);
         // Click across to the "Older Assignments" tab
@@ -102,5 +82,6 @@ describe("MyAssignments", () => {
         await userEvent.click(olderTab);
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
+        cleanup();
     });
 });

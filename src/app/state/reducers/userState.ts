@@ -1,5 +1,5 @@
 import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {isaacApi} from "../index";
 

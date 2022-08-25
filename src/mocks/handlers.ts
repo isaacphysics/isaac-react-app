@@ -1,5 +1,4 @@
 import {rest} from "msw";
-import {API_PATH} from "../app/services/constants";
 import {
     mockAssignmentsGroup2,
     mockAssignmentsGroup6,
@@ -13,6 +12,7 @@ import {
     mockUserAuthSettings,
     mockUserPreferences
 } from "./data";
+import {API_PATH} from "../app/services";
 import produce from "immer";
 
 export const handlers = [

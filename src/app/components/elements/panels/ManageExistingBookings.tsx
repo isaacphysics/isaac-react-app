@@ -14,14 +14,21 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../../../state";
-import {atLeastOne, zeroOrLess} from "../../../services/validation";
+import {
+    API_PATH,
+    atLeastOne,
+    bookingStatusMap,
+    examBoardLabelMap,
+    isAdmin,
+    isCS,
+    isEventLeader,
+    sortOnPredicateAndReverse,
+    stageLabelMap,
+    zeroOrLess
+} from "../../../services";
 import {PotentialUser} from "../../../../IsaacAppTypes";
-import {isAdmin, isEventLeader} from "../../../services/user";
 import {BookingStatus, EventBookingDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {DateString} from "../DateString";
-import {sortOnPredicateAndReverse} from "../../../services/sorting";
-import {API_PATH, bookingStatusMap, examBoardLabelMap, stageLabelMap} from "../../../services/constants";
-import {isCS} from "../../../services/siteConstants";
 
 export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialUser; eventBookingId: string}) => {
     const dispatch = useAppDispatch();

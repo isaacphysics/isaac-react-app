@@ -1,11 +1,10 @@
 import React, {useContext, useState} from "react";
-import { useAppDispatch, closeActiveModal, openActiveModal, returnQuizToStudent } from "../../../state";
-import { Button } from "reactstrap";
-import { IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO } from "../../../../IsaacApiTypes";
+import {closeActiveModal, openActiveModal, returnQuizToStudent, useAppDispatch} from "../../../state";
+import {Button} from "reactstrap";
+import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import { isQuestion } from "../../../services/questions";
-import { IsaacSpinner } from "../../handlers/IsaacSpinner";
-import {siteSpecific} from "../../../services/siteConstants";
+import {isQuestion, siteSpecific} from "../../../services";
+import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 export const ICON = siteSpecific(
     {

@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Col, Row} from "reactstrap";
-import {siteSpecific} from "../../services/siteConstants";
+import {EDITOR_ORIGIN, siteSpecific} from "../../services";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {Provider} from "react-redux";
-import {useAppDispatch, store, fetchGlossaryTerms} from "../../state";
+import {fetchGlossaryTerms, store, useAppDispatch} from "../../state";
 import {StaticRouter} from "react-router";
-import {EDITOR_ORIGIN} from "../../services/constants";
 
 function getType(doc: any) {
     if (!doc) {

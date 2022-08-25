@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {Link} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";

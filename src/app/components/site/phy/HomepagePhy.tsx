@@ -1,12 +1,10 @@
 import React, {useEffect} from "react";
-import {selectors, useAppSelector} from "../../../state";
+import {isaacApi, selectors, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {above, SITE_SUBJECT_TITLE, useDeviceSize} from "../../../services";
 import {WarningBanner} from "../../navigation/WarningBanner";
-import {above, useDeviceSize} from "../../../services/device";
-import {isaacApi} from "../../../state";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);

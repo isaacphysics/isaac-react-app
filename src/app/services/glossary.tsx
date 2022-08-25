@@ -2,7 +2,7 @@ import ReactDOMServer from "react-dom/server";
 import {Provider, useStore} from "react-redux";
 import {AppState, useAppSelector} from "../state";
 import {Router} from "react-router-dom";
-import {history} from "./history";
+import {history} from "./index";
 import {IsaacGlossaryTerm} from "../components/content/IsaacGlossaryTerm";
 import * as RS from "reactstrap";
 import React, {useRef} from "react";

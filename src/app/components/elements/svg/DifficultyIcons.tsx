@@ -1,7 +1,7 @@
 import React from "react";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {difficultyLabelMap, difficultyShortLabelMap} from "../../../services/constants";
+import {difficultyLabelMap, difficultyShortLabelMap} from "../../../services";
 import classnames from "classnames";
 import {Rectangle} from "./Rectangle";
 

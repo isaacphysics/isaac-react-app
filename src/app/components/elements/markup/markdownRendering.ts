@@ -1,7 +1,6 @@
-import {MARKDOWN_RENDERER} from "../../../services/constants";
+import {isPhy, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-import {isPhy} from "../../../services/siteConstants";
 
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 

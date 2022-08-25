@@ -1,7 +1,5 @@
 import {RegisteredUserDTO} from "../../IsaacApiTypes";
-import * as persistence from "./localStorage";
-import {KEY} from "./localStorage";
-
+import {KEY, persistence} from "./";
 
 export function showNotification(user: RegisteredUserDTO | null) {
     const dateNow = new Date();

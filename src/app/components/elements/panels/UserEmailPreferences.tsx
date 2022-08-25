@@ -3,8 +3,7 @@ import React, {useEffect} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {AppState, useAppSelector} from "../../../state";
-import {validateEmailPreferences} from "../../../services/validation";
-import {SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences;

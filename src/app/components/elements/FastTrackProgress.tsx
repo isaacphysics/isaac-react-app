@@ -7,7 +7,7 @@ import {fetchFasttrackConcepts} from "../../state";
 import * as RS from "reactstrap";
 import {selectors} from "../../state";
 import {Link} from "react-router-dom";
-import {useDeviceSize} from "../../services/device";
+import {useDeviceSize} from "../../services";
 import {Hexagon} from "./svg/Hexagon";
 import {HexagonConnection} from "./svg/HexagonConnection";
 import {Markup} from "./markup";

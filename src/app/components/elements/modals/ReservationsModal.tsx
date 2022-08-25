@@ -18,9 +18,8 @@ import {Button, Col, CustomInput, Dropdown, DropdownItem, DropdownMenu, Dropdown
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
+import {bookingStatusMap, isLoggedIn, NOT_FOUND} from "../../../services";
 import _orderBy from "lodash/orderBy";
-import {isLoggedIn} from "../../../services/user";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 

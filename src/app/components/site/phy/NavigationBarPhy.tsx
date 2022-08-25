@@ -7,7 +7,7 @@ import {
 } from "../../navigation/NavigationBar";
 import React from "react";
 import {selectors, useAppSelector} from "../../../state";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services/user";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services";
 
 export const NavigationBarPhy = () => {
     const user = useAppSelector(selectors.user.orNull);

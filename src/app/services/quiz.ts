@@ -1,10 +1,8 @@
 import {useEffect, useMemo} from "react";
 import {deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
-import {isDefined} from "./miscUtils";
+import {API_PATH, isDefined, isQuestion} from "./";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
-import {API_PATH} from "./constants";
 import {partition} from "lodash";
-import {isQuestion} from "./questions";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];

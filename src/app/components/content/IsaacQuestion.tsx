@@ -10,24 +10,26 @@ import {
 } from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
+import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
-import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
-import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, ConfidenceContext, GameboardContext} from "../../../IsaacAppTypes";
-import {RouteComponentProps, withRouter} from "react-router";
 import {
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
+    fastTrackProgressEnabledBoards,
+    isCS,
+    isLoggedIn,
+    isPhy,
+    QUESTION_TYPES,
+    selectQuestionPart,
     useFastTrackInformation
-} from "../../services/fastTrack";
-import {isCS, isPhy} from "../../services/siteConstants";
+} from "../../services";
+import {DateString, TIME_ONLY} from "../elements/DateString";
+import {AccordionSectionContext, ConfidenceContext, GameboardContext} from "../../../IsaacAppTypes";
+import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
-import {isLoggedIn} from "../../services/user";
-import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();

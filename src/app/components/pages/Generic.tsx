@@ -4,7 +4,7 @@ import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE} from "../../services/constants";
+import {DOCUMENT_TYPE, siteSpecific} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -13,7 +13,6 @@ import {EditContentButton} from "../elements/EditContentButton";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
-import {siteSpecific} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 interface GenericPageComponentProps {

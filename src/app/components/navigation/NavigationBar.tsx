@@ -1,6 +1,6 @@
 import React, {HTMLProps, useEffect, useMemo, useState} from "react";
 import {Link} from "react-router-dom";
-import {useAppDispatch, useAppSelector, isaacApi, loadQuizAssignedToMe, selectors} from "../../state";
+import {isaacApi, loadQuizAssignedToMe, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {
     Badge,
     Collapse,
@@ -14,10 +14,7 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import {filterAssignmentsByStatus} from "../../services/assignments";
-import {isCS} from "../../services/siteConstants";
-import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
-import {isFound} from "../../services/miscUtils";
+import {filterAssignmentsByStatus, isCS, isFound, partitionCompleteAndIncompleteQuizzes} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
 

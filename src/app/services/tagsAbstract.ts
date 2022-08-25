@@ -1,5 +1,5 @@
+import {TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag, Tag} from "../../IsaacAppTypes";
-import {TAG_ID, TAG_LEVEL} from "./constants";
 import {ContentDTO} from "../../IsaacApiTypes";
 
 export abstract class AbstractBaseTagService {

@@ -4,7 +4,7 @@ import {Remarkable} from "remarkable";
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
-import {siteSpecific} from "./siteConstants";
+import {siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",

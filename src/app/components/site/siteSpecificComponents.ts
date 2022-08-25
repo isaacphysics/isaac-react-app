@@ -1,4 +1,4 @@
-import {siteSpecific} from "../../services/siteConstants";
+import {siteSpecific} from "../../services";
 import {HomepageCS} from "./cs/HomepageCS";
 import {HeaderCS} from "./cs/HeaderCS";
 import {RoutesCS} from "./cs/RoutesCS";

@@ -1,5 +1,4 @@
-import {SEARCH_RESULT_TYPE} from "./constants";
-import {SITE_SUBJECT_TITLE} from "./siteConstants";
+import {SEARCH_RESULT_TYPE, SITE_SUBJECT_TITLE} from "./";
 
 export const searchList = [
     {

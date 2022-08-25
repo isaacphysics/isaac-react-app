@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {debounce} from 'lodash';
-import {isEventManager} from "../../services/user";
+import {isEventManager} from "../../services";
 
 interface AdminEmailsProps {
     location: {

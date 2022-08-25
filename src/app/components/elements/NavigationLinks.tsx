@@ -1,5 +1,5 @@
 import React from "react";
-import {PageNavigation} from "../../services/navigation";
+import {PageNavigation} from "../../services";
 import {Link} from "react-router-dom";
 import {Markup} from "./markup";
 

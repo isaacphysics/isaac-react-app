@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
     AppState,
+    isaacApi,
     requestEmailVerification,
     selectors,
     submitMessage,
     useAppDispatch,
-    useAppSelector,
-    isaacApi
+    useAppSelector
 } from "../../state";
 import {
     Alert,
@@ -22,13 +22,18 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {validateEmail} from "../../services/validation";
+import {
+    api,
+    isPhy,
+    isTeacher,
+    schoolNameWithPostcode,
+    SITE_SUBJECT_TITLE,
+    validateEmail,
+    WEBMASTER_EMAIL
+} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {api} from "../../services/api";
 import {Link} from "react-router-dom";
-import {isTeacher, schoolNameWithPostcode} from "../../services/user";
 import {IsaacContent} from "../content/IsaacContent";
-import {isPhy, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];

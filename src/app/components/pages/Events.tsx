@@ -15,12 +15,16 @@ import queryString from "query-string";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
-import {EventStageFilter, EventStatusFilter, EventTypeFilter} from "../../services/constants";
-import {isTeacher} from "../../services/user";
+import {
+    EventStageFilter,
+    EventStatusFilter,
+    EventTypeFilter,
+    isCS,
+    isTeacher,
+    stageExistsForSite
+} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
-import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
-import {stageExistsForSite} from "../../services/events";
 
 
 interface EventsPageQueryParams {

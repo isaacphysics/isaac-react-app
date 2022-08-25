@@ -2,16 +2,19 @@ import {AssignmentDTO, Difficulty, Stage} from "../../../IsaacApiTypes";
 import React, {MouseEvent} from "react";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
-import {extractTeacherName} from "../../services/user";
-import {formatDate} from "./DateString";
 import {
     allPropertiesFromAGameboard,
     determineGameboardSubjects,
-    generateGameboardSubjectHexagons
-} from "../../services/gameboards";
-import {isDefined} from "../../services/miscUtils";
-import tags from "../../services/tags";
-import {difficultiesOrdered, stageLabelMap, stagesOrdered, TAG_ID} from "../../services/constants";
+    difficultiesOrdered,
+    extractTeacherName,
+    generateGameboardSubjectHexagons,
+    isDefined,
+    stageLabelMap,
+    stagesOrdered,
+    TAG_ID,
+    tags
+} from "../../services";
+import {formatDate} from "./DateString";
 import {AggregateDifficultyIcons} from "./svg/DifficultyIcons";
 
 const midnightOf = (date: Date | number) => {
@@ -71,12 +74,12 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     <strong>{stages.length === 1 ? "Stage" : "Stages"}:</strong>{" "}
                     {stages.map(s => stageLabelMap[s]).join(", ")}
                 </p>}
-                {difficulties.length > 0 && <p className="mb-0">
+                {difficulties.length > 0 && <div className="mb-0">
                     <strong>{difficulties.length === 1 ? "Difficulty" : "Difficulties"}:</strong>{" "}
                     <div className="d-inline-flex">
                         {<AggregateDifficultyIcons difficulties={difficulties} />}
                     </div>
-                </p>}
+                </div>}
                 {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
             </Col>
             <Col xs={5} md={2} className="mt-sm-2 text-right">

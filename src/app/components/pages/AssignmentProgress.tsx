@@ -35,16 +35,22 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem, GameboardItemState, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
+import {
+    API_PATH,
+    getAssignmentCSVDownloadLink,
+    getQuizAssignmentCSVDownloadLink,
+    isDefined,
+    isFound,
+    MARKBOOK_TYPE_TAB,
+    SITE_SUBJECT_TITLE,
+    siteSpecific,
+    useAssignmentProgressAccessibilitySettings,
+    WEBMASTER_EMAIL
+} from "../../services";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
-import {SITE_SUBJECT_TITLE, siteSpecific, WEBMASTER_EMAIL} from "../../services/siteConstants";
-import {getAssignmentCSVDownloadLink} from "../../services/assignments";
-import {getQuizAssignmentCSVDownloadLink} from "../../services/quiz";
-import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {Tabs} from "../elements/Tabs";
-import {isDefined, isFound} from "../../services/miscUtils";
 import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";

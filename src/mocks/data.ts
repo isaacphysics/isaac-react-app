@@ -1,5 +1,5 @@
-import {siteSpecific} from "../app/services/siteConstants";
-import {FEATURED_NEWS_TAG} from "../app/services/constants";
+import {siteSpecific} from "../app/services";
+import {FEATURED_NEWS_TAG} from "../app/services";
 
 const NOW = Date.now(); // Use same "now" for all time relative calculations
 const DAYS_AGO = (n: number) => {

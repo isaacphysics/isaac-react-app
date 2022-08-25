@@ -8,9 +8,9 @@ import {
     filterAssignmentsByProperties,
     filterAssignmentsByStatus,
     getDistinctAssignmentGroups,
-    getDistinctAssignmentSetters
-} from "../../services/assignments";
-import {ifKeyIsEnter} from "../../services/navigation";
+    getDistinctAssignmentSetters,
+    ifKeyIsEnter
+} from "../../services";
 import {Assignments} from "../elements/Assignments";
 
 export const MyAssignments = () => {

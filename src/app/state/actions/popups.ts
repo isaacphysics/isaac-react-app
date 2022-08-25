@@ -1,7 +1,7 @@
 import {getRTKQueryErrorMessage, AppDispatch} from "../index";
 import {Dispatch} from "react";
 import {Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE} from "../../services/constants";
+import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE} from "../../services";
 import ReactGA from "react-ga";
 
 // Toasts

@@ -1,9 +1,8 @@
 import React from "react";
 import {IsaacFeaturedProfileDTO} from "../../../IsaacApiTypes";
-import {apiHelper} from "../../services/api";
+import {apiHelper, isDefined} from "../../services";
 import {IsaacContent} from "./IsaacContent";
 import {Col, Row} from "reactstrap";
-import { isDefined } from "../../services/miscUtils";
 
 interface IsaacFeaturedProfileProps {
     doc: IsaacFeaturedProfileDTO;

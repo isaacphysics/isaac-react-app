@@ -2,8 +2,7 @@ import React, {useCallback, useEffect, useMemo} from "react";
 import {loadQuizPreview, selectors, useAppDispatch, useAppSelector} from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined} from "../../../services/miscUtils";
-import {useQuizQuestions, useQuizSections} from "../../../services/quiz";
+import {isDefined, useQuizQuestions, useQuizSections} from "../../../services";
 import {
     myQuizzesCrumbs,
     QuizAttemptComponent,

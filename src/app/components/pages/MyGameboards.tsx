@@ -21,14 +21,9 @@ import {BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    difficultiesOrdered,
-    difficultyShortLabelMap,
-    sortIcon,
-    stageLabelMap,
-    stagesOrdered
-} from "../../services/constants";
-import {
+    above,
     allPropertiesFromAGameboard,
+    below,
     BOARD_ORDER_NAMES,
     BoardCompletions,
     boardCompletionSelection,
@@ -36,15 +31,21 @@ import {
     BoardLimit,
     BoardViews,
     determineGameboardSubjects,
+    difficultiesOrdered,
+    difficultyShortLabelMap,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
+    isMobile,
+    isPhy,
+    sortIcon,
+    stageLabelMap,
+    stagesOrdered,
+    useDeviceSize,
     useGameboards
-} from "../../services/gameboards";
-import {above, below, isMobile, useDeviceSize} from "../../services/device";
+} from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
-import {isPhy} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 

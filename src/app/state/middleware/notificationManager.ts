@@ -1,11 +1,15 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
-import {ACTION_TYPE} from "../../services/constants";
+import {
+    ACTION_TYPE,
+    allRequiredInformationIsPresent,
+    isLoggedIn,
+    KEY,
+    persistence,
+    withinLast2Hours,
+    withinLast50Minutes
+} from "../../services";
 import {Action} from "../../../IsaacAppTypes";
-import {logAction, openActiveModal, routerPageChange, needToUpdateUserContextDetails} from "../index";
-import {allRequiredInformationIsPresent, withinLast2Hours, withinLast50Minutes} from "../../services/validation";
-import {isLoggedIn} from "../../services/user";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
+import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";

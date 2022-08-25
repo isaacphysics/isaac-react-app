@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppState, closeActiveModal, store, useAppDispatch, useAppSelector} from "../../../state";
 import {Button, Col, Row} from "reactstrap";
-import {api} from '../../../services/api';
+import {api} from "../../../services";
 import {IsaacContent} from "../../content/IsaacContent";
 
 const NotificationModalBody = (notification: { notification: any }) => {

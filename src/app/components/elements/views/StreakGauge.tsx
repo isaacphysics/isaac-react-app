@@ -1,7 +1,7 @@
 import React from 'react';
 import {UserSnapshot} from "../../../../IsaacAppTypes";
 import {buildStyles, CircularProgressbarWithChildren} from "react-circular-progressbar";
-import {GRAY_120, progressColour} from "../../../services/constants";
+import {GRAY_120, progressColour} from "../../../services";
 
 interface StreakGaugeProps {
     streakRecord: UserSnapshot | null | undefined;

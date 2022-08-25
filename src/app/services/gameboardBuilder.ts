@@ -1,9 +1,7 @@
-import {difficultiesOrdered, SortOrder} from "./constants";
+import {determineAudienceViews, difficultiesOrdered, SortOrder, tags} from "./";
 import {orderBy} from "lodash";
-import tags from "./tags";
 import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
-import {determineAudienceViews} from "./userContext";
 
 const bookSort = (a: string, b: string) => {
     const splitRegex = /(\d+)/;

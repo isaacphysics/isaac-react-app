@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {AppState, handlePasswordReset, useAppDispatch, useAppSelector, verifyPasswordReset} from "../../state";
 import {Button, Card, CardBody, CardFooter, Container, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services/passwordStrength";
+import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services";
 import {RouteComponentProps} from "react-router";
 
 

@@ -1,7 +1,7 @@
 import {Col, Row, Container} from "reactstrap";
 import React from "react";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {SUBJECTS} from "../../../services/constants";
+import {SUBJECTS} from "../../../services";
 import {PageFragment} from "../../elements/PageFragment";
 import {BookChapter} from "../../elements/BookChapter";
 

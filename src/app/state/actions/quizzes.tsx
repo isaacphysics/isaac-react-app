@@ -1,8 +1,16 @@
 import React, {Dispatch} from "react";
 import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
-import {api} from "../../services/api";
-import {AppState, selectors, AppDispatch, openActiveModal, closeActiveModal, extractMessage, loadGroups, showAxiosErrorToastIfNeeded} from "../index";
+import {ACTION_TYPE, api} from "../../services";
+import {
+    AppDispatch,
+    AppState,
+    closeActiveModal,
+    extractMessage,
+    loadGroups,
+    openActiveModal,
+    selectors,
+    showAxiosErrorToastIfNeeded
+} from "../index";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {WithLoadedSelector} from "../../components/handlers/ShowLoading";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";

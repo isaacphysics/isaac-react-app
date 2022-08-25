@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Label} from "reactstrap";
 import {IsaacClozeQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {useCurrentQuestionAttempt} from "../../services/questions";
+import {buildUseKeyboardSensor, isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
     DragDropContext,
@@ -17,9 +17,6 @@ import {
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
-import {buildUseKeyboardSensor} from "../../services/clozeQuestionKeyboardSensor";
-
-import {isDefined} from "../../services/miscUtils";
 
 const augmentInlineItemWithUniqueReplacementID = (idv: ClozeItemDTO | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
 const augmentNonSelectedItemWithReplacementID = (item: ClozeItemDTO) => ({...item, replacementId: item.id});

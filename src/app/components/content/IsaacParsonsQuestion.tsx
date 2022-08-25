@@ -16,8 +16,7 @@ import {
     NotDraggingStyle,
 } from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
-import {useCurrentQuestionAttempt} from "../../services/questions";
-import {isDefined} from "../../services/miscUtils";
+import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 

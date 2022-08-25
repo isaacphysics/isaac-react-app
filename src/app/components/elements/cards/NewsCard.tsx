@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {Card, CardBody, CardImg, CardText} from "reactstrap";
 import {IsaacPodDTO} from "../../../../IsaacApiTypes";
-import {apiHelper} from "../../../services/api";
+import {apiHelper} from "../../../services";
 
 interface NewsCardProps {
     newsItem: IsaacPodDTO;

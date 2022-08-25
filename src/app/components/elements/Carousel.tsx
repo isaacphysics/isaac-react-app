@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Carousel, CarouselControl, CarouselIndicators, CarouselItem} from 'reactstrap';
-import {ifKeyIsEnter} from "../../services/navigation";
+import {ifKeyIsEnter} from "../../services";
 
 const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     const items = children;

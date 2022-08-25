@@ -1,7 +1,6 @@
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {Action, Concepts, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
-import tags from "../../services/tags";
+import {ACTION_TYPE, NOT_FOUND, tags} from "../../services";
 import {routerPageChange} from "../index";
 
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;

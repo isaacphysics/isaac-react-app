@@ -1,5 +1,13 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {
+    API_PATH,
+    EventStageFilter,
+    EventTypeFilter,
+    MEMBERSHIP_STATUS,
+    securePadCredentials,
+    securePadPasswordReset,
+    TAG_ID
+} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
@@ -24,7 +32,6 @@ import {
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
-import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,

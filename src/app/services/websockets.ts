@@ -1,4 +1,4 @@
-import {api} from "./api";
+import {api} from "./";
 import {UserSnapshot} from "../../IsaacAppTypes";
 import {UserSummaryDTO} from "../../IsaacApiTypes";
 import {getSnapshot, partiallyUpdateUserSnapshot, store} from "../state";

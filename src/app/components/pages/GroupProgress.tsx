@@ -17,12 +17,9 @@ import {AppGroup, AssignmentProgressPageSettingsContext,} from "../../../IsaacAp
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardProgressSummaryDTO, UserGameboardProgressSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH} from "../../services/constants";
-import {siteSpecific} from "../../services/siteConstants";
-import {isDefined} from '../../services/miscUtils';
+import {API_PATH, isDefined, siteSpecific, useAssignmentProgressAccessibilitySettings} from "../../services";
 import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
 import {skipToken} from "@reduxjs/toolkit/query";
 
 enum SortOrder {

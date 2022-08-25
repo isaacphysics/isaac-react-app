@@ -1,5 +1,5 @@
 import {AnyAction, combineReducers} from "redux";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 import {
     currentEvent,
     eventBookings,

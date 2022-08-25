@@ -7,7 +7,7 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isTeacher} from "../../../services/user";
+import {isTeacher} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";

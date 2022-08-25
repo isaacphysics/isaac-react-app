@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
-import {WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {WEBMASTER_EMAIL} from "../../services";
 import {FallbackProps} from "react-error-boundary";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 

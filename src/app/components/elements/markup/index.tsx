@@ -5,7 +5,7 @@ import {renderRemarkableMarkdown, regexProcessMarkdown, renderInlineGlossaryTerm
 import {utils} from "remarkable";
 import {usePortalsInHtml, useStatefulElementRef} from "./portals/utils";
 import {compose} from "redux";
-import {isDefined} from "../../../services/miscUtils";
+import {isDefined} from "../../../services";
 
 // This component renders the HTML given to it inside a React element.
 //

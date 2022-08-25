@@ -1,16 +1,23 @@
 import React, {Dispatch} from "react";
-import {api} from "../../services/api";
-import {history} from "../../services/history";
 import {
     ACTION_TYPE,
+    api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE, EventStageFilter,
+    atLeastOne,
+    augmentEvent,
+    DOCUMENT_TYPE,
+    EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
+    history,
+    isDefined,
+    isFirstLoginInPersistence,
+    KEY,
     MEMBERSHIP_STATUS,
+    persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID
-} from "../../services/constants";
+} from "../../services";
 import {
     Action,
     AdditionalInformation,
@@ -50,24 +57,28 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
 import {
     additionalManagerRemovalModal,
     groupInvitationModal,
     groupManagersModal
 } from "../../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
-import {isFirstLoginInPersistence} from "../../services/firstLogin";
 import {AxiosError} from "axios";
 import ReactGA from "react-ga";
-import {augmentEvent} from "../../services/events";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
-import {atLeastOne} from "../../services/validation";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
-import {isDefined} from "../../services/miscUtils";
-import {AppState, store, selectors, errorSlice, routerPageChange, closeActiveModal, openActiveModal, showToast, logAction} from "../index";
+import {
+    AppState,
+    closeActiveModal,
+    errorSlice,
+    logAction,
+    openActiveModal,
+    routerPageChange,
+    selectors,
+    showToast,
+    store
+} from "../index";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {

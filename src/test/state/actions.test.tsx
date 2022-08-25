@@ -11,7 +11,7 @@ import {
     requestEmailVerification,
     showToast
 } from "../../app/state";
-import {endpoint} from "../../app/services/api";
+import {endpoint} from "../../app/services";
 import {
     errorResponses,
     questionDTOs,
@@ -21,7 +21,7 @@ import {
     userAuthenticationSettings,
     userPreferencesSettings
 } from "../test-factory";
-import {ACTION_TYPE} from "../../app/services/constants";
+import {ACTION_TYPE} from "../../app/services";
 import {Action} from "../../IsaacAppTypes";
 import {jest} from "@jest/globals";
 

@@ -26,7 +26,8 @@ import {
     isaacApi,
     loadGroups,
     openIsaacBooksModal,
-    selectors, showErrorToast,
+    selectors,
+    showErrorToast,
     unlinkUserFromGameboard,
     useAppDispatch,
     useAppSelector
@@ -36,28 +37,37 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
+    above,
     allPropertiesFromAGameboard,
+    below,
     BOARD_ORDER_NAMES,
     BoardCreators,
     BoardLimit,
     BoardSubjects,
     BoardViews,
     determineGameboardSubjects,
+    difficultiesOrdered,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
+    isAdminOrEventManager,
+    isDefined,
+    isPhy,
+    isStaff,
+    Item,
+    itemise,
+    selectOnChange,
+    siteSpecific,
+    sortIcon,
+    stageLabelMap,
+    stagesOrdered,
+    useDeviceSize,
     useGameboards
-} from "../../services/gameboards";
+} from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
-import {isPhy, siteSpecific} from "../../services/siteConstants";
-import {isAdminOrEventManager, isStaff} from "../../services/user";
-import {isDefined} from "../../services/miscUtils";
-import {difficultiesOrdered, sortIcon, stageLabelMap, stagesOrdered} from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
-import {above, below, useDeviceSize} from "../../services/device";
 import Select from "react-select";
-import {Item, itemise, selectOnChange} from "../../services/select";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
 

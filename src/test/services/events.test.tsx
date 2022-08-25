@@ -3,7 +3,7 @@ import {
     userCanBeAddedToEventWaitingList,
     userCanMakeEventBooking,
     userCanReserveEventSpaces
-} from "../../app/services/events";
+} from "../../app/services";
 
 let event: AugmentedEvent
 

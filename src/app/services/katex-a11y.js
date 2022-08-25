@@ -780,10 +780,8 @@ const flatten = function(array) {
     return result;
 };
 
-const renderA11yString = function(text, settings) {
+export const renderA11yString = function(text, settings) {
     const tree = katex.__parse(text, settings);
     const a11yStrings = buildA11yStrings(tree, [], "normal");
     return flatten(a11yStrings).join(", ");
 };
-
-export default renderA11yString;

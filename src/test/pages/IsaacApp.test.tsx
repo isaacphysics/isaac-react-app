@@ -1,17 +1,13 @@
-import {cleanup, render, screen, within} from "@testing-library/react/pure";
-import {Provider} from "react-redux";
-import {isaacApi, store} from "../../app/state";
 import React from "react";
-import {history} from "../../app/services/history";
-import {IsaacApp} from "../../app/components/navigation/IsaacApp";
-import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/extend-expect";
+import {cleanup, screen, waitFor, within} from "@testing-library/react/pure";
+import userEvent from "@testing-library/user-event";
+import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
 import {Role, ROLES} from "../../IsaacApiTypes";
-import {resetWithUserRole} from "./utils";
-import {isPhy, siteSpecific} from "../../app/services/siteConstants";
+import {renderTestEnvironment} from "./utils";
+import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
-import {FEATURED_NEWS_TAG} from "../../app/services/constants";
 
 type NavBarTitle = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 
@@ -105,34 +101,25 @@ const navigationBarLinksPerRole: {[p in (Role | "ANONYMOUS")]: {[title in NavBar
 
 describe("IsaacApp", () => {
 
-    beforeAll(() => {
-        render(<Provider store={store}>
-            <IsaacApp/>
-        </Provider>);
-    });
-
-    afterAll(() => {
-        // We have to do this manually because we imported /pure and we
-        // don't want to affect the next test suite
-        cleanup();
-        store.dispatch(isaacApi.util.resetApiState());
-    });
-
     it('should open on the home page', async () => {
-        expect(history.location.pathname).toBe("/");
+        renderTestEnvironment();
+        await waitFor(() => {
+            expect(history.location.pathname).toBe("/");
+        });
+        cleanup();
     });
 
     // For each role (including a not-logged-in user), test whether the user sees the correct links in the navbar menu
     ["ANONYMOUS"].concat(ROLES).forEach((r) => {
         const role = r as Role | "ANONYMOUS";
         it (`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
-            resetWithUserRole(role);
+            renderTestEnvironment({role});
             for (const [title, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {
                 const navLink = screen.queryByRole("link", {name: title, exact: false});
                 if (hrefs === null) {
                     // Expect link to be hidden from user
                     expect(navLink).toBeNull();
-                    return;
+                    break;
                 }
                 expect(navLink).toBeDefined();
                 if (!navLink) return; // appease TS
@@ -147,12 +134,13 @@ describe("IsaacApp", () => {
                     expect(link).toHaveAttribute("href", href);
                 });
             }
+            cleanup();
         });
     });
 
     // TODO implement test data and this test for CS
     isPhy && it('should show the users number of current assignments in the navigation menu', async () => {
-        resetWithUserRole();
+        renderTestEnvironment();
         const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
         expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
     });
@@ -171,5 +159,6 @@ describe("IsaacApp", () => {
             mockNewsPods.results.filter(p => !p.tags.includes(FEATURED_NEWS_TAG)).map(p => p.url)
         );
         expect(newsPodLinks.slice(featuredNewsPodLinks.length)).toEqual(nonFeaturedNewsPodLinks);
+        cleanup();
     });
 });

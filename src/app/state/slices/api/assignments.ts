@@ -1,6 +1,6 @@
 import {isaacApi, openActiveModal, useAppDispatch, useAppSelector, selectors} from "../../index";
 import React, {useCallback, useMemo} from "react";
-import {isFound} from "../../../services/miscUtils";
+import {isFound} from "../../../services";
 import {downloadLinkModal} from "../../../components/elements/modals/AssignmentProgressModalCreators";
 
 export const useGroupAssignments = (groupId?: number) => {

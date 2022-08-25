@@ -2,19 +2,15 @@ import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} 
 import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
-import {ifKeyIsEnter} from "../../services/navigation";
+import {ifKeyIsEnter, isDefined, isStaff, sanitiseInequalityState, siteSpecific} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
-import {siteSpecific} from "../../services/siteConstants";
-import { Inequality, makeInequality } from 'inequality';
-import { sanitiseInequalityState } from '../../services/questions';
-import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'inequality-grammar';
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+import {Inequality, makeInequality} from 'inequality';
+import {parseBooleanExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
+import {selectors, useAppSelector} from "../../state";
 
-import { isDefined } from "../../services/miscUtils";
-import { useAppSelector, selectors } from "../../state";
-import { isStaff } from '../../services/user';
+const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
 const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);

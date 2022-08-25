@@ -10,33 +10,40 @@ import {
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
-import tags from '../../services/tags';
 import {
     DIFFICULTY_ICON_ITEM_OPTIONS,
     DIFFICULTY_ITEM_OPTIONS,
+    getFilteredExamBoardOptions,
+    getFilteredStageOptions,
+    groupTagSelectionsByParent,
+    isCS,
+    isDefined,
+    isFound,
+    isItemEqual,
+    isPhy,
+    Item,
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
+    selectOnChange,
+    siteSpecific,
     STAGE,
-    TAG_ID
-} from '../../services/constants';
+    TAG_ID,
+    tags,
+    useDeviceSize,
+    useUserContext
+} from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {isItemEqual, Item, selectOnChange} from "../../services/select";
-import {useDeviceSize} from "../../services/device";
 import Select, {GroupBase} from "react-select";
-import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
-import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
-import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
 import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {debounce} from "lodash";
 import {History} from "history";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {isDefined, isFound} from "../../services/miscUtils";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 

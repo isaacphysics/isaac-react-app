@@ -4,12 +4,10 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history} from "../../services/history";
+import {history, isDefined, isCS, siteSpecific} from "../../services";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
-import {isCS, siteSpecific} from "../../services/siteConstants";
-import {isDefined} from "../../services/miscUtils";
 import {MetaDescription} from "../elements/MetaDescription";
 
 type SupportType = "student" | "teacher";

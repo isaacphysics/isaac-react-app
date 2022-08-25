@@ -17,7 +17,7 @@ import {IsaacFeaturedProfile} from "./IsaacFeaturedProfile";
 import {IsaacCard} from "./IsaacCard";
 import {IsaacCardDeck} from "./IsaacCardDeck";
 import {QuizQuestion} from "./QuizQuestion";
-import {isQuestion} from "../../services/questions";
+import {isQuestion} from "../../services";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";

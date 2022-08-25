@@ -1,6 +1,4 @@
 import React, {lazy, Suspense, useEffect} from 'react';
-import "../../services/scrollManager"; // important
-import "../../services/polyfills"; // important
 import {
     AppState,
     fetchGlossaryTerms,
@@ -30,7 +28,19 @@ import {NotFound} from "../pages/NotFound";
 import {TrackedRoute} from "./TrackedRoute";
 import {ResetPasswordHandler} from "../handlers/PasswordResetHandler";
 import {Admin} from "../pages/Admin";
-import {history} from "../../services/history"
+import {
+    persistence,
+    checkForWebSocket,
+    closeWebSocket,
+    history,
+    isAdminOrEventManager,
+    isEventLeader,
+    isLoggedIn,
+    isStaff,
+    isTeacher,
+    KEY,
+    showNotification
+} from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
 import {AuthError} from "../pages/AuthError";
@@ -43,7 +53,6 @@ import {Toasts} from "./Toasts";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../services/user";
 import {ActiveModals} from "../elements/modals/ActiveModals";
 import {Groups} from "../pages/Groups";
 import {SetAssignments} from "../pages/SetAssignments";
@@ -62,13 +71,9 @@ import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
 import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 import {notificationModal} from "../elements/modals/NotificationModal";
-import {showNotification} from "../../services/notificationChecker";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ClientError} from "../pages/ClientError";
-import {checkForWebSocket, closeWebSocket} from "../../services/websockets";
 import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
 import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
 import {QuizDoAssignment} from "../pages/quizzes/QuizDoAssignment";
@@ -135,7 +140,7 @@ export const IsaacApp = () => {
         <UnsupportedBrowserBanner />
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
-        <main id="main" role="main" className="flex-fill content-body">
+        <main id="main" data-testid="main" role="main" className="flex-fill content-body">
             <ErrorBoundary FallbackComponent={ClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>

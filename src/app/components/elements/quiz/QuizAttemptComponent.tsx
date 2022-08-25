@@ -6,8 +6,7 @@ import {
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
-import {isDefined} from "../../../services/miscUtils";
-import {extractTeacherName} from "../../../services/user";
+import {below, extractTeacherName, isDefined, siteSpecific, useDeviceSize} from "../../../services";
 import {Spacer} from "../Spacer";
 import {formatDate} from "../DateString";
 import {Link} from "react-router-dom";
@@ -17,8 +16,6 @@ import {IsaacContent} from "../../content/IsaacContent";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {closeActiveModal, openActiveModal, showQuizSettingModal, useAppDispatch} from "../../../state";
-import {siteSpecific} from "../../../services/siteConstants";
-import {below, useDeviceSize} from "../../../services/device";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {EditContentButton} from "../EditContentButton";

@@ -2,9 +2,8 @@ import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from 
 import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {MINIMUM_PASSWORD_LENGTH, validateEmail} from "../../../services/validation";
+import {loadZxcvbnIfNotPresent, MINIMUM_PASSWORD_LENGTH, passwordDebounce, validateEmail} from "../../../services";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
-import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../../services/passwordStrength";
 
 interface UserPasswordProps {
     currentPassword?: string;

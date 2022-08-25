@@ -8,13 +8,12 @@ import {Students} from "../../pages/Students";
 import {TeacherTools} from "../../pages/TeacherTools";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
-import {isEventLeaderOrStaff, isTeacher} from "../../../services/user";
+import {isEventLeaderOrStaff, isTeacher, STAGE} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {GroupProgress} from "../../pages/GroupProgress";
 import {Glossary} from "../../pages/Glossary";
-import {STAGE} from "../../../services/constants";
 
 let key = 0;
 export const RoutesCS = [

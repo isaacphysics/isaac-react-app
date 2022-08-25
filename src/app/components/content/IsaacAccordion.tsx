@@ -3,16 +3,17 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
 import {
+    DOCUMENT_TYPE,
+    isCS,
+    isFound,
     isIntendedAudience,
     makeIntendedAudienceComparator,
     mergeDisplayOptions,
+    siteSpecific,
     stringifyAudience,
     useUserContext
-} from "../../services/userContext";
+} from "../../services";
 import {AppState, selectors, useAppSelector} from "../../state";
-import {isCS, siteSpecific} from "../../services/siteConstants";
-import {DOCUMENT_TYPE} from "../../services/constants";
-import {isFound} from "../../services/miscUtils";
 import {useLocation} from "react-router-dom";
 
 const defaultConceptDisplay = siteSpecific(

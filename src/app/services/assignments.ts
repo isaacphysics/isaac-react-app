@@ -1,8 +1,7 @@
 import {AssignmentDTO} from "../../IsaacApiTypes";
 import {orderBy} from "lodash";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
-import {API_PATH} from "./constants";
-import {extractTeacherName} from "./user";
+import {API_PATH, extractTeacherName} from "./";
 
 export function hasGameboard(assignment: AssignmentDTO): assignment is EnhancedAssignment {
     return assignment.gameboard != undefined;

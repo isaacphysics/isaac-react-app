@@ -13,11 +13,14 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
-import {useAssignmentProgressAccessibilitySettings} from "../../../services/progress";
+import {
+    extractTeacherName,
+    getQuizAssignmentCSVDownloadLink,
+    isDefined,
+    useAssignmentProgressAccessibilitySettings
+} from "../../../services";
 import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
-import {extractTeacherName} from "../../../services/user";
-import {isDefined} from "../../../services/miscUtils";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -38,7 +41,6 @@ import {
     Row,
     UncontrolledDropdown
 } from "reactstrap";
-import {getQuizAssignmentCSVDownloadLink} from "../../../services/quiz";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.

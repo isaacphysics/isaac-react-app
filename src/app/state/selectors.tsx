@@ -1,8 +1,6 @@
 import {anonymisationFunctions, anonymiseIfNeededWith, AppState} from "./index";
-import {NOT_FOUND} from "../services/constants";
+import {isDefined, KEY, persistence, NOT_FOUND} from "../services";
 import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {KEY, load} from "../services/localStorage";
-import {isDefined} from "../services/miscUtils";
 import {QuizAssignmentDTO} from "../../IsaacApiTypes";
 
 export const selectors = {
@@ -116,7 +114,7 @@ export const selectors = {
         },
         assignedToMe: (state: AppState) => state?.quizAssignedToMe,
         available: (state: AppState) => state?.quizzes?.quizzes,
-        assignments: (state: AppState) => state?.quizAssignments && (load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments)),
+        assignments: (state: AppState) => state?.quizAssignments && (persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationFunctions.assignments(state?.quizAssignments) : augmentWithGroupNameIfInCache(state, state?.quizAssignments)),
         /* Retrieves the current users most recent attempt at the current quiz being viewed */
         currentQuizAttempt: (state: AppState) => state?.quizAttempt,
         /* Retrieves the quiz attempt for the current student being looked at (this is used to render /test/attempt/feedback/[group id]/[student id]) */

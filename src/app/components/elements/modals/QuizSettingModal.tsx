@@ -10,10 +10,9 @@ import {
     useAppDispatch
 } from "../../../state";
 import React, {useState} from "react";
-import {Item, selectOnChange} from "../../../services/select";
+import {isDefined, Item, selectOnChange} from "../../../services";
 import {range} from "lodash";
 import {currentYear, DateInput} from "../inputs/DateInput";
-import {isDefined} from "../../../services/miscUtils";
 import * as RS from "reactstrap";
 import Select from "react-select";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";

@@ -1,13 +1,9 @@
+import {apiHelper, atLeastOne, isStudent, isTeacher, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
 import {IsaacEventPageDTO} from "../../IsaacApiTypes";
-import {apiHelper} from "./api";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
 import React from "react";
 import {Link} from "react-router-dom";
-import {STAGE, STAGES_CS, STAGES_PHY} from "./constants";
-import {siteSpecific} from "./siteConstants";
-import {isStudent, isTeacher} from "./user";
-import {atLeastOne, zeroOrLess} from "./validation";
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     {"This event is aimed at students. If you are not a student but still wish to attend, please "}

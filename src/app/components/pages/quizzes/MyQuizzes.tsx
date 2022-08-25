@@ -15,12 +15,15 @@ import {QuizAttemptDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../Isa
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
-import {extractTeacherName} from "../../../services/user";
-import {isFound} from "../../../services/miscUtils";
+import {
+    extractTeacherName,
+    isAttempt,
+    isFound,
+    partitionCompleteAndIncompleteQuizzes,
+    siteSpecific
+} from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
-import {isAttempt, partitionCompleteAndIncompleteQuizzes} from "../../../services/quiz";
-import {siteSpecific} from "../../../services/siteConstants";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;

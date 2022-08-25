@@ -1,22 +1,23 @@
-import {KEY, load} from "../../../services/localStorage";
+import {isDefined, KEY, persistence, NOT_FOUND} from "../../../services";
 import produce from "immer";
 import {
     AppAssignmentProgress,
     AppGroup,
-    AppQuizAssignment, GroupMembershipDetailDTO,
+    AppQuizAssignment,
+    GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
     UserProgress
 } from "../../../../IsaacAppTypes";
 import {
-    QuizAssignmentDTO, QuizAttemptFeedbackDTO,
-    UserGameboardProgressSummaryDTO, UserSummaryDTO,
+    QuizAssignmentDTO,
+    QuizAttemptFeedbackDTO,
+    UserGameboardProgressSummaryDTO,
+    UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";
-import {isDefined} from "../../../services/miscUtils";
-import {NOT_FOUND} from "../../../services/constants";
 
 export const anonymiseIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T) => T) => (nonanonymousData: T) =>
-    load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData) : nonanonymousData;
+    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData) : nonanonymousData;
 
 export const anonymisationFunctions = {
     progressState: produce<AppAssignmentProgress[]>((progress) => {

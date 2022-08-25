@@ -1,31 +1,34 @@
 import {
     BOOLEAN_NOTATION,
+    comparatorFromOrderedValues,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
     examBoardBooleanNotationMap,
     examBoardLabelMap,
+    history,
+    isCS,
+    isDefined,
+    isLoggedIn,
+    isPhy,
     PROGRAMMING_LANGUAGE,
+    roleRequirements,
+    siteSpecific,
     STAGE,
     STAGE_NULL_OPTIONS,
     stageLabelMap,
     STAGES_CS,
     STAGES_PHY,
     stagesOrdered,
-} from "./constants";
+    useQueryParams,
+} from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
 import {AppState, useAppSelector} from "../state";
-import {isCS, isPhy, siteSpecific} from "./siteConstants";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
-import {isLoggedIn, roleRequirements} from "./user";
-import {isDefined} from "./miscUtils";
-import {history} from "./history";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
-import {useQueryParams} from "./reactRouterExtension";
-import {comparatorFromOrderedValues} from "./gameboards";
 
 export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;

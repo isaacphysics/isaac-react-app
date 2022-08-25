@@ -1,10 +1,8 @@
 import {History} from "history";
-import {DOCUMENT_TYPE, TAG_ID} from "./constants";
+import {DOCUMENT_TYPE, isStaff, TAG_ID} from "./";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
-import {isStaff} from "./user";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
-
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     const previousQuery = queryString.parse(history.location.search);

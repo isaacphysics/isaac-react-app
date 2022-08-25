@@ -1,7 +1,6 @@
-import {STAGE, SUBJECTS, TAG_ID, TAG_LEVEL} from "./constants";
+import {AbstractBaseTagService, STAGE, SUBJECTS, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO} from "../../IsaacApiTypes";
-import {AbstractBaseTagService} from "./tagsAbstract";
 
 const GCSE_COMING_2022 = {[STAGE.GCSE]: {comingSoonDate: "2022"}};
 const GCSE_HIDDEN = {[STAGE.GCSE]: {hidden: true}};

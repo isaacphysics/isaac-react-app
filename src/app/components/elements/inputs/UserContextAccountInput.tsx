@@ -1,19 +1,23 @@
 import React, {useRef} from "react";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
-import {isTeacher} from "../../../services/user";
-import * as RS from "reactstrap";
-import {CustomInput, Input} from "reactstrap";
 import {
     EMPTY_BOOLEAN_NOTATION_RECORD,
     EXAM_BOARD,
     examBoardBooleanNotationMap,
-    STAGE
-} from "../../../services/constants";
-import {getFilteredExamBoardOptions, getFilteredStageOptions} from "../../../services/userContext";
-import {isCS, isPhy, siteSpecific, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
+    getFilteredExamBoardOptions,
+    getFilteredStageOptions,
+    isCS,
+    isDefined,
+    isPhy,
+    isTeacher,
+    siteSpecific,
+    STAGE,
+    TEACHER_REQUEST_ROUTE
+} from "../../../services";
+import * as RS from "reactstrap";
+import {CustomInput, Input} from "reactstrap";
 import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
-import {isDefined} from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 
@@ -155,7 +159,7 @@ export function UserContextAccountInput({
                         ×
                     </button>}
 
-                    {showPlusOption && <RS.Label inline>
+                    {showPlusOption && <RS.Label>
                         <button
                             type="button" aria-label="Add stage"
                             className={`${userContexts.length <= 1 ? "ml-2" : ""} align-middle close float-none pointer-cursor`}

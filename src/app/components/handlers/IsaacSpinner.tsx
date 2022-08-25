@@ -1,5 +1,5 @@
 import React from "react";
-import {isCS, siteSpecific} from "../../services/siteConstants";
+import {isCS, siteSpecific} from "../../services";
 import classNames from "classnames";
 
 export interface IsaacSpinnerProps {

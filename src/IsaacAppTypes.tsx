@@ -29,7 +29,7 @@ import {
     STAGE,
     TAG_ID,
     TAG_LEVEL
-} from "./app/services/constants";
+} from "./app/services";
 import {DropResult} from "react-beautiful-dnd";
 
 export type Action =

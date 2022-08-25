@@ -11,12 +11,11 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/constants";
+import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {isAdmin} from "../../services/user";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();

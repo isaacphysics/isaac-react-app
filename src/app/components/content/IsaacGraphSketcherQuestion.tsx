@@ -3,7 +3,7 @@ import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTy
 import {IsaacTabbedHints} from "./IsaacHints";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
-import {useCurrentQuestionAttempt} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {

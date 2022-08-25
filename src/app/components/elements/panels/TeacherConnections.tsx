@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {
+    AdminUserGetState,
     authenticateWithTokenAfterPrompt,
     changeMyMembershipStatus,
     getActiveAuthorisations,
@@ -11,14 +12,12 @@ import {
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt,
+    selectors,
     useAppDispatch,
-    useAppSelector,
-    AdminUserGetState,
-    selectors
+    useAppSelector
 } from "../../../state";
 import classnames from "classnames";
-import {MEMBERSHIP_STATUS} from "../../../services/constants";
-import {extractTeacherName, isLoggedIn, isStudent} from "../../../services/user";
+import {extractTeacherName, isLoggedIn, isStudent, MEMBERSHIP_STATUS} from "../../../services";
 
 
 interface TeacherConnectionsProps {

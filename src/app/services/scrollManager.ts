@@ -1,5 +1,4 @@
-import {history} from "./history";
-import { isDefined } from './miscUtils';
+import {history, isDefined} from "./";
 
 let previousPathname = "";
 history.listen((location, action) => {

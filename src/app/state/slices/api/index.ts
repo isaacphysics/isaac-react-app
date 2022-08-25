@@ -2,9 +2,10 @@ import {
     API_PATH,
     API_REQUEST_FAILURE_MESSAGE,
     FEATURED_NEWS_TAG,
+    isPhy,
     NOT_FOUND,
     QUESTION_CATEGORY
-} from "../../../services/constants";
+} from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
@@ -13,12 +14,12 @@ import {
     AssignmentFeedbackDTO,
     GameboardDTO,
     GameboardListDTO,
+    IsaacConceptPageDTO,
+    IsaacPodDTO,
     IsaacWildcard,
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO,
-    IsaacConceptPageDTO,
-    IsaacPodDTO
+    UserGameboardProgressSummaryDTO
 } from "../../../../IsaacApiTypes";
 import {
     anonymisationFunctions,
@@ -37,7 +38,6 @@ import {
     NOT_FOUND_TYPE,
     NumberOfBoards
 } from "../../../../IsaacAppTypes";
-import {isPhy} from "../../../services/siteConstants";
 import {SerializedError} from "@reduxjs/toolkit";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
 

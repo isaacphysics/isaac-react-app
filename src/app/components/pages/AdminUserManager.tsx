@@ -18,10 +18,8 @@ import {
 import {EmailVerificationStatus, Role} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ADMIN_CRUMB} from "../../services/constants";
+import {ADMIN_CRUMB, isAdmin, isDefined} from "../../services";
 import {Link} from "react-router-dom";
-import {isAdmin} from "../../services/user";
-import {isDefined} from "../../services/miscUtils";
 
 export const AdminUserManager = () => {
     const dispatch = useAppDispatch();
