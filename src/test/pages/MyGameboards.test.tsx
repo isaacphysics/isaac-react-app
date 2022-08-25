@@ -77,7 +77,5 @@ describe("MyGameboards", () => {
         // Make sure that 6 gameboards in the response ---> 6 gameboards displayed
         const gameboardCards = await screen.findAllByTestId("my-gameboard-card");
         expect(gameboardCards).toHaveLength(6);
-        // Remove the extra gameboards endpoint handler
-        server.resetHandlers();
     });
 });

@@ -92,6 +92,9 @@ export const handlers = [
             ctx.json(mockUser)
         );
     }),
+    rest.post(API_PATH + "/auth/logout", (req, res, ctx) => {
+        return res(ctx.status(200));
+    }),
     rest.get(API_PATH + "/users/user_preferences", (req, res, ctx) => {
         return res(
             ctx.status(200),
@@ -150,6 +153,12 @@ export const handlers = [
         console.info("Log event: ", json);
         return res(
             ctx.status(200)
+        );
+    }),
+    rest.get(API_PATH + "/user-alerts", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json({})
         );
     }),
 ];
