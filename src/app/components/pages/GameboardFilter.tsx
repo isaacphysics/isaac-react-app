@@ -10,6 +10,7 @@ import {
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
+    removeP3AndC3ForCs,
     STAGE,
     TAG_ID
 } from '../../services/constants';
@@ -304,7 +305,12 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         C3 require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
+                <Select
+                    id="difficulty-selector" isClearable isMulti
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS .filter(removeP3AndC3ForCs)}
+                    value={difficulties}
+                    onChange={selectOnChange(setDifficulties, false)}
+                />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
