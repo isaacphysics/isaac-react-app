@@ -4769,39 +4769,39 @@ export const mockNewsPods = {
 };
 
 export const mockFragment = (pageId: string) => ({
-    "id": pageId,
-    "type": "isaacPageFragment",
-    "canonicalSourceFile": "content/mocks/${pageId}.json",
-    "title": `Mock page fragment: ${pageId}`,
-    "subtitle": "",
-    "encoding": "markdown",
-    "children": [
+    id: pageId,
+    type: "isaacPageFragment",
+    canonicalSourceFile: `content/mocks/${pageId}.json`,
+    title: `Mock page fragment: ${pageId}`,
+    subtitle: "",
+    encoding: "markdown",
+    children: [
         {
-            "id": `${pageId}|inner-content`,
-            "title": "Mock page fragment inner",
-            "type": "isaacFeaturedProfile",
-            "encoding": "markdown",
-            "children": [
+            id: `${pageId}|inner-content`,
+            title: "Mock page fragment inner",
+            type: "isaacFeaturedProfile",
+            encoding: "markdown",
+            children: [
                 {
-                    "type": "content",
-                    "encoding": "markdown",
-                    "children": [],
-                    "value": "This is some mock content. Yay!",
-                    "published": false,
-                    "tags": []
+                    type: "content",
+                    encoding: "markdown",
+                    children: [],
+                    value: "This is some mock content. Yay!",
+                    published: false,
+                    tags: []
                 }
             ],
-            "tags": [],
-            "image": {
-                "type": "image",
-                "children": [],
-                "published": false,
-                "src": "content/mock/doesnt_exist.png",
-                "altText": "Mock image that doesn't exist"
+            tags: [],
+            image: {
+                type: "image",
+                children: [],
+                published: false,
+                src: "content/mock/doesnt_exist.png",
+                altText: "Mock image that doesn't exist"
             },
-            "homepage": "/",
-            "published": true
+            homepage: "/",
+            published: true
         }
     ],
-    "published": true
-})
+    published: true
+});
