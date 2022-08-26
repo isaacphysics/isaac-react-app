@@ -11,12 +11,6 @@ import {Helmet} from "react-helmet";
 
 printAsciiArtLogoToConsolePhy();
 
-// Start MSW to intercept requests that we want to mock responses to - uncomment to enable in browser
-// if (process.env.NODE_ENV !== 'production') {
-//     const {worker} = require('./mocks/browser');
-//     worker.start();
-// }
-
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
