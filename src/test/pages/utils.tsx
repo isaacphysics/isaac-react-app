@@ -5,7 +5,7 @@ import {rest, RestHandler} from "msw";
 import {ACTION_TYPE, API_PATH} from "../../app/services";
 import produce from "immer";
 import {mockUser} from "../../mocks/data";
-import {isaacApi, logOutUser, requestCurrentUser, store} from "../../app/state";
+import {isaacApi, requestCurrentUser, store} from "../../app/state";
 import {Provider} from "react-redux";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import React from "react";
