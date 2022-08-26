@@ -5,6 +5,7 @@ module.exports = {
     ],
     "resolver": "jest-pnp-resolver",
     "setupFilesAfterEnv": [
+        "@testing-library/jest-dom/extend-expect",
         "<rootDir>src/test/setupTests.ts",
         "react-app-polyfill/jsdom"
     ],

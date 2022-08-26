@@ -136,6 +136,7 @@ const AssignGroup = ({groups, board}: BoardProps) => {
             className="mt-2 mb-2"
             block color={siteSpecific("secondary", "primary")}
             onClick={assign}
+            role={"button"}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
         >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
     </Container>;
@@ -211,9 +212,9 @@ const Board = (props: BoardProps) => {
 
     return <>
         <Modal isOpen={modal} data-testid={"set-assignment-modal"} toggle={toggleAssignModal}>
-            <ModalHeader close={
-                <button className="close" onClick={toggleAssignModal}>
-                    {"Close"}
+            <ModalHeader role={"heading"} className={"text-break"} close={
+                <button role={"button"} className={"close text-nowrap"} onClick={toggleAssignModal}>
+                    Close
                 </button>
             }>
                 {board.title}
@@ -227,7 +228,7 @@ const Board = (props: BoardProps) => {
                     <Label>Board currently assigned to:</Label>
                     {startedAssignees.length > 0
                         ? <Container className="mb-4">{startedAssignees.map(assignee =>
-                            <Row key={assignee.groupId} className="px-1">
+                            <Row data-testid={"current-assignment"} key={assignee.groupId} className="px-1">
                                 <span className="flex-grow-1">{assignee.groupName}</span>
                                 <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
                             </Row>
@@ -243,7 +244,7 @@ const Board = (props: BoardProps) => {
                     </UncontrolledTooltip>
                     {scheduledAssignees.length > 0
                         ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
-                            <Row key={assignee.groupId} className="px-1">
+                            <Row data-testid={"pending-assignment"} key={assignee.groupId} className="px-1">
                                 <span className="flex-grow-1">{assignee.groupName}</span>
                                 {assignee.startDate && <>
                                     <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"

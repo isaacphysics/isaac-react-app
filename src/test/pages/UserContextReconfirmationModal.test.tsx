@@ -1,7 +1,6 @@
 import React from "react";
 import {screen, waitFor, within} from "@testing-library/react";
 import {MOST_RECENT_AUGUST} from "../../app/state";
-import "@testing-library/jest-dom/extend-expect";
 import produce from "immer";
 import {renderTestEnvironment} from "./utils";
 
