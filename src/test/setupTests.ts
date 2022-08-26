@@ -1,9 +1,5 @@
-import Enzyme from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import 'core-js';
 import {server} from "../mocks/server";
-
-Enzyme.configure({ adapter: new Adapter() });
 
 global.window.scrollTo = jest.fn();
 jest.mock("react-ga"); // Google Analytics requires a DOM.window which doesn't exist in test

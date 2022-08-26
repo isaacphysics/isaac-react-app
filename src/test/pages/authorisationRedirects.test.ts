@@ -1,5 +1,5 @@
 import {renderTestEnvironment} from "./utils";
-import {cleanup, screen, waitFor} from "@testing-library/react/pure";
+import {screen, waitFor} from "@testing-library/react";
 import {history, siteSpecific} from "../../app/services";
 
 describe("Visiting a teacher-only page", () => {
@@ -12,7 +12,6 @@ describe("Visiting a teacher-only page", () => {
         await waitFor(() => {
             expect(history.location.pathname).toEqual("/login");
         });
-        cleanup();
     });
 
     it('should redirect student users to teacher account contact page', async () => {
@@ -23,6 +22,5 @@ describe("Visiting a teacher-only page", () => {
         await waitFor(() => {
             expect(history.location.pathname).toEqual(siteSpecific("/pages/contact_us_teacher", "/pages/teacher_accounts"));
         });
-        cleanup();
     });
 });

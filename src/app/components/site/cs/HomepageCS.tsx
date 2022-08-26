@@ -19,6 +19,9 @@ export const HomepageCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
 
+    const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
+    const carouselNewsItems = news ? (user?.loggedIn ? news.slice(1) : news) : [];
+
     const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
         <h3>Show me</h3>
         <Row>
@@ -53,7 +56,7 @@ export const HomepageCS = () => {
                                 {/*<img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />*/}
                             </Col>
                             <Col data-testid={"featured-news-item"} md="12" lg="7" className="d-none d-lg-block">
-                                <FeaturedNewsItem item={news?.[0]} />
+                                <FeaturedNewsItem item={featuredNewsItem} />
                             </Col>
                         </Row>
                     </>
@@ -118,9 +121,9 @@ export const HomepageCS = () => {
                 <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
                     <h2 className="h-title mb-4">News</h2>
                     {user?.loggedIn && <div className={"d-block d-lg-none mb-4 mb-lg-0"}>
-                        <FeaturedNewsItem item={news?.[0]} />
+                        <FeaturedNewsItem item={featuredNewsItem} />
                     </div>}
-                    <NewsCarousel items={user?.loggedIn ? news?.slice(1) : news} />
+                    <NewsCarousel items={carouselNewsItems} />
                 </div>
             </Container>
         </section>

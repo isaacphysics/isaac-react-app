@@ -12,7 +12,7 @@ module.exports = {
     "testMatch": [
         "<rootDir>src/**/*.test.(js|jsx|ts|tsx)"
     ],
-    "testEnvironment": "enzyme",
+    "testEnvironment": "jsdom",
     "testURL": "http://localhost",
     "transform": {
         "^.+\\.css$": "<rootDir>config/jest/cssTransform.js",
@@ -38,9 +38,6 @@ module.exports = {
         "web.jsx",
         "jsx",
         "node"
-    ],
-    "snapshotSerializers": [
-        "enzyme-to-json/serializer"
     ],
     "watchPlugins": [
         "<rootDir>node_modules/jest-watch-typeahead/filename.js",

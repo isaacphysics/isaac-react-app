@@ -1,8 +1,7 @@
 import React from "react";
 import {rest} from "msw";
 import {API_PATH} from "../../app/services";
-// Importing "/pure" means that tests ARE NOT CLEANED UP automatically
-import {cleanup, screen, waitFor} from "@testing-library/react/pure";
+import {screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
 import {mockMyAssignments} from "../../mocks/data";
@@ -11,26 +10,32 @@ import produce from "immer";
 
 describe("MyAssignments", () => {
 
-    it('should show my current assignments on render', async () => {
+    const renderMyAssignments = () => {
         renderTestEnvironment({
             PageComponent: MyAssignments,
             initalRouteEntries: ["/assignments"]
         });
+    };
+
+    it('should show my current assignments on render', async () => {
+        renderMyAssignments();
         const assignments = await screen.findAllByTestId("my-assignment");
         expect(assignments).toHaveLength(mockMyAssignments.length);
     });
 
     it('should render with "To Do" tab open first', async () => {
-        const toDoTab = await screen.getByTitle("Assignments To Do tab");
-        const olderTab = await screen.getByTitle("Older Assignments tab");
-        const completedTab = await screen.getByTitle("Completed Assignments tab");
+        renderMyAssignments();
+        const toDoTab = await screen.findByTitle("Assignments To Do tab");
+        const olderTab = await screen.findByTitle("Older Assignments tab");
+        const completedTab = await screen.findByTitle("Completed Assignments tab");
         expect(toDoTab.classList).toContain("active");
         expect(olderTab.classList).not.toContain("active");
         expect(completedTab.classList).not.toContain("active");
     });
 
     it('should allow users to filter assignments on gameboard title', async () => {
-        const filter = screen.getByPlaceholderText("Filter assignments by name");
+        renderMyAssignments();
+        const filter = await screen.findByPlaceholderText("Filter assignments by name");
         await userEvent.type(filter, "Test Gameboard 3");
         // Only one assignment should be shown
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
@@ -41,9 +46,10 @@ describe("MyAssignments", () => {
     });
 
     it('should open "Older" tab when tab is clicked, and tab should contain no assignments', async () => {
-        const toDoTab = await screen.getByTitle("Assignments To Do tab");
-        const olderTab = await screen.getByTitle("Older Assignments tab");
-        const completedTab = await screen.getByTitle("Completed Assignments tab");
+        renderMyAssignments();
+        const toDoTab = await screen.findByTitle("Assignments To Do tab");
+        const olderTab = await screen.findByTitle("Older Assignments tab");
+        const completedTab = await screen.findByTitle("Completed Assignments tab");
         await userEvent.click(olderTab);
         await waitFor(() => {
             expect(toDoTab.classList).not.toContain("active");
@@ -51,7 +57,6 @@ describe("MyAssignments", () => {
             expect(completedTab.classList).not.toContain("active");
         }, {onTimeout: augmentErrorMessage("Tabs did not change to the correct state fast enough")});
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
-        cleanup();
     });
 
     it('should contain assignments with undefined due date and older than a month in the "Older Assignments" tab', async () => {
@@ -82,6 +87,5 @@ describe("MyAssignments", () => {
         await userEvent.click(olderTab);
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
-        cleanup();
     });
 });

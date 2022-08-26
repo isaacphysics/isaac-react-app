@@ -1,14 +1,13 @@
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
-import {cleanup, screen, waitFor, within} from "@testing-library/react/pure";
+import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
 import {Role, ROLES} from "../../IsaacApiTypes";
 import {renderTestEnvironment} from "./utils";
-import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history} from "../../app/services";
+import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
-import {isaacApi, logOutUser, store} from "../../app/state";
 
 type NavBarTitle = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 
@@ -102,16 +101,11 @@ const navigationBarLinksPerRole: {[p in (Role | "ANONYMOUS")]: {[title in NavBar
 
 describe("IsaacApp", () => {
 
-    afterEach(() => {
-        cleanup();
-    });
-
     it('should open on the home page', async () => {
         renderTestEnvironment();
         await waitFor(() => {
             expect(history.location.pathname).toBe("/");
         });
-        cleanup();
     });
 
     // For each role (including a not-logged-in user), test whether the user sees the correct links in the navbar menu
@@ -143,28 +137,29 @@ describe("IsaacApp", () => {
     });
 
     // TODO implement test data and this test for CS
-    isPhy && it('should show the users number of current assignments in the navigation menu', async () => {
+    isPhy && it('should show the users number of current assignments in the navigation menu (Physics only)', async () => {
         renderTestEnvironment();
         const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
         expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
     });
 
-    // TODO fix
-    // it('should show featured news pods before non-featured ones, and order pods correctly based on id', async () => {
-    //     renderTestEnvironment();
-    //     const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
-    //     const newsCarousel = await screen.findByTestId("carousel-inner");
-    //     const newsPods = screen.queryAllByTestId("featured-news-item") // picks up the CS featured news item first
-    //         .concat(within(newsCarousel).queryAllByTestId("news-pod"));
-    //     const newsPodLinks = newsPods.map(p => within(p).queryAllByRole("link")[0]?.getAttribute("href"));
-    //     expect(newsPods).toHaveLength(5);
-    //     const featuredNewsPodLinks = transformPodList(
-    //         mockNewsPods.results.filter(p => p.tags.includes(FEATURED_NEWS_TAG)).map(p => p.url)
-    //     );
-    //     expect(newsPodLinks.slice(0, featuredNewsPodLinks.length)).toEqual(featuredNewsPodLinks);
-    //     const nonFeaturedNewsPodLinks = transformPodList(
-    //         mockNewsPods.results.filter(p => !p.tags.includes(FEATURED_NEWS_TAG)).map(p => p.url)
-    //     );
-    //     expect(newsPodLinks.slice(featuredNewsPodLinks.length)).toEqual(nonFeaturedNewsPodLinks);
-    // });
+    isCS && it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
+        renderTestEnvironment();
+        const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
+        const newsCarousel = await screen.findByTestId("carousel-inner");
+        const featuredNewsSection = await screen.findByTestId("featured-news-item");
+        const featuredNewsPod = await within(featuredNewsSection).findByTestId("news-pod");
+        const newsCarouselPods = await within(newsCarousel).findAllByTestId("news-pod");
+        const allNewsPodsInOrder = [featuredNewsPod].concat(newsCarouselPods);
+        const newsPodLinks = allNewsPodsInOrder.map(p => within(p).queryAllByRole("link")[0]?.getAttribute("href"));
+        expect(allNewsPodsInOrder).toHaveLength(5);
+        const featuredNewsPodLinks = transformPodList(
+            mockNewsPods.results.filter(p => p.tags.includes(FEATURED_NEWS_TAG)).map(p => p.url)
+        );
+        expect(newsPodLinks.slice(0, featuredNewsPodLinks.length)).toEqual(featuredNewsPodLinks);
+        const nonFeaturedNewsPodLinks = transformPodList(
+            mockNewsPods.results.filter(p => !p.tags.includes(FEATURED_NEWS_TAG)).map(p => p.url)
+        );
+        expect(newsPodLinks.slice(featuredNewsPodLinks.length)).toEqual(nonFeaturedNewsPodLinks);
+    });
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import {cleanup, screen, waitFor, within} from "@testing-library/react/pure";
+import {screen, waitFor, within} from "@testing-library/react";
 import {MOST_RECENT_AUGUST} from "../../app/state";
 import "@testing-library/jest-dom/extend-expect";
 import produce from "immer";
@@ -20,7 +20,6 @@ describe("UserContextReconfirmationModal", () => {
         } else {
             expect(modals).toHaveLength(0);
         }
-        cleanup();
     });
 
     it('should show if the user has not updated their audience context information since last August', async () => {
@@ -32,6 +31,5 @@ describe("UserContextReconfirmationModal", () => {
         await waitFor(() => {
             expect(within(screen.getByTestId("active-modal")).queryByText("Please review your details")).not.toBeNull();
         });
-        cleanup();
     });
 });
