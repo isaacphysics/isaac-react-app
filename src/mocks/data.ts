@@ -526,7 +526,7 @@ export const mockGameboards = {
                         },
                         {
                             stage: [
-                                "year_7"
+                                "year_7_and_8"
                             ],
                             difficulty: [
                                 "challenge_1"
@@ -3124,7 +3124,7 @@ export const mockMyAssignments = [
                         },
                         {
                             stage: [
-                                "year_7"
+                                "year_7_and_8"
                             ],
                             difficulty: [
                                 "challenge_1"
@@ -4157,7 +4157,7 @@ export const mockAssignmentsGroup2 = [
                         },
                         {
                             stage: [
-                                "year_7"
+                                "year_7_and_8"
                             ],
                             difficulty: [
                                 "challenge_1"

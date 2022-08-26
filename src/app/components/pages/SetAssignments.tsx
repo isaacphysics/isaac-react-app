@@ -150,8 +150,8 @@ interface HexagonGroupsButtonProps {
 const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
     <button onClick={toggleAssignModal} id={id} className="board-subject-hexagon-container">
         {generateGameboardSubjectHexagons(boardSubjects)}
-        <span className="groups-assigned">
-                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>
+        <span className="groups-assigned" title={"Groups assigned"}>
+                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
                 group{(!assignees || assignees.length != 1) && "s"}
             {isDefined(assignees) &&
             <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
@@ -290,7 +290,7 @@ const Board = (props: BoardProps) => {
             </tr>
             :
             // Card view
-            <Card className="board-card card-neat" data-testid={"assignment-gameboard-card"}>
+            <Card aria-label={`Gameboard ${board.title}`} className="board-card card-neat" data-testid={"assignment-gameboard-card"}>
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
                     <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
@@ -388,7 +388,7 @@ export const SetAssignments = () => {
             <Col md={6} lg={4} className="pt-1">
                 {siteSpecific(
                     // Physics
-                    <Button tag={Link} onClick={() => dispatch(openIsaacBooksModal())} color="secondary" block className="px-3">
+                    <Button role={"link"} onClick={() => dispatch(openIsaacBooksModal())} color="secondary" block className="px-3">
                         our books
                     </Button>,
                     // Computer science

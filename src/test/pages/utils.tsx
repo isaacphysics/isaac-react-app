@@ -76,3 +76,13 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
             : <IsaacApp/>}
     </Provider>);
 };
+
+export const dayMonthYearStringToDate = (d?: string) => {
+    if (!d) return undefined;
+    const parts = d.split("/").map(n => parseInt(n, 10));
+    return new Date(parts[2], parts[1] - 1, parts[0]);
+}
+
+export const ONE_DAY_IN_MS = 86400000;
+
+export const DDMMYYYY_REGEX = /\d{2}\/\d{2}\/\d{4}/;

@@ -18,7 +18,7 @@ export const middleware: Middleware[] = [
     isaacApi.middleware
 ];
 const defaultMiddlewareOptions = {
-    serializableCheck: process.env.JEST_WORKER_ID === undefined
+    serializableCheck: process.env.NODE_ENV !== 'test'
 }
 
 export const store = configureStore({
