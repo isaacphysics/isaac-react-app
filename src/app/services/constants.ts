@@ -4,7 +4,7 @@ import {Remarkable} from "remarkable";
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
-import {siteSpecific} from "./siteConstants";
+import {isCS, siteSpecific} from "./siteConstants";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -665,6 +665,10 @@ export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = dif
 export const DIFFICULTY_ICON_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyIconLabelMap[d]}
 ));
+
+export function removeP3AndC3ForCs(difficulty: {value: Difficulty}) {
+    return !isCS || (difficulty.value != "practice_3" && difficulty.value != "challenge_3");
+}
 
 // QUESTION CATEGORIES
 export enum QUESTION_CATEGORY {
