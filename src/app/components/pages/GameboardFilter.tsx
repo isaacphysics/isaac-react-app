@@ -184,10 +184,10 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                     <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                         Practice questions let you directly apply one idea -<br />
                         P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                        P3 covers later topics.<br />
+                        {siteSpecific("P3", "P2")} covers later topics.<br />
                         Challenge questions are solved by combining multiple concepts and creativity.<br />
                         C1 can be attempted near the beginning of your course,<br />
-                        C3 require more creativity and could be attempted later in a course.
+                        {siteSpecific("C3", "C2")} require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
                 <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
