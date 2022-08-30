@@ -19,7 +19,6 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.cyberSecurity, title: "Cybersecurity", parent: TAG_ID.computerScience},
         {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.computerScience},
         {id: TAG_ID.dataStructuresAndAlgorithms, title: "Data structures and algorithms", parent: TAG_ID.computerScience},
-        {id: TAG_ID.gcseToALevel, title: "GCSE to A level transition", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.impactsOfDigitalTechnology, title: "Impacts of digital technology", parent: TAG_ID.computerScience},
         {id: TAG_ID.machineLearningAi, title: "Machine learning and AI", parent: TAG_ID.computerScience, hidden: true},
         {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
@@ -64,9 +63,6 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.sorting, title: "Sorting algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.pathfinding, title: "Pathfinding algorithms", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
-        // GCSE to A level transition topics
-        {id: TAG_ID.gcseProgrammingConcepts, title: "GCSE Programming concepts", parent: TAG_ID.gcseToALevel},
-        {id: TAG_ID.gcseNetworking, title: "GCSE Networking", parent: TAG_ID.gcseToALevel},
         // Impacts of technology topics
         {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology, stageOverride: GCSE_COMING_2022},
         {id: TAG_ID.impactsOfTech, title: "Impacts of technology", parent: TAG_ID.impactsOfDigitalTechnology, stageOverride: GCSE_COMING_2022},
