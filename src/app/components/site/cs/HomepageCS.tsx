@@ -27,7 +27,7 @@ export const HomepageCS = () => {
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/topics/gcse"} color="secondary" block>
-                    GCSE resources <Badge color="secondary" className="ml-1 border">BETA</Badge>
+                    GCSE resources
                 </Button>
             </Col>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">

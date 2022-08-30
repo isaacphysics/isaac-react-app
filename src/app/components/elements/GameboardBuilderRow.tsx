@@ -6,6 +6,7 @@ import {
     determineAudienceViews,
     examBoardLabelMap,
     filterAudienceViewsByProperties,
+    findAudienceRecordsMatchingPartial,
     generateQuestionTitle,
     isCS,
     siteSpecific,
@@ -109,9 +110,15 @@ const GameboardBuilderRow = (
             </div>)}
         </td>
         {isCS && <td className="w-5">
-            {filteredAudienceViews.map(v => v.examBoard).map(examBoard => <div key={examBoard}>
-                {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
-            </div>)}
+            {filteredAudienceViews.map((audienceView, i, collection) => <>
+                {findAudienceRecordsMatchingPartial(question.audience, audienceView)
+                    .map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => <div key={examBoard}>
+                        {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
+                    </div>))
+                }
+                {/* When this becomes more common we should solve separation via a new row and merge other columns */}
+                {i + 1 < collection.length && <hr className="text-center" />}
+            </>)}
         </td>}
     </tr>
 };

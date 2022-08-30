@@ -29,7 +29,8 @@ import {
     SortOrder,
     sortQuestions,
     STAGE,
-    useUserContext
+    useUserContext,
+    removeP3AndC3ForCs
 } from "../../../services";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
@@ -191,7 +192,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS.filter(removeP3AndC3ForCs)} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
             {isCS && <RS.Col lg={6} className={`text-wrap my-2`}>

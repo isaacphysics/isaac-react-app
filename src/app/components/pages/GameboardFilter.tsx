@@ -27,6 +27,7 @@ import {
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
     selectOnChange,
     siteSpecific,
+    removeP3AndC3ForCs,
     STAGE,
     TAG_ID,
     tags,
@@ -194,10 +195,10 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                     <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                         Practice questions let you directly apply one idea -<br />
                         P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                        P3 covers later topics.<br />
+                        {siteSpecific("P3", "P2")} covers later topics.<br />
                         Challenge questions are solved by combining multiple concepts and creativity.<br />
                         C1 can be attempted near the beginning of your course,<br />
-                        C3 require more creativity and could be attempted later in a course.
+                        {siteSpecific("C3", "C2")} require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
                 <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
@@ -314,7 +315,12 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         C3 require more creativity and could be attempted later in a course.
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ICON_ITEM_OPTIONS} />
+                <Select
+                    id="difficulty-selector" isClearable isMulti
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS.filter(removeP3AndC3ForCs)}
+                    value={difficulties}
+                    onChange={selectOnChange(setDifficulties, false)}
+                />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>

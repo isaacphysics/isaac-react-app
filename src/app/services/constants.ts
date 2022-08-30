@@ -4,7 +4,7 @@ import {Remarkable} from "remarkable";
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
-import {siteSpecific} from "./";
+import {isCS, siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -594,11 +594,11 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_3: "Challenge\u00A0(C3)",
 }
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
-    practice_1: "Practice (P1) \u2B22\u2B21\u2B21",
-    practice_2: "Practice (P2) \u2B22\u2B22\u2B21",
+    practice_1: `Practice (P1) \u2B22\u2B21${siteSpecific("\u2B21", "")}`,
+    practice_2: `Practice (P2) \u2B22\u2B22${siteSpecific("\u2B21", "")}`,
     practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
-    challenge_1: "Challenge (C1) \u25A0\u25A1\u25A1",
-    challenge_2: "Challenge (C2) \u25A0\u25A0\u25A1",
+    challenge_1: `Challenge (C1) \u25A0\u25A1${siteSpecific("\u25A1", "")}`,
+    challenge_2: `Challenge (C2) \u25A0\u25A0${siteSpecific("\u25A1", "")}`,
     challenge_3: "Challenge (C3) \u25A0\u25A0\u25A0",
 }
 export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"];
@@ -608,6 +608,10 @@ export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = dif
 export const DIFFICULTY_ICON_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyIconLabelMap[d]}
 ));
+
+export function removeP3AndC3ForCs(difficulty: {value: Difficulty}) {
+    return !isCS || (difficulty.value != "practice_3" && difficulty.value != "challenge_3");
+}
 
 // QUESTION CATEGORIES
 export enum QUESTION_CATEGORY {
