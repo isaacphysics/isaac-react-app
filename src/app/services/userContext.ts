@@ -274,6 +274,15 @@ function produceAudienceViewingCombinations(audience: AudienceContext): ViewingC
     return audienceOptions;
 }
 
+// Find all combinations of viewing contexts from an audience of the form:
+//   {stage: ["a_level", "gcse"], examBoard: ["aqa", "ocr"]}
+// so that we have a list of the form: [
+//   {stage: "a_level", examBoard: "aqa"},
+//   {stage: "a_level", examBoard: "ocr"},
+//   {stage: "gcse", examBoard: "aqa"},
+//   {stage: "gcse", examBoard: "ocr"},
+// ].
+// Then, filter possible viewing context by creation context if any is provided.
 export function determineAudienceViews(audience?: AudienceContext[], creationContext?: AudienceContext): ViewingContext[] {
     if (audience === undefined) {return [];}
 
@@ -324,6 +333,12 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
         }
     });
     return filteredViews;
+}
+
+export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['audience'], partialViewingContext: Partial<ViewingContext>) {
+    return audience?.filter((audienceRecord) => {
+        return Object.entries(partialViewingContext).every(([key, value]) => audienceRecord[key as keyof AudienceContext]?.[0] === value);
+    }) ?? [];
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {
