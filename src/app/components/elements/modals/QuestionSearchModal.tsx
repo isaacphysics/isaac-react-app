@@ -92,7 +92,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 examBoards: examBoardString,
                 fasttrack,
                 startIndex,
-                limit: -1
+                limit: 300
             }));
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
