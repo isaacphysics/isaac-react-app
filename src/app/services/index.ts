@@ -1,5 +1,6 @@
 // No internal app dependencies
 export * from "./localStorage";
+export * from "./dates";
 export * from "./siteConstants";
 export * from "./clozeQuestionKeyboardSensor";
 export * from "./demoTools";

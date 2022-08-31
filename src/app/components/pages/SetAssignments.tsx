@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {
     Alert,
     Button,
@@ -33,9 +33,8 @@ import {
     useAppSelector
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {range, sortBy} from "lodash";
+import {sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
     above,
     allPropertiesFromAGameboard,
@@ -70,6 +69,7 @@ import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import Select from "react-select";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
+import {createOptionForDate, DatePicker} from "../elements/inputs/DatePicker";
 
 type BoardProps = {
     user: RegisteredUserDTO;
@@ -99,8 +99,7 @@ const AssignGroup = ({groups, board}: BoardProps) => {
         });
     }
 
-    const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getMonth() + 1;
+    const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() >= dueDate.valueOf() : false;
 
     return <Container className="py-2">
         <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
@@ -113,12 +112,18 @@ const AssignGroup = ({groups, board}: BoardProps) => {
         </Label>
         {/* TODO remove staff role requirement */}
         {isStaff(user) && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
-                       onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
+            <DatePicker value={scheduledStartDate ? createOptionForDate(scheduledStartDate) : null}
+                        onChange={(date) => setScheduledStartDate(date?.value)}
+                        isInvalid={dueDateInvalid}
+            />
         </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
+            <DatePicker value={dueDate ? createOptionForDate(dueDate) : null}
+                        onChange={(date) => setDueDate(date?.value)}
+                        referenceDate={scheduledStartDate?.addDays(1)}
+                        isInvalid={dueDateInvalid}
+            />
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after start date.</small>}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
