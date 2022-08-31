@@ -39,6 +39,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                 }
                 return a;
             }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+            const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
             return <React.Fragment key={index}>
                 <hr />
                 <Row className="board-card">
@@ -57,8 +58,8 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                         </Link>
-                        {isDefined(assignment.creationDate) &&
-                        <p className="mb-0"><strong>Assigned:</strong> {formatDate(assignment.creationDate)}</p>
+                        {isDefined(assignmentStartDate) &&
+                        <p className="mb-0"><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
                         }
                         {isDefined(assignment.dueDate) &&
                         <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>
