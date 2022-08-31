@@ -218,10 +218,7 @@ export const customStyles: StylesConfig<DateOption, false, GroupBase<DateOption>
         }
         return base;
     },
-    container: (base, state) => ({
-        ...base,
-        zIndex: 5,
-    }),
+    menu: (base) => ({...base, zIndex: 5}),
 };
 
 type DatePickerProps = {
