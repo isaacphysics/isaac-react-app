@@ -5,7 +5,7 @@ import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {clearEventsList, getEventMapData, getEventsList} from "../../state/actions";
 import {EventCard} from "../elements/cards/EventCard";
 import {PageFragment} from "../elements/PageFragment";
@@ -16,7 +16,10 @@ import {RenderNothing} from "../elements/RenderNothing";
 import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 import {stageExistsForSite} from "../../services/events";
-
+import { isDefined } from "../../services/miscUtils";
+import { Map, Marker, Popup, TileLayer } from "react-leaflet";
+import * as L from "leaflet";
+import { DateString } from "../elements/DateString";
 
 interface EventsPageQueryParams {
     show_booked_only?: boolean;
@@ -33,7 +36,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
 
     const dispatch = useAppDispatch();
     const eventsState = useAppSelector((state: AppState) => state?.events);
-    // const eventMapData = useAppSelector((state: AppState) => state?.eventMapData);
+    const eventMapData = useAppSelector((state: AppState) => state?.eventMapData);
     const user = useAppSelector(selectors.user.orNull);
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
@@ -57,6 +60,13 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     </span>;
 
     const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
+
+    let icon = L.icon({
+        iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+        iconUrl: require('leaflet/dist/images/marker-icon.png'),
+        shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+        iconAnchor: [12, 41]
+    });
 
     return <div>
         <RS.Container>
@@ -102,6 +112,27 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                         </RS.Input>
                     </RS.Label>
                 </RS.Form>
+
+                {isDefined(eventMapData) && Array.isArray(eventMapData) && eventMapData.length > 0 &&
+                    <div className="border px-2 py-1 mt-3 bg-light">
+                        <Map center={[55.7490919,-2.8184722]} zoom={5.67}>
+                            <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                            />
+                            {eventMapData.map(event => <Marker position={[event.latitude || 0, event.longitude || 0]} icon={icon}>
+                                    <Popup>
+                                        <strong>{event.title}</strong><br />{event?.address?.addressLine1}<br />{event?.address?.addressLine2}<br />{event?.address?.town}<br />{event?.address?.postalCode}<br />
+                                        <Link className="focus-target" to={`/events/${event.id}`}>
+                                            View details
+                                            <span className='sr-only'> of the event: {event.title} {" - "} <DateString>{event.date}</DateString></span>
+                                        </Link>
+                                    </Popup>
+                                </Marker>
+                            )}
+                        </Map>
+                    </div>
+                }
 
                 {/* Results */}
                 <ShowLoading until={eventsState} thenRender={({events, total}) => <div className="my-4">
