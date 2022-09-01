@@ -2,11 +2,16 @@ import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { GraphSketcher, LineType, makeGraphSketcher, GraphSketcherState } from "isaac-graph-sketcher/dist/src/GraphSketcher";
 import { isDefined } from '../../../services/miscUtils';
 import debounce from "lodash/debounce";
+import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
+import {IsaacQuestionProps} from "../../../../IsaacAppTypes";
+import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
+import {Markup} from "../markup";
 
 interface GraphSketcherModalProps {
     close: () => void;
     initialState?: GraphSketcherState;
     onGraphSketcherStateChange: (state: GraphSketcherState) => void;
+    question?: IsaacGraphSketcherQuestionDTO;
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
@@ -102,6 +107,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 <option value="Orange">Orange</option>
                 <option value="Green">Green</option>
             </select>
+            {props.question?.value &&
+                <Markup trusted-markup-encoding={props.question.encoding}>
+                    {props.question.value}
+                </Markup>}
         </div>
     </div>
 }
