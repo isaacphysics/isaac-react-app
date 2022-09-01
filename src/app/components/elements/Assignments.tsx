@@ -53,7 +53,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                 </Link>
                 {isDefined(assignmentStartDate) &&
-                <p className="mb-0"><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
+                <p className="mb-0" data-testid={"gameboard-assigned"}><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
                 }
                 {isDefined(assignment.dueDate) &&
                 <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>

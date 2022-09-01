@@ -1,12 +1,6 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
-
-const NOW = Date.now(); // Use same "now" for all time relative calculations
-const DAYS_AGO = (n: number) => {
-    let d = new Date(NOW);
-    d.setUTCDate(d.getUTCDate() - n);
-    return d.valueOf();
-};
+import {DAYS_AGO} from "../test/pages/utils";
 
 export const mockGameboards = {
     results: [
@@ -2433,7 +2427,7 @@ export const mockMyAssignments = [
         },
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
-        scheduledStartDate: DAYS_AGO(1),
+        //scheduledStartDate: undefined,
         _id: 37
     },
     {

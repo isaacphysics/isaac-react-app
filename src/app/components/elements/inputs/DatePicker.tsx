@@ -9,7 +9,6 @@ import moment, {Moment} from "moment";
 import * as chrono from "chrono-node";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {StateManagerProps} from "react-select/dist/declarations/src/useStateManager";
-import {isDefined} from "../../../services";
 
 /**
  * Adapted from a recipe in the react-select docs
