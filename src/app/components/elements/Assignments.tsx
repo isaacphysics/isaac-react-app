@@ -19,7 +19,7 @@ import {AggregateDifficultyIcons} from "./svg/DifficultyIcons";
 
 const midnightOf = (date: Date | number) => {
     let d = new Date(date);
-    d.setHours(11, 59, 59, 999);
+    d.setHours(23, 59, 59, 999);
     return d;
 };
 
