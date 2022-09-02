@@ -183,69 +183,71 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                         <RS.Col lg={8} className={event.hasExpired ? "expired" : ""}>
                             {/* TODO Student/Teacher/Virtual icon */}
                             {isStaff(user) &&
-                            <RS.Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
-                                       title="Add to Google Calendar">
-                                Add to Calendar
-                            </RS.Button>
+                                <RS.Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
+                                           title="Add to Google Calendar">
+                                    Add to Calendar
+                                </RS.Button>
                             }
 
                             {/* Key event info */}
                             <RS.Table borderless className="event-key-info mb-4">
                                 <tbody>
-                                <tr>
-                                    <td>When:</td>
-                                    <td>
-                                        {formatEventDetailsDate(event)}
-                                        {event.hasExpired &&
-                                        <div className="alert-danger text-center">This event is in the past.</div>}
-                                    </td>
-                                </tr>
-                                {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual &&
-                                <tr>
-                                    <td>Location:</td>
-                                    <td>
-                                        {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
-                                    </td>
-                                </tr>}
-                                {event.isNotClosed && !event.hasExpired && <tr>
-                                    <td>Availability:</td>
-                                    <td>
-                                        {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
-                                        {zeroOrLess(event.placesAvailable) && <div>
-                                            <strong className="text-danger">FULL</strong>
-                                            {event.isAStudentEvent && isTeacher(user) &&
-                                            <span> - for student bookings</span>}
-                                        </div>}
-                                        {event.userBookingStatus === "CONFIRMED" && <span> - <span
-                                            className="text-success">You are booked on this event!</span></span>}
-                                        {event.userBookingStatus === 'RESERVED' &&
-                                        <span> - <span className="text-success">
-                                                You have been reserved a place on this event!
-                                                <RS.Button color="link text-success"
-                                                           onClick={openAndScrollToBookingForm}>
-                                                    <u>Complete your registration below</u>.
-                                                </RS.Button>
-                                            </span></span>}
-                                        {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
-                                        {event.userBookingStatus === "WAITING_LIST" &&
-                                        <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
-                                        {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
-                                        <div className="text-muted font-weight-normal">
-                                            {studentOnlyEventMessage(eventId)}
-                                        </div>
-                                        }
-                                    </td>
-                                </tr>}
-                                {event.bookingDeadline && <tr>
-                                    <td>Booking Deadline:</td>
-                                    <td>
-                                        <DateString>{event.bookingDeadline}</DateString>
-                                        {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                        <div className="alert-danger text-center">
-                                            The booking deadline for this event has passed.
-                                        </div>}
-                                    </td>
-                                </tr>}
+                                    <tr>
+                                        <td>When:</td>
+                                        <td>
+                                            {formatEventDetailsDate(event)}
+                                            {event.hasExpired &&
+                                            <div className="alert-danger text-center">This event is in the past.</div>}
+                                        </td>
+                                    </tr>
+                                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual &&
+                                        <tr>
+                                            <td>Location:</td>
+                                            <td>
+                                                {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
+                                            </td>
+                                        </tr>}
+                                    {event.isNotClosed && !event.hasExpired &&
+                                        <tr>
+                                            <td>Availability:</td>
+                                            <td>
+                                                {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
+                                                {zeroOrLess(event.placesAvailable) && <div>
+                                                    <strong className="text-danger">FULL</strong>
+                                                    {event.isAStudentEvent && isTeacher(user) &&
+                                                    <span> - for student bookings</span>}
+                                                </div>}
+                                                {event.userBookingStatus === "CONFIRMED" && <span> - <span
+                                                    className="text-success">You are booked on this event!</span></span>}
+                                                {event.userBookingStatus === 'RESERVED' &&
+                                                <span> - <span className="text-success">
+                                                        You have been reserved a place on this event!
+                                                        <RS.Button color="link text-success"
+                                                                   onClick={openAndScrollToBookingForm}>
+                                                            <u>Complete your registration below</u>.
+                                                        </RS.Button>
+                                                    </span></span>}
+                                                {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
+                                                {event.userBookingStatus === "WAITING_LIST" &&
+                                                <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
+                                                {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
+                                                <div className="text-muted font-weight-normal">
+                                                    {studentOnlyEventMessage(eventId)}
+                                                </div>
+                                                }
+                                            </td>
+                                        </tr>}
+                                    {event.bookingDeadline &&
+                                        <tr>
+                                            <td>Booking Deadline:</td>
+                                            <td>
+                                                <DateString>{event.bookingDeadline}</DateString>
+                                                {!event.isWithinBookingDeadline && !event.hasExpired &&
+                                                <div className="alert-danger text-center">
+                                                    The booking deadline for this event has passed.
+                                                </div>}
+                                            </td>
+                                        </tr>}
                                 </tbody>
                             </RS.Table>
 
@@ -297,12 +299,12 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                             <div>
                                 {/* Options for un-logged-in users */}
                                 {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
-                                <RS.Button onClick={loginAndReturn}>
-                                    {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
-                                        "Login to book" :
-                                        "Login to apply"
-                                    }
-                                </RS.Button>
+                                    <RS.Button onClick={loginAndReturn}>
+                                        {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
+                                            "Login to book" :
+                                            "Login to apply"
+                                        }
+                                    </RS.Button>
                                 }
 
                                 {/* Options for logged-in users */}
@@ -329,14 +331,12 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                     </RS.Button>
                                     }
                                 </React.Fragment>}
-
                                 <RS.Button tag={Link} to="/events" color="primary" outline>
                                     Back to events
                                 </RS.Button>
                             </div>
                         </RS.Col>
                     </RS.Row>
-
                 </RS.CardBody>
             </RS.Card>
         </RS.Container>
