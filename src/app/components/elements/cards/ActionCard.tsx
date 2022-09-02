@@ -29,7 +29,7 @@ export const ActionCard = ({title, amountText, linkDestination, linkText, coming
                 {comingSoon ? comingSoonMessage : amountText}
             </p>
             <p>
-                {children}
+                <>{children}</>
             </p>
             <RS.Button tag={Link} to={linkDestination} color="secondary" block disabled={comingSoon}>
                 {linkText}

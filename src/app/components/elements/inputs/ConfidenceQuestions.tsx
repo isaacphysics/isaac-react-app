@@ -191,7 +191,7 @@ export const useConfidenceQuestionsValues = (show: boolean | undefined, type: Co
     // Confidence question specific things
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
     const [validationPending, setValidationPending] = useState<ValidationPendingState>({pending: false});
-    const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || (currentAttempt.value === "") || ((currentAttempt as ItemChoiceDTO).items === []));
+    const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || (currentAttempt.value === "") || (Array.isArray((currentAttempt as ItemChoiceDTO).items) && (currentAttempt as ItemChoiceDTO).items?.length === 0));
     const showQuestionFeedback = confidenceState !== "initial" || !show || correct;
 
     // Reset question confidence on attempt change

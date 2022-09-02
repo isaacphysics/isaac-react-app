@@ -194,7 +194,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
         }
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
-    const updateAttemptCallback = useCallback((dropResult) => {
+    const updateAttemptCallback = useCallback((dropResult: DropResult) => {
         updateAttempt({...dropResult, destination: {droppableId: itemsSectionDroppableId, index: nonSelectedItems.length}},{announce: (_) => {return;}});
     }, [itemsSectionDroppableId, nonSelectedItems]);
 

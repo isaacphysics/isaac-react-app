@@ -70,7 +70,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const embedSrc = src && rewrite(src);
     const altTextToUse = `Embedded YouTube video: ${altText || src}.`
 
-    const videoRef = useCallback( node => {
+    const videoRef = useCallback( (node: any) => { // This isn't great but I couldn't figure out the actual type
         const $window: any = window;
         if (node !== null && $window.YT) {
             try {

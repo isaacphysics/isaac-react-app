@@ -212,6 +212,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         // Only update email preferences on the email preferences tab
         if (activeTab == ACCOUNT_TAB.emailpreferences) {
             if (validateEmailPreferences(emailPreferences)) {
+                myUserPreferences.EMAIL_PREFERENCE ||= {}; // Make sure there is something to Object.assign into
                 Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
             } else {
                 return; // early exit

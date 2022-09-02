@@ -35,7 +35,7 @@ function EditorListener() {
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
-    const listener = useCallback((event) => {
+    const listener = useCallback((event: MessageEvent) => {
         if (!event.origin?.includes("localhost") && event.origin !== EDITOR_ORIGIN) {
             console.warn("Ignoring message from unexpected origin (" + event.origin + ")!")
             return;
