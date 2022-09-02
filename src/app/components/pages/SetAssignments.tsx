@@ -114,14 +114,14 @@ const AssignGroup = ({groups, board}: BoardProps) => {
         {isStaff(user) && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DatePicker value={scheduledStartDate ? createOptionForDate(scheduledStartDate) : null}
                         onChange={(date) => setScheduledStartDate(date?.value)}
-                        isInvalid={dueDateInvalid}
+                        isInvalid={dueDateInvalid} hideCalendar
             />
         </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DatePicker value={dueDate ? createOptionForDate(dueDate) : null}
                         onChange={(date) => setDueDate(date?.value)}
                         referenceDate={scheduledStartDate?.addDays(1)}
-                        isInvalid={dueDateInvalid}
+                        isInvalid={dueDateInvalid} hideCalendar
             />
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after start date.</small>}
         </Label>

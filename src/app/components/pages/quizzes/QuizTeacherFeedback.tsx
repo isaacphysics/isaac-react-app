@@ -122,22 +122,19 @@ export const QuizTeacherFeedback = () => {
                 </p>
                 <Row>
                     {assignment.dueDate && <Col xs={12} sm={6} md={4}>
-                        <Label for="dueDate" className="pr-1">Extend the due date:</Label>
-                        <DatePicker id={"dueDate"}
-                                    value={dueDate ? createOptionForDate(dueDate) : null}
-                                    onChange={(date) => date && setDueDate(date.value)}
-                                    referenceDate={assignment.dueDate}
-                                    isInvalid={assignment?.dueDate && dueDate ? dueDate.valueOf() < assignment.dueDate.valueOf() : false}
-                        />
-                        <div className={"mt-2 w-100 text-center mb-2"}>
+                        <Label for="dueDate" className="pr-1">Extend the due date:
+                            <DatePicker id={"dueDate"}
+                                        value={dueDate ? createOptionForDate(dueDate) : null}
+                                        onChange={(date) => date && setDueDate(date.value)}
+                                        referenceDate={assignment.dueDate}
+                                        isInvalid={assignment?.dueDate && dueDate ? dueDate.valueOf() < assignment.dueDate.valueOf() : false}
+                            />
+                            {dueDate && (dueDate < assignment.dueDate) && <small className={"pt-2 text-danger"}>Extended due date must be after the current due date!</small>}
+                        </Label>
+                        <div className={"mt-2 w-100 mb-2"}>
                             {dueDate && (dueDate > assignment.dueDate) && <Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
                                 {settingDueDate ? <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></> : "Extend due date"}
                             </Button>}
-                            {dueDate && (dueDate < assignment.dueDate) && <Card className={"text-left border bg-transparent border-danger"}>
-                                <CardBody className={"p-2 pl-3"}>
-                                    Extended due date must be after the current due date!
-                                </CardBody>
-                            </Card>}
                         </div>
                     </Col>}
                     <Col>
