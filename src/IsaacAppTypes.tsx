@@ -17,7 +17,6 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    TOTPSharedSecretDTO,
     UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
@@ -61,19 +60,10 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS; provider: AuthenticationProvider}
     | {type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_SUCCESS; totpSharedSecretDTO: TOTPSharedSecretDTO}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_NEW_SECRET_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_SUCCESS}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_SETUP_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_REQUEST}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_SUCCESS}
-    | {type: ACTION_TYPE.USER_AUTH_MFA_DISABLE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
@@ -219,10 +209,6 @@ export type Action =
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.FRAGMENT_REQUEST; id: string}
-    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS; id: string; doc: ApiTypes.ContentDTO}
-    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE; id: string}
-
     | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
@@ -348,10 +334,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
 
-    | {type: ACTION_TYPE.NEWS_REQUEST}
-    | {type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS; theNews: ApiTypes.IsaacPodDTO[]}
-    | {type: ACTION_TYPE.NEWS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
@@ -440,21 +422,17 @@ export type Action =
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS; gameboardId: string}
     | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
-    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
+    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; boardId: string}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; boardId: string}
+    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; boardId: string}
 
-    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
-
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; boardId: string; groupId: number}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; boardId: string; groupId: number}
+    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; boardId: string; groupId: number}
 
     | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; newAssignments: (BoardAssignee & {assignmentId: number})[]; assignmentStub: AssignmentDTO}
+    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]}
 
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
@@ -585,6 +563,7 @@ export interface BooleanNotation {
 
 export interface DisplaySettings {
     HIDE_NON_AUDIENCE_CONTENT?: boolean;
+    HIDE_QUESTION_ATTEMPTS?: boolean;
 }
 
 export interface UserPreferencesDTO {
@@ -668,20 +647,18 @@ export enum BoardOrder {
     "-completion" = "-completion"
 }
 
-export type ActualBoardLimit = number | "ALL";
-
-export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
+export type NumberOfBoards = number | "ALL";
 
 export interface Boards {
     boards: GameboardDTO[];
     totalResults: number;
 }
 
+export type BoardAssignee = {groupId: number, groupName?: string; startDate?: Date | number};
+
 export interface BoardAssignees {
-    boardAssignees?: {[key: string]: number[]};
+    boardAssignees?: {[key: string]: BoardAssignee[]};
 }
-
-
 
 // Admin Content Errors:
 export interface ContentErrorItem {
@@ -985,4 +962,9 @@ export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "S
 
 export interface ClozeItemDTO extends ItemDTO {
     replacementId?: string;
+}
+
+export interface NewsItemProps {
+    subject: "news" | "physics";
+    orderDecending?: boolean;
 }

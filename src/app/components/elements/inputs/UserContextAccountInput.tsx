@@ -24,7 +24,7 @@ interface UserContextRowProps {
     submissionAttempted: boolean;
     existingUserContexts: UserContext[];
     setBooleanNotation: (bn: BooleanNotation) => void;
-    setDisplaySettings: (ds: DisplaySettings) => void;
+    setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
 }
 
 function UserContextRow({
@@ -50,7 +50,7 @@ function UserContextRow({
                     setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
 
                     // Set display settings default values
-                    setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: true});
+                    setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
                 }
                 setUserContext({...userContext, stage, examBoard});
             }}
@@ -97,7 +97,7 @@ interface UserContextAccountInputProps {
     setUserContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
     displaySettings: DisplaySettings;
-    setDisplaySettings: (ds: DisplaySettings) => void;
+    setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
 }
 export function UserContextAccountInput({
@@ -117,7 +117,7 @@ export function UserContextAccountInput({
             // Physics
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
-                <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
+                <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
                     {"You will be able to change this preference on relevant pages."}<br />
                     {'If you prefer to see all content by default, select "All stages".'}
@@ -126,7 +126,7 @@ export function UserContextAccountInput({
             // Computer science
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
-                <RS.UncontrolledTooltip placement="bottom" target={`show-me-content-${componentId}`}>
+                <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {teacher ?
                         <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
                         <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
@@ -170,7 +170,7 @@ export function UserContextAccountInput({
                         <CustomInput
                             type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
                             checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
-                            onChange={e => setDisplaySettings({HIDE_NON_AUDIENCE_CONTENT: !e.target.checked})}
+                            onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}
                         />{" "}
                         <span>Show other content that is not for my selected qualification(s). <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
                         <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>

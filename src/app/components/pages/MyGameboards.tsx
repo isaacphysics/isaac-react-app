@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {deleteBoard, loadBoards} from "../../state/actions";
+import React, {useCallback, useEffect, useState} from "react";
+import {useAppDispatch, useAppSelector} from "../../state/store";
+import {deleteBoard} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AppState} from "../../state/reducers";
 import * as RS from 'reactstrap';
@@ -18,9 +18,8 @@ import {
     Row,
     Table
 } from 'reactstrap';
-import {ActualBoardLimit, AppGameBoard, BoardOrder, Boards} from "../../../IsaacAppTypes";
-import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {selectors} from "../../state/selectors";
+import {BoardOrder, Boards} from "../../../IsaacAppTypes";
+import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
     difficultiesOrdered,
@@ -34,7 +33,13 @@ import {
     boardCompletionSelection,
     determineGameboardSubjects,
     formatBoardOwner,
-    generateGameboardSubjectHexagons
+    generateGameboardSubjectHexagons,
+    useGameboards,
+    BoardViews,
+    BoardLimit,
+    BoardCreators,
+    BoardCompletions,
+    BOARD_ORDER_NAMES
 } from "../../services/gameboards";
 import {above, below, isMobile, useDeviceSize} from "../../services/device";
 import {formatDate} from "../elements/DateString";
@@ -49,44 +54,11 @@ interface MyBoardsPageProps {
     boards: Boards | null;
 }
 
-enum boardCreators {
-    "all" = "All",
-    "isaac" = "Isaac",
-    "me" = "Me",
-    "someoneelse" = "Someone else"
-}
-enum boardCompletions {
-    "any" = "Any",
-    "notStarted" = "Not Started",
-    "inProgress" = "In Progress",
-    "completed" = "Completed"
-}
-enum BoardLimit {
-    "six" = "6",
-    "eighteen" = "18",
-    "sixy" = "60",
-    "All" = "ALL"
-}
-enum boardViews {
-    "table" = "Table View",
-    "card" = "Card View"
-}
-const orderNames: {[key in BoardOrder]: string} = {
-    "created": "Date Created Ascending",
-    "-created": "Date Created Descending",
-    "visited": "Date Visited Ascending",
-    "-visited": "Date Visited Descending",
-    "title": "Title Ascending",
-    "-title": "Title Descending",
-    "completion": "Completion Ascending",
-    "-completion": "Completion Descending"
-};
-
 type BoardTableProps = MyBoardsPageProps & {
-    board: AppGameBoard;
+    board: GameboardDTO;
     setSelectedBoards: (e: any) => void;
-    selectedBoards: AppGameBoard[];
-    boardView: boardViews;
+    selectedBoards: GameboardDTO[];
+    boardView: BoardViews;
 }
 
 const Board = (props: BoardTableProps) => {
@@ -95,9 +67,9 @@ const Board = (props: BoardTableProps) => {
 
     const boardLink = `/gameboards#${board.id}`;
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const updateBoardSelection = (board: AppGameBoard, checked: boolean) => {
+    const updateBoardSelection = (board: GameboardDTO, checked: boolean) => {
         if (checked) {
             setSelectedBoards([...selectedBoards, board]);
         } else {
@@ -107,7 +79,7 @@ const Board = (props: BoardTableProps) => {
 
     function confirmCardDeleteBoard() {
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            dispatch(deleteBoard(board));
+            dispatch(deleteBoard(board.id, board.title));
         }
     }
 
@@ -115,7 +87,7 @@ const Board = (props: BoardTableProps) => {
     const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
     const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
-    return boardView == boardViews.table ?
+    return boardView == BoardViews.table ?
         <tr key={board.id} className="board-card">
             <td>
                 <div className="board-subject-hexagon-container table-view">
@@ -140,10 +112,13 @@ const Board = (props: BoardTableProps) => {
                     <ShareLink linkUrl={boardLink} gameboardId={board.id} />
                 </div>
             </td>
-            <td><CustomInput id={`board-delete-${board.id}`} type="checkbox" checked={board && (selectedBoards.some(e => e.id === board.id))}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                    board && updateBoardSelection(board, event.target.checked)
-                }} aria-label="Delete gameboard"/></td>
+            <td>
+                <CustomInput id={`board-delete-${board.id}`} type="checkbox"
+                             checked={board && (selectedBoards.some(e => e.id === board.id))}
+                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                 board && updateBoardSelection(board, event.target.checked)
+                             }} aria-label="Delete gameboard"/>
+            </td>
         </tr>
         :
         <Card className="board-card card-neat">
@@ -164,7 +139,7 @@ const Board = (props: BoardTableProps) => {
                         {`Stage${boardStages.length !== 1 ? "s" : ""}: `}<strong>{boardStages.map(s => stageLabelMap[s]).join(', ') || "N/A"}</strong>
                     </CardSubtitle>
                     <CardSubtitle>
-                        {`Difficult${boardStages.length !== 1 ? "ies" : "y"}: `}
+                        {`Difficult${boardDifficulties.length !== 1 ? "ies" : "y"}: `}
                         <strong>
                             {boardDifficulties.length > 0 ?
                                 <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
@@ -187,89 +162,46 @@ const Board = (props: BoardTableProps) => {
         </Card>;
 };
 
-function toActual(limit: BoardLimit) {
-    if (limit == "ALL") return "ALL";
-    return parseInt(limit, 10);
-}
-function orderName(order: BoardOrder) {
-    return orderNames[order];
-}
-
 export const MyGameboards = () => {
     //Redux state and dispatch
-    const dispatch = useDispatch();
-    const boards = useSelector(selectors.boards.boards) as Boards;
-    const user = useSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
 
-    const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);
-    const [loading, setLoading] = useState(false);
-    const [boardView, setBoardView] = useState(isMobile() ? boardViews.card : boardViews.table);
-    const [boardLimit, setBoardLimit] = useState<BoardLimit>(boardView == boardViews.table ? BoardLimit.All : BoardLimit.six);
-    const [boardTitleFilter, setBoardTitleFilter] = useState<string>("");
-    const [selectedBoards, setSelectedBoards] = useState<AppGameBoard[]>([]);
-    const [boardCreator, setBoardCreator] = useState<boardCreators>(boardCreators.all);
-    const [boardCompletion, setBoardCompletion] = useState<boardCompletions>(boardCompletions.any);
+    const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
+    const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
+    const [boardCompletion, setBoardCompletion] = useState<BoardCompletions>(BoardCompletions.any);
     const [completed, setCompleted] = useState(0);
     const [inProgress, setInProgress] = useState(0);
     const [notStarted, setNotStarted] = useState(0);
 
-    let actualBoardLimit: ActualBoardLimit = toActual(boardLimit);
-
-    function loadInitial() {
-        dispatch(loadBoards(0, actualBoardLimit, boardOrder));
-        setLoading(true);
-    }
-    useEffect(loadInitial, [boardOrder]);
-
-    useEffect(() => {
-        actualBoardLimit = toActual(boardLimit);
-        loadInitial();
-    }, [boardLimit]);
-
-    useEffect(() => {
-        if (boardView == boardViews.table) {
-            setBoardLimit(BoardLimit.All)
-        } else if (boardView == boardViews.card) {
-            setBoardLimit(BoardLimit.six)
-        }
-    }, [boardView]);
+    const {
+        boards, loading, viewMore,
+        boardOrder, setBoardOrder,
+        boardView, setBoardView,
+        boardLimit, setBoardLimit,
+        boardTitleFilter, setBoardTitleFilter
+    } = useGameboards(
+        isMobile() ? BoardViews.card : BoardViews.table,
+        isMobile() ? BoardLimit.six : BoardLimit.All
+        );
 
     function confirmDeleteMultipleBoards() {
         if (confirm(`Are you sure you want to remove ${selectedBoards && selectedBoards.length > 1 ? selectedBoards.length + " boards" : selectedBoards[0].title} from your account?`)) {
-            selectedBoards && selectedBoards.map(board => dispatch(deleteBoard(board)));
+            selectedBoards && selectedBoards.map(board => dispatch(deleteBoard(board.id, board.title)));
             setSelectedBoards([]);
         }
     }
 
-    function switchView(e: React.ChangeEvent<HTMLInputElement>) {
+    const switchViewAndClearSelected = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedBoards([]);
-        setBoardView(e.target.value as boardViews);
-    }
-
-    function viewMore() {
-        const increment = toActual(boardLimit);
-        if (increment != "ALL" && actualBoardLimit != "ALL") {
-            dispatch(loadBoards(actualBoardLimit, increment, boardOrder));
-            setLoading(true);
-        }
-    }
+        setBoardView(e.target.value as BoardViews);
+    }, [setBoardView, setSelectedBoards]);
 
     useEffect( () => {
-        if (boards && boards.totalResults != 0) {
-            const wasLoading = loading;
+        if (boards) {
             let boardsCompleted = 0;
             let boardsNotStarted = 0;
             let boardsInProgress = 0;
-            setLoading(false);
-            if (boards.boards) {
-                if (actualBoardLimit != boards.boards.length) {
-                    actualBoardLimit = (boards.boards.length);
-                    if (!wasLoading && boards.boards.length == 0) {
-                        // Through deletion or something we have ended up with no boards, so fetch more.
-                        viewMore();
-                    }
-                }
-            }
             boards.boards.map(board => {
                 if (board.percentageCompleted === 0) {
                     boardsNotStarted += 1;
@@ -292,25 +224,25 @@ export const MyGameboards = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My gameboards" help={pageHelp} />
         {boards && boards.totalResults == 0 ?
-            <React.Fragment>
+            <>
                 <h3 className="text-center mt-4">You have no gameboards to view.</h3>
                 {isPhy && <div className="text-center mt-3 mb-5">
                     <Button color="secondary" tag={Link} to="/gameboards/new">Create a gameboard</Button>
                 </div>}
-            </React.Fragment>
+            </>
             :
-            <React.Fragment>
+            <>
                 <div className="mt-4 mb-2">
                     {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
                         with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
-                    {!boards && <h4>You have <IsaacSpinner size="sm" /> saved gameboards...</h4>}
+                    {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved gameboards...</h4>}
                 </div>
                 <div>
-                    {boardView !== boardViews.table && <Row>
+                    {boardView !== BoardViews.table && <Row>
                         <Col sm={6} lg={3} xl={2}>
                             <Label className="w-100">
-                                Display in <Input type="select" value={boardView} onChange={switchView}>
-                                    {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected}>
+                                    {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                 </Input>
                             </Label>
                         </Col>
@@ -325,19 +257,19 @@ export const MyGameboards = () => {
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
                                 Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{orderName(order)}</option>)}
+                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
                                 </Input>
                             </Label>
                         </Col>
                     </Row>}
                 </div>
                 <ShowLoading until={boards}>
-                    {boards && boards.boards && <div>
-                        {boardView == boardViews.card ?
+                    {boards && boards.boards &&
+                        (boardView == BoardViews.card ?
                             // Card view
-                            <div>
-                                <div className="block-grid-xs-1 block-grid-md-2 block-grid-lg-3 my-2">
-                                    {boards.boards.map(board => <div key={board.id}>
+                            <>
+                                <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
+                                    {boards.boards.map(board => <Col>
                                         <Board
                                             key={board.id}
                                             board={board}
@@ -347,21 +279,21 @@ export const MyGameboards = () => {
                                             user={user}
                                             boards={boards}
                                         />
-                                    </div>)}
-                                </div>
-                                <div className="text-center mt-2 mb-5" style={{clear: "both"}}>
+                                    </Col>)}
+                                </Row>
+                                <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
                                     {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}
                                 </div>
-                            </div>
+                            </>
                             :
                             // Table view
-                            <div>
+                            <>
                                 <Row>
                                     <Col sm={6} lg={3} xl={2}>
                                         <Label className="w-100">
-                                            Display in <Input type="select" value={boardView} onChange={e => switchView(e)} className="p-2">
-                                                {Object.values(boardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                                            Display in <Input type="select" value={boardView} onChange={switchViewAndClearSelected} className="p-2">
+                                                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                                             </Input>
                                         </Label>
                                     </Col>
@@ -397,15 +329,15 @@ export const MyGameboards = () => {
                                             {/*}*/}
                                             <Col sm={6} lg={{size: 2, offset: 4}}>
                                                 <Label className="w-100">
-                                                    Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as boardCreators)}>
-                                                        {Object.values(boardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
+                                                    Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+                                                        {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
                                                     </Input>
                                                 </Label>
                                             </Col>
                                             <Col sm={6} lg={2}>
                                                 <Label className="w-100">
-                                                    Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as boardCompletions)}>
-                                                        {Object.values(boardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
+                                                    Completion <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
+                                                        {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
                                                     </Input>
                                                 </Label>
                                             </Col>
@@ -474,9 +406,9 @@ export const MyGameboards = () => {
                                         </div>
                                     </CardBody>
                                 </Card>
-                            </div>}
-                    </div>}
+                            </>
+                        )}
                 </ShowLoading>
-            </React.Fragment>}
+            </>}
     </Container>;
 };

@@ -13,7 +13,7 @@ import { parseMathsExpression, parseBooleanExpression, ParsingError } from 'ineq
 const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
 import { isDefined } from "../../services/miscUtils";
-import { useSelector } from 'react-redux';
+import { useAppSelector } from "../../state/store";
 import { selectors } from '../../state/selectors';
 import { isStaff } from '../../services/user';
 
@@ -26,10 +26,10 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     const [editorSyntax, setEditorSyntax] = useState('logic');
     const [textInput, setTextInput] = useState('');
     const [errors, setErrors] = useState<string[]>();
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
     const [editorMode, setEditorMode] = useState(queryParams.mode || siteSpecific('maths', 'logic'));
-    const segueEnvironment = useSelector(selectors.segue.environmentOrUnknown);
+    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
 
     /*** Text based input stuff */
     const hiddenEditorRef = useRef<HTMLDivElement | null>(null);

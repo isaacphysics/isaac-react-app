@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
 import {loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal} from "../../state/actions";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {SingleProgressDetailsProps} from "../../../IsaacAppTypes";
 import {ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
@@ -15,7 +15,7 @@ import {selectors} from "../../state/selectors";
 
 const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     const {assignmentId, assignment, progress, pageSettings} = props;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
@@ -35,7 +35,7 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
 };
 
 export const SingleAssignmentProgress = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
 
@@ -47,7 +47,7 @@ export const SingleAssignmentProgress = () => {
     const [colourBlind, setColourBlind] = useState(false);
     const [formatAsPercentage, setFormatAsPercentage] = useState(false);
 
-    const myOwnedAssignments = useSelector((state: AppState) => {
+    const myOwnedAssignments = useAppSelector((state: AppState) => {
         return state?.assignmentsByMe
     });
 
@@ -59,11 +59,8 @@ export const SingleAssignmentProgress = () => {
         boardId && dispatch(loadBoard(boardId));
     }, [dispatch, myOwnedAssignments]);
 
-    const assignmentProgress = useSelector(selectors.assignments.progress);
-
-    const boards = useSelector((state: AppState) => {
-        return state?.boards?.boards?.boards;
-    });
+    const assignmentProgress = useAppSelector(selectors.assignments.progress);
+    const boards = useAppSelector(selectors.boards.boards);
 
     const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
 
@@ -71,8 +68,8 @@ export const SingleAssignmentProgress = () => {
     const [assignment, setAssignment] = useState(myOwnedAssignments?.find(x => x._id == assignmentId));
 
     useEffect(() => {
-        if (boards && (boards[0].id = assignment?.gameboardId)) {
-            setAssignment({...assignment, gameboard: boards[0]})
+        if (boards && (boards.boards[0].id = assignment?.gameboardId)) {
+            setAssignment({...assignment, gameboard: boards.boards[0]})
         }
     }, [boards]);
 
@@ -80,21 +77,17 @@ export const SingleAssignmentProgress = () => {
         setAssignment(myOwnedAssignments?.find(x => x._id == assignmentId));
     }, [myOwnedAssignments, assignmentId]);
 
-    return <React.Fragment>
-        <ShowLoading until={assignment && assignmentProgress}>
-            <Container>
-                <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
-                    currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
-                    className="mb-4" />
-            </Container>
-
-            <div className="assignment-progress-container mb-5">
-                {assignment && assignmentProgress && hasGameboard(assignment) &&
-                <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
-                    progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
-                }
-            </div>
-
-        </ShowLoading>
-    </React.Fragment>
+    return <ShowLoading until={assignment && assignmentProgress}>
+        <Container>
+            <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
+                currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
+                className="mb-4" />
+        </Container>
+        <div className="assignment-progress-container mb-5">
+            {assignment && assignmentProgress && hasGameboard(assignment) &&
+            <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
+                progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
+            }
+        </div>
+    </ShowLoading>
 };

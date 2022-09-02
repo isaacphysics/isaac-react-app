@@ -1,6 +1,6 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from "reactstrap";
 import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
@@ -19,9 +19,9 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useDispatch();
-    const user = useSelector(selectors.user.orNull);
-    const concepts = useSelector((state: AppState) => state?.concepts?.results || null);
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectors.user.orNull);
+    const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
 
     useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
 

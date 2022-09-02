@@ -16,9 +16,9 @@ def assert_using_a_tty():
         print("Error: Must run this method with a tty. If you're using windows try:\n" + f"winpty {' '.join(sys.argv)}")
         sys.exit(1)
 
-def check_react_app_is_up_to_date():
-    print("# Git pull for the latest version of the deploy script:")
-    ask_to_run_command("git pull")
+def check_repos_are_up_to_date():
+    print("# Git pull for the latest version of the deploy script and db schema:")
+    ask_to_run_command("git pull && cd ../isaac-api && git pull && cd -")
 
 def parse_command_line_arguments():
     parser = argparse.ArgumentParser(description='Deploy the site')
@@ -46,6 +46,7 @@ def update_config(env, site):
     # TODO check if there have been any new config values since last release
     print("# If necessary, update config:")
     ask_to_run_command(f"sudo nano /local/data/isaac-config/{site}/segue-config.{env}.properties")
+    print("# Remember to also update isaac-3 so that it remains in-sync! \n")
 
 def run_db_migrations(env, site):
     # TODO check if there are any migrations since the last release
@@ -69,11 +70,12 @@ def bring_up_the_new_containers(site, env, app):
 
 
 def deploy_test(site, app):
-    print("\n[DEPLOY {site.upper()} TEST]")
+    print(f"\n[DEPLOY {site.upper()} TEST]")
     bring_down_any_existing_containers(site, 'test')
     print("Note: If there is a database schema change, you might need to alter the default data - usually through a migration followed by a snapshot.")
     print("# Reset the test database.")
     ask_to_run_command(f"./clean-test-db.sh {site}")
+    update_config("test", site)
     bring_up_the_new_containers(site, 'test', app)
 
 def deploy_staging_or_dev(env, site, app):
@@ -84,7 +86,7 @@ def deploy_staging_or_dev(env, site, app):
     bring_up_the_new_containers(site, env, app)
 
 def deploy_live(site, app):
-    print("\n[DEPLOY {site.upper()} LIVE]")
+    print(f"\n[DEPLOY {site.upper()} LIVE]")
     front_end_only_release = 'y' == input("Is this a front-end-only release? [y/n]").lower()
     if not front_end_only_release:
         # TODO figure out penultimate version
@@ -142,7 +144,7 @@ if __name__ == '__main__':
     print("\n# ! THIS SCRIPT IS STILL EXPERIMENTAL SO CHECK EACH COMMAND BEFORE EXECUTING IT !\n")
     print("# Go to isaac-react-app on the live machine:")
     ask_to_run_command("cd /local/src/isaac-react-app")
-    check_react_app_is_up_to_date()
+    check_repos_are_up_to_date()
 
     build_docker_image_for_version(context['app'], context['api'])
 

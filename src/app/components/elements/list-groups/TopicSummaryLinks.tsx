@@ -10,7 +10,7 @@ import {
     useUserContext
 } from "../../../services/userContext";
 import {Link} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {selectors} from "../../../state/selectors";
 import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../../services/constants";
 import {isCS} from "../../../services/siteConstants";
@@ -19,7 +19,7 @@ import {Markup} from "../markup";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
     const userContext = useUserContext();
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
 
     return <RS.ListGroup className="mt-3 link-list list-group-links">
         {items

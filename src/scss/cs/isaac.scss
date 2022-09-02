@@ -82,6 +82,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "~bootstrap-block-grid/dist/bootstrap4-block-grid.min.css";
 @import "~billboard.js/dist/theme/insight.css";
 @import "~highlight.js/styles/a11y-light.css";
+@import "~leaflet/dist/leaflet.css";
 
 @import "../common/isaac";
 
@@ -143,7 +144,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/glossary";
 @import "../common/quiz";
 @import "accordions";
-@import "callout";
+@import "../common/callout";
 
 @import "parsons-layout";
 
@@ -272,7 +273,7 @@ body {
     }
     @include respond-above(md) {
         background-image: url('/assets/pattern01.svg');
-        background-position: right 0;
+        background-position: right 8px;
         background-repeat: no-repeat;
     }
 }

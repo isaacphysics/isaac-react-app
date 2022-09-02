@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EVENTS_CRUMB, NOT_FOUND} from "../../services/constants";
@@ -54,9 +54,9 @@ interface EventDetailsProps {
     location: {pathname: string};
 }
 const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventDetailsProps) => {
-    const dispatch = useDispatch();
-    const event = useSelector((state: AppState) => state && state.currentEvent);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const event = useAppSelector((state: AppState) => state && state.currentEvent);
+    const user = useAppSelector(selectors.user.orNull);
     useEffect(() => {dispatch(getEvent(eventId))}, [dispatch, eventId]);
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);

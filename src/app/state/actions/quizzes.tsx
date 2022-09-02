@@ -2,7 +2,7 @@ import React, {Dispatch} from "react";
 import {Action} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services/constants";
 import {api} from "../../services/api";
-import {closeActiveModal, extractMessage, loadGroups, openActiveModal, showErrorToastIfNeeded} from "../actions";
+import {closeActiveModal, extractMessage, loadGroups, openActiveModal, showAxiosErrorToastIfNeeded} from "../actions";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {AppDispatch} from "../store";
 import {WithLoadedSelector} from "../../components/handlers/ShowLoading";
@@ -16,7 +16,7 @@ export const loadQuizzes = (startIndex: number) => async (dispatch: Dispatch<Act
         const quizzes = await api.quizzes.available(startIndex);
         dispatch({type: ACTION_TYPE.QUIZZES_RESPONSE_SUCCESS, quizzes: quizzes.data});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading tests failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading tests failed", e));
     }
 };
 
@@ -27,7 +27,7 @@ export const setQuiz = (assignment: QuizAssignmentDTO) => async (dispatch: Dispa
         dispatch({type: ACTION_TYPE.QUIZ_SET_RESPONSE_SUCCESS, newAssignment: newAssignment.data});
         return newAssignment;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Test setting failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Test setting failed", e));
         throw e;
     }
 };
@@ -37,7 +37,7 @@ export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, due
         closeAction: () => {
             dispatch(closeActiveModal())
         },
-        title: "Setting quiz " + (quiz.title ?? quiz.id),
+        title: `Setting test '${quiz.title ?? quiz.id}'`,
         body: <WithLoadedSelector
             selector={selectors.groups.active}
             loadingThunk={() => dispatch(loadGroups(false))}
@@ -52,7 +52,7 @@ export const loadQuizAssignments = () => async (dispatch: Dispatch<Action>) => {
         const assignments = await api.quizzes.assignments();
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignments.data});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading test assignments failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading test assignments failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENTS_RESPONSE_FAILURE});
     }
 };
@@ -63,7 +63,7 @@ export const loadQuizAssignedToMe = () => async (dispatch: Dispatch<Action>) => 
         const assignments = await api.quizzes.assignedToMe();
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_SUCCESS, assignments: assignments.data});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading tests assigned to you failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading tests assigned to you failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNED_TO_ME_RESPONSE_FAILURE});
     }
 };
@@ -74,7 +74,7 @@ export const loadQuizAssignmentAttempt = (quizAssignmentId: number) => async (di
         const attempt = await api.quizzes.loadQuizAssignmentAttempt(quizAssignmentId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e: any) {
-        dispatch(showErrorToastIfNeeded("Loading assigned quiz attempt failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading assigned quiz attempt failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -112,7 +112,7 @@ export const markQuizAttemptAsComplete = (quizAttemptId: number) => async (dispa
         dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_COMPLETE_RESPONSE_SUCCESS, attempt: attempt.data});
         return true;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Failed to submit your test answers", e));
+        dispatch(showAxiosErrorToastIfNeeded("Failed to submit your test answers", e));
         return false;
     }
 };
@@ -123,7 +123,7 @@ export const loadQuizAttemptFeedback = (quizAttemptId: number) => async (dispatc
         const attempt = await api.quizzes.loadQuizAttemptFeedback(quizAttemptId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e: any) {
-        dispatch(showErrorToastIfNeeded("Loading quiz feedback failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading quiz feedback failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -134,7 +134,7 @@ export const loadStudentQuizAttemptFeedback = (quizAttemptId: number, userId: nu
         const studentAttempt = await api.quizzes.loadStudentQuizAttemptFeedback(quizAttemptId, userId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS, studentAttempt: studentAttempt.data});
     } catch (e: any) {
-        dispatch(showErrorToastIfNeeded("Loading student quiz feedback failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading student quiz feedback failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -145,7 +145,7 @@ export const loadQuizAssignmentFeedback = (quizAssignmentId: number) => async (d
         const assignment = await api.quizzes.loadQuizAssignmentFeedback(quizAssignmentId);
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_SUCCESS, assignment: assignment.data});
     } catch (e: any) {
-        dispatch(showErrorToastIfNeeded("Loading quiz feedback failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading quiz feedback failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_FEEDBACK_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -158,7 +158,7 @@ export const markQuizAsCancelled = (quizAssignmentId: number) => async (dispatch
         return true;
     } catch (e) {
         dispatch({type: ACTION_TYPE.QUIZ_CANCEL_ASSIGNMENT_RESPONSE_FAILURE, quizAssignmentId});
-        dispatch(showErrorToastIfNeeded("Failed to cancel test", e));
+        dispatch(showAxiosErrorToastIfNeeded("Failed to cancel test", e));
         return false;
     }
 };
@@ -169,7 +169,7 @@ export const loadQuizPreview = (quizId: string) => async (dispatch: Dispatch<Act
         const quiz = await api.quizzes.loadQuizPreview(quizId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_SUCCESS, quiz: quiz.data});
     } catch (e: any) {
-        dispatch(showErrorToastIfNeeded("Loading quiz preview failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading quiz preview failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_PREVIEW_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -180,7 +180,7 @@ export const loadFreeQuizAttempt = (quizId: string) => async (dispatch: Dispatch
         const attempt = await api.quizzes.loadFreeQuizAttempt(quizId);
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS, attempt: attempt.data});
     } catch (e: any) {
-        dispatch(showErrorToastIfNeeded("Loading quiz failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading quiz failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_FAILURE, error: extractMessage(e)});
     }
 };
@@ -191,7 +191,7 @@ export const loadQuizzesAttemptedFreelyByMe = () => async (dispatch: Dispatch<Ac
         const attempts = await api.quizzes.loadAttemptedFreelyByMe();
         dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_SUCCESS, attempts: attempts.data});
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Loading freely attempted tests failed", e));
+        dispatch(showAxiosErrorToastIfNeeded("Loading freely attempted tests failed", e));
         dispatch({type: ACTION_TYPE.QUIZ_ATTEMPTED_FREELY_BY_ME_RESPONSE_FAILURE});
     }
 };
@@ -203,7 +203,7 @@ export const returnQuizToStudent = (quizAssignmentId: number, studentId: number)
         dispatch({type: ACTION_TYPE.QUIZ_ATTEMPT_MARK_INCOMPLETE_RESPONSE_SUCCESS, quizAssignmentId, feedback: feedback.data});
         return true;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Failed to return work to the student", e));
+        dispatch(showAxiosErrorToastIfNeeded("Failed to return work to the student", e));
         return false;
     }
 };
@@ -216,7 +216,7 @@ export const updateQuizAssignmentFeedbackMode = (quizAssignmentId: number, quizF
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS, quizAssignmentId, update});
         return true;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Failed to update feedback mode", e));
+        dispatch(showAxiosErrorToastIfNeeded("Failed to update feedback mode", e));
         return false;
     }
 };
@@ -229,7 +229,7 @@ export const updateQuizAssignmentDueDate = (quizAssignmentId: number, dueDate: D
         dispatch({type: ACTION_TYPE.QUIZ_ASSIGNMENT_UPDATE_RESPONSE_SUCCESS, quizAssignmentId, update});
         return true;
     } catch (e) {
-        dispatch(showErrorToastIfNeeded("Failed to update due date", e));
+        dispatch(showAxiosErrorToastIfNeeded("Failed to update due date", e));
         return false;
     }
 };

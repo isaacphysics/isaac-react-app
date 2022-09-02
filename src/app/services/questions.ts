@@ -6,7 +6,7 @@ import {
     ContentDTO,
     ContentSummaryDTO
 } from "../../IsaacApiTypes";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../state/store";
 import {setCurrentAttempt} from "../state/actions";
 import {selectors} from "../state/selectors";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
@@ -156,8 +156,8 @@ export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
  * @param questionId  id of the question to return the current attempt of
  */
 export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: string) {
-    const dispatch = useDispatch();
-    const pageQuestions = useSelector(selectors.questions.getQuestions);
+    const dispatch = useAppDispatch();
+    const pageQuestions = useAppSelector(selectors.questions.getQuestions);
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     return {
         currentAttempt: questionPart?.currentAttempt as (T | undefined),

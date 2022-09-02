@@ -1,6 +1,6 @@
 import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {logAction} from "../../state/actions";
 import {selectors} from "../../state/selectors";
 import {NOT_FOUND} from "../../services/constants";
@@ -63,9 +63,9 @@ export function pauseAllVideos() {
 
 
 export function IsaacVideo(props: IsaacVideoProps) {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {doc: {src, altText}} = props;
-    const page = useSelector(selectors.doc.get);
+    const page = useAppSelector(selectors.doc.get);
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const embedSrc = src && rewrite(src);
     const altTextToUse = `Embedded YouTube video: ${altText || src}.`

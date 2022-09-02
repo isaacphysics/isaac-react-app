@@ -1,5 +1,5 @@
 import React, {lazy, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Button, Card, CardBody, Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem} from "../../../IsaacApiTypes";
@@ -45,12 +45,12 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const baseGameboardId = queryParams && queryParams.base as string;
     const concepts = queryParams && queryParams.concepts as string;
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const wildcards = useSelector((state: AppState) => state && state.wildcards);
-    const baseGameboard = useSelector(selectors.board.currentGameboard);
+    const wildcards = useAppSelector((state: AppState) => state && state.wildcards);
+    const baseGameboard = useAppSelector(selectors.board.currentGameboard);
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);

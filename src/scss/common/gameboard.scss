@@ -33,6 +33,10 @@
       .chemistry > .text-secondary {
         color: #cb2921 !important;
       }
+      // Biology green has a 7.88 contrast ratio against the light green background
+      .biology > .text-secondary {
+        color: #005210 !important;
+      }
     }
   }
 

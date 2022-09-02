@@ -1,7 +1,7 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {closeActiveModal, openActiveModal} from "../../state/actions";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../state/store";
 import {PageFragment} from "./PageFragment";
 import {SUBJECTS} from "../../services/constants";
 
@@ -14,7 +14,7 @@ interface ChapterProps {
 }
 
 export const BookChapter = ({chapterId, chapterTitle, chapterSubHeading, chapterIcon, chapterSubject}: ChapterProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     function bookChapterLoad() {
         dispatch(openActiveModal({

@@ -1,5 +1,5 @@
 import React, {ComponentProps, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {
     Button,
     Col,
@@ -50,7 +50,7 @@ function selectGroups(state: AppState) {
     if (isDefined(state)) {
         const gameboards: {[id: string]: GameboardDTO} = {};
         if (isDefined(state.boards) && isDefined(state.boards.boards)) {
-            for (const board of state.boards.boards.boards) {
+            for (const board of state.boards.boards) {
                 gameboards[board.id as string] = board;
             }
         }
@@ -76,8 +76,9 @@ function selectGroups(state: AppState) {
         }
 
         const quizAssignments: { [id: number]: QuizAssignmentDTO[] } = {};
-        if (isFound(state.quizAssignments)) { // assigned by me
-            for (const qa of state.quizAssignments) {
+        const quizAssignmentsState = selectors.quizzes.assignments(state);
+        if (isFound(quizAssignmentsState)) { // assigned by me
+            for (const qa of quizAssignmentsState) {
                 if (!isDefined(qa.groupId)) {
                     continue;
                 }
@@ -398,7 +399,7 @@ export const ProgressDetails = (props: ProgressDetailsProps | SingleProgressDeta
 };
 
 const ProgressLoader = (props: AssignmentDetailsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {assignment} = props;
 
     useEffect( () => {
@@ -413,7 +414,7 @@ const ProgressLoader = (props: AssignmentDetailsProps) => {
 
 const AssignmentDetails = (props: AssignmentDetailsProps) => {
     const {assignment} = props;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
     const assignmentPath = siteSpecific("assignment_progress", "my_markbook");
@@ -507,10 +508,10 @@ export const AssignmentProgressLegend = (props: AssignmentProgressLegendProps) =
 };
 
 const QuizProgressLoader = (props: { quizAssignment: QuizAssignmentDTO }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { quizAssignment } = props;
     const quizAssignmentId = isDefined(quizAssignment.id) ? quizAssignment.id : null;
-    const quizAssignments = useSelector(selectors.quizzes.assignments);
+    const quizAssignments = useAppSelector(selectors.quizzes.assignments);
 
     useEffect(() => {
         if (isDefined(quizAssignmentId)) {
@@ -541,7 +542,7 @@ const QuizProgressDetails = (props: { quizAssignment: QuizAssignmentDTO, userFee
 
 const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
     const { quizAssignment } = props;
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
@@ -575,7 +576,7 @@ const QuizDetails = (props: { quizAssignment: QuizAssignmentDTO }) => {
 };
 
 const GroupDetails = (props: GroupDetailsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {group, pageSettings} = props;
     const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
 
@@ -624,7 +625,7 @@ function getGroupQuizProgressCSVDownloadLink(groupId: number) {
 }
 
 const GroupAssignmentProgress = (props: GroupDetailsProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const {group} = props;
     const [isExpanded, setExpanded] = useState(false);
 
@@ -659,8 +660,8 @@ const GroupAssignmentProgress = (props: GroupDetailsProps) => {
 };
 
 export function AssignmentProgress(props: AssignmentProgressPageProps) {
-    const dispatch = useDispatch();
-    const {groups} = useSelector(selectGroups);
+    const dispatch = useAppDispatch();
+    const {groups} = useAppSelector(selectGroups);
     const pageSettings = usePageSettings();
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);

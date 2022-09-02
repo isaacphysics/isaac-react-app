@@ -7,7 +7,7 @@ import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrC
 import {Badge} from "reactstrap";
 
 export function Item({item}: {item: ItemDTO}) {
-    return <Badge className="m-2 p-2">
+    return <Badge className="m-2 p-2 cloze-item">
         <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
             {item.children}
         </IsaacContentValueOrChildren>

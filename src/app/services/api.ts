@@ -14,7 +14,7 @@ import {
 } from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
-    ActualBoardLimit,
+    NumberOfBoards,
     AdditionalInformation,
     ATTENDANCE,
     BoardOrder,
@@ -302,11 +302,6 @@ export const api = {
             return endpoint.get(`/pages/${id}`);
         },
     },
-    fragments: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/fragments/${id}`);
-        },
-    },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
@@ -427,28 +422,20 @@ export const api = {
         }
     },
     boards: {
-        get: (startIndex: number, limit: ActualBoardLimit, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
+        get: (startIndex: number, limit: NumberOfBoards, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
             return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
         },
-        delete: (board: ApiTypes.GameboardDTO) => {
-            return endpoint.delete(`/gameboards/user_gameboards/${board.id}`);
+        delete: (boardId: string) => {
+            return endpoint.delete(`/gameboards/user_gameboards/${boardId}`);
         },
-        getGroupsForBoard: (board: ApiTypes.GameboardDTO): AxiosPromise<{[key: string]: ApiTypes.UserGroupDTO[]}> => {
-            return endpoint.get(`/assignments/assign/groups`, {params: {"gameboard_ids": board.id}});
-        },
-        unassign: (board: ApiTypes.GameboardDTO, group: ApiTypes.UserGroupDTO) => {
-            return endpoint.delete(`/assignments/assign/${board.id}/${group.id}`);
+        unassign: (boardId: string, groupId: number) => {
+            return endpoint.delete(`/assignments/assign/${boardId}/${groupId}`);
         },
         assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentFeedbackDTO[]> => {
             return endpoint.post(`/assignments/assign_bulk`, assignments);
         },
         getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
             return endpoint.get(`/gameboards/${boardId}`);
-        }
-    },
-    news: {
-        get: (subject: string): AxiosPromise<{results: ApiTypes.IsaacPodDTO[]; totalResults: number}> => {
-            return endpoint.get(`/pages/pods/${subject}`)
         }
     },
     events: {

@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
@@ -13,7 +13,6 @@ import {EventStageFilter, EventStatusFilter, EventTypeFilter} from "../../servic
 import {selectors} from "../../state/selectors";
 import {isTeacher} from "../../services/user";
 import {RenderNothing} from "../elements/RenderNothing";
-import {CoronavirusWarningBanner} from "../navigation/CoronavirusWarningBanner";
 import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 import {stageExistsForSite} from "../../services/events";
@@ -32,10 +31,10 @@ const EVENTS_PER_PAGE = 6;
 export const Events = withRouter(({history, location}: RouteComponentProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
 
-    const dispatch = useDispatch();
-    const eventsState = useSelector((state: AppState) => state?.events);
-    // const eventMapData = useSelector((state: AppState) => state?.eventMapData);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const eventsState = useAppSelector((state: AppState) => state?.events);
+    // const eventMapData = useAppSelector((state: AppState) => state?.eventMapData);
+    const user = useAppSelector(selectors.user.orNull);
     const numberOfLoadedEvents = eventsState ? eventsState.events.length : 0;
 
     const statusFilter =
@@ -62,10 +61,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {isCS && <>
-                <CoronavirusWarningBanner />
-                <MetaDescription description={metaDescriptionCS} />
-            </>}
+            {isCS && <MetaDescription description={metaDescriptionCS} />}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">

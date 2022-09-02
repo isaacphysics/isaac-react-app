@@ -1,18 +1,20 @@
-import React, {Suspense, lazy, useCallback, useEffect, useState} from "react";
+import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
 import {clearQuestionSearch, closeActiveModal, searchQuestions} from "../../../state/actions";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {AppState} from "../../../state/reducers";
 import {debounce, isEqual} from "lodash";
 import Select, {MultiValue} from "react-select";
-import {
-    groupTagSelectionsByParent,
-    logEvent,
-    sortQuestions
-} from "../../../services/gameboardBuilder";
+import {groupTagSelectionsByParent, logEvent, sortQuestions} from "../../../services/gameboardBuilder";
 import tags from "../../../services/tags";
-import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
+import {
+    DIFFICULTY_ICON_ITEM_OPTIONS,
+    EXAM_BOARD_NULL_OPTIONS,
+    removeP3AndC3ForCs,
+    SortOrder,
+    STAGE
+} from "../../../services/constants";
 import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
 import {searchResultIsPublic} from "../../../services/search";
 import {isStaff} from "../../../services/user";
@@ -40,7 +42,7 @@ interface QuestionSearchModalProps {
     eventLog: object[];
 }
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const userContext = useUserContext();
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
@@ -67,8 +69,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
-    const questions = useSelector((state: AppState) => state && state.questionSearchResult);
-    const user = useSelector((state: AppState) => state && state.user);
+    const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
+    const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
         debounce((searchString: string, topics: string[], examBoards: string[], book: string[], stages: string[], difficulties: string[], fasttrack: boolean, startIndex: number) => {
@@ -90,7 +92,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 examBoards: examBoardString,
                 fasttrack,
                 startIndex,
-                limit: -1
+                limit: 300
             }));
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
@@ -178,7 +180,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS.filter(removeP3AndC3ForCs)} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
             {isCS && <RS.Col lg={6} className={`text-wrap my-2`}>

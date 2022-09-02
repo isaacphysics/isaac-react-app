@@ -47,3 +47,16 @@ export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: 
         return !content.supersededBy && !content.tags?.includes("nofilter");
     }
 };
+
+export function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT_TYPE[]] {
+    const searchParsed = queryString.parse(search);
+
+    const parsedQuery = searchParsed.query || "";
+    const query = parsedQuery instanceof Array ? parsedQuery[0] : parsedQuery;
+
+    const parsedFilters = searchParsed.types || "";
+    const possibleFilters = (Array.isArray(parsedFilters) ? parsedFilters[0] || "" : parsedFilters || "").split(",");
+    const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[]
+
+    return [query, filters];
+}

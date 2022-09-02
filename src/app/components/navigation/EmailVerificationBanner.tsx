@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import {Button} from 'reactstrap';
@@ -8,9 +8,9 @@ import {WEBMASTER_EMAIL} from '../../services/siteConstants';
 import {selectors} from "../../state/selectors";
 
 export const EmailVerificationBanner = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [hidden, setHidden] = useState(false);
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const status = user?.loggedIn && user?.emailVerificationStatus || null;
     const show = user?.loggedIn && status != "VERIFIED" && !hidden;
 

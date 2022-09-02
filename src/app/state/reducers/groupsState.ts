@@ -183,11 +183,6 @@ export const groups = (groups: GroupsState = null, action: Action): GroupsState 
             return updateMembers(groups, action.group, action.members);
         case ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS:
             return deleteMember(groups, action.member);
-        case ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS:
-            // You might be wondering what this doing here.
-            // Basically, it updates the cache with groups that are loaded because they are assigned to gameboards
-            // even if those groups have not been loaded (e.g. they are archived), they are still needed here.
-            return updateGroupsCache(groups, Object.values(action.groups).flat(1));
         default:
             return groups;
     }

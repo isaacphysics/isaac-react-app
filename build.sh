@@ -125,5 +125,5 @@ rm -rf isaac-api
 echo "Build complete"
 echo "Now run, for example:"
 echo "   ./compose phy dev $VERSION_TO_DEPLOY up -d"
+echo "   ./compose cs dev $VERSION_TO_DEPLOY up -d"
 echo
-echo "   Er, maybe. That was what we did for Isaac Physics, anyway."

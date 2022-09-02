@@ -1,5 +1,5 @@
 import {useEffect, useMemo} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../state/store";
 import {isDefined} from "./miscUtils";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {selectors} from "../state/selectors";
@@ -46,8 +46,8 @@ export function useQuizSections(attempt: QuizAttemptDTO | null) {
 }
 
 export function useCurrentQuizAttempt() {
-    const attemptState = useSelector(selectors.quizzes.currentQuizAttempt);
-    const studentAttemptState = useSelector(selectors.quizzes.currentStudentQuizAttempt);
+    const attemptState = useAppSelector(selectors.quizzes.currentQuizAttempt);
+    const studentAttemptState = useAppSelector(selectors.quizzes.currentStudentQuizAttempt);
     const error = isDefined(attemptState) && 'error' in attemptState ? attemptState.error : null;
     const attempt = isDefined(attemptState) && 'attempt' in attemptState ? attemptState.attempt : null;
     const studentError = isDefined(studentAttemptState) && 'error' in studentAttemptState ? studentAttemptState.error : null;
@@ -56,7 +56,7 @@ export function useCurrentQuizAttempt() {
     const questions = useQuizQuestions(isDefined(studentAttempt) ? studentAttempt : attempt);
     const sections = useQuizSections(isDefined(studentAttempt) ? studentAttempt : attempt);
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect( () => {
         questions.forEach(question => dispatch(registerQuestion(question)));

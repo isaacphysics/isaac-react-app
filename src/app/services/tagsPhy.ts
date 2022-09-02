@@ -13,6 +13,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physics, title: "Physics"},
         {id: TAG_ID.maths, title: "Maths"},
         {id: TAG_ID.chemistry, title: "Chemistry"},
+        {id: TAG_ID.biology, title: "Biology", hidden: true},
 
         // --- Fields ---
 
@@ -27,7 +28,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.foundations, title: `Founda${softHyphen}tions`, parent: TAG_ID.chemistry},
         {id: TAG_ID.physical, title: "Physical", parent: TAG_ID.chemistry},
         {id: TAG_ID.inorganic, title: "Inorganic", parent: TAG_ID.chemistry},
-        {id: TAG_ID.organic, title: "Organic", parent: TAG_ID.chemistry, comingSoonDate: "soon"},
+        {id: TAG_ID.organic, title: "Organic", parent: TAG_ID.chemistry},
         {id: TAG_ID.analytical, title: "Analytical", parent: TAG_ID.chemistry},
         // Maths Fields
         {id: TAG_ID.number, title: "Number", parent: TAG_ID.maths},
@@ -88,12 +89,12 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.quadratics, title: `Quadra${softHyphen}tics`, parent: TAG_ID.algebra},
         {id: TAG_ID.simultaneous, title: `Simul${softHyphen}taneous Equations`, parent: TAG_ID.algebra},
         {id: TAG_ID.series, title: "Series", parent: TAG_ID.algebra},
-        {id: TAG_ID.matrices, title: "Matrices", parent: TAG_ID.algebra, comingSoonDate: "soon"},
+        {id: TAG_ID.matrices, title: "Matrices", parent: TAG_ID.algebra},
         // Geometry
         {id: TAG_ID.shapes, title: "Shapes", parent: TAG_ID.geometry},
         {id: TAG_ID.trigonometry, title: `Trigon${softHyphen}ometry`, parent: TAG_ID.geometry},
-        {id: TAG_ID.geomVectors, title: "Vectors", parent: TAG_ID.geometry},
-        {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry, comingSoonDate: "soon"},
+        {id: TAG_ID.vectors, title: "Vectors", parent: TAG_ID.geometry},
+        {id: TAG_ID.planes, title: "Planes", parent: TAG_ID.geometry},
         // Functions
         {id: TAG_ID.generalFunctions, title: "General Functions", parent: TAG_ID.functions},
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
@@ -104,8 +105,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Statistics
         {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistics},
         {id: TAG_ID.probability, title: `Probabil${softHyphen}ity`, parent: TAG_ID.statistics},
-        {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics, comingSoonDate: "soon"},
-        {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics, comingSoonDate: "soon"},
+        {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics},
+        {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics},
 
         // --- Chemistry Topics ---
 
@@ -133,9 +134,9 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.stoichiometry, title: `Stoichio${softHyphen}metry`, parent: TAG_ID.foundations},
         {id: TAG_ID.gasLaws, title: "Gas Laws", parent: TAG_ID.foundations},
         // Organic
-        {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic, comingSoonDate: "soon"},
-        {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic, comingSoonDate: "Coming soon"},
-        {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic, comingSoonDate: "soon"},
+        {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic},
+        {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
+        {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic, comingSoonDate: "soon"},
         {id: TAG_ID.reactionsGeneral, title: "Reactions (general)", parent: TAG_ID.organic, comingSoonDate: "soon"},
     ];
@@ -156,7 +157,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
             return this.getById(globalSubjectTagId as TAG_ID);
         }
 
-        const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray);
+        const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray, true);
         for (const i in subjectTags) {
             if (subjectTags[i].id == globalSubjectTagId) {
                 return subjectTags[i];

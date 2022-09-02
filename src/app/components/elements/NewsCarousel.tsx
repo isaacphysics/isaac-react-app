@@ -1,43 +1,18 @@
-import React, {useEffect} from "react";
+import React from "react";
 import ResponsiveCarousel from "./Carousel";
-import {useDispatch, useSelector} from "react-redux";
-import {AppState} from "../../state/reducers";
-import {getNewsPodList} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {NewsCard} from "./cards/NewsCard";
 import {IsaacPodDTO} from "../../../IsaacApiTypes";
 
-interface NewsCarouselProps {
-    subject: "news" | "physics";
-    descending?: boolean;
+type NewsCarouselProps = {
+    items: IsaacPodDTO[] | undefined;
     showTitle?: boolean;
     className?: string;
-}
-
-export const NewsCarousel = (props: NewsCarouselProps) => {
-    const {descending, subject, showTitle, className} = props;
-    const dispatch = useDispatch();
-    const newsState = useSelector((state: AppState) => state && state.news);
-    useEffect(() => {
-        dispatch(getNewsPodList(subject));
-    }, [dispatch, subject]);
-
-    function compare(a: IsaacPodDTO, b: IsaacPodDTO) {
-        if (a.id && b.id) {
-            if (a.id < b.id) {
-                return descending ? 1 : -1;
-            }
-
-            if (a.id > b.id) {
-                return descending ? -1 : 1;
-            }
-        }
-        return 0;
-    }
-
-    return <ShowLoading until={newsState} thenRender={({news}) => <div>
-        <ResponsiveCarousel groupingLimit={3} className={className}>
-            {news?.sort(compare).map((newsItem: IsaacPodDTO, index: number) => <NewsCard newsItem={newsItem} showTitle={showTitle} key={index} />)}
-        </ResponsiveCarousel>
-    </div>} />
 };
+
+export const NewsCarousel = ({items, showTitle, className}: NewsCarouselProps) =>
+    <ShowLoading until={items} thenRender={(newsPods) => <div>
+        <ResponsiveCarousel groupingLimit={3} className={className}>
+            {newsPods?.map((newsItem: IsaacPodDTO, index: number) => <NewsCard newsItem={newsItem} showTitle={showTitle} key={index} />)}
+        </ResponsiveCarousel>
+    </div>} />;

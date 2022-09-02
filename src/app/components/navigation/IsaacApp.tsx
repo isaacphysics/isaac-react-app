@@ -1,7 +1,7 @@
 import React, {lazy, Suspense, useEffect} from 'react';
 import "../../services/scrollManager"; // important
 import "../../services/polyfills"; // important
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Route, Router, Switch} from "react-router-dom";
 import {Footer} from "./Footer";
 import {Question} from "../pages/Question";
@@ -85,13 +85,13 @@ const EventDetails = lazy(() => import('../pages/EventDetails'));
 
 export const IsaacApp = () => {
     // Redux state and dispatch
-    const dispatch = useDispatch();
-    const consistencyError = useSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
-    const serverError = useSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
-    const goneAwayError = useSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
-    const segueEnvironment = useSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
-    const notifications = useSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const consistencyError = useAppSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
+    const serverError = useAppSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
+    const goneAwayError = useAppSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
+    const segueEnvironment = useAppSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
+    const notifications = useAppSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
+    const user = useAppSelector(selectors.user.orNull);
 
     // Run once on component mount
     useEffect(() => {

@@ -6,12 +6,12 @@ import {
     NavigationSection,
     useAssignmentsCount
 } from "../../navigation/NavigationBar";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../state/store";
 import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
 import {selectors} from "../../../state/selectors";
 
 export const NavigationBarCS = () => {
-    const user = useSelector(selectors.user.orNull);
+    const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>
@@ -32,7 +32,7 @@ export const NavigationBarCS = () => {
         </NavigationSection>}
 
         <NavigationSection title="Learn">
-            <LinkItem to="/topics/gcse" badgeTitle="BETA">GCSE topics</LinkItem>
+            <LinkItem to="/topics/gcse">GCSE topics</LinkItem>
             <LinkItem to="/topics/a_level">A level topics</LinkItem>
             <LinkItem to="/gameboards/new">Question Finder</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>

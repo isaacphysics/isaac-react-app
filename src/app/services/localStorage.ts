@@ -4,6 +4,7 @@ export enum KEY {
     CURRENT_USER_ID = "currentUserId",
     FIRST_LOGIN = "firstLogin",
     REQUIRED_MODAL_SHOWN_TIME = "requiredModalShownTime",
+    RECONFIRM_USER_CONTEXT_SHOWN_TIME = "reconfirmStageExamBoardShownTime",
     LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME = "loginOrSignUpModalShownTime",
     LAST_NOTIFICATION_TIME = "lastNotificationTime",
     ANONYMISE_USERS = "anonymiseUsers",

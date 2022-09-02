@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
 
@@ -105,11 +105,11 @@ function QuizGrid({quizzes, empty}: AssignmentGridProps) {
 }
 
 const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
-    const quizAssignments = useSelector(selectors.quizzes.assignedToMe);
-    const freeAttempts = useSelector(selectors.quizzes.attemptedFreelyByMe);
-    const quizzes = useSelector(selectors.quizzes.available);
+    const quizAssignments = useAppSelector(selectors.quizzes.assignedToMe);
+    const freeAttempts = useAppSelector(selectors.quizzes.attemptedFreelyByMe);
+    const quizzes = useAppSelector(selectors.quizzes.available);
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const startIndex = 0;
 

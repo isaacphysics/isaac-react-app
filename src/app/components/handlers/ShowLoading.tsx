@@ -4,7 +4,7 @@ import {NotFound} from "../pages/NotFound";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {isDefined} from "../../services/miscUtils";
 import {AppState} from "../../state/reducers";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {IsaacSpinner} from "./IsaacSpinner";
 
 interface ShowLoadingProps<T> {
@@ -58,7 +58,7 @@ interface WithLoadedSelectorProps<T> extends Omit<ShowLoadingProps<T>, 'until'> 
 }
 
 export const WithLoadedSelector = <T extends {}>({selector, loadingThunk, ...rest}: WithLoadedSelectorProps<T>) => {
-    const value = useSelector(selector);
+    const value = useAppSelector(selector);
     useEffect(() => {
         if (loadingThunk) {
             if (!isDefined(value)) {

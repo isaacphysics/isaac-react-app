@@ -20,6 +20,12 @@ interface AssignmentsProps {
     showOld?: (event: MouseEvent) => void;
 }
 
+const midnightOf = (date: Date | number) => {
+    let d = new Date(date);
+    d.setHours(11, 59, 59, 999);
+    return d;
+};
+
 export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
     const now = new Date();
 
@@ -33,6 +39,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                 }
                 return a;
             }, new Set<TAG_ID>())).filter(tag => isDefined(tag))).map(tag => tag.title).sort();
+            const assignmentStartDate = assignment.scheduledStartDate ?? assignment.creationDate;
             return <React.Fragment key={index}>
                 <hr />
                 <Row className="board-card">
@@ -51,8 +58,8 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                         </Link>
-                        {isDefined(assignment.creationDate) &&
-                        <p className="mb-0"><strong>Assigned:</strong> {formatDate(assignment.creationDate)}</p>
+                        {isDefined(assignmentStartDate) &&
+                        <p className="mb-0"><strong>Assigned:</strong> {formatDate(assignmentStartDate)}</p>
                         }
                         {isDefined(assignment.dueDate) &&
                         <p className="mb-0"><strong>Due:</strong> {formatDate(assignment.dueDate)}</p>
@@ -86,7 +93,7 @@ export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
                         <Link to={`/gameboards#${assignment.gameboardId}`}>
                             View Assignment
                         </Link>
-                        {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > assignment.dueDate && assignment.gameboard.percentageCompleted !== 100 &&
+                        {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100 &&
                         <p><strong className="overdue">Overdue:</strong> {formatDate(assignment.dueDate)}</p>}
                     </Col>
                 </Row>

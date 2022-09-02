@@ -6,7 +6,7 @@ import {bookUserOnEvent, closeActiveModal, showToast} from "../../../state/actio
 import * as RS from "reactstrap";
 import {atLeastOne, zeroOrLess} from "../../../services/validation";
 import {EventBookingForm} from "../EventBookingForm";
-import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../../state/store";
 import {FAILURE_TOAST} from "../../navigation/Toasts";
 import {formatBookingModalConfirmMessage} from "../../../services/events";
 
@@ -19,7 +19,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
             `Create a booking for ${selectedUser.givenName} ${selectedUser.familyName}`,
 
         body: function UserBookingModalBody() {
-            const dispatch =useDispatch();
+            const dispatch =useAppDispatch();
 
             const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
 

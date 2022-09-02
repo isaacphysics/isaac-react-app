@@ -12,15 +12,14 @@ import {
 } from "./eventsState";
 import {
     totpChallengePending,
-    totpSharedSecret,
     user,
     userAuthSettings,
     userPreferences,
     userSchoolLookup
 } from "./userState";
 import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
-import {constants, glossaryTerms, news} from "./staticState";
-import {concepts, doc, fragments} from "./contentState";
+import {constants, glossaryTerms} from "./staticState";
+import {concepts, doc} from "./contentState";
 import {graphSketcherSpec, questions} from "./questionState";
 import {activeModals, notifications, toasts} from "./notifiersState";
 import {myAnsweredQuestionsByDate, myProgress, userAnsweredQuestionsByDate, userProgress} from "./progressState";
@@ -47,6 +46,7 @@ import {
     quizPreview,
     quizzes, studentQuizAttempt,
 } from "./quizState";
+import {isaacApi} from "../slices/api";
 
 const appReducer = combineReducers({
     // User
@@ -54,7 +54,6 @@ const appReducer = combineReducers({
     userAuthSettings,
     userPreferences,
     userSchoolLookup,
-    totpSharedSecret,
     totpChallengePending,
 
     // Internal App
@@ -70,12 +69,10 @@ const appReducer = combineReducers({
 
     // Static Content
     constants,
-    news,
     glossaryTerms,
 
     // Content
     doc,
-    fragments,
     concepts,
 
     // Question
@@ -140,13 +137,16 @@ const appReducer = combineReducers({
     quizAssignment,
     quizPreview,
     quizAttemptedFreelyByMe,
+
+    // API reducer
+    [isaacApi.reducerPath]: isaacApi.reducer
 });
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
 export const rootReducer = (state: AppState, action: Action) => {
     if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        state = undefined;
+        return appReducer(undefined, action);
     }
     return appReducer(state, action);
 };

@@ -243,8 +243,14 @@ button {
       @for $i from 0 through $parsons-max-indent {
         &.ghost-indent-#{$i} {
           background: linear-gradient(to right,
-            white #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 5}px, $gray-200 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
+            white #{$i * $parsons-step + 5}px, $gray-400 #{$i * $parsons-step + 5}px, $gray-400 #{$i * $parsons-step + 7}px, white #{$i * $parsons-step + 7}px
           );
+        }
+      }
+
+      &.is-dragging {
+        .parsons-item {
+          opacity: 0.666;
         }
       }
     }
@@ -354,4 +360,8 @@ button {
       fill: red;
     }
   }
+}
+
+.cloze-item {
+  font-size: 1rem !important;
 }

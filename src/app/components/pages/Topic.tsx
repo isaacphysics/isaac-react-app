@@ -1,6 +1,6 @@
 import React, {useEffect} from "react"
 import {Link, withRouter} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import {AppState} from "../../state/reducers";
 import {fetchTopicSummary} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -17,9 +17,9 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
-    const dispatch = useDispatch();
-    const topicPage = useSelector((state: AppState) => state ? state.currentTopic : null);
-    const user = useSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
+    const topicPage = useAppSelector((state: AppState) => state ? state.currentTopic : null);
+    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
     useEffect(() => {dispatch(fetchTopicSummary(topicName))}, [dispatch, topicName]);

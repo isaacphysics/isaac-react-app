@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import {useAppDispatch, useAppSelector} from "../../state/store";
 import * as RS from "reactstrap";
 import {getAdminSiteStats} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -16,9 +16,9 @@ function addTotalToMapOfCounts(counts: {[key: string]: number}) {
 }
 
 export const AdminStats = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {dispatch(getAdminSiteStats());}, []);
-    const adminStats = useSelector((state: AppState) => state?.adminStats || null);
+    const adminStats = useAppSelector((state: AppState) => state?.adminStats || null);
 
     if (adminStats != null) {
         // Add total value to each of the active user ranges

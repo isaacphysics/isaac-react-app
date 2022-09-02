@@ -86,13 +86,13 @@ export abstract class AbstractBaseTagService {
         return descendents;
     }
 
-    public getSpecifiedTags(tagType: TAG_LEVEL, tagArray: TAG_ID[]) {
+    public getSpecifiedTags(tagType: TAG_LEVEL, tagArray: TAG_ID[], getHidden = false) {
         // Return all TAG_ID an object has of a given type!
         if (tagArray == null) return [];
         let tags = [];
         for (const i in tagArray) {
             let tag = this.getById(tagArray[i]);
-            if (tag != null && tag.type === tagType && !tag.hidden) {
+            if (tag != null && tag.type === tagType && (getHidden || !tag.hidden)) {
                 tags.push(tag);
             }
         }

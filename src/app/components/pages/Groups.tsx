@@ -1,5 +1,6 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react";
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
+import {useAppSelector} from "../../state/store";
 import {
     Button,
     ButtonDropdown,
@@ -178,7 +179,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
     const initialGroupName = group ? group.groupName : "";
     const [newGroupName, setNewGroupName] = useState(initialGroupName);
 
-    const user = useSelector((state: AppState) => state && state.user || null);
+    const user = useAppSelector((state: AppState) => state && state.user || null);
     const isUserGroupOwner = user?.loggedIn && user.id === group?.ownerId;
 
     useEffect(() => {

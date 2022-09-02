@@ -10,9 +10,8 @@
 .subject-chemistry {
   background-position: -128px 0;
 }
-.subject-compsci {
-  // Use the yellow background for compsci?
-  //background-position: -192px 0;
+.subject-biology {
+  background-position: -192px 0;
 }
 .subject-complete {
   background-position: -320px 0;
@@ -21,7 +20,19 @@
 tr.board-card {
   height: 100px;
 }
+.col > .board-card {
+  height: calc(100% - 25px);
+}
 .board-card {
+  min-width: 30%;
+  @media (max-width: map-get($breakpoints, sm)) {
+    min-width: 50%;
+  }
+  margin-top: 25px;
+  .card-footer {
+    background: white;
+    border-top: unset;
+  }
   .card-body > .close {
     position: absolute;
     right: 10px;
