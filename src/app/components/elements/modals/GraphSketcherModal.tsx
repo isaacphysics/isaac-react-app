@@ -2,8 +2,6 @@ import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import { GraphSketcher, LineType, makeGraphSketcher, GraphSketcherState } from "isaac-graph-sketcher/dist/src/GraphSketcher";
 import { isDefined } from '../../../services/miscUtils';
 import debounce from "lodash/debounce";
-import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
-import {IsaacQuestionProps} from "../../../../IsaacAppTypes";
 import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
 import {Markup} from "../markup";
 

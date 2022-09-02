@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
-import {IsaacTabbedHints} from "./IsaacHints";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
 import {useCurrentQuestionAttempt} from "../../services/questions";
