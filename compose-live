@@ -91,6 +91,10 @@ services:
       driver: journald
       options:
         tag: isaac-$SITE-api-$ENV
+  $SITE-renderer:
+    container_name: $SITE-renderer
+    image: docker.isaacscience.org/isaac-$SITE-app-renderer:$APP_VERSION
+    restart: unless-stopped
 networks:
   default:
     external:

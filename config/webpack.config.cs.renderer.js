@@ -6,7 +6,6 @@ const configCS = require('./webpack.config.cs');
 const {merge} = require('webpack-merge');
 
 module.exports = env => {
-
     let configCSrenderer = {
         entry: {
             'isaac-cs-renderer': [resolve('src/index-cs-renderer')],

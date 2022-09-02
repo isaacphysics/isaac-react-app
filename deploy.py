@@ -121,6 +121,9 @@ def deploy_live(site, app):
           "sleep 3 && "             
           f"docker stop {site}-app-live-{previous_app_version} && "
           "../isaac-router/reload-router-config")
+    print("// Bring down the old preview renderer and bring up the new one")
+    ask_to_run_command(f"docker stop {site}-renderer && docker rm {site}-renderer && "
+          f"./compose-live {site} {app} up -d {site}-renderer")
 
 def deploy_etl(site, app):
     print(f"\n[DEPLOY {site.upper()} ETL]")
