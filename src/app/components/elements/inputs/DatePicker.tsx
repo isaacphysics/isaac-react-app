@@ -9,6 +9,7 @@ import moment, {Moment} from "moment";
 import * as chrono from "chrono-node";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {StateManagerProps} from "react-select/dist/declarations/src/useStateManager";
+import {UncontrolledTooltip} from "reactstrap";
 
 /**
  * Adapted from a recipe in the react-select docs
@@ -249,17 +250,30 @@ export const DatePicker = (props: DatePickerProps) => {
         setOptions(todayOnwardsOptions(referenceDate, hideCalendar));
     }, [referenceDate]);
 
-    return <Select
-        {...props}
-        components={{ Group, Option }}
-        filterOption={null}
-        isMulti={false}
-        isOptionSelected={(o, v) => v.some((i) => i.date.isSame(o.date, 'day'))}
-        maxMenuHeight={380}
-        onInputChange={handleInputChange}
-        options={options}
-        value={value}
-        placeholder={props.placeholder ?? "Start typing... (e.g. Next Wednesday)"}
-        styles={customStyles}
-    />
+    return <>
+        <span id={"date-picker-help-tooltip"} className="icon-help ml-2" />
+        <UncontrolledTooltip target={"date-picker-help-tooltip"} placement="bottom" >
+            Examples of how a date can be input:
+            <ul className={"text-left"}>
+                <li>Next Wednesday</li>
+                <li>02/05/2023</li>
+                <li>Tomorrow</li>
+                <li>In 2 weeks</li>
+                <li>In one month</li>
+            </ul>
+        </UncontrolledTooltip>
+        <Select
+            {...props}
+            components={{ Group, Option }}
+            filterOption={null}
+            isMulti={false}
+            isOptionSelected={(o, v) => v.some((i) => i.date.isSame(o.date, 'day'))}
+            maxMenuHeight={380}
+            onInputChange={handleInputChange}
+            options={options}
+            value={value}
+            placeholder={props.placeholder ?? "Start typing date... (e.g. Next Wednesday)"}
+            styles={customStyles}
+        />
+    </>
 };

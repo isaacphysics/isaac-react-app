@@ -81,7 +81,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
             />
             {groupInvalid && <small className={"pt-2 text-danger"}>You must select a group.</small>}
         </RS.Label>
-        <RS.Label className="w-100 mb-4">Set an optional due date:<br/>
+        <RS.Label className="w-100 mb-4">Set an optional due date:
             <DatePicker value={dueDate ? createOptionForDate(dueDate) : null}
                         onChange={(date) => setDueDate(date?.value ?? null)}
                         referenceDate={new Date().addDays(1)}
