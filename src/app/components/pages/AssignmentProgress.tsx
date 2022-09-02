@@ -89,7 +89,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
-    const questions = useMemo(() => assignment.gameboard.contents, [assignment]);
+    const questions = assignment.gameboard.contents;
     const progressData = useMemo<[AppAssignmentProgress, boolean][]>(() => assignment.progress.map(p => {
         if (!p.user.authorisedFullAccess) return [p, false];
         const initialState = {
@@ -116,8 +116,8 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         return [ret, questions.length === ret.tickCount];
     }), [assignment]);
 
-    const progress = useMemo(() => progressData.map(pd => pd[0]), [progressData]);
-    const studentsCorrect = useMemo(() => progressData.reduce((sc, pd) => sc + (pd[1] ? 1 : 0), 0), [progressData]);
+    const progress = progressData.map(pd => pd[0]);
+    const studentsCorrect = progressData.reduce((sc, pd) => sc + (pd[1] ? 1 : 0), 0);
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
@@ -326,15 +326,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
     const { data: assignmentProgress, isError: assignmentProgressError, error } = isaacApi.endpoints.getAssignmentProgress.useQuery(assignment.id);
 
-    const assignmentWithProgress = useMemo<EnhancedAssignmentWithProgress | undefined>(() => {
-        if (assignmentProgress) {
-           return {
-               ...assignment,
-               progress: assignmentProgress
-           };
-        }
-        return undefined;
-    }, [assignment, assignmentProgress]);
+    const assignmentWithProgress = assignmentProgress
+        ? {...assignment, progress: assignmentProgress}
+        : undefined;
 
     return assignmentWithProgress
         ? <ProgressDetails assignment={assignmentWithProgress} />
@@ -567,14 +561,14 @@ export function AssignmentProgress() {
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    let data = groups;
-    if (data) {
+    let sortedGroups;
+    if (groups) {
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                data = sortBy(data, g => g.groupName && g.groupName.toLowerCase());
+                sortedGroups = sortBy(groups, g => g.groupName && g.groupName.toLowerCase());
                 break;
             case SortOrder["Date Created"]:
-                data = sortBy(data, g => g.created).reverse();
+                sortedGroups = sortBy(groups, g => g.created).reverse();
                 break;
         }
     }
@@ -613,11 +607,11 @@ export function AssignmentProgress() {
             </Row>
         </Container>
         <div className="assignment-progress-container mb-5">
-            <ShowLoading until={data}>
+            <ShowLoading until={sortedGroups}>
                 <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                    {data && data.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
+                    {sortedGroups && sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
                 </AssignmentProgressPageSettingsContext.Provider>
-                {data && data.length == 0 && <Container className="py-5">
+                {sortedGroups && sortedGroups.length == 0 && <Container className="py-5">
                     <h3 className="text-center">
                         You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
                     </h3>

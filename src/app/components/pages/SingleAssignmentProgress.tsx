@@ -42,19 +42,13 @@ export const SingleAssignmentProgress = () => {
     const { data: assignment } = isaacApi.endpoints.getSingleSetAssignment.useQuery(assignmentId || skipToken);
     const { data: assignmentProgress, isError: assignmentProgressError, error } = isaacApi.endpoints.getAssignmentProgress.useQuery(assignmentId || skipToken);
 
-    const assignmentWithProgress = useMemo<EnhancedAssignmentWithProgress | undefined>(() => {
-        if (assignment && assignmentProgress) {
-            return {
-                ...assignment,
-                progress: assignmentProgress
-            };
-        }
-        return undefined;
-    }, [assignment, assignmentProgress]);
+    const assignmentWithProgress = assignment && assignmentProgress
+        ? {...assignment, progress: assignmentProgress}
+        : undefined;
 
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 
-    return <ShowLoading until={assignmentId && assignment && assignmentProgress}>
+    return <ShowLoading until={assignmentProgress}>
         <Container>
             <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
