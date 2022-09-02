@@ -248,14 +248,19 @@ const isaacApi = createApi({
                 url: `gameboards/${boardId}`,
                 method: "POST",
                 params: {title: newTitle},
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Linking the gameboard to your account failed"
             })
         }),
 
         linkUserToGameboard: build.mutation<void, string>({
             query: (boardId) => ({
                 url: `gameboards/user_gameboards/${boardId}`,
-                method: "POST",
-                body: {}
+                method: "POST"
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Linking the gameboard to your account failed"
             })
         }),
 
