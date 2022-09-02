@@ -255,6 +255,7 @@ const isaacApi = createApi({
             query: (boardId) => ({
                 url: `gameboards/user_gameboards/${boardId}`,
                 method: "POST",
+                body: {}
             })
         }),
 

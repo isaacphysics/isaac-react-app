@@ -208,7 +208,7 @@ export const saveGameboard = createAsyncThunk(
             }
             return {boardId, boardTitle};
         } catch (e) {
-            dispatch(showAxiosErrorToastIfNeeded("Error saving gameboard", e));
+            dispatch(showRTKQueryErrorToastIfNeeded("Error saving gameboard", e) as any);
             return rejectWithValue(null);
         }
     }
