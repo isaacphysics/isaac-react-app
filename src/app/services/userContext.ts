@@ -141,14 +141,20 @@ export function useUserContext(): UseUserContextReturnType {
     useEffect(() => {
         const actualParams = queryString.parse(window.location.search);
         if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
-            history.replace({
-                ...existingLocation,
-                search: queryString.stringify({
-                    ...queryParams,
-                    stage,
-                    examBoard: isCS ? examBoard : undefined,
-                }, {encode: false})
-            });
+            try {
+                history.replace({
+                    ...existingLocation,
+                    search: queryString.stringify({
+                        ...queryParams,
+                        stage,
+                        examBoard: isCS ? examBoard : undefined,
+                    }, {encode: false})
+                });
+            } catch (e) {
+                // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
+                // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
+                // trying to render, causing a loop and a spike in client-side errors.
+            }
         }
     }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
 
