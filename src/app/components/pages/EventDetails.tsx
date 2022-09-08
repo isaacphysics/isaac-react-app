@@ -193,6 +193,10 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
                                         </td>
                                     </tr>}
+                                    {isVirtual && <tr>
+                                        <td>Location:</td>
+                                        <td>Online</td>
+                                    </tr>}
                                     {event.isNotClosed && !event.hasExpired && <tr>
                                         <td>Availability:</td>
                                         <td>
