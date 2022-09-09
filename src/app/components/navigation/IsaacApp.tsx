@@ -106,23 +106,25 @@ export const IsaacApp = () => {
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
+    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
-        if (isLoggedIn(user)) {
+        if (loggedInUserId) {
             dispatch(requestNotifications());
-            checkForWebSocket(user);
+            checkForWebSocket(loggedInUserId);
         }
         return () => {
             closeWebSocket();
         };
-    }, [dispatch, user]);
+    }, [dispatch, loggedInUserId]);
 
+    const showNotifications = isLoggedIn(user) && showNotification(user);
     useEffect(() => {
         const dateNow = new Date();
-        if (isLoggedIn(user) && showNotification(user) && notifications && notifications.length > 0) {
+        if (showNotifications && notifications && notifications.length > 0) {
             dispatch(openActiveModal(notificationModal(notifications[0])));
             persistence.save(KEY.LAST_NOTIFICATION_TIME, dateNow.toString())
         }
-    }, [dispatch, user, notifications]);
+    }, [dispatch, showNotifications, notifications]);
 
     // Render
     return <Router history={history}>
