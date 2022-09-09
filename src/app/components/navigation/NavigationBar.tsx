@@ -24,6 +24,7 @@ import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
 import {isFound} from "../../services/miscUtils";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
+import {isLoggedIn} from "../../services/user";
 
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
@@ -72,12 +73,13 @@ export function useAssignmentsCount() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
 
+    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
-        if (user?.loggedIn) {
+        if (loggedInUserId) {
             dispatch(loadMyAssignments());
             dispatch(loadQuizAssignedToMe());
         }
-    }, [dispatch, user]);
+    }, [dispatch, loggedInUserId]);
 
     return useAppSelector((state: AppState) => {
         const response = {assignmentsCount: 0, quizzesCount: 0};
