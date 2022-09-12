@@ -30,8 +30,6 @@ import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
-    Card,
-    CardBody,
     Col,
     Container,
     DropdownItem,
