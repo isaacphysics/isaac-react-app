@@ -1586,8 +1586,8 @@ export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], du
     }
 
     if (scheduledStartDate != undefined) {
-        // Unline with the due date, we want to preserve the hour assigned at the UI level, unless we want to move that logic here.
-        if ((scheduledStartDate.valueOf() - today.valueOf()) < 0) {
+        // Unlike with the due date, we want to preserve the hour assigned at the UI level, unless we want to move that logic here.
+        if ((scheduledStartDate.valueOf() - (new Date()).valueOf()) < 0) {
             dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}) as any);
             return false;
         }
