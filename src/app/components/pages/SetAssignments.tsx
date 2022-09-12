@@ -115,8 +115,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
         const utcDate = e.target.valueAsDate as Date;
-        const sevenAM = 7 * 60 * 60 * 1000;
-        const scheduledDate = new Date(utcDate.getTime() + sevenAM);
+        const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
         // Sets the scheduled date to 7AM in the timezone of the browser.
         setScheduledStartDate(scheduledDate)
     }
