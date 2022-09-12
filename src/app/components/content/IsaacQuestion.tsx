@@ -22,6 +22,7 @@ import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inp
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
+import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -123,7 +124,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
-                            <IsaacContent doc={validationResponse.explanation}/>
+                            <WithFigureNumbering doc={validationResponse.explanation}>
+                                <IsaacContent doc={validationResponse.explanation}/>
+                            </WithFigureNumbering>
                         }
                     </div>}
                 </div>}
