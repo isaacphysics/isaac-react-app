@@ -11,10 +11,11 @@ import {
 } from "../../../state";
 import React, {useState} from "react";
 import {isDefined, Item, selectOnChange} from "../../../services";
+import {range} from "lodash";
+import {currentYear, DateInput} from "../inputs/DateInput";
 import * as RS from "reactstrap";
 import Select from "react-select";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
-import {createOptionForDate, DatePicker} from "../inputs/DatePicker";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
@@ -51,6 +52,11 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     const [dueDate, setDueDate] = useState<Date | null>(initialDueDate ?? null);
     const [feedbackMode, setFeedbackMode] = useState<QuizFeedbackMode | null>(initialFeedbackMode ?? null);
 
+    const yearRange = range(currentYear, currentYear + 5);
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+
     const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
 
     function addValidated(what: ControlName) {
@@ -60,7 +66,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     }
 
     const groupInvalid = validated.has('group') && selectedGroups.length === 0;
-    const dueDateInvalid = isDefined(dueDate) && dueDate.getTime() < Date.now();
+    const dueDateInvalid = isDefined(dueDate) && dueDate.getTime() < now.getTime();
     const feedbackModeInvalid = validated.has('feedbackMode') && feedbackMode === null;
 
     return <div className="mb-4">
@@ -79,15 +85,11 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
                     menuPortal: base => ({...base, zIndex: 9999}),
                 }}
             />
-            {groupInvalid && <small className={"pt-2 text-danger"}>You must select a group.</small>}
+            {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
         </RS.Label>
-        <RS.Label className="w-100 mb-4">Set an optional due date:
-            <DatePicker value={dueDate ? createOptionForDate(dueDate) : null}
-                        onChange={(date) => setDueDate(date?.value ?? null)}
-                        referenceDate={new Date().addDays(1)}
-                        isInvalid={dueDateInvalid}
-                        hideCalendar
-            />
+        <RS.Label className="w-100 mb-4">Set an optional due date:<br/>
+            <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
+                       defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after today.</small>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">What level of feedback should students get:<br/>
