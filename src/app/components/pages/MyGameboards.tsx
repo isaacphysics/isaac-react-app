@@ -163,11 +163,9 @@ const Board = (props: BoardTableProps) => {
         </Card>;
 };
 
-export const MyGameboards = () => {
+export const MyGameboards = ({user}: {user: RegisteredUserDTO}) => {
     //Redux state and dispatch
     const dispatch = useAppDispatch();
-    // We know the user is logged in to visit this page
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);

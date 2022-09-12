@@ -74,12 +74,12 @@ export function useAssignmentsCount() {
         }
     }, [dispatch, loggedInUserId]);
 
-    const assignmentsCount = useMemo(() => assignments ?
-        filterAssignmentsByStatus(assignments).inProgressRecent.length
-        : 0, [assignments]);
-    const quizzesCount = useMemo(() => quizzes && isFound(quizzes)
+    const assignmentsCount = assignments
+        ? filterAssignmentsByStatus(assignments).inProgressRecent.length
+        : 0;
+    const quizzesCount = quizzes && isFound(quizzes)
         ? partitionCompleteAndIncompleteQuizzes(quizzes)[1].length
-        : 0, [quizzes]);
+        : 0;
 
     return {assignmentsCount, quizzesCount};
 }
