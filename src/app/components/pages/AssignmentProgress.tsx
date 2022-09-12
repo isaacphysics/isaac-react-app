@@ -507,7 +507,7 @@ const GroupDetails = ({group}: {group: AppGroup}) => {
     const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
-    const {groupBoardAssignments, groupQuizAssignments,} = useGroupAssignments(group.id);
+    const {groupBoardAssignments, groupQuizAssignments} = useGroupAssignments(group.id);
     const assignments = groupBoardAssignments ?? [];
     const quizAssignments = groupQuizAssignments ?? [];
 
