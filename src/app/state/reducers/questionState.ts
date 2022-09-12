@@ -1,5 +1,5 @@
 import {Action, AppQuestionDTO, isValidatedChoice} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 
 export const question = (question: AppQuestionDTO, action: Action) => {

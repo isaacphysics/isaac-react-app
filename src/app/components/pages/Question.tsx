@@ -5,27 +5,32 @@ import {match, RouteComponentProps, withRouter} from "react-router-dom";
 import {fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, TAG_ID} from "../../services/constants";
+import {
+    determineAudienceViews,
+    DOCUMENT_TYPE,
+    fastTrackProgressEnabledBoards,
+    generateQuestionTitle,
+    isPhy,
+    isStudent,
+    siteSpecific,
+    TAG_ID,
+    tags,
+    useNavigation
+} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useNavigation} from "../../services/navigation";
 import {EditContentButton} from "../elements/EditContentButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
-import {isStudent} from "../../services/user";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
-import {isPhy, siteSpecific} from "../../services/siteConstants";
-import tags from "../../services/tags";
 import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
-import {determineAudienceViews} from "../../services/userContext";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
-import {generateQuestionTitle} from "../../services/questions";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {

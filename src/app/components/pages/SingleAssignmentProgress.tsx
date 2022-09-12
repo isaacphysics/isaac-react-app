@@ -1,15 +1,17 @@
-import React, {useContext, useMemo} from "react";
+import React, {useContext} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
 import {isaacApi, openActiveModal, useAppDispatch} from "../../state";
 import {AssignmentProgressPageSettingsContext, EnhancedAssignmentWithProgress} from "../../../IsaacAppTypes";
-import {ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
+import {
+    ASSIGNMENT_PROGRESS_CRUMB,
+    getAssignmentCSVDownloadLink,
+    useAssignmentProgressAccessibilitySettings
+} from "../../services";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentProgressFetchError, AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {getAssignmentCSVDownloadLink} from "../../services/assignments";
-import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 
@@ -40,19 +42,13 @@ export const SingleAssignmentProgress = () => {
     const { data: assignment } = isaacApi.endpoints.getSingleSetAssignment.useQuery(assignmentId || skipToken);
     const { data: assignmentProgress, isError: assignmentProgressError, error } = isaacApi.endpoints.getAssignmentProgress.useQuery(assignmentId || skipToken);
 
-    const assignmentWithProgress = useMemo<EnhancedAssignmentWithProgress | undefined>(() => {
-        if (assignment && assignmentProgress) {
-            return {
-                ...assignment,
-                progress: assignmentProgress
-            };
-        }
-        return undefined;
-    }, [assignment, assignmentProgress]);
+    const assignmentWithProgress = assignment && assignmentProgress
+        ? {...assignment, progress: assignmentProgress}
+        : undefined;
 
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 
-    return <ShowLoading until={assignmentId && assignment && assignmentProgress}>
+    return <ShowLoading until={assignmentProgress}>
         <Container>
             <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}

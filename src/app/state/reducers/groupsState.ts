@@ -5,7 +5,7 @@ import {
     UserSummaryWithGroupMembershipDTO
 } from "../../../IsaacApiTypes";
 import {Action, AppGroup, AppGroupMembership, GroupMembershipDetailDTO} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 import {mapValues, union, without} from "lodash";
 import {isaacApi} from "../slices/api";
 

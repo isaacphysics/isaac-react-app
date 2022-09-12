@@ -1,5 +1,5 @@
 import {Action, AugmentedEvent, EventMapData, EventOverview, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
+import {ACTION_TYPE, NOT_FOUND} from "../../services";
 import {EventBookingDTO} from "../../../IsaacApiTypes";
 import {routerPageChange} from "../index";
 

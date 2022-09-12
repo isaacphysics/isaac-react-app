@@ -13,11 +13,14 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
-import {useAssignmentProgressAccessibilitySettings} from "../../../services/progress";
+import {
+    extractTeacherName,
+    getQuizAssignmentCSVDownloadLink,
+    isDefined,
+    useAssignmentProgressAccessibilitySettings
+} from "../../../services";
 import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
-import {extractTeacherName} from "../../../services/user";
-import {isDefined} from "../../../services/miscUtils";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -27,8 +30,6 @@ import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,
     Button,
-    Card,
-    CardBody,
     Col,
     Container,
     DropdownItem,
@@ -38,7 +39,6 @@ import {
     Row,
     UncontrolledDropdown
 } from "reactstrap";
-import {getQuizAssignmentCSVDownloadLink} from "../../../services/quiz";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -127,18 +127,14 @@ export const QuizTeacherFeedback = () => {
                 </p>
                 <Row>
                     {assignment.dueDate && <Col xs={12} sm={6} md={4}>
-                        <Label for="dueDate" className="pr-1">Extend the due date:</Label>
-                        <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined} yearRange={yearRange} defaultYear={currentYear} noClear
-                                   defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                        <Label for="dueDate" className="pr-1">Extend the due date:
+                            <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined} yearRange={yearRange} defaultYear={currentYear} noClear
+                                       defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                        </Label>
                         <div className={"mt-2 w-100 text-center mb-2"}>
                             {dueDate && (dueDate > assignment.dueDate) && <Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
                                 {settingDueDate ? <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></> : "Extend due date"}
                             </Button>}
-                            {dueDate && (dueDate < assignment.dueDate) && <Card className={"text-left border bg-transparent border-danger"}>
-                                <CardBody className={"p-2 pl-3"}>
-                                    Extended due date must be after the current due date!
-                                </CardBody>
-                            </Card>}
                         </div>
                     </Col>}
                     <Col>

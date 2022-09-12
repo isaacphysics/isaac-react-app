@@ -1,7 +1,6 @@
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {ifKeyIsEnter} from "../../../services/navigation";
+import {ifKeyIsEnter, Item} from "../../../services";
 import React from "react";
-import {Item} from "../../../services/select";
 import {generateSquareProportions, Rectangle} from "./Rectangle";
 import {Container} from "reactstrap";
 

@@ -1,8 +1,6 @@
-import {TAG_ID, TAG_LEVEL} from "./constants";
+import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO} from "../../IsaacApiTypes";
-import subject from "./subject";
-import {AbstractBaseTagService} from "./tagsAbstract";
 
 const softHyphen = "\u00AD";
 
@@ -13,6 +11,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physics, title: "Physics"},
         {id: TAG_ID.maths, title: "Maths"},
         {id: TAG_ID.chemistry, title: "Chemistry"},
+        {id: TAG_ID.biology, title: "Biology", hidden: true},
 
         // --- Fields ---
 
@@ -133,7 +132,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.stoichiometry, title: `Stoichio${softHyphen}metry`, parent: TAG_ID.foundations},
         {id: TAG_ID.gasLaws, title: "Gas Laws", parent: TAG_ID.foundations},
         // Organic
-        {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic, comingSoonDate: "soon"},
+        {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic},
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
         {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic, comingSoonDate: "soon"},
@@ -156,7 +155,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
             return this.getById(globalSubjectTagId as TAG_ID);
         }
 
-        const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray);
+        const subjectTags = this.getSpecifiedTags(TAG_LEVEL.subject, tagArray, true);
         for (const i in subjectTags) {
             if (subjectTags[i].id == globalSubjectTagId) {
                 return subjectTags[i];

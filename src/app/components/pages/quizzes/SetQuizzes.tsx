@@ -17,14 +17,18 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
-import {MANAGE_QUIZ_TAB, NOT_FOUND} from "../../../services/constants";
-import {siteSpecific} from "../../../services/siteConstants";
+import {
+    below,
+    isDefined,
+    isEventLeaderOrStaff,
+    MANAGE_QUIZ_TAB,
+    NOT_FOUND,
+    siteSpecific,
+    useDeviceSize,
+    useQueryParams
+} from "../../../services";
 import {Tabs} from "../../elements/Tabs";
-import {below, useDeviceSize} from "../../../services/device";
-import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
-import {isEventLeaderOrStaff} from "../../../services/user";
-import {useQueryParams} from "../../../services/reactRouterExtension";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;

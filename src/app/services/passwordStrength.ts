@@ -1,5 +1,5 @@
 import {PasswordFeedback, ZxcvbnResult} from "../../IsaacAppTypes";
-import {siteSpecific} from "./siteConstants";
+import {siteSpecific} from "./";
 import axios from "axios";
 
 export const passwordStrengthText: {[score: number]: string} = {

@@ -4,7 +4,7 @@ import {selectors, useAppSelector} from "../../../state";
 import {Col, Container, Row} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarCS} from "./NavigationBarCS";
-import {useDeviceSize} from "../../../services/device";
+import {useDeviceSize} from "../../../services";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);

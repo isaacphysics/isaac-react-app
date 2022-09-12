@@ -1,37 +1,37 @@
-import {isaacApi, openActiveModal, useAppDispatch, useAppSelector, selectors} from "../../index";
-import React, {useCallback, useMemo} from "react";
-import {isFound} from "../../../services/miscUtils";
-import {downloadLinkModal} from "../../../components/elements/modals/AssignmentProgressModalCreators";
+import {isaacApi, useAppSelector, selectors} from "../../index";
+import {isFound} from "../../../services";
+import {EnhancedAssignment} from "../../../../IsaacAppTypes";
 
-export const useGroupAssignments = (groupId?: number) => {
-    const dispatch = useAppDispatch();
-    const { data: groupBoardAssignments } = isaacApi.endpoints.getMySetAssignments.useQuery(groupId);
+// Returns summary assignment objects without data on gameboard contents - much faster to request these from the API
+// than those returned from useGroupAssignments
+export const useGroupAssignmentSummary = (groupId?: number) => {
+    const { data: assignments } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const quizAssignments = useAppSelector(selectors.quizzes.assignments);
-    const groupQuizAssignments = useMemo(() =>
-            isFound(quizAssignments)
-                ? quizAssignments?.filter(a => a.groupId === groupId)
-                : undefined
-        , [quizAssignments]);
+
+    const groupBoardAssignments = assignments?.filter(a => a.groupId === groupId);
+    const groupQuizAssignments = isFound(quizAssignments)
+        ? quizAssignments?.filter(a => a.groupId === groupId)
+        : undefined;
 
     const assignmentCount = (groupBoardAssignments?.length ?? 0) + (groupQuizAssignments?.length ?? 0);
 
-    const openGroupDownloadLink = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.stopPropagation();
-        event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
-    }, [dispatch]);
+    return {
+        assignmentCount,
+        groupBoardAssignments,
+        groupQuizAssignments
+    };
+};
 
-    const openGroupQuizDownloadLink = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
-        event.stopPropagation();
-        event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
-    }, [dispatch]);
+// Returns assignment objects with full gameboard and question part data
+export const useGroupAssignments = (groupId?: number) => {
+    const { data: groupBoardAssignments } = isaacApi.endpoints.getMySetAssignments.useQuery(groupId);
+    const quizAssignments = useAppSelector(selectors.quizzes.assignments);
+    const groupQuizAssignments = isFound(quizAssignments)
+        ? quizAssignments?.filter(a => a.groupId === groupId)
+        : undefined;
 
     return {
-        groupBoardAssignments,
-        groupQuizAssignments,
-        assignmentCount,
-        openGroupDownloadLink,
-        openGroupQuizDownloadLink
+        groupBoardAssignments: groupBoardAssignments as EnhancedAssignment[] | undefined,
+        groupQuizAssignments
     }
-}
+};

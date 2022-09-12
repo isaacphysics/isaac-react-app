@@ -1,15 +1,22 @@
 import React from "react";
 import * as RS from "reactstrap";
 import Select from "react-select";
-import {TAG_ID} from "../../../services/constants";
+import {
+    tags,
+    addHexagonKeyPoints,
+    DeviceSize,
+    ifKeyIsEnter,
+    isDefined,
+    Item,
+    noop,
+    selectOnChange,
+    svgLine,
+    svgMoveTo,
+    TAG_ID,
+    useDeviceSize
+} from "../../../services";
 import {calculateHexagonProportions, Hexagon, HexagonProportions} from "./Hexagon";
-import {DeviceSize, useDeviceSize} from "../../../services/device";
 import {HexagonConnection} from "./HexagonConnection";
-import {Item, selectOnChange} from "../../../services/select";
-import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services/svg";
-import {ifKeyIsEnter} from "../../../services/navigation";
-import tags from "../../../services/tags";
-import {isDefined, noop} from "../../../services/miscUtils";
 import classNames from "classnames";
 
 export interface Tier {id: string; name: string; for: string}

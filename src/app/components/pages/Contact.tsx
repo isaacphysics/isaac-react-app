@@ -15,13 +15,11 @@ import {
     Row
 } from "reactstrap";
 import {PotentialUser} from "../../../IsaacAppTypes";
-import {validateEmail} from "../../services/validation";
+import {isCS, isPhy, SITE_SUBJECT_TITLE, SOCIAL_LINKS, validateEmail, WEBMASTER_EMAIL} from "../../services";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {isCS, isPhy, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
 import {PageFragment} from "../elements/PageFragment";
 import {MetaDescription} from "../elements/MetaDescription";
-import {SOCIAL_LINKS} from "../../services/constants";
 
 const determineUrlQueryPresets = (user?: PotentialUser | null) => {
     const urlQuery = queryString.parse(location.search);

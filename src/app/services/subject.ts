@@ -1,4 +1,4 @@
-import {TAG_ID} from "./constants";
+import {TAG_ID} from "./";
 
 let id;
 if (["localhost:8000", "localhost:8004"].includes(document.location.host)  || document.location.host.includes("isaacphysics")) {
@@ -15,7 +15,7 @@ if (["localhost:8000", "localhost:8004"].includes(document.location.host)  || do
 
 let title = id[0].toUpperCase() + id.split("_").join(" ").substring(1);
 
-export default {
+export const subject = {
     id: id,
     title: title,
 };

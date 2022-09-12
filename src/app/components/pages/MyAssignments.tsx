@@ -8,9 +8,9 @@ import {
     filterAssignmentsByProperties,
     filterAssignmentsByStatus,
     getDistinctAssignmentGroups,
-    getDistinctAssignmentSetters
-} from "../../services/assignments";
-import {ifKeyIsEnter} from "../../services/navigation";
+    getDistinctAssignmentSetters,
+    ifKeyIsEnter
+} from "../../services";
 import {Assignments} from "../elements/Assignments";
 
 export const MyAssignments = () => {
@@ -30,10 +30,10 @@ export const MyAssignments = () => {
         event.preventDefault();
     } || undefined;
 
-    const tabs: [React.ReactElement, AssignmentDTO[]][] = [
-        [<span key={1}><span className="d-none d-md-inline">Assignments </span>To&nbsp;Do</span>, myAssignments.inProgressRecent],
-        [<span key={2}>Older<span className="d-none d-md-inline"> Assignments</span></span>, myAssignments.inProgressOld],
-        [<span key={3}><span className="d-none d-md-inline">Completed Assignments</span><span className="d-inline d-md-none">Done</span></span>, myAssignments.completed]
+    const tabs: [React.ReactElement, AssignmentDTO[], string][] = [
+        [<span key={1}><span className="d-none d-md-inline">Assignments </span>To&nbsp;Do</span>, myAssignments.inProgressRecent, "Assignments To Do"],
+        [<span key={2}>Older<span className="d-none d-md-inline"> Assignments</span></span>, myAssignments.inProgressOld, "Older Assignments"],
+        [<span key={3}><span className="d-none d-md-inline">Completed Assignments</span><span className="d-inline d-md-none">Done</span></span>, myAssignments.completed, "Completed Assignments"]
     ];
 
     const pageHelp = <span>
@@ -47,13 +47,14 @@ export const MyAssignments = () => {
             <CardBody className="pt-0">
                 <ShowLoading until={assignments}>
                     <Nav className="mt-4 mb-3" tabs>
-                        {tabs.map(([tabTitle, tabItems], mapIndex) => {
+                        {tabs.map(([tabTitle, tabItems, tabAccessibleName], mapIndex) => {
                             const tabIndex = mapIndex;
                             const classes = activeTab === tabIndex ? "active" : "";
                             return <NavItem key={tabIndex} className="px-3">
                                 <NavLink
                                     className={classes} tabIndex={0} onClick={() => setActiveTab(tabIndex)}
                                     onKeyDown={ifKeyIsEnter(() => setActiveTab(tabIndex))}
+                                    title={`${tabAccessibleName} tab`}
                                 >
                                     {tabTitle} ({tabItems.length || 0})
                                 </NavLink>

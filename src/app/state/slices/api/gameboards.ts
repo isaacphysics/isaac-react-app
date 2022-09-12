@@ -1,21 +1,17 @@
-import {getValue, Item, toTuple} from "../../../services/select";
+import {getValue, history, isAdminOrEventManager, isDefined, isTeacher, Item, toTuple, TODAY} from "../../../services";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {AssignmentDTO} from "../../../../IsaacApiTypes";
-import {isDefined} from "../../../services/miscUtils";
-import {isAdminOrEventManager, isTeacher} from "../../../services/user";
 import {
     AppDispatch,
     AppState,
     isaacApi,
     mutationSucceeded,
-    showAxiosErrorToastIfNeeded,
     showErrorToast,
     showRTKQueryErrorToastIfNeeded,
-    showSuccessToast, showToast
+    showSuccessToast,
+    showToast
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
-import {history} from "../../../services/history";
-import {TODAY} from "../../../services/constants";
 
 export interface AssignmentSpec {
     boardId: string;
@@ -210,7 +206,7 @@ export const saveGameboard = createAsyncThunk(
             }
             return {boardId, boardTitle};
         } catch (e) {
-            dispatch(showAxiosErrorToastIfNeeded("Error saving gameboard", e));
+            dispatch(showRTKQueryErrorToastIfNeeded("Error saving gameboard", e) as any);
             return rejectWithValue(null);
         }
     }

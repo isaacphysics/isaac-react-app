@@ -1,8 +1,7 @@
 import React, {ReactElement, ReactNode, useEffect, useState} from "react";
-import {NOT_FOUND} from "../../services/constants";
+import {isDefined, NOT_FOUND} from "../../services";
 import {NotFound} from "../pages/NotFound";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {isDefined} from "../../services/miscUtils";
 import {AppState, useAppSelector} from "../../state";
 import {IsaacSpinner} from "./IsaacSpinner";
 

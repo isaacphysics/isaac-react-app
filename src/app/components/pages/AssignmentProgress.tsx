@@ -1,4 +1,13 @@
-import React, {ComponentProps, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {
+    ComponentProps,
+    useCallback,
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
 import {
     getRTKQueryErrorMessage,
     isaacApi,
@@ -8,7 +17,8 @@ import {
     selectors,
     useAppDispatch,
     useAppSelector,
-    useGroupAssignments
+    useGroupAssignments,
+    useGroupAssignmentSummary
 } from "../../state";
 import {
     Alert,
@@ -34,16 +44,23 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardItem, GameboardItemState, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {API_PATH, ASSIGNMENT_PROGRESS_PATH, MARKBOOK_TYPE_TAB} from "../../services/constants";
+import {
+    API_PATH,
+    ASSIGNMENT_PROGRESS_PATH,
+    getAssignmentCSVDownloadLink,
+    getQuizAssignmentCSVDownloadLink,
+    isDefined,
+    isFound,
+    MARKBOOK_TYPE_TAB,
+    SITE_SUBJECT_TITLE,
+    siteSpecific,
+    useAssignmentProgressAccessibilitySettings,
+    WEBMASTER_EMAIL
+} from "../../services";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
-import {SITE_SUBJECT_TITLE, siteSpecific, WEBMASTER_EMAIL} from "../../services/siteConstants";
-import {getAssignmentCSVDownloadLink} from "../../services/assignments";
-import {getQuizAssignmentCSVDownloadLink} from "../../services/quiz";
-import {useAssignmentProgressAccessibilitySettings} from "../../services/progress";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {Tabs} from "../elements/Tabs";
-import {isDefined, isFound} from "../../services/miscUtils";
 import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
@@ -82,7 +99,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
-    const questions = useMemo(() => assignment.gameboard.contents, [assignment]);
+    const questions = assignment.gameboard.contents;
     const progressData = useMemo<[AppAssignmentProgress, boolean][]>(() => assignment.progress.map(p => {
         if (!p.user.authorisedFullAccess) return [p, false];
         const initialState = {
@@ -109,8 +126,8 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
         return [ret, questions.length === ret.tickCount];
     }), [assignment]);
 
-    const progress = useMemo(() => progressData.map(pd => pd[0]), [progressData]);
-    const studentsCorrect = useMemo(() => progressData.reduce((sc, pd) => sc + (pd[1] ? 1 : 0), 0), [progressData]);
+    const progress = progressData.map(pd => pd[0]);
+    const studentsCorrect = progressData.reduce((sc, pd) => sc + (pd[1] ? 1 : 0), 0);
 
     // Calculate 'class average', which isn't an average at all, it's the percentage of ticks per question.
     const [assignmentAverages, assignmentTotalQuestionParts] = useMemo<[number[], number]>(() => {
@@ -319,15 +336,9 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
     const { data: assignmentProgress, isError: assignmentProgressError, error } = isaacApi.endpoints.getAssignmentProgress.useQuery(assignment.id);
 
-    const assignmentWithProgress = useMemo<EnhancedAssignmentWithProgress | undefined>(() => {
-        if (assignmentProgress) {
-           return {
-               ...assignment,
-               progress: assignmentProgress
-           };
-        }
-        return undefined;
-    }, [assignment, assignmentProgress]);
+    const assignmentWithProgress = assignmentProgress
+        ? {...assignment, progress: assignmentProgress}
+        : undefined;
 
     return assignmentWithProgress
         ? <ProgressDetails assignment={assignmentWithProgress} />
@@ -490,14 +501,13 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
     </div> : null;
 };
 
-type GroupDetailsProps = {
-    group: AppGroup;
-    quizAssignments: QuizAssignmentDTO[];
-    assignments: EnhancedAssignment[];
-};
-const GroupDetails = ({assignments, quizAssignments}: GroupDetailsProps) => {
+const GroupDetails = ({group}: {group: AppGroup}) => {
     const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
+
+    const {groupBoardAssignments, groupQuizAssignments} = useGroupAssignments(group.id);
+    const assignments = groupBoardAssignments ?? [];
+    const quizAssignments = groupQuizAssignments ?? [];
 
     const assignmentTabs = {
         [`Assignments (${assignments.length || 0})`]:
@@ -526,27 +536,31 @@ function getGroupQuizProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/quiz/group/" + groupId + "/download";
 }
 
-const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
+export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
+    const dispatch = useAppDispatch();
     const [isExpanded, setExpanded] = useState(false);
 
-    const {groupBoardAssignments, groupQuizAssignments, assignmentCount,
-        openGroupDownloadLink, openGroupQuizDownloadLink} = useGroupAssignments(group.id);
+    const openDownloadLink = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
+        event.stopPropagation();
+        event.preventDefault();
+        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+    }, [dispatch]);
+
+    const {assignmentCount} = useGroupAssignmentSummary(group.id);
 
     return <>
         <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupDownloadLink}>(Download Group Assignments CSV)</a></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openGroupQuizDownloadLink}>(Download Group Test CSV)</a></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Assignments CSV)</a></div>
+            <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>
-        {isExpanded && <GroupDetails group={group}
-                                     quizAssignments={groupQuizAssignments ?? []}
-                                     assignments={(groupBoardAssignments ?? []) as EnhancedAssignment[]} />}
+        {isExpanded && <GroupDetails group={group} />}
     </>;
 };
 
@@ -559,14 +573,14 @@ export function AssignmentProgress() {
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    let data = groups;
-    if (data) {
+    let sortedGroups;
+    if (groups) {
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                data = sortBy(data, g => g.groupName && g.groupName.toLowerCase());
+                sortedGroups = sortBy(groups, g => g.groupName && g.groupName.toLowerCase());
                 break;
             case SortOrder["Date Created"]:
-                data = sortBy(data, g => g.created).reverse();
+                sortedGroups = sortBy(groups, g => g.created).reverse();
                 break;
         }
     }
@@ -604,11 +618,11 @@ export function AssignmentProgress() {
             </Row>
         </Container>
         <div className="assignment-progress-container mb-5">
-            <ShowLoading until={data}>
+            <ShowLoading until={sortedGroups}>
                 <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                    {data && data.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
+                    {sortedGroups && sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
                 </AssignmentProgressPageSettingsContext.Provider>
-                {data && data.length == 0 && <Container className="py-5">
+                {sortedGroups && sortedGroups.length == 0 && <Container className="py-5">
                     <h3 className="text-center">
                         You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
                     </h3>

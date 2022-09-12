@@ -2,7 +2,7 @@ import {closeActiveModal, store, useAppDispatch} from "../../../state";
 import React from "react";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
-import {siteSpecific} from "../../../services/siteConstants";
+import {siteSpecific} from "../../../services";
 
 interface BookInfo {
     title: string;

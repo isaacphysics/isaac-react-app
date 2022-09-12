@@ -1,5 +1,5 @@
 import {PrintingSettings} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services/constants";
+import {ACTION_TYPE, EXAM_BOARD, STAGE} from "../../services";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {routerPageChange} from "../index";
 

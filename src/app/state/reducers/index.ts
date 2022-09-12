@@ -1,6 +1,5 @@
-import {combineReducers} from "redux";
-import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {AnyAction, combineReducers} from "redux";
+import {ACTION_TYPE} from "../../services";
 import {
     currentEvent,
     eventBookings,
@@ -20,10 +19,8 @@ import {
     transientUserContextSlice,
     constants,
     glossaryTerms,
-    news,
     concepts,
     doc,
-    fragments,
     graphSketcherSpec,
     questions,
     activeModals,
@@ -81,12 +78,10 @@ const appReducer = combineReducers({
 
     // Static Content
     constants,
-    news,
     glossaryTerms,
 
     // Content
     doc,
-    fragments,
     concepts,
 
     // Question
@@ -150,8 +145,10 @@ const appReducer = combineReducers({
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
-export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+export const rootReducer = (state: AppState, action: AnyAction) => {
+    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS
+        || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS
+        || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         return appReducer(undefined, action);
     }
     return appReducer(state, action);

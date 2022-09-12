@@ -7,16 +7,19 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import {isDefined} from '../../services/miscUtils';
-import tags from "../../services/tags";
-import {NOT_FOUND, TAG_ID} from '../../services/constants';
+import {
+    isCS,
+    isDefined,
+    Item,
+    NOT_FOUND,
+    scrollVerticallyIntoView,
+    TAG_ID,
+    tags,
+    useUrlHashValue,
+    useUserContext
+} from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import Select from "react-select";
-import {useUserContext} from "../../services/userContext";
-import {useUrlHashValue} from "../../services/reactRouterExtension";
-import {Item} from "../../services/select";
-import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 /*

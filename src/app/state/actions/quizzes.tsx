@@ -1,8 +1,15 @@
 import React, {Dispatch} from "react";
 import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
-import {api} from "../../services/api";
-import {AppState, selectors, AppDispatch, openActiveModal, closeActiveModal, extractMessage, showAxiosErrorToastIfNeeded} from "../index";
+import {ACTION_TYPE, api} from "../../services";
+import {
+    AppDispatch,
+    AppState,
+    closeActiveModal,
+    extractMessage,
+    openActiveModal,
+    selectors,
+    showAxiosErrorToastIfNeeded
+} from "../index";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
 
@@ -33,7 +40,7 @@ export const showQuizSettingModal = (quiz: ContentSummaryDTO | IsaacQuizDTO, due
         closeAction: () => {
             dispatch(closeActiveModal())
         },
-        title: "Setting quiz " + (quiz.title ?? quiz.id),
+        title: `Setting test '${quiz.title ?? quiz.id}'`,
         body: <QuizSettingModal quiz={quiz} dueDate={dueDate} feedbackMode={feedbackMode}/>
     }));
 }

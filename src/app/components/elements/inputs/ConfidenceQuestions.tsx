@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {closeActiveModal, logAction, openActiveModal, store, useAppDispatch} from "../../../state";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
+import {isCS, isPhy, siteSpecific} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 
 type ActiveConfidenceState = "initial" | "followUp"

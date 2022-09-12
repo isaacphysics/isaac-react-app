@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useAppSelector, selectors} from "../../state";
-import {isLoggedIn, isStudent} from "../../services/user";
+import {isLoggedIn, isStudent} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCard} from "../content/IsaacCard";
 

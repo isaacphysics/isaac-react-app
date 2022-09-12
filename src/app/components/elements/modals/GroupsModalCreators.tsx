@@ -14,7 +14,7 @@ import {
     useAppSelector
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history} from "../../../services/history";
+import {history} from "../../../services";
 import * as RS from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";

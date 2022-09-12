@@ -2,7 +2,7 @@ import React, {RefObject, useContext, useEffect} from 'react';
 import {AnvilAppDTO} from "../../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {AccordionSectionContext, QuestionContext} from "../../../IsaacAppTypes";
-import {selectQuestionPart} from "../../services/questions";
+import {selectQuestionPart} from "../../services";
 
 interface AnvilAppProps {
     doc: AnvilAppDTO;

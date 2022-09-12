@@ -5,15 +5,20 @@ import {
     determineCurrentCreationContext,
     determineGameboardHistory,
     determineNextGameboardItem,
-    determinePreviousGameboardItem
-} from "./gameboards";
-import {DOCUMENT_TYPE, fastTrackProgressEnabledBoards, NOT_FOUND, TAG_ID} from "./constants";
-import {determineNextTopicContentLink, determineTopicHistory, makeAttemptAtTopicHistory} from "./topics";
-import {useUserContext} from "./userContext";
+    determineNextTopicContentLink,
+    determinePreviousGameboardItem,
+    determineTopicHistory,
+    DOCUMENT_TYPE,
+    fastTrackProgressEnabledBoards,
+    makeAttemptAtTopicHistory,
+    NOT_FOUND,
+    TAG_ID,
+    useQueryParams,
+    useUserContext
+} from "./";
 import {AudienceContext, ContentDTO, GameboardDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
-import {useQueryParams} from "./reactRouterExtension";
 import {useLocation} from "react-router-dom";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}

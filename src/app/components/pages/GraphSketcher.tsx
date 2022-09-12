@@ -10,7 +10,7 @@ import {
     makeGraphSketcher
 } from 'isaac-graph-sketcher/dist/src/GraphSketcher';
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
-import {isStaff} from "../../services/user";
+import {isStaff} from "../../services";
 
 const GraphSketcherPage = () => {
     const user = useAppSelector((state: AppState) => state && state.user || null);

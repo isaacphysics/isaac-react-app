@@ -2,10 +2,9 @@ import React, {useState} from "react";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
-import {useAppDispatch, logAction} from "../../state";
-import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services/fastTrack";
+import {logAction, useAppDispatch} from "../../state";
+import {determineFastTrackSecondaryAction, isCS, useFastTrackInformation} from "../../services";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
-import {isCS} from "../../services/siteConstants";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
 

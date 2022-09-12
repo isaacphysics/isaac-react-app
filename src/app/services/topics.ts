@@ -1,10 +1,16 @@
 import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
-import {ALL_TOPICS_CRUMB, DOCUMENT_TYPE, documentTypePathPrefix, NOT_FOUND} from "./constants";
-import {LinkInfo} from "./navigation";
-import {isIntendedAudience, UseUserContextReturnType} from "./userContext";
+import {
+    ALL_TOPICS_CRUMB,
+    DOCUMENT_TYPE,
+    documentTypePathPrefix,
+    isIntendedAudience,
+    isPhy,
+    LinkInfo,
+    NOT_FOUND,
+    UseUserContextReturnType
+} from "./";
 import {NOT_FOUND_TYPE, PotentialUser} from "../../IsaacAppTypes";
 import {CurrentTopicState} from "../state";
-import {isPhy} from "./siteConstants";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);

@@ -1,9 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isCS, siteSpecific} from "../../services/siteConstants";
+import {isCS, isMobile, isTeacher, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
-import {isMobile} from "../../services/device";
-import {isTeacher} from "../../services/user";
-import {useOutsideCallback} from "../../services/miscUtils";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
     const [showShareLink, setShowShareLink] = useState(false);

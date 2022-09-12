@@ -10,7 +10,14 @@ import {
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Card, CardBody, Col, Container, Row} from "reactstrap";
-import {isTeacher} from "../../services/user";
+import {
+    HUMAN_QUESTION_TAGS,
+    HUMAN_QUESTION_TYPES,
+    isPhy,
+    isTeacher,
+    safePercentage,
+    siteSpecific
+} from "../../services";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {Unauthorised} from "./Unauthorised";
@@ -18,12 +25,9 @@ import {AggregateQuestionStats} from "../elements/panels/AggregateQuestionStats"
 import {StreakPanel} from "../elements/panels/StreakPanel";
 import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
-import {HUMAN_QUESTION_TAGS, HUMAN_QUESTION_TYPES} from "../../services/questions";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
-import {safePercentage} from "../../services/validation";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
-import {isPhy, siteSpecific} from "../../services/siteConstants";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
 const siteSpecificStats = siteSpecific(

@@ -1,15 +1,14 @@
 import React, {useCallback, useEffect} from "react";
 import {
-    useAppDispatch,
     clearQuizAttempt,
     clearStudentQuizAttempt,
     loadQuizAttemptFeedback,
-    loadStudentQuizAttemptFeedback
+    loadStudentQuizAttemptFeedback,
+    useAppDispatch
 } from "../../../state";
 import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined} from "../../../services/miscUtils";
-import {useCurrentQuizAttempt} from "../../../services/quiz";
+import {isDefined, useCurrentQuizAttempt} from "../../../services";
 import {
     myQuizzesCrumbs,
     QuizAttemptComponent,
@@ -19,7 +18,7 @@ import {
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {Container, Alert, Button} from "reactstrap";
+import {Alert, Button, Container} from "reactstrap";
 
 function QuizFooter(props: QuizAttemptProps) {
     const {page, pageLink, studentUser} = props;

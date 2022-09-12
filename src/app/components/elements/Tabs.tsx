@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
-import {isDefined} from "../../services/miscUtils";
+import {isDefined} from "../../services";
 import classNames from "classnames";
 import {useStatefulElementRef} from "./markup/portals/utils";
 import {useExpandContent} from "./markup/portals/Tables";

@@ -5,7 +5,7 @@ import {Col, Container, Row, UncontrolledTooltip} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarPhy} from "./NavigationBarPhy";
 import {HeaderStreakGauge} from "../../elements/views/StreakGauge";
-import {useDeviceSize} from "../../../services/device";
+import {useDeviceSize} from "../../../services";
 
 export const HeaderPhy = () => {
     const user = useAppSelector(selectors.user.orNull);

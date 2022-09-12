@@ -17,6 +17,9 @@ export const middleware: Middleware[] = [
     notificationCheckerMiddleware,
     isaacApi.middleware
 ];
+const defaultMiddlewareOptions = {
+    serializableCheck: process.env.NODE_ENV !== 'test'
+}
 
 export const store = configureStore({
     reducer: rootReducer,
@@ -24,7 +27,7 @@ export const store = configureStore({
     // in development, with only thunk included in production.
     // See https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
     middleware: (getDefaultMiddleware) => {
-        const newMiddleware = getDefaultMiddleware().concat(middleware);
+        const newMiddleware = getDefaultMiddleware(defaultMiddlewareOptions).concat(middleware);
         // @ts-ignore
         if (process.env.NODE_ENV !== 'production' && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
             newMiddleware.concat([reduxLogger]);

@@ -38,16 +38,15 @@ import {
     showGroupManagersModal,
     updateGroup,
     selectors,
-    AppState, isaacApi
+    AppState,
+    isaacApi,
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter} from "../../services/navigation";
-import {isStaff} from "../../services/user";
-import {isCS, siteSpecific} from "../../services/siteConstants";
+import {ifKeyIsEnter, isCS, isStaff, siteSpecific} from "../../services";
 
 const stateFromProps = (state: AppState) => (state && {
     groups: selectors.groups.groups(state),

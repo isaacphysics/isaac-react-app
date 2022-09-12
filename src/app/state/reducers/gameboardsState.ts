@@ -1,6 +1,6 @@
 import {ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Action, FasttrackConceptsState} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 
 export const fasttrackConcepts = (state: FasttrackConceptsState = null, action: Action) => {
     switch (action.type) {

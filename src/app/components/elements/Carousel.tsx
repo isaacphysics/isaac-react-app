@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Carousel, CarouselControl, CarouselIndicators, CarouselItem} from 'reactstrap';
-import {ifKeyIsEnter} from "../../services/navigation";
+import {ifKeyIsEnter} from "../../services";
 
 const ControlledCarouselInstance = ({children, collectionTag}: any) => {
     const items = children;
@@ -112,7 +112,7 @@ export const ResponsiveCarousel = ({groupingLimit, children, collectionTag = 'di
                     {children}
                 </ControlledCarouselInstance>
             </div>
-            <div className={`d-none d-md-block ${className ?? ""}`}>
+            <div data-testid={"carousel-inner"} className={`d-none d-md-block ${className ?? ""}`}>
                 <ControlledCarouselInstance collectionTag={collectionTag}>
                     {tuple}
                 </ControlledCarouselInstance>

@@ -11,16 +11,29 @@ import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
 import {debounce, isEqual} from "lodash";
 import Select, {MultiValue} from "react-select";
-import {groupTagSelectionsByParent, logEvent, sortQuestions} from "../../../services/gameboardBuilder";
-import tags from "../../../services/tags";
-import {DIFFICULTY_ICON_ITEM_OPTIONS, EXAM_BOARD_NULL_OPTIONS, SortOrder, STAGE} from "../../../services/constants";
-import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
-import {searchResultIsPublic} from "../../../services/search";
-import {isStaff} from "../../../services/user";
-import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
+import {
+    tags,
+    DIFFICULTY_ICON_ITEM_OPTIONS,
+    EXAM_BOARD_NULL_OPTIONS,
+    getFilteredExamBoardOptions,
+    getFilteredStageOptions,
+    groupTagSelectionsByParent,
+    isCS,
+    isPhy,
+    isStaff,
+    Item,
+    logEvent,
+    searchResultIsPublic,
+    selectOnChange,
+    siteSpecific,
+    SortOrder,
+    sortQuestions,
+    STAGE,
+    useUserContext,
+    removeP3AndC3ForCs
+} from "../../../services";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
-import {Item, selectOnChange} from "../../../services/select";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
 
@@ -91,7 +104,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 examBoards: examBoardString,
                 fasttrack,
                 startIndex,
-                limit: -1
+                limit: 300
             }));
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
@@ -179,7 +192,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS.filter(removeP3AndC3ForCs)} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
             {isCS && <RS.Col lg={6} className={`text-wrap my-2`}>

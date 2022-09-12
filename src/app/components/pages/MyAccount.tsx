@@ -1,4 +1,4 @@
-import React, {Suspense, lazy, useEffect, useMemo, useState} from 'react';
+import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -17,10 +17,10 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
-    ErrorState,
+    adminUserGetRequest,
     AdminUserGetState,
     AppState,
-    adminUserGetRequest,
+    ErrorState,
     getChosenUserAuthSettings,
     resetPassword,
     updateCurrentUser
@@ -38,24 +38,27 @@ import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
+    ACCOUNT_TAB,
     allRequiredInformationIsPresent,
+    history,
+    ifKeyIsEnter,
+    isCS,
     isDobOverThirteen,
+    isStaff,
+    PROGRAMMING_LANGUAGE,
+    SITE_SUBJECT_TITLE,
     validateEmail,
     validateEmailPreferences,
     validatePassword
-} from "../../services/validation";
+} from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
-import {ACCOUNT_TAB, PROGRAMMING_LANGUAGE} from "../../services/constants";
-import {history} from "../../services/history"
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {isStaff} from "../../services/user";
 import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
+
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 const stateToProps = (state: AppState, props: any) => {

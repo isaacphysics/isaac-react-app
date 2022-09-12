@@ -6,11 +6,10 @@ import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
 import {store} from "./app/state";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
-import {printAsciiArtLogoToConsole} from "./app/services/easterEggs/csLogoAsciiArt";
-import * as highlightJsService from "./app/services/highlightJs";
+import {printAsciiArtLogoToConsoleCS, highlightJsService} from "./app/services";
 import {Helmet} from "react-helmet";
 
-printAsciiArtLogoToConsole();
+printAsciiArtLogoToConsoleCS();
 highlightJsService.registerLanguages();
 
 ReactDOM.render(

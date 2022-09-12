@@ -6,10 +6,8 @@ import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {TAG_ID} from "../../services/constants";
-import {pushConceptsToHistory, searchResultIsPublic} from "../../services/search";
+import {pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 

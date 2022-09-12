@@ -1,6 +1,14 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {Button, UncontrolledTooltip} from "reactstrap";
-import {isPhy, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {
+    AUDIENCE_DISPLAY_FIELDS,
+    filterAudienceViewsByProperties,
+    isPhy,
+    SITE_SUBJECT_TITLE,
+    STAGE,
+    stageLabelMap,
+    useUserContext
+} from "../../services";
 import {
     AppState,
     closeActiveModal,
@@ -11,8 +19,6 @@ import {
 } from "../../state";
 import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
-import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
-import {STAGE, stageLabelMap} from "../../services/constants";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import {Helmet} from "react-helmet";
@@ -80,7 +86,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
-        <div className="mr-auto">
+        <div className="mr-auto" data-testid={"main-heading"}>
             {formatPageTitle(currentPageTitle, disallowLaTeX)}
             {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
         </div>

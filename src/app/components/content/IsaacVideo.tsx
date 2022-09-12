@@ -1,7 +1,7 @@
 import React, {useCallback, useContext} from 'react';
 import {VideoDTO} from "../../../IsaacApiTypes";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {NOT_FOUND} from "../../services/constants";
+import {NOT_FOUND} from "../../services";
 import ReactGA from "react-ga";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
 

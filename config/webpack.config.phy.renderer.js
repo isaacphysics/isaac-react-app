@@ -6,7 +6,6 @@ const configPHY = require('./webpack.config.physics');
 const {merge} = require('webpack-merge');
 
 module.exports = env => {
-
     let configPHYrenderer = {
         entry: {
             'isaac-phy-renderer': [resolve('src/index-phy-renderer')],

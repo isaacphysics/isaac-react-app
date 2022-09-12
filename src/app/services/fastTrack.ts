@@ -1,9 +1,7 @@
 import {getRelatedConcepts} from "./topics";
-import {history} from "./history";
+import {DOCUMENT_TYPE, history, NOT_FOUND, useUserContext, UseUserContextReturnType} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, NOT_FOUND} from "./constants";
-import {useUserContext, UseUserContextReturnType} from "./userContext";
 import {AppState, selectors, useAppSelector} from "../state";
 import queryString from "query-string";
 import {Location} from "history";

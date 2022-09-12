@@ -21,14 +21,9 @@ import {BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    difficultiesOrdered,
-    difficultyShortLabelMap,
-    sortIcon,
-    stageLabelMap,
-    stagesOrdered
-} from "../../services/constants";
-import {
+    above,
     allPropertiesFromAGameboard,
+    below,
     BOARD_ORDER_NAMES,
     BoardCompletions,
     boardCompletionSelection,
@@ -36,15 +31,21 @@ import {
     BoardLimit,
     BoardViews,
     determineGameboardSubjects,
+    difficultiesOrdered,
+    difficultyShortLabelMap,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
+    isMobile,
+    isPhy,
+    sortIcon,
+    stageLabelMap,
+    stagesOrdered,
+    useDeviceSize,
     useGameboards
-} from "../../services/gameboards";
-import {above, below, isMobile, useDeviceSize} from "../../services/device";
+} from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
-import {isPhy} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 
@@ -87,7 +88,7 @@ const Board = (props: BoardTableProps) => {
     const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
     return boardView == BoardViews.table ?
-        <tr key={board.id} className="board-card">
+        <tr className="board-card" data-testid={"my-gameboard-table-row"}>
             <td>
                 <div className="board-subject-hexagon-container table-view">
                     {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
@@ -120,7 +121,7 @@ const Board = (props: BoardTableProps) => {
             </td>
         </tr>
         :
-        <Card className="board-card card-neat">
+        <Card className="board-card card-neat" data-testid={"my-gameboard-card"}>
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
                 <div className="board-subject-hexagon-container">
@@ -269,9 +270,8 @@ export const MyGameboards = () => {
                             // Card view
                             <>
                                 <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
-                                    {boards.boards.map(board => <Col>
+                                    {boards.boards.map(board => <Col key={board.id}>
                                         <Board
-                                            key={board.id}
                                             board={board}
                                             selectedBoards={selectedBoards}
                                             setSelectedBoards={setSelectedBoards}

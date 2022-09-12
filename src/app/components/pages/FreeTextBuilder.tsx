@@ -5,7 +5,7 @@ import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {AppState, testQuestion, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
-import {atLeastOne} from "../../services/validation";
+import {atLeastOne} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
 
 interface AugmentedTestCase extends TestCaseDTO {

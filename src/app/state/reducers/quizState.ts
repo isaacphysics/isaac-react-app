@@ -1,5 +1,5 @@
 import {Action, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, NOT_FOUND} from "../../services/constants";
+import {ACTION_TYPE, extractQuestions, isDefined, isFound, NOT_FOUND} from "../../services";
 import {
     ChoiceDTO,
     IsaacQuizDTO,
@@ -8,9 +8,7 @@ import {
     QuizAttemptFeedbackDTO,
     QuizSummaryDTO
 } from "../../../IsaacApiTypes";
-import {isDefined, isFound} from "../../services/miscUtils";
 import produce from "immer";
-import {extractQuestions} from "../../services/quiz";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {

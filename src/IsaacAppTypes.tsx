@@ -29,7 +29,7 @@ import {
     STAGE,
     TAG_ID,
     TAG_LEVEL
-} from "./app/services/constants";
+} from "./app/services";
 import {DropResult} from "react-beautiful-dnd";
 import {Item} from "./app/services/select";
 
@@ -198,10 +198,6 @@ export type Action =
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.FRAGMENT_REQUEST; id: string}
-    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS; id: string; doc: ApiTypes.ContentDTO}
-    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE; id: string}
-
     | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
@@ -304,10 +300,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
     | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-
-    | {type: ACTION_TYPE.NEWS_REQUEST}
-    | {type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS; theNews: ApiTypes.IsaacPodDTO[]}
-    | {type: ACTION_TYPE.NEWS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
@@ -929,4 +921,9 @@ export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "S
 
 export interface ClozeItemDTO extends ItemDTO {
     replacementId?: string;
+}
+
+export interface NewsItemProps {
+    subject: "news" | "physics";
+    orderDecending?: boolean;
 }

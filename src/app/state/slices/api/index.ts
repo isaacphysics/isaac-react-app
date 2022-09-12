@@ -1,4 +1,11 @@
-import {API_PATH, API_REQUEST_FAILURE_MESSAGE, NOT_FOUND, QUESTION_CATEGORY} from "../../../services/constants";
+import {
+    API_PATH,
+    API_REQUEST_FAILURE_MESSAGE,
+    FEATURED_NEWS_TAG,
+    isPhy,
+    NOT_FOUND,
+    QUESTION_CATEGORY
+} from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
@@ -7,10 +14,13 @@ import {
     AssignmentFeedbackDTO,
     GameboardDTO,
     GameboardListDTO,
+    IsaacConceptPageDTO,
+    IsaacPodDTO,
     IsaacWildcard,
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO, UserGroupDTO,
+    UserGameboardProgressSummaryDTO,
+    UserGroupDTO
 } from "../../../../IsaacApiTypes";
 import {
     anonymisationFunctions,
@@ -29,7 +39,6 @@ import {
     NOT_FOUND_TYPE,
     NumberOfBoards
 } from "../../../../IsaacAppTypes";
-import {isPhy} from "../../../services/siteConstants";
 import {SerializedError} from "@reduxjs/toolkit";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
 
@@ -64,6 +73,10 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
     return result;
 }
 
+export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | SerializedError | undefined) => {
+    return error && 'status' in error && error.status === NOT_FOUND ? NOT_FOUND : result;
+}
+
 interface QueryLifecycleSpec<T, R> {
     onQueryStart?: (args: T, dispatch: Dispatch<any>) => void;
     successTitle?: string;
@@ -72,7 +85,6 @@ interface QueryLifecycleSpec<T, R> {
     errorTitle?: string;
     onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>}) => void;
 }
-
 const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, queryFulfilled }: { dispatch: Dispatch<any>, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
     onQueryStart?.(arg, dispatch);
     try {
@@ -121,6 +133,36 @@ const isaacApi = createApi({
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
 
+        // === Content ===
+
+        getNewsPodList: build.query<IsaacPodDTO[], {subject: string; orderDecending?: boolean}>({
+            query: ({subject}) => ({
+                url: `/pages/pods/${subject}`
+            }),
+            transformResponse: (response: {results: IsaacPodDTO[]; totalResults: number}, meta, arg) => {
+                // Sort news pods in order of id (asc or desc depending on orderDecending), with ones tagged "featured"
+                // placed first
+                return response.results.sort((a, b) => {
+                    const aIsFeatured = a.tags?.includes(FEATURED_NEWS_TAG);
+                    const bIsFeatured = b.tags?.includes(FEATURED_NEWS_TAG);
+                    if (aIsFeatured && !bIsFeatured) return -1;
+                    if (!aIsFeatured && bIsFeatured) return 1;
+                    return a.id && b.id
+                        ? a.id.localeCompare(b.id) * (arg.orderDecending ? -1 : 1)
+                        : 0;
+                });
+            },
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Unable to display news"
+            })
+        }),
+
+        getPageFragment: build.query<IsaacConceptPageDTO, string>({
+            query: (fragmentId) => ({
+                url: `/pages/fragments/${fragmentId}`
+            })
+        }),
+
         // === Gameboards ===
         
         getGameboards: build.query<Boards, {startIndex: number, limit: NumberOfBoards, sort: BoardOrder}>({
@@ -140,8 +182,8 @@ const isaacApi = createApi({
         // TODO CP need to make this only fetch if we don't already have the board in state (and the board
         //  contains all question data) : this should be easily do-able with tags.
         // TODO CP could actually do ^this^ by inserting each gameboard fetched by `getGameboards` into the cache
-        // for this endpoint, which will be easy if RTK Query dev implement the requested `upsertQueryData` util
-        // function
+        //  for this endpoint, which will be easy if RTK Query dev implement the requested `upsertQueryData` util
+        //  function
         // TODO MT handle local storage load if gameboardId == null
         // TODO MT handle requesting new gameboard if local storage is also null
         getGameboardById: build.query<GameboardDTO, string | null>({
@@ -207,13 +249,19 @@ const isaacApi = createApi({
                 url: `gameboards/${boardId}`,
                 method: "POST",
                 params: {title: newTitle},
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Linking the gameboard to your account failed"
             })
         }),
 
         linkUserToGameboard: build.mutation<void, string>({
             query: (boardId) => ({
                 url: `gameboards/user_gameboards/${boardId}`,
-                method: "POST",
+                method: "POST"
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Linking the gameboard to your account failed"
             })
         }),
 

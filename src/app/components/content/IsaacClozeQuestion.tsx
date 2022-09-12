@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Label} from "reactstrap";
 import {IsaacClozeQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {useCurrentQuestionAttempt} from "../../services/questions";
+import {buildUseKeyboardSensor, isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
     DragDropContext,
@@ -17,15 +17,22 @@ import {
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
-import {buildUseKeyboardSensor} from "../../services/clozeQuestionKeyboardSensor";
 
-const augmentInlineItemWithUniqueReplacementID = (idv: ClozeItemDTO) => idv ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
+const augmentInlineItemWithUniqueReplacementID = (idv: ClozeItemDTO | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
 const augmentNonSelectedItemWithReplacementID = (item: ClozeItemDTO) => ({...item, replacementId: item.id});
-const itemNotInAttempt = (currentAttempt: ItemChoiceDTO) => (i: ClozeItemDTO) => !currentAttempt.items?.map(si => si?.id).includes(i.id);
+const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (ItemDTO | undefined)[]}) => (i: ClozeItemDTO | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
+
+const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
+const NULL_CLOZE_ITEM: ItemDTO = {
+    type: "item",
+    id: NULL_CLOZE_ITEM_ID
+};
+const replaceNullItems = (items: ItemDTO[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
 
 const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
+    const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
+    const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
 
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
     const withReplacement = doc.withReplacement ?? false;
@@ -48,7 +55,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
             // If the question allows duplicates, then the items in the non-selected item section should never change
             //  (apart from on question load - this case is handled in the initial state of nonSelectedItems)
             if (!withReplacement) {
-                setNonSelectedItems(nsis => nsis.filter(itemNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) || []);
+                setNonSelectedItems(nsis => nsis.filter(itemNotNullAndNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) || []);
             }
         }
     }, [currentAttempt, withReplacement]);
@@ -59,7 +66,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     useEffect(function updateStateOnDocChange() {
         setInlineDropValues((currentAttempt?.items ?? []).map(augmentInlineItemWithUniqueReplacementID));
         if (currentAttempt && !withReplacement) {
-            setNonSelectedItems(doc.items ? [...doc.items].filter(itemNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) : []);
+            setNonSelectedItems(doc.items ? [...doc.items].filter(itemNotNullAndNotInAttempt(currentAttempt)).map(augmentNonSelectedItemWithReplacementID) : []);
         } else {
             setNonSelectedItems(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
         }
@@ -170,13 +177,14 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
             // Update attempt since an inline drop zone changed
             const itemChoice: ItemChoiceDTO = {
                 type: "itemChoice",
-                items: idvs.map(x => {
-                    if (x) {
-                        const {replacementId, ...itemDto} = x;
+                items: Array(registeredDropRegionIDs.size).fill(null).map((_, i) => {
+                    const item = idvs[i];
+                    if (item) {
+                        const {replacementId, ...itemDto} = item;
                         return itemDto as ItemDTO;
                     }
-                    // Really, items should be a list of type (ItemDTO | undefined), but this is a workaround
-                    return x as unknown as ItemDTO;
+                    // Return a "null item" to indicate a hole in the answer
+                    return NULL_CLOZE_ITEM;
                 })
             };
             dispatchSetCurrentAttempt(itemChoice);

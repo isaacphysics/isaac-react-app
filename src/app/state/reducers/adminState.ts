@@ -1,6 +1,6 @@
 import {RegisteredUserDTO, TestCaseDTO, UserSummaryForAdminUsersDTO} from "../../../IsaacApiTypes";
 import {Action, AdminStatsResponse, ContentErrorsResponse, TemplateEmail} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../../services/constants";
+import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../../services";
 
 export type AdminUserSearchState = UserSummaryForAdminUsersDTO[] | null;
 export const adminUserSearch = (adminUserSearch: AdminUserSearchState = null, action: Action) => {

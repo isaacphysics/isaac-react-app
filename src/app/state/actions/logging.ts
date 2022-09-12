@@ -1,5 +1,4 @@
-import {api} from "../../services/api";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE, api} from "../../services";
 
 // Generic log action
 export const logAction = (eventDetails: object) => {

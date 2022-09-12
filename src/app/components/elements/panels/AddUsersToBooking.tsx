@@ -3,17 +3,15 @@ import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
     adminUserSearchRequest,
+    AppState,
     openActiveModal,
-    useAppDispatch,
-    useAppSelector,
     selectors,
-    AppState
+    useAppDispatch,
+    useAppSelector
 } from "../../../state";
-import {atLeastOne, zeroOrLess} from "../../../services/validation";
+import {atLeastOne, formatManageBookingActionButtonMessage, NOT_FOUND, zeroOrLess} from "../../../services";
 import {DateString} from "../DateString";
-import {NOT_FOUND} from "../../../services/constants";
 import {userBookingModal} from "../modals/UserBookingModal";
-import {formatManageBookingActionButtonMessage} from "../../../services/events";
 
 export const AddUsersToBooking = () => {
     const dispatch = useAppDispatch();

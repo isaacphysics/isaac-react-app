@@ -1,6 +1,6 @@
 import {union, mapValues} from "lodash"
 import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
-import {ACTION_TYPE} from "../../app/services/constants";
+import {ACTION_TYPE} from "../../app/services";
 import {Action, AppGroup, AppGroupMembership, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
 import {GameboardDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 import {createMockAPIAction} from "./utils";

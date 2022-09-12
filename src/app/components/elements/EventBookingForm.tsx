@@ -4,9 +4,7 @@ import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {studentOnlyEventMessage} from "../../services/events";
-import {isCS} from "../../services/siteConstants";
-import {examBoardLabelMap, stageLabelMap} from "../../services/constants";
+import {examBoardLabelMap, isCS, stageLabelMap, studentOnlyEventMessage} from "../../services";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;

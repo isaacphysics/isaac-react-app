@@ -1,16 +1,23 @@
 import React, {Dispatch} from "react";
-import {api} from "../../services/api";
-import {history} from "../../services/history";
 import {
     ACTION_TYPE,
+    api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE, EventStageFilter,
+    atLeastOne,
+    augmentEvent,
+    DOCUMENT_TYPE,
+    EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
+    history,
+    isDefined,
+    isFirstLoginInPersistence,
+    KEY,
     MEMBERSHIP_STATUS,
+    persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID
-} from "../../services/constants";
+} from "../../services";
 import {
     Action,
     AdditionalInformation,
@@ -50,36 +57,30 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
 import {
     additionalManagerRemovalModal,
     groupInvitationModal,
     groupManagersModal
 } from "../../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
-import {isFirstLoginInPersistence} from "../../services/firstLogin";
 import {AxiosError} from "axios";
 import ReactGA from "react-ga";
-import {augmentEvent} from "../../services/events";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
-import {atLeastOne} from "../../services/validation";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
-import {isDefined} from "../../services/miscUtils";
 import {
+    AppDispatch,
     AppState,
-    store,
-    selectors,
-    errorSlice,
-    routerPageChange,
     closeActiveModal,
-    openActiveModal,
-    showToast,
+    errorSlice,
+    isaacApi,
     logAction,
-    isaacApi, AppDispatch
+    openActiveModal,
+    routerPageChange,
+    selectors,
+    showToast,
+    store
 } from "../index";
-import {AnyAction} from "redux";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -176,7 +177,11 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
@@ -187,7 +192,6 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
     }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
@@ -348,8 +352,11 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
             dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
             return;
         }
-
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
@@ -357,7 +364,6 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
@@ -415,7 +421,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
@@ -749,17 +759,6 @@ export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatc
         dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
     } catch (e) {
         dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
-    }
-};
-
-// Page fragments
-export const fetchFragment = (id: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.FRAGMENT_REQUEST, id});
-    try {
-        const response = await api.fragments.get(id);
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS, id, doc: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE, id});
     }
 };
 
@@ -1367,18 +1366,6 @@ export const getEventsPodList = (numberOfEvents: number) => async (dispatch: Dis
     } catch (e) {
         dispatch({type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Unable to display events", e));
-    }
-};
-
-export const getNewsPodList = (subject: string) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.NEWS_REQUEST});
-        const response = await api.news.get(subject);
-        const newsList = response.data.results;
-        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS, theNews: newsList})
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.NEWS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Unable to display news", e));
     }
 };
 

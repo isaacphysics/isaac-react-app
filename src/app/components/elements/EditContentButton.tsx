@@ -1,7 +1,7 @@
 import React from "react";
 import {selectors, useAppSelector} from "../../state";
 import {ExternalLink} from "./ExternalLink";
-import {EDITOR_URL} from "../../services/constants";
+import {EDITOR_URL} from "../../services";
 import {ContentDTO} from "../../../IsaacApiTypes";
 
 export interface EditContentButtonProps {

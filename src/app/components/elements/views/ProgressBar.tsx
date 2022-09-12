@@ -1,5 +1,5 @@
 import React from 'react';
-import {isDefined} from "../../../services/miscUtils";
+import {isDefined} from "../../../services";
 
 interface ProgressBarProps {
     percentage: number;

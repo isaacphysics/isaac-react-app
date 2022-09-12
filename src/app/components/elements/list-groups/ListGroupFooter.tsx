@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {ListGroup, ListGroupItem} from "reactstrap";
-import {siteSpecific} from "../../../services/siteConstants";
+import {siteSpecific} from "../../../services";
 
 interface FooterLinkProps {
     linkTo: string;

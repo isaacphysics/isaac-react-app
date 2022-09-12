@@ -6,21 +6,26 @@ import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
-import {isTeacher} from "../../services/user";
-import {Redirect} from "react-router";
-import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
-import tags from "../../services/tags";
-import {showWildcard} from "../../services/gameboards";
-import queryString from "query-string";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
-    filterAudienceViewsByProperties
-} from "../../services/userContext";
-import {generateQuestionTitle} from "../../services/questions";
+    filterAudienceViewsByProperties,
+    generateQuestionTitle,
+    isCS,
+    isDefined,
+    isFound,
+    isPhy,
+    isTeacher,
+    NOT_FOUND,
+    showWildcard,
+    siteSpecific,
+    TAG_ID,
+    TAG_LEVEL,
+    tags
+} from "../../services";
+import {Redirect} from "react-router";
+import queryString from "query-string";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
-import {isDefined, isFound} from "../../services/miscUtils";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";

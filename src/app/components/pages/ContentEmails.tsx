@@ -5,7 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {debounce} from 'lodash';
 import {convert} from 'html-to-text';
-import {siteSpecific} from "../../services/siteConstants";
+import {siteSpecific} from "../../services";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";
 
 interface ContentEmailsProps {

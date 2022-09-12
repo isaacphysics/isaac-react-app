@@ -1,9 +1,8 @@
 import React, {useCallback, useEffect} from "react";
-import {useAppDispatch, clearQuizAttempt, loadQuizAssignmentAttempt} from "../../../state";
+import {clearQuizAttempt, loadQuizAssignmentAttempt, useAppDispatch} from "../../../state";
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {isDefined} from "../../../services/miscUtils";
-import {useCurrentQuizAttempt} from "../../../services/quiz";
+import {isDefined, useCurrentQuizAttempt} from "../../../services";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";

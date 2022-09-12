@@ -1,15 +1,12 @@
-import {useAppDispatch, useAppSelector, AppState, getEventOverviews} from "../../../state";
+import {AppState, getEventOverviews, useAppDispatch, useAppSelector} from "../../../state";
 import React, {useEffect, useState} from "react";
 import {Accordion} from "../Accordion";
 import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
-import {atLeastOne, zeroOrLess} from "../../../services/validation";
-import {sortOnPredicateAndReverse} from "../../../services/sorting";
+import {atLeastOne, isCS, isEventLeader, sortOnPredicateAndReverse, zeroOrLess} from "../../../services";
 import {PotentialUser} from "../../../../IsaacAppTypes";
-import {isEventLeader} from "../../../services/user";
-import {isCS} from "../../../services/siteConstants";
 
 export enum EventOverviewFilter {
     "All events" = "ALL",

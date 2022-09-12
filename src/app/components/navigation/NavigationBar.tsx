@@ -1,6 +1,6 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {HTMLProps, useEffect, useMemo, useState} from "react";
 import {Link} from "react-router-dom";
-import {useAppDispatch, useAppSelector, isaacApi, loadQuizAssignedToMe, selectors} from "../../state";
+import {isaacApi, loadQuizAssignedToMe, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {
     Badge,
     Collapse,
@@ -14,12 +14,10 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import {filterAssignmentsByStatus} from "../../services/assignments";
-import {isCS} from "../../services/siteConstants";
-import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
-import {isFound} from "../../services/miscUtils";
+import {filterAssignmentsByStatus, isCS, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
@@ -53,27 +51,28 @@ export const NavigationSection = ({children, title, topLevelLink, to}: Navigatio
     </MenuOpenContext.Consumer>
 );
 
-export function MenuBadge({count, message}: {count: number, message: string}) {
+export function MenuBadge({count, message, ...rest}: {count: number, message: string} & HTMLProps<HTMLDivElement>) {
     if (count == 0) {
         return RenderNothing;
     }
-    return <React.Fragment>
+    return <div {...rest}>
         <span className="badge badge-pill bg-grey ml-2">{count}</span>
-        <span className="sr-only">{message}</span>
-    </React.Fragment>;
+        <span className="sr-only"> {message}</span>
+    </div>;
 }
 
 export function useAssignmentsCount() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const quizzes = useAppSelector(state => state?.quizAssignedToMe);
-    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery();
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(user?.loggedIn ? undefined : skipToken);
 
+    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
         if (user?.loggedIn) {
             dispatch(loadQuizAssignedToMe());
         }
-    }, [dispatch, user]);
+    }, [dispatch, loggedInUserId]);
 
     const assignmentsCount = useMemo(() => assignments ?
         filterAssignmentsByStatus(assignments).inProgressRecent.length

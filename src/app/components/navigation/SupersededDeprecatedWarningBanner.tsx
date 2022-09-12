@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {isStudent, isTeacher} from "../../services/user";
+import {isStudent, isTeacher} from "../../services";
 
 export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
     const dispatch = useAppDispatch();

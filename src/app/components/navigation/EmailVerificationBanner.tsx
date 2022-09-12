@@ -3,7 +3,7 @@ import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} fro
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import {Button} from 'reactstrap';
-import {WEBMASTER_EMAIL} from '../../services/siteConstants';
+import {WEBMASTER_EMAIL} from "../../services";
 
 export const EmailVerificationBanner = () => {
     const dispatch = useAppDispatch();

@@ -5,17 +5,26 @@ import * as RS from "reactstrap";
 import {Col, Container, Form, Input, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {DOCUMENT_TYPE, documentDescription, SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
-import {parseLocationSearch, pushSearchToHistory, searchResultIsPublic} from "../../services/search";
+import {
+    DOCUMENT_TYPE,
+    documentDescription,
+    isCS,
+    isIntendedAudience,
+    isPhy,
+    parseLocationSearch,
+    pushSearchToHistory,
+    SEARCH_CHAR_LENGTH_LIMIT,
+    searchResultIsPublic,
+    selectOnChange,
+    shortcuts,
+    siteSpecific,
+    useUserContext
+} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
-import {isIntendedAudience, useUserContext} from "../../services/userContext";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
-import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
 import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {selectOnChange} from "../../services/select";
 
 interface Item<T> {
     value: T;

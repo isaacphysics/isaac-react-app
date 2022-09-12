@@ -1,27 +1,27 @@
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
+    AUDIENCE_DISPLAY_FIELDS,
+    determineAudienceViews,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
+    filterAudienceViewsByProperties,
+    generateQuestionTitle,
+    isCS,
+    isIntendedAudience,
+    isPhy,
+    notRelevantMessage,
     SEARCH_RESULT_TYPE,
+    siteSpecific,
     TAG_ID,
-    TAG_LEVEL
-} from "../../../services/constants";
+    TAG_LEVEL,
+    tags,
+    useUserContext
+} from "../../../services";
 import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import React, {useRef} from "react";
-import tags from "../../../services/tags";
-import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
-import {
-    AUDIENCE_DISPLAY_FIELDS,
-    determineAudienceViews,
-    filterAudienceViewsByProperties,
-    isIntendedAudience,
-    notRelevantMessage,
-    useUserContext
-} from "../../../services/userContext";
 import {selectors, useAppSelector} from "../../../state";
 import {v4 as uuid_v4} from "uuid";
-import {generateQuestionTitle} from "../../../services/questions";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";

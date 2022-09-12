@@ -1,5 +1,13 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, TAG_ID} from "./constants";
+import {
+    API_PATH,
+    EventStageFilter,
+    EventTypeFilter,
+    MEMBERSHIP_STATUS,
+    securePadCredentials,
+    securePadPasswordReset,
+    TAG_ID
+} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
     AuthenticationProvider,
@@ -24,7 +32,6 @@ import {
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
-import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -287,11 +294,6 @@ export const api = {
             return endpoint.get(`/pages/${id}`);
         },
     },
-    fragments: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/fragments/${id}`);
-        },
-    },
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
@@ -360,11 +362,6 @@ export const api = {
         },
         deleteManager: (group: AppTypes.AppGroup, manager: ApiTypes.UserSummaryWithEmailAddressDTO): AxiosPromise => {
             return endpoint.delete(`/groups/${group.id}/manager/${manager.id}`);
-        }
-    },
-    news: {
-        get: (subject: string): AxiosPromise<{results: ApiTypes.IsaacPodDTO[]; totalResults: number}> => {
-            return endpoint.get(`/pages/pods/${subject}`)
         }
     },
     events: {

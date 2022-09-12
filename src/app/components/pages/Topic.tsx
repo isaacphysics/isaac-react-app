@@ -1,15 +1,21 @@
 import React, {useEffect} from "react"
 import {Link, withRouter} from "react-router-dom";
-import {selectors, useAppDispatch, useAppSelector, AppState, fetchTopicSummary} from "../../state";
+import {AppState, fetchTopicSummary, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {getRelatedDocs} from "../../services/topics";
+import {
+    ALL_TOPICS_CRUMB,
+    atLeastOne,
+    examBoardLabelMap,
+    getRelatedDocs,
+    NOT_FOUND,
+    stageLabelMap,
+    TAG_ID,
+    useUserContext
+} from "../../services";
 import {Button, Card, CardBody, CardTitle, Col, Container, Row} from "reactstrap";
-import {ALL_TOPICS_CRUMB, examBoardLabelMap, NOT_FOUND, stageLabelMap, TAG_ID} from "../../services/constants";
-import {useUserContext} from "../../services/userContext";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
-import {atLeastOne} from "../../services/validation";
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 

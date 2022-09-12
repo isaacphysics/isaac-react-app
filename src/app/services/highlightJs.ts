@@ -7,7 +7,7 @@ import sql from 'highlight.js/lib/languages/sql'
 import {LanguageFn} from "highlight.js";
 const importHljsCore = import("highlight.js/lib/core");
 
-export function registerLanguages() {
+function registerLanguages() {
     importHljsCore.then(({default: hljs}) => {
         hljs.registerLanguage('javascript', javascript);
         hljs.registerLanguage('python', python);
@@ -20,7 +20,7 @@ export function registerLanguages() {
     });
 }
 
-export function addLineNumbers(code: Element) {
+function addLineNumbers(code: Element) {
     // Adapt the PrismJS code for line numbering:
     // https://github.com/PrismJS/prism/blob/v1.24.1/plugins/line-numbers/prism-line-numbers.js
     // This will not work for code that is wrapped onto multiple lines; see the PrismJS
@@ -165,3 +165,8 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         ]
     };
 }
+
+export const highlightJsService = {
+    registerLanguages,
+    addLineNumbers
+};

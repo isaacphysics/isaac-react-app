@@ -23,9 +23,8 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history} from "../../services/history";
+import {history, isCS, SITE_SUBJECT_TITLE} from "../../services";
 import {Redirect} from "react-router";
-import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
