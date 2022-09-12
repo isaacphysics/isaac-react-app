@@ -10,7 +10,6 @@ import {
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
-    removeP3AndC3ForCs,
     STAGE,
     TAG_ID
 } from '../../services/constants';
@@ -307,7 +306,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 </RS.Label>
                 <Select
                     id="difficulty-selector" isClearable isMulti
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS.filter(removeP3AndC3ForCs)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS}
                     value={difficulties}
                     onChange={selectOnChange(setDifficulties, false)}
                 />

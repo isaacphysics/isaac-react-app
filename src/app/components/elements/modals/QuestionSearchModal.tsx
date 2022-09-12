@@ -11,7 +11,6 @@ import tags from "../../../services/tags";
 import {
     DIFFICULTY_ICON_ITEM_OPTIONS,
     EXAM_BOARD_NULL_OPTIONS,
-    removeP3AndC3ForCs,
     SortOrder,
     STAGE
 } from "../../../services/constants";
@@ -180,7 +179,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
                 <Select
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS.filter(removeP3AndC3ForCs)} onChange={selectOnChange(setSearchDifficulties, true)}
+                    options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
             {isCS && <RS.Col lg={6} className={`text-wrap my-2`}>
