@@ -424,8 +424,7 @@ export const SetAssignments = () => {
             </h3>
             : <>
                 {boards && boards.totalResults > 0 && <h4>
-                    You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"}
-                    ready to assign...
+                    You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...
                 </h4>}
                 {!boards && <h4>
                     You have <IsaacSpinner size="sm" inline/> gameboards ready to assign...

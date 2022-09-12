@@ -200,37 +200,34 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>
-                                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual &&
-                                        <tr>
-                                            <td>Location:</td>
-                                            <td>
-                                                {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
-                                            </td>
-                                        </tr>}
-                                    {event.isNotClosed && !event.hasExpired &&
-                                        <tr>
-                                            <td>Availability:</td>
-                                            <td>
-                                                {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
-                                                {zeroOrLess(event.placesAvailable) && <div>
-                                                    <strong className="text-danger">FULL</strong>
-                                                    {event.isAStudentEvent && isTeacher(user) &&
-                                                    <span> - for student bookings</span>}
-                                                </div>}
-                                                {event.userBookingStatus === "CONFIRMED" && <span> - <span
-                                                    className="text-success">You are booked on this event!</span></span>}
-                                                {event.userBookingStatus === 'RESERVED' &&
-                                                <span> - <span className="text-success">
-                                                        You have been reserved a place on this event!
-                                                        <RS.Button color="link text-success"
-                                                                   onClick={openAndScrollToBookingForm}>
-                                                            <u>Complete your registration below</u>.
-                                                        </RS.Button>
-                                                    </span></span>}
-                                                {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
-                                                {event.userBookingStatus === "WAITING_LIST" &&
-                                                <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
-                                                {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
+                                    {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
+                                        <td>Location:</td>
+                                        <td>
+                                            {event.location.address.addressLine1}, {event.location.address.addressLine2}, {event.location.address.town}, {event.location.address.postalCode}
+                                        </td>
+                                    </tr>}
+                                    {isVirtual && <tr>
+                                        <td>Location:</td>
+                                        <td>Online</td>
+                                    </tr>}
+                                    {event.isNotClosed && !event.hasExpired && <tr>
+                                        <td>Availability:</td>
+                                        <td>
+                                            {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
+                                            {zeroOrLess(event.placesAvailable) && <div>
+                                                <strong className="text-danger">FULL</strong>
+                                                {event.isAStudentEvent && isTeacher(user) && <span> - for student bookings</span>}
+                                            </div>}
+                                            {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
+                                            {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
+                                                You have been reserved a place on this event!
+                                                <RS.Button color="link text-success" onClick={openAndScrollToBookingForm}>
+                                                    <u>Complete your registration below</u>.
+                                                </RS.Button>
+                                            </span></span>}
+                                            {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
+                                            {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
+                                            {event.isStudentOnly && !studentOnlyRestrictionSatisfied &&
                                                 <div className="text-muted font-weight-normal">
                                                     {studentOnlyEventMessage(eventId)}
                                                 </div>

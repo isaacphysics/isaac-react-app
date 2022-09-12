@@ -7,11 +7,14 @@ import {
 } from "isaac-graph-sketcher/dist/src/GraphSketcher";
 import {isDefined} from "../../../services";
 import debounce from "lodash/debounce";
+import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
+import {Markup} from "../markup";
 
 interface GraphSketcherModalProps {
     close: () => void;
     initialState?: GraphSketcherState;
     onGraphSketcherStateChange: (state: GraphSketcherState) => void;
+    question?: IsaacGraphSketcherQuestionDTO;
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
@@ -107,6 +110,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                 <option value="Orange">Orange</option>
                 <option value="Green">Green</option>
             </select>
+            {props.question?.value &&
+                <Markup trusted-markup-encoding={props.question.encoding}>
+                    {props.question.value}
+                </Markup>}
         </div>
     </div>
 }

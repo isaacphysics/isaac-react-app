@@ -14,9 +14,10 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import {filterAssignmentsByStatus, isCS, isFound, partitionCompleteAndIncompleteQuizzes} from "../../services";
+import {filterAssignmentsByStatus, isCS, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
@@ -64,13 +65,14 @@ export function useAssignmentsCount() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const quizzes = useAppSelector(state => state?.quizAssignedToMe);
-    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery();
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(user?.loggedIn ? undefined : skipToken);
 
+    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
         if (user?.loggedIn) {
             dispatch(loadQuizAssignedToMe());
         }
-    }, [dispatch, user]);
+    }, [dispatch, loggedInUserId]);
 
     const assignmentsCount = useMemo(() => assignments ?
         filterAssignmentsByStatus(assignments).inProgressRecent.length

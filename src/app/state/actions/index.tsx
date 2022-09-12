@@ -175,7 +175,11 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
@@ -186,7 +190,6 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
     }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
@@ -347,8 +350,11 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
             dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
             return;
         }
-
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
@@ -356,7 +362,6 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
@@ -414,7 +419,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
             ReactGA.event({

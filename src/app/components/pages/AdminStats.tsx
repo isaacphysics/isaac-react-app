@@ -66,7 +66,10 @@ export const AdminStats = () => {
                                             <li>Other: {adminStats.userGenders.OTHER || 0} ({
                                                 asPercentage(adminStats.userGenders.OTHER, adminStats.userGenders.TOTAL)}%)
                                             </li>
-                                            <li>Unknown: {adminStats.userGenders.UNKNOWN || 0} ({
+                                            <li>Prefer not to say: {adminStats.userGenders.PREFER_NOT_TO_SAY || 0} ({
+                                                asPercentage(adminStats.userGenders.PREFER_NOT_TO_SAY, adminStats.userGenders.TOTAL)}%)
+                                            </li>
+                                            <li>Missing data: {adminStats.userGenders.UNKNOWN || 0} ({
                                                 asPercentage(adminStats.userGenders.UNKNOWN, adminStats.userGenders.TOTAL)}%)
                                             </li>
                                         </ul>

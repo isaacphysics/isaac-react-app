@@ -1,6 +1,5 @@
 import {api} from "./";
 import {UserSnapshot} from "../../IsaacAppTypes";
-import {UserSummaryDTO} from "../../IsaacApiTypes";
 import {getSnapshot, partiallyUpdateUserSnapshot, store} from "../state";
 
 let notificationWebSocket: WebSocket | null  = null;
@@ -8,13 +7,13 @@ let webSocketCheckTimeout: number | null = null;
 let webSocketErrorCount = 0;
 let lastKnownServerTime: number | null = null;
 
-const openNotificationSocket = function(user: UserSummaryDTO | null): void {
+const openNotificationSocket = function(userId: number | undefined): void {
 
     if (notificationWebSocket !== null) {
         return;
     }
 
-    if (!user) {
+    if (userId === undefined) {
         return;
     }
 
@@ -109,7 +108,7 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
     }
 }
 
-export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnapshot?: UserSnapshot): void {
+export const checkForWebSocket = function(userId?: number, userSnapshot?: UserSnapshot): void {
     try {
         if (notificationWebSocket !== null) {
             if (!userSnapshot) {
@@ -124,7 +123,7 @@ export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnap
             }
             webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 60000);
         } else {
-            openNotificationSocket(user);
+            openNotificationSocket(userId);
         }
     } catch (e) {
         console.log("Error establishing WebSocket connection!", e)

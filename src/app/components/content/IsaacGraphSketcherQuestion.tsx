@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
-import {IsaacTabbedHints} from "./IsaacHints";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher/dist/src/GraphSketcher";
 import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 
 const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {
 
@@ -68,7 +68,12 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, [currentAttempt]);
 
     return <div className="graph-sketcher-question">
-        <div className="sketch-preview" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
+        <div className="question-content">
+            <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
+                {doc.children}
+            </IsaacContentValueOrChildren>
+        </div>
+        <div className="sketch-preview text-center" onClick={openModal} onKeyUp={openModal} role={readonly ? undefined : "button"}
              tabIndex={readonly ? undefined : 0}>
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
         </div>
@@ -76,8 +81,8 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             close={closeModal}
             onGraphSketcherStateChange={onGraphSketcherStateChange}
             initialState={initialState}
+            question={doc}
         />}
-        <IsaacTabbedHints questionPartId={questionId} hints={doc.hints} />
     </div>
 };
 export default IsaacGraphSketcherQuestion;
