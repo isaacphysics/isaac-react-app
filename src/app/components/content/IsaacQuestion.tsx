@@ -7,7 +7,7 @@ import {selectors} from "../../state/selectors";
 import * as RS from "reactstrap";
 import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
 import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, ConfidenceContext} from "../../../IsaacAppTypes";
+import {AccordionSectionContext, ConfidenceContext, FigureNumberingContext} from "../../../IsaacAppTypes";
 import {RouteComponentProps, withRouter} from "react-router";
 import {
     determineFastTrackPrimaryAction,
@@ -21,8 +21,18 @@ import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
+import {BEST_ATTEMPT_HIDDEN, ContentDTO} from "../../../IsaacApiTypes";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
+import {clone} from "lodash";
+
+const ValidationResponse = ({doc}: {doc: ContentDTO}) => {
+    const figureNumbering = useContext(FigureNumberingContext);
+    return <FigureNumberingContext.Provider value={clone(figureNumbering)}>
+        <WithFigureNumbering doc={doc}>
+            <IsaacContent doc={doc}/>
+        </WithFigureNumbering>
+    </FigureNumberingContext.Provider>;
+};
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
@@ -124,9 +134,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
-                            <WithFigureNumbering doc={validationResponse.explanation}>
-                                <IsaacContent doc={validationResponse.explanation}/>
-                            </WithFigureNumbering>
+                            <ValidationResponse doc={validationResponse.explanation}/>
                         }
                     </div>}
                 </div>}
