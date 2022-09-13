@@ -69,9 +69,11 @@ import {EventOverviewFilter} from "../../components/elements/panels/EventOvervie
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
 import {
+    AppDispatch,
     AppState,
     closeActiveModal,
     errorSlice,
+    isaacApi,
     logAction,
     openActiveModal,
     routerPageChange,
@@ -786,7 +788,7 @@ interface Attempt {
 }
 const attempts: {[questionId: string]: Attempt} = {};
 
-export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export const attemptQuestion = (questionId: string, attempt: ChoiceDTO, gameboardId?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
     const state = getState();
     const isAnonymous = !(state && state.user && state.user.loggedIn);
     const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
@@ -795,6 +797,9 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
         dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
         const response = await api.questions.answer(questionId, attempt);
         dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId, response: response.data});
+        if (gameboardId) {
+            dispatch(isaacApi.util.invalidateTags([{type: "Gameboard", id: gameboardId}]));
+        }
 
         // This mirrors the soft limit checking on the server
         let lastAttempt = attempts[questionId];

@@ -127,7 +127,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms"],
+    tagTypes: ["GlossaryTerms", "Gameboard"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
@@ -189,6 +189,7 @@ const isaacApi = createApi({
             query: (boardId) => ({
                 url: `/gameboards/${boardId}`
             }),
+            providesTags: (result) => result && result.id ? [{type: "Gameboard", id: result.id}] : []
         }),
         
         getWildcards: build.query<IsaacWildcard[], void>({
