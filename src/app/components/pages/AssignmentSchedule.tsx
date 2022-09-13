@@ -1,48 +1,48 @@
 import {assignGameboard, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {sortBy, groupBy, mapValues, range} from "lodash";
+import {groupBy, mapValues, range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import React, {
-    ChangeEvent,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState
-} from "react";
+import React, {ChangeEvent, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment} from "react";
 import {
-    Container,
-    Row,
-    Col,
+    Alert,
     Button,
-    CardHeader,
+    ButtonGroup,
     Card,
     CardBody,
-    Label,
+    CardFooter,
+    CardHeader,
+    Col,
+    Container,
     Input,
-    ModalHeader,
+    Label,
+    Modal,
     ModalBody,
     ModalFooter,
-    Modal,
-    CardFooter,
-    Alert,
-    ButtonGroup
+    ModalHeader,
+    Row
 } from "reactstrap";
-import {BoardLimit, formatBoardOwner} from "../../services/gameboards";
-import {BoardOrder, AssignmentTimelineContext, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
+import {
+    ASSIGNMENT_PROGRESS_PATH,
+    BoardLimit,
+    formatBoardOwner,
+    getAssignmentStartDate,
+    isDefined,
+    isStaff,
+    Item,
+    itemise,
+    MONTH_NAMES,
+    nthHourOf,
+    selectOnChange,
+    siteSpecific,
+    TODAY
+} from "../../services";
+import {AssignmentTimelineContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
-import {ASSIGNMENT_PROGRESS_PATH, MONTH_NAMES, TODAY} from "../../services/constants";
 import classNames from "classnames";
-import {isStaff} from "../../services/user";
 import Select from "react-select";
-import {Item, itemise, selectOnChange} from "../../services/select";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
-import {isDefined} from "../../services/miscUtils";
-import {siteSpecific} from "../../services/siteConstants";
 import {GameboardViewerInner} from "./Gameboard";
-import {useLocation} from "react-router-dom";
-import {getAssignmentStartDate} from "../../services/assignments";
+import {Link, useLocation} from "react-router-dom";
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -59,7 +59,6 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const assignmentStartDate = getAssignmentStartDate(assignment);
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
-            {/*make this a link to the board, or have a "view board" link*/}
             <h4><a target={"_blank"} href={assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined}>{assignment.gameboard?.title ?? "No gameboard title"}</a></h4>
             <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
@@ -165,7 +164,6 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
     </>;
 }
 
-type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
 interface AssignmentModalProps {
     user: RegisteredUserDTO;
     refetchAssignmentsSetByMe: () => void;
@@ -192,13 +190,13 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
         if (assignmentToCopy && assignmentToCopy.gameboardId) {
             // Copy existing assignment
             setSelectedGameboard([{value: assignmentToCopy.gameboardId, label: boardsById[assignmentToCopy.gameboardId]?.title ?? "No gameboard title"}]);
-            setScheduledStartDate(assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : TODAY());
+            setScheduledStartDate(assignmentToCopy.scheduledStartDate ? new Date(assignmentToCopy.scheduledStartDate.valueOf()) : undefined);
             setDueDate(assignmentToCopy.dueDate ? new Date(assignmentToCopy.dueDate.valueOf()) : undefined);
             setAssignmentNotes(assignmentToCopy.notes);
         } else {
             // Create from scratch
             setSelectedGameboard(undefined);
-            setScheduledStartDate(TODAY());
+            setScheduledStartDate(undefined);
             setDueDate(undefined);
             setAssignmentNotes(undefined);
         }
@@ -210,7 +208,7 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
             boardId: selectedGameboard[0]?.value,
             groups: [...selectedGroups],
             dueDate,
-            scheduledStartDate,
+            scheduledStartDate: scheduledStartDate && nthHourOf(7, scheduledStartDate),
             notes: assignmentNotes
         })).then((result) => {
             if (assignGameboard.fulfilled.match(result)) {
@@ -229,6 +227,8 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getUTCMonth() + 1;
 
+    const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() >= dueDate.valueOf() : false;
+
     useEffect(() => {
         if (showAssignmentModal) setShowGameboardPreview(false);
     }, [showAssignmentModal]);
@@ -241,7 +241,7 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     return <Modal isOpen={showAssignmentModal} toggle={toggleAssignModal}>
         <ModalHeader close={
             <button className="close" onClick={toggleAssignModal}>
-                {"Close"}
+                Close
             </button>
         }>
             Set new assignment
@@ -277,6 +277,7 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
             <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
                 <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
+                {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after start date.</small>}
             </Label>
             {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
                 <Input type="textarea"
@@ -305,9 +306,8 @@ const AssignmentModal = ({user, refetchAssignmentsSetByMe, showAssignmentModal, 
     </Modal>;
 }
 
-export const AssignmentSchedule = () => {
-    // We know the user is logged in and is at least a teacher in order to visit this page
-    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
+export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     const { data: assignmentsSetByMe, refetch: refetchAssignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const { data: gameboards } = isaacApi.endpoints.getGameboards.useQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
     const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
@@ -317,7 +317,8 @@ export const AssignmentSchedule = () => {
     // Empty list means all groups are included, non-empty means only those in the list are included
     const [groupsToInclude, setGroupsToInclude] = useState<Item<number>[]>([]);
 
-    // Slow-to-calculate constant lookup maps for ease of locating gameboards, groups, etc.
+    // --- Slow-to-calculate constant lookup maps for ease of locating gameboards, groups, etc. ---
+
     const boardsById = useMemo<{[id: string]: GameboardDTO}>(() => {
         return gameboards?.boards.reduce((acc, b) => b.id ? {...acc, [b.id]: b} : acc, {} as {[id: string]: GameboardDTO}) ?? {};
     }, [gameboards]);
@@ -326,6 +327,7 @@ export const AssignmentSchedule = () => {
         return groups?.reduce((acc, g) => g.id ? {...acc, [g.id]: g} : acc, {} as {[id: number]: UserGroupDTO}) ?? {};
     }, [groups]);
 
+    // Map from group id -> whether group should be included or not
     const groupFilter = useMemo<{[id: number]: boolean}>(() => {
         if (groupsToInclude.length === 0) {
             return mapValues(groupsById, () => true);
@@ -365,14 +367,14 @@ export const AssignmentSchedule = () => {
         return d;
     });
 
-    // The assignments that will be shown in the schedule, filtered and grouped
+    // The assignments that will be shown in the schedule, filtered and grouped by date
     const assignmentsGroupedByDate = useMemo<AssignmentsGroupedByDate>(() => {
         if (!assignmentsSetByMe) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
             assignmentsSetByMe
-            .map((a) => ({...a, listingDate: new Date((viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0)).valueOf())} as ValidAssignmentWithListingDate))
-            // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
-            .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (a.listingDate.valueOf() >= earliestShowDate.valueOf()) && (viewBy === "startDate" || isDefined(a.dueDate)))
+                .map((a) => ({...a, listingDate: new Date((viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0)).valueOf())} as ValidAssignmentWithListingDate))
+                // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
+                .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (a.listingDate.valueOf() >= earliestShowDate.valueOf()) && (viewBy === "startDate" || isDefined(a.dueDate)))
             , a => a.listingDate.valueOf()
         );
         function parseNumericKey<T>([k, v]: [string, T]): [number, T] { return [parseInt(k), v]; }
@@ -407,7 +409,7 @@ export const AssignmentSchedule = () => {
     // Flag to notify children components to completely collapse all assignment sub-lists, so only months are showing
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
-    // --- Sticky header ---
+    // --- Sticky header logic ---
     const headerScrollerSentinel = useRef<HTMLDivElement>(null);
     const headerScrollerFlag = useRef(false);
     const headerScrollerObserver = useRef<IntersectionObserver>();
@@ -494,6 +496,7 @@ export const AssignmentSchedule = () => {
         </Row>
         {groupsToInclude.length > 0 && <div className={"mt-2"}>You have no assignments to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}</div>}
     </Card>;
+    // --- End sticky header logic ---
 
     const pageHelp = <span>
         Use this page to set and manage assignments to your groups. You can assign any gameboard you have saved to your account.
@@ -504,7 +507,11 @@ export const AssignmentSchedule = () => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Assignment Schedule"} help={pageHelp}/>
         <AssignmentTimelineContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
-            <div className={"px-md-4 pl-2 pr-2 timeline-column mb-4"}>
+            <div className={"px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2"}>
+                {groups && groups.length === 0 && <Alert color="warning">
+                    You have not created any groups to assign work to.
+                    Please <Link to="/groups">create a group here first.</Link>
+                </Alert>}
                 <div className="no-print">
                     <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
                     <div ref={stickyHeaderListContainer} id="stickyheader">
@@ -518,7 +525,7 @@ export const AssignmentSchedule = () => {
                     It is a work in progress, and we would love to <a href={"/contact?subject=Assignment%20Schedule%20Feedback"}>hear your feedback</a>!
                 </Alert>}
                 {assignmentsGroupedByDate.length > 0 && <Card className={"mt-2"}>
-                    <CardBody className={classNames({"pt-0": assignmentsGroupedByDate.length > 0})}>
+                    <CardBody className={"pt-0"}>
                         {notAllPastAssignmentsAreListed && <div className={"mt-3"}>
                             <Button size={"sm"} onClick={extendBackSixMonths}>
                                 Show assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
@@ -526,10 +533,13 @@ export const AssignmentSchedule = () => {
                         </div>}
                         <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
                             {assignmentsGroupedByDate.map(([y, ms]) =>
-                                <>
-                                    <div key={y} className={"year-label w-100 text-right"}><h3 className={"mb-n3"}>{`${y}`}</h3><hr className={"ml-4"}/></div>
+                                <Fragment key={y}>
+                                    <div className={"year-label w-100 text-right"}>
+                                        <h3 className={"mb-n3"}>{`${y}`}</h3>
+                                        <hr className={"ml-4"}/>
+                                    </div>
                                     {ms.map(([m, ds]) => <MonthAssignmentList key={m} month={m} datesAndAssignments={ds}/>)}
-                                </>
+                                </Fragment>
                             )}
                             <div className={classNames("bg-timeline", {"fade-in": !notAllPastAssignmentsAreListed})}/>
                         </div>
