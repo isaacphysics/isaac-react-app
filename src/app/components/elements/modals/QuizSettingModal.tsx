@@ -3,11 +3,11 @@ import {AppGroup} from "../../../../IsaacAppTypes";
 import {
     AppDispatch,
     closeActiveModal,
-    hideToast,
+    hideToast, isaacApi, selectors,
     setQuiz,
     showQuizSettingModal,
     showToast,
-    useAppDispatch
+    useAppDispatch, useAppSelector
 } from "../../../state";
 import React, {useState} from "react";
 import {isDefined, Item, selectOnChange} from "../../../services";
@@ -16,6 +16,7 @@ import {currentYear, DateInput} from "../inputs/DateInput";
 import * as RS from "reactstrap";
 import Select from "react-select";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {Spinner} from "reactstrap";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
@@ -39,13 +40,15 @@ type ControlName = 'group' | 'dueDate' | 'feedbackMode';
 
 interface QuizSettingModalProps {
     quiz: ContentSummaryDTO | IsaacQuizDTO;
-    groups: AppGroup[];
     dueDate?: Date | null;
     feedbackMode?: QuizFeedbackMode | null;
 }
 
-export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
+export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
+    const { isLoading } = isaacApi.endpoints.getGroups.useQuery(false);
+    const groups = useAppSelector(selectors.groups.active);
+
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
     const [submitting, setSubmitting] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
@@ -57,7 +60,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     const currentMonth = now.getMonth() + 1;
     const currentDay = now.getDate();
 
-    const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
+    const groupOptions: Item<number>[] = (groups ?? []).map(g => ({label: g.groupName as string, value: g.id as number}));
 
     function addValidated(what: ControlName) {
         setValidated(validated => {
@@ -71,20 +74,23 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
 
     return <div className="mb-4">
         <RS.Label className="w-100 mb-4">Set test to the following groups:<br/>
-            <Select
-                options={groupOptions}
-                onChange={(s) => {
-                    selectOnChange(setSelectedGroups, false)(s);
-                    addValidated('group');
-                }}
-                onBlur={() => addValidated('group')}
-                isSearchable
-                menuPortalTarget={document.body}
-                styles={{
-                    control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
-                    menuPortal: base => ({...base, zIndex: 9999}),
-                }}
-            />
+            {isLoading
+                ? <Spinner/>
+                : <Select
+                    options={groupOptions}
+                    onChange={(s) => {
+                        selectOnChange(setSelectedGroups, false)(s);
+                        addValidated('group');
+                    }}
+                    onBlur={() => addValidated('group')}
+                    isSearchable
+                    menuPortalTarget={document.body}
+                    styles={{
+                        control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                        menuPortal: base => ({...base, zIndex: 9999}),
+                    }}
+                />
+            }
             {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">Set an optional due date:<br/>

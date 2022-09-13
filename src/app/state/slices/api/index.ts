@@ -19,7 +19,8 @@ import {
     IsaacWildcard,
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO
+    UserGameboardProgressSummaryDTO,
+    UserGroupDTO
 } from "../../../../IsaacApiTypes";
 import {
     anonymisationFunctions,
@@ -369,6 +370,17 @@ const isaacApi = createApi({
             query: () => ({
                 url: "/assignments"
             }),
+        }),
+
+        // === Groups ===
+
+        getGroups: build.query<UserGroupDTO[], boolean>({
+            query: (archivedGroupsOnly) => ({
+                url: `/groups?archived_groups_only=${archivedGroupsOnly}`
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading groups failed"
+            })
         }),
         
         // === Account MFA ===

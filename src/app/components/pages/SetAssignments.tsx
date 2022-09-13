@@ -24,7 +24,6 @@ import {Link, useLocation} from "react-router-dom";
 import {
     assignGameboard,
     isaacApi,
-    loadGroups,
     openIsaacBooksModal,
     selectors,
     showErrorToast,
@@ -341,6 +340,7 @@ export const SetAssignments = () => {
     const dispatch = useAppDispatch();
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+    isaacApi.endpoints.getGroups.useQuery(false);
     const groups = useAppSelector(selectors.groups.active);
     const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
@@ -353,10 +353,6 @@ export const SetAssignments = () => {
             return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
         }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {}
     , [assignmentsSetByMe]);
-
-    useEffect(() => {
-        dispatch(loadGroups(false));
-    }, []);
 
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);

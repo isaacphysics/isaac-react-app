@@ -49,23 +49,3 @@ export const ShowLoading = <T extends {}>({until, children, thenRender, placehol
             return children || (thenRender && thenRender(until));
     }
 };
-
-interface WithLoadedSelectorProps<T> extends Omit<ShowLoadingProps<T>, 'until'> {
-    selector: (state: AppState) => T | NOT_FOUND_TYPE | null | undefined;
-    loadingThunk: () => void;
-}
-
-export const WithLoadedSelector = <T extends {}>({selector, loadingThunk, ...rest}: WithLoadedSelectorProps<T>) => {
-    const value = useAppSelector(selector);
-    useEffect(() => {
-        if (loadingThunk) {
-            if (!isDefined(value)) {
-                loadingThunk();
-            }
-        }
-        // Only run the loading thunk once, so no deps on until
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loadingThunk]);
-
-    return <ShowLoading {...rest} until={value} />;
-};

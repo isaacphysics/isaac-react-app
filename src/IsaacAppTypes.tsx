@@ -17,7 +17,7 @@ import {
     RegisteredUserDTO,
     ResultsWrapper,
     TestCaseDTO,
-    UserContext,
+    UserContext, UserGroupDTO,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
@@ -262,9 +262,6 @@ export type Action =
 
     | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
-
-    | {type: ACTION_TYPE.GROUPS_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS; groups: ApiTypes.UserGroupDTO[]; archivedGroupsOnly: boolean}
 
     | {type: ACTION_TYPE.GROUPS_SELECT; group: ApiTypes.UserGroupDTO | null}
 
