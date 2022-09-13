@@ -4,12 +4,14 @@ import configureMockStore from 'redux-mock-store';
 import thunk from "redux-thunk";
 import {
     fetchSearch,
-    registerQuestion,
+    middleware,
+    registerQuestions,
     requestConstantsUnits,
-    requestCurrentUser, requestEmailVerification,
+    requestCurrentUser,
+    requestEmailVerification,
     showToast
-} from "../../app/state/actions";
-import {endpoint} from "../../app/services/api";
+} from "../../app/state";
+import {endpoint} from "../../app/services";
 import {
     errorResponses,
     questionDTOs,
@@ -19,9 +21,8 @@ import {
     userAuthenticationSettings,
     userPreferencesSettings
 } from "../test-factory";
-import {ACTION_TYPE} from "../../app/services/constants";
+import {ACTION_TYPE} from "../../app/services";
 import {Action} from "../../IsaacAppTypes";
-import {middleware} from "../../app/state/store";
 import {jest} from "@jest/globals";
 
 const mockStore = configureMockStore([thunk, ...middleware]);
@@ -114,9 +115,9 @@ describe("requestCurrentUser action", () => {
 describe("registerQuestion action", () => {
     it("dispatches a question registration action", () => {
         const {manVsHorse} = questionDTOs;
-        const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, question: manVsHorse}];
+        const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, questions: [manVsHorse]}];
         const store = mockStore();
-        store.dispatch(registerQuestion(manVsHorse) as any);
+        store.dispatch(registerQuestions([manVsHorse]) as any);
         expect(store.getActions()).toEqual(expectedActions);
     });
 });

@@ -1,8 +1,7 @@
 import React from "react";
 import Select from "react-select";
-import {Item, selectOnChange} from "../../../services/select";
+import {ifKeyIsEnter, Item, selectOnChange} from "../../../services";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {ifKeyIsEnter} from "../../../services/navigation";
 
 interface LevelsSummaryProps {
     levelOptions: Item<number>[];

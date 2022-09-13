@@ -1,6 +1,6 @@
 import React from 'react';
 import {ImageDTO} from "../../../IsaacApiTypes";
-import {apiHelper} from "../../services/api";
+import {apiHelper} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Markup} from "../elements/markup";
 

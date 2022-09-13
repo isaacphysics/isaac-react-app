@@ -3,14 +3,12 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {EditContentButton} from "./EditContentButton";
-import {isaacApi, resultOrNotFound} from "../../state/slices/api";
-
+import {isaacApi, resultOrNotFound} from "../../state";
 
 interface PageFragmentComponentProps {
     fragmentId: string;
     ifNotFound?: ReactElement;
 }
-
 export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProps) => {
     const {data: fragment, error} = isaacApi.endpoints.getPageFragment.useQuery(fragmentId);
 

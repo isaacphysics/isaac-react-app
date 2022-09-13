@@ -1,19 +1,14 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
 import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
-import {fetchConcepts} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
-import {TAG_ID} from "../../services/constants";
-import {pushConceptsToHistory, searchResultIsPublic} from "../../services/search";
+import {pushConceptsToHistory, searchResultIsPublic, shortcuts, TAG_ID} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {shortcuts} from "../../services/searchResults";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
-import {selectors} from "../../state/selectors";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 

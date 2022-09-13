@@ -1,26 +1,38 @@
 import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
-import {clearQuestionSearch, closeActiveModal, searchQuestions} from "../../../state/actions";
+import {
+    AppState,
+    clearQuestionSearch,
+    closeActiveModal,
+    searchQuestions,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
 import {debounce, isEqual} from "lodash";
 import Select, {MultiValue} from "react-select";
-import {groupTagSelectionsByParent, logEvent, sortQuestions} from "../../../services/gameboardBuilder";
-import tags from "../../../services/tags";
 import {
+    tags,
     DIFFICULTY_ICON_ITEM_OPTIONS,
     EXAM_BOARD_NULL_OPTIONS,
+    getFilteredExamBoardOptions,
+    getFilteredStageOptions,
+    groupTagSelectionsByParent,
+    isCS,
+    isPhy,
+    isStaff,
+    Item,
+    logEvent,
+    searchResultIsPublic,
+    selectOnChange,
+    siteSpecific,
     SortOrder,
-    STAGE
-} from "../../../services/constants";
-import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
-import {searchResultIsPublic} from "../../../services/search";
-import {isStaff} from "../../../services/user";
-import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
+    sortQuestions,
+    STAGE,
+    useUserContext
+} from "../../../services";
 import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
-import {Item, selectOnChange} from "../../../services/select";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
 

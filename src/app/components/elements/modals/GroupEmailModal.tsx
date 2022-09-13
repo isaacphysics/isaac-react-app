@@ -1,5 +1,4 @@
-import {store} from "../../../state/store";
-import {closeActiveModal} from "../../../state/actions";
+import {closeActiveModal, store} from "../../../state";
 import React from "react";
 import {Col, Row} from "reactstrap";
 

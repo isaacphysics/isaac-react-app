@@ -1,7 +1,4 @@
-import { formatBoardOwner } from "../../app/services/gameboards";
-
-// scrollManager is indirectly imported, and importing it fails in this context, therefore we're mocking it.
-jest.mock("../../app/services/scrollManager")
+import { formatBoardOwner } from "../../app/services";
 
 describe("Correct board owner is shown", () => {
     it("Shows 'Isaac' as board owner when the tag is present and the current user created the board",

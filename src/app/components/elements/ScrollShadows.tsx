@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {isDefined} from "../../services/miscUtils";
+import {isDefined} from "../../services";
 import classNames from "classnames";
 
 // This allows you to listen for changes in an attribute of some HTMLElement when one of a specified list of events occur.

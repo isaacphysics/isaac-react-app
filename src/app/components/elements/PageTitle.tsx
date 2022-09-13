@@ -1,13 +1,24 @@
 import React, {ReactElement, useEffect, useRef} from "react";
 import {Button, UncontrolledTooltip} from "reactstrap";
-import {isPhy, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {closeActiveModal, openActiveModal, setMainContentId} from "../../state/actions";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
+import {
+    AUDIENCE_DISPLAY_FIELDS,
+    filterAudienceViewsByProperties,
+    isPhy,
+    SITE_SUBJECT_TITLE,
+    STAGE,
+    stageLabelMap,
+    useUserContext
+} from "../../services";
+import {
+    AppState,
+    closeActiveModal,
+    mainContentIdSlice,
+    openActiveModal,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
-import {AUDIENCE_DISPLAY_FIELDS, filterAudienceViewsByProperties, useUserContext} from "../../services/userContext";
-import {STAGE, stageLabelMap} from "../../services/constants";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
 import {Helmet} from "react-helmet";
@@ -48,7 +59,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
 
     const showModal = modalId && isPhy;
 
-    useEffect(() => {dispatch(setMainContentId("main-heading"));}, []);
+    useEffect(() => {dispatch(mainContentIdSlice.actions.set("main-heading"));}, []);
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
         const element = headerRef.current;
@@ -75,7 +86,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
-        <div className="mr-auto">
+        <div className="mr-auto" data-testid={"main-heading"}>
             {formatPageTitle(currentPageTitle, disallowLaTeX)}
             {subTitle && <span className="h-subtitle d-none d-sm-block">{subTitle}</span>}
         </div>

@@ -1,20 +1,23 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { createRef, FormEvent } from "react";
+import React, {createRef, FormEvent} from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 import katex from "katex";
 import _uniqWith from 'lodash/uniqWith';
 import _isEqual from 'lodash/isEqual';
-import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState} from "../../../services/questions";
-import {ACTION_TYPE, GREEK_LETTERS_MAP} from '../../../services/constants';
-import { IsaacContentValueOrChildren } from '../../content/IsaacContentValueOrChildren';
-import { ContentDTO } from '../../../../IsaacApiTypes';
-import { isDefined } from '../../../services/miscUtils';
-import { store } from '../../../state/store';
-import { closeActiveModal, openActiveModal } from "../../../state/actions";
-import { connect } from "react-redux";
-import { ActiveModal } from "../../../../IsaacAppTypes";
-import { PageFragment } from "../PageFragment";
-import { Input } from "reactstrap";
+import {
+    ACTION_TYPE,
+    GREEK_LETTERS_MAP,
+    isDefined,
+    parsePseudoSymbolicAvailableSymbols,
+    sanitiseInequalityState
+} from "../../../services";
+import {IsaacContentValueOrChildren} from '../../content/IsaacContentValueOrChildren';
+import {ContentDTO} from '../../../../IsaacApiTypes';
+import {closeActiveModal, openActiveModal, store} from '../../../state';
+import {connect} from "react-redux";
+import {ActiveModal} from "../../../../IsaacAppTypes";
+import {PageFragment} from "../PageFragment";
+import {Input} from "reactstrap";
 
 class MenuItem {
     public type: string;

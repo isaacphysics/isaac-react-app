@@ -3,11 +3,9 @@ import {FreeTextRule} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {testQuestion} from "../../state/actions";
-import {AppState} from "../../state/reducers";
+import {AppState, testQuestion, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
-import {atLeastOne} from "../../services/validation";
+import {atLeastOne} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
 
 interface AugmentedTestCase extends TestCaseDTO {

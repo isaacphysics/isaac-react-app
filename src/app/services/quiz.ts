@@ -1,12 +1,8 @@
 import {useEffect, useMemo} from "react";
-import {useAppDispatch, useAppSelector} from "../state/store";
-import {isDefined} from "./miscUtils";
+import {deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
+import {API_PATH, isDefined, isQuestion} from "./";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
-import {selectors} from "../state/selectors";
-import {deregisterQuestion, registerQuestion} from "../state/actions";
-import {API_PATH} from "./constants";
 import {partition} from "lodash";
-import {isQuestion} from "./questions";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];
@@ -29,13 +25,13 @@ export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     return qs;
 }
 
-export function useQuizQuestions(attempt: QuizAttemptDTO | null) {
+export function useQuizQuestions(attempt?: QuizAttemptDTO) {
     return useMemo(() => {
         return extractQuestions(attempt?.quiz);
     }, [attempt?.quiz]);
 }
 
-export function useQuizSections(attempt: QuizAttemptDTO | null) {
+export function useQuizSections(attempt?: QuizAttemptDTO) {
     return useMemo(() => {
         const sections: { [id: string]: IsaacQuizSectionDTO } = {};
         attempt?.quiz?.children?.forEach(section => {
@@ -45,28 +41,42 @@ export function useQuizSections(attempt: QuizAttemptDTO | null) {
     }, [attempt?.quiz]);
 }
 
-export function useCurrentQuizAttempt() {
-    const attemptState = useAppSelector(selectors.quizzes.currentQuizAttempt);
+export function useCurrentQuizAttempt(studentId?: number) {
+    const currentUserAttemptState = useAppSelector(selectors.quizzes.currentQuizAttempt);
+    const [currentUserAttempt, currentUserError] = useMemo(() => {
+        if (!isDefined(currentUserAttemptState)) return [];
+        return [
+            'attempt' in currentUserAttemptState ? currentUserAttemptState.attempt : undefined,
+            'error' in currentUserAttemptState ? currentUserAttemptState.error : undefined
+        ];
+    }, [currentUserAttemptState]);
+
     const studentAttemptState = useAppSelector(selectors.quizzes.currentStudentQuizAttempt);
-    const error = isDefined(attemptState) && 'error' in attemptState ? attemptState.error : null;
-    const attempt = isDefined(attemptState) && 'attempt' in attemptState ? attemptState.attempt : null;
-    const studentError = isDefined(studentAttemptState) && 'error' in studentAttemptState ? studentAttemptState.error : null;
-    const studentAttempt = isDefined(studentAttemptState) && 'studentAttempt' in studentAttemptState ? studentAttemptState.studentAttempt.attempt : null;
-    const studentUser = isDefined(studentAttemptState) && 'studentAttempt' in studentAttemptState ? studentAttemptState.studentAttempt.user : undefined;
-    const questions = useQuizQuestions(isDefined(studentAttempt) ? studentAttempt : attempt);
-    const sections = useQuizSections(isDefined(studentAttempt) ? studentAttempt : attempt);
+    const [studentAttempt, studentError, studentUser] = useMemo(() => {
+        if (!isDefined(studentAttemptState)) return [];
+        return [
+            'studentAttempt' in studentAttemptState ? studentAttemptState.studentAttempt.attempt : undefined,
+            'error' in studentAttemptState ? studentAttemptState.error : undefined,
+            'studentAttempt' in studentAttemptState ? studentAttemptState.studentAttempt.user : undefined
+        ];
+    }, [studentAttemptState]);
+
+    // If we have a student id, then we're asking for the attempt for a given student
+    const [attempt, error] = studentId
+        ? [studentAttempt, studentError]
+        : [currentUserAttempt, currentUserError];
+
+    const questions = useQuizQuestions(attempt);
+    const sections = useQuizSections(attempt);
 
     const dispatch = useAppDispatch();
-
     useEffect( () => {
-        questions.forEach(question => dispatch(registerQuestion(question)));
-        const ids = questions.map(q => q.id as string);
-        return () => {
-            ids.forEach(id => dispatch(deregisterQuestion(id)));
-        };
+        // All register questions does is store the questions in redux WITH SOME EXTRA CALCULATED STRUCTURE
+        dispatch(registerQuestions(questions));
+        return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 
-    return {attempt, studentAttempt, studentUser, questions, sections, error, studentError};
+    return {attempt, error, studentUser, questions, sections};
 }
 
 export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {

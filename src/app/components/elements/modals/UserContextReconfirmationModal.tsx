@@ -1,15 +1,21 @@
 import React, {useCallback, useMemo, useState} from "react";
 import {Button, Col, Form, Row} from "reactstrap";
-import {validateUserContexts, validateUserSchool} from "../../../services/validation";
+import {
+    isCS,
+    isDefined,
+    isLoggedIn,
+    isPhy,
+    isTeacher,
+    SITE_SUBJECT_TITLE,
+    siteSpecific,
+    validateUserContexts,
+    validateUserSchool
+} from "../../../services";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {isDefined} from "../../../services/miscUtils";
 import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {selectors} from "../../../state/selectors";
-import {isLoggedIn, isTeacher} from "../../../services/user";
-import {closeActiveModal, logAction, updateCurrentUser} from "../../../state/actions";
-import {isCS, isPhy, SITE_SUBJECT_TITLE, siteSpecific} from "../../../services/siteConstants";
+import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {

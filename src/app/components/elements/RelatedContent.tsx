@@ -2,21 +2,25 @@ import React, {ReactNode} from "react";
 import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {ContentDTO, ContentSummaryDTO} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
-import {difficultyShortLabelMap, DOCUMENT_TYPE, documentTypePathPrefix, stageLabelMap} from "../../services/constants";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
-import {sortByNumberStringValue, sortByStringValue} from "../../services/sorting";
-import {logAction} from "../../state/actions";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
+    difficultyShortLabelMap,
+    DOCUMENT_TYPE,
+    documentTypePathPrefix,
     filterAudienceViewsByProperties,
+    isCS,
     isIntendedAudience,
+    isPhy,
+    isTeacher,
+    siteSpecific,
+    sortByNumberStringValue,
+    sortByStringValue,
+    stageLabelMap,
     useUserContext
-} from "../../services/userContext";
-import {selectors} from "../../state/selectors";
+} from "../../services";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ConceptGameboardButton} from "./ConceptGameboardButton";
-import {isTeacher} from "../../services/user";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];

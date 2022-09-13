@@ -1,6 +1,6 @@
 import React from "react";
 import {Helmet} from "react-helmet";
-import {isDefined} from "../../services/miscUtils";
+import {isDefined} from "../../services";
 import {RenderNothing} from "./RenderNothing";
 
 export function MetaDescription(props: { description?: string }) {

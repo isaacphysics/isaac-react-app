@@ -2,9 +2,8 @@ import {CodeSnippetDTO} from "../../../IsaacApiTypes";
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
 import hljs from 'highlight.js/lib/core';
-import {addLineNumbers} from "../../services/highlightJs";
+import {highlightJsService, isCS} from "../../services";
 import {ScrollShadows} from "../elements/ScrollShadows";
-import {isCS} from "../../services/siteConstants";
 import classNames from "classnames";
 import {useExpandContent} from "../elements/markup/portals/Tables";
 import {useStatefulElementRef} from "../elements/markup/portals/utils";
@@ -19,7 +18,7 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     useEffect(() => {
         if (codeSnippetRef.current) {
             hljs.highlightElement(codeSnippetRef.current);
-            addLineNumbers(codeSnippetRef.current);
+            highlightJsService.addLineNumbers(codeSnippetRef.current);
         }
     }, [doc]);
 

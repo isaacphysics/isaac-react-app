@@ -1,39 +1,49 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {
+    AppState,
+    extractDataFromQueryResponse,
+    fetchConcepts,
+    isaacApi,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
-import tags from '../../services/tags';
 import {
     DIFFICULTY_ICON_ITEM_OPTIONS,
     DIFFICULTY_ITEM_OPTIONS,
+    getFilteredExamBoardOptions,
+    getFilteredStageOptions,
+    groupTagSelectionsByParent,
+    isCS,
+    isDefined,
+    isFound,
+    isItemEqual,
+    isPhy,
+    Item,
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
+    selectOnChange,
+    siteSpecific,
     STAGE,
-    TAG_ID
-} from '../../services/constants';
-import {Tag} from "../../../IsaacAppTypes";
+    TAG_ID,
+    tags,
+    useDeviceSize,
+    useUserContext
+} from "../../services";
+import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
-import {fetchConcepts, generateTemporaryGameboard, loadGameboard} from '../../state/actions';
 import {ShowLoading} from "../handlers/ShowLoading";
-import {selectors} from "../../state/selectors";
 import queryString from "query-string";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import {isItemEqual, Item, selectOnChange} from "../../services/select";
-import {useDeviceSize} from "../../services/device";
 import Select, {GroupBase} from "react-select";
-import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../services/userContext";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
-import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
-import {groupTagSelectionsByParent} from "../../services/gameboardBuilder";
-import {AppState} from "../../state/reducers";
-import {ContentSummaryDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {debounce} from "lodash";
 import {History} from "history";
-import {Dispatch} from "redux";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {isDefined} from "../../services/miscUtils";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 
@@ -340,25 +350,26 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
 }
 
 export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
-    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
 
     const userContext = useUserContext();
     const {querySelections, queryStages, queryDifficulties, queryConcepts, queryExamBoards} = processQueryString(location.search);
 
     const history = useHistory();
-    const gameboardOrNotFound = useAppSelector(selectors.board.currentGameboardOrNotFound);
-    const gameboard = useAppSelector(selectors.board.currentGameboard);
+
+    const [gameboard, setGameboard] = useState<GameboardDTO | NOT_FOUND_TYPE | null | undefined>();
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
+    const [ generateTemporaryGameboard ] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
+    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
 
     useEffect(() => {
-        if (gameboard && gameboard.id !== gameboardIdAnchor) {
+        if (isFound(gameboard) && gameboard.id !== gameboardIdAnchor) {
             history.replace({search: location.search, hash: gameboard.id});
-        } else if (gameboardIdAnchor && gameboardOrNotFound === NOT_FOUND) {
+        } else if (gameboardIdAnchor && gameboard === NOT_FOUND) {
             // A request returning "gameboard not found" should clear the gameboard.id from the url hash anchor
             history.replace({search: location.search});
         }
-    }, [gameboard, gameboardIdAnchor, gameboardOrNotFound])
+    }, [gameboard, gameboardIdAnchor]);
 
     const [filterExpanded, setFilterExpanded] = useState(siteSpecific(deviceSize != "xs", true));
     const gameboardRef = useRef<HTMLDivElement>(null);
@@ -426,7 +437,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
                               examBoards: Item<string>[], selections: Item<TAG_ID>[][], boardTitle: string,
-                              history: History, dispatch: Dispatch<any>) {
+                              history: History) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
         if (stages.length) params.stages = toCSV(stages);
@@ -447,7 +458,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             params[tier.id] = toCSV(selections[i]);
         });
 
-        dispatch(generateTemporaryGameboard(params));
+        generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then(setGameboard);
         // Don't add subject and strands to CS URL
         if (isCS) {
             if (tiers[0]?.id) delete params[tiers[0].id];
@@ -463,21 +474,23 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         [selections, stages, difficulties, concepts, examBoards]);
 
     useEffect(() => {
-        if (gameboardIdAnchor && gameboardIdAnchor !== gameboard?.id) {
-            dispatch(loadGameboard(gameboardIdAnchor));
+        if (gameboardIdAnchor && (!isFound(gameboard) || gameboardIdAnchor !== gameboard.id)) {
+            const newBoardPromise = loadGameboard(gameboardIdAnchor, true)
+            newBoardPromise.then(extractDataFromQueryResponse).then(setGameboard);
+            newBoardPromise.unsubscribe();
         } else {
             setBoardStack([]);
-            loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history, dispatch)
+            loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history)
         }
     }, [selections, stages, difficulties, concepts, examBoards]);
 
     function refresh() {
-        if (gameboard) {
+        if (isFound(gameboard)) {
             if (!boardStack.includes(gameboard.id as string)) {
                 boardStack.push(gameboard.id as string);
                 setBoardStack(boardStack);
             }
-            debouncedLeadingLoadGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history, dispatch);
+            debouncedLeadingLoadGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history);
         }
     }
 
@@ -485,7 +498,9 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (boardStack.length > 0) {
             const oldBoardId = boardStack.pop() as string;
             setBoardStack(boardStack);
-            dispatch(loadGameboard(oldBoardId));
+            const newBoardPromise = loadGameboard(oldBoardId, true)
+            newBoardPromise.then(extractDataFromQueryResponse).then(setGameboard);
+            newBoardPromise.unsubscribe();
         }
     }
 
@@ -575,7 +590,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             />
         </RS.Card>
 
-        {gameboard && <div ref={gameboardRef} className="row mt-4 mb-3">
+        {isFound(gameboard) && <div ref={gameboardRef} className="row mt-4 mb-3">
             {siteSpecific(
                 // PHY
                 <RS.Col xs={12} lg={"auto"} >
@@ -624,7 +639,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
         <div className="pb-4">
             <ShowLoading
-                until={gameboardOrNotFound}
+                until={gameboard}
                 thenRender={gameboard  => (<GameboardViewer gameboard={gameboard} />)}
                 ifNotFound={<RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>}
             />

@@ -1,14 +1,19 @@
 import React, {Dispatch} from "react";
 import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
-import {api} from "../../services/api";
-import {closeActiveModal, extractMessage, loadGroups, openActiveModal, showAxiosErrorToastIfNeeded} from "../actions";
+import {ACTION_TYPE, api} from "../../services";
+import {
+    AppDispatch,
+    AppState,
+    closeActiveModal,
+    extractMessage,
+    loadGroups,
+    openActiveModal,
+    selectors,
+    showAxiosErrorToastIfNeeded
+} from "../index";
 import {ContentSummaryDTO, IsaacQuizDTO, QuizAssignmentDTO, QuizFeedbackMode} from "../../../IsaacApiTypes";
-import {AppDispatch} from "../store";
 import {WithLoadedSelector} from "../../components/handlers/ShowLoading";
-import {selectors} from "../selectors";
 import {QuizSettingModal} from "../../components/elements/modals/QuizSettingModal";
-import {AppState} from "../reducers";
 
 export const loadQuizzes = (startIndex: number) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZZES_REQUEST});

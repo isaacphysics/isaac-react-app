@@ -1,14 +1,12 @@
 import React, {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {getMyProgress, selectors, useAppDispatch, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {isTeacher} from "../../services/user";
+import {isTeacher} from "../../services";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
-import {getMyProgress} from "../../state/actions";
-import {selectors} from "../../state/selectors";
 
 export const TeacherTools = () => {
     const dispatch = useAppDispatch();

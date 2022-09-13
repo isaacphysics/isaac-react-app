@@ -1,14 +1,8 @@
 import React, {lazy} from "react";
 import {AppQuestionDTO, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
-import {REVERSE_GREEK_LETTERS_MAP, DOCUMENT_TYPE} from './constants';
-import {
-    ChoiceDTO,
-    ContentDTO,
-    ContentSummaryDTO
-} from "../../IsaacApiTypes";
-import {useAppDispatch, useAppSelector} from "../state/store";
-import {setCurrentAttempt} from "../state/actions";
-import {selectors} from "../state/selectors";
+import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP} from './';
+import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
+import {selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
 const IsaacReorderQuestion = lazy(() => import("../components/content/IsaacReorderQuestion"));

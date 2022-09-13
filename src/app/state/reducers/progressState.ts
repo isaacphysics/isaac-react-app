@@ -1,5 +1,5 @@
 import {Action, UserProgress} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 import {AnsweredQuestionsByDate} from "../../../IsaacApiTypes";
 
 export type MyProgressState = UserProgress | null;

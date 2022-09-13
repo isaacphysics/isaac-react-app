@@ -1,5 +1,5 @@
 import {createBrowserHistory} from "history";
-import {registerPageChange} from "../state/actions";
+import {registerPageChange} from "../state";
 
 export const history = createBrowserHistory();
 

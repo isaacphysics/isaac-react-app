@@ -1,21 +1,25 @@
 import classnames from "classnames";
 import * as RS from "reactstrap";
-import {examBoardLabelMap, stageLabelMap, TAG_ID, TAG_LEVEL} from "../../services/constants";
-import React from "react";
-import {AudienceContext} from "../../../IsaacApiTypes";
-import {closeActiveModal, openActiveModal} from "../../state/actions";
-import {useAppDispatch} from "../../state/store";
-import {DraggableProvided} from "react-beautiful-dnd";
-import tags from "../../services/tags";
-import {Question} from "../pages/Question";
-import {isCS, siteSpecific} from "../../services/siteConstants";
-import {ContentSummary} from "../../../IsaacAppTypes";
-import {generateQuestionTitle} from "../../services/questions";
 import {
+    tags,
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
-    filterAudienceViewsByProperties, findAudienceRecordsMatchingPartial
-} from "../../services/userContext";
+    examBoardLabelMap,
+    filterAudienceViewsByProperties,
+    findAudienceRecordsMatchingPartial,
+    generateQuestionTitle,
+    isCS,
+    siteSpecific,
+    stageLabelMap,
+    TAG_ID,
+    TAG_LEVEL
+} from "../../services";
+import React from "react";
+import {AudienceContext} from "../../../IsaacApiTypes";
+import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
+import {DraggableProvided} from "react-beautiful-dnd";
+import {Question} from "../pages/Question";
+import {ContentSummary} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 
 interface GameboardBuilderRowInterface {

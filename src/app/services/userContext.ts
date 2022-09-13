@@ -1,33 +1,34 @@
 import {
     BOOLEAN_NOTATION,
+    comparatorFromOrderedValues,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
     examBoardBooleanNotationMap,
     examBoardLabelMap,
+    history,
+    isCS,
+    isDefined,
+    isLoggedIn,
+    isPhy,
     PROGRAMMING_LANGUAGE,
+    roleRequirements,
+    siteSpecific,
     STAGE,
     STAGE_NULL_OPTIONS,
     stageLabelMap,
     STAGES_CS,
     STAGES_PHY,
     stagesOrdered,
-} from "./constants";
+    useQueryParams,
+} from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {useAppSelector} from "../state/store";
-import {AppState} from "../state/reducers";
-import {isCS, isPhy, siteSpecific} from "./siteConstants";
-import {PotentialUser, ViewingContext} from "../../IsaacAppTypes";
-import {isLoggedIn, roleRequirements} from "./user";
-import {isDefined} from "./miscUtils";
-import {history} from "./history";
+import {AppState, useAppSelector} from "../state";
+import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
-import {useEffect} from "react";
-import {useQueryParams} from "./reactRouterExtension";
-import {comparatorFromOrderedValues} from "./gameboards";
-import {selectors} from "../state/selectors";
+import {useContext, useEffect} from "react";
 
 export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -100,7 +101,7 @@ export function useUserContext(): UseUserContextReturnType {
     }
 
     // Gameboard views overrides all context options
-    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
+    const currentGameboard = useContext(GameboardContext);
     const {questionId} = useParams<{ questionId: string}>();
     if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
         const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];

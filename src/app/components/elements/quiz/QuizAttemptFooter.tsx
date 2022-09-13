@@ -1,12 +1,10 @@
 import {QuizAttemptProps, QuizPagination} from "./QuizAttemptComponent";
-import {useAppDispatch} from "../../../state/store";
+import {markQuizAttemptAsComplete, showToast, useAppDispatch} from "../../../state";
 import {Link, useHistory} from "react-router-dom";
 import React, {useState} from "react";
-import {markQuizAttemptAsComplete} from "../../../state/actions/quizzes";
-import {showToast} from "../../../state/actions";
-import * as RS from "reactstrap";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {Button} from "reactstrap";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -59,11 +57,11 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
 
         if (allCompleted) {
             controls = <>
-                <RS.Button color="tertiary" tag={Link} replace to={pageLink(attempt, 1)}>Review answers</RS.Button>
+                <Button color="tertiary" tag={Link} replace to={pageLink(1)}>Review answers</Button>
                 <Spacer/>
                 All sections complete
                 <Spacer/>
-                <RS.Button color="primary" onClick={submitQuiz}>{submitButton}</RS.Button>
+                <Button color="primary" onClick={submitQuiz}>{submitButton}</Button>
             </>;
         } else {
             prequel = <p>Click &lsquo;{primaryButton}&rsquo; when you are ready to {primaryDescription} the test.</p>;
@@ -71,15 +69,15 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
                 controls = <>
                     <div className="text-center">
                         {totalCompleted} / {sectionCount} sections complete<br/>
-                        <RS.Button onClick={() => window.confirm("Are you sure? You haven't answered all of the questions") && submitQuiz()}>{submitButton}</RS.Button>
+                        <Button onClick={() => window.confirm("Are you sure? You haven't answered all of the questions") && submitQuiz()}>{submitButton}</Button>
                     </div>
                     <Spacer/>
-                    <RS.Button color="primary" tag={Link} replace to={pageLink(attempt, firstIncomplete + 1)}>{primaryButton}</RS.Button>
+                    <Button color="primary" tag={Link} replace to={pageLink(firstIncomplete + 1)}>{primaryButton}</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <RS.Button color="primary" tag={Link} replace to={pageLink(attempt, 1)}>{primaryButton}</RS.Button>
+                    <Button color="primary" tag={Link} replace to={pageLink(1)}>{primaryButton}</Button>
                 </>;
             }
         }

@@ -2,7 +2,7 @@ import React, {ReactElement, useEffect, useState} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {isDefined} from "../../services/miscUtils";
+import {isDefined} from "../../services";
 
 interface IsaacTabsProps {
     doc: {

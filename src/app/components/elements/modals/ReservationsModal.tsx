@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {
+    AppState,
     cancelReservationsOnEvent,
     closeActiveModal,
     getEventBookingsForAllGroups,
@@ -8,18 +8,18 @@ import {
     getGroupMembers,
     loadGroups,
     reserveUsersOnEvent,
-    selectGroup
-} from "../../../state/actions";
-import {store} from "../../../state/store";
+    selectGroup,
+    selectors,
+    store,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
 import {Button, Col, CustomInput, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Table} from "reactstrap";
-import {AppState} from "../../../state/reducers";
-import {selectors} from '../../../state/selectors';
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {bookingStatusMap, NOT_FOUND} from "../../../services/constants";
+import {bookingStatusMap, isLoggedIn, NOT_FOUND} from "../../../services";
 import _orderBy from "lodash/orderBy";
-import {isLoggedIn} from "../../../services/user";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 

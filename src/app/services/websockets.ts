@@ -1,7 +1,6 @@
-import {api} from "./api";
+import {api} from "./";
 import {UserSnapshot} from "../../IsaacAppTypes";
-import {getSnapshot, partiallyUpdateUserSnapshot} from "../state/actions";
-import {store} from "../state/store";
+import {getSnapshot, partiallyUpdateUserSnapshot, store} from "../state";
 
 let notificationWebSocket: WebSocket | null  = null;
 let webSocketCheckTimeout: number | null = null;

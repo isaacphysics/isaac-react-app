@@ -22,7 +22,7 @@ const logoAsciiArt: string = "\n" +
     "           ▀▀███▀▀" +
     "\n\xA0";
 
-export function printAsciiArtLogoToConsole() {
+export function printAsciiArtLogoToConsolePhy() {
     if (navigator.vendor.indexOf("Google") > -1 || navigator.userAgent.indexOf("Firefox") > -1) {
         // eslint-disable-next-line no-console
         console.log(logoAsciiArt);

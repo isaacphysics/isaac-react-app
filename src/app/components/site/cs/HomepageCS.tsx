@@ -1,15 +1,13 @@
 import React, {useEffect} from "react";
-import {useAppSelector} from "../../../state/store";
+import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {Link} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
-import {selectors} from "../../../state/selectors";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
-import {isaacApi} from "../../../state/slices/api";
 import classNames from "classnames";
 
 interface ShowMeButtonsProps {
@@ -20,6 +18,9 @@ export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
+
+    const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
+    const carouselNewsItems = news ? (user?.loggedIn ? news.slice(1) : news) : [];
 
     const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
         <h3>Show me</h3>
@@ -54,8 +55,8 @@ export const HomepageCS = () => {
                                 <ShowMeButtons className={"pt-xl-2"}/>
                                 {/*<img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />*/}
                             </Col>
-                            <Col md="12" lg="7" className="d-none d-lg-block">
-                                <FeaturedNewsItem item={news?.[0]} />
+                            <Col data-testid={"featured-news-item"} md="12" lg="7" className="d-none d-lg-block">
+                                <FeaturedNewsItem item={featuredNewsItem} />
                             </Col>
                         </Row>
                     </>
@@ -117,12 +118,12 @@ export const HomepageCS = () => {
 
         <section id="news">
             <Container className={classNames("pt-4 pb-5", {"mt-lg-n5 pt-lg-0": user?.loggedIn ?? false})}>
-                <div className="eventList pt-5 pattern-03-reverse">
+                <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
                     <h2 className="h-title mb-4">News</h2>
                     {user?.loggedIn && <div className={"d-block d-lg-none mb-4 mb-lg-0"}>
-                        <FeaturedNewsItem item={news?.[0]} />
+                        <FeaturedNewsItem item={featuredNewsItem} />
                     </div>}
-                    <NewsCarousel items={user?.loggedIn ? news?.slice(1) : news} />
+                    <NewsCarousel items={carouselNewsItems} />
                 </div>
             </Container>
         </section>

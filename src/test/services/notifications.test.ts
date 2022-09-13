@@ -1,4 +1,4 @@
-import {needToUpdateUserContextDetails} from "../../app/state/middleware/utils";
+import {needToUpdateUserContextDetails} from "../../app/state";
 
 jest.useFakeTimers();
 

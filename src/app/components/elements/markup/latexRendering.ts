@@ -1,14 +1,10 @@
 import {useContext} from "react";
-import {useAppSelector} from "../../../state/store";
-import {selectors} from "../../../state/selectors";
+import {selectors, useAppSelector} from "../../../state";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {isCS} from "../../../services/siteConstants";
-import katex, { KatexOptions } from "katex";
+import {renderA11yString, BOOLEAN_NOTATION, isCS, useUserContext} from "../../../services";
+import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
-import renderA11yString from "../../../services/katex-a11y";
-import {useUserContext} from "../../../services/userContext";
-import {BOOLEAN_NOTATION} from "../../../services/constants";
 import {dropZoneRegex} from "./markdownRendering";
 
 type MathJaxMacro = string|[string, number];

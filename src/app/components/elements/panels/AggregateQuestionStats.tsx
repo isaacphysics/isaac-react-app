@@ -2,7 +2,7 @@ import React from "react";
 import * as RS from "reactstrap";
 import {ProgressBar} from "../views/ProgressBar";
 import {UserProgress} from "../../../../IsaacAppTypes";
-import {safePercentage} from "../../../services/validation";
+import {safePercentage} from "../../../services";
 
 export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgress | null}) => {
     const fullCorrect = userProgress?.totalQuestionsCorrect;

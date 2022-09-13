@@ -1,17 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {
+    getContentVersion,
+    requestConstantsSegueVersion,
+    selectors,
+    setContentVersion,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {getContentVersion, requestConstantsSegueVersion, setContentVersion} from "../../state/actions";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL} from "../../services/constants";
+import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {selectors} from "../../state/selectors";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {isAdmin} from "../../services/user";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();

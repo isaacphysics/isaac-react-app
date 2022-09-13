@@ -1,17 +1,21 @@
 import React, {useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {ALPHABET, DOCUMENT_TYPE, NOT_FOUND} from "../../services/constants";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {logAction} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {scrollVerticallyIntoView} from "../../services/scrollManager";
+import {
+    ALPHABET,
+    audienceStyle,
+    DOCUMENT_TYPE,
+    isCS,
+    isPhy,
+    NOT_FOUND,
+    notRelevantMessage,
+    scrollVerticallyIntoView,
+    useUserContext
+} from "../../services";
+import {AppState, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AccordionSectionContext} from "../../../IsaacAppTypes";
-import {selectors} from "../../state/selectors";
-import {isCS, isPhy} from "../../services/siteConstants";
 import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
-import {audienceStyle, notRelevantMessage, useUserContext} from "../../services/userContext";
 import classNames from "classnames";
 import {Markup} from "./markup";
 

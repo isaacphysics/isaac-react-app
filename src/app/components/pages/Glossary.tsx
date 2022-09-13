@@ -1,23 +1,25 @@
 import React, {useEffect, useMemo, useRef, useState} from "react";
 import {Col, Container, Input, Label, Row} from "reactstrap";
-import {AppState} from "../../state/reducers";
+import {AppState, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useAppSelector} from "../../state/store";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
-import {scrollVerticallyIntoView} from "../../services/scrollManager";
-import {isDefined} from '../../services/miscUtils';
-import tags from "../../services/tags";
-import {NOT_FOUND, TAG_ID} from '../../services/constants';
+import {
+    isCS,
+    isDefined,
+    Item,
+    NOT_FOUND,
+    scrollVerticallyIntoView,
+    TAG_ID,
+    tags,
+    useUrlHashValue,
+    useUserContext
+} from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import Select from "react-select";
-import {useUserContext} from "../../services/userContext";
-import {useUrlHashValue} from "../../services/reactRouterExtension";
-import {Item} from "../../services/select";
-import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 /*

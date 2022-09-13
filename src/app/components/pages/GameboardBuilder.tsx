@@ -1,46 +1,47 @@
 import React, {lazy, useEffect, useRef, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {Button, Card, CardBody, Col, Container, Input, Label, Row, Table} from "reactstrap";
-import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardItem} from "../../../IsaacApiTypes";
 import {
     closeActiveModal,
-    createGameboard,
-    generateTemporaryGameboard,
-    getWildcards,
-    loadGameboard,
+    isaacApi,
     logAction,
     openActiveModal,
-} from "../../state/actions";
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
+import {Button, Card, CardBody, Col, Container, Input, Label, Row, Spinner, Table} from "reactstrap";
+import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
+import {GameboardItem} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
-import {AppState} from "../../state/reducers";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
-import {isStaff} from "../../services/user";
-import {isValidGameboardId} from "../../services/validation";
 import {
     convertContentSummaryToGameboardItem,
+    EXAM_BOARD,
+    history,
+    isCS,
+    isDefined,
+    isStaff,
+    isValidGameboardId,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
-    logEvent
-} from "../../services/gameboardBuilder";
-import {history} from "../../services/history"
+    logEvent,
+    selectOnChange,
+    siteSpecific,
+    STAGE,
+    useUserContext
+} from "../../services";
 import Select from "react-select";
 import {withRouter} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isCS, siteSpecific} from "../../services/siteConstants";
-import {selectors} from "../../state/selectors";
 import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {useUserContext} from "../../services/userContext";
-import {EXAM_BOARD, STAGE} from "../../services/constants";
-import {selectOnChange} from "../../services/select";
-import {isFound} from "../../services/miscUtils";
+import {skipToken} from "@reduxjs/toolkit/query";
+
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
-const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
+const GameboardBuilder = withRouter((props: { location: { search?: string } }) => {
     const queryParams = props.location.search && queryString.parse(props.location.search);
     const baseGameboardId = queryParams && queryParams.base as string;
     const concepts = queryParams && queryParams.concepts as string;
@@ -49,13 +50,15 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
 
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const wildcards = useAppSelector((state: AppState) => state && state.wildcards);
-    const baseGameboard = useAppSelector(selectors.board.currentGameboard);
+    const {data: wildcards} = isaacApi.endpoints.getWildcards.useQuery();
+    const {data: baseGameboard} = isaacApi.endpoints.getGameboardById.useQuery(baseGameboardId ?? skipToken);
+    const [generateTemporaryGameboard] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
+    const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = isaacApi.endpoints.createGameboard.useMutation();
 
     const [gameboardTitle, setGameboardTitle] = useState("");
     const [gameboardTags, setGameboardTags] = useState<string[]>([]);
     const [gameboardURL, setGameboardURL] = useState<string>();
-    const [questionOrder, setQuestionOrder] = useState<string[]>( []);
+    const [questionOrder, setQuestionOrder] = useState<string[]>([]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
@@ -83,15 +86,9 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
         }
     };
 
-    useEffect(() => {if (!wildcards) dispatch(getWildcards())}, [dispatch, user, wildcards]);
-    useEffect(() => {
-        if (baseGameboardId && (!baseGameboard)) {
-            dispatch(loadGameboard(baseGameboardId));
-        }
-    }, [dispatch, baseGameboardId, baseGameboard]);
     useEffect(() => {
         if (concepts && (!baseGameboardId)) {
-            const params: {[key: string]: string} = {};
+            const params: { [key: string]: string } = {};
             params.concepts = concepts;
             if (userContext.stage !== STAGE.ALL) {
                 params.stages = userContext.stage;
@@ -99,9 +96,9 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
             if (userContext.examBoard !== EXAM_BOARD.ALL) {
                 params.examBoards = userContext.examBoard;
             }
-            dispatch(generateTemporaryGameboard(params));
+            generateTemporaryGameboard(params);
         }
-    }, [dispatch, concepts])
+    }, [dispatch, concepts]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
@@ -112,7 +109,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
         ten questions to a gameboard.
-        <br />
+        <br/>
         You cannot modify a gameboard after it has been created. You&apos;ll find a link underneath any
         existing gameboard to duplicate and edit it.
     </span>;
@@ -126,12 +123,12 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                     <Col>
                         <Label htmlFor="gameboard-builder-name">Gameboard title:</Label>
                         <Input id="gameboard-builder-name"
-                            type="text"
-                            placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
-                            defaultValue={gameboardTitle}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setGameboardTitle(e.target.value);
-                            }}
+                               type="text"
+                               placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
+                               defaultValue={gameboardTitle}
+                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                   setGameboardTitle(e.target.value);
+                               }}
                         />
                     </Col>
                 </Row>
@@ -140,40 +137,42 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                     <Col>
                         <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
                         <Select inputId="question-search-level"
-                            isMulti
-                            options={siteSpecific([
-                                { value: 'ISAAC_BOARD', label: 'Created by Isaac' },
-                            ], [
-                                { value: 'ISAAC_BOARD', label: 'Created by Isaac' },
-                                { value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board' }
-                            ])}
-                            name="colors"
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            placeholder="None"
-                            onChange={selectOnChange(setGameboardTags, true)}
+                                isMulti
+                                options={siteSpecific([
+                                    {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
+                                ], [
+                                    {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
+                                    {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
+                                ])}
+                                name="colors"
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                placeholder="None"
+                                onChange={selectOnChange(setGameboardTags, true)}
                         />
                     </Col>
                     <Col>
                         <Label htmlFor="gameboard-builder-url">Gameboard ID</Label>
                         <Input id="gameboard-builder-url"
-                            type="text"
-                            placeholder="Optional"
-                            defaultValue={gameboardURL}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setGameboardURL(e.target.value);
-                            }}
-                            invalid={!isValidGameboardId(gameboardURL)}
+                               type="text"
+                               placeholder="Optional"
+                               defaultValue={gameboardURL}
+                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                   setGameboardURL(e.target.value);
+                               }}
+                               invalid={!isValidGameboardId(gameboardURL)}
                         />
                     </Col>
                     <Col>
                         <Label htmlFor="gameboard-builder-wildcard">Wildcard</Label>
                         <Input id="gameboard-builder-wildcard"
-                            type="select" defaultValue={wildcardId}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setWildcardId(e.target.value);}}
+                               type="select" defaultValue={wildcardId}
+                               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                   setWildcardId(e.target.value);
+                               }}
                         >
                             <option value="random">Random wildcard</option>
-                            {isFound(wildcards) && wildcards.map((wildcard) => {
+                            {isDefined(wildcards) && wildcards.map((wildcard) => {
                                 return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>
                             })}
                         </Input>
@@ -184,67 +183,74 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                     <DragDropContext onDragEnd={reorder}>
                         <Table bordered>
                             <thead>
-                                <tr>
-                                    <th className="w-5" />
-                                    <th className="w-40">Question title</th>
-                                    <th className="w-25">Topic</th>
-                                    <th className="w-15">Stage</th>
-                                    <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
-                                    {isCS && <th className="w-5">Exam boards</th>}
-                                </tr>
+                            <tr>
+                                <th className="w-5"/>
+                                <th className="w-40">Question title</th>
+                                <th className="w-25">Topic</th>
+                                <th className="w-15">Stage</th>
+                                <th className={siteSpecific("w-15", "w-10")}>Difficulty</th>
+                                {isCS && <th className="w-5">Exam boards</th>}
+                            </tr>
                             </thead>
                             <Droppable droppableId="droppable">
                                 {(provided) => {
                                     return (
                                         <tbody ref={provided.innerRef}>
-                                            {questionOrder.map((questionId, index: number) => {
-                                                const question = selectedQuestions.get(questionId);
-                                                return question && question.id && <Draggable key={question.id} draggableId={question.id} index={index}>
+                                        {questionOrder.map((questionId, index: number) => {
+                                            const question = selectedQuestions.get(questionId);
+                                            return question && question.id &&
+                                                <Draggable key={question.id} draggableId={question.id} index={index}>
                                                     {(provided) => (
                                                         <GameboardBuilderRow
-                                                            provided={provided} key={`gameboard-builder-row-${question.id}`}
+                                                            provided={provided}
+                                                            key={`gameboard-builder-row-${question.id}`}
                                                             question={question} selectedQuestions={selectedQuestions}
-                                                            setSelectedQuestions={setSelectedQuestions} questionOrder={questionOrder}
-                                                            setQuestionOrder={setQuestionOrder} creationContext={question.creationContext}
+                                                            setSelectedQuestions={setSelectedQuestions}
+                                                            questionOrder={questionOrder}
+                                                            setQuestionOrder={setQuestionOrder}
+                                                            creationContext={question.creationContext}
                                                         />)}
                                                 </Draggable>
-                                            })}
-                                            {provided.placeholder}
-                                            <tr>
-                                                <td colSpan={siteSpecific(5, 6)}>
-                                                    <div className="img-center">
-                                                        <ShowLoading
-                                                            placeholder={<div className="text-center"><IsaacSpinner /></div>}
-                                                            until={!baseGameboardId || baseGameboard}
+                                        })}
+                                        {provided.placeholder}
+                                        <tr>
+                                            <td colSpan={siteSpecific(5, 6)}>
+                                                <div className="img-center">
+                                                    <ShowLoading
+                                                        placeholder={<div className="text-center"><IsaacSpinner/></div>}
+                                                        until={!baseGameboardId || baseGameboard}
+                                                    >
+                                                        <Button
+                                                            className="plus-button"
+                                                            color="primary" outline
+                                                            onClick={() => {
+                                                                logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
+                                                                dispatch(openActiveModal({
+                                                                    closeAction: () => {
+                                                                        dispatch(closeActiveModal())
+                                                                    },
+                                                                    closeLabelOverride: "CANCEL",
+                                                                    size: "xl",
+                                                                    title: "Search questions",
+                                                                    body: <QuestionSearchModal
+                                                                        originalSelectedQuestions={selectedQuestions}
+                                                                        setOriginalSelectedQuestions={setSelectedQuestions}
+                                                                        originalQuestionOrder={questionOrder}
+                                                                        setOriginalQuestionOrder={setQuestionOrder}
+                                                                        eventLog={eventLog}
+                                                                    />
+                                                                }))
+                                                            }}
                                                         >
-                                                            <Button
-                                                                className="plus-button"
-                                                                color="primary" outline
-                                                                onClick={() => {
-                                                                    logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                    dispatch(openActiveModal({
-                                                                        closeAction: () => {dispatch(closeActiveModal())},
-                                                                        closeLabelOverride: "CANCEL",
-                                                                        size: "xl",
-                                                                        title: "Search questions",
-                                                                        body: <QuestionSearchModal
-                                                                            originalSelectedQuestions={selectedQuestions}
-                                                                            setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                            originalQuestionOrder={questionOrder}
-                                                                            setOriginalQuestionOrder={setQuestionOrder}
-                                                                            eventLog={eventLog}
-                                                                        />
-                                                                    }))
-                                                                }}
-                                                            >
-                                                                {siteSpecific("Add Questions", "Add questions")}
-                                                            </Button>
-                                                        </ShowLoading>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                                            {siteSpecific("Add Questions", "Add questions")}
+                                                        </Button>
+                                                    </ShowLoading>
+                                                </div>
+                                            </td>
+                                        </tr>
                                         </tbody>
-                                    )}}
+                                    )
+                                }}
                             </Droppable>
                         </Table>
                     </DragDropContext>
@@ -257,7 +263,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                         onClick={() => {
                             // TODO - refactor this onCLick into a named method; and use Tags service, not hardcoded subject tag list.
                             let wildcard = undefined;
-                            if (wildcardId && isFound(wildcards) && wildcards.length > 0) {
+                            if (wildcardId && isDefined(wildcards) && wildcards.length > 0) {
                                 wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                             }
 
@@ -278,30 +284,38 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                                 subjects = Array.from(new Set(subjects));
                             }
 
-                            dispatch(createGameboard({
-                                id: gameboardURL,
-                                title: gameboardTitle,
-                                contents: questionOrder.map((questionId) => {
-                                    const question = selectedQuestions.get(questionId);
-                                    return question && convertContentSummaryToGameboardItem(question);
-                                }).filter((question) => question !== undefined) as GameboardItem[],
-                                wildCard: wildcard,
-                                wildCardPosition: 0,
-                                gameFilter: {subjects: subjects},
-                                tags: gameboardTags
-                            }, baseGameboardId));
-
-                            dispatch(openActiveModal({
-                                closeAction: () => {dispatch(closeActiveModal())},
-                                title: "Gameboard created",
-                                body: <GameboardCreatedModal/>
-                            }));
+                            createGameboard({
+                                gameboard: {
+                                    id: gameboardURL,
+                                    title: gameboardTitle,
+                                    contents: questionOrder.map((questionId) => {
+                                        const question = selectedQuestions.get(questionId);
+                                        return question && convertContentSummaryToGameboardItem(question);
+                                    }).filter((question) => question !== undefined) as GameboardItem[],
+                                    wildCard: wildcard,
+                                    wildCardPosition: 0,
+                                    gameFilter: {subjects: subjects},
+                                    tags: gameboardTags
+                                },
+                                previousId: baseGameboardId
+                            }).then(gameboardOrError => {
+                                const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
+                                const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
+                                dispatch(openActiveModal({
+                                    closeAction: () => {
+                                        dispatch(closeActiveModal())
+                                    },
+                                    title: gameboardId ? "Gameboard created" : "Gameboard creation failed",
+                                    body: <GameboardCreatedModal gameboardId={gameboardId} error={error}/>,
+                                }));
+                            });
 
                             logEvent(eventLog, "SAVE_GAMEBOARD", {});
                             dispatch(logAction({type: "SAVE_GAMEBOARD", events: eventLog}));
                         }}
                     >
-                        {siteSpecific("Save Gameboard", "Save gameboard")}
+                        {isWaitingForCreateGameboard ?
+                            <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save gameboard")}
                     </Button>
                 </div>
 
@@ -311,7 +325,7 @@ const GameboardBuilder = withRouter((props: {location: {search?: string}}) => {
                 >
                     Gameboards require both a title and between 1 and 10 questions.
                     {!isValidGameboardId(gameboardURL) && <div className="text-danger">
-                        The gameboard ID should contain numbers, lowercase letters, underscores and hyphens only.<br />
+                        The gameboard ID should contain numbers, lowercase letters, underscores and hyphens only.<br/>
                         It should not be the full URL.
                     </div>}
                 </div>}

@@ -2,9 +2,7 @@ import React, {useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {api} from "../../../services/api";
-import {validateUserSchool} from "../../../services/validation";
-import {schoolNameWithPostcode} from "../../../services/user";
+import {api, schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import {throttle} from "lodash";
 import classNames from "classnames";
 

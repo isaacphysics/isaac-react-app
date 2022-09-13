@@ -1,30 +1,34 @@
 import React, {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {isaacApi, logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Link, withRouter} from "react-router-dom"
-import {loadGameboard, logAction} from "../../state/actions";
 import * as RS from "reactstrap"
 import {Container} from "reactstrap"
 import {ShowLoading} from "../handlers/ShowLoading";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {NOT_FOUND, TAG_ID, TAG_LEVEL} from "../../services/constants";
-import {isTeacher} from "../../services/user";
-import {Redirect} from "react-router";
-import {isCS, isPhy, siteSpecific} from "../../services/siteConstants";
-import tags from "../../services/tags";
-import {selectors} from "../../state/selectors";
-import {showWildcard} from "../../services/gameboards";
-import queryString from "query-string";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     determineAudienceViews,
-    filterAudienceViewsByProperties
-} from "../../services/userContext";
-import {generateQuestionTitle} from "../../services/questions";
+    filterAudienceViewsByProperties,
+    generateQuestionTitle,
+    isCS,
+    isDefined,
+    isFound,
+    isPhy,
+    isTeacher,
+    NOT_FOUND,
+    showWildcard,
+    siteSpecific,
+    TAG_ID,
+    TAG_LEVEL,
+    tags
+} from "../../services";
+import {Redirect} from "react-router";
+import queryString from "query-string";
 import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySummaryIcons";
-import {isDefined} from "../../services/miscUtils";
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {
     const csvQuery: {[key: string]: string} = {}
@@ -126,9 +130,9 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();
-    const gameboard = useAppSelector(selectors.board.currentGameboardOrNotFound);
-    const user = useAppSelector(selectors.user.orNull);
     const gameboardId = location.hash ? location.hash.slice(1) : null;
+    const { data: gameboard } = isaacApi.endpoints.getGameboardById.useQuery(gameboardId ?? skipToken);
+    const user = useAppSelector(selectors.user.orNull);
 
     // Show filter
     const {filter} = queryString.parse(location.search);
@@ -138,11 +142,9 @@ export const Gameboard = withRouter(({ location }) => {
         showFilter = isDefined(filterValue) && filterValue.toLowerCase() === "true";
     }
 
-    useEffect(() => {dispatch(loadGameboard(gameboardId))}, [dispatch, gameboardId]);
-
     // Only log a gameboard view when we have a gameboard loaded:
     useEffect(() => {
-        if (gameboard !== null && gameboard !== NOT_FOUND) {
+        if (isDefined(gameboard) && isFound(gameboard)) {
             dispatch(logAction({type: "VIEW_GAMEBOARD_BY_ID", gameboardId: gameboard.id}));
         }
     }, [dispatch, gameboard]);

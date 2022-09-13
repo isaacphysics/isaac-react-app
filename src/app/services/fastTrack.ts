@@ -1,15 +1,11 @@
 import {getRelatedConcepts} from "./topics";
-import {history} from "./history";
+import {DOCUMENT_TYPE, history, NOT_FOUND, useUserContext, UseUserContextReturnType} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
-import {DOCUMENT_TYPE, NOT_FOUND} from "./constants";
-import {useUserContext, UseUserContextReturnType} from "./userContext";
-import {useAppSelector} from "../state/store";
-import {AppState} from "../state/reducers";
+import {AppState, selectors, useAppSelector} from "../state";
 import queryString from "query-string";
 import {Location} from "history";
 import {PotentialUser} from "../../IsaacAppTypes";
-import {selectors} from "../state/selectors";
 
 export function makeUrl(url: string, queryParams?: { [p: string]: string | undefined }) {
     function valueIsNotUndefined(v: [string, string | undefined]): v is [string, string] {

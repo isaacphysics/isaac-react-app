@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
 import {
@@ -18,23 +18,25 @@ import {
     Row
 } from "reactstrap";
 import {PasswordFeedback} from "../../../IsaacAppTypes";
-import {updateCurrentUser} from "../../state/actions";
 import {
+    FIRST_LOGIN_STATE,
+    isCS,
     isDobOverTen,
     isDobOverThirteen,
+    isPhy,
+    KEY,
+    loadZxcvbnIfNotPresent,
+    passwordDebounce,
+    persistence,
+    SITE_SUBJECT_TITLE,
+    siteSpecific,
     validateEmail,
     validateName,
     validatePassword
-} from "../../services/validation";
+} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import * as persistence from "../../services/localStorage"
-import {KEY} from "../../services/localStorage"
 import {DateInput} from "../elements/inputs/DateInput";
-import {loadZxcvbnIfNotPresent, passwordDebounce} from "../../services/passwordStrength"
-import {FIRST_LOGIN_STATE} from "../../services/firstLogin";
 import {Redirect, RouteComponentProps, withRouter} from "react-router";
-import {isCS, isPhy, SITE_SUBJECT_TITLE, siteSpecific} from "../../services/siteConstants";
-import {selectors} from "../../state/selectors";
 import {MetaDescription} from "../elements/MetaDescription";
 
 export const Registration = withRouter(({location}:  RouteComponentProps<{}, {}, {email?: string; password?: string}>) => {

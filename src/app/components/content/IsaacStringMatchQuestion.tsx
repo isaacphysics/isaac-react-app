@@ -2,7 +2,7 @@ import React from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacStringMatchQuestionDTO} from "../../../IsaacApiTypes";
 import {Input} from "reactstrap";
-import {useCurrentQuestionAttempt} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacStringMatchQuestionDTO>) => {

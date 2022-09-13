@@ -43,6 +43,8 @@ export function generatePolygon<T>(props : SVGShapeProps<T>, points : string, pe
         pointerEvents: props.properties?.clickable ? 'visible' : props.pointerEvents,
         strokeDasharray: calculateDashArray(props.states, props.selector || (() => true), perimeter) || props.strokeDasharray
     };
+    // @ts-ignore Remove invalid polygon element properties to stop loads of console errors
+    delete polygonAttributes.quarterHeight; delete polygonAttributes.halfWidth;
     return <polygon {...polygonAttributes}>
         {props.children}
     </polygon>;

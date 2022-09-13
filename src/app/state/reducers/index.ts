@@ -1,6 +1,5 @@
-import {combineReducers} from "redux";
-import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {AnyAction, combineReducers} from "redux";
+import {ACTION_TYPE} from "../../services";
 import {
     currentEvent,
     eventBookings,
@@ -8,45 +7,55 @@ import {
     eventBookingsForGroup,
     eventMapData,
     eventOverviews,
-    events
-} from "./eventsState";
-import {
+    events,
     totpChallengePending,
     user,
     userAuthSettings,
     userPreferences,
-    userSchoolLookup
-} from "./userState";
-import {error, mainContentId, printingSettings, transientUserContext} from "./internalAppState";
-import {constants, glossaryTerms} from "./staticState";
-import {concepts, doc} from "./contentState";
-import {graphSketcherSpec, questions} from "./questionState";
-import {activeModals, notifications, toasts} from "./notifiersState";
-import {myAnsweredQuestionsByDate, myProgress, userAnsweredQuestionsByDate, userProgress} from "./progressState";
-import {
+    userSchoolLookup,
+    errorSlice,
+    mainContentIdSlice,
+    printingSettingsSlice,
+    transientUserContextSlice,
+    constants,
+    glossaryTerms,
+    concepts,
+    doc,
+    graphSketcherSpec,
+    questions,
+    activeModals,
+    notifications,
+    toasts,
+    myAnsweredQuestionsByDate,
+    myProgress,
+    userAnsweredQuestionsByDate,
+    userProgress,
     adminContentErrors,
     adminEmailTemplate,
     adminStats,
     adminUserGet,
     adminUserSearch,
     contentVersion,
-    testQuestions
-} from "./adminState";
-import {activeAuthorisations, groupMemberships, groups, otherUserAuthorisations} from "./groupsState";
-import {currentTopic} from "./topicState";
-import {boards, currentGameboard, fasttrackConcepts, questionSearchResult, wildcards} from "./gameboardsState";
-import {search} from "./searchState";
-import {assignments, assignmentsByMe, groupProgress, progress} from "./assignmentsState";
-import {
+    testQuestions,
     quizAssignedToMe,
     quizAssignment,
     quizAssignments,
     quizAttempt,
     quizAttemptedFreelyByMe,
     quizPreview,
-    quizzes, studentQuizAttempt,
-} from "./quizState";
-import {isaacApi} from "../slices/api";
+    quizzes,
+    studentQuizAttempt,
+    activeAuthorisations,
+    groupMemberships,
+    groups,
+    otherUserAuthorisations,
+    currentTopic,
+    fasttrackConcepts,
+    questionSearchResult,
+    search,
+    isaacApi,
+    gameboardsSlice
+} from "../index";
 
 const appReducer = combineReducers({
     // User
@@ -57,10 +66,10 @@ const appReducer = combineReducers({
     totpChallengePending,
 
     // Internal App
-    printingSettings,
-    mainContentId,
-    transientUserContext,
-    error,
+    printingSettings: printingSettingsSlice.reducer,
+    mainContentId: mainContentIdSlice.reducer,
+    transientUserContext: transientUserContextSlice.reducer,
+    error: errorSlice.reducer,
 
     // Notifiers
     toasts,
@@ -104,17 +113,9 @@ const appReducer = combineReducers({
     currentTopic,
 
     // Gameboards
-    boards,
-    currentGameboard,
-    wildcards,
+    boards: gameboardsSlice.reducer,
     questionSearchResult,
     fasttrackConcepts,
-
-    // Assignments
-    assignments,
-    assignmentsByMe,
-    progress,
-    groupProgress,
 
     // Search
     search,
@@ -144,8 +145,10 @@ const appReducer = combineReducers({
 
 export type AppState = ReturnType<typeof appReducer> | undefined;
 
-export const rootReducer = (state: AppState, action: Action) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
+export const rootReducer = (state: AppState, action: AnyAction) => {
+    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS
+        || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS
+        || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
         return appReducer(undefined, action);
     }
     return appReducer(state, action);

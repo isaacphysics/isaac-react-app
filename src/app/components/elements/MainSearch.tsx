@@ -1,11 +1,9 @@
 import React, {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
 import {SearchButton} from "./SearchButton";
-import {pushSearchToHistory} from "../../services/search";
+import {isPhy, pushSearchToHistory, SEARCH_CHAR_LENGTH_LIMIT} from "../../services";
 import {History} from "history";
 import {withRouter} from "react-router";
 import {Collapse, Form, FormGroup, Input, Label, Nav, Navbar, NavbarToggler, NavItem} from "reactstrap";
-import {SEARCH_CHAR_LENGTH_LIMIT} from "../../services/constants";
-import {isPhy} from "../../services/siteConstants";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
 

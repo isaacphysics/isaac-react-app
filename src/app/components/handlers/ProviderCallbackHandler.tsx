@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
-import {useAppDispatch} from "../../state/store";
+import {handleProviderCallback, useAppDispatch} from "../../state";
 import {withRouter} from "react-router-dom";
-import {handleProviderCallback} from "../../state/actions";
 import {AuthenticationProvider} from "../../../IsaacApiTypes";
 import {IsaacSpinner} from "./IsaacSpinner";
 

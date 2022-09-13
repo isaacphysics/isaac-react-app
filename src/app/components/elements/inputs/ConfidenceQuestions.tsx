@@ -1,12 +1,10 @@
 import {Button, Col, Row} from "reactstrap";
 import React, {useEffect, useState} from "react";
-import {closeActiveModal, logAction, openActiveModal} from "../../../state/actions";
-import {useAppDispatch} from "../../../state/store";
+import {closeActiveModal, logAction, openActiveModal, store, useAppDispatch} from "../../../state";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
-import {store} from "../../../state/store";
-import {ChoiceDTO, GameboardDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
+import {isCS, isPhy, siteSpecific} from "../../../services";
+import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -187,7 +185,7 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
 // This and ConfidenceQuestions should be used together, with the values managed by this hook passed to an instance of
 // ConfidenceQuestions. This hook just abstracts away confidence-question-specific stuff so it is easy to remove and
 // doesn't have to hang around in IsaacQuestion and IsaacQuickQuestion.
-export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, locked?: boolean, currentGameboard?: GameboardDTO | null) => {
+export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, locked?: boolean) => {
     // Confidence question specific things
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
     const [validationPending, setValidationPending] = useState<ValidationPendingState>({pending: false});

@@ -2,7 +2,7 @@ import React from "react";
 import {Tabs} from "./Tabs";
 import {IsaacContent} from "../content/IsaacContent";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isaacApi, resultOrNotFound} from "../../state/slices/api";
+import {isaacApi, resultOrNotFound} from "../../state";
 
 const COMPUTER_SCIENTIST_FRAGMENT_ID = "computer-scientist-of-the-month";
 

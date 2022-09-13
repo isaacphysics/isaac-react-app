@@ -1,16 +1,20 @@
 import React, {ChangeEvent} from "react";
-import {PROGRAMMING_LANGUAGE, programmingLanguagesMap, UserFacingRole} from "../../../services/constants";
 import {
     allRequiredInformationIsPresent,
-    validateEmail, validateName
-} from "../../../services/validation";
+    isCS,
+    PROGRAMMING_LANGUAGE,
+    programmingLanguagesMap,
+    TEACHER_REQUEST_ROUTE,
+    UserFacingRole,
+    validateEmail,
+    validateName
+} from "../../../services";
 import {CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from "reactstrap";
 import {BooleanNotation, DisplaySettings, ProgrammingLanguage, ValidationUser} from "../../../../IsaacAppTypes";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {DobInput} from "../inputs/DobInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTypes";
-import {isCS, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
 import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";

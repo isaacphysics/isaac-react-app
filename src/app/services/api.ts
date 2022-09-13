@@ -1,23 +1,26 @@
 import axios, {AxiosPromise} from "axios";
-import {API_PATH, EventStageFilter, EventTypeFilter, MEMBERSHIP_STATUS, QUESTION_CATEGORY, TAG_ID} from "./constants";
+import {
+    API_PATH,
+    EventStageFilter,
+    EventTypeFilter,
+    MEMBERSHIP_STATUS,
+    securePadCredentials,
+    securePadPasswordReset,
+    TAG_ID
+} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
-    AssignmentDTO,
-    AssignmentFeedbackDTO,
     AuthenticationProvider,
     EmailTemplateDTO,
     EventBookingDTO,
-    GameboardDTO,
     ResultsWrapper,
     TestCaseDTO,
     UserContext
 } from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
-    NumberOfBoards,
     AdditionalInformation,
     ATTENDANCE,
-    BoardOrder,
     Choice,
     Concepts,
     CredentialsAuthDTO,
@@ -27,10 +30,8 @@ import {
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
-import {handleApiGoneAway, handleServerError} from "../state/actions";
+import {handleApiGoneAway, handleServerError} from "../state";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
-import {securePadCredentials, securePadPasswordReset} from "./credentialPadding";
-import {isPhy} from "./siteConstants";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -143,15 +144,6 @@ export const api = {
         },
         unlinkAccount: (provider: AuthenticationProvider): AxiosPromise => {
             return endpoint.delete(`/auth/${provider}/link`);
-        },
-        getNewMFASecret: (): AxiosPromise => {
-            return endpoint.get(`/users/current_user/mfa/new_secret`)
-        },
-        setupMFAOnAccount: (sharedSecret: string, mfaVerificationCode: string): AxiosPromise => {
-            return endpoint.post(`/users/current_user/mfa`, {sharedSecret: sharedSecret, mfaVerificationCode: mfaVerificationCode})
-        },
-        disableMFAOnAccount: (userId: number): AxiosPromise => {
-            return endpoint.delete(`/users/${userId}/mfa`)
         },
     },
     email: {
@@ -307,49 +299,6 @@ export const api = {
             return endpoint.get(`/pages/topics/${topicName}`);
         }
     },
-    gameboards: {
-        get: (gameboardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
-            return endpoint.get(`/gameboards/${gameboardId}`);
-        },
-        save: (gameboardId: string) => {
-            return endpoint.post(`gameboards/user_gameboards/${gameboardId}`, {});
-        },
-        renameAndSave: (gameboardId: string, newGameboardTitle: string) => {
-            return endpoint.post(`gameboards/${gameboardId}`, {}, {params: {title: newGameboardTitle}});
-        },
-        create: (gameboard: GameboardDTO) => {
-            return endpoint.post(`gameboards`, gameboard);
-        },
-        getWildcards: (): AxiosPromise<ApiTypes.IsaacWildcard[]> => {
-            return endpoint.get(`gameboards/wildcards`);
-        },
-        generateTemporary: (params: {[key: string]: string}): AxiosPromise<ApiTypes.GameboardDTO> => {
-            // TODO FILTER: Temporarily force physics to search for problem solving questions
-            if (isPhy) {
-                if (!Object.keys(params).includes("questionCategories")) {
-                    params.questionCategories = QUESTION_CATEGORY.PROBLEM_SOLVING;
-                }
-                // Swap 'learn_and_practice' to 'problem_solving' and 'books' as that is how the content is tagged
-                // TODO the content should be modified with a script/change of tagging so that this is the case
-                params.questionCategories = params.questionCategories?.split(",")
-                    .map(c => c === QUESTION_CATEGORY.LEARN_AND_PRACTICE ? `${QUESTION_CATEGORY.PROBLEM_SOLVING},${QUESTION_CATEGORY.BOOK_QUESTIONS}` : c)
-                    .join(",")
-            }
-
-            return endpoint.get(`/gameboards`, {params});
-        }
-    },
-    assignments: {
-        getMyAssignments: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
-            return endpoint.get(`/assignments`);
-        },
-        getAssignmentsOwnedByMe: (): AxiosPromise<ApiTypes.AssignmentDTO[]> => {
-            return endpoint.get(`/assignments/assign`);
-        },
-        getProgressForAssignment: (assignment: ApiTypes.AssignmentDTO): AxiosPromise<AppTypes.AppAssignmentProgress[]> => {
-            return endpoint.get(`/assignments/assign/${assignment._id}/progress`);
-        }
-    },
     contentVersion: {
         getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
             return endpoint.get(`/info/content_versions/live_version`);
@@ -416,26 +365,6 @@ export const api = {
         },
         deleteManager: (group: AppTypes.AppGroup, manager: ApiTypes.UserSummaryWithEmailAddressDTO): AxiosPromise => {
             return endpoint.delete(`/groups/${group.id}/manager/${manager.id}`);
-        },
-        groupProgress: (group: ApiTypes.UserGroupDTO): AxiosPromise<ApiTypes.UserGameboardProgressSummaryDTO[]> => {
-            return endpoint.get(`/groups/${group.id}/progress`);
-        }
-    },
-    boards: {
-        get: (startIndex: number, limit: NumberOfBoards, sort: BoardOrder): AxiosPromise<ApiTypes.GameboardListDTO> => {
-            return endpoint.get(`/gameboards/user_gameboards`, {params: {"start_index": startIndex, limit, sort}});
-        },
-        delete: (boardId: string) => {
-            return endpoint.delete(`/gameboards/user_gameboards/${boardId}`);
-        },
-        unassign: (boardId: string, groupId: number) => {
-            return endpoint.delete(`/assignments/assign/${boardId}/${groupId}`);
-        },
-        assign: (assignments: AssignmentDTO[]): AxiosPromise<AssignmentFeedbackDTO[]> => {
-            return endpoint.post(`/assignments/assign_bulk`, assignments);
-        },
-        getById: (boardId: string): AxiosPromise<ApiTypes.GameboardDTO> => {
-            return endpoint.get(`/gameboards/${boardId}`);
         }
     },
     events: {

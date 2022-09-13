@@ -1,7 +1,7 @@
 import React from "react";
 import {DisplaySettings} from "../../../../IsaacAppTypes";
 import {CardBody, CustomInput, UncontrolledTooltip} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../../services";
 interface UserBetaFeaturesProps {
     displaySettings?: DisplaySettings;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;

@@ -1,8 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {deleteBoard} from "../../state/actions";
+import {selectors, unlinkUserFromGameboard, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import * as RS from 'reactstrap';
 import {
     Button,
@@ -16,36 +14,39 @@ import {
     Input,
     Label,
     Row,
+    Spinner,
     Table
 } from 'reactstrap';
 import {BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
+    above,
+    allPropertiesFromAGameboard,
+    below,
+    BOARD_ORDER_NAMES,
+    BoardCompletions,
+    boardCompletionSelection,
+    BoardCreators,
+    BoardLimit,
+    BoardViews,
+    determineGameboardSubjects,
     difficultiesOrdered,
     difficultyShortLabelMap,
-    sortIcon,
-    stageLabelMap,
-    stagesOrdered
-} from "../../services/constants";
-import {
-    allPropertiesFromAGameboard,
-    boardCompletionSelection,
-    determineGameboardSubjects,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
-    useGameboards,
-    BoardViews,
-    BoardLimit,
-    BoardCreators,
-    BoardCompletions,
-    BOARD_ORDER_NAMES
-} from "../../services/gameboards";
-import {above, below, isMobile, useDeviceSize} from "../../services/device";
+    isMobile,
+    isPhy,
+    siteSpecific,
+    sortIcon,
+    stageLabelMap,
+    stagesOrdered,
+    useDeviceSize,
+    useGameboards
+} from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
-import {isPhy, siteSpecific} from "../../services/siteConstants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 
@@ -79,7 +80,7 @@ const Board = (props: BoardTableProps) => {
 
     function confirmCardDeleteBoard() {
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            dispatch(deleteBoard(board.id, board.title));
+            dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title}));
         }
     }
 
@@ -88,7 +89,7 @@ const Board = (props: BoardTableProps) => {
     const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
 
     return boardView == BoardViews.table ?
-        <tr key={board.id} className="board-card">
+        <tr className="board-card" data-testid={"my-gameboard-table-row"}>
             <td>
                 <div className="board-subject-hexagon-container table-view">
                     {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
@@ -121,7 +122,7 @@ const Board = (props: BoardTableProps) => {
             </td>
         </tr>
         :
-        <Card className="board-card card-neat">
+        <Card className="board-card card-neat" data-testid={"my-gameboard-card"}>
             <CardBody className="pb-4 pt-4">
                 <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
                 <div className="board-subject-hexagon-container">
@@ -165,7 +166,8 @@ const Board = (props: BoardTableProps) => {
 export const MyGameboards = () => {
     //Redux state and dispatch
     const dispatch = useAppDispatch();
-    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
+    // We know the user is logged in to visit this page
+    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
 
     const [selectedBoards, setSelectedBoards] = useState<GameboardDTO[]>([]);
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
@@ -187,7 +189,7 @@ export const MyGameboards = () => {
 
     function confirmDeleteMultipleBoards() {
         if (confirm(`Are you sure you want to remove ${selectedBoards && selectedBoards.length > 1 ? selectedBoards.length + " boards" : selectedBoards[0].title} from your account?`)) {
-            selectedBoards && selectedBoards.map(board => dispatch(deleteBoard(board.id, board.title)));
+            selectedBoards && selectedBoards.map(board => dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title})));
             setSelectedBoards([]);
         }
     }
@@ -233,7 +235,7 @@ export const MyGameboards = () => {
             :
             <>
                 <div className="mt-4 mb-2">
-                    {boards && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
+                    {boards && boards.totalResults && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
                         with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
                     {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved gameboards...</h4>}
                 </div>
@@ -269,9 +271,8 @@ export const MyGameboards = () => {
                             // Card view
                             <>
                                 <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
-                                    {boards.boards.map(board => <Col>
+                                    {boards.boards.map(board => <Col key={board.id}>
                                         <Board
-                                            key={board.id}
                                             board={board}
                                             selectedBoards={selectedBoards}
                                             setSelectedBoards={setSelectedBoards}
@@ -283,7 +284,7 @@ export const MyGameboards = () => {
                                 </Row>
                                 <div className="text-center mt-3 mb-5" style={{clear: "both"}}>
                                     <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <IsaacSpinner /> : "View more"}</Button>}
+                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner /> : "View more"}</Button>}
                                 </div>
                             </>
                             :
