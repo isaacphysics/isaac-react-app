@@ -113,6 +113,13 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getMonth() + 1;
 
+    function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
+        const utcDate = e.target.valueAsDate as Date;
+        const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
+        // Sets the scheduled date to 7AM in the timezone of the browser.
+        setScheduledStartDate(scheduledDate)
+    }
+
     return <Container className="py-2">
         <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
             <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
@@ -125,7 +132,7 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
         {/* TODO remove staff role requirement */}
         {isStaff(user) && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
-                       onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
+                       onChange={setScheduledStartDateAtSevenAM} />
         </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
