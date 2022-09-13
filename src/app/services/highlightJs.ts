@@ -75,6 +75,8 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         "DEFAULT",
         "ENDSWITCH",
         "FOR",
+        "FOREACH",
+        "IN",
         "TO",
         "NEXT",
         "WHILE",
@@ -87,6 +89,10 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         "ENDFUNCTION",
         "PROCEDURE",
         "ENDPROCEDURE",
+        "TRY",
+        "CATCH",
+        "FINALLY",
+        "ENDTRY",
         "BYREF",
         "BYVAL",
         "RECORD",
@@ -98,6 +104,10 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         "PUBLIC",
         "PROTECTED",
         "NEW",
+        "EXTENDS",
+        "SUPER",
+        "DICTIONARY",
+        "LIST",
     ];
 
     const LITERALS = [
@@ -113,6 +123,19 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         "INPUT",
         "PRINT",
         "LEN",
+        "UPPER",
+        "LOWER",
+        "SPLIT",
+        "MID",
+        "LEFT",
+        "RIGHT",
+        "INDEXOF",
+        "STRIP",
+        "CONTAINS",
+        "DELETE",
+        "APPEND",
+        "POP",
+        "CREATE_FILE",
         "OPEN_READ",
         "OPEN_WRITE",
         "OPEN_APPEND",
@@ -124,7 +147,9 @@ const isaacPseudocodeHighlightDefinition: LanguageFn = function(hljsLib) {
         "END_OF_FILE",
         "ASC",
         "CHR",
-        "RANDOM_INT"
+        "RANDOM_INT",
+        "STR_TO_DATE",
+        "STR_TO_TIME",
     ]
 
     const FUNCTION_DEFINITION = {
