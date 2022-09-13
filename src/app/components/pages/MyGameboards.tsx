@@ -37,6 +37,7 @@ import {
     generateGameboardSubjectHexagons,
     isMobile,
     isPhy,
+    siteSpecific,
     sortIcon,
     stageLabelMap,
     stagesOrdered,
@@ -361,8 +362,8 @@ export const MyGameboards = () => {
                                                         <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
                                                             Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
                                                             <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                                                                Practice: {difficultiesOrdered.slice(0, 3).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                                                                Challenge: {difficultiesOrdered.slice(3).map(d => difficultyShortLabelMap[d]).join(", ")}
+                                                                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                                                                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
                                                             </RS.UncontrolledTooltip>
                                                         </th>
                                                         <th className="text-center align-middle">Creator</th>
