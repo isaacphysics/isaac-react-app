@@ -117,7 +117,7 @@ export const IsaacApp = () => {
     useEffect(() => {
         if (loggedInUserId) {
             dispatch(requestNotifications());
-            checkForWebSocket(loggedInUserId);
+            checkForWebSocket();
         }
         return () => {
             closeWebSocket();
