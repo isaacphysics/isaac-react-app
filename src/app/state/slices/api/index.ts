@@ -344,28 +344,29 @@ const isaacApi = createApi({
             }),
             invalidatesTags: (_, error) => !error ? ["AssignmentProgress"] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Assignment deleted",
-                successMessage: "This assignment has been unset successfully.",
-                onQuerySuccess: ({boardId, groupId}, _, {dispatch}) => {
-                    // TODO could make these optimistic updates, and revert them on failure? Might require ditching
-                    //  onQueryLifecycleEvents for this endpoint
-
+                onQueryStart: ({boardId, groupId}, {dispatch}) => {
                     // Update getMySetAssignments cache data, removing any assignments with this group and gameboard id
-                    dispatch(isaacApi.util.updateQueryData(
+                    const allAssignmentsPromise = dispatch(isaacApi.util.updateQueryData(
                         "getMySetAssignments",
                         undefined,
                         (assignments) => {
                             return (assignments ?? []).filter(a => (a.groupId !== groupId) || (a.gameboardId !== boardId));
                         }
                     ));
-                    dispatch(isaacApi.util.updateQueryData(
+                    const groupAssignmentsPromise = dispatch(isaacApi.util.updateQueryData(
                         "getMySetAssignments",
                         groupId,
                         (assignments) => {
                             return (assignments ?? []).filter(a => a.gameboardId !== boardId);
                         }
                     ));
+                    return {resetOptimisticUpdates: () => {
+                        // @ts-ignore These ".undo()"s definitely exist: https://redux-toolkit.js.org/rtk-query/usage/manual-cache-updates#optimistic-updates
+                        allAssignmentsPromise.undo(); groupAssignmentsPromise.undo();
+                    }};
                 },
+                successTitle: "Assignment deleted",
+                successMessage: "This assignment has been unset successfully.",
                 errorTitle: "Assignment deletion failed"
             })
         }),
