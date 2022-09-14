@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import Cookies from 'js-cookie';
-import {useAppDispatch} from "../../state/store";
-import {logAction} from "../../state/actions";
+import {logAction, useAppDispatch} from "../../state";
 
 const COOKIE_COOKIE = "isaacCookiesAccepted";
 

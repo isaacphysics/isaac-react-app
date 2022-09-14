@@ -1,6 +1,6 @@
 import React, {RefObject, useCallback, useEffect, useRef, useState} from "react";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {NOT_FOUND} from "./constants";
+import {NOT_FOUND} from "./";
 
 // undefined|null checker and type guard all-in-wonder.
 // Why is this not in Typescript?

@@ -1,14 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {AppState} from "../../state/reducers";
-import {getAdminContentErrors} from "../../state/actions";
+import {AppState, getAdminContentErrors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {useAppDispatch, useAppSelector} from "../../state/store";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
-import {EDITOR_URL} from "../../services/constants";
+import {EDITOR_URL, selectOnChange} from "../../services";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import Select from "react-select";
-import {selectOnChange} from "../../services/select";
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>

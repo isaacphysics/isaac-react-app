@@ -1,26 +1,24 @@
 import React, {useState} from "react";
 import {connect, ResolveThunks} from "react-redux";
-import {useAppSelector} from "../../../state/store";
-import {sortBy} from "lodash";
-import {history} from "../../../services/history";
-import * as RS from "reactstrap";
-import {Button} from "reactstrap";
-
-import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
-import {Action, AppGroup} from "../../../../IsaacAppTypes";
-
-import {store} from "../../../state/store";
 import {
     addGroupManager,
+    AppState,
     closeActiveModal,
     deleteGroupManager,
     selectGroup,
+    selectors,
     showAdditionalManagerSelfRemovalModal,
     showGroupInvitationModal,
-    showGroupManagersModal
-} from "../../../state/actions";
-import {AppState} from "../../../state/reducers";
-import {selectors} from "../../../state/selectors";
+    showGroupManagersModal,
+    store,
+    useAppSelector
+} from "../../../state";
+import {sortBy} from "lodash";
+import {history} from "../../../services";
+import * as RS from "reactstrap";
+import {Button} from "reactstrap";
+import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
+import {Action, AppGroup} from "../../../../IsaacAppTypes";
 import {bindActionCreators, Dispatch} from "redux";
 
 

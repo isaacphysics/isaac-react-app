@@ -1,21 +1,19 @@
-import {api} from "./api";
-import {UserSnapshot} from "../../IsaacAppTypes";
-import {UserSummaryDTO} from "../../IsaacApiTypes";
-import {getSnapshot, partiallyUpdateUserSnapshot} from "../state/actions";
-import {store} from "../state/store";
+import {api, isLoggedIn} from "./";
+import {getSnapshot, partiallyUpdateUserSnapshot, store} from "../state";
 
 let notificationWebSocket: WebSocket | null  = null;
 let webSocketCheckTimeout: number | null = null;
 let webSocketErrorCount = 0;
 let lastKnownServerTime: number | null = null;
 
-const openNotificationSocket = function(user: UserSummaryDTO | null): void {
+const openNotificationSocket = function(): void {
 
     if (notificationWebSocket !== null) {
         return;
     }
 
-    if (!user) {
+    // Slightly hacky check that we are in fact logged in:
+    if (!isLoggedIn(store.getState().user)) {
         return;
     }
 
@@ -94,8 +92,8 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
                     }
                     // This is likely a network interrupt or else a server restart.
                     // For the latter, we really don't want all reconnections at once.
-                    // Wait a random time between 20s and 60s, and then attempt reconnection:
-                    const randomRetryIntervalSeconds = 20 + Math.floor(Math.random() * 40);
+                    // Wait a random time between 30s and 90s, and then attempt reconnection:
+                    const randomRetryIntervalSeconds = 30 + Math.floor(Math.random() * 60);
                     console.log("WebSocket connection lost. Reconnect attempt in " + randomRetryIntervalSeconds + "s.");
                     webSocketCheckTimeout = window.setTimeout(checkForWebSocket, randomRetryIntervalSeconds * 1000);
                 }
@@ -110,14 +108,14 @@ const openNotificationSocket = function(user: UserSummaryDTO | null): void {
     }
 }
 
-export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnapshot?: UserSnapshot): void {
+export const checkForWebSocket = function(): void {
     try {
         if (notificationWebSocket !== null) {
-            if (!userSnapshot) {
+            if (!store.getState()?.myProgress?.userSnapshot) {
                 // If we don't have a snapshot, request one.
                 notificationWebSocket.send("user-snapshot-nudge");
             } else {
-                // Else just ping to keep connection alive.
+                // Else just ping to keep connection alive; we'll get updates sent by the server.
                 notificationWebSocket.send("heartbeat");
             }
             if (webSocketCheckTimeout) {
@@ -125,7 +123,7 @@ export const checkForWebSocket = function(user: UserSummaryDTO | null , userSnap
             }
             webSocketCheckTimeout = window.setTimeout(checkForWebSocket, 60000);
         } else {
-            openNotificationSocket(user);
+            openNotificationSocket();
         }
     } catch (e) {
         console.log("Error establishing WebSocket connection!", e)

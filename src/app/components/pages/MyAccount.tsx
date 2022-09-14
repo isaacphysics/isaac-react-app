@@ -1,4 +1,4 @@
-import React, {Suspense, lazy, useEffect, useMemo, useState} from 'react';
+import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {
@@ -16,8 +16,15 @@ import {
     TabPane,
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
-import {AppState} from "../../state/reducers";
-import {adminUserGet, getChosenUserAuthSettings, resetPassword, updateCurrentUser} from "../../state/actions";
+import {
+    adminUserGetRequest,
+    AdminUserGetState,
+    AppState,
+    ErrorState,
+    getChosenUserAuthSettings,
+    resetPassword,
+    updateCurrentUser
+} from "../../state";
 import {
     BooleanNotation,
     DisplaySettings,
@@ -31,26 +38,27 @@ import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
 import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
+    ACCOUNT_TAB,
     allRequiredInformationIsPresent,
+    history,
+    ifKeyIsEnter,
+    isCS,
     isDobOverThirteen,
+    isStaff,
+    PROGRAMMING_LANGUAGE,
+    SITE_SUBJECT_TITLE,
     validateEmail,
     validateEmailPreferences,
     validatePassword
-} from "../../services/validation";
+} from "../../services";
 import queryString from "query-string";
 import {Link, withRouter} from "react-router-dom";
-import {ACCOUNT_TAB, PROGRAMMING_LANGUAGE} from "../../services/constants";
-import {history} from "../../services/history"
 import {TeacherConnections} from "../elements/panels/TeacherConnections";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter} from "../../services/navigation";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {isStaff} from "../../services/user";
-import {ErrorState} from "../../state/reducers/internalAppState";
-import {AdminUserGetState} from "../../state/reducers/adminState";
 import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
+
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
 const stateToProps = (state: AppState, props: any) => {
@@ -71,7 +79,7 @@ const stateToProps = (state: AppState, props: any) => {
 const dispatchToProps = {
     updateCurrentUser,
     resetPassword,
-    adminUserGet,
+    adminUserGetRequest,
     getChosenUserAuthSettings,
 };
 
@@ -93,11 +101,11 @@ interface AccountPageProps {
     hashAnchor: string | null;
     authToken: string | null;
     userOfInterest: string | null;
-    adminUserGet: (userid: number | undefined) => void;
+    adminUserGetRequest: (userid: number | undefined) => void;
     adminUserToEdit?: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGet, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
     // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
@@ -106,7 +114,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useEffect(() => {
         if (userOfInterest) {
-            adminUserGet(Number(userOfInterest));
+            adminUserGetRequest(Number(userOfInterest));
             getChosenUserAuthSettings(Number(userOfInterest));
         }
     }, [userOfInterest]);

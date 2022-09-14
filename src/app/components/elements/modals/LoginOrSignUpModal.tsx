@@ -1,15 +1,10 @@
 import React, {useEffect} from "react";
-import {Button, Col, Row, CustomInput, Form} from "reactstrap";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {Button, Col, CustomInput, Form, Row} from "reactstrap";
+import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
-import {selectors} from "../../../state/selectors";
-import {closeActiveModal} from "../../../state/actions";
-import {store} from "../../../state/store";
-import {GoogleSignInButton, PasswordResetButton, TFAInput, EmailPasswordInputs, useLoginLogic} from "../../pages/LogIn";
-import * as persistence from "../../../services/localStorage";
-import {KEY} from "../../../services/localStorage";
+import {EmailPasswordInputs, GoogleSignInButton, PasswordResetButton, TFAInput, useLoginLogic} from "../../pages/LogIn";
+import {isCS, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
-import {isCS, siteSpecific} from "../../../services/siteConstants";
 
 const LoginOrSignUpBody = () => {
 

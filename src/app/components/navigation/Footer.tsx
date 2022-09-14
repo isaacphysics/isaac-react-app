@@ -4,7 +4,7 @@ import {ListGroupFooter} from "../elements/list-groups/ListGroupFooter";
 import {ListGroupSocial} from "../elements/list-groups/ListGroupSocial";
 import {ListGroupFooterBottom} from "../elements/list-groups/ListGroupFooterBottom";
 import {Link} from "react-router-dom";
-import {siteSpecific} from "../../services/siteConstants";
+import {siteSpecific} from "../../services";
 
 const ExternalLink = ({href, children}: {href: string; children: any}) => (
     // eslint-disable-next-line react/jsx-no-target-blank

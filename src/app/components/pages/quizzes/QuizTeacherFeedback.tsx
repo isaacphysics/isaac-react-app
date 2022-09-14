@@ -1,35 +1,44 @@
 import React, {useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
-
-import {ShowLoading} from "../../handlers/ShowLoading";
 import {
     loadQuizAssignmentFeedback,
+    selectors,
+    showToast,
     updateQuizAssignmentDueDate,
-    updateQuizAssignmentFeedbackMode
-} from "../../../state/actions/quizzes";
-import {selectors} from "../../../state/selectors";
+    updateQuizAssignmentFeedbackMode,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
+import {useParams} from "react-router-dom";
+import {ShowLoading} from "../../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
-import {usePageSettings} from "../../../services/progress";
-import {QuizFeedbackModes} from "../../../../IsaacAppTypes";
+import {
+    extractTeacherName,
+    getQuizAssignmentCSVDownloadLink,
+    isDefined,
+    useAssignmentProgressAccessibilitySettings
+} from "../../../services";
+import {AssignmentProgressPageSettingsContext, QuizFeedbackModes} from "../../../../IsaacAppTypes";
 import {teacherQuizzesCrumbs} from "../../elements/quiz/QuizAttemptComponent";
-import {extractTeacherName} from "../../../services/user";
-import {isDefined} from "../../../services/miscUtils";
 import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
-import {API_PATH} from "../../../services/constants";
-import {getQuizAssignmentResultsSummaryCSV, showToast} from "../../../state/actions";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
 import {range} from "lodash";
-import { ResultsTable } from "../../elements/quiz/QuizProgressCommon";
-
-interface QuizTeacherFeedbackProps {
-    match: {params: {quizAssignmentId: string}}
-}
+import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
+import {
+    Alert,
+    Button,
+    Col,
+    Container,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Label,
+    Row,
+    UncontrolledDropdown
+} from "reactstrap";
 
 const pageHelp = <span>
     See the feedback for your students for this test assignment.
@@ -42,8 +51,9 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
     DETAILED_FEEDBACK: "Detailed feedback on each question",
 };
 
-const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: QuizTeacherFeedbackProps) => {
-    const pageSettings = usePageSettings();
+export const QuizTeacherFeedback = () => {
+    const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
+    const pageSettings = useAssignmentProgressAccessibilitySettings();
     const assignmentState = useAppSelector(selectors.quizzes.assignment);
 
     const dispatch = useAppDispatch();
@@ -105,7 +115,7 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
         }
     }
 
-    return <RS.Container>
+    return <Container>
         <ShowLoading until={assignmentState}>
             {assignment && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
@@ -115,65 +125,61 @@ const QuizTeacherFeedbackComponent = ({match: {params: {quizAssignmentId}}}: Qui
                     </span>
                     {isDefined(assignment.dueDate) && <><Spacer/>Due: {formatDate(assignment.dueDate)}</>}
                 </p>
-                <RS.Row>
-                    {assignment.dueDate && <RS.Col xs={12} sm={6} md={4}>
-                        <RS.Label for="dueDate" className="pr-1">Extend the due date:</RS.Label>
-                        <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined} yearRange={yearRange} defaultYear={currentYear} noClear
-                                   defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                <Row>
+                    {assignment.dueDate && <Col xs={12} sm={6} md={4}>
+                        <Label for="dueDate" className="pr-1">Extend the due date:
+                            <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined} yearRange={yearRange} defaultYear={currentYear} noClear
+                                       defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                        </Label>
                         <div className={"mt-2 w-100 text-center mb-2"}>
-                            {dueDate && (dueDate > assignment.dueDate) && <RS.Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
+                            {dueDate && (dueDate > assignment.dueDate) && <Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
                                 {settingDueDate ? <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></> : "Extend due date"}
-                            </RS.Button>}
-                            {dueDate && (dueDate < assignment.dueDate) && <RS.Card className={"text-left border bg-transparent border-danger"}>
-                                <RS.CardBody className={"p-2 pl-3"}>
-                                    Extended due date must be after the current due date!
-                                </RS.CardBody>
-                            </RS.Card>}
+                            </Button>}
                         </div>
-                    </RS.Col>}
-                    <RS.Col>
-                        <RS.Label for="feedbackMode" className="pr-1">Student feedback mode:</RS.Label><br/>
-                        <RS.UncontrolledDropdown className="d-inline-block">
-                            <RS.DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
+                    </Col>}
+                    <Col>
+                        <Label for="feedbackMode" className="pr-1">Student feedback mode:</Label><br/>
+                        <UncontrolledDropdown className="d-inline-block">
+                            <DropdownToggle color="dark" outline className={"px-3 text-nowrap"} caret={!settingFeedbackMode} id="feedbackMode" disabled={settingFeedbackMode}>
                                 {settingFeedbackMode ?
                                     <>Saving <IsaacSpinner size="sm" className="quizFeedbackModeSpinner" /></>
                                 :   feedbackNames[assignment.quizFeedbackMode as QuizFeedbackMode]}
-                            </RS.DropdownToggle>
-                            <RS.DropdownMenu>
+                            </DropdownToggle>
+                            <DropdownMenu>
                                 {QuizFeedbackModes.map(mode =>
-                                    <RS.DropdownItem key={mode}
+                                    <DropdownItem key={mode}
                                                     onClick={() => setFeedbackMode(mode)}
                                                     active={mode === assignment?.quizFeedbackMode}>
                                         {feedbackNames[mode]}
-                                    </RS.DropdownItem>
+                                    </DropdownItem>
                                 )}
-                            </RS.DropdownMenu>
-                        </RS.UncontrolledDropdown>
-                    </RS.Col>
-                    <RS.Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
-                        <RS.Button
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </Col>
+                    <Col sm={12} md={"auto"} className={"text-right mt-2 mt-md-0"}>
+                        <Button
                             color="primary" outline className="btn-md mt-1 text-nowrap"
-                            href={`${API_PATH}/quiz/assignment/${assignment.id}/download`}
+                            href={getQuizAssignmentCSVDownloadLink(assignment.id as number)}
                             target="_blank"
                         >
                             Export as CSV
-                        </RS.Button>
-                    </RS.Col>
-                </RS.Row>
+                        </Button>
+                    </Col>
+                </Row>
                 <div className={`assignment-progress-details bg-transparent ${pageSettings.colourBlind ? " colour-blind" : ""}`}>
-                    <AssignmentProgressLegend pageSettings={pageSettings} showQuestionKey />
-                    <ResultsTable assignment={assignment} pageSettings={pageSettings} />
+                    <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+                        <AssignmentProgressLegend showQuestionKey />
+                        <ResultsTable assignment={assignment} />
+                    </AssignmentProgressPageSettingsContext.Provider>
                 </div>
             </>}
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp} intermediateCrumbs={teacherQuizzesCrumbs}/>
-                <RS.Alert color="danger">
+                <Alert color="danger">
                     <h4 className="alert-heading">Error loading test feedback</h4>
                     <p>{error}</p>
-                </RS.Alert>
+                </Alert>
             </>}
         </ShowLoading>
-    </RS.Container>;
+    </Container>;
 };
-
-export const QuizTeacherFeedback = withRouter(QuizTeacherFeedbackComponent);

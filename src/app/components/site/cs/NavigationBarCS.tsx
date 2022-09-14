@@ -6,9 +6,8 @@ import {
     NavigationSection,
     useAssignmentsCount
 } from "../../navigation/NavigationBar";
-import {useAppSelector} from "../../../state/store";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
-import {selectors} from "../../../state/selectors";
+import {useAppSelector, selectors} from "../../../state";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services";
 
 export const NavigationBarCS = () => {
     const user = useAppSelector(selectors.user.orNull);

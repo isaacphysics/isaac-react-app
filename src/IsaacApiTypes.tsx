@@ -3,7 +3,7 @@
 
 // Manually added/modified parts
 
-import {EXAM_BOARD} from "./app/services/constants";
+import {EXAM_BOARD} from "./app/services";
 
 export interface IsaacCardDTO extends ContentDTO {
     image?: ImageDTO;
@@ -41,7 +41,6 @@ export interface AssignmentDTO extends IAssignmentLike {
     creationDate?: Date;
     dueDate?: Date;
     scheduledStartDate?: Date;
-    _id?: number;
 }
 
 export interface AssignmentFeedbackDTO {

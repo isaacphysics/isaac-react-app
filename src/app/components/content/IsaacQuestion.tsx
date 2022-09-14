@@ -1,33 +1,41 @@
-import React, {useContext, useEffect, Suspense} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {addGameboard, attemptQuestion, deregisterQuestion, registerQuestion} from "../../state/actions";
+import React, {Suspense, useContext, useEffect} from "react";
+import {
+    attemptQuestion,
+    deregisterQuestions,
+    registerQuestions,
+    saveGameboard,
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {selectors} from "../../state/selectors";
+import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
-import {QUESTION_TYPES, selectQuestionPart} from "../../services/questions";
-import {DateString, TIME_ONLY} from "../elements/DateString";
-import {AccordionSectionContext, ConfidenceContext} from "../../../IsaacAppTypes";
-import {RouteComponentProps, withRouter} from "react-router";
 import {
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
+    fastTrackProgressEnabledBoards,
+    isCS,
+    isLoggedIn,
+    isPhy,
+    QUESTION_TYPES,
+    selectQuestionPart,
     useFastTrackInformation
-} from "../../services/fastTrack";
-import {isCS, isPhy} from "../../services/siteConstants";
+} from "../../services";
+import {DateString, TIME_ONLY} from "../elements/DateString";
+import {AccordionSectionContext, ConfidenceContext, GameboardContext} from "../../../IsaacAppTypes";
+import {RouteComponentProps, withRouter} from "react-router";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
-import {isLoggedIn} from "../../services/user";
-import {fastTrackProgressEnabledBoards} from "../../services/constants";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 
 export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.QuestionDTO} & RouteComponentProps) => {
     const dispatch = useAppDispatch();
     const accordion = useContext(AccordionSectionContext);
+    const currentGameboard = useContext(GameboardContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
-    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
     const currentUser = useAppSelector(selectors.user.orNull);
     const questionPart = selectQuestionPart(pageQuestions, doc.id);
     const currentAttempt = questionPart?.currentAttempt;
@@ -51,8 +59,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         currentAttempt,
         canSubmit,
         correct,
-        !!locked,
-        currentGameboard
+        !!locked
     );
 
     const tooManySigFigsFeedback = <p>
@@ -73,8 +80,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Register Question Part in Redux
     useEffect(() => {
-        dispatch(registerQuestion(doc, accordion.clientId));
-        return () => { dispatch(deregisterQuestion(doc.id as string)); }
+        dispatch(registerQuestions([doc], accordion.clientId));
+        return () => dispatch(deregisterQuestions([doc.id as string]));
     }, [dispatch, doc.id]);
 
     // Select QuestionComponent from the question part's document type (or default)
@@ -96,9 +103,13 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         <RS.Form onSubmit={function submitCurrentAttempt(event) {
             if (event) {event.preventDefault();}
             if (questionPart?.currentAttempt) {
-                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
+                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
                 if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
-                    dispatch(addGameboard(currentGameboard.id, currentUser));
+                    dispatch(saveGameboard({
+                        boardId: currentGameboard.id,
+                        user: currentUser,
+                        redirectOnSuccess: false
+                    }));
                 }
             }
         }}>

@@ -1,5 +1,5 @@
 import {Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 
 export type ToastsState = Toast[] | null;
 export const toasts = (toasts: ToastsState = null, action: Action) => {

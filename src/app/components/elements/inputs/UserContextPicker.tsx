@@ -1,19 +1,20 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {CustomInput, FormGroup, Input, Label} from "reactstrap";
-import {getFilteredExamBoardOptions, getFilteredStageOptions, useUserContext} from "../../../services/userContext";
-import {EXAM_BOARD, examBoardLabelMap, STAGE, stageLabelMap} from "../../../services/constants";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {
-    setTransientExamBoardPreference,
-    setTransientShowOtherContentPreference,
-    setTransientStagePreference
-} from "../../../state/actions";
-import {isCS} from "../../../services/siteConstants";
-import {selectors} from "../../../state/selectors";
-import {history} from "../../../services/history";
+    EXAM_BOARD,
+    examBoardLabelMap,
+    getFilteredExamBoardOptions,
+    getFilteredStageOptions,
+    history,
+    isCS,
+    STAGE,
+    stageLabelMap,
+    useQueryParams,
+    useUserContext
+} from "../../../services";
+import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector} from "../../../state";
 import queryString from "query-string";
-import {useQueryParams} from "../../../services/reactRouterExtension";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useAppDispatch();
@@ -42,7 +43,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
             <CustomInput
                 className="w-auto d-inline-block pl-1 pr-0" type="checkbox" id="uc-show-other-content-check"
                 checked={userContext.showOtherContent}
-                onChange={e => dispatch(setTransientShowOtherContentPreference(e.target.checked))}
+                onChange={e => dispatch(transientUserContextSlice.actions.setShowOtherContent(e.target.checked))}
             />
         </FormGroup>}
 
@@ -67,10 +68,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                             examBoard = possibleExamBoards[0];
                         }
                         newParams.examBoard = examBoard;
-                        dispatch(setTransientExamBoardPreference(examBoard));
+                        dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
                     }
                     history.push({search: queryString.stringify(newParams, {encode: false})});
-                    dispatch(setTransientStagePreference(stage));
+                    dispatch(transientUserContextSlice.actions.setStage(stage));
                 }}
             >
                 {filteredStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
@@ -94,7 +95,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 value={userContext.examBoard}
                 onChange={e => {
                     history.push({search: queryString.stringify({...qParams, examBoard: e.target.value}, {encode: false})});
-                    dispatch(setTransientExamBoardPreference(e.target.value as EXAM_BOARD))
+                    dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD))
                 }}
             >
                 {filteredExamBoardOptions.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}

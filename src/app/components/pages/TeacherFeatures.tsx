@@ -1,9 +1,8 @@
 import React from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {useAppSelector} from "../../state/store";
-import {isLoggedIn, isStudent} from "../../services/user";
-import {selectors} from "../../state/selectors";
+import {useAppSelector, selectors} from "../../state";
+import {isLoggedIn, isStudent} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCard} from "../content/IsaacCard";
 

@@ -2,14 +2,25 @@ import React, {MutableRefObject, useEffect, useState} from 'react';
 import * as RS from "reactstrap";
 import {LevelAttempts} from "../../../../IsaacAppTypes";
 import {bb, Chart} from "billboard.js";
-import tags from "../../../services/tags";
-import Select, { SingleValue } from "react-select";
-import {difficultiesOrdered, difficultyLabelMap, doughnutColours, specificDoughnutColours, STAGE, stageLabelMap, TAG_ID} from "../../../services/constants";
-import {isCS, isPhy, siteSpecific} from "../../../services/siteConstants";
-import {getFilteredStageOptions} from "../../../services/userContext";
+import {
+    comparatorFromOrderedValues,
+    difficultiesOrdered,
+    difficultyLabelMap,
+    doughnutColours,
+    getFilteredStageOptions,
+    isCS,
+    isPhy,
+    Item,
+    selectOnChange,
+    siteSpecific,
+    specificDoughnutColours,
+    STAGE,
+    stageLabelMap,
+    TAG_ID,
+    tags
+} from "../../../services";
+import Select, {SingleValue} from "react-select";
 import {Difficulty} from "../../../../IsaacApiTypes";
-import {comparatorFromOrderedValues} from "../../../services/gameboards";
-import {Item, selectOnChange} from "../../../services/select";
 
 interface QuestionProgressChartsProps {
     subId: string;

@@ -2,12 +2,10 @@ import {ListGroup, ListGroupItem} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
 import React, {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {IsaacContent} from "./IsaacContent";
-import {AppState} from "../../state/reducers";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {Tabs} from "../elements/Tabs";
-import {logAction} from "../../state/actions";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
+import {IsaacContent} from "./IsaacContent";
+import {AppState, useAppDispatch, useAppSelector, logAction} from "../../state";
+import {Tabs} from "../elements/Tabs";
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);

@@ -1,8 +1,7 @@
 import katex from "katex";
 import {katexify} from "../../app/components/elements/markup/latexRendering";
 
-
-jest.mock("katex");
+jest.spyOn(katex, "renderToString");
 
 const html = ["<div>foo</div><p><b>bar</b>", "</span></p>"];
 const math = ["e = mc^2"];
@@ -24,6 +23,11 @@ describe('TrustedHtml LaTeX locator', () => {
         // @ts-ignore
         katex.renderToString.mockImplementation(() => LATEX);
     });
+
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('can find basic delimiters', () => {
         delimiters.forEach(([open, displayMode, close]) => {
             const testcase = html[0] + wrapIn(open, math[0], close) + html[1];

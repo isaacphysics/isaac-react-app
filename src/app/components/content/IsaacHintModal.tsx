@@ -2,8 +2,7 @@ import React, {useContext, useState} from "react";
 import {Button, Modal, ModalBody, ModalHeader} from "reactstrap";
 import {IsaacContent} from "./IsaacContent";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {useAppDispatch} from "../../state/store";
-import {logAction} from "../../state/actions";
+import {logAction, useAppDispatch} from "../../state";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
 
 interface HintModalProps {

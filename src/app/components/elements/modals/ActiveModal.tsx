@@ -1,8 +1,7 @@
 import React from "react";
 import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
-import {closeActiveModal} from "../../../state/actions";
-import {useAppDispatch} from "../../../state/store";
+import {closeActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
 
 interface ActiveModalProps {
@@ -17,7 +16,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         dispatch(closeActiveModal());
     };
 
-    return <RS.Modal toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered}>
+    return <RS.Modal data-testid={"active-modal"} toggle={toggle} isOpen={true} size={(activeModal && activeModal.size) || "lg"} centered={activeModal?.centered}>
         {activeModal && <React.Fragment>
             {<RS.ModalHeader
                     className={classNames({"h-title pb-5 mb-4": !!activeModal.title}, {"position-absolute": !activeModal.title})}

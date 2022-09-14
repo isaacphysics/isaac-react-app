@@ -2,11 +2,8 @@ import React, {Ref} from 'react';
 import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import tags from "../../services/tags";
-import { isDefined } from '../../services/miscUtils';
-import {isCS} from '../../services/siteConstants';
-import { TAG_ID } from '../../services/constants';
-import { Tag } from '../../../IsaacAppTypes';
+import {isCS, isDefined, TAG_ID, tags} from "../../services";
+import {Tag} from '../../../IsaacAppTypes';
 import {formatGlossaryTermId} from "../pages/Glossary";
 
 interface IsaacGlossaryTermProps {

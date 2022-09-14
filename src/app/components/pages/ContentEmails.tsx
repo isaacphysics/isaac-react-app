@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {useAppDispatch} from "../../state/store";
+import {sendProvidedEmailWithUserIds, useAppDispatch} from "../../state";
 import * as RS from "reactstrap";
-import {sendProvidedEmailWithUserIds} from "../../state/actions";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {debounce} from 'lodash';
 import {convert} from 'html-to-text';
-import {siteSpecific} from "../../services/siteConstants";
+import {siteSpecific} from "../../services";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";
 
 interface ContentEmailsProps {

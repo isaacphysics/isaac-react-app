@@ -2,7 +2,7 @@ import React, {ChangeEvent} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {Input} from "reactstrap";
-import {validateUserGender} from "../../../services/validation";
+import {validateUserGender} from "../../../services";
 import classNames from "classnames";
 
 interface GenderInputProps {

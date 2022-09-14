@@ -1,43 +1,27 @@
-import React, {useEffect} from "react";
-import {useAppDispatch} from "../../../state/store";
-import {withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
-
+import React, {useCallback, useEffect} from "react";
+import {clearQuizAttempt, loadFreeQuizAttempt, useAppDispatch} from "../../../state";
+import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {clearQuizAttempt, loadFreeQuizAttempt} from "../../../state/actions/quizzes";
-import {isDefined} from "../../../services/miscUtils";
-import {useCurrentQuizAttempt} from "../../../services/quiz";
+import {isDefined, useCurrentQuizAttempt} from "../../../services";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
-
-interface QuizDoFreeAttemptProps {
-    match: {params: {quizId: string, page: string}}
-}
-
-const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
-    if (page !== undefined) {
-        return `/test/attempt/${attempt.quizId}/page/${page}`;
-    } else {
-        return `/test/attempt/${attempt.quizId}`;
-    }
-};
-
+import {Alert, Container} from "reactstrap";
 
 const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete to see your feedback.
 </span>;
 
-const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFreeAttemptProps) => {
+export const QuizDoFreeAttempt = () => {
+    const {page, quizId} = useParams<{quizId: string; page?: string;}>();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(loadFreeQuizAttempt(quizId));
-
         return () => {
             dispatch(clearQuizAttempt());
         };
@@ -48,9 +32,13 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
 
     const assignedQuizError = error?.toString().includes("You are currently set this test");
 
+    const pageLink = useCallback((page?: number) =>
+        `/test/attempt/${quizId}` + (isDefined(page) ? `/page/${page}` : "")
+    , [quizId]);
+
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 
-    return <RS.Container className="mb-5">
+    return <Container className="mb-5">
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />
@@ -58,7 +46,7 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
             </>}
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} />
-                <RS.Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
+                <Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
                     <h4 className="alert-heading">{assignedQuizError ? "You have been set this test" : "Error loading test!"}</h4>
                     {!assignedQuizError && <p>{error}</p>}
                     {assignedQuizError && <>
@@ -66,10 +54,8 @@ const QuizDoFreeAttemptComponent = ({match: {params: {quizId, page}}}: QuizDoFre
                             If you are ready to take the test, click on it in your <a href={"/tests"} target="_self" rel="noopener noreferrer">assigned tests</a> page.
                         </p>
                     </>}
-                </RS.Alert>
+                </Alert>
             </>}
         </ShowLoading>
-    </RS.Container>;
+    </Container>;
 };
-
-export const QuizDoFreeAttempt = withRouter(QuizDoFreeAttemptComponent);

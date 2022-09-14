@@ -1,16 +1,20 @@
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
-import {AppDispatch} from "../../../state/store";
-import {useAppDispatch} from "../../../state/store";
+import {
+    AppDispatch,
+    closeActiveModal,
+    hideToast,
+    setQuiz,
+    showQuizSettingModal,
+    showToast,
+    useAppDispatch
+} from "../../../state";
 import React, {useState} from "react";
-import {Item, selectOnChange} from "../../../services/select";
+import {isDefined, Item, selectOnChange} from "../../../services";
 import {range} from "lodash";
 import {currentYear, DateInput} from "../inputs/DateInput";
-import {isDefined} from "../../../services/miscUtils";
 import * as RS from "reactstrap";
 import Select from "react-select";
-import {closeActiveModal, hideToast, showToast} from "../../../state/actions";
-import {setQuiz, showQuizSettingModal} from "../../../state/actions/quizzes";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
@@ -86,7 +90,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
         <RS.Label className="w-100 mb-4">Set an optional due date:<br/>
             <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
                        defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
-            {dueDateInvalid && <RS.FormFeedback>Due date must be after today</RS.FormFeedback>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after today.</small>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">What level of feedback should students get:<br/>
             <Select

@@ -1,5 +1,4 @@
-import * as persistence from "./localStorage";
-import {KEY, LOADING_FAILURE_VALUE} from "./localStorage";
+import {KEY, LOADING_FAILURE_VALUE, persistence} from "./";
 
 // TODO there'll probably be a way to use this in a way that lets the compiler do even more checking for us
 export enum FIRST_LOGIN_STATE {

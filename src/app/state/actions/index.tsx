@@ -1,49 +1,44 @@
 import React, {Dispatch} from "react";
-import {api} from "../services/api";
-import {AppState} from "./reducers";
-import {history} from "../services/history";
-import {AppDispatch, store} from "./store";
 import {
     ACTION_TYPE,
+    api,
     API_REQUEST_FAILURE_MESSAGE,
-    DOCUMENT_TYPE, EventStageFilter,
+    atLeastOne,
+    augmentEvent,
+    DOCUMENT_TYPE,
+    EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
-    EXAM_BOARD,
+    history,
+    isDefined,
+    isFirstLoginInPersistence,
+    KEY,
     MEMBERSHIP_STATUS,
-    NO_CONTENT,
-    NOT_FOUND,
+    persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    STAGE,
     TAG_ID
-} from "../services/constants";
+} from "../../services";
 import {
     Action,
-    ActiveModal,
-    NumberOfBoards,
     AdditionalInformation,
     AppGroup,
     AppGroupMembership,
     ATTENDANCE,
-    BoardOrder,
     CredentialsAuthDTO,
     EmailUserRoles,
     FreeTextRule,
     PotentialUser,
     QuestionSearchQuery,
-    Toast,
     UserPreferencesDTO,
     UserSnapshot,
     ValidatedChoice,
     ValidationUser,
-} from "../../IsaacAppTypes";
+} from "../../../IsaacAppTypes";
 import {
-    AssignmentDTO,
     AuthenticationProvider,
     ChoiceDTO,
     EmailTemplateDTO,
     EmailVerificationStatus,
-    GameboardDTO,
     GlossaryTermDTO,
     GraphChoiceDTO,
     IsaacQuestionPageDTO,
@@ -55,33 +50,37 @@ import {
     UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
-} from "../../IsaacApiTypes";
+} from "../../../IsaacApiTypes";
 import {
     releaseAllConfirmationModal,
     releaseConfirmationModal,
     revocationConfirmationModal,
     tokenVerificationModal
-} from "../components/elements/modals/TeacherConnectionModalCreators";
-import * as persistence from "../services/localStorage";
-import {KEY} from "../services/localStorage";
+} from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {
     additionalManagerRemovalModal,
     groupInvitationModal,
     groupManagersModal
-} from "../components/elements/modals/GroupsModalCreators";
+} from "../../components/elements/modals/GroupsModalCreators";
 import {ThunkDispatch} from "redux-thunk";
-import {selectors} from "./selectors";
-import {isFirstLoginInPersistence} from "../services/firstLogin";
 import {AxiosError} from "axios";
-import {isAdminOrEventManager, isTeacher} from "../services/user";
 import ReactGA from "react-ga";
-import {augmentEvent} from "../services/events";
-import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
-import {atLeastOne} from "../services/validation";
-import {isaacBooksModal} from "../components/elements/modals/IsaacBooksModal";
-import {groupEmailModal} from "../components/elements/modals/GroupEmailModal";
-import {isDefined} from "../services/miscUtils";
-import {getValue, Item, toTuple} from "../services/select";
+import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
+import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
+import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
+import {
+    AppDispatch,
+    AppState,
+    closeActiveModal,
+    errorSlice,
+    isaacApi,
+    logAction,
+    openActiveModal,
+    routerPageChange,
+    selectors,
+    showToast,
+    store
+} from "../index";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -94,45 +93,6 @@ export function extractMessage(e: Error) {
     }
     return API_REQUEST_FAILURE_MESSAGE;
 }
-
-// Toasts
-const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOASTS_REMOVE, toastId});
-};
-
-export const hideToast = (toastId: string) => (dispatch: AppDispatch) => {
-    dispatch({type: ACTION_TYPE.TOASTS_HIDE, toastId});
-    setTimeout(() => {
-        dispatch(removeToast(toastId));
-    }, 1000);
-};
-
-let nextToastId = 0;
-export const showToast = (toast: Toast) => (dispatch: AppDispatch) => {
-    const toastId = toast.id = "toast" + nextToastId++;
-    if (toast.timeout) {
-        setTimeout(() => {
-            dispatch(hideToast(toastId));
-        }, toast.timeout);
-    }
-    if (toast.closable === undefined) toast.closable = true;
-    toast.showing = true;
-    dispatch({type: ACTION_TYPE.TOASTS_SHOW, toast});
-    return toastId;
-};
-
-export const showErrorToast = (error: string, body: string) => showToast({
-    color: "danger",
-    title: error,
-    timeout: 5000,
-    body
-});
-export const showSuccessToast = (title: string, body: string) => showToast({
-    color: "success",
-    timeout: 5000,
-    title,
-    body
-});
 
 export function showAxiosErrorToastIfNeeded(error: string, e: any) {
     if (e) {
@@ -155,17 +115,6 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
     }
     return {type: ACTION_TYPE.TEST_ACTION};
 }
-
-// ActiveModal
-export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
-
-export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
-
-// Generic log action:
-export const logAction = (eventDetails: object) => {
-    api.logger.log(eventDetails); // We do not care whether this completes or not
-    return {type: ACTION_TYPE.LOG_EVENT, eventDetails: eventDetails};
-};
 
 // User authentication
 export const getUserAuthSettings = () => async (dispatch: Dispatch<Action>) => {
@@ -228,7 +177,11 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
 
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
@@ -239,7 +192,6 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
     }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
@@ -338,17 +290,6 @@ export const updateCurrentUser = (
     }
 };
 
-export function setTransientStagePreference(stage: STAGE) {
-    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE, stage};
-}
-export function setTransientExamBoardPreference(examBoard: EXAM_BOARD) {
-    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD, examBoard};
-}
-
-export function setTransientShowOtherContentPreference(showOtherContent: boolean) {
-    return {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT, showOtherContent};
-}
-
 export const getMyProgress = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.MY_PROGRESS_REQUEST});
     try {
@@ -411,8 +352,11 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
             dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUIRED});
             return;
         }
-
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         persistence.remove(KEY.AFTER_AUTH_PATH);
         history.push(afterAuthPath);
@@ -420,7 +364,6 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }
-    dispatch(requestCurrentUser() as any)
 };
 
 export const resetPassword = (params: {email: string}) => async (dispatch: Dispatch<Action>) => {
@@ -478,7 +421,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
-        await dispatch(requestCurrentUser() as any); // Request user preferences
+        // Request user preferences, as we do in the requestCurrentUser action:
+        await Promise.all([
+            dispatch(getUserAuthSettings() as any),
+            dispatch(getUserPreferences() as any)
+        ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
             ReactGA.event({
@@ -827,12 +774,12 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Questions
-export const registerQuestion = (question: QuestionDTO, accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, question, accordionClientId});
+export const registerQuestions = (questions: QuestionDTO[], accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, questions, accordionClientId});
 };
 
-export const deregisterQuestion = (questionId: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionId});
+export const deregisterQuestions = (questionIds: string[]) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionIds});
 };
 
 interface Attempt {
@@ -841,7 +788,7 @@ interface Attempt {
 }
 const attempts: {[questionId: string]: Attempt} = {};
 
-export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export const attemptQuestion = (questionId: string, attempt: ChoiceDTO, gameboardId?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
     const state = getState();
     const isAnonymous = !(state && state.user && state.user.loggedIn);
     const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
@@ -850,6 +797,9 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO) => async
         dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
         const response = await api.questions.answer(questionId, attempt);
         dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId, response: response.data});
+        if (gameboardId) {
+            dispatch(isaacApi.util.invalidateTags([{type: "Gameboard", id: gameboardId}]));
+        }
 
         // This mirrors the soft limit checking on the server
         let lastAttempt = attempts[questionId];
@@ -1022,120 +972,6 @@ export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dis
     }
 }
 
-// Current gameboard
-export const loadGameboard = (gameboardId: string|null) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.currentGameboard && state.currentGameboard !== NOT_FOUND && 'inflight' in state.currentGameboard && state.currentGameboard.id === gameboardId) return;
-    dispatch({type: ACTION_TYPE.GAMEBOARD_REQUEST, gameboardId});
-    try {
-        // TODO MT handle local storage load if gameboardId == null
-        // TODO MT handle requesting new gameboard if local storage is also null
-        if (gameboardId) {
-            const gameboardResponse = await api.gameboards.get(gameboardId);
-            dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE, gameboardId});
-    }
-};
-
-export const addGameboard = (gameboardId: string, user: PotentialUser, gameboardTitle?: string, redirectOnSuccess?: boolean) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST});
-
-        if (gameboardTitle) {
-            // If the user wants a custom title, we can use the `renameAndSaveGameboard` endpoint. This is a redesign
-            //  of the `updateGameboard` endpoint.
-            await api.gameboards.renameAndSave(gameboardId, gameboardTitle);
-            dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId, gameboardTitle: gameboardTitle});
-        } else {
-            // If the user doesn't want a custom title, we can use the `linkUserToGameboard` endpoint
-            await api.gameboards.save(gameboardId);
-            dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS, gameboardId: gameboardId});
-        }
-        if (redirectOnSuccess) {
-            if (isTeacher(user)) {
-                history.push(`/set_assignments#${gameboardId}`);
-            } else {
-                history.push(`/my_gameboards#${gameboardId}`);
-            }
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Error saving gameboard", e));
-    }
-};
-
-export const createGameboard = (gameboard: GameboardDTO, previousId?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
-    try {
-        const response = await api.gameboards.create(gameboard);
-        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS, gameboardId: response.data.id});
-        if (previousId) {
-            dispatch(logAction({type: "CLONE_GAMEBOARD", gameboardId: previousId, newGameboardId: response.data.id})as any);
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Error creating gameboard", e));
-    }
-};
-
-export const getWildcards = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST});
-    try {
-        const response = await api.gameboards.getWildcards();
-        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS, wildcards: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Error loading wildcards", e));
-    }
-};
-
-export const generateTemporaryGameboard = (params: {[key: string]: string}) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST});
-    try {
-        const gameboardResponse = await api.gameboards.generateTemporary(params);
-        if (gameboardResponse.status === NO_CONTENT) {
-            dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT});
-        } else {
-            dispatch({type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS, gameboard: gameboardResponse.data});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Error creating temporary gameboard", e));
-    }
-};
-
-// Assignments
-export const loadMyAssignments = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ASSIGNMENTS_REQUEST});
-    const assignmentsResponse = await api.assignments.getMyAssignments();
-    dispatch({type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
-    // Generic error handling covers errors here
-};
-
-export const loadAssignmentsOwnedByMe = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST});
-    const assignmentsResponse = await api.assignments.getAssignmentsOwnedByMe();
-    dispatch({type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS, assignments: assignmentsResponse.data});
-};
-
-export const loadProgress = (assignment: AssignmentDTO) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    // Don't request this again if it has already been fetched successfully
-    const state = getState();
-    if (state && state.progress && (assignment._id as number) in state.progress) {
-        return;
-    }
-
-    dispatch({type: ACTION_TYPE.PROGRESS_REQUEST, assignment});
-    try {
-        const result = await api.assignments.getProgressForAssignment(assignment);
-        dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS, assignment, progress: result.data});
-    } catch {
-        dispatch({type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE, assignment});
-    }
-};
-
 // Content version
 export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
@@ -1173,7 +1009,7 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 };
 
 // Admin
-export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+export const adminUserSearchRequest = (queryParams: {}) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST});
     try {
         const searchResponse = await api.admin.userSearch.get(queryParams);
@@ -1188,7 +1024,7 @@ export const adminUserSearch = (queryParams: {}) => async (dispatch: Dispatch<Ac
     }
 };
 
-export const adminUserGet = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+export const adminUserGetRequest = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_USER_GET_REQUEST});
     try {
         const searchResponse = await api.admin.userGet.get(userid);
@@ -1493,173 +1329,6 @@ export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_
         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Membership status update failed", e));
     }
-};
-
-export const getGroupProgress = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUP_PROGRESS_REQUEST});
-    try {
-        const result = await api.groups.groupProgress(group);
-        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS, groupId: group.id || 0, progress: result.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE, groupId: group.id || 0});
-        dispatch(showAxiosErrorToastIfNeeded("Loading group members failed", e));
-    }
-};
-
-// Gameboards
-export const loadBoards = (startIndex: number, limit: NumberOfBoards, sort: BoardOrder) => async (dispatch: Dispatch<Action>) => {
-    const accumulate = startIndex != 0;
-    dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
-    try {
-        const boards = await api.boards.get(startIndex, limit, sort);
-        dispatch({type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS, boards: boards.data, accumulate});
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Loading gameboards failed", e));
-    }
-};
-
-export const deleteBoard = (boardId?: string, boardTitle?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
-    if (!isDefined(boardId)) {
-        // This really shouldn't happen!
-        dispatch(showErrorToast("Gameboard deletion failed", "Gameboard ID is missing: please contact us about this error."));
-        return;
-    }
-    dispatch({type: ACTION_TYPE.BOARDS_DELETE_REQUEST, boardId});
-    try {
-        // TODO The following check won't be needed once we build a calendar-list view of assignments
-        await loadAssignmentsOwnedByMe();
-        const reduxState = getState();
-        // Check if there are any assignments that use this gameboard...
-        const hasAssignedGroups = (reduxState?.assignmentsByMe?.filter(a => a.gameboardId === boardId) ?? []).length > 0;
-        if (hasAssignedGroups) {
-            if (reduxState && reduxState.user && reduxState.user.loggedIn && isAdminOrEventManager(reduxState.user)) {
-                if (!confirm(`Warning: You currently have groups assigned to ${boardTitle}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.`)) {
-                    return;
-                }
-            } else {
-                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: `You have groups assigned to ${boardTitle}. To delete this gameboard, you must unassign all groups.`, timeout: 5000});
-                return;
-            }
-        }
-        await api.boards.delete(boardId);
-        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS, boardId});
-        dispatch(showToast({color: "success", title: "Gameboard deleted", body: "You have deleted gameboard " + boardTitle, timeout: 5000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE, boardId});
-        dispatch(showAxiosErrorToastIfNeeded("Gameboard deletion failed", e));
-    }
-};
-
-export const unassignBoard = (boardId?: string, groupId?: number) => async (dispatch: Dispatch<Action>) => {
-    if (!isDefined(boardId) || !isDefined(groupId)) {
-        // This really shouldn't happen!
-        dispatch(showAxiosErrorToastIfNeeded("Assignment deletion failed", "Group or gameboard ID is missing: please contact us about this error."));
-        return;
-    }
-    dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST, boardId, groupId});
-    try {
-        await api.boards.unassign(boardId, groupId);
-        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS, boardId, groupId});
-        dispatch(showToast({color: "success", title: "Assignment deleted", body: "This assignment has been unset successfully.", timeout: 5000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE, boardId, groupId});
-        dispatch(showAxiosErrorToastIfNeeded("Assignment deletion failed", e));
-    }
-};
-
-export const assignBoard = (board: GameboardDTO, groups: Item<number>[] = [], dueDate?: Date, scheduledStartDate?: Date, notes?: string) => async (dispatch: Dispatch<Action>) => {
-    if (groups.length === 0) {
-        dispatch(showToast({color: "danger", title: "Gameboard assignment failed", body: "Error: Please choose one or more groups.", timeout: 5000}) as any);
-        return false;
-    }
-
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-
-    // TODO think about whether this can be done in the back-end too?
-    if (dueDate != undefined) {
-        dueDate?.setUTCHours(0, 0, 0, 0);
-        if ((dueDate.valueOf() - today.valueOf()) < 0) {
-            dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}) as any);
-            return false;
-        }
-    }
-
-    if (scheduledStartDate != undefined) {
-        scheduledStartDate?.setUTCHours(0, 0, 0, 0);
-        if ((scheduledStartDate.valueOf() - today.valueOf()) < 0) {
-            dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}) as any);
-            return false;
-        }
-    }
-
-    if (dueDate != undefined && scheduledStartDate != undefined) {
-        if ((dueDate.valueOf() - scheduledStartDate.valueOf()) <= 0) {
-            dispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be strictly after scheduled start date.", timeout: 5000}) as any);
-            return false;
-        }
-    }
-
-    const groupIds = groups.map(getValue);
-    const assignments: AssignmentDTO[] = groupIds.map(id => ({
-        gameboardId: board.id,
-        groupId: id,
-        dueDate,
-        scheduledStartDate,
-        notes
-    }));
-
-    dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST, assignments});
-    try {
-        const groupLookUp = new Map(groups.map(toTuple));
-        const { data: assigmentStatuses } = await api.boards.assign(assignments);
-        const newAssignments = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => ({groupId: a.groupId, groupName: groupLookUp.get(a.groupId), assignmentId: a.assignmentId as number}));
-        const successfulIds = newAssignments.map(a => a.groupId);
-        const failedIds = assigmentStatuses.filter(a => isDefined(a.errorMessage));
-
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS, board, newAssignments, assignmentStub: {dueDate, scheduledStartDate, notes, creationDate: new Date()}});
-        // Handle user feedback depending on whether some groups failed to assign or not
-        if (failedIds.length === 0) {
-            const successMessage = successfulIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
-            dispatch(showToast({color: "success", title: `Assignment${successfulIds.length > 1 ? "s" : ""} saved`, body: successMessage, timeout: 5000}) as any);
-        } else {
-            // Show each group assignment error in a separate toast
-            failedIds.forEach(({groupId, errorMessage}) => {
-                dispatch(showToast({color: "danger", title: `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`, body: errorMessage}) as any);
-            });
-            // Check whether some group assignments succeeded, if so show "partial success" toast
-            if (failedIds.length === assigmentStatuses.length) {
-                return false;
-            } else {
-                const partialSuccessMessage = successfulIds.length > 1 ? "Some assignments were saved successfully." : `Assignment to ${groupLookUp.get(successfulIds[0])} was saved successfully.`
-                dispatch(showToast({color: "success", title: `Assignment${successfulIds.length > 1 ? "s" : ""} saved`, body: partialSuccessMessage, timeout: 5000}) as any);
-            }
-        }
-        return true;
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE, board, groupIds});
-        dispatch(showAxiosErrorToastIfNeeded(`Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, e));
-        return false;
-    }
-};
-
-export const loadBoard = (boardId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.boards && state.boards.boards) {
-        const board = state.boards.boards.find(board => board.id == boardId);
-        if (board && board.contents && board.contents.every(q => q.questionPartsTotal !== undefined)) {
-            // Don't load the board if it is already available and questions have been loaded
-            return;
-        }
-    }
-    const accumulate = true;
-    dispatch({type: ACTION_TYPE.BOARDS_REQUEST, accumulate});
-    const board = await api.boards.getById(boardId);
-    dispatch({
-        type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS,
-        boards: {totalResults: undefined, results: [board.data]},
-        accumulate
-    });
 };
 
 // Events
@@ -1993,10 +1662,6 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
     }
 };
 
-export const setPrintingHints = (hintsEnabled: boolean) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.PRINTING_SET_HINTS, hintsEnabled});
-};
-
 // Concepts
 export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
@@ -2018,22 +1683,20 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
         dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
     }};
 
-// Main anchor
-export const setMainContentId = (id: string) => ({type: ACTION_TYPE.SET_MAIN_CONTENT_ID, id});
-
 // SERVICE ACTIONS (w/o dispatch)
+
 export const changePage = (path: string) => {
     history.push(path);
 };
 
 export const registerPageChange = (path: string) => {
-    store.dispatch({type: ACTION_TYPE.ROUTER_PAGE_CHANGE, path});
+    store.dispatch(routerPageChange(path));
 };
 
 export const handleServerError = () => {
-    store.dispatch({type: ACTION_TYPE.API_SERVER_ERROR});
+    store.dispatch(errorSlice.actions.apiServerError);
 };
 
 export const handleApiGoneAway = () => {
-    store.dispatch({type: ACTION_TYPE.API_GONE_AWAY});
+    store.dispatch(errorSlice.actions.apiGoneAway);
 };

@@ -1,8 +1,6 @@
 import React, {useEffect} from "react";
 import ResponsiveCarousel from "./Carousel";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
-import {clearEventsList, getEventsPodList} from "../../state/actions";
+import {AppState, clearEventsList, getEventsPodList, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {EventCard} from "./cards/EventCard";
 

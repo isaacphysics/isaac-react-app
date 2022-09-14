@@ -1,7 +1,7 @@
 import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
-import {isaacApi} from "../slices/api";
+import {isaacApi} from "../index";
 
 type UserState = PotentialUser | null;
 export const user = (user: UserState = null, action: Action): UserState => {
@@ -12,6 +12,7 @@ export const user = (user: UserState = null, action: Action): UserState => {
         case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS:
             return {loggedIn: true, ...action.user};
+        case ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE:
         case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:

@@ -1,6 +1,6 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../services";
 
 export const ConsistencyErrorModal = ({consistencyError}: {consistencyError: boolean}) => {
     return <RS.Modal id="user-consistency-error" isOpen={consistencyError} size={"lg"}>

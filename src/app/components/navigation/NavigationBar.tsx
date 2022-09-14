@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {HTMLProps, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
+import {isaacApi, loadQuizAssignedToMe, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {
     Badge,
     Collapse,
@@ -15,16 +14,10 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import {loadMyAssignments} from "../../state/actions";
-import {filterAssignmentsByStatus} from "../../services/assignments";
-import {selectors} from "../../state/selectors";
-import {isCS} from "../../services/siteConstants";
-import {loadQuizAssignedToMe} from "../../state/actions/quizzes";
-import {partitionCompleteAndIncompleteQuizzes} from "../../services/quiz";
-import {isFound} from "../../services/miscUtils";
+import {filterAssignmentsByStatus, isCS, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
-
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
@@ -58,39 +51,37 @@ export const NavigationSection = ({children, title, topLevelLink, to}: Navigatio
     </MenuOpenContext.Consumer>
 );
 
-export function MenuBadge({count, message}: {count: number, message: string}) {
+export function MenuBadge({count, message, ...rest}: {count: number, message: string} & HTMLProps<HTMLDivElement>) {
     if (count == 0) {
         return RenderNothing;
     }
-    return <React.Fragment>
+    return <div {...rest}>
         <span className="badge badge-pill bg-grey ml-2">{count}</span>
-        <span className="sr-only">{message}</span>
-    </React.Fragment>;
+        <span className="sr-only"> {message}</span>
+    </div>;
 }
 
 export function useAssignmentsCount() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
+    const quizzes = useAppSelector(state => state?.quizAssignedToMe);
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(user?.loggedIn ? undefined : skipToken);
 
+    const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {
         if (user?.loggedIn) {
-            dispatch(loadMyAssignments());
             dispatch(loadQuizAssignedToMe());
         }
-    }, [dispatch, user]);
+    }, [dispatch, loggedInUserId]);
 
-    return useAppSelector((state: AppState) => {
-        const response = {assignmentsCount: 0, quizzesCount: 0};
-        if (state?.assignments) {
-            const {inProgressRecent} = filterAssignmentsByStatus(state.assignments);
-            response.assignmentsCount = inProgressRecent.length;
-        }
-        if (state && isFound(state.quizAssignedToMe)) {
-            const [_completedQuizzes, incompleteQuizzes] = partitionCompleteAndIncompleteQuizzes(state.quizAssignedToMe);
-            response.quizzesCount = incompleteQuizzes.length;
-        }
-        return response;
-    });
+    const assignmentsCount = assignments
+        ? filterAssignmentsByStatus(assignments).inProgressRecent.length
+        : 0;
+    const quizzesCount = quizzes && isFound(quizzes)
+        ? partitionCompleteAndIncompleteQuizzes(quizzes)[1].length
+        : 0;
+
+    return {assignmentsCount, quizzesCount};
 }
 
 export const NavigationBar = ({children}: {children: React.ReactNode}) => {

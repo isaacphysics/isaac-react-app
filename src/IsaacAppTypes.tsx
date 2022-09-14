@@ -29,18 +29,13 @@ import {
     STAGE,
     TAG_ID,
     TAG_LEVEL
-} from "./app/services/constants";
+} from "./app/services";
 import {DropResult} from "react-beautiful-dnd";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
     | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
-
-    | {type: ACTION_TYPE.ROUTER_PAGE_CHANGE; path: string}
-
-    | {type: ACTION_TYPE.API_SERVER_ERROR}
-    | {type: ACTION_TYPE.API_GONE_AWAY}
 
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -67,10 +62,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE; stage: STAGE}
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT; showOtherContent: boolean}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -185,9 +176,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS; groupId: number; newStatus: MEMBERSHIP_STATUS}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.GROUP_PROGRESS_REQUEST}
-    | {type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS; groupId: number; progress: ApiTypes.UserGameboardProgressSummaryDTO[]}
-    | {type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE; groupId: number}
 
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
@@ -213,8 +201,8 @@ export type Action =
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO; accordionClientId?: string}
-    | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string}
+    | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date}
@@ -253,28 +241,9 @@ export type Action =
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
-
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS; wildcards: ApiTypes.IsaacWildcard[]}
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
-
-    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
-
-    | {type: ACTION_TYPE.PROGRESS_REQUEST; assignment: ApiTypes.AssignmentDTO}
-    | {type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS; assignment: ApiTypes.AssignmentDTO; progress: AppAssignmentProgress[]}
-    | {type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE; assignment: ApiTypes.AssignmentDTO}
 
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
@@ -411,29 +380,6 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
-    | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
-
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS; gameboardId: string; gameboardTitle?: string}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS; gameboardId: string}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; boardId: string}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; boardId: string}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; boardId: string}
-
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; boardId: string; groupId: number}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; boardId: string; groupId: number}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; boardId: string; groupId: number}
-
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; newAssignments: (BoardAssignee & {assignmentId: number})[]; assignmentStub: AssignmentDTO}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]}
-
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
@@ -441,10 +387,6 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
-
-    | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
-
-    | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
 
     | {type: ACTION_TYPE.QUIZZES_REQUEST}
     | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
@@ -695,6 +637,8 @@ export const ClozeDropRegionContext = React.createContext<{register: (id: string
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
+export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
+export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
@@ -934,8 +878,13 @@ export type EnhancedGameboard = GameboardDTO & {
     contents: (GameboardItem & { questionPartsTotal: number })[];
 };
 
-export type SingleEnhancedAssignment = AssignmentDTO & {
+export type EnhancedAssignment = AssignmentDTO & {
+    id: number;
     gameboard: EnhancedGameboard;
+};
+
+export type EnhancedAssignmentWithProgress = EnhancedAssignment & {
+    progress: AppAssignmentProgress[];
 };
 
 export interface PageSettings {
@@ -943,13 +892,6 @@ export interface PageSettings {
     setColourBlind: (newValue: boolean) => void;
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
-}
-
-export interface SingleProgressDetailsProps {
-    assignmentId: number;
-    assignment: SingleEnhancedAssignment;
-    progress: AppAssignmentProgress[];
-    pageSettings: PageSettings;
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;

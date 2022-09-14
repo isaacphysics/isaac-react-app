@@ -1,10 +1,7 @@
 import React, {Suspense, useContext, useEffect} from "react";
-import {useAppDispatch} from "../../state/store";
+import {submitQuizQuestionIfDirty, useAppDispatch} from "../../state";
 import classnames from "classnames";
-import {QUESTION_TYPES} from "../../services/questions";
-import {submitQuizQuestionIfDirty} from "../../state/actions/quizzes";
-import {isDefined} from "../../services/miscUtils";
-import {isPhy, isCS} from "../../services/siteConstants";
+import {isCS, isDefined, isPhy, QUESTION_TYPES} from "../../services";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -16,7 +13,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
 
     const {quizAttempt, questionNumbers} = useContext(QuizAttemptContext);
 
-    useEffect((): (() => void) => {
+    useEffect(() => {
         return () => {
             // Submit answer when unmounting if it is dirty
             if (isDefined(quizAttempt) && quizAttempt.completedDate === undefined) {
@@ -31,7 +28,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
     const noAnswer = validated && correct === undefined;
 
-    const QuestionComponent = QUESTION_TYPES[doc.type || "default"];
+    const QuestionComponent = QUESTION_TYPES[doc?.type ?? "default"];
 
     return <React.Fragment>
         <div className={

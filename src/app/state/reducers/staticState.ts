@@ -1,6 +1,6 @@
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 
 type ConstantsState = {units?: string[]; segueVersion?: string; segueEnvironment?: string} | null;
 export const constants = (constants: ConstantsState = null, action: Action) => {

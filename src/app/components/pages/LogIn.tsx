@@ -1,12 +1,30 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {Button, Card, CardBody, Col, Container, Form, FormFeedback, FormGroup, Input, Label, Row, CustomInput} from "reactstrap";
-import {handleProviderLoginRedirect, logInUser, resetPassword, submitTotpChallengeResponse} from "../../state/actions";
-import {AppState} from "../../state/reducers";
-import {history} from "../../services/history";
+import {
+    AppState,
+    handleProviderLoginRedirect,
+    logInUser,
+    resetPassword,
+    selectors,
+    submitTotpChallengeResponse,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
+import {
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    CustomInput,
+    Form,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label,
+    Row
+} from "reactstrap";
+import {history, isCS, SITE_SUBJECT_TITLE} from "../../services";
 import {Redirect} from "react-router";
-import {selectors} from "../../state/selectors";
-import {isCS, SITE_SUBJECT_TITLE} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays

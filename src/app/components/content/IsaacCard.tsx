@@ -1,9 +1,8 @@
 import React from "react";
 import {Card, CardBody, CardTitle, Col, Row} from "reactstrap";
 import classNames from "classnames";
-import {apiHelper} from "../../services/api";
+import {apiHelper, isAppLink} from "../../services";
 import {Link} from "react-router-dom";
-import {isAppLink} from "../../services/navigation";
 import {IsaacCardDTO} from "../../../IsaacApiTypes";
 
 interface IsaacCardProps {

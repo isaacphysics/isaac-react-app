@@ -1,31 +1,42 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
-import {ACTION_TYPE} from "../../services/constants";
+import {
+    ACTION_TYPE,
+    allRequiredInformationIsPresent,
+    isDefined,
+    isLoggedIn,
+    KEY,
+    persistence,
+    withinLast2Hours,
+    withinLast50Minutes
+} from "../../services";
 import {Action} from "../../../IsaacAppTypes";
-import {logAction, openActiveModal} from "../actions";
-import {allRequiredInformationIsPresent, withinLast50Minutes, withinLast2Hours} from "../../services/validation";
-import {isLoggedIn} from "../../services/user";
-import * as persistence from "../../services/localStorage";
-import {KEY} from "../../services/localStorage";
+import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
-import {needToUpdateUserContextDetails} from "./utils";
 
 export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
 
     const state = middlewareApi.getState();
-    if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, ACTION_TYPE.ROUTER_PAGE_CHANGE].includes(action.type)) {
-        if (state && isLoggedIn(state.user)) {
+    if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
+        // Get user object either from the action or state
+        const user = action.type === ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS
+            ? action.user
+            : (state && isLoggedIn(state.user)
+                ? state.user
+                : undefined);
+
+        if (isDefined(user)) {
             // Required account info modal - takes precedence over stage/exam board re-confirmation modal, and is only
             // shown once every 50 minutes (using a key in clients browser storage)
-            if (!allRequiredInformationIsPresent(state.user, state.userPreferences, state.user.registeredContexts) &&
+            if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) &&
                 !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))) {
                 persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
                 await dispatch(openActiveModal(requiredAccountInformationModal));
             }
             // User context re-confirmation modal - used to request a user to update their stage and/or exam board
             // once every academic year.
-            else if (needToUpdateUserContextDetails(state.user.registeredContextsLastConfirmed) &&
+            else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
                      !withinLast50Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
                 persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
                 await dispatch(openActiveModal(userContextReconfimationModal));

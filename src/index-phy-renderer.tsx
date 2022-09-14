@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import './scss/phy/isaac.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as highlightJsService from "./app/services/highlightJs";
+import {highlightJsService} from "./app/services";
 import {EditorRenderer} from "./app/components/elements/EditorRenderer";
 
 highlightJsService.registerLanguages();

@@ -1,21 +1,23 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
-import {loadAssignmentsOwnedByMe, loadBoard, loadProgress, openActiveModal} from "../../state/actions";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {AppState} from "../../state/reducers";
-import {SingleProgressDetailsProps} from "../../../IsaacAppTypes";
-import {ASSIGNMENT_PROGRESS_CRUMB} from "../../services/constants";
+import {isaacApi, openActiveModal, useAppDispatch} from "../../state";
+import {AssignmentProgressPageSettingsContext, EnhancedAssignmentWithProgress} from "../../../IsaacAppTypes";
+import {
+    ASSIGNMENT_PROGRESS_CRUMB,
+    getAssignmentCSVDownloadLink,
+    useAssignmentProgressAccessibilitySettings
+} from "../../services";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
+import {AssignmentProgressFetchError, AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
-import {getAssignmentCSVDownloadLink, hasGameboard} from "../../services/assignments";
-import {selectors} from "../../state/selectors";
+import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {skipToken} from "@reduxjs/toolkit/query";
 
-const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
-    const {assignmentId, assignment, progress, pageSettings} = props;
+const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
     const dispatch = useAppDispatch();
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
@@ -24,70 +26,43 @@ const SingleProgressDetails = (props: SingleProgressDetailsProps) => {
     }
 
     return <div className={"assignment-progress-details single-assignment" + (pageSettings.colourBlind ? " colour-blind" : "")}>
-        <AssignmentProgressLegend pageSettings={pageSettings}/>
+        <AssignmentProgressLegend />
         <div className="single-download mb-2 mx-4">
-            <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignmentId)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
+            <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
         </div>
         <div className="mx-md-4 mx-sm-2">
-            <ProgressDetails assignmentId={assignmentId} pageSettings={pageSettings} assignment={assignment} progress={progress}/>
+            <ProgressDetails assignment={assignment}/>
         </div>
     </div>;
 };
 
 export const SingleAssignmentProgress = () => {
-    const dispatch = useAppDispatch();
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
+    const { data: assignment } = isaacApi.endpoints.getSingleSetAssignment.useQuery(assignmentId || skipToken);
+    const { data: assignmentProgress, isError: assignmentProgressError, error } = isaacApi.endpoints.getAssignmentProgress.useQuery(assignmentId || skipToken);
 
-    useEffect(() => {
-        dispatch(loadProgress({_id: assignmentId}));
-        dispatch(loadAssignmentsOwnedByMe());
-    }, [dispatch, assignmentId]);
+    const assignmentWithProgress = assignment && assignmentProgress
+        ? {...assignment, progress: assignmentProgress}
+        : undefined;
 
-    const [colourBlind, setColourBlind] = useState(false);
-    const [formatAsPercentage, setFormatAsPercentage] = useState(false);
+    const pageSettings = useAssignmentProgressAccessibilitySettings();
 
-    const myOwnedAssignments = useAppSelector((state: AppState) => {
-        return state?.assignmentsByMe
-    });
-
-    useEffect(() => {
-        const thisAssignment = myOwnedAssignments?.filter(obj => {
-            return obj._id == assignmentId
-        })[0];
-        const boardId = thisAssignment?.gameboardId;
-        boardId && dispatch(loadBoard(boardId));
-    }, [dispatch, myOwnedAssignments]);
-
-    const assignmentProgress = useAppSelector(selectors.assignments.progress);
-    const boards = useAppSelector(selectors.boards.boards);
-
-    const pageSettings = {colourBlind, setColourBlind, formatAsPercentage, setFormatAsPercentage};
-
-
-    const [assignment, setAssignment] = useState(myOwnedAssignments?.find(x => x._id == assignmentId));
-
-    useEffect(() => {
-        if (boards && (boards.boards[0].id = assignment?.gameboardId)) {
-            setAssignment({...assignment, gameboard: boards.boards[0]})
-        }
-    }, [boards]);
-
-    useEffect(() => {
-        setAssignment(myOwnedAssignments?.find(x => x._id == assignmentId));
-    }, [myOwnedAssignments, assignmentId]);
-
-    return <ShowLoading until={assignment && assignmentProgress}>
+    return <ShowLoading until={assignmentProgress}>
         <Container>
             <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}
                 className="mb-4" />
         </Container>
         <div className="assignment-progress-container mb-5">
-            {assignment && assignmentProgress && hasGameboard(assignment) &&
-            <SingleProgressDetails assignmentId={assignmentId} assignment={assignment}
-                progress={assignmentProgress[assignmentId]} pageSettings={pageSettings}/>
-            }
+            <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+                {assignmentWithProgress
+                    ? <SingleProgressDetails assignment={assignmentWithProgress} />
+                    : (assignmentProgressError
+                        ? <AssignmentProgressFetchError error={error} />
+                        : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>)
+                }
+            </AssignmentProgressPageSettingsContext.Provider>
         </div>
     </ShowLoading>
 };

@@ -14,7 +14,7 @@ export enum KEY {
 
 export const LOADING_FAILURE_VALUE = null;
 
-export const save = function save(key: KEY, value: string) {
+const save = function save(key: KEY, value: string) {
     try {
         window.localStorage.setItem(key, value);
         return true;
@@ -24,7 +24,7 @@ export const save = function save(key: KEY, value: string) {
     }
 };
 
-export const load = function load(key: KEY) {
+const load = function load(key: KEY) {
     try {
         return window.localStorage.getItem(key);
     } catch (e) {
@@ -33,7 +33,7 @@ export const load = function load(key: KEY) {
     }
 };
 
-export const remove = function remove(key: KEY) {
+const remove = function remove(key: KEY) {
     try {
         window.localStorage.removeItem(key);
         return true;
@@ -43,7 +43,7 @@ export const remove = function remove(key: KEY) {
     }
 };
 
-export const clear = function clear() {
+const clear = function clear() {
     try {
         window.localStorage.clear();
         return true;
@@ -53,7 +53,7 @@ export const clear = function clear() {
     }
 };
 
-export const session = {
+const session = {
     save: function sessionSave(key: KEY, value: string) {
         try {
             window.sessionStorage.setItem(key, value);
@@ -92,4 +92,12 @@ export const session = {
             return false;
         }
     },
+};
+
+export const persistence = {
+    save,
+    load,
+    remove,
+    clear,
+    session
 };

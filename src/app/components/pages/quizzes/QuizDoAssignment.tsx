@@ -1,43 +1,26 @@
-import React, {useEffect} from "react";
-import {useAppDispatch} from "../../../state/store";
-import {withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
-
+import React, {useCallback, useEffect} from "react";
+import {clearQuizAttempt, loadQuizAssignmentAttempt, useAppDispatch} from "../../../state";
+import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {clearQuizAttempt, loadQuizAssignmentAttempt} from "../../../state/actions/quizzes";
-import {isDefined} from "../../../services/miscUtils";
-import {useCurrentQuizAttempt} from "../../../services/quiz";
+import {isDefined, useCurrentQuizAttempt} from "../../../services";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
-
-interface QuizDoAsssignmentProps {
-    match: {params: {quizAssignmentId: string, page: string}}
-}
-
-const pageLink = (attempt: QuizAttemptDTO, page?: number) => {
-    if (page !== undefined) {
-        return `/test/assignment/${attempt.quizAssignmentId}/page/${page}`;
-    } else {
-        return `/test/assignment/${attempt.quizAssignmentId}`;
-    }
-};
-
+import {Alert, Container} from "reactstrap";
 
 const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete when you are finished.
 </span>;
 
-const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}: QuizDoAsssignmentProps) => {
-    const {attempt, questions, sections, error} = useCurrentQuizAttempt();
-
+export const QuizDoAssignment = () => {
     const dispatch = useAppDispatch();
+    const {page, quizAssignmentId} = useParams<{quizAssignmentId: string; page?: string;}>();
+    const {attempt, questions, sections, error} = useCurrentQuizAttempt();
 
     useEffect(() => {
         dispatch(loadQuizAssignmentAttempt(parseInt(quizAssignmentId, 10)));
-
         return () => {
             dispatch(clearQuizAttempt());
         };
@@ -46,9 +29,13 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
     useSectionViewLogging(attempt, pageNumber);
 
+    const pageLink = useCallback((page?: number) =>
+        `/test/assignment/${quizAssignmentId}` + (isDefined(page) ? `/page/${page}` : "")
+    , [quizAssignmentId]);
+
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 
-    return <RS.Container className="mb-5">
+    return <Container className="mb-5">
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />
@@ -56,13 +43,11 @@ const QuizDoAsssignmentComponent = ({match: {params: {quizAssignmentId, page}}}:
             </>}
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Test" intermediateCrumbs={myQuizzesCrumbs} />
-                <RS.Alert color="danger">
+                <Alert color="danger">
                     <h4 className="alert-heading">Error loading assignment!</h4>
                     <p>{error}</p>
-                </RS.Alert>
+                </Alert>
             </>}
         </ShowLoading>
-    </RS.Container>;
+    </Container>;
 };
-
-export const QuizDoAssignment = withRouter(QuizDoAsssignmentComponent);

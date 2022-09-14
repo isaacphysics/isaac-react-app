@@ -1,14 +1,11 @@
 import React, {useState} from "react";
 import {UserSummaryForAdminUsersDTO} from "../../../../IsaacApiTypes";
 import {AdditionalInformation, AugmentedEvent} from "../../../../IsaacAppTypes";
-import {store} from "../../../state/store";
-import {bookUserOnEvent, closeActiveModal, showToast} from "../../../state/actions";
+import {bookUserOnEvent, closeActiveModal, showToast, store, useAppDispatch} from "../../../state";
 import * as RS from "reactstrap";
-import {atLeastOne, zeroOrLess} from "../../../services/validation";
+import {atLeastOne, formatBookingModalConfirmMessage, zeroOrLess} from "../../../services";
 import {EventBookingForm} from "../EventBookingForm";
-import {useAppDispatch} from "../../../state/store";
 import {FAILURE_TOAST} from "../../navigation/Toasts";
-import {formatBookingModalConfirmMessage} from "../../../services/events";
 
 export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, selectedEvent: AugmentedEvent, eventBookingIds: number[]) {
     return {

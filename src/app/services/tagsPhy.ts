@@ -1,8 +1,6 @@
-import {TAG_ID, TAG_LEVEL} from "./constants";
+import {AbstractBaseTagService, subject, TAG_ID, TAG_LEVEL} from "./";
 import {BaseTag} from "../../IsaacAppTypes";
 import {ContentDTO} from "../../IsaacApiTypes";
-import subject from "./subject";
-import {AbstractBaseTagService} from "./tagsAbstract";
 
 const softHyphen = "\u00AD";
 

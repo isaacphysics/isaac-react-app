@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import * as RS from 'reactstrap';
 import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {SITE_SUBJECT_TITLE} from "../../services/siteConstants";
-import {SOCIAL_LINKS} from "../../services/constants";
+import {SITE_SUBJECT_TITLE, SOCIAL_LINKS} from "../../services";
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 

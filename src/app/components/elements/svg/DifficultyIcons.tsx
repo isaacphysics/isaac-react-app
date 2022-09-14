@@ -1,10 +1,9 @@
 import React from "react";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {difficultyLabelMap, difficultyShortLabelMap} from "../../../services/constants";
+import {difficultyLabelMap, difficultyShortLabelMap, siteSpecific} from "../../../services";
 import classnames from "classnames";
 import {Rectangle} from "./Rectangle";
-import {siteSpecific} from "../../../services/siteConstants";
 
 // Difficulty icon proportions
 const difficultyIconWidth = 25;

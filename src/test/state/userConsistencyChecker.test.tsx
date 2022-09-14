@@ -1,11 +1,10 @@
-import "../../app/state/actions"; // very annoying but this needs to be imported early to avoid a cyclic dependency issue
-import {getUserId, setUserId} from "../../app/state/middleware/userConsistencyCheckerCurrentUser";
-import {ACTION_TYPE} from "../../app/services/constants";
-import {userConsistencyCheckerMiddleware} from "../../app/state/middleware/userConsistencyChecker";
+import {ACTION_TYPE} from "../../app/services";
+import {setUserId, getUserId, userConsistencyCheckerMiddleware} from "../../app/state";
+import * as CurrentUser from "../../app/state/middleware/userConsistencyCheckerCurrentUser";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
-import {jest} from "@jest/globals";
 
-jest.mock("../../app/state/middleware/userConsistencyCheckerCurrentUser");
+jest.spyOn(CurrentUser, "setUserId");
+jest.spyOn(CurrentUser, "getUserId");
 
 let fakeDispatch: Dispatch, fakeGetState, fakeStore: MiddlewareAPI, fakeNext: Dispatch<AnyAction>;
 
@@ -31,6 +30,10 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         jest.clearAllMocks();
     });
+
+    afterAll(() => {
+        jest.clearAllMocks();
+    })
 
     it("sets the current user after a successful login and starts consistency checking", async () => {
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);

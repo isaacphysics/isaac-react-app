@@ -1,7 +1,6 @@
-import {MARKDOWN_RENDERER} from "../../../services/constants";
+import {isPhy, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-import {isPhy} from "../../../services/siteConstants";
 
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
@@ -32,7 +31,7 @@ export const renderClozeDropZones = (markdown: string) => {
 // This is used to render the full version of a glossary term using the IsaacGlossaryTerm component.
 export const renderGlossaryBlocks = (markdown: string) => {
     // Matches strings such as [glossary:glossary-demo|boolean-algebra] which MUST be at the beginning of the line.
-    const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z-|]+?)\]/gm;
+    const glossaryBlockRegexp = /^\[glossary:(?<id>[a-z0-9-|]+?)\]/gm;
     return markdown.replace(glossaryBlockRegexp, (_match, id) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
         return `<div data-type="full" id="glossary-term-${cssFriendlyTermId}">Loading glossary...</div>`;
@@ -43,7 +42,7 @@ export const renderGlossaryBlocks = (markdown: string) => {
 export const renderInlineGlossaryTerms = (markdown: string) => {
     // Matches strings such as [glossary-inline:glossary-demo|boolean-algebra] and
     // [glossary-inline:glossary-demo|boolean-algebra "boolean algebra"] which CAN be inlined.
-    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z-|]+?)\s*(?:"(?<text>[A-Za-z0-9-() ]+)")?\]/g;
+    const glossaryInlineRegexp = /\[glossary-inline:(?<id>[a-z0-9-|]+?)\s*(?:"(?<text>[A-Za-z0-9-() ]+)")?\]/g;
     return markdown.replace(glossaryInlineRegexp, (_match, id, text, offset) => {
         const cssFriendlyTermId = id.replace(/\|/g, '-');
         return `<span data-type="inline" class="inline-glossary-term" ${text ? `data-text="${text}"` : ""} id="glossary-term-${cssFriendlyTermId}">Loading glossary...</span>`;

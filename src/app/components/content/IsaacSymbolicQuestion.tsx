@@ -3,15 +3,20 @@ import * as RS from "reactstrap";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {FormulaDTO, IsaacSymbolicQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
-import {ifKeyIsEnter} from "../../services/navigation";
+import {
+    ifKeyIsEnter,
+    isDefined,
+    jsonHelper,
+    parsePseudoSymbolicAvailableSymbols,
+    sanitiseInequalityState,
+    useCurrentQuestionAttempt
+} from "../../services";
 import {Inequality, makeInequality} from "inequality";
 import {parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
-import {parsePseudoSymbolicAvailableSymbols, sanitiseInequalityState, useCurrentQuestionAttempt} from "../../services/questions";
-import {jsonHelper} from "../../services/json";
 import {v4 as uuid_v4} from "uuid";
-import { isDefined } from '../../services/miscUtils';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+
 const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
 // Magic starts here

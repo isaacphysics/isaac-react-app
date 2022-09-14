@@ -2,7 +2,7 @@ import React from "react";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
-import {WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {WEBMASTER_EMAIL} from "../../services";
 
 export const SessionExpired = () => {
 

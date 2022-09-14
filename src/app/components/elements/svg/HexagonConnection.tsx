@@ -1,5 +1,5 @@
 import React from "react";
-import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services/svg";
+import {addHexagonKeyPoints, svgLine, svgMoveTo} from "../../../services";
 import {HexagonProportions} from "./Hexagon";
 
 function rightAngledConnectionLine(hexagonProperties: HexagonProportions, sourceIndex: number, targetIndex: number) {

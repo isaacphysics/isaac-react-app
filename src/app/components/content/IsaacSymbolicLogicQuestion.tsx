@@ -1,21 +1,24 @@
 import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {useAppSelector} from "../../state/store";
+import {selectors, useAppSelector} from "../../state";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
-import {ifKeyIsEnter} from "../../services/navigation";
-import {selectors} from "../../state/selectors";
-import {sanitiseInequalityState, useCurrentQuestionAttempt} from '../../services/questions';
+import {
+    ifKeyIsEnter,
+    isDefined,
+    isStaff,
+    jsonHelper,
+    sanitiseInequalityState,
+    useCurrentQuestionAttempt,
+    useUserContext
+} from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
-import {jsonHelper} from "../../services/json";
 import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
-import {isDefined} from '../../services/miscUtils';
-import {isStaff} from '../../services/user';
-import {useUserContext} from "../../services/userContext";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+
 const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
 
 // Magic starts here
