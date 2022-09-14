@@ -127,7 +127,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "Gameboard"],
+    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
@@ -169,6 +169,7 @@ const isaacApi = createApi({
                 url: "/gameboards/user_gameboards",
                 params: {"start_index": startIndex, limit, sort}
             }),
+            providesTags: (result) => result ? ["AllGameboards", ...result.boards.map(b => ({type: "Gameboard" as const, id: b.id}))] : [],
             transformResponse: (response: GameboardListDTO) => ({
                 boards: response.results ?? [],
                 totalResults: response.totalResults ?? 0
@@ -250,6 +251,7 @@ const isaacApi = createApi({
                 method: "POST",
                 params: {title: newTitle},
             }),
+            invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Linking the gameboard to your account failed"
             })
@@ -260,6 +262,7 @@ const isaacApi = createApi({
                 url: `gameboards/user_gameboards/${boardId}`,
                 method: "POST"
             }),
+            invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Linking the gameboard to your account failed"
             })
@@ -270,6 +273,7 @@ const isaacApi = createApi({
                 url: `/gameboards/user_gameboards/${boardId}`,
                 method: "DELETE",
             }),
+            invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Gameboard deleted",
                 successMessage: "You have successfully unlinked your account from this gameboard.",
@@ -286,6 +290,7 @@ const isaacApi = createApi({
                 url: "/assignments/assign",
                 params: groupId ? {group: groupId} : undefined
             }),
+            providesTags: (result, _, groupId) => result ? (groupId ? [{type: "GroupAssignments", id: groupId}] : ["AllSetAssignments"]) : []
         }),
 
         // Get a specific assignment managed by this user. The returned assignment will have gameboard and question
@@ -294,6 +299,7 @@ const isaacApi = createApi({
             query: (assignmentId) => ({
                 url: `/assignments/assign/${assignmentId}`,
             }),
+            providesTags: (result, _, assignmentId) => result ? [{type: "SetAssignment", id: assignmentId}] : []
         }),
 
         // Get all quiz assignments for groups managed by this user.
@@ -302,26 +308,18 @@ const isaacApi = createApi({
                 url: "/quiz/assigned",
                 params: groupId ? {groupId} : undefined
             }),
+            providesTags: (result, _, groupId) => result ? (groupId ? [{type: "GroupTests", id: groupId}] : ["AllSetTests"]) : []
         }),
 
         getAssignmentProgress: build.query<AppAssignmentProgress[], number>({
             query: (assignmentId) => ({
                 url: `/assignments/assign/${assignmentId}/progress`
             }),
+            providesTags: ["AssignmentProgress"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading assignment progress failed"
             }),
             transformResponse: anonymiseIfNeededWith<AppAssignmentProgress[]>(anonymisationFunctions.progressState)
-        }),
-
-        getGroupProgress: build.query<UserGameboardProgressSummaryDTO[], number>({
-            query: (groupId) => ({
-                url: `/groups/${groupId}/progress`
-            }),
-            onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading group progress failed"
-            }),
-            transformResponse: anonymiseIfNeededWith<UserGameboardProgressSummaryDTO[]>(anonymisationFunctions.groupProgress)
         }),
 
         assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
@@ -330,6 +328,7 @@ const isaacApi = createApi({
                 method: "POST",
                 body: assignments
             }),
+            invalidatesTags: result => result ? ["AssignmentProgress"] : []
         }),
 
         unassignGameboard: build.mutation<void, {boardId: string, groupId: number}>({
@@ -337,6 +336,7 @@ const isaacApi = createApi({
                 url: `/assignments/assign/${boardId}/${groupId}`,
                 method: "DELETE",
             }),
+            invalidatesTags: (_, error) => !error ? ["AssignmentProgress"] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Assignment deleted",
                 successMessage: "This assignment has been unset successfully.",
