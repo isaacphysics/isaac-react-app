@@ -1,16 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {
-    extractDataFromQueryResponse,
     isaacApi,
     logAction,
     selectors,
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import {Link, withRouter} from "react-router-dom"
-import * as RS from "reactstrap"
-import {Container} from "reactstrap"
-import {ShowLoading} from "../handlers/ShowLoading";
+import {Link, withRouter} from "react-router-dom";
+import * as RS from "reactstrap";
+import {Container} from "reactstrap";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -22,7 +20,7 @@ import {
     isDefined,
     isFound,
     isPhy,
-    isTeacher, NO_CONTENT,
+    isTeacher,
     NOT_FOUND,
     showWildcard,
     siteSpecific,
@@ -36,7 +34,6 @@ import {StageAndDifficultySummaryIcons} from "../elements/StageAndDifficultySumm
 import {Markup} from "../elements/markup";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
-import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 function extractFilterQueryString(gameboard: GameboardDTO): string {

@@ -126,7 +126,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         existing gameboard to duplicate and edit it.
     </span>;
 
-    const sentinal = useRef<HTMLDivElement>(null);
+    const sentinel = useRef<HTMLDivElement>(null);
 
     const resetBuilder = () => {
         if (baseGameboard) {
@@ -134,11 +134,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         } else {
             initialise();
         }
-        setTimeout(() => sentinal.current?.scrollIntoView(), 50);
+        setTimeout(() => sentinel.current?.scrollIntoView(), 50);
     };
 
     return <Container id="gameboard-builder">
-        <div ref={sentinal}/>
+        <div ref={sentinel}/>
         <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp} modalId="gameboard_builder_help"/>
 
         <Card className="p-3 mt-4 mb-5">
