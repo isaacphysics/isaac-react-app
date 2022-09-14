@@ -199,7 +199,7 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
 
     // Fetch gameboards from server, no aggregation since we want a fresh list
     const loadInitial = useCallback((limit: NumberOfBoards) => {
-        loadGameboards({startIndex: 0, limit, sort: boardOrder});
+        loadGameboards({startIndex: 0, limit, sort: boardOrder}, false);
         setLoading(true);
     }, [loadGameboards, setLoading, boardOrder]);
 

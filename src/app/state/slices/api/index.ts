@@ -1,8 +1,11 @@
 import {
     API_PATH,
     API_REQUEST_FAILURE_MESSAGE,
-    FEATURED_NEWS_TAG, isDefined,
-    isPhy, MEMBERSHIP_STATUS,
+    FEATURED_NEWS_TAG,
+    isDefined,
+    isPhy,
+    MEMBERSHIP_STATUS,
+    NO_CONTENT,
     NOT_FOUND,
     QUESTION_CATEGORY
 } from "../../../services";
@@ -19,8 +22,8 @@ import {
     IsaacWildcard,
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO,
-    UserGroupDTO, UserSummaryWithGroupMembershipDTO
+    UserGroupDTO,
+    UserSummaryWithGroupMembershipDTO,
 } from "../../../../IsaacApiTypes";
 import {
     anonymisationFunctions,
@@ -52,22 +55,24 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
             return headers;
         }
     }
-    const result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
+    let result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
     if (result.error && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
         if (result.error.status === 502) {
             // A '502 Bad Gateway' response means that the API no longer exists:
             api.dispatch(errorSlice.actions.apiGoneAway);
-        } else if (result.error.status === 401) {
-            //
         } else {
             api.dispatch(errorSlice.actions.apiServerError);
         }
         // eslint-disable-next-line no-console
         console.warn("Error from API:", result.error);
     } else {
-        if (result.meta?.response?.status && result.meta?.response?.status >= 500) {
+        const status = result.meta?.response?.status;
+        if (!status) return result;
+        if (status >= 500) {
             // eslint-disable-next-line no-console
             console.warn("Uncaught error from API:", result.meta?.response);
+        } else if ([NOT_FOUND, NO_CONTENT].includes(status)) {
+            result.data = NOT_FOUND;
         }
     }
     return result;
@@ -105,7 +110,7 @@ export const mutationSucceeded = <T>(response: {data: T} | {error: FetchBaseQuer
     return response.hasOwnProperty("data");
 }
 
-export const extractDataFromQueryResponse = <T>(response: { data?: T; } | { error: FetchBaseQueryError | SerializedError; }): T | NOT_FOUND_TYPE | undefined => {
+export const extractDataFromQueryResponse = <T>(response: { data?: T } | { error: FetchBaseQueryError | SerializedError; }): T | NOT_FOUND_TYPE | undefined => {
     if ('data' in response) {
         return response.data;
     } else if ('error' in response && 'status' in response.error && response.error.status === NOT_FOUND) {
@@ -128,7 +133,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "Groups", "GroupMemberships", "MyGroupMemberships"],
+    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
@@ -170,6 +175,7 @@ const isaacApi = createApi({
                 url: "/gameboards/user_gameboards",
                 params: {"start_index": startIndex, limit, sort}
             }),
+            providesTags: (result) => result ? ["AllGameboards", ...result.boards.map(b => ({type: "Gameboard" as const, id: b.id}))] : [],
             transformResponse: (response: GameboardListDTO) => ({
                 boards: response.results ?? [],
                 totalResults: response.totalResults ?? 0
@@ -190,6 +196,7 @@ const isaacApi = createApi({
             query: (boardId) => ({
                 url: `/gameboards/${boardId}`
             }),
+            providesTags: (result) => result && result.id ? [{type: "Gameboard", id: result.id}] : []
         }),
         
         getWildcards: build.query<IsaacWildcard[], void>({
@@ -250,6 +257,7 @@ const isaacApi = createApi({
                 method: "POST",
                 params: {title: newTitle},
             }),
+            invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Linking the gameboard to your account failed"
             })
@@ -260,6 +268,7 @@ const isaacApi = createApi({
                 url: `gameboards/user_gameboards/${boardId}`,
                 method: "POST"
             }),
+            invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Linking the gameboard to your account failed"
             })
@@ -270,6 +279,7 @@ const isaacApi = createApi({
                 url: `/gameboards/user_gameboards/${boardId}`,
                 method: "DELETE",
             }),
+            invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Gameboard deleted",
                 successMessage: "You have successfully unlinked your account from this gameboard.",
@@ -286,6 +296,7 @@ const isaacApi = createApi({
                 url: "/assignments/assign",
                 params: groupId ? {group: groupId} : undefined
             }),
+            providesTags: (result, _, groupId) => result ? (groupId ? [{type: "GroupAssignments", id: groupId}] : ["AllSetAssignments"]) : []
         }),
 
         // Get a specific assignment managed by this user. The returned assignment will have gameboard and question
@@ -294,6 +305,7 @@ const isaacApi = createApi({
             query: (assignmentId) => ({
                 url: `/assignments/assign/${assignmentId}`,
             }),
+            providesTags: (result, _, assignmentId) => result ? [{type: "SetAssignment", id: assignmentId}] : []
         }),
 
         // Get all quiz assignments for groups managed by this user.
@@ -302,26 +314,18 @@ const isaacApi = createApi({
                 url: "/quiz/assigned",
                 params: groupId ? {groupId} : undefined
             }),
+            providesTags: (result, _, groupId) => result ? (groupId ? [{type: "GroupTests", id: groupId}] : ["AllSetTests"]) : []
         }),
 
         getAssignmentProgress: build.query<AppAssignmentProgress[], number>({
             query: (assignmentId) => ({
                 url: `/assignments/assign/${assignmentId}/progress`
             }),
+            providesTags: ["AssignmentProgress"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading assignment progress failed"
             }),
             transformResponse: anonymiseIfNeededWith<AppAssignmentProgress[]>(anonymisationFunctions.progressState)
-        }),
-
-        getGroupProgress: build.query<UserGameboardProgressSummaryDTO[], number>({
-            query: (groupId) => ({
-                url: `/groups/${groupId}/progress`
-            }),
-            onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading group progress failed"
-            }),
-            transformResponse: anonymiseIfNeededWith<UserGameboardProgressSummaryDTO[]>(anonymisationFunctions.groupProgress)
         }),
 
         assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
@@ -330,6 +334,7 @@ const isaacApi = createApi({
                 method: "POST",
                 body: assignments
             }),
+            invalidatesTags: result => result ? ["AssignmentProgress"] : []
         }),
 
         unassignGameboard: build.mutation<void, {boardId: string, groupId: number}>({
@@ -337,6 +342,7 @@ const isaacApi = createApi({
                 url: `/assignments/assign/${boardId}/${groupId}`,
                 method: "DELETE",
             }),
+            invalidatesTags: (_, error) => !error ? ["AssignmentProgress"] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 successTitle: "Assignment deleted",
                 successMessage: "This assignment has been unset successfully.",

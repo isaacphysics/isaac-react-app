@@ -103,7 +103,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
         <RS.Form onSubmit={function submitCurrentAttempt(event) {
             if (event) {event.preventDefault();}
             if (questionPart?.currentAttempt) {
-                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt));
+                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
                 if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
                     dispatch(saveGameboard({
                         boardId: currentGameboard.id,

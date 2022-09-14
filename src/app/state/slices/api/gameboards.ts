@@ -110,6 +110,7 @@ export const assignGameboard = createAsyncThunk(
                 undefined,
                 (assignmentsByMe) => assignmentsByMe.concat(newAssignments)
             ));
+            appDispatch(isaacApi.util.invalidateTags(successfulIds.map(groupId => ({type: "GroupAssignments", id: groupId}))));
             return newAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
