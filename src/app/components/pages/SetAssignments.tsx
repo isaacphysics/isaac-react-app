@@ -340,8 +340,7 @@ export const SetAssignments = () => {
     const dispatch = useAppDispatch();
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    isaacApi.endpoints.getGroups.useQuery(false);
-    const groups = useAppSelector(selectors.groups.active);
+    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
     const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
         assignmentsSetByMe?.reduce((acc, assignment) => {

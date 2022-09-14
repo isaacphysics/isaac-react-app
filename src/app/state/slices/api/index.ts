@@ -1,8 +1,8 @@
 import {
     API_PATH,
     API_REQUEST_FAILURE_MESSAGE,
-    FEATURED_NEWS_TAG,
-    isPhy,
+    FEATURED_NEWS_TAG, isDefined,
+    isPhy, MEMBERSHIP_STATUS,
     NOT_FOUND,
     QUESTION_CATEGORY
 } from "../../../services";
@@ -20,11 +20,11 @@ import {
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
     UserGameboardProgressSummaryDTO,
-    UserGroupDTO
+    UserGroupDTO, UserSummaryWithGroupMembershipDTO
 } from "../../../../IsaacApiTypes";
 import {
     anonymisationFunctions,
-    anonymiseIfNeededWith,
+    anonymiseIfNeededWith, anonymiseListIfNeededWith,
     errorSlice,
     logAction,
     showRTKQueryErrorToastIfNeeded,
@@ -32,10 +32,10 @@ import {
 } from "../../index";
 import {Dispatch} from "redux";
 import {
-    AppAssignmentProgress,
+    AppAssignmentProgress, AppGroup, AppGroupMembership, AppGroupTokenDTO,
     BoardOrder,
     Boards,
-    EnhancedAssignment,
+    EnhancedAssignment, GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
     NumberOfBoards
 } from "../../../../IsaacAppTypes";
@@ -128,7 +128,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms"],
+    tagTypes: ["GlossaryTerms", "Groups", "GroupMemberships", "MyGroupMemberships"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
@@ -374,15 +374,223 @@ const isaacApi = createApi({
 
         // === Groups ===
 
-        getGroups: build.query<UserGroupDTO[], boolean>({
+        getGroups: build.query<AppGroup[], boolean>({
             query: (archivedGroupsOnly) => ({
                 url: `/groups?archived_groups_only=${archivedGroupsOnly}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading groups failed"
+            }),
+            transformResponse: anonymiseListIfNeededWith<AppGroup>(anonymisationFunctions.appGroup),
+            providesTags: ["Groups"]
+        }),
+
+        createGroup: build.mutation<UserGroupDTO, string>({
+            query: (groupName) => ({
+                method: "POST",
+                url: "/groups",
+                body: {groupName},
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: (_, newGroup, {dispatch}) => {
+                    dispatch(isaacApi.util.updateQueryData(
+                        "getGroups",
+                        true,
+                        (groups) => [...groups, newGroup]
+                    ));
+                },
+                errorTitle: "Group creation failed"
+            }),
+            transformResponse: anonymiseIfNeededWith<UserGroupDTO>(anonymisationFunctions.appGroup)
+        }),
+
+        deleteGroup: build.mutation<void, number>({
+            query: (groupId) => ({
+                method: "DELETE",
+                url: `/groups/${groupId}`,
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: (groupId, _, {dispatch}) => {
+                    dispatch(isaacApi.util.updateQueryData(
+                        "getGroups",
+                        true,
+                        (groups) => groups.filter(g => g.id === groupId)
+                    ));
+                },
+                errorTitle: "Group deletion failed"
             })
         }),
-        
+
+        updateGroup: build.mutation<void, {updatedGroup: AppGroup; message?: string}>({
+            query: ({updatedGroup}) => ({
+                method: "POST",
+                url: `/groups/${updatedGroup.id}`,
+                body: {...updatedGroup, members: undefined}
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: ({updatedGroup, message}, _, {dispatch}) => {
+                    dispatch(showSuccessToast("Group saved successfully", message));
+                    dispatch(isaacApi.util.updateQueryData(
+                        "getGroups",
+                        true,
+                        (groups) =>
+                            groups.map(g => g.id === updatedGroup.id
+                                ? updatedGroup
+                                : g
+                            )
+                    ));
+                },
+                errorTitle: "Group saving failed"
+            })
+        }),
+
+        // --- Group members and memberships ---
+
+        getGroupMemberships: build.query<GroupMembershipDetailDTO[], number | undefined>({
+            query: (userId) => ({
+                url: userId ? `/groups/membership/${userId}` : "/groups/membership"
+            }),
+            providesTags: (_, __, userId) => userId ? [{type: "GroupMemberships", id: userId}] : ["MyGroupMemberships"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading group memberships failed"
+            }),
+            transformResponse: anonymiseListIfNeededWith<GroupMembershipDetailDTO>(anonymisationFunctions.groupMembershipDetail)
+        }),
+
+        changeMyMembershipStatus: build.mutation<void, {groupId: number, newStatus: MEMBERSHIP_STATUS}>({
+            query: ({groupId, newStatus}) => ({
+                method: "POST",
+                url: `/groups/membership/${groupId}/${newStatus}`
+            }),
+            invalidatesTags: ["MyGroupMemberships"],
+            onQueryStarted: onQueryLifecycleEvents({
+                successTitle: "Status Updated",
+                successMessage: "You have updated your membership status.",
+                errorTitle: "Membership status update failed"
+            }),
+        }),
+
+        getGroupMembers: build.mutation<UserSummaryWithGroupMembershipDTO[], number>({
+            query: (groupId) => ({
+                url: `/groups/${groupId}/membership`
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: (groupId, members, {dispatch}) => {
+                    [true, false].forEach(archivedGroupsOnly => {
+                        dispatch(isaacApi.util.updateQueryData(
+                            "getGroups",
+                            archivedGroupsOnly,
+                            (groups) =>
+                                groups.map(g => g.id === groupId
+                                    ? {...g, members: members as AppGroupMembership[]}
+                                    : g
+                                )
+                        ));
+                    });
+                },
+                errorTitle: "Loading group members failed"
+            }),
+            transformResponse: anonymiseListIfNeededWith<UserSummaryWithGroupMembershipDTO>(anonymisationFunctions.userSummary())
+        }),
+
+        deleteGroupMember: build.mutation<void, {groupId: number, userId: number}>({
+            query: ({groupId, userId}) => ({
+                method: "DELETE",
+                url: `/groups/${groupId}/membership/${userId}`
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: ({groupId, userId}, _, {dispatch}) => {
+                    [true, false].forEach(archivedGroupsOnly => {
+                        dispatch(isaacApi.util.updateQueryData(
+                            "getGroups",
+                            archivedGroupsOnly,
+                            (groups) =>
+                                groups.map(g => g.id === groupId
+                                    ? {...g, members: g.members?.filter(m => m.id !== userId)}
+                                    : g
+                                )
+                        ));
+                    });
+                },
+                errorTitle: "Failed to delete member"
+            })
+        }),
+
+        // --- Group managers ---
+
+        addGroupManager: build.mutation<UserGroupDTO, {groupId: number, managerEmail: string}>({
+            query: ({groupId, managerEmail}) => ({
+                method: "POST",
+                url: `/groups/${groupId}/manager`,
+                body: {email: managerEmail}
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: (_, groupWithNewManager, {dispatch}) => {
+                    [true, false].forEach(archivedGroupsOnly => {
+                        dispatch(isaacApi.util.updateQueryData(
+                            "getGroups",
+                            archivedGroupsOnly,
+                            (groups) =>
+                                groups.map(g => g.id === groupWithNewManager.id
+                                    ? {...g, additionalManagers: groupWithNewManager.additionalManagers}
+                                    : g
+                                )
+                        ));
+                    });
+                },
+                errorTitle: "Group manager addition failed"
+            }),
+            transformResponse: anonymiseIfNeededWith<UserGroupDTO>(anonymisationFunctions.appGroup)
+        }),
+
+        deleteGroupManager: build.mutation<void, {groupId: number, managerUserId: number}>({
+            query: ({groupId, managerUserId}) => ({
+                method: "DELETE",
+                url: `/groups/${groupId}/manager/${managerUserId}`
+            }),
+            invalidatesTags: (result, error) => isDefined(error) ? [] : ["Groups"],
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: ({groupId, managerUserId}, _, {dispatch}) => {
+                    [true, false].forEach(archivedGroupsOnly => {
+                        dispatch(isaacApi.util.updateQueryData(
+                            "getGroups",
+                            archivedGroupsOnly,
+                            (groups) =>
+                                groups.map(g => g.id === groupId
+                                    ? {...g, additionalManagers: g.additionalManagers?.filter(m => m.id !== managerUserId)}
+                                    : g
+                                )
+                        ));
+                    });
+                },
+                errorTitle: "Group manager removal failed"
+            }),
+        }),
+
+        // --- Tokens ---
+
+        getGroupToken: build.mutation<AppGroupTokenDTO, number>({
+            query: (groupId) => ({
+                url: `/authorisations/token/${groupId}`
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: (groupId, tokenDTO, {dispatch}) => {
+                    [true, false].forEach(archivedGroupsOnly => {
+                        dispatch(isaacApi.util.updateQueryData(
+                            "getGroups",
+                            archivedGroupsOnly,
+                            (groups) =>
+                                groups.map(g => g.id === groupId
+                                    ? {...g, token: tokenDTO.token}
+                                    : g
+                                )
+                        ));
+                    });
+                },
+                errorTitle: "Loading group token failed"
+            }),
+        }),
+
         // === Account MFA ===
         
         setupAccountMFA: build.mutation<void, {sharedSecret: string, mfaVerificationCode: string}>({

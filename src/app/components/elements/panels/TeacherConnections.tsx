@@ -5,10 +5,8 @@ import {PotentialUser} from "../../../../IsaacAppTypes";
 import {
     AdminUserGetState,
     authenticateWithTokenAfterPrompt,
-    changeMyMembershipStatus,
     getActiveAuthorisations,
-    getGroupMemberships,
-    getStudentAuthorisations,
+    getStudentAuthorisations, isaacApi,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt,
@@ -30,13 +28,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const dispatch = useAppDispatch();
     const activeAuthorisations = useAppSelector(selectors.connections.activeAuthorisations);
     const studentAuthorisations = useAppSelector(selectors.connections.otherUserAuthorisations);
-    const groupMemberships = useAppSelector(selectors.connections.groupMemberships);
+    const [getGroupMemberships, {data: groupMemberships}] = isaacApi.endpoints.getGroupMemberships.useLazyQuery();
+    const [changeMyMembershipStatus] = isaacApi.endpoints.changeMyMembershipStatus.useMutation();
 
     useEffect(() => {
         if (user.loggedIn && user.id) {
             dispatch(getActiveAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
             dispatch(getStudentAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
-            dispatch(getGroupMemberships((editingOtherUser && userToEdit?.id) || undefined));
+            getGroupMemberships((editingOtherUser && userToEdit?.id) || undefined);
         }
     }, [dispatch, editingOtherUser, userToEdit?.id]);
 
@@ -207,7 +206,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 </tr>
                             </thead>
                             <tbody>
-                                {groupMemberships && groupMemberships.map((membership) => (<tr key={membership.group.id}>
+                                {groupMemberships && groupMemberships.map((membership) => <tr key={membership.group.id}>
                                     <td>
                                         {membership.group.groupName || "Group " + membership.group.id}
                                     </td>
@@ -223,9 +222,9 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                         {membership.membershipStatus}
                                     </td>
                                     <td>
-                                        {membership.membershipStatus == MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
+                                        {membership.membershipStatus === MEMBERSHIP_STATUS.ACTIVE && <React.Fragment>
                                             <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
-                                                dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.INACTIVE))
+                                                changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.INACTIVE})
                                             }>
                                                 Leave group
                                             </RS.Button>
@@ -238,7 +237,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
                                         {membership.membershipStatus === MEMBERSHIP_STATUS.INACTIVE && <React.Fragment>
                                             <RS.Button color="link" disabled={editingOtherUser} onClick={() =>
-                                                dispatch(changeMyMembershipStatus(membership.group.id as number, MEMBERSHIP_STATUS.ACTIVE))
+                                                changeMyMembershipStatus({groupId: membership.group.id as number, newStatus: MEMBERSHIP_STATUS.ACTIVE})
                                             }>
                                                 Rejoin group
                                             </RS.Button>
@@ -249,7 +248,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                             </RS.UncontrolledTooltip>
                                         </React.Fragment>}
                                     </td>
-                                </tr>))}
+                                </tr>)}
                             </tbody>
                         </RS.Table>
                     </div>

@@ -47,7 +47,6 @@ import {
     studentQuizAttempt,
     activeAuthorisations,
     groupMemberships,
-    groups,
     otherUserAuthorisations,
     currentTopic,
     fasttrackConcepts,
@@ -104,7 +103,6 @@ const appReducer = combineReducers({
     testQuestions,
 
     // Groups
-    groups,
     groupMemberships,
     activeAuthorisations,
     otherUserAuthorisations,

@@ -11,13 +11,16 @@ import {
 import {
     QuizAssignmentDTO,
     QuizAttemptFeedbackDTO,
-    UserGameboardProgressSummaryDTO,
+    UserGameboardProgressSummaryDTO, UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";
 
 export const anonymiseIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T) => T) => (nonanonymousData: T) =>
     persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData) : nonanonymousData;
+
+export const anonymiseListIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T) => T) => (nonanonymousData: T[]) =>
+    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? nonanonymousData.map(anonymisationCallback) : nonanonymousData;
 
 export const anonymisationFunctions = {
     progressState: produce<AppAssignmentProgress[]>((progress) => {
@@ -92,9 +95,8 @@ export const anonymisationFunctions = {
         activeAuthorisations?.map((a, i) => anonymisationFunctions.userSummary("Demo", `Teacher ${i + 1}`)(a)),
     otherUserAuthorisations: (otherUserAuthorisations: UserSummaryDTO[]): UserSummaryDTO[] =>
         otherUserAuthorisations?.map(anonymisationFunctions.userSummary()),
-    groupMemberships: (groupMemberships: GroupMembershipDetailDTO[]): GroupMembershipDetailDTO[] =>
-        groupMemberships.map(g => ({
-            ...g,
-            group: anonymisationFunctions.appGroup(g.group) ?? {},
-        }))
+    groupMembershipDetail: (groupMembership: GroupMembershipDetailDTO): GroupMembershipDetailDTO => ({
+        ...groupMembership,
+        group: anonymisationFunctions.appGroup(groupMembership.group) ?? {},
+    })
 }

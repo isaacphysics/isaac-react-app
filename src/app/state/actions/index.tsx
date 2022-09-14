@@ -13,7 +13,6 @@ import {
     isDefined,
     isFirstLoginInPersistence,
     KEY,
-    MEMBERSHIP_STATUS,
     persistence,
     QUESTION_ATTEMPT_THROTTLED_MESSAGE,
     TAG_ID
@@ -21,7 +20,6 @@ import {
 import {
     Action,
     AdditionalInformation,
-    AppGroup,
     AppGroupMembership,
     ATTENDANCE,
     CredentialsAuthDTO,
@@ -47,7 +45,6 @@ import {
     Role,
     TestCaseDTO,
     UserContext,
-    UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../../IsaacApiTypes";
@@ -57,21 +54,13 @@ import {
     revocationConfirmationModal,
     tokenVerificationModal
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
-import {
-    additionalManagerRemovalModal,
-    groupInvitationModal,
-    groupManagersModal
-} from "../../components/elements/modals/GroupsModalCreators";
-import {ThunkDispatch} from "redux-thunk";
 import {AxiosError} from "axios";
 import ReactGA from "react-ga";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
-import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
 import {
     AppState,
     store,
-    selectors,
     errorSlice,
     routerPageChange,
     closeActiveModal,
@@ -573,13 +562,13 @@ export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAu
         }
     }
 };
-export const authenticateWithToken = (authToken: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export const authenticateWithToken = (authToken: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_REQUEST});
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
-        dispatch(getGroupMemberships() as any);
+        dispatch(isaacApi.util.invalidateTags(["MyGroupMemberships"]));
         dispatch(showToast({
             color: "success", title: "Granted access", timeout: 5000,
             body: "You have granted access to your data."
@@ -1154,71 +1143,71 @@ export const mergeUsers = (targetId: number, sourceId: number) => async (dispatc
 };
 
 // Groups
-export const selectGroup = (group: UserGroupDTO | null) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_SELECT, group});
-};
+// export const selectGroup = (group: UserGroupDTO | null) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_SELECT, group});
+// };
 
-export const createGroup = (groupName: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_CREATE_REQUEST});
-    try {
-        const newGroup = await api.groups.create(groupName);
-        dispatch({type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: newGroup.data});
-        return newGroup.data as AppGroup;
-    } catch (e) {
-        dispatch(showAxiosErrorToastIfNeeded("Group creation failed", e));
-        throw e;
-    }
-};
+// export const createGroup = (groupName: string) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_CREATE_REQUEST});
+//     try {
+//         const newGroup = await api.groups.create(groupName);
+//         dispatch({type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: newGroup.data});
+//         return newGroup.data as AppGroup;
+//     } catch (e) {
+//         dispatch(showAxiosErrorToastIfNeeded("Group creation failed", e));
+//         throw e;
+//     }
+// };
+//
+// export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<any>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_DELETE_REQUEST});
+//     try {
+//         await api.groups.delete(group);
+//         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup: group});
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE, deletedGroup: group});
+//         dispatch(showAxiosErrorToastIfNeeded("Group deletion failed", e));
+//     }
+// };
+//
+// export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_UPDATE_REQUEST});
+//     try {
+//         await api.groups.update(updatedGroup);
+//         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS, updatedGroup: updatedGroup});
+//         dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}) as any);
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
+//         dispatch(showAxiosErrorToastIfNeeded("Group saving failed", e));
+//     }
+// };
 
-export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<any>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_DELETE_REQUEST});
-    try {
-        await api.groups.delete(group);
-        dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup: group});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE, deletedGroup: group});
-        dispatch(showAxiosErrorToastIfNeeded("Group deletion failed", e));
-    }
-};
+// export const getGroupMembers = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST, group});
+//     try {
+//         const result = await api.groups.getMembers(group);
+//         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: group, members: result.data});
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE, group: group});
+//         dispatch(showAxiosErrorToastIfNeeded("Loading group members failed", e));
+//     }
+// };
 
-export const updateGroup = (updatedGroup: UserGroupDTO, message?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_UPDATE_REQUEST});
-    try {
-        await api.groups.update(updatedGroup);
-        dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS, updatedGroup: updatedGroup});
-        dispatch(showToast({color: "success", title: "Group saved successfully", body: message, timeout: 3000}) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE, updatedGroup: updatedGroup});
-        dispatch(showAxiosErrorToastIfNeeded("Group saving failed", e));
-    }
-};
+// export const getGroupToken = (group: AppGroup) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_TOKEN_REQUEST, group});
+//     try {
+//         const result = await api.authorisations.getToken(group.id as number);
+//         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS, group: group, token: result.data.token});
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE, group: group});
+//         dispatch(showAxiosErrorToastIfNeeded("Loading group token failed", e));
+//     }
+// };
 
-export const getGroupMembers = (group: UserGroupDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST, group});
-    try {
-        const result = await api.groups.getMembers(group);
-        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: group, members: result.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE, group: group});
-        dispatch(showAxiosErrorToastIfNeeded("Loading group members failed", e));
-    }
-};
-
-export const getGroupToken = (group: AppGroup) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_TOKEN_REQUEST, group});
-    try {
-        const result = await api.authorisations.getToken(group.id as number);
-        dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS, group: group, token: result.data.token});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE, group: group});
-        dispatch(showAxiosErrorToastIfNeeded("Loading group token failed", e));
-    }
-};
-
-export const getGroupInfo = (group: AppGroup) => async (dispatch: ThunkDispatch<AppState, void, Action>) => {
-    dispatch(getGroupMembers(group));
-    dispatch(getGroupToken(group));
-};
+// export const getGroupInfo = (group: AppGroup) => async (dispatch: ThunkDispatch<AppState, void, Action>) => {
+//     dispatch(getGroupMembers(group));
+//     dispatch(getGroupToken(group));
+// };
 
 export const resetMemberPassword = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST, member});
@@ -1231,92 +1220,72 @@ export const resetMemberPassword = (member: AppGroupMembership) => async (dispat
     }
 };
 
-export const deleteMember = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST, member});
-    try {
-        await api.groups.deleteMember(member);
-        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS, member});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE, member});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to delete member", e));
-    }
-};
+// export const deleteMember = (member: AppGroupMembership) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST, member});
+//     try {
+//         await api.groups.deleteMember(member);
+//         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS, member});
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE, member});
+//         dispatch(showAxiosErrorToastIfNeeded("Failed to delete member", e));
+//     }
+// };
 
-export const addGroupManager = (group: AppGroup, managerEmail: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST, group, managerEmail});
-    try {
-        const result = await api.groups.addManager(group, managerEmail);
-        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS, group, managerEmail, newGroup: result.data});
-        return true;
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE, group, managerEmail});
-        dispatch(showAxiosErrorToastIfNeeded("Group manager addition failed", e));
-        return false;
-    }
-};
+// export const addGroupManager = (group: AppGroup, managerEmail: string) => async (dispatch: Dispatch<Action>) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST, group, managerEmail});
+//     try {
+//         const result = await api.groups.addManager(group, managerEmail);
+//         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS, group, managerEmail, newGroup: result.data});
+//         return true;
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE, group, managerEmail});
+//         dispatch(showAxiosErrorToastIfNeeded("Group manager addition failed", e));
+//         return false;
+//     }
+// };
+//
+// export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmailAddressDTO, showArchived?: boolean) => async (dispatch: AppDispatch) => {
+//     dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST, group, manager});
+//     try {
+//         await api.groups.deleteManager(group, manager);
+//         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
+//         if (isDefined(showArchived)) {
+//             dispatch(isaacApi.endpoints.getGroups.initiate(showArchived));
+//         }
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
+//         dispatch(showAxiosErrorToastIfNeeded("Group manager removal failed", e));
+//     }
+// };
 
-export const deleteGroupManager = (group: AppGroup, manager: UserSummaryWithEmailAddressDTO, showArchived?: boolean) => async (dispatch: AppDispatch) => {
-    dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST, group, manager});
-    try {
-        await api.groups.deleteManager(group, manager);
-        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group, manager});
-        if (isDefined(showArchived)) {
-            dispatch(isaacApi.endpoints.getGroups.initiate(showArchived));
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE, group, manager});
-        dispatch(showAxiosErrorToastIfNeeded("Group manager removal failed", e));
-    }
-};
+// export const getGroupMemberships = (userId?: number) => async (dispatch: Dispatch<Action>) => {
+//     try {
+//         dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
+//         const groupMembershipsResponse = await (userId ? api.groups.adminGetMemberships(userId) : api.groups.getMemberships());
+//         dispatch({
+//             type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
+//             groupMemberships: groupMembershipsResponse.data
+//         });
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
+//         dispatch(showAxiosErrorToastIfNeeded("Loading group memberships failed", e));
+//     }
+// };
 
-export const showGroupEmailModal = (users?: number[]) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(groupEmailModal(users)) as any);
-};
-
-export const showGroupInvitationModal = (firstTime: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(groupInvitationModal(firstTime)) as any);
-};
-
-export const showAdditionalManagerSelfRemovalModal = (groupToModify: AppGroup, user: RegisteredUserDTO, showArchived: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(additionalManagerRemovalModal({groupToModify, user, showArchived})) as any);
-};
-
-export const showGroupManagersModal = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    const group = selectors.groups.current(state);
-    const user = state && state.user && state.user.loggedIn && state.user || null;
-    const userIsOwner = group && user && group.ownerId == user.id || false;
-    dispatch(openActiveModal(groupManagersModal(userIsOwner)) as any);
-};
-
-export const getGroupMemberships = (userId?: number) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_REQUEST});
-        const groupMembershipsResponse = await (userId ? api.groups.adminGetMemberships(userId) : api.groups.getMemberships());
-        dispatch({
-            type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_SUCCESS,
-            groupMemberships: groupMembershipsResponse.data
-        });
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUP_GET_MEMBERSHIPS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Loading group memberships failed", e));
-    }
-};
-
-export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
-        await api.groups.changeMyMembershipStatus(groupId, newStatus);
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
-        dispatch(showToast({
-            color: "success", title: "Status Updated", timeout: 5000,
-            body: "You have updated your membership status."
-        }) as any);
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Membership status update failed", e));
-    }
-};
+// export const changeMyMembershipStatus = (groupId: number, newStatus: MEMBERSHIP_STATUS) => async (dispatch: Dispatch<Action>) => {
+//     try {
+//         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST});
+//         await api.groups.changeMyMembershipStatus(groupId, newStatus);
+//         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS, groupId, newStatus});
+//         dispatch(showToast({
+//             color: "success", title: "Status Updated", timeout: 5000,
+//             body: "You have updated your membership status."
+//         }) as any);
+//     } catch (e) {
+//         dispatch({type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE});
+//         dispatch(showAxiosErrorToastIfNeeded("Membership status update failed", e));
+//     }
+// };
 
 // Events
 export const clearEventsList = {type: ACTION_TYPE.EVENTS_CLEAR};

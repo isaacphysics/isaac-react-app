@@ -568,8 +568,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 export function AssignmentProgress() {
     const dispatch = useAppDispatch();
 
-    isaacApi.endpoints.getGroups.useQuery(false);
-    const groups = useAppSelector(selectors.groups.active);
+    const {data: groups} = isaacApi.endpoints.getGroups.useQuery(false);
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);

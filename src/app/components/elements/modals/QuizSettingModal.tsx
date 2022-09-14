@@ -1,9 +1,10 @@
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
-import {AppGroup} from "../../../../IsaacAppTypes";
 import {
     AppDispatch,
     closeActiveModal,
-    hideToast, isaacApi, selectors,
+    hideToast,
+    isaacApi,
+    selectors,
     setQuiz,
     showQuizSettingModal,
     showToast,
@@ -46,8 +47,7 @@ interface QuizSettingModalProps {
 
 export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
-    const { isLoading } = isaacApi.endpoints.getGroups.useQuery(false);
-    const groups = useAppSelector(selectors.groups.active);
+    const { data: groups, isLoading } = isaacApi.endpoints.getGroups.useQuery(false);
 
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
     const [submitting, setSubmitting] = useState(false);
