@@ -35,7 +35,6 @@ export * from "./middleware/notificationManager";
 export * from "./middleware/userConsistencyChecker";
 export * from "./slices/api/gameboards";
 export * from "./slices/api/assignments";
-export * from "./slices/api/groups";
 export * from "./actions";
 export * from "./selectors";
 export * from "./reducers";

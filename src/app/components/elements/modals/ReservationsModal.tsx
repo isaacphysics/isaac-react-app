@@ -26,7 +26,7 @@ const ReservationsModal = () => {
     const user = useAppSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
 
     const {data: activeGroups} = isaacApi.endpoints.getGroups.useQuery(false);
-    const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useMutation();
+    const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
     const sortedActiveGroups = useMemo<AppGroup[]>(() => sortBy(activeGroups ?? [],g => g.groupName), [activeGroups]);
 
     const [selectedGroupId, setSelectedGroupId] = useState<number>();

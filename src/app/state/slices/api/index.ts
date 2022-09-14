@@ -22,7 +22,6 @@ import {
     IsaacWildcard,
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
-    UserGroupDTO,
     UserSummaryWithGroupMembershipDTO,
 } from "../../../../IsaacApiTypes";
 import {
@@ -83,7 +82,7 @@ export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | Seri
 }
 
 interface QueryLifecycleSpec<T, R> {
-    onQueryStart?: (args: T, dispatch: Dispatch<any>) => void;
+    onQueryStart?: (args: T, api: {dispatch: Dispatch<any>}) => void | {resetOptimisticUpdates: (() => void)};
     successTitle?: string;
     successMessage?: string;
     onQuerySuccess?: (args: T, response: R, api: {dispatch: Dispatch<any>}) => void;
@@ -91,7 +90,7 @@ interface QueryLifecycleSpec<T, R> {
     onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>}) => void;
 }
 const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, queryFulfilled }: { dispatch: Dispatch<any>, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
-    onQueryStart?.(arg, dispatch);
+    const queryStartCallbacks = onQueryStart?.(arg, {dispatch});
     try {
         const response = await queryFulfilled;
         if (successTitle && successMessage) {
@@ -103,6 +102,7 @@ const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessag
             dispatch(showRTKQueryErrorToastIfNeeded(errorTitle, e));
         }
         onQueryError?.(arg, e.error, {dispatch});
+        queryStartCallbacks?.resetOptimisticUpdates();
     }
 };
 
@@ -384,14 +384,14 @@ const isaacApi = createApi({
             query: (archivedGroupsOnly) => ({
                 url: `/groups?archived_groups_only=${archivedGroupsOnly}`
             }),
+            providesTags: ["Groups"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading groups failed"
             }),
-            transformResponse: anonymiseListIfNeededWith<AppGroup>(anonymisationFunctions.appGroup),
-            providesTags: ["Groups"]
+            transformResponse: anonymiseListIfNeededWith<AppGroup>(anonymisationFunctions.appGroup)
         }),
 
-        createGroup: build.mutation<UserGroupDTO, string>({
+        createGroup: build.mutation<AppGroup, string>({
             query: (groupName) => ({
                 method: "POST",
                 url: "/groups",
@@ -399,15 +399,16 @@ const isaacApi = createApi({
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: (_, newGroup, {dispatch}) => {
+                    // Created groups are active by default, so don't need to update cache for archived groups
                     dispatch(isaacApi.util.updateQueryData(
                         "getGroups",
-                        true,
+                        false,
                         (groups) => [...groups, newGroup]
                     ));
                 },
                 errorTitle: "Group creation failed"
             }),
-            transformResponse: anonymiseIfNeededWith<UserGroupDTO>(anonymisationFunctions.appGroup)
+            transformResponse: anonymiseIfNeededWith<AppGroup>(anonymisationFunctions.appGroup)
         }),
 
         deleteGroup: build.mutation<void, number>({
@@ -415,13 +416,14 @@ const isaacApi = createApi({
                 method: "DELETE",
                 url: `/groups/${groupId}`,
             }),
+            invalidatesTags: (_, error, groupId) => !isDefined(error) ? [{type: "GroupAssignments", id: groupId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: (groupId, _, {dispatch}) => {
-                    dispatch(isaacApi.util.updateQueryData(
+                    [true, false].forEach(archivedGroupsOnly => dispatch(isaacApi.util.updateQueryData(
                         "getGroups",
-                        true,
-                        (groups) => groups.filter(g => g.id === groupId)
-                    ));
+                        archivedGroupsOnly,
+                        (groups) => groups.filter(g => g.id !== groupId)
+                    )));
                 },
                 errorTitle: "Group deletion failed"
             })
@@ -433,18 +435,32 @@ const isaacApi = createApi({
                 url: `/groups/${updatedGroup.id}`,
                 body: {...updatedGroup, members: undefined}
             }),
+            invalidatesTags: (_, error, {updatedGroup}) => !isDefined(error) ? [{type: "GroupAssignments", id: updatedGroup.id}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: ({updatedGroup, message}, _, {dispatch}) => {
                     dispatch(showSuccessToast("Group saved successfully", message));
-                    dispatch(isaacApi.util.updateQueryData(
-                        "getGroups",
-                        true,
-                        (groups) =>
-                            groups.map(g => g.id === updatedGroup.id
-                                ? updatedGroup
-                                : g
-                            )
-                    ));
+                    [true, false].forEach(archivedGroupsOnly => {
+                        dispatch(isaacApi.util.updateQueryData(
+                            "getGroups",
+                            archivedGroupsOnly,
+                            (groups) => {
+                                // If updatedGroup should be in this list (archived or active) ...
+                                if (updatedGroup.archived === archivedGroupsOnly) {
+                                    // ... and actually is ...
+                                    if (groups.find(g => g.id === updatedGroup.id)) {
+                                        // ... then update the existing entry ...
+                                        return groups.map(g => g.id === updatedGroup.id ? updatedGroup : g);
+                                    } else {
+                                        // ... otherwise, add it to the list.
+                                        return groups.concat([updatedGroup]);
+                                    }
+                                } else {
+                                    // If updatedGroup shouldn't be in the list, make sure that it isn't
+                                    return groups.filter(g => g.id !== updatedGroup.id);
+                                }
+                            })
+                        );
+                    });
                 },
                 errorTitle: "Group saving failed"
             })
@@ -476,7 +492,7 @@ const isaacApi = createApi({
             }),
         }),
 
-        getGroupMembers: build.mutation<UserSummaryWithGroupMembershipDTO[], number>({
+        getGroupMembers: build.query<UserSummaryWithGroupMembershipDTO[], number>({
             query: (groupId) => ({
                 url: `/groups/${groupId}/membership`
             }),
@@ -524,7 +540,7 @@ const isaacApi = createApi({
 
         // --- Group managers ---
 
-        addGroupManager: build.mutation<UserGroupDTO, {groupId: number, managerEmail: string}>({
+        addGroupManager: build.mutation<AppGroup, {groupId: number, managerEmail: string}>({
             query: ({groupId, managerEmail}) => ({
                 method: "POST",
                 url: `/groups/${groupId}/manager`,
@@ -546,7 +562,7 @@ const isaacApi = createApi({
                 },
                 errorTitle: "Group manager addition failed"
             }),
-            transformResponse: anonymiseIfNeededWith<UserGroupDTO>(anonymisationFunctions.appGroup)
+            transformResponse: anonymiseIfNeededWith<AppGroup>(anonymisationFunctions.appGroup)
         }),
 
         deleteGroupManager: build.mutation<void, {groupId: number, managerUserId: number}>({
@@ -554,7 +570,6 @@ const isaacApi = createApi({
                 method: "DELETE",
                 url: `/groups/${groupId}/manager/${managerUserId}`
             }),
-            invalidatesTags: (result, error) => isDefined(error) ? [] : ["Groups"],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: ({groupId, managerUserId}, _, {dispatch}) => {
                     [true, false].forEach(archivedGroupsOnly => {
@@ -575,7 +590,7 @@ const isaacApi = createApi({
 
         // --- Tokens ---
 
-        getGroupToken: build.mutation<AppGroupTokenDTO, number>({
+        getGroupToken: build.query<AppGroupTokenDTO, number>({
             query: (groupId) => ({
                 url: `/authorisations/token/${groupId}`
             }),

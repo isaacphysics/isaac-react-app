@@ -6,14 +6,15 @@ import {
     showGroupManagersModal,
     isaacApi,
     store,
-    useAppDispatch,
+    useAppDispatch, getRTKQueryErrorMessage,
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history} from "../../../services";
-import {Jumbotron, Row, Col, Form, Input, Table} from "reactstrap";
+import {history, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../../services";
+import {Jumbotron, Row, Col, Form, Input, Table, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
+import {Loading} from "../../handlers/IsaacSpinner";
 
 const AdditionalManagerRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -52,25 +53,46 @@ interface CurrentGroupInviteModalProps {
     group: AppGroup;
 }
 const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProps) => {
+    const {data: token, isLoading, isError, error} = isaacApi.endpoints.getGroupToken.useQuery(group.id as number);
+    const errorDetails = getRTKQueryErrorMessage(error);
     return <>
         {firstTime && <h1>Invite users</h1>}
 
         <p>Use one of the following methods to add users to your group. Students joining your group will be shown your name and account email and asked to confirm sharing data.</p>
 
-        <Jumbotron>
-            <h2>Option 1: Share link</h2>
-            <p>Share the following link with your students to have them join your group:</p>
-            <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1">
-                {location.origin}/account?authToken={group.token}
-            </span>
-        </Jumbotron>
+        {isError
+            ? <Alert color={"warning"}>
+                Error fetching group joining token: {errorDetails.message}
+                <br/>
+                {errorDetails.status ? `Status code: ${errorDetails.status}` : ""}
+                <br/>
+                You may want to refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
+                this continues to happen.
+                Please include in your email the name and email associated with this
+                Isaac {SITE_SUBJECT_TITLE} account, alongside the details of the error given above.
+            </Alert>
+            : <>
+                <Jumbotron>
+                    <h2>Option 1: Share link</h2>
+                    <p>Share the following link with your students to have them join your group:</p>
+                    {isLoading
+                        ? <Loading noText/>
+                        : <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1">
+                            {location.origin}/account?authToken={token?.token}
+                        </span>
+                    }
+                </Jumbotron>
 
-        <Jumbotron>
-            <h2>Option 2: Share code</h2>
-            <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
-            <h3 className="text-center user-select-all d-block border bg-light p-1">{group.token}</h3>
-        </Jumbotron>
-
+                <Jumbotron>
+                    <h2>Option 2: Share code</h2>
+                    <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
+                    {isLoading
+                        ? <Loading noText/>
+                        : <h3 className="text-center user-select-all d-block border bg-light p-1">{token?.token}</h3>
+                    }
+                </Jumbotron>
+            </>
+        }
         <p>
             Now you&apos;ve made a group, you may want to:
         </p>
@@ -148,10 +170,13 @@ const CurrentGroupManagersModal = ({group, user}: {group: AppGroup, user: Regist
         }
     }
 
-    return group && <>
+    return group && <div className={"mb-4"}>
         <h2>Selected group: {group.groupName}</h2>
 
-        <p>Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress. It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.</p>
+        <p>
+            Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
+            It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
+        </p>
 
         {!userIsOwner && group.ownerSummary && <div>
             <h4>Group owner:</h4>
@@ -200,7 +225,7 @@ const CurrentGroupManagersModal = ({group, user}: {group: AppGroup, user: Regist
                 <Button block onClick={addManager}>Add group manager</Button>
             </Form>
         </>}
-    </>;
+    </div>;
 };
 export const groupManagersModal = (group: AppGroup, user: RegisteredUserDTO) => {
     const userIsOwner = user?.id === group.ownerId;
