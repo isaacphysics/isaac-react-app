@@ -2,7 +2,7 @@ import {
     API_PATH,
     API_REQUEST_FAILURE_MESSAGE,
     FEATURED_NEWS_TAG,
-    isPhy,
+    isPhy, NO_CONTENT,
     NOT_FOUND,
     QUESTION_CATEGORY
 } from "../../../services";
@@ -51,22 +51,24 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
             return headers;
         }
     }
-    const result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
+    let result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
     if (result.error && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
         if (result.error.status === 502) {
             // A '502 Bad Gateway' response means that the API no longer exists:
             api.dispatch(errorSlice.actions.apiGoneAway);
-        } else if (result.error.status === 401) {
-            //
         } else {
             api.dispatch(errorSlice.actions.apiServerError);
         }
         // eslint-disable-next-line no-console
         console.warn("Error from API:", result.error);
     } else {
-        if (result.meta?.response?.status && result.meta?.response?.status >= 500) {
+        const status = result.meta?.response?.status;
+        if (!status) return result;
+        if (status >= 500) {
             // eslint-disable-next-line no-console
             console.warn("Uncaught error from API:", result.meta?.response);
+        } else if ([NOT_FOUND, NO_CONTENT].includes(status)) {
+            result.data = NOT_FOUND;
         }
     }
     return result;
@@ -104,7 +106,7 @@ export const mutationSucceeded = <T>(response: {data: T} | {error: FetchBaseQuer
     return response.hasOwnProperty("data");
 }
 
-export const extractDataFromQueryResponse = <T>(response: { data?: T; } | { error: FetchBaseQueryError | SerializedError; }): T | NOT_FOUND_TYPE | undefined => {
+export const extractDataFromQueryResponse = <T>(response: { data?: T } | { error: FetchBaseQueryError | SerializedError; }): T | NOT_FOUND_TYPE | undefined => {
     if ('data' in response) {
         return response.data;
     } else if ('error' in response && 'status' in response.error && response.error.status === NOT_FOUND) {
