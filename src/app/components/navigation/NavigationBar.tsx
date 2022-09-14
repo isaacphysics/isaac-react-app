@@ -55,7 +55,7 @@ export function MenuBadge({count, message, ...rest}: {count: number, message: st
     if (count == 0) {
         return RenderNothing;
     }
-    return <div {...rest}>
+    return <div className={"d-inline"} {...rest}>
         <span className="badge badge-pill bg-grey ml-2">{count}</span>
         <span className="sr-only"> {message}</span>
     </div>;
