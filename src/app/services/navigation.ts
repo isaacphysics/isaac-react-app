@@ -70,6 +70,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
             nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
             previousItem: previousQuestion ? {title: "Return to Previous Question", to: `/questions/${previousQuestion}`} : undefined,
             search: queryString.stringify(previousQuestion ? {board, modifiedQuestionHistory} : {board}),
+            currentGameboard
         };
     }
 
