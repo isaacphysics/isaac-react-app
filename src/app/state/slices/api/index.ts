@@ -18,8 +18,7 @@ import {
     IsaacPodDTO,
     IsaacWildcard,
     QuizAssignmentDTO,
-    TOTPSharedSecretDTO,
-    UserGameboardProgressSummaryDTO
+    TOTPSharedSecretDTO
 } from "../../../../IsaacApiTypes";
 import {
     anonymisationFunctions,

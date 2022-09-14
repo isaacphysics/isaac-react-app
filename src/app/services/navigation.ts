@@ -37,11 +37,11 @@ export interface PageNavigation {
 const defaultPageNavigation = (currentGameboard?: GameboardDTO) => ({breadcrumbHistory: [], currentGameboard});
 
 export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
-    const search = useLocation().search;
+    const {search} = useLocation();
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const dispatch = useAppDispatch();
-    const {data: currentGameboard} = isaacApi.endpoints.getGameboardById.useQuery(gameboardId ?? skipToken);
+    const {data: currentGameboard} = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
 
     useEffect(() => {
         if (topic) dispatch(fetchTopicSummary(topic as TAG_ID));

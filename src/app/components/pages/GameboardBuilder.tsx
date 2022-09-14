@@ -4,24 +4,24 @@ import {
     isaacApi,
     logAction,
     openActiveModal,
-    selectors,
     useAppDispatch,
-    useAppSelector
 } from "../../state";
 import {Button, Card, CardBody, Col, Container, Input, Label, Row, Spinner, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardItem} from "../../../IsaacApiTypes";
+import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
     convertContentSummaryToGameboardItem,
     EXAM_BOARD,
+    getValue,
     history,
     isCS,
     isDefined,
     isStaff,
     isValidGameboardId,
+    Item,
     loadGameboardQuestionOrder,
     loadGameboardSelectedQuestions,
     logEvent,
@@ -31,7 +31,7 @@ import {
     useUserContext
 } from "../../services";
 import Select from "react-select";
-import {withRouter} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import intersection from "lodash/intersection";
@@ -41,41 +41,53 @@ import {skipToken} from "@reduxjs/toolkit/query";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
-const GameboardBuilder = withRouter((props: { location: { search?: string } }) => {
-    const queryParams = props.location.search && queryString.parse(props.location.search);
+const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
+    const {search} = useLocation();
+    const queryParams = search && queryString.parse(search);
     const baseGameboardId = queryParams && queryParams.base as string;
     const concepts = queryParams && queryParams.concepts as string;
 
     const dispatch = useAppDispatch();
-
-    const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const {data: wildcards} = isaacApi.endpoints.getWildcards.useQuery();
-    const {data: baseGameboard} = isaacApi.endpoints.getGameboardById.useQuery(baseGameboardId ?? skipToken);
+    const {data: baseGameboard} = isaacApi.endpoints.getGameboardById.useQuery(baseGameboardId || skipToken);
     const [generateTemporaryGameboard] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
     const [createGameboard, {isLoading: isWaitingForCreateGameboard}] = isaacApi.endpoints.createGameboard.useMutation();
 
     const [gameboardTitle, setGameboardTitle] = useState("");
-    const [gameboardTags, setGameboardTags] = useState<string[]>([]);
+    const [gameboardTags, setGameboardTags] = useState<Item<string>[]>([]);
     const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>([]);
     const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
+    const cloneGameboard = (gameboard: GameboardDTO) => {
+        setGameboardTitle(gameboard.title ? `${gameboard.title} (Copy)` : "");
+        setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
+        setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
+        setWildcardId(isStaff(user) && gameboard.wildCard && gameboard.wildCard.id || undefined);
+        if (concepts && (!baseGameboardId)) {
+            logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", {concepts: concepts});
+        } else {
+            logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: gameboard.id});
+        }
+    };
+
+    const initialise = () => {
+        setGameboardTitle("");
+        setGameboardTags([]);
+        setQuestionOrder([]);
+        setGameboardURL(undefined);
+        setSelectedQuestions(new Map<string, ContentSummary>());
+        setWildcardId(undefined);
+    };
+
     useEffect(() => {
         if (baseGameboard) {
-            setGameboardTitle(baseGameboard.title ? `${baseGameboard.title} (Copy)` : "");
-            setQuestionOrder(loadGameboardQuestionOrder(baseGameboard) || []);
-            setSelectedQuestions(loadGameboardSelectedQuestions(baseGameboard) || new Map<string, ContentSummary>());
-            setWildcardId(isStaff(user) && baseGameboard.wildCard && baseGameboard.wildCard.id || undefined);
-            if (concepts && (!baseGameboardId)) {
-                logEvent(eventLog, "GAMEBOARD_FROM_CONCEPT", {concepts: concepts});
-            } else {
-                logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: baseGameboard.id});
-            }
+            cloneGameboard(baseGameboard);
         }
-    }, [user, baseGameboard]);
+    }, [baseGameboard]);
 
     const canSubmit = (selectedQuestions.size > 0 && selectedQuestions.size <= 10) && gameboardTitle != "" && isValidGameboardId(gameboardURL);
 
@@ -98,7 +110,7 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
             }
             generateTemporaryGameboard(params);
         }
-    }, [dispatch, concepts]);
+    }, [dispatch, concepts, baseGameboardId]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
@@ -114,7 +126,19 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
         existing gameboard to duplicate and edit it.
     </span>;
 
+    const sentinal = useRef<HTMLDivElement>(null);
+
+    const resetBuilder = () => {
+        if (baseGameboard) {
+            cloneGameboard(baseGameboard);
+        } else {
+            initialise();
+        }
+        setTimeout(() => sentinal.current?.scrollIntoView(), 50);
+    };
+
     return <Container id="gameboard-builder">
+        <div ref={sentinal}/>
         <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp} modalId="gameboard_builder_help"/>
 
         <Card className="p-3 mt-4 mb-5">
@@ -125,7 +149,7 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
                         <Input id="gameboard-builder-name"
                                type="text"
                                placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
-                               defaultValue={gameboardTitle}
+                               value={gameboardTitle}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    setGameboardTitle(e.target.value);
                                }}
@@ -145,10 +169,11 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
                                     {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
                                 ])}
                                 name="colors"
+                                value={gameboardTags}
                                 className="basic-multi-select"
                                 classNamePrefix="select"
                                 placeholder="None"
-                                onChange={selectOnChange(setGameboardTags, true)}
+                                onChange={selectOnChange(setGameboardTags, false)}
                         />
                     </Col>
                     <Col>
@@ -156,7 +181,7 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
                         <Input id="gameboard-builder-url"
                                type="text"
                                placeholder="Optional"
-                               defaultValue={gameboardURL}
+                               value={gameboardURL}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    setGameboardURL(e.target.value);
                                }}
@@ -166,7 +191,7 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
                     <Col>
                         <Label htmlFor="gameboard-builder-wildcard">Wildcard</Label>
                         <Input id="gameboard-builder-wildcard"
-                               type="select" defaultValue={wildcardId}
+                               type="select" value={wildcardId}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    setWildcardId(e.target.value);
                                }}
@@ -295,18 +320,16 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
                                     wildCard: wildcard,
                                     wildCardPosition: 0,
                                     gameFilter: {subjects: subjects},
-                                    tags: gameboardTags
+                                    tags: gameboardTags.map(getValue)
                                 },
                                 previousId: baseGameboardId
                             }).then(gameboardOrError => {
                                 const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
                                 const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
                                 dispatch(openActiveModal({
-                                    closeAction: () => {
-                                        dispatch(closeActiveModal())
-                                    },
+                                    closeAction: () => dispatch(closeActiveModal()),
                                     title: gameboardId ? "Gameboard created" : "Gameboard creation failed",
-                                    body: <GameboardCreatedModal gameboardId={gameboardId} error={error}/>,
+                                    body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
                                 }));
                             });
 
@@ -329,9 +352,8 @@ const GameboardBuilder = withRouter((props: { location: { search?: string } }) =
                         It should not be the full URL.
                     </div>}
                 </div>}
-
             </CardBody>
         </Card>
     </Container>;
-});
+};
 export default GameboardBuilder;

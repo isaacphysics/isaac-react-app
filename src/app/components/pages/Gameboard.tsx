@@ -140,7 +140,7 @@ export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();
     const gameboardId = location.hash ? location.hash.slice(1) : null;
-    const gameboardQuery = isaacApi.endpoints.getGameboardById.useQuery(gameboardId ?? skipToken);
+    const gameboardQuery = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
     const {data: gameboard} = gameboardQuery;
     const user = useAppSelector(selectors.user.orNull);
 
