@@ -4,11 +4,10 @@ import {
     closeActiveModal,
     hideToast,
     isaacApi,
-    selectors,
     setQuiz,
     showQuizSettingModal,
     showToast,
-    useAppDispatch, useAppSelector
+    useAppDispatch
 } from "../../../state";
 import React, {useState} from "react";
 import {isDefined, Item, selectOnChange} from "../../../services";

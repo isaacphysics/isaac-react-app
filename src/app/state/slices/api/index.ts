@@ -26,7 +26,8 @@ import {
 } from "../../../../IsaacApiTypes";
 import {
     anonymisationFunctions,
-    anonymiseIfNeededWith, anonymiseListIfNeededWith,
+    anonymiseIfNeededWith,
+    anonymiseListIfNeededWith,
     errorSlice,
     logAction,
     showRTKQueryErrorToastIfNeeded,
@@ -34,10 +35,14 @@ import {
 } from "../../index";
 import {Dispatch} from "redux";
 import {
-    AppAssignmentProgress, AppGroup, AppGroupMembership, AppGroupTokenDTO,
+    AppAssignmentProgress,
+    AppGroup,
+    AppGroupMembership,
+    AppGroupTokenDTO,
     BoardOrder,
     Boards,
-    EnhancedAssignment, GroupMembershipDetailDTO,
+    EnhancedAssignment,
+    GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
     NumberOfBoards
 } from "../../../../IsaacAppTypes";

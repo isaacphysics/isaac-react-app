@@ -1,13 +1,9 @@
 import {
-    UserGroupDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO,
-    UserSummaryWithGroupMembershipDTO
 } from "../../../IsaacApiTypes";
-import {Action, AppGroup, AppGroupMembership, GroupMembershipDetailDTO} from "../../../IsaacAppTypes";
+import {Action, GroupMembershipDetailDTO} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
-import {mapValues, union, without} from "lodash";
-import {isaacApi} from "../slices/api";
 
 export type ActiveAuthorisationsState = UserSummaryWithEmailAddressDTO[] | null;
 export const activeAuthorisations = (activeAuthorisations: ActiveAuthorisationsState = null, action: Action) => {

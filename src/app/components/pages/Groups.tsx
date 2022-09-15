@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
 import {
     Button,
     ButtonDropdown,
@@ -17,8 +17,6 @@ import {
     NavItem,
     NavLink,
     Row,
-    TabContent,
-    TabPane,
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap"
@@ -40,11 +38,11 @@ import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter, isCS, isDefined, isStaff, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {skipToken} from "@reduxjs/toolkit/query";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 enum SortOrder {
-    "Alphabetical" = "Alphabetical",
-    "Date Created" = "Date Created"
+    Alphabetical = "Alphabetical",
+    DateCreated = "Date Created"
 }
 
 interface GroupCreatorProps {
@@ -318,7 +316,8 @@ const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorPr
 export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const [showArchived, setShowArchived] = useState(false);
-    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(showArchived);
+    const groupQuery = isaacApi.endpoints.getGroups.useQuery(showArchived);
+    const { data: groups } = groupQuery;
 
     const [createGroup] = isaacApi.endpoints.createGroup.useMutation();
     const [deleteGroup] = isaacApi.endpoints.deleteGroup.useMutation();
@@ -326,38 +325,38 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
     const selectedGroup = groups?.find(g => g.id === selectedGroupId);
 
+    // Clear the selected group when switching between tabs
+    const switchTab = (archived: boolean) => {
+        setShowArchived(archived);
+        setSelectedGroupId(undefined);
+    }
     const tabs = [
         {
             name: "Active",
-            data: groups,
             active: () => !showArchived,
-            activate: () => setShowArchived(false)
+            activate: () => switchTab(false)
         },
         {
             name: "Archived",
-            data: groups,
             active: () => showArchived,
-            activate: () => setShowArchived(true)
+            activate: () => switchTab(true)
         }
     ];
-    const activeTab = tabs.find(tab => tab.active());
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    let sortedGroups = activeTab && activeTab.data;
-    if (sortedGroups && sortedGroups.length > 0) {
+    const sortedGroups = useMemo(() => {
+        if (!groups) return [];
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                sortedGroups.slice().sort((a, b) => {
+                return groups.slice().sort((a, b) => {
                     if (a.groupName && b.groupName) return (a.groupName.localeCompare(b.groupName, undefined, { numeric: true, sensitivity: 'base' }));
                     return 1;
                 });
-                break;
-            case SortOrder["Date Created"]:
-                sortedGroups = sortBy(sortedGroups, g => g.created).reverse();
-                break;
+            case SortOrder.DateCreated:
+                return sortBy(groups, g => g.created).reverse();
         }
-    }
+    }, [groups, sortOrder]);
 
     const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
         setShowArchived(false);
@@ -389,11 +388,6 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         }
     };
 
-    // Clear the selected group when switching between tabs
-    useEffect(() => {
-        setSelectedGroupId(undefined);
-    }, [showArchived]);
-
     // Get member data for selected group
     const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
     useEffect(() => {
@@ -412,10 +406,10 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
-        <Row className="mb-5">
-            <Col md={4}>
-                <ShowLoading until={activeTab}>
-                    {activeTab && <Card>
+        <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
+            <Row className="mb-5">
+                <Col md={4}>
+                    <Card>
                         <CardBody className="mt-2">
                             <Nav tabs className="d-flex flex-wrap">
                                 {tabs.map((tab, index) => {
@@ -430,69 +424,63 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                     </NavItem>;
                                 })}
                             </Nav>
-                            <TabContent activeTab="thisOne">
-                                <TabPane tabId="thisOne">
-                                    <ShowLoading until={sortedGroups}>
-                                        <Row className="align-items-center pt-4 pb-3 d-none d-md-flex">
-                                            <Col>
-                                                <strong>Groups:</strong>
-                                            </Col>
-                                            <Col className="text-right">
-                                                <UncontrolledButtonDropdown size="sm">
-                                                    <DropdownToggle color="tertiary" caret>
-                                                        {sortOrder}
-                                                    </DropdownToggle>
-                                                    <DropdownMenu>
-                                                        {Object.values(SortOrder).map(item =>
-                                                            <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
-                                                        )}
-                                                    </DropdownMenu>
-                                                </UncontrolledButtonDropdown>
-                                            </Col>
-                                        </Row>
-                                        <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
-                                        <Row className="d-none d-md-block mb-3">
-                                            <Col>
-                                                <Button block color="primary" outline onClick={() => {
-                                                    setSelectedGroupId(undefined);
-                                                    if (groupNameInputRef.current) {
-                                                        groupNameInputRef.current.focus();
-                                                    }
-                                                }}>Create new group</Button>
-                                            </Col>
-                                        </Row>
-                                        <Row className="mt-3 mt-md-0">
-                                            <Col>
-                                                {sortedGroups && sortedGroups.map((g: AppGroup) =>
-                                                    <div key={g.id} className="group-item p-2">
-                                                        <div className="d-flex justify-content-between align-items-center">
-                                                            <Button color="link text-left" className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
-                                                                {g.groupName}
-                                                            </Button>
-                                                            <button
-                                                                onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                                                aria-label="Delete group" className="close ml-1"
-                                                            >
-                                                                ×
-                                                            </button>
-                                                        </div>
-                                                        {selectedGroup && selectedGroup.id === g.id && <div className="d-md-none py-2">
-                                                            <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
-                                                        </div>}
-                                                    </div>
-                                                )}
-                                            </Col>
-                                        </Row>
-                                    </ShowLoading>
-                                </TabPane>
-                            </TabContent>
+                            <Row className="align-items-center pt-4 pb-3 d-none d-md-flex">
+                                <Col>
+                                    <strong>Groups:</strong>
+                                </Col>
+                                <Col className="text-right">
+                                    <UncontrolledButtonDropdown size="sm">
+                                        <DropdownToggle color="tertiary" caret>
+                                            {sortOrder}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            {Object.values(SortOrder).map(item =>
+                                                <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
+                                            )}
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                </Col>
+                            </Row>
+                            <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
+                            <Row className="d-none d-md-block mb-3">
+                                <Col>
+                                    <Button block color="primary" outline onClick={() => {
+                                        setSelectedGroupId(undefined);
+                                        if (groupNameInputRef.current) {
+                                            groupNameInputRef.current.focus();
+                                        }
+                                    }}>Create new group</Button>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3 mt-md-0">
+                                <Col>
+                                    {sortedGroups && sortedGroups.map((g: AppGroup) =>
+                                        <div key={g.id} className="group-item p-2">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <Button color="link text-left" className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
+                                                    {g.groupName}
+                                                </Button>
+                                                <button
+                                                    onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
+                                                    aria-label="Delete group" className="close ml-1"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-md-none py-2">
+                                                <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
+                                            </div>}
+                                        </div>
+                                    )}
+                                </Col>
+                            </Row>
                         </CardBody>
-                    </Card>}
-                </ShowLoading>
-            </Col>
-            <Col md={8} className="d-none d-md-block">
-                <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
-            </Col>
-        </Row>
+                    </Card>
+                </Col>
+                <Col md={8} className="d-none d-md-block">
+                    <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
+                </Col>
+            </Row>
+        </ShowLoadingQuery>
     </Container>;
 };

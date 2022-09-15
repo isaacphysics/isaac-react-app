@@ -1,8 +1,7 @@
 import React, {ReactElement, ReactNode, useEffect, useState} from "react";
-import {isDefined, NOT_FOUND} from "../../services";
+import {NOT_FOUND} from "../../services";
 import {NotFound} from "../pages/NotFound";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {AppState, useAppSelector} from "../../state";
 import {IsaacSpinner} from "./IsaacSpinner";
 
 interface ShowLoadingProps<T> {
