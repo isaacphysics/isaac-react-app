@@ -156,7 +156,7 @@ export const Gameboard = withRouter(({ location }) => {
         }
     }, [dispatch, gameboard]);
 
-    const notFoundComponent = () => <Container>
+    const notFoundComponent = <Container>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
         <h3 className="my-4">
             <small>
@@ -170,39 +170,43 @@ export const Gameboard = withRouter(({ location }) => {
         </h3>
     </Container>;
 
-    return gameboardId ?
-        <RS.Container className="mb-5">
-            <ShowLoadingQuery query={gameboardQuery} thenRender={(gameboard) => {
-                if (showFilter) {
-                    return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
-                }
-                return <>
-                    <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
-                    <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-                    {user && isTeacher(user)
-                        ? <RS.Row className="col-8 offset-2">
-                            <RS.Col className="mt-4">
-                                <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                                    {siteSpecific("Set as Assignment", "Set as assignment")}
-                                </RS.Button>
-                            </RS.Col>
-                            <RS.Col className="mt-4">
-                                <RS.Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
-                                    {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
-                                </RS.Button>
-                            </RS.Col>
-                        </RS.Row>
-                        : gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
-                            <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                                <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
-                                    {siteSpecific("Save to My Gameboards", "Save to My gameboards")}
-                                </RS.Button>
-                            </RS.Col>
-                        </RS.Row>
+    return !gameboardId
+        ? <Redirect to={siteSpecific("/gameboards/new", "/gameboards#example-gameboard")} />
+        : <RS.Container className="mb-5">
+            <ShowLoadingQuery
+                query={gameboardQuery}
+                defaultErrorTitle={`Error fetching gameboard with id: ${gameboardId}`}
+                ifNotFound={notFoundComponent}
+                thenRender={(gameboard) => {
+                    if (showFilter) {
+                        return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
                     }
-                </>
-            }} ifError={notFoundComponent} />
-        </RS.Container>
-        :
-        <Redirect to={siteSpecific("/gameboards/new", "/gameboards#example-gameboard")} />
+                    return <>
+                        <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
+                        <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
+                        {user && isTeacher(user)
+                            ? <RS.Row className="col-8 offset-2">
+                                <RS.Col className="mt-4">
+                                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                                        {siteSpecific("Set as Assignment", "Set as assignment")}
+                                    </RS.Button>
+                                </RS.Col>
+                                <RS.Col className="mt-4">
+                                    <RS.Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
+                                        {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
+                                    </RS.Button>
+                                </RS.Col>
+                            </RS.Row>
+                            : gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
+                                <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
+                                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                                        {siteSpecific("Save to My Gameboards", "Save to My gameboards")}
+                                    </RS.Button>
+                                </RS.Col>
+                            </RS.Row>
+                        }
+                    </>
+                }}
+            />
+        </RS.Container>;
 });
