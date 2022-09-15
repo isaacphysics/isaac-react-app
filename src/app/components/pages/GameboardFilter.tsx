@@ -435,7 +435,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const defaultBoardTitle = siteSpecific(generatePhyBoardName, generateCSBoardName)(selections);
     const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
-     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
+    function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
                               examBoards: Item<string>[], selections: Item<TAG_ID>[][], boardTitle: string,
                               history: History) {
         // Load a gameboard
