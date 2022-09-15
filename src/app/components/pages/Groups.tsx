@@ -234,7 +234,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     {(isUserGroupOwner || !isDefined(group)) && <InputGroupAddon addonType="append">
                         <Button
                             color={siteSpecific("secondary", "primary")}
-                            className="p-0 border-dark" disabled={newGroupName === ""}
+                            className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                             onClick={saveUpdatedGroup}
                         >
                             {group ? "Update" : "Create"}
