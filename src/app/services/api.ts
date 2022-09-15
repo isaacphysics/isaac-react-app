@@ -3,7 +3,6 @@ import {
     API_PATH,
     EventStageFilter,
     EventTypeFilter,
-    MEMBERSHIP_STATUS,
     securePadCredentials,
     securePadPasswordReset,
     TAG_ID

@@ -11,7 +11,7 @@ import {
 import {
     QuizAssignmentDTO,
     QuizAttemptFeedbackDTO,
-    UserGameboardProgressSummaryDTO, UserGroupDTO,
+    UserGameboardProgressSummaryDTO,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";

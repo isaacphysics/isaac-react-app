@@ -30,7 +30,6 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {ShowLoading} from "../handlers/ShowLoading";
 import {orderBy, sortBy} from "lodash";
 import {
     AppAssignmentProgress,
