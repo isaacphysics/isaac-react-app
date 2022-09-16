@@ -15,6 +15,7 @@ import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
 import {Loading} from "../../handlers/IsaacSpinner";
+import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 
 const AdditionalManagerRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -53,46 +54,29 @@ interface CurrentGroupInviteModalProps {
     group: AppGroup;
 }
 const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProps) => {
-    const {data: token, isLoading, isError, error} = isaacApi.endpoints.getGroupToken.useQuery(group.id as number);
-    const errorDetails = getRTKQueryErrorMessage(error);
+    const tokenQuery = isaacApi.endpoints.getGroupToken.useQuery(group.id as number);
     return <>
         {firstTime && <h1>Invite users</h1>}
-
         <p>Use one of the following methods to add users to your group. Students joining your group will be shown your name and account email and asked to confirm sharing data.</p>
-
-        {isError
-            ? <Alert color={"warning"}>
-                Error fetching group joining token: {errorDetails.message}
-                <br/>
-                {errorDetails.status ? `Status code: ${errorDetails.status}` : ""}
-                <br/>
-                You may want to refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
-                this continues to happen.
-                Please include in your email the name and email associated with this
-                Isaac {SITE_SUBJECT_TITLE} account, alongside the details of the error given above.
-            </Alert>
-            : <>
+        <ShowLoadingQuery
+            query={tokenQuery}
+            defaultErrorTitle={"Error fetching group joining token"}
+            thenRender={token => <>
                 <Jumbotron>
                     <h2>Option 1: Share link</h2>
                     <p>Share the following link with your students to have them join your group:</p>
-                    {isLoading
-                        ? <Loading noText/>
-                        : <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1">
-                            {location.origin}/account?authToken={token?.token}
-                        </span>
-                    }
+                    <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1">
+                        {location.origin}/account?authToken={token?.token}
+                    </span>
                 </Jumbotron>
 
                 <Jumbotron>
                     <h2>Option 2: Share code</h2>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
-                    {isLoading
-                        ? <Loading noText/>
-                        : <h3 className="text-center user-select-all d-block border bg-light p-1">{token?.token}</h3>
-                    }
+                    <h3 className="text-center user-select-all d-block border bg-light p-1">{token?.token}</h3>
                 </Jumbotron>
-            </>
-        }
+            </>}
+        />
         <p>
             Now you&apos;ve made a group, you may want to:
         </p>
