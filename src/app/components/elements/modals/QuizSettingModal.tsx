@@ -17,6 +17,7 @@ import * as RS from "reactstrap";
 import Select from "react-select";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Spinner} from "reactstrap";
+import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
@@ -46,7 +47,7 @@ interface QuizSettingModalProps {
 
 export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
-    const { data: groups, isLoading } = isaacApi.endpoints.getGroups.useQuery(false);
+    const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
 
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
     const [submitting, setSubmitting] = useState(false);
@@ -58,8 +59,6 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: i
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentDay = now.getDate();
-
-    const groupOptions: Item<number>[] = (groups ?? []).map(g => ({label: g.groupName as string, value: g.id as number}));
 
     function addValidated(what: ControlName) {
         setValidated(validated => {
@@ -73,23 +72,27 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: i
 
     return <div className="mb-4">
         <RS.Label className="w-100 mb-4">Set test to the following groups:<br/>
-            {isLoading
-                ? <Spinner/>
-                : <Select
-                    options={groupOptions}
-                    onChange={(s) => {
-                        selectOnChange(setSelectedGroups, false)(s);
-                        addValidated('group');
-                    }}
-                    onBlur={() => addValidated('group')}
-                    isSearchable
-                    menuPortalTarget={document.body}
-                    styles={{
-                        control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
-                        menuPortal: base => ({...base, zIndex: 9999}),
-                    }}
-                />
-            }
+            <ShowLoadingQuery
+                query={groupsQuery}
+                defaultErrorTitle={"Error fetching groups"}
+                thenRender={groups => {
+                    const groupOptions: Item<number>[] = (groups ?? []).map(g => ({label: g.groupName as string, value: g.id as number}));
+                    return <Select
+                        options={groupOptions}
+                        onChange={(s) => {
+                            selectOnChange(setSelectedGroups, false)(s);
+                            addValidated('group');
+                        }}
+                        onBlur={() => addValidated('group')}
+                        isSearchable
+                        menuPortalTarget={document.body}
+                        styles={{
+                            control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                            menuPortal: base => ({...base, zIndex: 9999}),
+                        }}
+                    />
+                }}
+            />
             {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">Set an optional due date:<br/>
