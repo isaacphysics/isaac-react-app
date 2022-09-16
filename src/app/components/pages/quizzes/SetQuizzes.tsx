@@ -55,6 +55,8 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
             dispatch(markQuizAsCancelled(assignment.id as number));
         }
     };
+    // TODO RTKQ quiz refactor use isPending from use mutation hook to re-implement this (markQuizAsCancelled would be
+    //  the mutation trigger)
     const isCancelling = 'cancelling' in assignment && (assignment as {cancelling: boolean}).cancelling;
     return <div className="p-2">
         <RS.Card className="card-neat">
