@@ -21,21 +21,22 @@ const GameboardSuccessfullyCreated = () =>
         </Label>
     </Row>;
 
-const GameboardCreatedModalButtons = ({gameboardId}: {gameboardId: string | undefined}) => {
+const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {
     const dispatch = useAppDispatch();
+    const closeModal = () => dispatch(closeActiveModal());
     return <Row>
         <Col className="mb-1">
             <Button
                 tag={Link} to={`/add_gameboard/${gameboardId}`} color="secondary" block
-                disabled={!gameboardId} onClick={() => dispatch(closeActiveModal())}
+                disabled={!gameboardId} onClick={closeModal}
             >
                 Set as assignment
             </Button>
         </Col>
         <Col className="mb-1">
             <Button
-                tag={Link} to={`/gameboard_builder`} color="primary" outline
-                onClick={() => dispatch(closeActiveModal())}
+                color="primary" outline
+                onClick={() => {resetBuilder(); closeModal();}}
             >
                 Create another board
             </Button>
@@ -43,7 +44,7 @@ const GameboardCreatedModalButtons = ({gameboardId}: {gameboardId: string | unde
         <Col className="mb-1">
             <Button
                 tag={Link} to={`/set_assignments`} color="primary" outline
-                onClick={() => dispatch(closeActiveModal())}
+                onClick={closeModal}
             >
                 View all of your boards
             </Button>
@@ -51,13 +52,13 @@ const GameboardCreatedModalButtons = ({gameboardId}: {gameboardId: string | unde
     </Row>
 }
 
-export const GameboardCreatedModal = ({gameboardId, error}: {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined}) => {
+export const GameboardCreatedModal = ({gameboardId, error, resetBuilder}: {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined, resetBuilder: () => void}) => {
     const errorMessage = getRTKQueryErrorMessage(error).message;
     return <div>
         {gameboardId
             ? <GameboardSuccessfullyCreated/>
             : <GameboardNotFound errorMessage={errorMessage}/>
         }
-        <GameboardCreatedModalButtons gameboardId={gameboardId} />
+        <GameboardCreatedModalButtons resetBuilder={resetBuilder} gameboardId={gameboardId} />
     </div>;
 };

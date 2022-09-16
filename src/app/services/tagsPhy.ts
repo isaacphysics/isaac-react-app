@@ -98,11 +98,11 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.graphSketching, title: "Graph Sketching", parent: TAG_ID.functions},
         // Calculus
         {id: TAG_ID.differentiation, title: `Differen${softHyphen}tiation`, parent: TAG_ID.calculus},
-        {id: TAG_ID.integration, title: "Integration", parent: TAG_ID.calculus},
-        {id: TAG_ID.differentialEq, title: "Differential Equations", parent: TAG_ID.calculus},
+        {id: TAG_ID.integration, title: `Inte${softHyphen}gration`, parent: TAG_ID.calculus},
+        {id: TAG_ID.differentialEq, title: `Differ${softHyphen}ential Equations`, parent: TAG_ID.calculus},
         // Statistics
         {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistics},
-        {id: TAG_ID.probability, title: `Probabil${softHyphen}ity`, parent: TAG_ID.statistics},
+        {id: TAG_ID.probability, title: `Probabi${softHyphen}lity`, parent: TAG_ID.statistics},
         {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics},
         {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics},
 
@@ -117,7 +117,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
         {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
         {id: TAG_ID.entropy, title: "Entropy", parent: TAG_ID.physical},
-        {id: TAG_ID.equilibrium, title: "Equilibrium", parent: TAG_ID.physical},
+        {id: TAG_ID.equilibrium, title: `Equili${softHyphen}brium`, parent: TAG_ID.physical},
         {id: TAG_ID.acidsAndBases, title: "Acids & Bases", parent: TAG_ID.physical},
         {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
         // Analytical
