@@ -458,14 +458,16 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             params[tier.id] = toCSV(selections[i]);
         });
 
-        generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then(setGameboard);
-        // Don't add subject and strands to CS URL
-        if (isCS) {
-            if (tiers[0]?.id) delete params[tiers[0].id];
-            if (tiers[1]?.id) delete params[tiers[1].id];
-        }
-        delete params.questionCategories;
-        history.replace({search: queryString.stringify(params, {encode: false})});
+        generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then((gameboard) => {
+            setGameboard(gameboard);
+            // Don't add subject and strands to CS URL
+            if (isCS) {
+                if (tiers[0]?.id) delete params[tiers[0].id];
+                if (tiers[1]?.id) delete params[tiers[1].id];
+            }
+            delete params.questionCategories;
+            history.replace({search: queryString.stringify(params, {encode: false})});
+        });
     }
 
     // This is a leading debounced version of loadNewGameboard, used with the shuffle questions button - this stops
@@ -480,7 +482,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             newBoardPromise.unsubscribe();
         } else {
             setBoardStack([]);
-            loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history)
+            loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history);
         }
     }, [selections, stages, difficulties, concepts, examBoards]);
 
