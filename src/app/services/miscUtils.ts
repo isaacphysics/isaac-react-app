@@ -75,7 +75,7 @@ export function useIFrameMessages(uid: string, iFrameRef?: RefObject<HTMLIFrameE
 }
 
 // Type guard with checks for "defined"-ness and whether the resource was found or not
-export const isFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is T => {
+export const isFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is NonNullable<T> => {
     return isDefined(resource) && resource !== NOT_FOUND;
 };
 
