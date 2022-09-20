@@ -234,7 +234,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
 
     const alreadyAssignedGroupNames = useMemo<string[]>(() => {
         if (!selectedGameboard || selectedGameboard.length === 0 || !selectedGroups || selectedGroups.length === 0) return [];
-        return selectedGroups.filter(g => g.value && boardIdsByGroupId[g.value].includes(selectedGameboard[0]?.value)).map(g => g.label);
+        return selectedGroups.filter(g => g.value && boardIdsByGroupId[g.value]?.includes(selectedGameboard[0]?.value)).map(g => g.label);
     }, [selectedGroups, boardIdsByGroupId, selectedGameboard]);
 
     return <Modal isOpen={showAssignmentModal} toggle={toggleAssignModal}>

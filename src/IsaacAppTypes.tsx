@@ -650,7 +650,7 @@ export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO};
     groupsById: {[id: number]: AppGroup};
     groupFilter: {[id: number]: boolean};
-    boardIdsByGroupId: {[id: number]: string[]};
+    boardIdsByGroupId: {[id: number]: string[] | undefined};
     groups: AppGroup[];
     gameboards: GameboardDTO[];
     openAssignmentModal: (assignment: ValidAssignmentWithListingDate) => void;
