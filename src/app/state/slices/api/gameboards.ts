@@ -67,13 +67,16 @@ export const assignGameboard = createAsyncThunk(
             const groupLookUp = new Map(groups.map(toTuple));
             const assigmentStatuses = response.data;
             const newAssignments: AssignmentDTO[] = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => ({
+                id: a.assignmentId as number,
                 groupId: a.groupId,
                 gameboardId: boardId,
                 groupName: groupLookUp.get(a.groupId),
-                assignmentId: a.assignmentId as number,
-                creationDate: new Date(),
-                dueDate,
-                scheduledStartDate,
+                // FIXME we *really* need to make sure that we only expect objects in Redux to contain timestamps and not
+                //  full-blown Date objects, because these are what the API returns, and also serializable.
+                //  Will require a medium-sized refactor.
+                creationDate: (new Date()).valueOf() as unknown as Date,
+                dueDate: dueDate?.valueOf() as unknown as Date | undefined,
+                scheduledStartDate: scheduledStartDate?.valueOf() as unknown as Date | undefined,
                 notes
             }));
             const successfulIds = newAssignments.map(a => a.groupId);
@@ -104,12 +107,19 @@ export const assignGameboard = createAsyncThunk(
                     ));
                 }
             }
+            // Update all relevant cache entries
             appDispatch(isaacApi.util.updateQueryData(
                 "getMySetAssignments",
                 undefined,
                 (assignmentsByMe) => assignmentsByMe.concat(newAssignments)
             ));
-            appDispatch(isaacApi.util.invalidateTags(successfulIds.map(groupId => ({type: "GroupAssignments", id: groupId}))));
+            successfulIds.forEach(groupId => {
+                appDispatch(isaacApi.util.updateQueryData(
+                    "getMySetAssignments",
+                    groupId,
+                    (assignmentsByMe) => assignmentsByMe.concat(newAssignments.filter(a => a.groupId === groupId))
+                ));
+            });
             return newAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
