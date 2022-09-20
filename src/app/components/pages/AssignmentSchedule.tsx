@@ -343,7 +343,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     }, [groupsToInclude, groupsById]);
 
     // Map from group id -> ids of boards they are assigned to
-    const boardIdsByGroupId = useMemo<{[id: number]: string[]}>(() => {
+    const boardIdsByGroupId = useMemo<{[id: number]: string[] | undefined}>(() => {
         return assignmentsSetByMe?.reduce((acc, a) => {
             if (!a.groupId || !a.gameboardId) return acc;
             return a.groupId in acc ? {...acc, [a.groupId]: [...acc[a.groupId], a.gameboardId]} : {...acc, [a.groupId]: [a.gameboardId]};
