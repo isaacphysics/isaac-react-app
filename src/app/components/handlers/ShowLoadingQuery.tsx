@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React from "react";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
 import {IsaacSpinner} from "./IsaacSpinner";

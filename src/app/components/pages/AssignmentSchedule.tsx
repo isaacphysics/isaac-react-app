@@ -60,7 +60,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const assignmentStartDate = getAssignmentStartDate(assignment);
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
-            <h4><a target={"_blank"} href={assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined}>{assignment.gameboard?.title ?? "No gameboard title"}</a></h4>
+            <h4><a target={"_blank"} rel={"noreferrer noopener"} href={assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined}>{assignment.gameboard?.title ?? "No gameboard title"}</a></h4>
             <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Copy
@@ -76,7 +76,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             {viewBy === "dueDate" && assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
             {assignment.gameboard && <div>By: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
             {assignment.listingDate <= TODAY() && <div>
-                <a color="link" target={"_blank"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
+                <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
                     View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
                 </a>
             </div>}
@@ -266,7 +266,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 {selectedGameboard && selectedGameboard?.[0]?.value && boardsById[selectedGameboard[0].value] && boardsById[selectedGameboard[0].value]?.contents && <Card className={"my-1"} >
                     <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"} gameboard preview</Button></CardHeader>
                     {showGameboardPreview && <GameboardViewerInner gameboard={boardsById[selectedGameboard[0].value]}/>}
-                    {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"} gameboard preview</Button></CardFooter>}
+                    {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide gameboard preview</Button></CardFooter>}
                 </Card>}
             </Label>
             <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
