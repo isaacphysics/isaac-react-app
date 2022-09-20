@@ -4,11 +4,9 @@ import userEvent from "@testing-library/user-event";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
 import {Role, ROLES} from "../../IsaacApiTypes";
-import {renderTestEnvironment} from "./utils";
+import {renderTestEnvironment, NavBarTitle} from "./utils";
 import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
-
-type NavBarTitle = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
 
 const myIsaacLinks = siteSpecific(
     ["/account", "/my_gameboards", "/assignments", "/progress", "/tests"],

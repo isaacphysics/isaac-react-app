@@ -11,6 +11,8 @@ import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import React from "react";
 import {isDefined} from "../../app/services";
 import {MemoryRouter} from "react-router";
+import {screen, within} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
@@ -24,7 +26,7 @@ interface RenderTestEnvironmentOptions {
     extraEndpoints?: RestHandler<any>[];
 }
 // Flexible helper function to setup different kinds of test environments. You can:
-//  - Choose the role of the mock user
+//  - Choose the role of the mock user (defaults to ADMIN)
 //  - Apply an arbitrary transformation to the mock user
 //  - Choose which page component you want  to render (if it is omitted, IsaacApp will be rendered)
 //  - Define extra endpoint handlers for the MSW server
@@ -75,6 +77,20 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
             </MemoryRouter>
             : <IsaacApp/>}
     </Provider>);
+};
+
+export type NavBarTitle = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
+
+// Clicks on the given navigation menu entry, allowing navigation around the app as a
+export const followHeaderNavLink = async (menuTitle: NavBarTitle, linkName: string) => {
+    const navLink = await screen.findByRole("link", {name: menuTitle, exact: false});
+    await userEvent.click(navLink);
+    // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
+    // related to a given title
+    const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
+    if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menuTitle} navigation menu.`);
+    const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName, exact: false});
+    await userEvent.click(link);
 };
 
 export const dayMonthYearStringToDate = (d?: string) => {

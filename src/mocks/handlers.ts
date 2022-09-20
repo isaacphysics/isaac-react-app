@@ -35,10 +35,11 @@ export const handlers = [
         )
     }),
     rest.get(API_PATH + "/groups", (req, res, ctx) => {
-        // req.url.searchParams.get("archived_groups_only") should be checked?
+        const archived = req.url.searchParams.get("archived_groups_only") === "true";
+        const groups = mockGroups.filter(g => g.archived === archived);
         return res(
             ctx.status(200),
-            ctx.json(mockGroups)
+            ctx.json(groups)
         );
     }),
     rest.get(API_PATH + "/assignments", (req, res, ctx) => {
