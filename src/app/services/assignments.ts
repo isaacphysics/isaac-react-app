@@ -90,3 +90,5 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | unde
     }
     return distinctFormattedAssignmentSetters
 }
+
+export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();

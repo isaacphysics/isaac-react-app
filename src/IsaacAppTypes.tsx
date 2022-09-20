@@ -627,6 +627,13 @@ export interface AdminStatsResponse {
     viewQuestionEvents: number;
 }
 
+export interface ValidAssignmentWithListingDate extends AssignmentDTO {
+    gameboardId: string;
+    groupId: number;
+    id: number;
+    listingDate: Date;
+}
+
 export interface FigureNumbersById {[figureId: string]: number}
 export const FigureNumberingContext = React.createContext<FigureNumbersById>({});
 export const AccordionSectionContext = React.createContext<{id: string | undefined; clientId: string, open: boolean | null}>(
@@ -639,6 +646,18 @@ export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
 export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
+export const AssignmentScheduleContext = React.createContext<{
+    boardsById: {[id: string]: GameboardDTO};
+    groupsById: {[id: number]: AppGroup};
+    groupFilter: {[id: number]: boolean};
+    boardIdsByGroupId: {[id: number]: string[]};
+    groups: AppGroup[];
+    gameboards: GameboardDTO[];
+    openAssignmentModal: (assignment: ValidAssignmentWithListingDate) => void;
+    collapsed: boolean;
+    setCollapsed: (b: boolean) => void;
+    viewBy: "startDate" | "dueDate";
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;

@@ -47,6 +47,7 @@ import {GameboardItem, GameboardItemState, QuizAssignmentDTO, QuizUserFeedbackDT
 import {Link} from "react-router-dom";
 import {
     API_PATH,
+    ASSIGNMENT_PROGRESS_PATH,
     getAssignmentCSVDownloadLink,
     getQuizAssignmentCSVDownloadLink,
     isDefined,
@@ -351,8 +352,6 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
     const dispatch = useAppDispatch();
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const assignmentPath = siteSpecific("assignment_progress", "my_markbook");
-
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
@@ -375,7 +374,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
                 <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id as number)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={`/${assignmentPath}/${assignment.id}`} onClick={openSingleAssignment}>View individual assignment</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader assignment={assignment} />}

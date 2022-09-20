@@ -1091,3 +1091,5 @@ export const SEARCH_CHAR_LENGTH_LIMIT = 255;
 export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
+
+export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
