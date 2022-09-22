@@ -354,9 +354,9 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     // the oldest assignment yet
     const [earliestShowDate, setEarliestShowDate] = useState<Date>(() => {
         let d = new Date();
-        d.setUTCMonth(d.getUTCMonth() - 1);
-        d.setUTCDate(1);
-        d.setUTCHours(0, 0, 0, 0);
+        d.setMonth(d.getMonth() - 1);
+        d.setDate(1);
+        d.setHours(0, 0, 0, 0);
         return d;
     });
     const oldestAssignmentDate = useMemo<Date>(() => new Date(
@@ -370,7 +370,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         , [assignmentsSetByMe, groupFilter, viewBy]);
     const extendBackSixMonths = () => setEarliestShowDate(esd => {
         const d = new Date(esd.valueOf());
-        d.setUTCMonth(d.getUTCMonth() - 6);
+        d.setMonth(d.getMonth() - 6);
         return d;
     });
 

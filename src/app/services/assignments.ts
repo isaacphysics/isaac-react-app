@@ -14,8 +14,8 @@ export const filterAssignmentsByStatus = (assignments: AssignmentDTO[] | undefin
     const fourWeeksAgo = new Date(now.valueOf() - (4 * 7 * 24 * 60 * 60 * 1000));
     // Midnight five days ago:
     const fiveDaysAgo = new Date(now);
-    fiveDaysAgo.setUTCDate(now.getDate() - 5);
-    fiveDaysAgo.setUTCHours(0, 0, 0, 0);
+    fiveDaysAgo.setDate(now.getDate() - 5);
+    fiveDaysAgo.setHours(0, 0, 0, 0);
 
     const myAssignments: {inProgressRecent: AssignmentDTO[]; inProgressOld: AssignmentDTO[]; completed: AssignmentDTO[]} = {
         inProgressRecent: [],

@@ -37,7 +37,7 @@ export const assignGameboard = createAsyncThunk(
 
         // TODO think about whether this can be done in the back-end too?
         if (dueDate !== undefined) {
-            dueDate?.setUTCHours(0, 0, 0, 0);
+            dueDate?.setHours(0, 0, 0, 0);
             if ((dueDate.valueOf() - today.valueOf()) < 0) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}));
                 return rejectWithValue(null);
