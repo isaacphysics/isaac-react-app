@@ -1,4 +1,4 @@
-import {getValue, history, isAdminOrEventManager, isDefined, isTeacher, Item, toTuple} from "../../../services";
+import {getValue, history, isAdminOrEventManager, isDefined, isTeacher, Item, TODAY, toTuple} from "../../../services";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {AssignmentDTO} from "../../../../IsaacApiTypes";
 import {
@@ -33,15 +33,14 @@ export const assignGameboard = createAsyncThunk(
             return rejectWithValue(null);
         }
 
-        const today = new Date();
-        today.setUTCHours(0, 0, 0, 0);
+        const today = TODAY();
 
         // TODO think about whether this can be done in the back-end too?
         if (dueDate !== undefined) {
-            dueDate?.setUTCHours(0, 0, 0, 0);
+            dueDate?.setHours(0, 0, 0, 0);
             if ((dueDate.valueOf() - today.valueOf()) < 0) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}));
-                return false;
+                return rejectWithValue(null);
             }
         }
 
@@ -49,14 +48,14 @@ export const assignGameboard = createAsyncThunk(
             // Unlike with the due date, we want to preserve the hour assigned at the UI level, unless we want to move that logic here.
             if (scheduledStartDate.valueOf() <= (new Date()).valueOf()) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
-                return false;
+                return rejectWithValue(null);
             }
         }
 
         if (dueDate !== undefined && scheduledStartDate !== undefined) {
             if ((dueDate.valueOf() - scheduledStartDate.valueOf()) <= 0) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be strictly after scheduled start date.", timeout: 5000}));
-                return false;
+                return rejectWithValue(null);
             }
         }
 
@@ -68,13 +67,16 @@ export const assignGameboard = createAsyncThunk(
             const groupLookUp = new Map(groups.map(toTuple));
             const assigmentStatuses = response.data;
             const newAssignments: AssignmentDTO[] = assigmentStatuses.filter(a => isDefined(a.assignmentId)).map(a => ({
+                id: a.assignmentId as number,
                 groupId: a.groupId,
                 gameboardId: boardId,
                 groupName: groupLookUp.get(a.groupId),
-                assignmentId: a.assignmentId as number,
-                creationDate: new Date(),
-                dueDate,
-                scheduledStartDate,
+                // FIXME we *really* need to make sure that we only expect objects in Redux to contain timestamps and not
+                //  full-blown Date objects, because these are what the API returns, and also serializable.
+                //  Will require a medium-sized refactor.
+                creationDate: (new Date()).valueOf() as unknown as Date,
+                dueDate: dueDate?.valueOf() as unknown as Date | undefined,
+                scheduledStartDate: scheduledStartDate?.valueOf() as unknown as Date | undefined,
                 notes
             }));
             const successfulIds = newAssignments.map(a => a.groupId);
@@ -105,12 +107,19 @@ export const assignGameboard = createAsyncThunk(
                     ));
                 }
             }
+            // Update all relevant cache entries
             appDispatch(isaacApi.util.updateQueryData(
                 "getMySetAssignments",
                 undefined,
                 (assignmentsByMe) => assignmentsByMe.concat(newAssignments)
             ));
-            appDispatch(isaacApi.util.invalidateTags(successfulIds.map(groupId => ({type: "GroupAssignments", id: groupId}))));
+            successfulIds.forEach(groupId => {
+                appDispatch(isaacApi.util.updateQueryData(
+                    "getMySetAssignments",
+                    groupId,
+                    (assignmentsByMe) => assignmentsByMe.concat(newAssignments.filter(a => a.groupId === groupId))
+                ));
+            });
             return newAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(

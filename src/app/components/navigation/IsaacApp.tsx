@@ -83,6 +83,7 @@ import {QuizPreview} from "../pages/quizzes/QuizPreview";
 import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {Loading} from "../handlers/IsaacSpinner";
+import {AssignmentSchedule} from "../pages/AssignmentSchedule";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -211,6 +212,7 @@ export const IsaacApp = () => {
                     {/* Teacher pages */}
                     <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
                     <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
+                    <TrackedRoute exact path="/assignment_schedule" ifUser={isTeacher} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}
                     <TrackedRoute exact path="/set_tests" ifUser={isTeacher} component={SetQuizzes} />
                     <Redirect from="/set_quizzes" to="/set_tests" />
 
