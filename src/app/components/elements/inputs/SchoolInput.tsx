@@ -18,7 +18,7 @@ interface SchoolInputProps {
 const NOT_APPLICABLE = "N/A";
 
 
-const getSchoolPromise = (schoolSearchText: string) =>
+const getSchoolPromise = (schoolSearchText: string): Promise<any> =>
     new Promise(resolve => {
         resolve(api.schools.search(schoolSearchText).then(({data}) => {
             let temp: any = [];

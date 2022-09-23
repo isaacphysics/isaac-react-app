@@ -18,7 +18,7 @@ export const LinkCard = ({title, imageSource, linkDestination, linkText, childre
 
             <img src={imageSource} alt="" />
             <p>
-                {children}
+                <>{children}</>
             </p>
 
             <Link to={linkDestination} className="footer-link mt-4 font-weight-bold lrg-text">
