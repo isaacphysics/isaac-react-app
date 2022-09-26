@@ -16,7 +16,7 @@ import {
 import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {skipToken} from "@reduxjs/toolkit/query";
-import {combineQuerys, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 
 const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
@@ -60,7 +60,7 @@ export const SingleAssignmentProgress = () => {
             />
         </Container>
         <ShowLoadingQuery
-            query={combineQuerys(assignmentQuery, assignmentProgressQuery, augmentAssignmentWithProgress)}
+            query={combineQueries(assignmentQuery, assignmentProgressQuery, augmentAssignmentWithProgress)}
             defaultErrorTitle={"Error fetching assignment progress"}
             thenRender={(assignmentWithProgress) =>
                 <div className="assignment-progress-container mb-5">

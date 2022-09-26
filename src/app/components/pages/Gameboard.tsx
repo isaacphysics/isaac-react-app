@@ -118,27 +118,30 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
     </RS.ListGroupItem>
 }
 
-export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => {
-
-    return <RS.Row className={className}>
-        <RS.Col lg={{size: 10, offset: 1}}>
-            <RS.ListGroup className="link-list list-group-links list-gameboard">
-                {gameboard?.wildCard && showWildcard(gameboard) &&
-                    <Wildcard wildcard={gameboard.wildCard} />
-                }
-                {gameboard?.contents && gameboard.contents.map(q =>
-                    <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
-                )}
-            </RS.ListGroup>
-        </RS.Col>
-    </RS.Row>;
+export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
+    return <RS.ListGroup className="link-list list-group-links list-gameboard">
+        {gameboard?.wildCard && showWildcard(gameboard) &&
+            <Wildcard wildcard={gameboard.wildCard} />
+        }
+        {gameboard?.contents && gameboard.contents.map(q =>
+            <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
+        )}
+    </RS.ListGroup>
 };
+
+export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => (
+    <RS.Row className={className}>
+        <RS.Col lg={{size: 10, offset: 1}}>
+            <GameboardViewerInner gameboard={gameboard}/>
+        </RS.Col>
+    </RS.Row>
+);
 
 export const Gameboard = withRouter(({ location }) => {
     const dispatch = useAppDispatch();
     const gameboardId = location.hash ? location.hash.slice(1) : null;
     const gameboardQuery = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
-    const {data: gameboard} = gameboardQuery;
+    const { data: gameboard } = gameboardQuery;
     const user = useAppSelector(selectors.user.orNull);
 
     // Show filter

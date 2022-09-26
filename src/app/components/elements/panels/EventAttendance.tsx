@@ -33,7 +33,7 @@ export const EventAttendance = ({user, eventId}: {user: PotentialUser; eventId: 
     let canRecordAttendance = false;
     if (selectedEvent && selectedEvent.date) {
         const morningOfEvent = new Date(selectedEvent.date);
-        morningOfEvent.setHours(0, 0);
+        morningOfEvent.setUTCHours(0, 0);
         canRecordAttendance = morningOfEvent <= new Date();
     }
 

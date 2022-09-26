@@ -42,7 +42,7 @@ export function useIFrameMessages(uid: string, iFrameRef?: RefObject<HTMLIFrameE
         }
     }, [targetDomainSource, targetDomainOrigin, uidRef]);
 
-    const handleReceive = useCallback(e => {
+    const handleReceive = useCallback((e: MessageEvent) => {
         // Make sure we ignore messages from this domain
         if (e.origin === window.origin) return;
 
@@ -54,7 +54,7 @@ export function useIFrameMessages(uid: string, iFrameRef?: RefObject<HTMLIFrameE
 
         if (e.data.hasOwnProperty('type')) {
             if (!targetDomainSource) {
-                setTargetDomainSource(e.source);
+                setTargetDomainSource(e.source as MessageEventSource);
                 setTargetDomainOrigin(e.origin);
             }
             setReceivedData(e.data);

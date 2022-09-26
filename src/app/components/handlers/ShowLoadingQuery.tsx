@@ -1,4 +1,4 @@
-import React, {ReactElement} from "react";
+import React from "react";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
 import {IsaacSpinner} from "./IsaacSpinner";
@@ -32,7 +32,7 @@ interface ShowLoadingQueryInfo<T> {
     error?: FetchBaseQueryError | SerializedError;
 }
 // The Error and loading data of the first query take precedence over the second one
-export function combineQuerys<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, secondQuery: ShowLoadingQueryInfo<R>, combineResult: (firstQueryResult: NonNullable<T>, secondQueryResult: NonNullable<R>) => NonNullable<S>): ShowLoadingQueryInfo<S> {
+export function combineQueries<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, secondQuery: ShowLoadingQueryInfo<R>, combineResult: (firstQueryResult: NonNullable<T>, secondQueryResult: NonNullable<R>) => NonNullable<S>): ShowLoadingQueryInfo<S> {
     return {
         data: isFound<T>(firstQuery.data) && isFound<R>(secondQuery.data) ? combineResult(firstQuery.data, secondQuery.data) : undefined,
         isLoading: firstQuery.isLoading || secondQuery.isLoading,
@@ -42,23 +42,23 @@ export function combineQuerys<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, seco
 }
 
 interface ShowLoadingQueryBaseProps<T> {
-    placeholder?: ReactElement;
+    placeholder?: JSX.Element | JSX.Element[];
     query: ShowLoadingQueryInfo<T>;
-    ifNotFound?: ReactElement;
+    ifNotFound?: JSX.Element | JSX.Element[];
 }
 type ShowLoadingQueryErrorProps<T> = ShowLoadingQueryBaseProps<T> & ({
-    ifError: (error?: FetchBaseQueryError | SerializedError) => ReactElement;
+    ifError: (error?: FetchBaseQueryError | SerializedError) => JSX.Element | JSX.Element[];
     defaultErrorTitle?: undefined;
 } | {
     ifError?: undefined;
     defaultErrorTitle: string;
 });
 type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
-    thenRender: (t: NonNullable<T>) => ReactElement;
+    thenRender: (t: NonNullable<T>) => JSX.Element | JSX.Element[];
     children?: undefined;
 } | {
     thenRender?: undefined;
-    children: ReactElement;
+    children: JSX.Element | JSX.Element[];
 });
 // A flexible way of displaying whether a RTKQ query is loading or errored. You can give as props:
 //  - Either: `children` or `thenRender` (a function that takes the query data and returns a React element)
@@ -67,14 +67,15 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 //  - `query` (the object returned by a RTKQ useQuery hook)
 export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle}: ShowLoadingQueryProps<T>) {
     const {data, isLoading, isError, error} = query;
-    const renderError = () => ifError ? ifError(error) : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
+    const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
     if (isError) {
         return renderError();
     }
     if (isLoading) {
-        return placeholder ?? loadingPlaceholder;
+        return placeholder ? <>{placeholder}</> : loadingPlaceholder;
     }
     return isDefined(data)
-        ? (isFound<T>(data) ? (thenRender ? thenRender(data) : children) : (ifNotFound ?? renderError()))
+        ? (isFound<T>(data) ? <>{thenRender ? thenRender(data) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
+
         : renderError();
 }

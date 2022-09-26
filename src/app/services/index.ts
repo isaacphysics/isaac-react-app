@@ -4,6 +4,7 @@ export * from "./siteConstants";
 export * from "./clozeQuestionKeyboardSensor";
 export * from "./demoTools";
 export * from "./device";
+export * from "./dates";
 export * from "./polyfills";
 export * from "./highlightJs";
 export * from "./json";
