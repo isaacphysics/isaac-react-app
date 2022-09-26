@@ -12,13 +12,13 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {
         const selected = changeEvent.target.checked;
         const currentItems = currentAttempt && currentAttempt.items || [];
-        const itemChoice: ItemChoiceDTO = {type: "itemChoice", items: currentItems};
+        const itemChoice: ItemChoiceDTO = {type: "itemChoice", items: [...currentItems]};
 
         if (selected) {
             if (!itemChoice.items) {
                 itemChoice.items = [item];
             } else if (itemChoice.items.filter(i => i.id == item.id).length == 0) {
-                itemChoice.items.push(item);
+                itemChoice.items = [...itemChoice.items, item];
             }
         } else if (itemChoice.items) {
             itemChoice.items = itemChoice.items.filter(i => i.id !== item.id);
