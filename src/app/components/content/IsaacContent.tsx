@@ -21,7 +21,6 @@ import {isQuestion} from "../../services";
 import {IsaacCodeTabs} from "./IsaacCodeTabs";
 import {IsaacInteractiveCodeSnippet} from "./IsaacInteractiveCodeSnippet";
 import {IsaacCallout} from "./IsaacCallout";
-import {Immutable} from "immer";
 const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 
