@@ -10,7 +10,7 @@ import {
 } from "../../state";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
-import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
+import {BEST_ATTEMPT_HIDDEN, ContentDTO} from "../../../IsaacApiTypes";
 import * as RS from "reactstrap";
 import {
     determineFastTrackPrimaryAction,
@@ -134,7 +134,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {invalidFormatError ? invalidFormatFeeback : tooManySigFigsError ? tooManySigFigsFeedback : tooFewSigFigsError ? tooFewSigFigsFeedback :
-                            <IsaacContent doc={validationResponse.explanation}/>
+                            <IsaacContent doc={validationResponse.explanation as ContentDTO}/>
                         }
                     </div>}
                 </div>}

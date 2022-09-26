@@ -4,6 +4,7 @@
 // Manually added/modified parts
 
 import {EXAM_BOARD} from "./app/services";
+import {Immutable} from "immer";
 
 export interface IsaacCardDTO extends ContentDTO {
     image?: ImageDTO;
@@ -467,7 +468,7 @@ export type BestAttemptHidden = null;
 export const BEST_ATTEMPT_HIDDEN: BestAttemptHidden = null;
 export interface QuestionDTO extends ContentDTO {
     hints?: ContentBaseDTO[];
-    bestAttempt?: QuestionValidationResponseDTO | BestAttemptHidden;
+    bestAttempt?: Immutable<QuestionValidationResponseDTO> | BestAttemptHidden;
 }
 
 export interface SeguePageDTO extends ContentDTO {
