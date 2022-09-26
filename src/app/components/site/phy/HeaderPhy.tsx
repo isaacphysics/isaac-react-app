@@ -12,7 +12,7 @@ export const HeaderPhy = () => {
     const streakRecord = useAppSelector(selectors.user.snapshot);
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
-    return <header className="light">
+    return <header className="light" data-testid={"header"}>
         <Container className="container-fluid px-0">
             <Row className="align-items-center">
                 <Col>

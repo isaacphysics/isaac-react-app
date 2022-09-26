@@ -111,7 +111,8 @@ describe("IsaacApp", () => {
         it (`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
             renderTestEnvironment({role});
             for (const [menu, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {
-                const navLink = screen.queryByRole("link", {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu as NavBarMenus]});
+                const header = await screen.findByTestId("header");
+                const navLink = within(header).queryByRole("link", {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu as NavBarMenus]});
                 if (hrefs === null) {
                     // Expect link to be hidden from user
                     expect(navLink).toBeNull();

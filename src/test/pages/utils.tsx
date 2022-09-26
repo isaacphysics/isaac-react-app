@@ -101,7 +101,8 @@ export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string
 
 // Clicks on the given navigation menu entry, allowing navigation around the app as a
 export const followHeaderNavLink = async (menu: NavBarMenus, linkName: string) => {
-    const navLink = await screen.findByRole("link",  {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu]});
+    const header = await screen.findByTestId("header");
+    const navLink = within(header).getByRole("link",  {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu]});
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title
