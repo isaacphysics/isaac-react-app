@@ -6,15 +6,14 @@ import {
     showGroupManagersModal,
     isaacApi,
     store,
-    useAppDispatch, getRTKQueryErrorMessage,
+    useAppDispatch,
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../../services";
-import {Jumbotron, Row, Col, Form, Input, Table, Alert} from "reactstrap";
+import {history} from "../../../services";
+import {Jumbotron, Row, Col, Form, Input, Table} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
-import {Loading} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 
 const AdditionalManagerRemovalModalBody = ({group}: {group: AppGroup}) => <p>

@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {followHeaderNavLink, renderTestEnvironment} from "./utils";
+import {renderTestEnvironment, followHeaderNavLink} from "./utils";
 import {mockGroups} from "../../mocks/data";
 import {isDefined, siteSpecific} from "../../app/services";
 import {difference} from "lodash";

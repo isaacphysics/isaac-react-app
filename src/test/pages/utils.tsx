@@ -2,7 +2,7 @@ import {Role} from "../../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../../mocks/server";
 import {rest, RestHandler} from "msw";
-import {ACTION_TYPE, API_PATH} from "../../app/services";
+import {ACTION_TYPE, API_PATH, SITE, SITE_SUBJECT} from "../../app/services";
 import produce from "immer";
 import {mockUser} from "../../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../../app/state";
@@ -79,16 +79,34 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     </Provider>);
 };
 
-export type NavBarTitle = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
+export type NavBarMenus = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
+export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string}} = {
+    [SITE.PHY]: {
+        "My Isaac": "My Isaac",
+        Teach: "Teach",
+        Learn: "Learn",
+        Events: "Events",
+        Help: "Help",
+        Admin: "Admin"
+    },
+    [SITE.CS]: {
+        "My Isaac": "My Isaac",
+        Teach: "Teachers",
+        Learn: "Learn",
+        Events: "Events",
+        Help: "Help and support",
+        Admin: "Admin"
+    }
+};
 
 // Clicks on the given navigation menu entry, allowing navigation around the app as a
-export const followHeaderNavLink = async (menuTitle: NavBarTitle, linkName: string) => {
-    const navLink = await screen.findByRole("link", {name: menuTitle, exact: false});
+export const followHeaderNavLink = async (menu: NavBarMenus, linkName: string) => {
+    const navLink = await screen.findByRole("link",  {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu]});
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title
     const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
-    if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menuTitle} navigation menu.`);
+    if (!adminMenuSectionParent) fail(`Missing NavigationSection parent - cannot locate entries in ${menu} navigation menu.`);
     const link = await within(adminMenuSectionParent).findByRole("menuitem", {name: linkName, exact: false});
     await userEvent.click(link);
 };

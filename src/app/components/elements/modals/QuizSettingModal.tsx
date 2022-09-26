@@ -16,7 +16,6 @@ import {currentYear, DateInput} from "../inputs/DateInput";
 import * as RS from "reactstrap";
 import Select from "react-select";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
-import {Spinner} from "reactstrap";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;

@@ -4,8 +4,8 @@ import userEvent from "@testing-library/user-event";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
 import {Role, ROLES} from "../../IsaacApiTypes";
-import {renderTestEnvironment, NavBarTitle} from "./utils";
-import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS} from "../../app/services";
+import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "./utils";
+import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS, SITE_SUBJECT} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
 
 const myIsaacLinks = siteSpecific(
@@ -37,7 +37,7 @@ const helpLinks = siteSpecific(
     ["/support/teacher", "/support/student", "/contact"],
 );
 
-const navigationBarLinksPerRole: {[p in (Role | "ANONYMOUS")]: {[title in NavBarTitle]: string[] | null}} = {
+const navigationBarLinksPerRole: {[p in (Role | "ANONYMOUS")]: {[menu in NavBarMenus]: string[] | null}} = {
     ANONYMOUS: {
         "My Isaac": myIsaacLinks,
         Teach: null,
@@ -110,8 +110,8 @@ describe("IsaacApp", () => {
         const role = r as Role | "ANONYMOUS";
         it (`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
             renderTestEnvironment({role});
-            for (const [title, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {
-                const navLink = screen.queryByRole("link", {name: title, exact: false});
+            for (const [menu, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {
+                const navLink = screen.queryByRole("link", {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu as NavBarMenus]});
                 if (hrefs === null) {
                     // Expect link to be hidden from user
                     expect(navLink).toBeNull();
@@ -124,7 +124,7 @@ describe("IsaacApp", () => {
                 // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
                 // related to a given title
                 const adminMenuSectionParent = navLink.closest("li[class*='nav-item']") as HTMLLIElement | null;
-                if (!adminMenuSectionParent) fail(`Missing NavigationSection parent to check ${title} navigation menu contains correct entries.`);
+                if (!adminMenuSectionParent) fail(`Missing NavigationSection parent to check ${menu} navigation menu contains correct entries.`);
                 const menuItems = await within(adminMenuSectionParent).findAllByRole("menuitem");
                 zip(menuItems, hrefs).forEach(([link, href]) => {
                     expect(link).toHaveAttribute("href", href);
