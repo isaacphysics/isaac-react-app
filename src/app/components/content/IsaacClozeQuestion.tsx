@@ -17,17 +17,18 @@ import {
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
+import {Immutable} from "immer";
 
-const augmentInlineItemWithUniqueReplacementID = (idv: ClozeItemDTO | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
-const augmentNonSelectedItemWithReplacementID = (item: ClozeItemDTO) => ({...item, replacementId: item.id});
-const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (ItemDTO | undefined)[]}) => (i: ClozeItemDTO | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
+const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ClozeItemDTO> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
+const augmentNonSelectedItemWithReplacementID = (item: Immutable<ClozeItemDTO>) => ({...item, replacementId: item.id});
+const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ItemDTO> | undefined)[]}) => (i: Immutable<ClozeItemDTO> | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
 
 const NULL_CLOZE_ITEM_ID = "NULL_CLOZE_ITEM" as const;
 const NULL_CLOZE_ITEM: ItemDTO = {
     type: "item",
     id: NULL_CLOZE_ITEM_ID
 };
-const replaceNullItems = (items: ItemDTO[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
+const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
 
 const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
@@ -39,13 +40,13 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
 
     const itemsSectionDroppableId = "non-selected-items";
 
-    const [nonSelectedItems, setNonSelectedItems] = useState<ClozeItemDTO[]>(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
+    const [nonSelectedItems, setNonSelectedItems] = useState<Immutable<ClozeItemDTO>[]>(doc.items ? [...doc.items].map(augmentNonSelectedItemWithReplacementID) : []);
 
     const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
 
     const [borderMap, setBorderMap] = useState<{[dropId: string]: boolean}>({});
 
-    const [inlineDropValues, setInlineDropValues] = useState<(ClozeItemDTO | undefined)[]>(() => currentAttempt?.items || []);
+    const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ClozeItemDTO> | undefined)[]>(() => currentAttempt?.items || []);
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
     const inlineDropValueMap = useMemo(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
@@ -114,9 +115,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
         const idvs = [...inlineDropValues];
 
         // The item that's being dragged (this is worked out below in each case)
-        let item : ClozeItemDTO;
+        let item : Immutable<ClozeItemDTO>;
         // A callback to put an item back into the source of the drag (if needed)
-        let replaceSource : (itemToReplace: ClozeItemDTO | undefined) => void = () => undefined;
+        let replaceSource : (itemToReplace: Immutable<ClozeItemDTO> | undefined) => void = () => undefined;
         // Whether the inline drop zones were updated or not
         let update = false;
 

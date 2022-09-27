@@ -2,14 +2,15 @@ import {ClozeDropRegionContext} from "../../../../../IsaacAppTypes";
 import {Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import ReactDOM from "react-dom";
 import React, {useCallback, useContext, useEffect} from "react";
-import {ItemDTO} from "../../../../../IsaacApiTypes";
+import {ContentDTO, ItemDTO} from "../../../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
 import {Badge} from "reactstrap";
+import {Immutable} from "immer";
 
-export function Item({item}: {item: ItemDTO}) {
+export function Item({item}: {item: Immutable<ItemDTO>}) {
     return <Badge className="m-2 p-2 cloze-item">
         <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
-            {item.children}
+            {item.children as ContentDTO[]}
         </IsaacContentValueOrChildren>
     </Badge>;
 }

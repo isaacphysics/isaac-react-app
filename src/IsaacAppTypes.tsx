@@ -31,6 +31,7 @@ import {
     TAG_LEVEL
 } from "./app/services";
 import {DropResult} from "react-beautiful-dnd";
+import {Immutable} from "immer";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -203,11 +204,11 @@ export type Action =
 
     | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
-    | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
+    | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO>}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date}
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
-    | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
+    | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
@@ -413,8 +414,8 @@ export interface IsaacQuestionProps<T extends QuestionDTO> {
 }
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
-    validationResponse?: ApiTypes.QuestionValidationResponseDTO;
-    currentAttempt?: ApiTypes.ChoiceDTO;
+    validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO>;
+    currentAttempt?: Immutable<ApiTypes.ChoiceDTO>;
     canSubmit?: boolean;
     locked?: Date;
     accordionClientId?: string;
@@ -486,7 +487,7 @@ export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
     choice: C;
 }
 
-export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>): choice is ValidatedChoice<ApiTypes.ChoiceDTO> {
+export function isValidatedChoice(choice: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>): choice is Immutable<ValidatedChoice<ApiTypes.ChoiceDTO>> {
     return choice.hasOwnProperty("frontEndValidation");
 }
 

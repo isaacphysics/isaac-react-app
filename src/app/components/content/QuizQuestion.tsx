@@ -7,6 +7,7 @@ import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
 import {QuizAttemptContext} from "../../../IsaacAppTypes";
 import {Loading} from "../handlers/IsaacSpinner";
+import {ContentDTO} from "../../../IsaacApiTypes";
 
 export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
     const dispatch = useAppDispatch();
@@ -52,7 +53,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
                     <h1 className="m-0">{noAnswer ? "Not answered" : sigFigsError ? "Significant Figures" : correct ? "Correct!" : "Incorrect"}</h1>
                 </div>
                 {validationResponse && validationResponse.explanation && <div className="mb-1">
-                    <IsaacContent doc={validationResponse.explanation} />
+                    <IsaacContent doc={validationResponse.explanation as ContentDTO} />
                 </div>}
             </div>}
 

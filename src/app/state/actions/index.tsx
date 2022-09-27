@@ -70,6 +70,7 @@ import {
     isaacApi,
     AppDispatch
 } from "../index";
+import {Immutable} from "immer";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -777,7 +778,7 @@ interface Attempt {
 }
 const attempts: {[questionId: string]: Attempt} = {};
 
-export const attemptQuestion = (questionId: string, attempt: ChoiceDTO, gameboardId?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
+export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, gameboardId?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
     const state = getState();
     const isAnonymous = !(state && state.user && state.user.loggedIn);
     const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
@@ -832,9 +833,13 @@ export const attemptQuestion = (questionId: string, attempt: ChoiceDTO, gameboar
     }
 };
 
-export const setCurrentAttempt = (questionId: string, attempt: ChoiceDTO|ValidatedChoice<ChoiceDTO>) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT, questionId, attempt});
-};
+export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attempt: Immutable<T | ValidatedChoice<T>>) {
+    return (dispatch: Dispatch<Action>) => dispatch({
+        type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT,
+        questionId,
+        attempt
+    });
+}
 
 let questionSearchCounter = 0;
 
