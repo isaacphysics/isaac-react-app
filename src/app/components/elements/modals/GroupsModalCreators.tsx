@@ -64,7 +64,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                 <Jumbotron>
                     <h2>Option 1: Share link</h2>
                     <p>Share the following link with your students to have them join your group:</p>
-                    <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1">
+                    <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
                         {location.origin}/account?authToken={token?.token}
                     </span>
                 </Jumbotron>
@@ -72,7 +72,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                 <Jumbotron>
                     <h2>Option 2: Share code</h2>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
-                    <h3 className="text-center user-select-all d-block border bg-light p-1">{token?.token}</h3>
+                    <h3 className="text-center user-select-all d-block border bg-light p-1" data-testid={"share-code"}>{token?.token}</h3>
                 </Jumbotron>
             </>}
         />

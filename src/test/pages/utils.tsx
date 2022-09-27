@@ -29,7 +29,7 @@ interface RenderTestEnvironmentOptions {
 //  - Choose the role of the mock user (defaults to ADMIN)
 //  - Apply an arbitrary transformation to the mock user
 //  - Choose which page component you want  to render (if it is omitted, IsaacApp will be rendered)
-//  - Define extra endpoint handlers for the MSW server
+//  - Define extra endpoint handlers for the MSW server (will have priority over existing ones)
 //  - Setup the initial history of the routing component (doesn't apply if IsaacApp is being rendered in full)
 // If IsaacApp is rendered, it won't be wrapped in another router. Any component will be wrapped in a Redux
 // Provider with the global store.
@@ -99,7 +99,7 @@ export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string
     }
 };
 
-// Clicks on the given navigation menu entry, allowing navigation around the app as a
+// Clicks on the given navigation menu entry, allowing navigation around the app as a user would
 export const followHeaderNavLink = async (menu: NavBarMenus, linkName: string) => {
     const header = await screen.findByTestId("header");
     const navLink = within(header).getByRole("link",  {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu]});

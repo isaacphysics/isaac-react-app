@@ -2,6 +2,45 @@ import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/pages/utils";
 
+export const mockUser = {
+    givenName: "Test",
+    familyName: "Teacher",
+    email: "test-teacher@test.com",
+    dateOfBirth: 777777777777,
+    gender: "MALE",
+    registrationDate: DAYS_AGO(100),
+    role: "ADMIN",
+    schoolOther: "N/A",
+    registeredContexts: [
+        {
+            stage: "all",
+            examBoard: "all"
+        }
+    ],
+    registeredContextsLastConfirmed: DAYS_AGO(3),
+    firstLogin: false,
+    lastUpdated: DAYS_AGO(1),
+    lastSeen: DAYS_AGO(1),
+    emailVerificationStatus: "VERIFIED",
+    id: 1
+};
+
+export const mockUserSummary = {
+    givenName: "Test",
+    familyName: "Teacher",
+    role: "ADMIN",
+    authorisedFullAccess: false,
+    emailVerificationStatus: "VERIFIED",
+    registeredContexts: [
+        {
+            stage: "all",
+            examBoard: "all"
+        }
+    ],
+    email: "test-teacher@test.com",
+    id: 1
+};
+
 export const mockGameboards = {
     results: [
         {
@@ -3449,21 +3488,7 @@ export const mockGroups = [
         created: DAYS_AGO(-20),
         lastUpdated: DAYS_AGO(-20),
         archived: false,
-        ownerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            email: "test-teacher@test.com",
-            id: 1
-        },
+        ownerSummary: mockUserSummary,
         additionalManagers: [],
     },
     {
@@ -3473,23 +3498,19 @@ export const mockGroups = [
         created: DAYS_AGO(-25),
         lastUpdated: DAYS_AGO(-25),
         archived: false,
-        ownerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            email: "test-teacher@test.com",
-            id: 1
-        },
+        ownerSummary: mockUserSummary,
         additionalManagers: [],
-    }
+    },
+    {
+        id: 7,
+        groupName: "Test Group 3",
+        ownerId: 1,
+        created: DAYS_AGO(-50),
+        lastUpdated: DAYS_AGO(-30),
+        archived: true,
+        ownerSummary: mockUserSummary,
+        additionalManagers: [],
+    },
 ];
 
 export const mockAssignmentsGroup2 = [
@@ -4604,29 +4625,6 @@ export const mockAssignmentsGroup6 = [
         _id: 38
     }
 ];
-
-export const mockUser = {
-    givenName: "Test",
-    familyName: "Teacher",
-    email: "test-teacher@test.com",
-    dateOfBirth: 777777777777,
-    gender: "MALE",
-    registrationDate: DAYS_AGO(100),
-    role: "ADMIN",
-    schoolOther: "N/A",
-    registeredContexts: [
-        {
-            stage: "all",
-            examBoard: "all"
-        }
-    ],
-    registeredContextsLastConfirmed: DAYS_AGO(3),
-    firstLogin: false,
-    lastUpdated: DAYS_AGO(1),
-    lastSeen: DAYS_AGO(1),
-    emailVerificationStatus: "VERIFIED",
-    id: 1
-};
 
 export const mockUserPreferences = {
     BETA_FEATURE: {

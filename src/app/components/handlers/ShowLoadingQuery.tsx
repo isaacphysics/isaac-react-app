@@ -76,6 +76,5 @@ export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, i
     }
     return isDefined(data)
         ? (isFound<T>(data) ? <>{thenRender ? thenRender(data) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
-
         : renderError();
 }
