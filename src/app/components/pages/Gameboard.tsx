@@ -159,7 +159,7 @@ export const Gameboard = withRouter(({ location }) => {
         }
     }, [dispatch, gameboard]);
 
-    const notFoundComponent = () => <Container>
+    const notFoundComponent = <Container>
         <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
         <h3 className="my-4">
             <small>
@@ -178,7 +178,7 @@ export const Gameboard = withRouter(({ location }) => {
             <ShowLoadingQuery
                 query={gameboardQuery}
                 defaultErrorTitle={"Error fetching gameboard"}
-                ifNotFound={notFoundComponent()}
+                ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     if (showFilter) {
                         return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
