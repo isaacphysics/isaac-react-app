@@ -42,6 +42,13 @@ export const handlers = [
             ctx.json(groups)
         );
     }),
+    rest.get(API_PATH + "/groups/:groupId/membership", (req, res, ctx) => {
+        // TODO could get members from mock data if groupId refers to a known mock group
+        return res(
+            ctx.status(200),
+            ctx.json([])
+        );
+    }),
     rest.get(API_PATH + "/assignments", (req, res, ctx) => {
         return res(
             ctx.status(200),

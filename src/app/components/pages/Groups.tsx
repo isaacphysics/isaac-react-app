@@ -477,7 +477,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                         </CardBody>
                     </Card>
                 </Col>
-                <Col md={8} className="d-none d-md-block">
+                <Col md={8} className="d-none d-md-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
                 </Col>
             </Row>
