@@ -8,7 +8,7 @@ import {
     QuizAttemptFeedbackDTO,
     QuizSummaryDTO
 } from "../../../IsaacApiTypes";
-import produce from "immer";
+import produce, {Immutable} from "immer";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -122,7 +122,7 @@ export const quizAttemptedFreelyByMe = (quizAttempts: QuizAttemptedFreelyByMeSta
     }
 };
 
-const updateQuizAttemptQuestion = (questionId: string, questionAttempt: ChoiceDTO) => produce<{attempt: QuizAttemptDTO}>((quizAttempt) => {
+const updateQuizAttemptQuestion = (questionId: string, questionAttempt: Immutable<ChoiceDTO>) => produce<{attempt: QuizAttemptDTO}>((quizAttempt) => {
     const quizQuestions = extractQuestions(quizAttempt?.attempt.quiz);
     quizQuestions.forEach(question => {
         if (question.id === questionId && (question.bestAttempt === null || question.bestAttempt?.correct === undefined)) {

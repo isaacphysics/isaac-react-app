@@ -32,6 +32,7 @@ import {
 } from "../../IsaacAppTypes";
 import {handleApiGoneAway, handleServerError} from "../state";
 import {EventOverviewFilter} from "../components/elements/panels/EventOverviews";
+import {Immutable} from "immer";
 
 export const endpoint = axios.create({
     baseURL: API_PATH,
@@ -260,7 +261,7 @@ export const api = {
                 params: query,
             });
         },
-        answer: (id: string, answer: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
+        answer: (id: string, answer: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/questions/${id}/answer`, answer);
         },
         answeredQuestionsByDate: (userId: number | string, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
@@ -501,7 +502,7 @@ export const api = {
         loadQuizAssignmentAttempt: (quizAssignmentId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {
             return endpoint.post(`/quiz/assignment/${quizAssignmentId}/attempt`);
         },
-        answer: (quizAttemptId: number, questionId: string, attempt: ApiTypes.ChoiceDTO): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
+        answer: (quizAttemptId: number, questionId: string, attempt: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
             return endpoint.post(`/quiz/attempt/${quizAttemptId}/answer/${questionId}`, attempt);
         },
         markQuizAttemptAsComplete: (quizAttemptId: number): AxiosPromise<ApiTypes.QuizAttemptDTO> => {

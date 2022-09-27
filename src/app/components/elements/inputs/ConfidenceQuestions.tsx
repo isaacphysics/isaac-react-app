@@ -5,6 +5,7 @@ import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
+import {Immutable} from "immer";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -76,7 +77,7 @@ interface ConfidenceQuestionsProps {
     identifier: any;
     disableInitialState?: boolean;
     type: ConfidenceType;
-    validationResponse?: QuestionValidationResponseDTO,
+    validationResponse?: Immutable<QuestionValidationResponseDTO>,
     answer?: any;
 }
 
@@ -185,11 +186,11 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
 // This and ConfidenceQuestions should be used together, with the values managed by this hook passed to an instance of
 // ConfidenceQuestions. This hook just abstracts away confidence-question-specific stuff so it is easy to remove and
 // doesn't have to hang around in IsaacQuestion and IsaacQuickQuestion.
-export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: ChoiceDTO, canSubmit?: boolean, correct?: boolean, locked?: boolean) => {
+export const useConfidenceQuestionsValues = (show: boolean | undefined, type: ConfidenceType, onConfidenceStateChange?: (cs: ConfidenceState) => void, currentAttempt?: Immutable<ChoiceDTO>, canSubmit?: boolean, correct?: boolean, locked?: boolean) => {
     // Confidence question specific things
     const [confidenceState, setConfidenceState] = useState<ConfidenceState>("initial");
     const [validationPending, setValidationPending] = useState<ValidationPendingState>({pending: false});
-    const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || (currentAttempt.value === "") || (Array.isArray((currentAttempt as ItemChoiceDTO).items) && (currentAttempt as ItemChoiceDTO).items?.length === 0));
+    const confidenceDisabled = type === "question" && (!canSubmit || !currentAttempt || (currentAttempt.value === "") || (Array.isArray((currentAttempt as Immutable<ItemChoiceDTO>).items) && (currentAttempt as Immutable<ItemChoiceDTO>).items?.length === 0));
     const showQuestionFeedback = confidenceState !== "initial" || !show || correct;
 
     // Reset question confidence on attempt change
