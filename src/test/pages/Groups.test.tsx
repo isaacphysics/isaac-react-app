@@ -190,6 +190,8 @@ describe("Groups", () => {
         expect(groupToArchiveElement).toBeDefined();
         const groupToArchiveName = within(groupToArchiveElement).getByTestId("select-group").textContent;
         await userEvent.click(within(groupToArchiveElement).getByTestId("select-group"));
+        // We need to look within the element marked with the "group-editor" test ID, because there are actually
+        // two GroupEditor components in the DOM at once, one is just hidden (depending on screen size).
         const groupEditor = await screen.findByTestId("group-editor");
         const archiveButton = await within(groupEditor).findByRole("button", {name: "Archive this group"});
         await userEvent.click(archiveButton);
