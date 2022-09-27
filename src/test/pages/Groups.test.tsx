@@ -165,7 +165,7 @@ describe("Groups", () => {
                     rest.post(API_PATH + "/groups/:groupId", async (req, res, ctx) => {
                         const {groupId} = req.params;
                         const updatedGroup = await req.json();
-                        if (parseInt(groupId as string) === groupToRename.id && updatedGroup.groupName === newGroupName && isEqual(groupToRename, {...updatedGroup, groupName: newGroupName})) {
+                        if (parseInt(groupId as string) === groupToRename.id && updatedGroup.groupName === newGroupName && isEqual(groupToRename, {...updatedGroup, groupName: groupToRename.groupName})) {
                             correctUpdateRequests++;
                         }
                         return res(ctx.status(204));
@@ -197,6 +197,8 @@ describe("Groups", () => {
                 expect(difference(groupNames, newGroupNames)).toEqual([groupToRename.groupName]);
                 expect(difference(newGroupNames, groupNames)).toEqual([newGroupName]);
             });
+            // Assert the correct number of update requests were sent
+            expect(correctUpdateRequests).toEqual(1);
         });
 
         it(`allows you to ${activeOrArchived === "active" ? "" : "un"}archive groups`, async () => {
