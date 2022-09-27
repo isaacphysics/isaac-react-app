@@ -2,7 +2,7 @@ import React from "react";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
 import {IsaacSpinner} from "./IsaacSpinner";
-import {isDefined, isFound, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services";
+import {isDefined, isFound, NO_CONTENT, NOT_FOUND, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services";
 import {getRTKQueryErrorMessage} from "../../state";
 import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
@@ -14,7 +14,7 @@ const loadingPlaceholder = <div className="w-100 text-center pb-2">
 
 export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError | SerializedError, title: string}) => {
     const errorDetails = getRTKQueryErrorMessage(error);
-    return <Alert color={"warning"}>
+    return <Alert color={"warning"} className={"my-2"}>
         {title ?? "Error fetching data from server"}: {errorDetails.message}
         {errorDetails.status ? <><br/>Status code: {errorDetails.status}</> : ""}
         <br/>
@@ -68,8 +68,8 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle}: ShowLoadingQueryProps<T>) {
     const {data, isLoading, isError, error} = query;
     const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
-    if (isError) {
-        return renderError();
+    if (isError && error) {
+        return "status" in error && typeof error.status === "number" && [NOT_FOUND, NO_CONTENT].includes(error.status) && ifNotFound ? <>{ifNotFound}</> : renderError();
     }
     if (isLoading) {
         return placeholder ? <>{placeholder}</> : loadingPlaceholder;

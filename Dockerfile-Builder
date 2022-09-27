@@ -4,7 +4,7 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y ca-certificates curl openssl git apt-transport-https gnupg-agent software-properties-common
 
 # Install Node
-RUN curl -sL https://deb.nodesource.com/setup_17.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -yy nodejs
 
 # Install Yarn
