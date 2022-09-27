@@ -462,7 +462,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                                 </Button>
                                                 <button
                                                     onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                                    aria-label="Delete group" className="close ml-1"
+                                                    aria-label="Delete group" className="close ml-1" title={"Delete group"}
                                                 >
                                                     ×
                                                 </button>

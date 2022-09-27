@@ -1,6 +1,6 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink, NOW} from "./utils";
-import {mockGroups, mockUser, mockUserSummary} from "../../mocks/data";
+import {renderTestEnvironment, followHeaderNavLink} from "./utils";
+import {mockActiveGroups, mockArchivedGroups, mockUser, mockUserSummary} from "../../mocks/data";
 import {API_PATH, isDefined, siteSpecific} from "../../app/services";
 import {difference} from "lodash";
 import userEvent from "@testing-library/user-event";
@@ -17,7 +17,7 @@ describe("Groups", () => {
         // Expect all group names to be defined
         expect(activeGroupNames).toHaveLength(maybeActiveGroupNames.length);
         // Expect all active mock groups to be displayed
-        expect(difference(activeGroupNames, mockGroups.filter(g => !g.archived).map(g => g.groupName))).toHaveLength(0);
+        expect(difference(activeGroupNames, mockActiveGroups.map(g => g.groupName))).toHaveLength(0);
 
         // Now check archived tab, should contain one archived group
         const archivedTabLink = screen.getByText("Archived");
@@ -29,7 +29,7 @@ describe("Groups", () => {
             // Expect all group names to be defined
             expect(archivedGroupNames).toHaveLength(maybeArchivedGroupNames.length);
             // Expect all active mock groups to be displayed
-            expect(difference(archivedGroupNames, mockGroups.filter(g => g.archived).map(g => g.groupName))).toHaveLength(0);
+            expect(difference(archivedGroupNames, mockArchivedGroups.map(g => g.groupName))).toHaveLength(0);
         });
     });
 
@@ -99,4 +99,57 @@ describe("Groups", () => {
         expect(link.textContent).toMatch(new RegExp(`\/account\\?authToken=${mockToken}`));
         expect(code.textContent).toEqual(mockToken);
     });
+
+    (["active", "archived"] as const).forEach((activeOrArchived) => it(`lets you delete ${activeOrArchived} groups`, async () => {
+        const mockGroups = activeOrArchived === "active" ? mockActiveGroups : mockArchivedGroups;
+        const groupToDelete = mockGroups[0];
+        let correctDeleteRequests = 0;
+        renderTestEnvironment({
+            extraEndpoints: [
+                rest.delete(API_PATH + "/groups/:groupId", async (req, res, ctx) => {
+                    const {groupId} = req.params;
+                    if (parseInt(groupId as string) === groupToDelete.id) {
+                        correctDeleteRequests++;
+                    }
+                    return res(
+                        ctx.status(204)
+                    );
+                }),
+            ]
+        });
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        // Switch to Archived tab if we are deleting an archived group
+        if (activeOrArchived === "archived") {
+            const archivedTabLink = await screen.findByText("Archived");
+            await userEvent.click(archivedTabLink);
+        }
+        let groups: HTMLElement[] = [];
+        // Make sure we have the number and names of groups that we expect
+        await waitFor(() => {
+            groups = screen.queryAllByTestId("group-item");
+            expect(groups).toHaveLength(mockGroups.length);
+            expect(difference(groups.map(e => within(e).getByTestId("select-group").textContent), mockGroups.map(g => g.groupName))).toHaveLength(0);
+        });
+        // Find delete button corresponding to group we want to delete
+        const groupToDeleteElement = groups.find(e => within(e).getByTestId("select-group").textContent === groupToDelete.groupName) as HTMLElement;
+        expect(groupToDeleteElement).toBeDefined();
+        const deleteButton = within(groupToDeleteElement).getByRole("button", {description: "Delete group"});
+        // Set up window.confirm mock - we want to accept the alert so return true in mock implementation
+        window.confirm = jest.fn(() => true);
+        await userEvent.click(deleteButton);
+        // Make sure window.confirm was called...
+        await waitFor(() => {
+            expect(window.confirm).toHaveBeenCalledTimes(1);
+        });
+        // ...and that a single DELETE request is sent immediately after.
+        await waitFor(() => {
+            expect(correctDeleteRequests).toEqual(1);
+        });
+        // Assert that list of active groups has been optimistically updated, with ONLY the group we care about removed
+        await waitFor(() => {
+            const newGroupNames = screen.queryAllByTestId("group-item").map(e => within(e).getByTestId("select-group").textContent);
+            expect(newGroupNames).not.toContain(groupToDelete.groupName);
+            expect(newGroupNames).toHaveLength(groups.length - 1);
+        });
+    }));
 });

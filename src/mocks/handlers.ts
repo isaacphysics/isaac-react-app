@@ -55,7 +55,7 @@ export const handlers = [
         );
     }),
     rest.get(API_PATH + "/assignments/assign/:assignmentId", (req, res, ctx) => {
-        const {_assignmentId} = req.params;
+        const {assignmentId: _assignmentId} = req.params;
         const assignmentId = parseInt(_assignmentId as string);
         // FIXME augment the returned assignment like in the API
         const assignments = mockSetAssignments.filter(a => a.id === assignmentId);

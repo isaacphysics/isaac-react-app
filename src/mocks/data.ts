@@ -3512,6 +3512,8 @@ export const mockGroups = [
         additionalManagers: [],
     },
 ];
+export const mockActiveGroups = mockGroups.filter(g => !g.archived);
+export const mockArchivedGroups = mockGroups.filter(g => g.archived);
 
 export const mockAssignmentsGroup2 = [
     {
