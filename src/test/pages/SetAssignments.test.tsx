@@ -134,15 +134,16 @@ describe("SetAssignments", () => {
         // Wait for modal to appear, for the gameboard we expect
         const modal = await screen.findByTestId("set-assignment-modal");
         within(modal).getByRole("heading", {name: mockGameboard.title});
-        // Ensure all the groups are selectable in the drop-down
+        // Ensure all active groups are selectable in the drop-down
+        const activeGroups = mockGroups.filter(g => !g.archived);
         const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
         const selectBox = within(modal).getByLabelText(/Group(\(s\))?:/);
         await userEvent.click(selectBox);
-        mockGroups.forEach(g => {
+        activeGroups.forEach(g => {
             expect(selectContainer.textContent).toContain(g.groupName);
         });
-        // Pick the second group
-        const group1Choice = within(selectContainer).getByText(mockGroups[1].groupName);
+        // Pick the second active group
+        const group1Choice = within(selectContainer).getByText(activeGroups[1].groupName);
         await userEvent.click(group1Choice);
 
         // Check scheduled start date and due date are there
@@ -161,7 +162,7 @@ describe("SetAssignments", () => {
         const pendingAssignments = within(modal).queryAllByTestId("pending-assignment");
         const allAssignments = currentAssignments.concat(pendingAssignments);
         expect(allAssignments).toHaveLength(1);
-        expect(allAssignments[0].textContent).toContain(mockGroups[0].groupName);
+        expect(allAssignments[0].textContent).toContain(activeGroups[0].groupName);
 
         // Click button
         const assignButton = within(modal).getByRole("button", {name: "Assign to group"});
@@ -169,7 +170,7 @@ describe("SetAssignments", () => {
 
         // Expect request to be sent off with expected parameters
         await waitFor(() => {
-            expect(requestGroupIds).toEqual([mockGroups[1].id]);
+            expect(requestGroupIds).toEqual([activeGroups[1].id]);
             expect(requestAssignment.gameboardId).toEqual(mockGameboard.id);
             expect(requestAssignment.notes).toEqual(testNotes);
             expect(requestAssignment.dueDate).not.toBeDefined();
@@ -179,7 +180,7 @@ describe("SetAssignments", () => {
         // Check that new assignment is displayed in the modal
         await waitFor(() => {
             const newCurrentAssignments = within(modal).queryAllByTestId("current-assignment");
-            expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(mockGroups[1].groupName);
+            expect(newCurrentAssignments.map(a => a.textContent).join(",")).toContain(activeGroups[1].groupName);
         });
 
         // Close modal
