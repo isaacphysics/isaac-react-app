@@ -32,13 +32,14 @@ describe("Groups", () => {
 
     it('displays all active groups on load, and all archived groups when Archived tab is clicked', async () => {
         renderTestEnvironment();
+        // visitGroupPageOnTab checks that the groups we expect to be there are in fact there
         await visitGroupPageOnTab("active");
-        // Now check archived tab, should contain one archived group
+        // Now check archived tab, should contain all archived groups
         const archivedTabLink = screen.getByText("Archived");
         await userEvent.click(archivedTabLink);
         await waitFor(() => {
             const archivedGroups = screen.queryAllByTestId("group-item");
-            const maybeArchivedGroupNames = archivedGroups.map(g => within(g).queryByTestId("select-group")?.textContent);
+            const maybeArchivedGroupNames = archivedGroups.map(g => within(g).getByTestId("select-group").textContent);
             const archivedGroupNames = maybeArchivedGroupNames.filter(isDefined);
             // Expect all group names to be defined
             expect(archivedGroupNames).toHaveLength(maybeArchivedGroupNames.length);
