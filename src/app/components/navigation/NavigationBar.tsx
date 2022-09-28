@@ -65,7 +65,7 @@ export function useAssignmentsCount() {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const quizzes = useAppSelector(state => state?.quizAssignedToMe);
-    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(user?.loggedIn ? undefined : skipToken);
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(user?.loggedIn ? undefined : skipToken, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
     const loggedInUserId = isLoggedIn(user) ? user.id : undefined;
     useEffect(() => {

@@ -17,7 +17,7 @@ export const MyAssignments = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
 
-    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery();
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const myAssignments = filterAssignmentsByStatus(assignments);
 
     const [activeTab, setActiveTab] = useState(0);
