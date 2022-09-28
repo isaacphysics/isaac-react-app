@@ -3,6 +3,7 @@ import {
     isaacApi,
     logAction,
     selectors,
+    setAssignBoardPath,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -201,7 +202,10 @@ export const Gameboard = withRouter(({ location }) => {
                             </RS.Row>
                             : gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
                                 <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`}
+                                               onClick={() => setAssignBoardPath("/set_assignments")}
+                                               color="primary" outline className="btn-block"
+                                    >
                                         {siteSpecific("Save to My Gameboards", "Save to My gameboards")}
                                     </RS.Button>
                                 </RS.Col>

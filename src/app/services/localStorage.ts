@@ -10,6 +10,7 @@ export enum KEY {
     ANONYMISE_USERS = "anonymiseUsers",
     MOST_RECENT_ALL_TOPICS_PATH = "mostRecentAllTopicsPath",
     FIRST_ANON_QUESTION = "firstAnonQuestion",
+    ASSIGN_BOARD_PATH = "assignBoardPath",
 }
 
 export const LOADING_FAILURE_VALUE = null;

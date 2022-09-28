@@ -27,6 +27,7 @@ import {
     loadGroups,
     openIsaacBooksModal,
     selectors,
+    setAssignBoardPath,
     showErrorToast,
     unlinkUserFromGameboard,
     useAppDispatch,
@@ -369,16 +370,6 @@ export const SetAssignments = () => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(BoardViews.card, BoardLimit.six);
 
-    const isaacAssignmentButtons = {
-        second: {
-            link: siteSpecific("/pages/pre_made_gameboards", "/topics"),
-            text: siteSpecific("our Boards for Lessons", "Topics list")
-        },
-        third: {
-            text: siteSpecific("create a gameboard", "Create gameboard")
-        }
-    };
-
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
@@ -398,23 +389,26 @@ export const SetAssignments = () => {
             <Col md={6} lg={4} className="pt-1">
                 {siteSpecific(
                     // Physics
-                    <Button role={"link"} onClick={() => dispatch(openIsaacBooksModal())} color="secondary" block className="px-3">
+                    <Button role={"link"} onClick={() => {
+                        setAssignBoardPath("/set_assignments");
+                        dispatch(openIsaacBooksModal());
+                    }} color="secondary" block className="px-3">
                         our books
                     </Button>,
                     // Computer science
-                    <Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
+                    <Button tag={Link} to={"/pages/gameboards"} onClick={() => setAssignBoardPath("/set_assignments")} color="secondary" block>
                         Pre-made gameboards
                     </Button>
                 )}
             </Col>
             <Col md={6} lg={4} className="pt-1">
-                <Button tag={Link} to={isaacAssignmentButtons.second.link} color="secondary" block>
-                    {isaacAssignmentButtons.second.text}
+                <Button tag={Link} to={siteSpecific("/pages/pre_made_gameboards", "/topics")} onClick={() => setAssignBoardPath("/set_assignments")} color="secondary" block>
+                    {siteSpecific("our Boards for Lessons", "Topics list")}
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
-                <Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
-                    {isaacAssignmentButtons.third.text}
+                <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath("/set_assignments")} color="secondary" block>
+                    {siteSpecific("create a gameboard", "Create gameboard")}
                 </Button>
             </Col>
         </Row>

@@ -1,4 +1,13 @@
-import {assignGameboard, isaacApi, loadGroups, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {
+    assignGameboard,
+    isaacApi,
+    loadGroups,
+    openIsaacBooksModal,
+    selectors,
+    setAssignBoardPath,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {groupBy, mapValues, range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -513,6 +522,36 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"Assignment Schedule"} help={pageHelp}/>
+        <h4 className="mt-4 mb-3">
+            Assign a gameboard from...
+        </h4>
+        <Row className="mb-4">
+            <Col md={6} lg={4} className="pt-1">
+                {siteSpecific(
+                    // Physics
+                    <Button role={"link"} onClick={() => {
+                        setAssignBoardPath("/assignment_schedule");
+                        dispatch(openIsaacBooksModal());
+                    }} color="secondary" block className="px-3">
+                        our books
+                    </Button>,
+                    // Computer science
+                    <Button tag={Link} to={"/pages/gameboards"} onClick={() => setAssignBoardPath("/assignment_schedule")} color="secondary" block>
+                        Pre-made gameboards
+                    </Button>
+                )}
+            </Col>
+            <Col md={6} lg={4} className="pt-1">
+                <Button tag={Link} to={siteSpecific("/pages/pre_made_gameboards", "/topics")} onClick={() => setAssignBoardPath("/assignment_schedule")} color="secondary" block>
+                    {siteSpecific("our Boards for Lessons", "Topics list")}
+                </Button>
+            </Col>
+            <Col md={12} lg={4} className="pt-1">
+                <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath("/assignment_schedule")} color="secondary" block>
+                    {siteSpecific("create a gameboard", "Create gameboard")}
+                </Button>
+            </Col>
+        </Row>
         <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
             {/*
                 Setting `combineResult` to `() => true` (3rd param of `combineQueries`) is a bit of a hack that lets you
@@ -524,7 +563,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                     {!isStaff(user) && <Alert className={"mt-2"} color={"info"}>
                         The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned gameboard.
                         <br/>
-                        It is a work in progress, and we would love to <a href={"/contact?subject=Assignment%20Schedule%20Feedback"}>hear your feedback</a>!
+                        It is a work in progress, and we would love to <a target={"_blank"} href={"/contact?subject=Assignment%20Schedule%20Feedback"}>hear your feedback</a>!
                     </Alert>}
                     <div className="no-print">
                         <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>

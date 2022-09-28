@@ -1,4 +1,15 @@
-import {getValue, history, isAdminOrEventManager, isDefined, isTeacher, Item, TODAY, toTuple} from "../../../services";
+import {
+    getValue,
+    history,
+    isAdminOrEventManager,
+    isDefined,
+    isTeacher,
+    Item,
+    KEY,
+    persistence,
+    TODAY,
+    toTuple
+} from "../../../services";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {AssignmentDTO} from "../../../../IsaacApiTypes";
 import {
@@ -6,6 +17,7 @@ import {
     AppState,
     isaacApi,
     mutationSucceeded,
+    setAssignBoardPath,
     showErrorToast,
     showRTKQueryErrorToastIfNeeded,
     showSuccessToast,
@@ -190,9 +202,9 @@ interface SaveGameboardParams {
     redirectOnSuccess?: boolean
 }
 
-export const saveGameboard = createAsyncThunk(
+export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: string}, SaveGameboardParams, {state: AppState}>(
     "gameboards/saveGameboard",
-    async ({boardId, user, boardTitle, redirectOnSuccess}: SaveGameboardParams, {dispatch, rejectWithValue}) => {
+    async ({boardId, user, boardTitle, redirectOnSuccess}, {dispatch, rejectWithValue}) => {
         try {
             if (boardTitle) {
                 // If the user wants a custom title, we can use the `renameAndSaveGameboard` endpoint. This is a redesign
@@ -210,7 +222,9 @@ export const saveGameboard = createAsyncThunk(
             }
             if (redirectOnSuccess) {
                 if (isTeacher(user)) {
-                    history.push(`/set_assignments#${boardId}`);
+                    const assignBoardPath = persistence.load(KEY.ASSIGN_BOARD_PATH) ?? "/set_assignments";
+                    history.push(`${assignBoardPath}#${boardId}`);
+                    setAssignBoardPath("/set_assignments");
                 } else {
                     history.push(`/my_gameboards#${boardId}`);
                 }
