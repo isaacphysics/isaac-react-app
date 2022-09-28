@@ -1,5 +1,6 @@
 import 'core-js';
 import {server} from "../mocks/server";
+import "./matchers";
 
 global.window.scrollTo = jest.fn();
 jest.mock("react-ga"); // Google Analytics requires a DOM.window which doesn't exist in test

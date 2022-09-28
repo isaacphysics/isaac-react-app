@@ -3,7 +3,7 @@ import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
-import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment} from "./utils";
+import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment} from "../utils";
 import {API_PATH, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
 import {rest} from "msw";
 

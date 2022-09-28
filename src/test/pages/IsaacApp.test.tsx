@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
 import {Role, ROLES} from "../../IsaacApiTypes";
-import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "./utils";
+import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "../utils";
 import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS, SITE_SUBJECT} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
 

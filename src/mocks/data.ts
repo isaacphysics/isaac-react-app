@@ -1,6 +1,6 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
-import {DAYS_AGO} from "../test/pages/utils";
+import {DAYS_AGO} from "../test/utils";
 
 export const mockUser = {
     givenName: "Test",

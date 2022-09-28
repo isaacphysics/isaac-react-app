@@ -1,5 +1,5 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink} from "./utils";
+import {renderTestEnvironment, followHeaderNavLink} from "../utils";
 import {mockActiveGroups, mockArchivedGroups, mockUser, mockUserSummary} from "../../mocks/data";
 import {API_PATH, isDefined, siteSpecific} from "../../app/services";
 import {difference, isEqual} from "lodash";
@@ -200,41 +200,38 @@ describe("Groups", () => {
             expect(correctUpdateRequests).toEqual(1);
         });
 
-        (activeOrArchived === "active" ? [false, true] : [false]).forEach((shouldTryToShowArchivedTabFirst) =>
+        (activeOrArchived === "active" ? [false, true] : [false]).forEach((shouldTryToShowArchivedTabFirst) => {
             it(`allows you to ${activeOrArchived === "active" ? "" : "un"}archive groups${shouldTryToShowArchivedTabFirst ? ", after switching to the Archived tab first" : ""}`, async () => {
                 const groupToModify = mockGroups[0];
                 const newArchivedValue = activeOrArchived === "active";
-                let correctUpdateRequests = 0;
-                let groupsRequests = 0;
+                // Request handlers
+                const updateGroup = jest.fn(async (req, res, ctx) => {
+                    return res(
+                        ctx.status(200),
+                        ctx.json({...groupToModify, archived: newArchivedValue})
+                    );
+                });
+                const getGroups = jest.fn((req, res, ctx) => {
+                    const archived = req.url.searchParams.get("archived_groups_only") === "true";
+                    const groups = archived === newArchivedValue ? (shouldTryToShowArchivedTabFirst ? mockOtherGroups : [...mockOtherGroups, {
+                        ...groupToModify,
+                        archived: newArchivedValue
+                    }]) : mockGroups;
+                    return res(
+                        ctx.status(200),
+                        ctx.json(groups)
+                    );
+                });
                 renderTestEnvironment({
                     extraEndpoints: [
-                        rest.post(API_PATH + "/groups/:groupId", async (req, res, ctx) => {
-                            const {groupId} = req.params;
-                            const updatedGroup = await req.json();
-                            // Request is correct if and only if the archived status has changed for the group that we expect
-                            if (parseInt(groupId as string) === groupToModify.id && updatedGroup.archived === newArchivedValue && isEqual(groupToModify, {...updatedGroup, archived: !newArchivedValue})) {
-                                correctUpdateRequests++;
-                            }
-                            return res(
-                                ctx.status(200),
-                                ctx.json({...groupToModify, archived: newArchivedValue})
-                            );
-                        }),
+                        rest.post(API_PATH + "/groups/:groupId", updateGroup),
                         // We need to handle when the Archived tab requests the list of archived groups, because in this case
                         // the optimistic update to the archived list falls flat - RTKQ cache updates can only occur if the
                         // cache entry exists, but in this test the archived tab only gets visited for the first time AFTER
                         // we try to update the cache.
                         // If RTKQ cache gets an "upsert" function, then we can use that instead, and the below request handler
                         // can be removed.
-                        rest.get(API_PATH + "/groups", (req, res, ctx) => {
-                            const archived = req.url.searchParams.get("archived_groups_only") === "true";
-                            const groups = archived === newArchivedValue ? (shouldTryToShowArchivedTabFirst ? mockOtherGroups : [...mockOtherGroups, {...groupToModify, archived: newArchivedValue}]) : mockGroups;
-                            groupsRequests++;
-                            return res(
-                                ctx.status(200),
-                                ctx.json(groups)
-                            );
-                        })
+                        rest.get(API_PATH + "/groups", getGroups)
                     ]
                 });
                 await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
@@ -252,12 +249,22 @@ describe("Groups", () => {
                 const groupEditor = await screen.findByTestId("group-editor");
                 const archiveButton = await within(groupEditor).findByRole("button", {name: `${activeOrArchived === "active" ? "A" : "Una"}rchive this group`});
                 await userEvent.click(archiveButton);
-                // Assert that the request was what we expect, and the modified group no longer exists in the initial list of groups
+                // Assert that the request was called, and the modified group no longer exists in the initial list of groups
                 await waitFor(() => {
-                    expect(correctUpdateRequests).toEqual(1);
+                    expect(updateGroup).toHaveBeenCalledTimes(1);
                     const newGroupNames = screen.queryAllByTestId("group-item").map(e => within(e).getByTestId("select-group").textContent);
                     expect(newGroupNames).not.toContain(groupToModifyName);
                     expect(newGroupNames).toHaveLength(groups.length - 1);
+                });
+                // Assert that the request was what we expected
+                await expect(updateGroup).toHaveBeenRequestedWith(async (req) => {
+                    const {groupId} = req.params;
+                    const updatedGroup = await req.json();
+                    // Request is correct if and only if the archived status has changed for the group that we expect
+                    return parseInt(groupId as string) === groupToModify.id && updatedGroup.archived === newArchivedValue && isEqual(groupToModify, {
+                        ...updatedGroup,
+                        archived: !newArchivedValue
+                    });
                 });
                 // Assert that the group is now in the other tab, and is the only new one there
                 const nextTabLink = await screen.findByText(activeOrArchived === "active" ? "Archived" : "Active");
@@ -268,9 +275,15 @@ describe("Groups", () => {
                     expect(difference(otherGroups.map(e => within(e).getByTestId("select-group").textContent), mockOtherGroups.map(g => g.groupName))).toEqual([groupToModifyName]);
                 });
                 // Ensure that in any case (whether we switched to the archived tab before doing anything or not), only
-                // two GET requests to the /groups endpoint were made
-                expect(groupsRequests).toEqual(2);
-            })
-        );
+                // two GET requests to the /groups endpoint were made, one for each tab
+                expect(getGroups).toHaveBeenCalledTimes(2);
+                await expect(getGroups).toHaveBeenRequestedWith((req) => {
+                    return req.url.searchParams.get("archived_groups_only") === "true";
+                });
+                await expect(getGroups).toHaveBeenRequestedWith((req) => {
+                    return req.url.searchParams.get("archived_groups_only") === "false";
+                });
+            });
+        });
     });
 });

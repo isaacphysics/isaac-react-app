@@ -1,4 +1,4 @@
-import {renderTestEnvironment} from "./utils";
+import {renderTestEnvironment} from "../utils";
 import {screen, waitFor} from "@testing-library/react";
 import {history, siteSpecific} from "../../app/services";
 
