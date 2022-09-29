@@ -4,8 +4,8 @@ import {DAYS_AGO} from "../test/utils";
 
 export const mockUser = {
     givenName: "Test",
-    familyName: "Teacher",
-    email: "test-teacher@test.com",
+    familyName: "Admin",
+    email: "test-admin@test.com",
     dateOfBirth: 777777777777,
     gender: "MALE",
     registrationDate: DAYS_AGO(100),
@@ -25,21 +25,39 @@ export const mockUser = {
     id: 1
 };
 
-export const mockUserSummary = {
+export const mockTeacher = {
     givenName: "Test",
     familyName: "Teacher",
-    role: "ADMIN",
-    authorisedFullAccess: false,
-    emailVerificationStatus: "VERIFIED",
-    registeredContexts: [
-        {
-            stage: "all",
-            examBoard: "all"
-        }
-    ],
     email: "test-teacher@test.com",
-    id: 1
+    dateOfBirth: 888888888888,
+    gender: "MALE",
+    registrationDate: DAYS_AGO(50),
+    role: "TEACHER",
+    schoolOther: "N/A",
+    registeredContexts: [{
+        stage: "all",
+        examBoard: "all"
+    }],
+    registeredContextsLastConfirmed: DAYS_AGO(3),
+    firstLogin: false,
+    lastUpdated: DAYS_AGO(1),
+    lastSeen: DAYS_AGO(1),
+    emailVerificationStatus: "VERIFIED",
+    id: 2
 };
+
+export const mockUserSummary = (user: any, authorisedFullAccess: boolean) => {
+    const email = authorisedFullAccess ? user.email : undefined;
+    return Object.assign({
+        givenName: user.givenName,
+        familyName: user.familyName,
+        role: user.role,
+        authorisedFullAccess,
+        emailVerificationStatus: user.emailVerificationStatus,
+        registeredContexts: user.registeredContexts,
+        id: user.id
+    }, email ? {email} : {});
+}
 
 export const mockGameboards = {
     results: [
@@ -2450,20 +2468,7 @@ export const mockMyAssignments = [
         groupId: 2,
         groupName: "Test Group 1",
         ownerUserId: 1,
-        assignerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            id: 1
-        },
+        assignerSummary: mockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         //scheduledStartDate: undefined,
@@ -2729,20 +2734,7 @@ export const mockMyAssignments = [
         groupId: 6,
         groupName: "Test Group 2",
         ownerUserId: 1,
-        assignerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            id: 1
-        },
+        assignerSummary: mockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -2873,20 +2865,7 @@ export const mockMyAssignments = [
         groupId: 2,
         groupName: "Test Group 1",
         ownerUserId: 1,
-        assignerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            id: 1
-        },
+        assignerSummary: mockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3338,20 +3317,7 @@ export const mockMyAssignments = [
         groupName: "Test Group 1",
         ownerUserId: 1,
         notes: "This is cool ",
-        assignerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            id: 1
-        },
+        assignerSummary: mockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3409,20 +3375,7 @@ export const mockQuizAssignments = [
         quizId: "test-quiz-assignment-1",
         groupId: 2,
         ownerUserId: 1,
-        assignerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            id: 1
-        },
+        assignerSummary: mockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(5),
         dueDate: DAYS_AGO(-5),
         quizFeedbackMode: "DETAILED_FEEDBACK",
@@ -3452,20 +3405,7 @@ export const mockQuizAssignments = [
         },
         groupId: 2,
         ownerUserId: 1,
-        assignerSummary: {
-            givenName: "Test",
-            familyName: "Teacher",
-            role: "ADMIN",
-            authorisedFullAccess: false,
-            emailVerificationStatus: "VERIFIED",
-            registeredContexts: [
-                {
-                    stage: "all",
-                    examBoard: "all"
-                }
-            ],
-            id: 1
-        },
+        assignerSummary: mockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(5),
         dueDate: DAYS_AGO(-5),
         quizFeedbackMode: "DETAILED_FEEDBACK",
@@ -3488,7 +3428,7 @@ export const mockGroups = [
         created: DAYS_AGO(-20),
         lastUpdated: DAYS_AGO(-20),
         archived: false,
-        ownerSummary: mockUserSummary,
+        ownerSummary: mockUserSummary(mockUser, false),
         additionalManagers: [],
     },
     {
@@ -3498,7 +3438,7 @@ export const mockGroups = [
         created: DAYS_AGO(-25),
         lastUpdated: DAYS_AGO(-25),
         archived: false,
-        ownerSummary: mockUserSummary,
+        ownerSummary: mockUserSummary(mockUser, false),
         additionalManagers: [],
     },
     {
@@ -3508,7 +3448,7 @@ export const mockGroups = [
         created: DAYS_AGO(-50),
         lastUpdated: DAYS_AGO(-30),
         archived: true,
-        ownerSummary: mockUserSummary,
+        ownerSummary: mockUserSummary(mockUser, false),
         additionalManagers: [],
     },
 ];

@@ -15,6 +15,7 @@ import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
+import {Loading} from "../../handlers/IsaacSpinner";
 
 const AdditionalManagerRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -114,11 +115,12 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     ]
 });
 
-const CurrentGroupManagersModal = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
+const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {groupId: number, archived: boolean, userIsOwner: boolean, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
+    const {data: groups} = isaacApi.endpoints.getGroups.useQuery(archived);
+    const group = groups?.find(g => g.id === groupId);
     const [addGroupManager] = isaacApi.endpoints.addGroupManager.useMutation();
     const [deleteGroupManager] = isaacApi.endpoints.deleteGroupManager.useMutation();
-    const userIsOwner = user?.id === group.ownerId;
 
     const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
 
@@ -153,7 +155,7 @@ const CurrentGroupManagersModal = ({group, user}: {group: AppGroup, user: Regist
         }
     }
 
-    return group && <div className={"mb-4"}>
+    return !group ? <Loading/> : <div className={"mb-4"}>
         <h2>Selected group: {group.groupName}</h2>
 
         <p>
@@ -184,7 +186,7 @@ const CurrentGroupManagersModal = ({group, user}: {group: AppGroup, user: Regist
 
         <Table className="group-table">
             <tbody>{additionalManagers && additionalManagers.map(manager =>
-                <tr key={manager.email}>
+                <tr key={manager.email} data-testid={"group-manager"}>
                     <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
                     {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete">
                         <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
@@ -201,7 +203,7 @@ const CurrentGroupManagersModal = ({group, user}: {group: AppGroup, user: Regist
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>
                 <p>
-                    <small><strong>Remember:</strong> Students may need to reuse the <a href="javascript:void(0)"
+                    <small><strong>Remember:</strong> Students may need to reuse the <a
                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}>group link</a> to approve access to their data for any new teachers.
                     </small>
                 </p>
@@ -215,8 +217,8 @@ export const groupManagersModal = (group: AppGroup, user: RegisteredUserDTO) => 
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
         title: userIsOwner ? "Share your group" : "Shared group",
-        body: <CurrentGroupManagersModal group={group} user={user} />,
-    }
+        body: <CurrentGroupManagersModal groupId={group.id as number} archived={!!group.archived} userIsOwner={userIsOwner} user={user} />,
+    };
 };
 
 interface GroupEmailModalProps {
