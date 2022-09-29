@@ -23,6 +23,7 @@ if [ $1 = "create" ] || [ $1 = "pull" ] || [ $1 = "push" ] || [ $1 = "run" ] || 
   docker pull docker.isaacscience.org/isaac-$SITE-app:$APP_VERSION
   API_VERSION=$(docker inspect -f '{{.Config.Labels.apiVersion}}' docker.isaacscience.org/isaac-$SITE-app:$APP_VERSION)
   docker pull docker.isaacscience.org/isaac-api:$API_VERSION
+  docker pull docker.isaacscience.org/isaac-$SITE-app-renderer:$APP_VERSION
 
 elif [ $1 = "down" ] || [ $1 = "stop" ] || [ $1 = "restart" ] || [ $1 = "exec" ] || [ $1 = "config" ] || [ $1 = "logs" ] || [ $1 = "kill" ] || [ $1 = "ps" ]; then
   # This affects existing containers, so don't pull newer images:
