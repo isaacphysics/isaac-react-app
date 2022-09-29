@@ -1,4 +1,4 @@
-import React, {lazy, Suspense, useCallback, useEffect, useState} from "react";
+import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from "react";
 import {
     AppState,
     clearQuestionSearch,
@@ -124,6 +124,20 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         searchDebounce(searchQuestionName, searchTopics, searchExamBoards, searchBook, searchStages, searchDifficulties, searchFastTrack, 0);
     },[searchDebounce, searchQuestionName, searchTopics, searchExamBoards, searchBook, searchFastTrack, searchStages, searchDifficulties]);
 
+    const sortedQuestions = useMemo(() => {
+        return questions && sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
+            questions.filter(question => {
+                const qIsPublic = searchResultIsPublic(question, user);
+                if (isBookSearch) return qIsPublic;
+                const qTopicsMatch =
+                    searchTopics.length === 0 ||
+                    (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
+
+                return qIsPublic && qTopicsMatch;
+            })
+        );
+    }, [questions, user, searchTopics, isBookSearch, questionsSort, creationContext]);
+
     const addSelectionsRow = <div className="d-lg-flex align-items-baseline">
         <div className="flex-grow-1 mb-1">
             <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
@@ -243,26 +257,13 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        questions &&
-                        sortQuestions(isBookSearch ? {title: SortOrder.ASC} : questionsSort, creationContext)(
-                            questions.filter(question => {
-                                const qIsPublic = searchResultIsPublic(question, user);
-                                if (isBookSearch) return qIsPublic;
-                                const qTopicsMatch =
-                                    searchTopics.length == 0 ||
-                                    (question.tags && question.tags.filter((tag) => searchTopics.includes(tag)).length > 0);
-
-                                return qIsPublic && qTopicsMatch;
-                            })
-                        ).map(question =>
-                            <GameboardBuilderRow
-                                key={`question-search-modal-row-${question.id}`} question={question}
-                                selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
-                                questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} creationContext={creationContext}
-                            />
-                        )
-                    }
+                    {sortedQuestions?.map(question =>
+                        <GameboardBuilderRow
+                            key={`question-search-modal-row-${question.id}`} question={question}
+                            selectedQuestions={selectedQuestions} setSelectedQuestions={setSelectedQuestions}
+                            questionOrder={questionOrder} setQuestionOrder={setQuestionOrder} creationContext={creationContext}
+                        />
+                    )}
                 </tbody>
             </RS.Table>
         </Suspense>
