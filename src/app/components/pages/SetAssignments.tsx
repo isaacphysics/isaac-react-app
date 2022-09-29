@@ -27,6 +27,7 @@ import {
     loadGroups,
     openIsaacBooksModal,
     selectors,
+    setAssignBoardPath,
     showErrorToast,
     unlinkUserFromGameboard,
     useAppDispatch,
@@ -337,6 +338,37 @@ const Board = (props: BoardProps) => {
     </>;
 };
 
+export const AddGameboardButtons = ({className, redirectBackTo}: {className: string, redirectBackTo: string}) => {
+    const dispatch = useAppDispatch();
+    return <Row className={className}>
+        <Col md={6} lg={4} className="pt-1">
+            {siteSpecific(
+                // Physics
+                <Button role={"link"} onClick={() => {
+                    setAssignBoardPath(redirectBackTo);
+                    dispatch(openIsaacBooksModal());
+                }} color="secondary" block className="px-3">
+                    our books
+                </Button>,
+                // Computer science
+                <Button tag={Link} to={"/pages/gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    Pre-made gameboards
+                </Button>
+            )}
+        </Col>
+        <Col md={6} lg={4} className="pt-1">
+            <Button tag={Link} to={siteSpecific("/pages/pre_made_gameboards", "/topics")} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                {siteSpecific("our Boards for Lessons", "Topics list")}
+            </Button>
+        </Col>
+        <Col md={12} lg={4} className="pt-1">
+            <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                {siteSpecific("create a gameboard", "Create gameboard")}
+            </Button>
+        </Col>
+    </Row>;
+};
+
 export const SetAssignments = () => {
     const dispatch = useAppDispatch();
     // We know the user is logged in and is at least a teacher in order to visit this page
@@ -369,16 +401,6 @@ export const SetAssignments = () => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(BoardViews.card, BoardLimit.six);
 
-    const isaacAssignmentButtons = {
-        second: {
-            link: siteSpecific("/pages/pre_made_gameboards", "/topics"),
-            text: siteSpecific("our Boards for Lessons", "Topics list")
-        },
-        third: {
-            text: siteSpecific("create a gameboard", "Create gameboard")
-        }
-    };
-
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
@@ -394,30 +416,7 @@ export const SetAssignments = () => {
         <h4 className="mt-4 mb-3">
             Add a gameboard from ...
         </h4>
-        <Row className="mb-4">
-            <Col md={6} lg={4} className="pt-1">
-                {siteSpecific(
-                    // Physics
-                    <Button role={"link"} onClick={() => dispatch(openIsaacBooksModal())} color="secondary" block className="px-3">
-                        our books
-                    </Button>,
-                    // Computer science
-                    <Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
-                        Pre-made gameboards
-                    </Button>
-                )}
-            </Col>
-            <Col md={6} lg={4} className="pt-1">
-                <Button tag={Link} to={isaacAssignmentButtons.second.link} color="secondary" block>
-                    {isaacAssignmentButtons.second.text}
-                </Button>
-            </Col>
-            <Col md={12} lg={4} className="pt-1">
-                <Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
-                    {isaacAssignmentButtons.third.text}
-                </Button>
-            </Col>
-        </Row>
+        <AddGameboardButtons className={"mb-4"} redirectBackTo={"/set_assignments"}/>
         {groups && groups.length === 0 && <Alert color="warning">
             You have not created any groups to assign work to.
             Please <Link to="/groups">create a group here first.</Link>

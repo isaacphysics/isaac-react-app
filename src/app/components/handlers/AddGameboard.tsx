@@ -1,17 +1,13 @@
 import React, {useEffect} from "react";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {saveGameboard, useAppDispatch} from "../../state";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {IsaacSpinner} from "./IsaacSpinner";
 import {history} from "../../services";
 import {Container} from "reactstrap";
 
-interface AddGameboardProps extends RouteComponentProps<{ gameboardId: string; gameboardTitle: string }> {
-    user: PotentialUser;
-}
-
-const AddGameboardComponent = (props: AddGameboardProps) => {
-    const {user, match: {params: {gameboardId, gameboardTitle}}} = props;
+export const AddGameboard = ({user}: {user: PotentialUser}) => {
+    const {gameboardId, gameboardTitle} = useParams<{gameboardId: string; gameboardTitle: string}>();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -31,5 +27,3 @@ const AddGameboardComponent = (props: AddGameboardProps) => {
         <IsaacSpinner size={"lg"} displayText={"Adding gameboard..."}/>
     </Container>;
 };
-
-export const AddGameboard = withRouter(AddGameboardComponent);

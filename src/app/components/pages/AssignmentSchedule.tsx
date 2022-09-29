@@ -1,4 +1,11 @@
-import {assignGameboard, isaacApi, loadGroups, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {
+    assignGameboard,
+    isaacApi,
+    loadGroups,
+    selectors,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {groupBy, mapValues, range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -44,6 +51,7 @@ import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
 import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import {AddGameboardButtons} from "./SetAssignments";
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -512,19 +520,23 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={"Assignment Schedule"} help={pageHelp}/>
+        <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" help={pageHelp}/>
+        <h4 className="mt-4 mb-3">
+            Assign a gameboard from...
+        </h4>
+        <AddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
         <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
             {/*
                 Setting `combineResult` to `() => true` (3rd param of `combineQueries`) is a bit of a hack that lets you
                 skip the combine query step and throw away the two results. It has to be `true` otherwise the resulting
                 query will be handled as if it failed.
             */}
-            <ShowLoadingQuery defaultErrorTitle={"Error loading assignments and/or gameboards"} query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, () => true)}>
-                <div className={"px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2"}>
-                    {!isStaff(user) && <Alert className={"mt-2"} color={"info"}>
+            <ShowLoadingQuery defaultErrorTitle="Error loading assignments and/or gameboards" query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, () => true)}>
+                <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2">
+                    {!isStaff(user) && <Alert className="mt-2" color="info">
                         The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned gameboard.
                         <br/>
-                        It is a work in progress, and we would love to <a href={"/contact?subject=Assignment%20Schedule%20Feedback"}>hear your feedback</a>!
+                        It is a work in progress, and we would love to <a target="_blank" href="/contact?subject=Assignment%20Schedule%20Feedback">hear your feedback</a>!
                     </Alert>}
                     <div className="no-print">
                         <div id="header-sentinel" ref={headerScrollerSentinel}>&nbsp;</div>
@@ -539,23 +551,23 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                         You have not created any groups to assign work to.
                         Please <Link to="/groups">create a group here first.</Link>
                     </Alert>}
-                    {groupsToInclude.length > 0 && <Alert color="warning" className={"mt-2"}>
+                    {groupsToInclude.length > 0 && <Alert color="warning" className="mt-2">
                         There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
                     </Alert>}
 
-                    {assignmentsGroupedByDate.length > 0 && <Card className={"mt-2"}>
-                        <CardBody className={"pt-0"}>
-                            {notAllPastAssignmentsAreListed && <div className={"mt-3"}>
-                                <Button size={"sm"} onClick={extendBackSixMonths}>
+                    {assignmentsGroupedByDate.length > 0 && <Card className="mt-2">
+                        <CardBody className="pt-0">
+                            {notAllPastAssignmentsAreListed && <div className="mt-3">
+                                <Button size="sm" onClick={extendBackSixMonths}>
                                     Show assignments before {earliestShowDate.toDateString().split(" ").filter((_, i) => i % 2 === 1).join(" ")}
                                 </Button>
                             </div>}
                             <div className={classNames("timeline w-100", {"pt-2": !notAllPastAssignmentsAreListed})}>
                                 {assignmentsGroupedByDate.map(([y, ms]) =>
                                     <Fragment key={y}>
-                                        <div className={"year-label w-100 text-right"}>
-                                            <h3 className={"mb-n3"}>{`${y}`}</h3>
-                                            <hr className={"ml-4"}/>
+                                        <div className="year-label w-100 text-right">
+                                            <h3 className="mb-n3">{`${y}`}</h3>
+                                            <hr className="ml-4"/>
                                         </div>
                                         {ms.map(([m, ds]) => <MonthAssignmentList key={m} month={m} datesAndAssignments={ds}/>)}
                                     </Fragment>
