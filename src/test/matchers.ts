@@ -1,6 +1,6 @@
 // Custom jest matchers for MSW handler functions
-import {DefaultBodyType, MockedResponse, RestRequest} from "msw";
-import {MaybePromise} from "@reduxjs/toolkit/dist/query/tsHelpers";
+import {RestRequest} from "msw";
+import {within} from "@testing-library/react";
 
 expect.extend({
     async toHaveBeenRequestedWith(received: jest.MockedFn<any>, predicate: (req: RestRequest) => (Promise<boolean> | boolean)) {
@@ -18,23 +18,6 @@ expect.extend({
         return {
             message: () =>
                 `No request parameters to the given handler passed the predicate. Received arguments: ${this.utils.printReceived(reqList)}`,
-            pass: false,
-        };
-    },
-    async toHaveRespondedWith(received: jest.MockedFn<any>, predicate: (res: MaybePromise<MockedResponse<DefaultBodyType>>) => (Promise<boolean> | boolean)) {
-        const resList: any[] = [];
-        for (const res of received.mock.results) {
-            resList.push(res);
-            if (await predicate(res as unknown as MaybePromise<MockedResponse<DefaultBodyType>>)) {
-                return {
-                    message: () => `Response ${this.utils.printReceived(res)} passed given predicate.`,
-                    pass: true,
-                };
-            }
-        }
-        return {
-            message: () =>
-                `No responses from the given handler passed the predicate. Responses: ${this.utils.printReceived(resList)}`,
             pass: false,
         };
     },
@@ -59,35 +42,29 @@ expect.extend({
             pass: false,
         };
     },
-    async toHaveRespondedWithNth(received: jest.MockedFn<any>, predicate: (res: MaybePromise<MockedResponse<DefaultBodyType>>) => (Promise<boolean> | boolean), n: number) {
-        const res = received.mock.results[n] as unknown as MaybePromise<MockedResponse<DefaultBodyType>> | undefined;
-        if (!res) {
+    toHaveModalTitle(recieved: HTMLElement, title: string) {
+        const modalHeader = within(recieved).queryByTestId("modal-header");
+        if (!modalHeader) {
             return {
-                message: () =>
-                    `Request handler has not yet been called ${n + 1} times.`,
                 pass: false,
+                message: () => `Expected modal title element, but could not find one!`
             };
         }
-        if (await predicate(res)) {
-            return {
-                message: () => `Response ${this.utils.printReceived(res)} passed given predicate.`,
-                pass: true,
-            };
-        }
+        const pass = !!within(modalHeader).queryByRole("heading", {name: title});
         return {
-            message: () =>
-                `Response with index ${n} from the given handler did not pass the predicate. Response was: ${this.utils.printReceived(res)}`,
-            pass: false,
+            pass,
+            message: () => `Expected title to contain: ${this.utils.printExpected(title)}\nReceived: ${
+                this.utils.printReceived(modalHeader?.textContent)
+            }${!pass ? `\n\n${this.utils.diff(title, modalHeader?.textContent)}` : ""}`
         };
-    },
+    }
 });
 declare global {
     namespace jest {
         interface Matchers<R> {
             toHaveBeenRequestedWith(predicate: (req: RestRequest) => (Promise<boolean> | boolean)): R;
             toHaveBeenRequestedWithNth(predicate: (req: RestRequest) => (Promise<boolean> | boolean), n: number): R;
-            toHaveRespondedWith(predicate: (res: MaybePromise<MockedResponse<DefaultBodyType>>) => (Promise<boolean> | boolean)): R;
-            toHaveRespondedWithNth(predicate: (res: MaybePromise<MockedResponse<DefaultBodyType>>) => (Promise<boolean> | boolean), n: number): R;
+            toHaveModalTitle(title: string): R;
         }
     }
 }

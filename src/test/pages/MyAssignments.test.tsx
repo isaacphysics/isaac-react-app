@@ -4,7 +4,7 @@ import {API_PATH} from "../../app/services";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
-import {mockMyAssignments} from "../../mocks/data";
+import {mockMyAssignments, mockUser} from "../../mocks/data";
 import {augmentErrorMessage, dayMonthYearStringToDate, DDMMYYYY_REGEX, renderTestEnvironment, DAYS_AGO} from "../utils";
 import produce from "immer";
 
@@ -107,7 +107,7 @@ describe("MyAssignments", () => {
                             },
                             groupId: 2,
                             groupName: "Test Group 1",
-                            ownerUserId: 1,
+                            ownerUserId: mockUser.id,
                             creationDate: DAYS_AGO(3),
                             dueDate: DAYS_AGO(-5, true),
                             scheduledStartDate: DAYS_AGO(-1, true),
@@ -144,7 +144,7 @@ describe("MyAssignments", () => {
                             },
                             groupId: 2,
                             groupName: "Test Group 1",
-                            ownerUserId: 1,
+                            ownerUserId: mockUser.id,
                             creationDate: DAYS_AGO(3),
                             dueDate: DAYS_AGO(-5, true)
                         }

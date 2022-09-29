@@ -1,7 +1,7 @@
 import {AppGroup} from "../../../IsaacAppTypes";
 import {openActiveModal} from "./../index";
 import {
-    additionalManagerRemovalModal,
+    additionalManagerSelfRemovalModal,
     groupInvitationModal,
     groupEmailModal, groupManagersModal
 } from "../../components/elements/modals/GroupsModalCreators";
@@ -25,7 +25,7 @@ export const showGroupInvitationModal = createAsyncThunk<void, {group: AppGroup;
 export const showAdditionalManagerSelfRemovalModal = createAsyncThunk<void, {group: AppGroup; user: RegisteredUserDTO}>(
     "groups/modals/additionalManagerSelfRemoval",
     async ({group, user}, {dispatch}) => {
-        dispatch(openActiveModal(additionalManagerRemovalModal(group, user)));
+        dispatch(openActiveModal(additionalManagerSelfRemovalModal(group, user)));
     }
 );
 

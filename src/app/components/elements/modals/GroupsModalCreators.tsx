@@ -17,26 +17,26 @@ import {AppGroup} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
 
-const AdditionalManagerRemovalModalBody = ({group}: {group: AppGroup}) => <p>
+const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
     Assignment Progress page or on the Manage Groups page.  You will still have student connections with the
     students who agreed to share data with you.  The group owner will <strong>not</strong> be notified.
 </p>;
-export const additionalManagerRemovalModal = (group: AppGroup, user: RegisteredUserDTO) => ({
+export const additionalManagerSelfRemovalModal = (group: AppGroup, user: RegisteredUserDTO) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: "Remove yourself as a group manager",
-    body: <AdditionalManagerRemovalModalBody group={group} />,
+    body: <AdditionalManagerSelfRemovalModalBody group={group} />,
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block outline key={2} color="primary" onClick={() => {
+                <Button block outline color="primary" onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Cancel
                 </Button>
             </Col>
             <Col>
-                <Button block key={1} color="secondary" onClick={() => {
+                <Button block color="secondary" onClick={() => {
                     if (group.id && user.id) {
                         store.dispatch(isaacApi.endpoints.deleteGroupManager.initiate({groupId: group.id, managerUserId: user.id}));
                     }
@@ -89,7 +89,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     buttons: [
         <Row key={0}>
             <Col>
-                <Button block key={2} color="secondary" onClick={() => {
+                <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
                 }}>
@@ -97,7 +97,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                 </Button>
             </Col>
             <Col>
-                <Button block key={0} color="secondary" onClick={() => {
+                <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());
                     history.push("/set_assignments");
                 }}>
@@ -105,7 +105,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                 </Button>
             </Col>
             <Col>
-                <Button block key={1} color="secondary" onClick={() => {
+                <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Create another group
@@ -167,7 +167,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             <h4>Group owner:</h4>
             <Table className="group-table">
                 <tbody>
-                    <tr>
+                    <tr key={group.ownerSummary.email} data-testid={"group-owner"}>
                         <td><span className="group-table-person" />{group.ownerSummary.givenName} {group.ownerSummary.familyName} ({group.ownerSummary.email})
                         </td>
                     </tr>
@@ -185,16 +185,18 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             <p>The users below have permission to manage this group.</p>}
 
         <Table className="group-table">
-            <tbody>{additionalManagers && additionalManagers.map(manager =>
-                <tr key={manager.email} data-testid={"group-manager"}>
-                    <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
-                    {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete">
-                        <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
-                            removeManager(manager) : removeSelf(manager)}>
-                        Remove
-                    </Button></td>}
-                </tr>
-            )}</tbody>
+            <tbody>
+                {additionalManagers && additionalManagers.map(manager =>
+                    <tr key={manager.email} data-testid={"group-manager"}>
+                        <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
+                        {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete">
+                            <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
+                                removeManager(manager) : removeSelf(manager)}>
+                            Remove
+                        </Button></td>}
+                    </tr>
+                )}
+            </tbody>
         </Table>
 
         {userIsOwner && <>
@@ -225,18 +227,16 @@ interface GroupEmailModalProps {
     users?: number[];
 }
 const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
-    return <React.Fragment>
-        <Col>
-            <Row>
-                An admin user can use the user IDs below to email these users:
-            </Row>
-            <Row className="my-3">
-                <pre>
-                    {users && users.sort((a, b) => a - b).join(",")}
-                </pre>
-            </Row>
-        </Col>
-    </React.Fragment>;
+    return <Col>
+        <Row>
+            An admin user can use the user IDs below to email these users:
+        </Row>
+        <Row className="my-3">
+            <pre>
+                {users && users.sort((a, b) => a - b).join(",")}
+            </pre>
+        </Row>
+    </Col>;
 };
 export const groupEmailModal = (users?: number[]) => ({
     closeAction: () => store.dispatch(closeActiveModal()),

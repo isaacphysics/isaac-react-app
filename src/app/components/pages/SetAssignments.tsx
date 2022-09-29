@@ -220,7 +220,7 @@ const Board = (props: BoardProps) => {
 
     return <>
         <Modal isOpen={modal} data-testid={"set-assignment-modal"} toggle={toggleAssignModal}>
-            <ModalHeader role={"heading"} className={"text-break"} close={
+            <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
                 <button role={"button"} className={"close text-nowrap"} onClick={toggleAssignModal}>
                     Close
                 </button>

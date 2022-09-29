@@ -133,7 +133,7 @@ describe("SetAssignments", () => {
 
         // Wait for modal to appear, for the gameboard we expect
         const modal = await screen.findByTestId("set-assignment-modal");
-        within(modal).getByRole("heading", {name: mockGameboard.title});
+        expect(modal).toHaveModalTitle(mockGameboard.title);
         // Ensure all active groups are selectable in the drop-down
         const selectContainer = within(modal).getByText(/Group(\(s\))?:/);
         const selectBox = within(modal).getByLabelText(/Group(\(s\))?:/);

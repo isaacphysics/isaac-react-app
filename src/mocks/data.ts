@@ -22,31 +22,34 @@ export const mockUser = {
     lastUpdated: DAYS_AGO(1),
     lastSeen: DAYS_AGO(1),
     emailVerificationStatus: "VERIFIED",
-    id: 1
+    id: 1 as const
 };
 
-export const mockTeacher = {
-    givenName: "Test",
-    familyName: "Teacher",
-    email: "test-teacher@test.com",
-    dateOfBirth: 888888888888,
-    gender: "MALE",
-    registrationDate: DAYS_AGO(50),
-    role: "TEACHER",
-    schoolOther: "N/A",
-    registeredContexts: [{
-        stage: "all",
-        examBoard: "all"
-    }],
-    registeredContextsLastConfirmed: DAYS_AGO(3),
-    firstLogin: false,
-    lastUpdated: DAYS_AGO(1),
-    lastSeen: DAYS_AGO(1),
-    emailVerificationStatus: "VERIFIED",
-    id: 2
-};
+export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUser.id) ? `Teacher ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T) => {
+    if (id === mockUser.id) throw Error("A mock teacher cannot have the same ID as the mockUser");
+    return {
+        givenName: "Test",
+        familyName: `Teacher ${id}`,
+        email: `test-teacher-${id}@test.com`,
+        dateOfBirth: 888888888888,
+        gender: id % 2 === 0 ? "MALE" : "FEMALE",
+        registrationDate: DAYS_AGO(50),
+        role: "TEACHER",
+        schoolOther: "N/A",
+        registeredContexts: [{
+            stage: "all",
+            examBoard: "all"
+        }],
+        registeredContextsLastConfirmed: DAYS_AGO(3),
+        firstLogin: false,
+        lastUpdated: DAYS_AGO(1),
+        lastSeen: DAYS_AGO(1),
+        emailVerificationStatus: "VERIFIED",
+        id: id,
+    }
+}
 
-export const mockUserSummary = (user: any, authorisedFullAccess: boolean) => {
+export const buildMockUserSummary = (user: any, authorisedFullAccess: boolean) => {
     const email = authorisedFullAccess ? user.email : undefined;
     return Object.assign({
         givenName: user.givenName,
@@ -149,7 +152,7 @@ export const mockGameboards = {
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -363,7 +366,7 @@ export const mockGameboards = {
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -713,7 +716,7 @@ export const mockGameboards = {
                     "maths"
                 ]
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [],
             creationMethod: "FILTER",
             percentageCompleted: 0,
@@ -1098,7 +1101,7 @@ export const mockGameboards = {
                     "book"
                 ]
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [],
             creationMethod: "FILTER",
             percentageCompleted: 0,
@@ -1436,7 +1439,7 @@ export const mockGameboards = {
                     "book"
                 ]
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [],
             creationMethod: "FILTER",
             percentageCompleted: 0,
@@ -1895,7 +1898,7 @@ export const mockGameboards = {
                     "book"
                 ]
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [],
             creationMethod: "FILTER",
             percentageCompleted: 0,
@@ -2190,7 +2193,7 @@ export const mockGameboards = {
                 examBoards: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -2457,7 +2460,7 @@ export const mockMyAssignments = [
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -2467,8 +2470,8 @@ export const mockMyAssignments = [
         },
         groupId: 2,
         groupName: "Test Group 1",
-        ownerUserId: 1,
-        assignerSummary: mockUserSummary(mockUser, false),
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         //scheduledStartDate: undefined,
@@ -2723,7 +2726,7 @@ export const mockMyAssignments = [
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -2733,8 +2736,8 @@ export const mockMyAssignments = [
         },
         groupId: 6,
         groupName: "Test Group 2",
-        ownerUserId: 1,
-        assignerSummary: mockUserSummary(mockUser, false),
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -2854,7 +2857,7 @@ export const mockMyAssignments = [
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -2864,8 +2867,8 @@ export const mockMyAssignments = [
         },
         groupId: 2,
         groupName: "Test Group 1",
-        ownerUserId: 1,
-        assignerSummary: mockUserSummary(mockUser, false),
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3307,7 +3310,7 @@ export const mockMyAssignments = [
                     "maths"
                 ]
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [],
             creationMethod: "FILTER",
             percentageCompleted: 0,
@@ -3315,9 +3318,9 @@ export const mockMyAssignments = [
         },
         groupId: 2,
         groupName: "Test Group 1",
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         notes: "This is cool ",
-        assignerSummary: mockUserSummary(mockUser, false),
+        assignerSummary: buildMockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3331,7 +3334,7 @@ export const mockSetAssignments = [
         gameboardId: "test-gameboard-2",
         groupId: 2,
         groupName: "Test Group 1",
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3341,7 +3344,7 @@ export const mockSetAssignments = [
         gameboardId: "test-gameboard-2",
         groupId: 6,
         groupName: "Test Group 2",
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3351,7 +3354,7 @@ export const mockSetAssignments = [
         gameboardId: "test-gameboard-1",
         groupId: 2,
         groupName: "Test Group 1",
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3361,7 +3364,7 @@ export const mockSetAssignments = [
         gameboardId: "test-gameboard-3",
         groupId: 2,
         groupName: "Test Group 1",
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         notes: "This is cool ",
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
@@ -3374,8 +3377,8 @@ export const mockQuizAssignments = [
         id: 9,
         quizId: "test-quiz-assignment-1",
         groupId: 2,
-        ownerUserId: 1,
-        assignerSummary: mockUserSummary(mockUser, false),
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(5),
         dueDate: DAYS_AGO(-5),
         quizFeedbackMode: "DETAILED_FEEDBACK",
@@ -3404,8 +3407,8 @@ export const mockQuizAssignments = [
             ]
         },
         groupId: 2,
-        ownerUserId: 1,
-        assignerSummary: mockUserSummary(mockUser, false),
+        ownerId: mockUser.id,
+        assignerSummary: buildMockUserSummary(mockUser, false),
         creationDate: DAYS_AGO(5),
         dueDate: DAYS_AGO(-5),
         quizFeedbackMode: "DETAILED_FEEDBACK",
@@ -3424,31 +3427,31 @@ export const mockGroups = [
     {
         id: 2,
         groupName: "Test Group 1",
-        ownerId: 1,
+        ownerId: mockUser.id,
         created: DAYS_AGO(-20),
         lastUpdated: DAYS_AGO(-20),
         archived: false,
-        ownerSummary: mockUserSummary(mockUser, false),
+        ownerSummary: buildMockUserSummary(mockUser, false),
         additionalManagers: [],
     },
     {
         id: 6,
         groupName: "Test Group 2",
-        ownerId: 1,
+        ownerId: mockUser.id,
         created: DAYS_AGO(-25),
         lastUpdated: DAYS_AGO(-25),
         archived: false,
-        ownerSummary: mockUserSummary(mockUser, false),
+        ownerSummary: buildMockUserSummary(mockUser, false),
         additionalManagers: [],
     },
     {
         id: 7,
         groupName: "Test Group 3",
-        ownerId: 1,
+        ownerId: mockUser.id,
         created: DAYS_AGO(-50),
         lastUpdated: DAYS_AGO(-30),
         archived: true,
-        ownerSummary: mockUserSummary(mockUser, false),
+        ownerSummary: buildMockUserSummary(mockUser, false),
         additionalManagers: [],
     },
 ];
@@ -3705,7 +3708,7 @@ export const mockAssignmentsGroup2 = [
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -3714,7 +3717,7 @@ export const mockAssignmentsGroup2 = [
             startedQuestion: false
         },
         groupId: 2,
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -3834,7 +3837,7 @@ export const mockAssignmentsGroup2 = [
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -3843,7 +3846,7 @@ export const mockAssignmentsGroup2 = [
             startedQuestion: false
         },
         groupId: 2,
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -4285,14 +4288,14 @@ export const mockAssignmentsGroup2 = [
                     "maths"
                 ]
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [],
             creationMethod: "FILTER",
             percentageCompleted: 0,
             startedQuestion: false
         },
         groupId: 2,
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         notes: "This is cool ",
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
@@ -4551,7 +4554,7 @@ export const mockAssignmentsGroup6 = [
                 concepts: [],
                 questionCategories: []
             },
-            ownerUserId: 1,
+            ownerId: mockUser.id,
             tags: [
                 "ISAAC_BOARD"
             ],
@@ -4560,7 +4563,7 @@ export const mockAssignmentsGroup6 = [
             startedQuestion: false
         },
         groupId: 6,
-        ownerUserId: 1,
+        ownerId: mockUser.id,
         creationDate: DAYS_AGO(3),
         dueDate: DAYS_AGO(-5),
         scheduledStartDate: DAYS_AGO(1),
@@ -4590,7 +4593,7 @@ export const mockUserAuthSettings = {
     linkedAccounts: [],
     hasSegueAccount: true,
     mfaStatus: true,
-    id: 1
+    id: mockUser.id
 };
 
 const newsPodTag = siteSpecific("physics", "news");

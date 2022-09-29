@@ -87,26 +87,26 @@ export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | Seri
 }
 
 interface QueryLifecycleSpec<T, R> {
-    onQueryStart?: (args: T, api: {dispatch: Dispatch<any>}) => void | {resetOptimisticUpdates: (() => void)};
+    onQueryStart?: (args: T, api: {dispatch: Dispatch<any>, getState: () => any}) => void | {resetOptimisticUpdates: (() => void)};
     successTitle?: string;
     successMessage?: string;
-    onQuerySuccess?: (args: T, response: R, api: {dispatch: Dispatch<any>}) => void;
+    onQuerySuccess?: (args: T, response: R, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
     errorTitle?: string;
-    onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>}) => void;
+    onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
 }
-const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, queryFulfilled }: { dispatch: Dispatch<any>, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
-    const queryStartCallbacks = onQueryStart?.(arg, {dispatch});
+const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, getState, queryFulfilled }: { dispatch: Dispatch<any>, getState: () => any, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
+    const queryStartCallbacks = onQueryStart?.(arg, {dispatch, getState});
     try {
         const response = await queryFulfilled;
         if (successTitle && successMessage) {
             dispatch(showSuccessToast(successTitle, successMessage));
         }
-        onQuerySuccess?.(arg, response.data, {dispatch});
+        onQuerySuccess?.(arg, response.data, {dispatch, getState});
     } catch (e: any) {
         if (errorTitle) {
             dispatch(showRTKQueryErrorToastIfNeeded(errorTitle, e));
         }
-        onQueryError?.(arg, e.error, {dispatch});
+        onQueryError?.(arg, e.error, {dispatch, getState});
         queryStartCallbacks?.resetOptimisticUpdates();
     }
 };
@@ -577,17 +577,27 @@ const isaacApi = createApi({
                 url: `/groups/${groupId}/manager/${managerUserId}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                onQuerySuccess: ({groupId, managerUserId}, _, {dispatch}) => {
+                onQuerySuccess: ({groupId, managerUserId}, _, {dispatch, getState}) => {
+                    const removedSelfAsManager = getState().user.id === managerUserId;
                     [true, false].forEach(archivedGroupsOnly => {
-                        dispatch(isaacApi.util.updateQueryData(
-                            "getGroups",
-                            archivedGroupsOnly,
-                            (groups) =>
-                                groups.map(g => g.id === groupId
-                                    ? {...g, additionalManagers: g.additionalManagers?.filter(m => m.id !== managerUserId)}
-                                    : g
-                                )
-                        ));
+                        if (removedSelfAsManager) {
+                            dispatch(isaacApi.util.updateQueryData(
+                                "getGroups",
+                                archivedGroupsOnly,
+                                (groups) =>
+                                    groups.filter(g => g.id !== groupId)
+                            ));
+                        } else {
+                            dispatch(isaacApi.util.updateQueryData(
+                                "getGroups",
+                                archivedGroupsOnly,
+                                (groups) =>
+                                    groups.map(g => g.id === groupId
+                                        ? {...g, additionalManagers: g.additionalManagers?.filter(m => m.id !== managerUserId)}
+                                        : g
+                                    )
+                            ));
+                        }
                     });
                 },
                 errorTitle: "Group manager removal failed"
