@@ -2,9 +2,7 @@ import {
     assignGameboard,
     isaacApi,
     loadGroups,
-    openIsaacBooksModal,
     selectors,
-    setAssignBoardPath,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -53,6 +51,7 @@ import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
 import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import {AddGameboardButtons} from "./SetAssignments";
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -525,33 +524,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         <h4 className="mt-4 mb-3">
             Assign a gameboard from...
         </h4>
-        <Row className="mb-4">
-            <Col md={6} lg={4} className="pt-1">
-                {siteSpecific(
-                    // Physics
-                    <Button role={"link"} onClick={() => {
-                        setAssignBoardPath("/assignment_schedule");
-                        dispatch(openIsaacBooksModal());
-                    }} color="secondary" block className="px-3">
-                        our books
-                    </Button>,
-                    // Computer science
-                    <Button tag={Link} to={"/pages/gameboards"} onClick={() => setAssignBoardPath("/assignment_schedule")} color="secondary" block>
-                        Pre-made gameboards
-                    </Button>
-                )}
-            </Col>
-            <Col md={6} lg={4} className="pt-1">
-                <Button tag={Link} to={siteSpecific("/pages/pre_made_gameboards", "/topics")} onClick={() => setAssignBoardPath("/assignment_schedule")} color="secondary" block>
-                    {siteSpecific("our Boards for Lessons", "Topics list")}
-                </Button>
-            </Col>
-            <Col md={12} lg={4} className="pt-1">
-                <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath("/assignment_schedule")} color="secondary" block>
-                    {siteSpecific("create a gameboard", "Create gameboard")}
-                </Button>
-            </Col>
-        </Row>
+        <AddGameboardButtons className={"mb-4"} redirectBackTo={"/assignment_schedule"}/>
         <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
             {/*
                 Setting `combineResult` to `() => true` (3rd param of `combineQueries`) is a bit of a hack that lets you
