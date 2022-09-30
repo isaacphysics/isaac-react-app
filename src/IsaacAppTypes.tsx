@@ -626,6 +626,7 @@ export interface AdminStatsResponse {
     userRoles: any;
     userSchoolInfo: any;
     viewQuestionEvents: number;
+    viewConceptEvents: number;
 }
 
 export interface ValidAssignmentWithListingDate extends AssignmentDTO {
