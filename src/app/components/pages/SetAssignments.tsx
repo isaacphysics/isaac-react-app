@@ -369,7 +369,6 @@ export const AddGameboardButtons = ({className, redirectBackTo}: {className: str
 };
 
 export const SetAssignments = () => {
-    const dispatch = useAppDispatch();
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
