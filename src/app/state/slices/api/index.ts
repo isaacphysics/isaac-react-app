@@ -138,7 +138,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships"],
+    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "AllMyAssignments", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     endpoints: (build) => ({
@@ -339,7 +339,7 @@ const isaacApi = createApi({
                 method: "POST",
                 body: assignments
             }),
-            invalidatesTags: result => result ? ["AssignmentProgress"] : []
+            invalidatesTags: result => result ? ["AssignmentProgress", "AllMyAssignments"] : []
         }),
 
         unassignGameboard: build.mutation<void, {boardId: string, groupId: number}>({
@@ -347,7 +347,7 @@ const isaacApi = createApi({
                 url: `/assignments/assign/${boardId}/${groupId}`,
                 method: "DELETE",
             }),
-            invalidatesTags: (_, error) => !error ? ["AssignmentProgress"] : [],
+            invalidatesTags: (_, error) => !error ? ["AssignmentProgress", "AllMyAssignments"] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 onQueryStart: ({boardId, groupId}, {dispatch}) => {
                     // Update getMySetAssignments cache data, removing any assignments with this group and gameboard id
@@ -382,6 +382,7 @@ const isaacApi = createApi({
             query: () => ({
                 url: "/assignments"
             }),
+            providesTags: (result) => result ? ["AllMyAssignments"] : []
         }),
 
         // === Groups ===
@@ -527,7 +528,11 @@ const isaacApi = createApi({
                 url: `/groups/${groupId}/membership/${userId}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                onQuerySuccess: ({groupId, userId}, _, {dispatch}) => {
+                onQuerySuccess: ({groupId, userId}, _, {dispatch, getState}) => {
+                    const currentUserId = getState().user.id;
+                    if (currentUserId === userId) {
+                        dispatch(isaacApi.util.invalidateTags(["AllMyAssignments"]));
+                    }
                     [true, false].forEach(archivedGroupsOnly => {
                         dispatch(isaacApi.util.updateQueryData(
                             "getGroups",
@@ -586,6 +591,12 @@ const isaacApi = createApi({
                                 archivedGroupsOnly,
                                 (groups) =>
                                     groups.filter(g => g.id !== groupId)
+                            ));
+                            dispatch(isaacApi.util.invalidateTags([{type: "GroupAssignments", id: groupId}]));
+                            dispatch(isaacApi.util.updateQueryData(
+                                "getMySetAssignments",
+                                undefined,
+                                (assignments) => assignments.filter(a => a.groupId !== groupId)
                             ));
                         } else {
                             dispatch(isaacApi.util.updateQueryData(

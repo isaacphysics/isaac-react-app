@@ -569,7 +569,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: App
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
-        dispatch(isaacApi.util.invalidateTags(["MyGroupMemberships"]));
+        dispatch(isaacApi.util.invalidateTags(["MyGroupMemberships", "AllMyAssignments"]));
         dispatch(showToast({
             color: "success", title: "Granted access", timeout: 5000,
             body: "You have granted access to your data."
@@ -581,7 +581,6 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: App
             // If we've just signed up and used a group code immediately, change back to the main settings page:
             history.push("/account");
         }
-        // /TODO
         dispatch(closeActiveModal() as any);
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_FAILURE});
