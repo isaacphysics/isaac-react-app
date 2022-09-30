@@ -44,6 +44,17 @@ const remove = function remove(key: KEY) {
     }
 };
 
+const pop = function pop(key: KEY) {
+    try {
+        const item = window.localStorage.getItem(key);
+        window.localStorage.removeItem(key);
+        return item;
+    } catch (e) {
+        console.error("Failed to pop from local storage. This might be a browser restriction.", e);
+        return undefined;
+    }
+};
+
 const clear = function clear() {
     try {
         window.localStorage.clear();
@@ -99,6 +110,7 @@ export const persistence = {
     save,
     load,
     remove,
+    pop,
     clear,
     session
 };
