@@ -73,7 +73,7 @@ import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
 import {notificationModal} from "../elements/modals/NotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
-import {ClientError} from "../pages/ClientError";
+import {ChunkOrClientError} from "../pages/ClientError";
 import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
 import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
 import {QuizDoAssignment} from "../pages/quizzes/QuizDoAssignment";
@@ -144,7 +144,7 @@ export const IsaacApp = () => {
         <DowntimeWarningBanner />
         <EmailVerificationBanner />
         <main id="main" data-testid="main" role="main" className="flex-fill content-body">
-            <ErrorBoundary FallbackComponent={ClientError}>
+            <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>
                     {/* Errors; these paths work but aren't really used */}

@@ -98,10 +98,11 @@ export const AdminStats = () => {
                                     </li>
                                 </ul>
 
-                                <strong>Question Statistics</strong>
+                                <strong>Content Statistics</strong>
                                 <ul className="list-unstyled">
                                     <li>Question Page Views: {(adminStats.viewQuestionEvents || 0).toLocaleString()}</li>
                                     <li>Total Question Attempts: {(adminStats.answeredQuestionEvents || 0).toLocaleString()}</li>
+                                    <li>Concept Page Views: {(adminStats.viewConceptEvents || 0).toLocaleString()}</li>
                                 </ul>
 
                             </RS.Col>

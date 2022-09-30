@@ -4,6 +4,7 @@ import {
     extractDataFromQueryResponse,
     fetchConcepts,
     isaacApi,
+    setAssignBoardPath,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -633,7 +634,10 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 </>
             )}
             <RS.Col xs={8} lg={"auto"} className="ml-auto text-right">
-                <RS.Button tag={Link} color="secondary" to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}>
+                <RS.Button tag={Link} color="secondary"
+                           to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}
+                           onClick={() => setAssignBoardPath("/set_assignments")}
+                >
                     Save to My&nbsp;Gameboards
                 </RS.Button>
             </RS.Col>

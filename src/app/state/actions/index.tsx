@@ -1529,3 +1529,7 @@ export const handleServerError = () => {
 export const handleApiGoneAway = () => {
     store.dispatch(errorSlice.actions.apiGoneAway);
 };
+
+export const setAssignBoardPath = (path: string) => {
+    persistence.save(KEY.ASSIGN_BOARD_PATH, path);
+};
