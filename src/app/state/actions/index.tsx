@@ -260,7 +260,9 @@ export const updateCurrentUser = (
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
-            redirect && history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+            if (redirect) {
+                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+            }
         } else if (!editingOtherUser) {
             dispatch(showToast({
                 title: "Account settings updated",
