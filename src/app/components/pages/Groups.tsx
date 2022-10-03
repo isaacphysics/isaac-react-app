@@ -78,12 +78,13 @@ interface MemberInfoProps {
     member: AppGroupMembership;
 }
 const MemberInfo = ({group, member}: MemberInfoProps) => {
+    const dispatch = useAppDispatch();
     const [passwordRequestSent, setPasswordRequestSent] = useState(false);
     const [deleteMember] = isaacApi.endpoints.deleteGroupMember.useMutation();
 
     function resetPassword() {
         setPasswordRequestSent(true);
-        resetMemberPassword(member);
+        dispatch(resetMemberPassword(member));
     }
 
     function confirmDeleteMember() {
