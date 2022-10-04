@@ -84,6 +84,7 @@ import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentSchedule} from "../pages/AssignmentSchedule";
+import {ExternalRedirect} from "../handlers/ExternalRedirect";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -147,117 +148,118 @@ export const IsaacApp = () => {
             <ErrorBoundary FallbackComponent={ChunkOrClientError}>
                 <Suspense fallback={<Loading/>}>
                     <Switch>
-                    {/* Errors; these paths work but aren't really used */}
-                    <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
-                    <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
-                    <TrackedRoute exact path={"/auth_error"} component={AuthError} />
+                        {/* Errors; these paths work but aren't really used */}
+                        <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
+                        <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
+                        <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
-                    {/* Site specific pages */}
-                    {SiteSpecific.Routes}
+                        {/* Site specific pages */}
+                        {SiteSpecific.Routes}
 
-                    {/* Application pages */}
-                    <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
-                    <Redirect exact from="/home" to="/" /> {/* historic route which might get reintroduced with the introduction of dashboards */}
-                    <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
-                    <TrackedRoute exact path="/search" component={Search} />
+                        {/* Application pages */}
+                        <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
+                        <Redirect exact from="/home" to="/" /> {/* historic route which might get reintroduced with the introduction of dashboards */}
+                        <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
+                        <TrackedRoute exact path="/search" component={Search} />
 
-                    <TrackedRoute exact path="/pages/:pageId" component={Generic} />
-                    <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
-                    <TrackedRoute exact path="/questions/:questionId" component={Question} />
+                        <TrackedRoute exact path="/pages/:pageId" component={Generic} />
+                        <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
+                        <TrackedRoute exact path="/questions/:questionId" component={Question} />
 
-                    <TrackedRoute exact path="/gameboards" component={Gameboard} />
-                    <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
-                    <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
-                    <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
-                    <TrackedRoute exact path="/add_gameboard/:gameboardId/:gameboardTitle?" ifUser={isLoggedIn} component={AddGameboard} />
-                    <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />
+                        <TrackedRoute exact path="/gameboards" component={Gameboard} />
+                        <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
+                        <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
+                        <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
+                        <TrackedRoute exact path="/add_gameboard/:gameboardId/:gameboardTitle?" ifUser={isLoggedIn} component={AddGameboard} />
+                        <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />
 
-                    <TrackedRoute exact path='/events' component={Events}/>
-                    <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
-                    <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
+                        <TrackedRoute exact path='/events' component={Events}/>
+                        <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
+                        <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
 
-                    {/* Quiz pages */}
+                        {/* Quiz pages */}
+                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />
+                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
+                        <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
+                        <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
+                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacher} component={QuizAttemptFeedback} />
+                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacher} component={QuizAttemptFeedback} />
+                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />
+                        <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />
+                        <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />
+                        <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
+                        <TrackedRoute exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
+                        {/* The order of these redirects matters to prevent substring replacement */}
+                        <Redirect from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />
+                        <Redirect from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />
+                        <Redirect from="/quiz/assignment/:quizAssignmentId"            to="/test/assignment/:quizAssignmentId" />
+                        <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" />
+                        <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId" to="/test/attempt/feedback/:quizAssignmentId/:studentId" />
+                        <Redirect from="/quiz/attempt/:quizAttemptId/feedback/:page"   to="/test/attempt/:quizAttemptId/feedback/:page" />
+                        <Redirect from="/quiz/attempt/:quizAttemptId/feedback"         to="/test/attempt/:quizAttemptId/feedback" />
+                        <Redirect from="/quiz/preview/:quizId/page/:page"              to="/test/preview/:quizId/page/:page" />
+                        <Redirect from="/quiz/preview/:quizId"                         to="/test/preview/:quizId" />
+                        <Redirect from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />
+                        <Redirect from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />
 
-                    <TrackedRoute exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />
-                    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
-                    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
-                    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
-                    <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacher} component={QuizAttemptFeedback} />
-                    <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacher} component={QuizAttemptFeedback} />
-                    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />
-                    <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />
-                    <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />
-                    <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
-                    <TrackedRoute exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
-                    {/* The order of these redirects matters to prevent substring replacement */}
-                    <Redirect from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />
-                    <Redirect from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />
-                    <Redirect from="/quiz/assignment/:quizAssignmentId"            to="/test/assignment/:quizAssignmentId" />
-                    <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" />
-                    <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId" to="/test/attempt/feedback/:quizAssignmentId/:studentId" />
-                    <Redirect from="/quiz/attempt/:quizAttemptId/feedback/:page"   to="/test/attempt/:quizAttemptId/feedback/:page" />
-                    <Redirect from="/quiz/attempt/:quizAttemptId/feedback"         to="/test/attempt/:quizAttemptId/feedback" />
-                    <Redirect from="/quiz/preview/:quizId/page/:page"              to="/test/preview/:quizId/page/:page" />
-                    <Redirect from="/quiz/preview/:quizId"                         to="/test/preview/:quizId" />
-                    <Redirect from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />
-                    <Redirect from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />
+                        {/* Student pages */}
+                        <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
+                        <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
+                        <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
+                        <TrackedRoute exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />
+                        <Redirect from="/quizzes" to="/tests" />
 
-                    {/* Student pages */}
-                    <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
-                    <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
-                    <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
-                    <TrackedRoute exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />
-                    <Redirect from="/quizzes" to="/tests" />
+                        {/* Teacher pages */}
+                        <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
+                        <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
+                        <TrackedRoute exact path="/assignment_schedule" ifUser={isTeacher} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}
+                        <TrackedRoute exact path="/set_tests" ifUser={isTeacher} component={SetQuizzes} />
+                        <Redirect from="/set_quizzes" to="/set_tests" />
 
-                    {/* Teacher pages */}
-                    <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
-                    <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
-                    <TrackedRoute exact path="/assignment_schedule" ifUser={isTeacher} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}
-                    <TrackedRoute exact path="/set_tests" ifUser={isTeacher} component={SetQuizzes} />
-                    <Redirect from="/set_quizzes" to="/set_tests" />
+                        {/* Admin */}
+                        <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
+                        <TrackedRoute exact path="/admin/usermanager" ifUser={isAdminOrEventManager} component={AdminUserManager} />
+                        <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
+                        <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
+                        <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
+                        <TrackedRoute exact path="/admin/emails" ifUser={isAdminOrEventManager} component={AdminEmails} />
+                        <TrackedRoute exact path="/admin/direct_emails" ifUser={isAdminOrEventManager} component={ContentEmails} />
 
-                    {/* Admin */}
-                    <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
-                    <TrackedRoute exact path="/admin/usermanager" ifUser={isAdminOrEventManager} component={AdminUserManager} />
-                    <TrackedRoute exact path="/admin/events" ifUser={user => isAdminOrEventManager(user) || isEventLeader(user)} component={EventManager} />
-                    <TrackedRoute exact path="/admin/stats" ifUser={isStaff} component={AdminStats} />
-                    <TrackedRoute exact path="/admin/content_errors" ifUser={user => segueEnvironment === "DEV" || isStaff(user)} component={AdminContentErrors} />
-                    <TrackedRoute exact path="/admin/emails" ifUser={isAdminOrEventManager} component={AdminEmails} />
-                    <TrackedRoute exact path="/admin/direct_emails" ifUser={isAdminOrEventManager} component={ContentEmails} />
+                        {/* Authentication */}
+                        <TrackedRoute exact path="/login" component={LogIn} />
+                        <TrackedRoute exact path="/logout" component={LogOutHandler} />
+                        <TrackedRoute exact path="/register" component={Registration} />
+                        <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
+                        <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
+                        <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>
 
-                    {/* Authentication */}
-                    <TrackedRoute exact path="/login" component={LogIn} />
-                    <TrackedRoute exact path="/logout" component={LogOutHandler} />
-                    <TrackedRoute exact path="/register" component={Registration} />
-                    <TrackedRoute exact path="/auth/:provider/callback" component={ProviderCallbackHandler} />
-                    <TrackedRoute exact path="/resetpassword/:token" component={ResetPasswordHandler}/>
-                    <TrackedRoute exact path="/verifyemail" component={EmailAlterHandler}/>
+                        {/* Static pages */}
+                        <TrackedRoute exact path="/contact" component={Contact}/>
+                        <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
+                        <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />
+                        <StaticPageRoute exact path="/terms" pageId="terms_of_use" />
+                        <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
+                        <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
+                        <StaticPageRoute exact path="/cyberessentials" />
 
-                    {/* Static pages */}
-                    <TrackedRoute exact path="/contact" component={Contact}/>
-                    <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
-                    <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />
-                    <StaticPageRoute exact path="/terms" pageId="terms_of_use" />
-                    <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
-                    <StaticPageRoute exact path="/accessibility" pageId="accessibility_statement" />
-                    <StaticPageRoute exact path="/cyberessentials" />
+                        {/* External redirects */}
+                        <ExternalRedirect<{qId: string}> from={"/survey/:qId"} to={({qId}, user) => `https://cambridge.eu.qualtrics.com/jfe/form/${qId}?UID=${user.id}`} ifUser={isLoggedIn} />
 
-                    {/*
-                    // TODO: schools and other admin stats
-                    */}
+                        {/*
+                        // TODO: schools and other admin stats
+                        */}
 
-                    {/* Builder pages */}
+                        {/* Builder pages */}
+                        <TrackedRoute exact path="/equality" component={Equality} />
+                        <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
+                        <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
 
-                    <TrackedRoute exact path="/equality" component={Equality} />
-                    <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
-                    <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
+                        {/* Support pages */}
+                        <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
 
-                    {/* Support pages */}
-                    <TrackedRoute exact path="/support/:type?/:category?" component={Support} />
-
-                    {/* Error pages */}
-                    <TrackedRoute component={NotFound} />
-                </Switch>
+                        {/* Error pages */}
+                        <TrackedRoute component={NotFound} />
+                    </Switch>
                 </Suspense>
             </ErrorBoundary>
         </main>
