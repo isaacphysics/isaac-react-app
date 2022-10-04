@@ -10,10 +10,10 @@ interface ExternalRedirectBaseProps {
     from: string;
 }
 type ExternalRedirectProps<Params extends { [K in keyof Params]: string }> = ExternalRedirectBaseProps & ({
-    to: (routeParams: Params) => `https://${string}`;
+    to: (routeParams: Params) => `https://${string}` | undefined | null;
     ifUser?: never;
 } | {
-    to: (routeParams: Params, user: RegisteredUserDTO) => `https://${string}`;
+    to: (routeParams: Params, user: RegisteredUserDTO) => `https://${string}` | undefined | null;
     ifUser: (user: PotentialUser) => boolean;
 });
 export function ExternalRedirect<Params extends { [K in keyof Params]: string } = {}>({from, to, ifUser}: ExternalRedirectProps<Params>) {
