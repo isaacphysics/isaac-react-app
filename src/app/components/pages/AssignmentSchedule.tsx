@@ -58,7 +58,7 @@ interface AssignmentListEntryProps {
 }
 const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const {boardsById, openAssignmentModal, viewBy} = useContext(AssignmentScheduleContext);
+    const {openAssignmentModal, viewBy} = useContext(AssignmentScheduleContext);
     const [ unassignGameboard ] = isaacApi.endpoints.unassignGameboard.useMutation();
     const deleteAssignment = () => {
         if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? "this gameboard"} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
@@ -66,8 +66,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         }
     }
     const assignmentStartDate = getAssignmentStartDate(assignment);
-    // FIXME make sure all assignments have the at least the gameboard title
-    const gameboardTitle = assignment.gameboard?.title ?? boardsById[assignment.gameboardId]?.title ?? (() => {console.log(assignment, boardsById); return "No gameboard title";})();
+    const gameboardTitle = assignment.gameboard?.title ?? "No gameboard title";
     const gameboardLink = assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined;
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
@@ -132,7 +131,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
             </svg>
         </div>
         {open && <div className={"date-assignment-list"}>
-            {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboardId ? boardsById[a.gameboardId] : undefined}}/> )}
+            {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboard ?? (a.gameboardId ? boardsById[a.gameboardId] : undefined)}}/> )}
         </div>}
     </>
 }
