@@ -66,6 +66,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         }
     }
     const assignmentStartDate = getAssignmentStartDate(assignment);
+    // FIXME make sure all assignments have the at least the gameboard title
     const gameboardTitle = assignment.gameboard?.title ?? boardsById[assignment.gameboardId]?.title ?? (() => {console.log(assignment, boardsById); return "No gameboard title";})();
     const gameboardLink = assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined;
     return <Card className={"my-1"}>
