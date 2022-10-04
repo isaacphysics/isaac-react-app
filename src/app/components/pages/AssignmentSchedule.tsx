@@ -549,7 +549,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                     </div>
 
                     {/* Groups-related alerts */}
-                    {groups && groups.length === 0 && <Alert color="warning">
+                    {groups && groups.length === 0 && <Alert color="warning" className="mt-2">
                         You have not created any groups to assign work to.
                         Please <Link to="/groups">create a group here first.</Link>
                     </Alert>}
