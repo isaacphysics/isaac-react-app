@@ -40,6 +40,11 @@ export function combineQueries<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, sec
         error: firstQuery.error ?? secondQuery.error,
     };
 }
+// Convenience function to get both results out of a combine query
+export const pairResults = <T, R>(first: T, second: R): [T, R] => [first, second];
+// Convenience function to discard the results of a combine query. Result value must be truthy so the combined query is
+// considered "successful"
+export const discardResults = (): true => true;
 
 interface ShowLoadingQueryBaseProps<T> {
     placeholder?: JSX.Element | JSX.Element[];
