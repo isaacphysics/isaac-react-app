@@ -27,7 +27,7 @@ const ReservationsModal = () => {
 
     const {data: activeGroups} = isaacApi.endpoints.getGroups.useQuery(false);
     const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
-    const sortedActiveGroups = useMemo<AppGroup[]>(() => sortBy(activeGroups ?? [],g => g.groupName), [activeGroups]);
+    const sortedActiveGroups = useMemo<AppGroup[]>(() => sortBy(activeGroups ?? [], g => g.groupName), [activeGroups]);
 
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
     const selectedGroup = sortedActiveGroups && sortedActiveGroups.find(g => g.id === selectedGroupId);

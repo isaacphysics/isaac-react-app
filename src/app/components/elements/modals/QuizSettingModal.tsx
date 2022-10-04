@@ -75,7 +75,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: i
                 query={groupsQuery}
                 defaultErrorTitle={"Error fetching groups"}
                 thenRender={groups => {
-                    const groupOptions: Item<number>[] = (groups ?? []).map(g => ({label: g.groupName as string, value: g.id as number}));
+                    const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
                     return <Select
                         options={groupOptions}
                         onChange={(s) => {
