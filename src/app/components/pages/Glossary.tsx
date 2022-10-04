@@ -91,8 +91,7 @@ export const Glossary = () => {
                 ? rawGlossaryTerms
                 : rawGlossaryTerms?.filter(e => e.value?.match(regex))
             )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
-             ?.filter(t => t.examBoard === "" || t.examBoard === examBoard);
-
+             ?.filter(t => !isDefined(t.examBoard) || t.examBoard === "" || t.examBoard === examBoard);
         return groupTerms(sortedAndFilteredTerms);
     }, [rawGlossaryTerms, filterTopic, searchText, examBoard]);
 
