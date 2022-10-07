@@ -11,14 +11,14 @@ import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
 
 export function Item({item, id, type, overrideOver}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean}) {
-    const {attributes, listeners, setNodeRef, isDragging, isOver, active, transform, transition} = useSortable({
+    const {attributes, listeners, setNodeRef, isDragging, isOver, transform, transition} = useSortable({
         id,
         data: { type }
     });
     const style: React.CSSProperties = {
         transform: CSS.Translate.toString(transform),
         transition,
-        opacity: ((overrideOver || isOver) && (type === "drop-zone" || active?.data.current?.type !== type)) || isDragging ? "0.2" : "1"
+        opacity: (overrideOver || isOver) || isDragging ? "0.2" : "1"
     };
 
     return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-2 cloze-item")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>

@@ -10,6 +10,7 @@ import {ContentDTO, IsaacClozeQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../.
 import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
+    closestCenter,
     DndContext,
     DragEndEvent,
     DragOverlay,
@@ -19,13 +20,23 @@ import {
     TouchSensor,
     useDroppable,
     useSensor,
-    useSensors
+    useSensors, CollisionDetection, rectIntersection, DroppableContainer
 } from "@dnd-kit/core";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
 import {Immutable} from "immer";
-import {arraySwap, rectSortingStrategy, SortableContext, sortableKeyboardCoordinates} from "@dnd-kit/sortable";
+import {
+    arraySwap,
+    SortableContext,
+    sortableKeyboardCoordinates
+} from "@dnd-kit/sortable";
+
+
+const composeCollisionAlgorithms = (first: CollisionDetection, second: CollisionDetection): CollisionDetection => (args) => {
+    const collisions = first(args);
+    return collisions.length > 0 ? collisions : second(args);
+};
 
 const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ClozeItemDTO> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}|${uuid_v4()}`}) : undefined;
 const augmentNonSelectedItemWithReplacementID = (item: Immutable<ClozeItemDTO>) => ({...item, replacementId: item.id});
@@ -42,10 +53,20 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}
     const { over, isOver, setNodeRef } = useDroppable({ id });
     const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
 
+    const itemSectionStyle: React.CSSProperties = {
+        display: "flex",
+        flexWrap: "wrap",
+        alignContent: "flex-start",
+        alignItems: "center",
+        // gridAutoRows: "max-content",
+        // gridTemplateColumns: "repeat(2, 1fr)",
+        minHeight: 64
+    };
+
     return <div className={"mb-3"}>
         <Label className="mt-3">Items: </Label>
-        <SortableContext items={items.map(i => i.replacementId as string)} strategy={rectSortingStrategy}>
-            <div ref={setNodeRef} style={{minHeight: 64}} aria-label={"Non-selected items"} className={`rounded p-2 bg-grey ${isOverContainer ? "border border-dark" : "border-light"}`}>
+        <SortableContext items={items.map(i => i.replacementId as string)} strategy={() => null}>
+            <div ref={setNodeRef} style={itemSectionStyle} aria-label={"Non-selected items"} className={`rounded p-2 bg-grey ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <Item item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
@@ -60,20 +81,21 @@ const useAutoScroll = ({acceleration, interval}: {acceleration?: number, interva
     };
 
     const autoScrollListener = useCallback((event: MouseEvent | TouchEvent) => {
-        const scrollingElement = document.scrollingElement;
+        // TODO could try to support different scrolling contexts, but this may not be needed
+        //const scrollingElement = document.scrollingElement;
 
-        const baseline = scrollingElement?.clientTop ?? 0;
+        const baseline = /*scrollingElement?.clientTop ??*/ 0;
 
         const y = (isTouchEvent(event)
             ? (event.touches[0] || event.changedTouches[0]).pageY
             : event.clientY) - baseline;
 
-        const referenceHeight = scrollingElement?.clientHeight ?? window.innerHeight;
+        const referenceHeight = /*scrollingElement?.clientHeight ?? */ window.innerHeight;
         const thresholdInPixels = referenceHeight * 0.2;
         if (y <= thresholdInPixels) {
             setScrollAmount((Math.max(baseline, y) - thresholdInPixels) / thresholdInPixels);
         } else if (y >= (referenceHeight - thresholdInPixels)) {
-            setScrollAmount((Math.min(referenceHeight, y) - (referenceHeight - thresholdInPixels)) / thresholdInPixels)
+            setScrollAmount((Math.min(referenceHeight, y) - (referenceHeight - thresholdInPixels)) / thresholdInPixels);
         } else {
             setScrollAmount(0);
         }
@@ -188,6 +210,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
 
         // The item that's being dragged, can be found immediately because replacement id is unique
         const item = findItemById(active.id as string);
+        let focusId = item?.replacementId;
 
         if (!item) return; // Something very wrong happened here, abort
 
@@ -216,9 +239,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
                 const toIndex = nsis.findIndex(i => i.replacementId === over.id);
                 // Return to same place if nothing changed
                 if (toIndex === -1 || fromIndex === toIndex) return;
-                // Otherwise insert into new spot
-                nsis.splice(fromIndex, 1);
-                nsis.splice(toIndex, 0, item);
+                // Otherwise swap into new spot
+                nsis = arraySwap(nsis, fromIndex, toIndex);
             } else {
                 // Take item from item section, considering duplication, and place into inline drop-zone
                 const toIndex = inlineDropIndex(over.id as string) ?? idvs.findIndex(i => i?.replacementId === over.id);
@@ -234,6 +256,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
                     }
                 }
                 idvs[toIndex] = augmentInlineItemWithUniqueReplacementID(item);
+                focusId = idvs[toIndex]?.replacementId;
                 updateAttempt(idvs);
             }
         } else {
@@ -247,12 +270,17 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
                     if (!withReplacement) nsis.push({...item, replacementId: item.id});
                 } else {
                     const toIndex = nsis.findIndex(i => i.replacementId === over.id);
-                    // Cancel if error
+                    // Cancel if we can't find the item
                     if (toIndex === -1) return;
-                    // Otherwise remove from drop-zone and add into item section
-                    idvs[fromIndex] = nsis[toIndex];
-                    if (!withReplacement) nsis.splice(toIndex, 1, {...item, replacementId: item.id});
+                    // If same items and with replacement, remove inline drop value and stop
+                    if (item.id === over.id && withReplacement) {
+                        idvs[fromIndex] = undefined;
+                    } else { // Otherwise remove from drop-zone and add into item section
+                        idvs[fromIndex] = augmentInlineItemWithUniqueReplacementID(nsis[toIndex]);
+                        if (!withReplacement) nsis.splice(toIndex, 1, {...item, replacementId: item.id});
+                    }
                 }
+                focusId = item.id;
                 updateAttempt(idvs);
             } else {
                 // Drag is between drop-zones, should check if it is back to the same drop-zone
@@ -261,6 +289,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
                 if (toIndex === -1 || fromIndex === toIndex) return;
                 // Otherwise perform the swap!
                 idvs = arraySwap(idvs, fromIndex, toIndex);
+                focusId = idvs[toIndex]?.replacementId;
                 updateAttempt(idvs);
             }
         }
@@ -271,11 +300,24 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
 
         // TODO focus item that was moved after drag
         // setTimeout(() => {
-        //     const draggedItem = document.getElementById(active.id as string);
-        //     draggedItem?.focus();
+        //     if (!focusId) return;
+        //     const itemToFocus = document.getElementById(focusId);
+        //     itemToFocus?.focus();
         // }, 100);
 
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
+
+    // A nicer closestCenter collision detection that doesn't consider the center of the item section of it contains
+    // items and you're hovering over it
+    const customCollision: CollisionDetection = (args) => {
+        const initialCollisions = closestCenter(args);
+        if (initialCollisions.length > 0 && initialCollisions[0].id === itemsSectionDroppableId) {
+            const justNonSelectedItems = args.droppableContainers.filter(dc => nonSelectedItems.findIndex(i => i.replacementId === dc.id) !== -1);
+            const nsiCollisions = rectIntersection({...args, droppableContainers: justNonSelectedItems});
+            return nsiCollisions.length > 0 ? nsiCollisions : initialCollisions;
+        }
+        return initialCollisions;
+    };
 
     const sensors = useSensors(
         useSensor(MouseSensor, {
@@ -308,6 +350,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
                 onDragStart={startItemDrag}
                 onDragCancel={stopItemDrag}
                 onDragEnd={onDragEnd}
+                collisionDetection={customCollision}
             >
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
