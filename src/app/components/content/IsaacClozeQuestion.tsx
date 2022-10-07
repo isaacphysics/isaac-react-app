@@ -1,25 +1,33 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Label} from "reactstrap";
-import {IsaacClozeQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
-import {buildUseKeyboardSensor, isDefined, useCurrentQuestionAttempt} from "../../services";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState
+} from "react";
+import {Badge, Label} from "reactstrap";
+import {ContentDTO, IsaacClozeQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
+import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
-    DragDropContext,
-    Draggable,
-    DragStart,
-    DragUpdate,
-    Droppable,
-    DropResult,
-    ResponderProvided,
-    useMouseSensor,
-    useTouchSensor
-} from "react-beautiful-dnd";
+    DndContext,
+    DragEndEvent,
+    DragOverlay,
+    DragStartEvent,
+    KeyboardSensor,
+    MouseSensor,
+    TouchSensor,
+    useDroppable,
+    useSensor,
+    useSensors
+} from "@dnd-kit/core";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
 import {Immutable} from "immer";
+import {arraySwap, rectSortingStrategy, SortableContext, sortableKeyboardCoordinates} from "@dnd-kit/sortable";
 
-const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ClozeItemDTO> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}-${uuid_v4()}`}) : undefined;
+const augmentInlineItemWithUniqueReplacementID = (idv: Immutable<ClozeItemDTO> | undefined) => isDefined(idv) ? ({...idv, replacementId: `${idv?.id}|${uuid_v4()}`}) : undefined;
 const augmentNonSelectedItemWithReplacementID = (item: Immutable<ClozeItemDTO>) => ({...item, replacementId: item.id});
 const itemNotNullAndNotInAttempt = (currentAttempt: {items?: (Immutable<ItemDTO> | undefined)[]}) => (i: Immutable<ClozeItemDTO> | undefined) => i ? !currentAttempt.items?.map(si => si?.id).includes(i.id) : false;
 
@@ -29,6 +37,73 @@ const NULL_CLOZE_ITEM: ItemDTO = {
     id: NULL_CLOZE_ITEM_ID
 };
 const replaceNullItems = (items: readonly Immutable<ItemDTO>[] | undefined) => items?.map(i => i.id === NULL_CLOZE_ITEM_ID ? undefined : i);
+
+const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}) => {
+    const { over, isOver, setNodeRef } = useDroppable({ id });
+    const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
+
+    return <div className={"mb-3"}>
+        <Label className="mt-3">Items: </Label>
+        <SortableContext items={items.map(i => i.replacementId as string)} strategy={rectSortingStrategy}>
+            <div ref={setNodeRef} style={{minHeight: 64}} aria-label={"Non-selected items"} className={`rounded p-2 bg-grey ${isOverContainer ? "border border-dark" : "border-light"}`}>
+                {items.map((item, i) => <Item item={item} id={item.replacementId as string} type={"item-section"} />)}
+            </div>
+        </SortableContext>
+    </div>;
+};
+
+const useAutoScroll = ({acceleration, interval}: {acceleration?: number, interval?: number} = {}) => {
+    const [scrollAmount, setScrollAmount] = useState<number>(0);
+
+    const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
+        return ["touchstart", "touchmove", "touchend", "touchcancel"].includes(event.type);
+    };
+
+    const autoScrollListener = useCallback((event: MouseEvent | TouchEvent) => {
+        const scrollingElement = document.scrollingElement;
+
+        const baseline = scrollingElement?.clientTop ?? 0;
+
+        const y = (isTouchEvent(event)
+            ? (event.touches[0] || event.changedTouches[0]).pageY
+            : event.clientY) - baseline;
+
+        const referenceHeight = scrollingElement?.clientHeight ?? window.innerHeight;
+        const thresholdInPixels = referenceHeight * 0.2;
+        if (y <= thresholdInPixels) {
+            setScrollAmount((Math.max(baseline, y) - thresholdInPixels) / thresholdInPixels);
+        } else if (y >= (referenceHeight - thresholdInPixels)) {
+            setScrollAmount((Math.min(referenceHeight, y) - (referenceHeight - thresholdInPixels)) / thresholdInPixels)
+        } else {
+            setScrollAmount(0);
+        }
+    }, []);
+
+    // Debouncing this in a clever way might improve stuttering
+    const updateScrollAmount = useCallback((scrollAmount: number, acceleration = 3, interval = 5) => {
+        if (scrollAmount !== 0) {
+            const scaledScrollAmount = acceleration * scrollAmount;
+            const doScroll = () => window.scrollBy(0, scaledScrollAmount);
+            const intervalId = setInterval(doScroll, interval);
+            return () => clearInterval(intervalId);
+        }
+    }, []);
+
+    useEffect(() => {
+        return updateScrollAmount(scrollAmount, acceleration, interval);
+    }, [scrollAmount, acceleration, interval]);
+
+    const activateScroll = () => {
+        window.addEventListener("mousemove", autoScrollListener);
+        window.addEventListener("touchmove", autoScrollListener);
+    }
+    const deactivateScroll = () => {
+        window.removeEventListener("mousemove", autoScrollListener);
+        window.removeEventListener("touchmove", autoScrollListener);
+        setScrollAmount(0);
+    }
+    return {activateScroll, deactivateScroll};
+}
 
 const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
 
@@ -44,11 +119,12 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
 
     const registeredDropRegionIDs = useRef<Map<string, number>>(new Map()).current;
 
-    const [borderMap, setBorderMap] = useState<{[dropId: string]: boolean}>({});
-
     const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ClozeItemDTO> | undefined)[]>(() => currentAttempt?.items || []);
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
     const inlineDropValueMap = useMemo(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
+
+    // Which item is being dragged currently, if any
+    const [activeItem, setActiveItem] = useState<Immutable<ClozeItemDTO> | undefined>();
 
     useEffect(function updateStateOnCurrentAttemptChange() {
         if (currentAttempt?.items) {
@@ -75,155 +151,179 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [doc]);
 
+    const findItemById = (id: string) => nonSelectedItems.find(i => i.replacementId === id) ?? inlineDropValues.find(i => i && i.replacementId === id);
+
+    const {activateScroll, deactivateScroll} = useAutoScroll({acceleration: 3, interval: 5});
+
+    const startItemDrag = (event: DragStartEvent) => {
+        setActiveItem(findItemById(event.active.id as string));
+    }
+    const stopItemDrag = () => {
+        deactivateScroll();
+        setActiveItem(undefined);
+    }
+
     const registerInlineDropRegion = (dropRegionId: string, index: number) => {
         if (!registeredDropRegionIDs.has(dropRegionId)) {
             registeredDropRegionIDs.set(dropRegionId, index);
-            const registeredDropRegionEntries = Array.from(registeredDropRegionIDs.entries());
             setInlineDropValues(idvs => [...idvs]); // This is messy, but it makes sure that the inlineDropValueMap is recomputed
-            setBorderMap(registeredDropRegionEntries.reduce((dict, [dropId, index]) => Object.assign(dict, {[dropId]: false}), {}));
         }
     };
 
-    function fixInlineZoneOnStartDrag({source}: DragStart, provided: ResponderProvided) {
-        fixInlineZones({destination: source} as DragUpdate, provided);
-    }
-
-    // This is run on drag update to highlight the droppable that the user is dragging over
-    //  this gives more control over when a droppable is highlighted
-    function fixInlineZones({destination}: DragUpdate, provided: ResponderProvided) {
-        Array.from(registeredDropRegionIDs.entries()).map(([dropId, index]) => {
-            const destinationDropIndex = destination ? index : -1;
-            const destinationDragIndex = destination?.index ?? -1;
-            borderMap[dropId] = (dropId === destination?.droppableId && destinationDropIndex !== -1 && destinationDragIndex === 0);
-        });
-        // Tell React about the changes to borderMap
-        setBorderMap({...borderMap});
-    }
-
     // Run after a drag action ends
-    const updateAttempt = useCallback(({source, destination, draggableId}: DropResult, provided: ResponderProvided) => {
-        // Make sure borders are removed, since drag has ended
-        fixInlineZones({destination: undefined} as DragUpdate, provided);
+    const onDragEnd = useCallback((event: DragEndEvent) => {
+        const {over, active} = event;
 
-        if (source.droppableId === destination?.droppableId && source.index === destination?.index) return; // No change
+        stopItemDrag();
 
-        if (!destination) return; // Drag had no destination
+        if (!over) return; // Drag had no destination, don't update anything
+
+        const isFromItemSection = isDefined(nonSelectedItems.find(i => i.replacementId === active?.id));
+        const isToItemSection = isDefined(nonSelectedItems.find(i => i.replacementId === over?.id)) || over?.id === itemsSectionDroppableId;
 
         const inlineDropIndex = (id : string) => registeredDropRegionIDs.get(id);
 
-        const nsis = [...nonSelectedItems];
-        const idvs = [...inlineDropValues];
+        let nsis = [...nonSelectedItems];
+        let idvs = [...inlineDropValues];
 
-        // The item that's being dragged (this is worked out below in each case)
-        let item : Immutable<ClozeItemDTO>;
-        // A callback to put an item back into the source of the drag (if needed)
-        let replaceSource : (itemToReplace: Immutable<ClozeItemDTO> | undefined) => void = () => undefined;
-        // Whether the inline drop zones were updated or not
-        let update = false;
+        // The item that's being dragged, can be found immediately because replacement id is unique
+        const item = findItemById(active.id as string);
 
-        // Check source of drag:
-        if (source.droppableId === itemsSectionDroppableId) {
-            // Drag was from items section
-            item = nonSelectedItems[source.index];
-            if (!withReplacement || destination.droppableId === itemsSectionDroppableId) {
-                nsis.splice(source.index, 1);
-                replaceSource = (itemToReplace) => itemToReplace && nsis.splice(source.index, 0, itemToReplace);
-            }
-        } else {
-            // Drag was from inline drop section
-            // When splicing inline drop values, you always need to delete and replace
-            const sourceDropIndex = inlineDropIndex(source.droppableId) as number;
-            if (sourceDropIndex !== undefined) {
-                const maybeItem = idvs[sourceDropIndex]; // This nastiness is to appease typescript
-                if (maybeItem) {
-                    item = maybeItem;
-                    idvs[sourceDropIndex] = undefined;
-                    replaceSource = (itemToReplace) => {idvs[sourceDropIndex] = itemToReplace;};
-                    update = true;
-                } else {
-                    return;
-                }
-            } else {
-                return;
-            }
-        }
+        if (!item) return; // Something very wrong happened here, abort
 
-        // Check destination of drag:
-        if (destination.droppableId === itemsSectionDroppableId) {
-            // Drop is into items section
-            if (!withReplacement || source.droppableId === itemsSectionDroppableId) {
-                nsis.splice(destination.index, 0, item);
-            } else {
-                nsis.splice(nsis.findIndex((x) => x.id === item.id), 1);
-                nsis.splice(destination.index, 0, item);
-            }
-        } else {
-            // Drop is into inline drop section
-            const destinationDropIndex = inlineDropIndex(destination.droppableId) as number;
-            if (destinationDropIndex !== undefined && destination.index === 0) {
-                replaceSource(idvs[destinationDropIndex]);
-                // Important! This extends the array with `undefined`s if `destinationDropIndex` is out of bounds
-                idvs[destinationDropIndex] = withReplacement ? augmentInlineItemWithUniqueReplacementID(item) : item
-            } else {
-                replaceSource(item);
-            }
-            update = true;
-        }
-
-        // Update draggable lists every time a successful drag ends
-        setInlineDropValues(idvs);
-        setNonSelectedItems(nsis);
-
-        if (update) {
+        const updateAttempt = (idvs: (Immutable<ClozeItemDTO> | undefined)[]) => {
             // Update attempt since an inline drop zone changed
             const itemChoice: ItemChoiceDTO = {
                 type: "itemChoice",
                 items: Array(registeredDropRegionIDs.size).fill(null).map((_, i) => {
                     const item = idvs[i];
-                    if (item) {
-                        const {replacementId, ...itemDto} = item;
-                        return itemDto as ItemDTO;
-                    }
-                    // Return a "null item" to indicate a hole in the answer
-                    return NULL_CLOZE_ITEM;
+                    // If no item, return a "null item" to indicate a hole in the answer
+                    if (!item) return NULL_CLOZE_ITEM;
+                    const {replacementId, ...itemDto} = item;
+                    return itemDto as ItemDTO;
                 })
             };
             dispatchSetCurrentAttempt(itemChoice);
+        };
+
+        if (isFromItemSection) {
+            // Drag originated in the item section
+            const fromIndex = nsis.indexOf(item);
+            if (isToItemSection) {
+                // Return if dragged to general item section area
+                if (over?.id === itemsSectionDroppableId) return;
+                // Swap within item section
+                const toIndex = nsis.findIndex(i => i.replacementId === over.id);
+                // Return to same place if nothing changed
+                if (toIndex === -1 || fromIndex === toIndex) return;
+                // Otherwise insert into new spot
+                nsis.splice(fromIndex, 1);
+                nsis.splice(toIndex, 0, item);
+            } else {
+                // Take item from item section, considering duplication, and place into inline drop-zone
+                const toIndex = inlineDropIndex(over.id as string) ?? idvs.findIndex(i => i?.replacementId === over.id);
+                // Cancel if error
+                if (toIndex === -1) return;
+                // Otherwise remove from item section and add to drop-zone, swapping out the previous item if it exists
+                const dzItem = idvs[toIndex];
+                if (!withReplacement) {
+                    if (dzItem) {
+                        nsis.splice(fromIndex, 1, dzItem);
+                    } else {
+                        nsis.splice(fromIndex, 1);
+                    }
+                }
+                idvs[toIndex] = augmentInlineItemWithUniqueReplacementID(item);
+                updateAttempt(idvs);
+            }
+        } else {
+            // Drag originated in a drop-zone
+            const fromIndex = idvs.indexOf(item);
+            if (fromIndex === -1) return; // shouldn't happen
+            if (isToItemSection) {
+                // Drag is from drop-zone into item section - add in correct position handling duplicates
+                if (over?.id === itemsSectionDroppableId) {
+                    idvs[fromIndex] = undefined;
+                    if (!withReplacement) nsis.push({...item, replacementId: item.id});
+                } else {
+                    const toIndex = nsis.findIndex(i => i.replacementId === over.id);
+                    // Cancel if error
+                    if (toIndex === -1) return;
+                    // Otherwise remove from drop-zone and add into item section
+                    idvs[fromIndex] = nsis[toIndex];
+                    if (!withReplacement) nsis.splice(toIndex, 1, {...item, replacementId: item.id});
+                }
+                updateAttempt(idvs);
+            } else {
+                // Drag is between drop-zones, should check if it is back to the same drop-zone
+                const toIndex = inlineDropIndex(over.id as string) ?? idvs.findIndex(i => i?.replacementId === over.id);
+                // Return to same drop zone if dragging to and from same one
+                if (toIndex === -1 || fromIndex === toIndex) return;
+                // Otherwise perform the swap!
+                idvs = arraySwap(idvs, fromIndex, toIndex);
+                updateAttempt(idvs);
+            }
         }
+
+        // Update both lists of items after any changes
+        setInlineDropValues(idvs);
+        setNonSelectedItems(nsis);
+
+        // TODO focus item that was moved after drag
+        // setTimeout(() => {
+        //     const draggedItem = document.getElementById(active.id as string);
+        //     draggedItem?.focus();
+        // }, 100);
+
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
-    const updateAttemptCallback = useCallback((dropResult: DropResult) => {
-        updateAttempt({...dropResult, destination: {droppableId: itemsSectionDroppableId, index: nonSelectedItems.length}},{announce: (_) => {return;}});
-    }, [itemsSectionDroppableId, nonSelectedItems]);
+    const sensors = useSensors(
+        useSensor(MouseSensor, {
+            // Require the mouse to move by 10 pixels before activating
+            activationConstraint: {
+                distance: 10,
+            },
+            onActivation: activateScroll
+        }),
+        useSensor(TouchSensor, {
+            // Press delay of 250ms, with tolerance of 5px of movement
+            activationConstraint: {
+                delay: 250,
+                tolerance: 5,
+            },
+            onActivation: activateScroll
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    // TODO accessibility
 
     return <div className="question-content cloze-question" id={cssFriendlyQuestionPartId}>
-        <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, updateAttemptCallback, readonly: readonly ?? false, inlineDropValueMap, borderMap}}>
-            <DragDropContext onDragStart={fixInlineZoneOnStartDrag} onDragEnd={updateAttempt} onDragUpdate={fixInlineZones} enableDefaultSensors={false} sensors={[useMouseSensor, useTouchSensor, buildUseKeyboardSensor(itemsSectionDroppableId, cssFriendlyQuestionPartId, registeredDropRegionIDs)]}>
+        <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, readonly: readonly ?? false, inlineDropValueMap}}>
+            <DndContext
+                sensors={sensors}
+                autoScroll={false}
+                onDragStart={startItemDrag}
+                onDragCancel={stopItemDrag}
+                onDragEnd={onDragEnd}
+            >
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
 
-                {/* Items section */}
-                <div className={"cloze-drop-zone"}>
-                    <Label className="mt-3">Items: </Label>
-                    <Droppable droppableId={itemsSectionDroppableId} direction="horizontal" isDropDisabled={readonly}>
-                        {(provided, snapshot) => <div
-                            ref={provided.innerRef} {...provided.droppableProps} id={"non-selected-items"} aria-label={"Non-selected items"}
-                            className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
-                        >
-                            {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
-                                {(provided) =>
-                                    <div className={"cloze-draggable"} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} role={"option"}>
-                                        <Item item={item} />
-                                    </div>
-                                }
-                            </Draggable>)}
-                            {nonSelectedItems.length === 0 && "\u00A0"}
-                            {provided.placeholder}
-                        </div>}
-                    </Droppable>
-                </div>
-            </DragDropContext>
+                {/* The item attached to the users cursor while dragging (just for display, shouldn't contain useDraggable/useSortable hooks) */}
+                <DragOverlay>
+                    {activeItem && <Badge className="p-2 cloze-item">
+                        <IsaacContentValueOrChildren value={activeItem.value} encoding={activeItem.encoding || "html"}>
+                            {activeItem.children as ContentDTO[]}
+                        </IsaacContentValueOrChildren>
+                    </Badge>}
+                </DragOverlay>
+
+                <ItemSection id={itemsSectionDroppableId} items={nonSelectedItems}/>
+            </DndContext>
         </ClozeDropRegionContext.Provider>
     </div>;
 };
