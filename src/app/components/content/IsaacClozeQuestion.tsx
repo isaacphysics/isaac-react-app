@@ -209,7 +209,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
                     <Droppable droppableId={itemsSectionDroppableId} direction="horizontal" isDropDisabled={readonly}>
                         {(provided, snapshot) => <div
                             ref={provided.innerRef} {...provided.droppableProps} id={"non-selected-items"} aria-label={"Non-selected items"}
-                            className={`d-flex overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
+                            className={`d-flex flex-wrap overflow-auto rounded p-2 mb-3 bg-grey ${snapshot.isDraggingOver ? "border border-dark" : ""}`}
                         >
                             {nonSelectedItems.map((item, i) => <Draggable key={item.replacementId} isDragDisabled={readonly} draggableId={item.replacementId || `${i}`} index={i}>
                                 {(provided) =>
