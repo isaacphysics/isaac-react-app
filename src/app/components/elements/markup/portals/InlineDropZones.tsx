@@ -51,8 +51,11 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
 
     if (dropRegionContext && droppableTarget) {
         return ReactDOM.createPortal(
-            <span style={{minHeight: height, minWidth: width}}
-                  className={classNames("d-inline-block", !item && `rounded bg-grey border ${isOver ? "border-dark" : "border-light"}`)} ref={setNodeRef}>
+            <span
+                style={{minHeight: height, minWidth: width}}
+                className={classNames("d-inline-block cloze-drop-zone", !item && `rounded bg-grey border ${isOver ? "border-dark" : "border-light"}`)}
+                ref={setNodeRef}
+            >
                 {item
                     ? <Item item={item} id={item.replacementId as string} type={"drop-zone"} overrideOver={isOver}/>
                     : <>&nbsp;</>

@@ -17,15 +17,13 @@
   }
 
   .cloze-drop-zone {
-    border: black solid 1px;
-    border-radius: 5px;
+    border: grey solid 1px !important;
+    background-color: transparent !important;
   }
 
   .cloze-item {
-    .frac-line {
-      border-color: #aaaaaa;
-      border-top-width: 0.04em;
-    }
+    color: black !important;
+    background-color: unset !important;
   }
 
   .accordion {
