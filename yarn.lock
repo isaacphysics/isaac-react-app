@@ -4853,10 +4853,10 @@ inequality-grammar@0.11.0:
     moo "^0.5.1"
     nearley "^2.20.1"
 
-inequality@^0.9.37:
-  version "0.9.37"
-  resolved "https://registry.yarnpkg.com/inequality/-/inequality-0.9.37.tgz#c6cbc427ebfc2255807bc6bdf920ff3b9d39b27b"
-  integrity sha512-BaFAyF8rxUpb3EusMSGHRjzcilNrvigelk7r46mGozPWqgxvGMjU0jJz55M42sEtqELtZi1EUsDOZ9WTy8pjOg==
+inequality@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.0.0.tgz#e665b9d7b777a8bde383c630a2fe2e369bce528d"
+  integrity sha512-YN5TM3+a4+fZZNXlIxSN0v1PgoBWLVnkFDR1VAvOMojEb82xG5ZaafV3Y+6ARCI8QfmhWPe+CulkORcuXggjIA==
 
 inflight@^1.0.4:
   version "1.0.6"
