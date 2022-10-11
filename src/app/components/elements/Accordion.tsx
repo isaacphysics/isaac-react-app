@@ -18,6 +18,7 @@ import {pauseAllVideos} from "../content/IsaacVideo";
 import {v4 as uuid_v4} from "uuid";
 import classNames from "classnames";
 import {Markup} from "./markup";
+import {ReportAccordionButton} from "./ReportAccordionButton";
 
 interface AccordionsProps extends RouteComponentProps {
     id?: string;
@@ -69,20 +70,28 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         }
     }, [hash, anchorId]);
 
-    function logAccordionOpen() {
+    function getPage() {
         if (page && page != NOT_FOUND) {
+            return page
+        }
+        return null
+    }
+
+    function logAccordionOpen() {
+        let currentPage = getPage()
+        if (currentPage) {
             let eventDetails;
-            if (page.type === "isaacQuestionPage") {
+            if (currentPage.type === "isaacQuestionPage") {
                 eventDetails = {
                     type: "QUESTION_PART_OPEN",
-                    questionPageId: page.id,
+                    questionPageId: currentPage.id,
                     questionPartIndex: index,
                     questionPartId: id
                 };
-            } else if (page.type === "isaacConceptPage") {
+            } else if (currentPage.type === "isaacConceptPage") {
                 eventDetails = {
                     type: "CONCEPT_SECTION_OPEN",
-                    conceptPageId: page.id,
+                    conceptPageId: currentPage.id,
                     conceptSectionIndex: index,
                     conceptSectionLevel: null,
                     conceptSectionId: id
@@ -90,7 +99,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
             } else {
                 eventDetails = {
                     type: "ACCORDION_SECTION_OPEN",
-                    pageId: page.id,
+                    pageId: currentPage.id,
                     accordionId: id,
                     accordionTitle: trustedTitle,
                     accordionIndex: index
@@ -164,7 +173,6 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                                 {`This content has ${notRelevantMessage(userContext)}.`}
                             </RS.UncontrolledTooltip>
                         </div>}
-
                     </RS.Row>
                 </div>
 
@@ -179,6 +187,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                     <RS.CardBody>
                         {children}
                     </RS.CardBody>
+                    <ReportAccordionButton pageId={getPage()?.id} sectionId={id} sectionTitle={trustedTitle}/>
                 </RS.Card>
             </AccordionSectionContext.Provider>
         </RS.Collapse>
