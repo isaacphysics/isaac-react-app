@@ -20,6 +20,7 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
+import {ReportButton} from "../elements/ReportButton";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -56,6 +57,9 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                         </div>
                         <div className="question-actions not-mobile">
                             <PrintButton />
+                        </div>
+                        <div className="question-actions">
+                            <ReportButton pageId={conceptId}/>
                         </div>
                     </div>
 
