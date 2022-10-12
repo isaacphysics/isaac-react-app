@@ -328,6 +328,9 @@ button {
   touch-action: none;
   position: relative;
   font-size: 1rem !important;
+  &.is-dragging {
+    opacity: 0.666;
+  }
 }
 
 // Could be used to display draggables when using drop zones in text or code (if we got rid of the purple blocks)

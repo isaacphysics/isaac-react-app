@@ -1093,3 +1093,6 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 export const FEATURED_NEWS_TAG = "featured";
 
 export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+
+export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
+export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
