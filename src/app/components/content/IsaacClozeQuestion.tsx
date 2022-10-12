@@ -351,8 +351,8 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
         })
     );
 
-    // A nicer closestCenter collision detection that doesn't consider the center of the item section of it contains
-    // items and you're hovering over it
+    // A nicer closestCenter collision detection that doesn't consider the center of the item section if it contains
+    // items and you're currently hovering over it
     const customCollision: CollisionDetection = useCallback((args) => {
         const justDropZones = args.droppableContainers.filter(isDropZone);
         const initialCollisions = composeCollisionAlgorithms(rectIntersection, closestCorners)({...args, droppableContainers: justDropZones});
