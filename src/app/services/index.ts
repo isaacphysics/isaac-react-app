@@ -20,6 +20,7 @@ export * from "./credentialPadding";
 export * from "./history";
 
 // Dependencies in /services
+export * from "./clozeQuestionKeyboardCoordinateGetter";
 export * from "./easterEggs/phyLogoAsciiArt";
 export * from "./easterEggs/csLogoAsciiArt";
 export * from "./user";

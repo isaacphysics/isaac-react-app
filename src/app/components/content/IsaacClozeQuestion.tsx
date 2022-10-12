@@ -35,7 +35,7 @@ import {
     arraySwap,
     SortableContext
 } from "@dnd-kit/sortable";
-import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
+import {customKeyboardCoordinates} from "../../services";
 
 const composeCollisionAlgorithms = (first: CollisionDetection, second: CollisionDetection): CollisionDetection => (args) => {
     const collisions = first(args);
