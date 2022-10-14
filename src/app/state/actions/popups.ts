@@ -7,7 +7,7 @@ import {
     selectors
 } from "../index";
 import {Dispatch, useCallback, useEffect, useMemo} from "react";
-import {Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
+import {Action, ActiveModalSpecification, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE} from "../../services";
 import ReactGA from "react-ga";
 import {ModalProps} from "reactstrap/es/Modal";
@@ -69,7 +69,7 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
 }
 
 // Modals
-export const openActiveModal = (activeModal: ActiveModal) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
+export const openActiveModal = (activeModal: ActiveModalSpecification) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
@@ -91,16 +91,16 @@ interface UseActiveModalOptions {
 // ```
 // If you want to be able to pass static (non-updatable) data into the `openModal` function, set the option
 // `passDataToOpenModal` to `true`. This lets the caller of `openModal` to pass data back up to the component
-// which called the `useActiveModal` hook. This could be helpful if you're opening the modal from a deeply nested
-// UI component for example.
-export const useActiveModal = (id: string, options: UseActiveModalOptions = {passDataToOpenModal: false}): {openModal: (staticData?: any) => void; closeModal: () => void; data?: any; modalProps: ModalProps} => {
+// which called the `useActiveModal` hook. This could be helpful if you are opening the modal from deeply nested
+// UI components for example.
+export const useActiveModal = <T>(id: string, options: UseActiveModalOptions = {passDataToOpenModal: false}): {openModal: (staticData?: T) => void; closeModal: () => void; data?: T; modalProps: ModalProps} => {
     const dispatch = useAppDispatch();
-    const currentOpenModal = useAppSelector(selectors.notifications.currentActiveModal);
-    const isOpen = currentOpenModal?.id === id;
+    const {id: currentModalId, staticData: currentModalData} = useAppSelector(selectors.notifications.currentActiveModal) ?? {};
+    const isOpen = currentModalId === id;
 
     const {isOpen: forceOpen, testId, passDataToOpenModal} = options;
 
-    const openModal = useCallback((staticData?: any) => {
+    const openModal = useCallback((staticData?: T) => {
         dispatch(currentActiveModalSlice.actions.openActiveModal({
             id,
             staticData: passDataToOpenModal ? staticData : undefined
@@ -133,7 +133,7 @@ export const useActiveModal = (id: string, options: UseActiveModalOptions = {pas
     return {
         openModal,
         closeModal,
-        data: currentOpenModal?.staticData,
+        data: isOpen ? (currentModalData as T | undefined) : undefined,
         modalProps,
     };
 };

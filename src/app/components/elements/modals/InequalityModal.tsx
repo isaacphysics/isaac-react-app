@@ -15,7 +15,7 @@ import {IsaacContentValueOrChildren} from '../../content/IsaacContentValueOrChil
 import {ContentDTO} from '../../../../IsaacApiTypes';
 import {closeActiveModal, openActiveModal, store} from '../../../state';
 import {connect} from "react-redux";
-import {ActiveModal} from "../../../../IsaacAppTypes";
+import {ActiveModalSpecification} from "../../../../IsaacAppTypes";
 import {PageFragment} from "../PageFragment";
 import {Input} from "reactstrap";
 
@@ -51,7 +51,7 @@ interface InequalityModalProps {
     questionDoc?: ContentDTO;
     showHelpModal: (editorModal: string) => {
         type: ACTION_TYPE;
-        activeModal: ActiveModal;
+        activeModal: ActiveModalSpecification;
     };
 }
 

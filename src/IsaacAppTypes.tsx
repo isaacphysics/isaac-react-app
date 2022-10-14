@@ -261,7 +261,7 @@ export type Action =
     | {type: ACTION_TYPE.TOASTS_HIDE; toastId: string}
     | {type: ACTION_TYPE.TOASTS_REMOVE; toastId: string}
 
-    | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
+    | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModalSpecification}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 
     | {type: ACTION_TYPE.GROUPS_REQUEST}
@@ -567,19 +567,19 @@ export interface Toast {
     showing?: boolean;
 }
 
-export interface ActiveModal {
+export interface ActiveModalSpecification {
+    title?: string;
+    body: any;
     centered?: boolean;
     noPadding?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: string;
-    title?: string;
-    body: any;
     buttons?: any[];
     overflowVisible?: boolean;
 }
 
-export interface _ActiveModal {
+export interface ActiveModal {
     id: string;
     staticData?: any;
 }
