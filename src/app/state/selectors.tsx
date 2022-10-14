@@ -122,6 +122,10 @@ export const selectors = {
         assignment: (state: AppState) => state?.quizAssignment && anonymiseIfNeededWith(anonymisationFunctions.assignment)(state.quizAssignment),
         attemptedFreelyByMe: (state: AppState) => state?.quizAttemptedFreelyByMe,
     },
+
+    notifications: {
+        currentActiveModal: (state: AppState) => state?.currentActiveModal
+    }
 };
 
 function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined): AppQuizAssignment[] | NOT_FOUND_TYPE | undefined | null {

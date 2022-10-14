@@ -29,7 +29,7 @@ import {
     selectors,
     setAssignBoardPath,
     showErrorToast,
-    unlinkUserFromGameboard,
+    unlinkUserFromGameboard, useActiveModal,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -153,13 +153,13 @@ const AssignGroup = ({groups, board}: BoardProps) => {
 };
 
 interface HexagonGroupsButtonProps {
-    toggleAssignModal: () => void;
+    openAssignModal: () => void;
     boardSubjects: string[];
     assignees: BoardAssignee[];
     id: string;
 }
-const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
-    <button onClick={toggleAssignModal} id={id} className="board-subject-hexagon-container">
+const HexagonGroupsButton = ({openAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
+    <button onClick={openAssignModal} id={id} className="board-subject-hexagon-container">
         {generateGameboardSubjectHexagons(boardSubjects)}
         <span className="groups-assigned" title={"Groups assigned"}>
                 <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
@@ -205,8 +205,10 @@ const Board = (props: BoardProps) => {
         }
     }
 
-    const [modal, setModal] = useState(board.id === hashAnchor);
-    const toggleAssignModal = useCallback(() => setModal(s => !s), [setModal]);
+    const {openModal: openAssignModal, closeModal, modalProps} = useActiveModal(`set-assignment-modal-${board.id}`, {
+        isOpen: board.id === hashAnchor,
+        testId: "set-assignment-modal"
+    });
 
     const hexagonId = `board-hex-${board.id}`;
 
@@ -221,9 +223,9 @@ const Board = (props: BoardProps) => {
     const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
 
     return <>
-        <Modal isOpen={modal} data-testid={"set-assignment-modal"} toggle={toggleAssignModal}>
+        <Modal {...modalProps}>
             <ModalHeader role={"heading"} className={"text-break"} close={
-                <button role={"button"} className={"close text-nowrap"} onClick={toggleAssignModal}>
+                <button role={"button"} className={"close text-nowrap"} onClick={closeModal}>
                     Close
                 </button>
             }>
@@ -269,7 +271,7 @@ const Board = (props: BoardProps) => {
                 </div>}
             </ModalBody>
             <ModalFooter>
-                <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
+                <Button block color="tertiary" onClick={openAssignModal}>Close</Button>
             </ModalFooter>
         </Modal>
         {boardView == BoardViews.table ?
@@ -277,7 +279,7 @@ const Board = (props: BoardProps) => {
             <tr className="board-card" data-testid={"assignment-gameboard-table-row"}>
                 <td>
                     <div className="board-subject-hexagon-container table-view">
-                        <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
+                        <HexagonGroupsButton openAssignModal={openAssignModal} id={hexagonId}
                                              assignees={assignees} boardSubjects={boardSubjects} />
                     </div>
                 </td>
@@ -289,7 +291,7 @@ const Board = (props: BoardProps) => {
                 <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
                 <td className="text-center align-middle">{formatDate(board.lastVisited)}</td>
                 <td className="text-center align-middle">
-                    <Button color="tertiary" size="sm" style={{fontSize: 15}} onClick={toggleAssignModal}>
+                    <Button color="tertiary" size="sm" style={{fontSize: 15}} onClick={openAssignModal}>
                         Assign&nbsp;/ Unassign
                     </Button>
                 </td>
@@ -304,7 +306,7 @@ const Board = (props: BoardProps) => {
             <Card aria-label={`Gameboard ${board.title}`} className="board-card card-neat" data-testid={"assignment-gameboard-card"}>
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
+                    <HexagonGroupsButton openAssignModal={openAssignModal} id={hexagonId}
                                          assignees={assignees} boardSubjects={boardSubjects} />
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
@@ -331,7 +333,7 @@ const Board = (props: BoardProps) => {
                     </Row>
                 </CardBody>
                 <CardFooter>
-                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>Assign / Unassign</Button>
+                    <Button className={"mb-1"} block color="tertiary" onClick={openAssignModal}>Assign / Unassign</Button>
                 </CardFooter>
             </Card>
         }

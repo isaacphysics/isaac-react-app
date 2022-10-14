@@ -1,5 +1,6 @@
-import {Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
+import {_ActiveModal, Action, ActiveModal, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export type ToastsState = Toast[] | null;
 export const toasts = (toasts: ToastsState = null, action: Action) => {
@@ -40,3 +41,13 @@ export const notifications = (notifications: NotificationsState = null, action: 
             return notifications;
     }
 };
+
+export type _ActiveModalState = _ActiveModal | null;
+export const currentActiveModalSlice = createSlice({
+    name: "currentActiveModal",
+    initialState: null as _ActiveModalState,
+    reducers: {
+        openActiveModal: (_, action: PayloadAction<_ActiveModal>) => action.payload,
+        closeActiveModal: (state, action: PayloadAction<string>) => state && state.id === action.payload ? null : state,
+    }
+});
