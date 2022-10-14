@@ -66,9 +66,9 @@ import {ThunkDispatch} from "redux-thunk";
 import {AxiosError} from "axios";
 import ReactGA from "react-ga";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
-import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
 import {
+    _openActiveModal,
     AppDispatch,
     AppState,
     closeActiveModal,
@@ -82,6 +82,7 @@ import {
     store
 } from "../index";
 import {Immutable} from "immer";
+import {MODAL_ID} from "../../components/elements/modals";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -594,8 +595,8 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         }) as any);
     }
 };
-export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(isaacBooksModal()) as any);
+export const openIsaacBooksModal = () => async (dispatch: AppDispatch) => {
+    dispatch(_openActiveModal(MODAL_ID.isaacBooks));
 };
 export const revokeAuthorisationAfterPrompt = (userId: number, otherUser: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(userId, otherUser)) as any);
