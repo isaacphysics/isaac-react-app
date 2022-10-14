@@ -6,7 +6,13 @@ import React, {
     useState
 } from "react";
 import {Badge, Label} from "reactstrap";
-import {ContentDTO, IsaacClozeQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
+import {
+    ClozeValidationResponseDTO,
+    ContentDTO,
+    IsaacClozeQuestionDTO,
+    ItemChoiceDTO,
+    ItemDTO
+} from "../../../IsaacApiTypes";
 import {CLOZE_DROP_ZONE_ID_PREFIX, CLOZE_ITEM_SECTION_ID, isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
@@ -142,7 +148,7 @@ const useAutoScroll = ({acceleration, interval}: {acceleration?: number, interva
     return {activateScroll, deactivateScroll};
 };
 
-const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacClozeQuestionDTO>) => {
+const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ClozeValidationResponseDTO>) => {
 
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
@@ -157,6 +163,13 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ClozeItemDTO> | undefined)[]>(() => currentAttempt?.items || []);
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
     const inlineDropValueMap = useMemo(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
+
+    // Compute map used to highlight each inline drop-zone with whether it is correct or not
+    const itemsCorrect = validationResponse?.itemsCorrect;
+    const dropZoneValidationMap = useMemo<{[p: string]: boolean | undefined}>(() => isDefined(itemsCorrect)
+        ? Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: itemsCorrect.at(i)}), {})
+        : {}
+    , [itemsCorrect]);
 
     // Manual management of which draggable item gets focus at the end of the drag. The new focus id is set in onDragEnd,
     // causing shouldGetFocus to be updated. shouldGetFocus is passed via the ClozeDropRegionContext to all draggable
@@ -406,7 +419,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaa
     }), [usingKeyboard]);
 
     return <div className="question-content cloze-question" id={cssFriendlyQuestionPartId}>
-        <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, readonly: readonly ?? false, inlineDropValueMap, shouldGetFocus}}>
+        <ClozeDropRegionContext.Provider value={{questionPartId: cssFriendlyQuestionPartId, register: registerInlineDropRegion, readonly: readonly ?? false, inlineDropValueMap, shouldGetFocus, dropZoneValidationMap}}>
             <DndContext
                 sensors={sensors}
                 autoScroll={false}

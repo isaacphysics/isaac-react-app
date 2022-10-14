@@ -54,6 +54,9 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
 
     const item = dropRegionContext ? dropRegionContext.inlineDropValueMap[droppableId] : undefined;
 
+    // Only show if this drop zone is correct or not if it contains an item
+    const isCorrect = item && dropRegionContext ? dropRegionContext.dropZoneValidationMap[droppableId] : undefined;
+
     const droppableTarget = rootElement?.querySelector(`#${id}`);
 
     const {isOver, setNodeRef} = useDroppable({
@@ -68,7 +71,7 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         return ReactDOM.createPortal(
             <span
                 style={{minHeight: height, minWidth: width}}
-                className={classNames("d-inline-block cloze-drop-zone", !item && `rounded bg-grey border ${isOver ? "border-dark" : "border-light"}`)}
+                className={classNames("d-inline-block cloze-drop-zone", !item && `rounded bg-grey border ${isOver ? "border-dark" : "border-light"}`, isCorrect === true && "correct", isCorrect === false && "incorrect")}
                 ref={setNodeRef}
             >
                 {item

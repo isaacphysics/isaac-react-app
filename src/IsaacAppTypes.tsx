@@ -11,7 +11,7 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
-    QuestionDTO,
+    QuestionDTO, QuestionValidationResponseDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
@@ -442,10 +442,11 @@ export type NOT_FOUND_TYPE = 404;
 
 export type ConfidenceType = "quick_question" | "question";
 
-export interface IsaacQuestionProps<T extends QuestionDTO> {
+export interface IsaacQuestionProps<T extends QuestionDTO, R extends QuestionValidationResponseDTO = QuestionValidationResponseDTO> {
     doc: T;
     questionId: string;
     readonly?: boolean;
+    validationResponse?: Immutable<R>;
 }
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
@@ -641,7 +642,13 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
-export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string, readonly: boolean, inlineDropValueMap: {[p: string]: ClozeItemDTO}, shouldGetFocus: (id: string) => boolean} | undefined>(undefined);
+export const ClozeDropRegionContext = React.createContext<{
+    register: (id: string, index: number) => void,
+    questionPartId: string, readonly: boolean,
+    inlineDropValueMap: {[p: string]: ClozeItemDTO},
+    dropZoneValidationMap: {[p: string]: boolean | undefined},
+    shouldGetFocus: (id: string) => boolean
+} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
