@@ -9,7 +9,7 @@ import {Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 //
 // The `specification` parameter can depend on some data that is stored in the `currentActiveModal` state, which can be
 // set by who/whatever activates this modal.
-export function buildActiveModal<T>(id: string, componentName: string, specification: ActiveModalSpecification | ((data?: T) => ActiveModalSpecification)): React.FC {
+export function buildActiveModal<T>(id: string, componentName: string, specification: ActiveModalSpecification | ((data: T) => ActiveModalSpecification)): React.FC {
     const ActiveModal: React.FC = () => {
         const {data, closeModal, modalProps} = useActiveModal<T>(id);
         const {
@@ -22,19 +22,19 @@ export function buildActiveModal<T>(id: string, componentName: string, specifica
             noPadding,
             overflowVisible,
             closeAction
-        } = modalProps.isOpen
-            ? (typeof specification === "function" ? specification(data) : specification)
-            : {} as {[key: string]: undefined};
+        } = (
+            typeof specification === "function"
+                ? (data ? specification(data) : {})
+                : specification
+        ) as ActiveModalSpecification | {[key: string]: undefined};
 
         return <Modal {...modalProps} size={size ?? "lg"} centered={centered ?? true}>
             {<ModalHeader
                 className={classNames({"h-title pb-5 mb-4": !!title}, {"position-absolute": !title})}
                 style={title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
-                close={closeAction
-                    ? <button className="close" onClick={() => {closeAction(); closeModal();}}>
-                        {closeLabelOverride || "Close"}
-                    </button>
-                    : null}
+                close={<button className="close" onClick={() => {closeAction?.(); closeModal();}}>
+                    {closeLabelOverride || "Close"}
+                </button>}
             >
                 {title}
             </ModalHeader>}
@@ -50,6 +50,7 @@ export function buildActiveModal<T>(id: string, componentName: string, specifica
     return ActiveModal;
 }
 
+// TODO deprecate the below component completely
 interface ActiveModalProps {
     activeModal?: ActiveModalSpecification | null;
 }
@@ -86,5 +87,5 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 </ModalFooter>
             }
         </>}
-    </Modal>
+    </Modal>;
 };

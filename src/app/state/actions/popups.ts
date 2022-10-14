@@ -11,6 +11,7 @@ import {Action, ActiveModalSpecification, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE} from "../../services";
 import ReactGA from "react-ga";
 import {ModalProps} from "reactstrap/es/Modal";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -71,6 +72,15 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
 // Modals
 export const openActiveModal = (activeModal: ActiveModalSpecification) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
+export const _openActiveModal = createAsyncThunk(
+    "openActiveModal",
+    (idOrIdAndData: string | {id: string, staticData: any}, {dispatch}) => {
+        const id = typeof idOrIdAndData === "string" ? idOrIdAndData : idOrIdAndData.id;
+        const staticData = typeof idOrIdAndData === "string" ? undefined : idOrIdAndData.staticData;
+        return dispatch(currentActiveModalSlice.actions.openActiveModal({id, staticData}));
+    }
+);
+
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
 interface UseActiveModalOptions {
@@ -105,7 +115,7 @@ export const useActiveModal = <T>(id: string, options: UseActiveModalOptions = {
             id,
             staticData: passDataToOpenModal ? staticData : undefined
         }));
-    }, [id]);
+    }, [id, passDataToOpenModal]);
     const closeModal = useCallback(() => {
         dispatch(currentActiveModalSlice.actions.closeActiveModal(id));
     }, [id]);
@@ -128,7 +138,7 @@ export const useActiveModal = <T>(id: string, options: UseActiveModalOptions = {
         // Miscellaneous props for accessibility, testing, etc.
         returnFocusAfterClose: true,
         "data-testid": testId ?? "active-modal"
-    }), [isOpen, openModal, closeModal, toggle]);
+    }), [isOpen, openModal, closeModal, toggle, testId]);
 
     return {
         openModal,

@@ -53,7 +53,7 @@ import {Toasts} from "./Toasts";
 import {AdminUserManager} from "../pages/AdminUserManager";
 import {AdminStats} from "../pages/AdminStats";
 import {AdminContentErrors} from "../pages/AdminContentErrors";
-import {ActiveModals} from "../elements/modals/ActiveModals";
+import {ActiveModals, IsaacModals} from "../elements/modals/IsaacModals";
 import {Groups} from "../pages/Groups";
 import {SetAssignments} from "../pages/SetAssignments";
 import {RedirectToGameboard} from './RedirectToGameboard';
@@ -139,6 +139,7 @@ export const IsaacApp = () => {
     return <Router history={history}>
         <SiteSpecific.Header />
         <Toasts />
+        <IsaacModals />
         <ActiveModals />
         <CookieBanner />
         <UnsupportedBrowserBanner />
