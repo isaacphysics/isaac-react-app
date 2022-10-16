@@ -1,4 +1,5 @@
-export enum MODAL_ID {
+export enum ModalId {
     loginOrSignUp = "login-or-sign-up",
-    isaacBooks = "isaac-books"
+    isaacBooks = "isaac-books",
+    inequalityHelp = "eqn-editor-help-modal"
 }

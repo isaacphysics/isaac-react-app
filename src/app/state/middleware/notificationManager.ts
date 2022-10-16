@@ -18,7 +18,7 @@ import {
 } from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
-import {MODAL_ID} from "../../components/elements/modals";
+import {ModalId} from "../../components/elements/modals";
 import {createListenerMiddleware} from "@reduxjs/toolkit";
 
 export const notificationCheckerMiddleware = createListenerMiddleware();
@@ -73,7 +73,7 @@ notificationCheckerMiddleware.startListening({
             }));
             persistence.session.remove(KEY.FIRST_ANON_QUESTION);
             persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
-            await dispatch(_openActiveModal(MODAL_ID.loginOrSignUp));
+            await dispatch(_openActiveModal(ModalId.loginOrSignUp));
         }
     }
 });

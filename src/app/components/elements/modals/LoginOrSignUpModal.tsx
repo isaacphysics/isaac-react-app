@@ -6,7 +6,7 @@ import {EmailPasswordInputs, GoogleSignInButton, PasswordResetButton, TFAInput, 
 import {isCS, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {buildActiveModal} from "./ActiveModal";
-import {MODAL_ID} from "./index";
+import {ModalId} from "./index";
 
 const LoginOrSignUpBody = () => {
 
@@ -101,7 +101,7 @@ const LoginOrSignUpBody = () => {
 };
 
 export const LoginOrSignUpModal = buildActiveModal(
-    MODAL_ID.loginOrSignUp,
+    ModalId.loginOrSignUp,
     "LoginOrSignUpModal",
     {
         noPadding: true,

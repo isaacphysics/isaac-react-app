@@ -82,7 +82,7 @@ import {
     store
 } from "../index";
 import {Immutable} from "immer";
-import {MODAL_ID} from "../../components/elements/modals";
+import {ModalId} from "../../components/elements/modals";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -596,7 +596,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
     }
 };
 export const openIsaacBooksModal = () => async (dispatch: AppDispatch) => {
-    dispatch(_openActiveModal(MODAL_ID.isaacBooks));
+    dispatch(_openActiveModal(ModalId.isaacBooks));
 };
 export const revokeAuthorisationAfterPrompt = (userId: number, otherUser: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(userId, otherUser)) as any);

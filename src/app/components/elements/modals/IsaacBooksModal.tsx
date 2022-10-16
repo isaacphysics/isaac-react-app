@@ -4,7 +4,7 @@ import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {siteSpecific} from "../../../services";
 import {buildActiveModal} from "./ActiveModal";
-import {MODAL_ID} from "./index";
+import {ModalId} from "./index";
 
 interface BookInfo {
     title: string;
@@ -68,7 +68,7 @@ export const BookModalBody = () => {
 };
 
 export const IsaacBooksModal = buildActiveModal(
-    MODAL_ID.isaacBooks,
+    ModalId.isaacBooks,
     "IsaacBooksModal",
     {
         title: "Isaac Skills Books",
