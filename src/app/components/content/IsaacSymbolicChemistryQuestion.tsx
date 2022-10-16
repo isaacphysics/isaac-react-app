@@ -6,7 +6,7 @@ import {ifKeyIsEnter, isDefined, jsonHelper, useCurrentQuestionAttempt} from "..
 import _flattenDeep from 'lodash/flattenDeep';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
@@ -57,8 +57,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
-                visible={modalVisible}
-                editorMode='chemistry'
+                editorMode="chemistry"
                 questionDoc={doc}
             />}
         </div>

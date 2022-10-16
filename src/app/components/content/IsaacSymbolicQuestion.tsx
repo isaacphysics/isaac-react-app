@@ -7,8 +7,6 @@ import {
     ifKeyIsEnter,
     isDefined,
     jsonHelper,
-    parsePseudoSymbolicAvailableSymbols,
-    sanitiseInequalityState,
     useCurrentQuestionAttempt
 } from "../../services";
 import {Inequality, makeInequality} from "inequality";
@@ -16,8 +14,9 @@ import {parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import {sanitiseInequalityState, parsePseudoSymbolicAvailableSymbols} from "../elements/modals/inequality/utils";
 
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 // Magic starts here
 interface ChildrenMap {
@@ -208,8 +207,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 onEditorStateChange={updateState}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
-                visible={modalVisible}
-                editorMode='maths'
+                editorMode="maths"
                 questionDoc={doc}
             />}
             {!readonly && <div className="eqn-editor-input">
