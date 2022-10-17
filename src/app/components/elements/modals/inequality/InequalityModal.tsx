@@ -5,8 +5,8 @@ import {
     parsePseudoSymbolicAvailableSymbols,
     sanitiseInequalityState
 } from "../../../../services";
-import {IsaacContentValueOrChildren} from '../../../content/IsaacContentValueOrChildren';
-import {ContentDTO} from '../../../../../IsaacApiTypes';
+import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
+import {ContentDTO} from "../../../../../IsaacApiTypes";
 import {Input} from "reactstrap";
 import classNames from "classnames";
 import {Markup} from "../../markup";
@@ -170,7 +170,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
     const onUnparsedChemicalElementsChange = (event: FormEvent<HTMLInputElement>) => setUnparsedChemicalElements(event.currentTarget.value);
     const [parsedChemicalElements, upperCaseWarning] = useMemo<[MenuItemProps[] | undefined, boolean]>(() => {
         if (isDefined(unparsedChemicalElements)) {
-            const splitUnparsed = unparsedChemicalElements.replace(/[^a-z]+/img, ',').split(',').filter(s => s !== '');
+            const splitUnparsed = unparsedChemicalElements.replace(/[^a-z]+/img, ",").split(",").filter(s => s !== "");
             const splitChemicalElements = splitUnparsed.filter(s => CHEMICAL_ELEMENTS.includes(s));
             const upperCaseWarning = splitUnparsed.some(e => e[0] !== e[0].toUpperCase());
             return [uniq(splitChemicalElements).map(generateChemicalElementMenuItem).filter(isDefined), upperCaseWarning];
@@ -210,7 +210,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                     </div>
                     <div className="input-box">
                         <div className={classNames("menu-item", isDefined(numberInputValue) ? "active" : "inactive")}
-                             data-item={isDefined(numberInputValue) ? JSON.stringify({ type: 'Num', properties: { significand: `${numberInputValue}`} }) : null}
+                             data-item={isDefined(numberInputValue) ? JSON.stringify({ type: "Num", properties: { significand: `${numberInputValue}`} }) : null}
                         >
                             {/* The `span` with a `katex` class is for some reason required for the empty hexagon to have correct layout */}
                             <VHexagon/>{isDefined(numberInputValue) ? <Markup encoding={"latex"} className={"d-block"}>{`$${numberInputValue}$`}</Markup> : <span className={"katex"}/>}
@@ -254,7 +254,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                             {menuItems.chemicalStates.map(buildIndexedMenuItem)}
                         </ul>
                     </div>}
-                    {editorMode === 'chemistry' && activeMenu === "operations" && <div className="top-menu chemistry operations">
+                    {editorMode === "chemistry" && activeMenu === "operations" && <div className="top-menu chemistry operations">
                         <ul className="sub-menu operations">
                             {menuItems.chemicalOperations.map(buildIndexedMenuItem)}
                         </ul>
@@ -265,7 +265,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                 <ul>
                     {["maths", "chemistry"].includes(editorMode) && <InequalityMenuTab menu={"numbers"} latexTitle={"1\\, 2\\, 3"}/>}
                     {["maths", "logic"].includes(editorMode) && <>
-                        {!disableLetters && <InequalityMenuTab menu={"letters"} subMenu={editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters"} latexTitle={"Ab\\ \\Delta \\gamma"}/>}
+                        {!disableLetters && <InequalityMenuTab menu={"letters"} subMenu={editorMode === "logic" ? "upperCaseLetters" : "lowerCaseLetters"} latexTitle={"Ab\\ \\Delta \\gamma"}/>}
                         <InequalityMenuTab menu={"basicFunctions"} latexTitle={functionsTabLabel}/>
                     </>}
                     {editorMode === "maths" && <InequalityMenuTab menu={"mathsOtherFunctions"} subMenu={"trigFunctions"} latexTitle={"\\sin\\ \\int"}/>}
@@ -291,7 +291,7 @@ interface InequalityModalProps {
     questionDoc?: ContentDTO;
 }
 const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEditorStateChange, questionDoc, initialEditorSymbols}: InequalityModalProps) => {
-    const parsedAvailableSymbols = useMemo(() => Array.from(new Set(parsePseudoSymbolicAvailableSymbols(availableSymbols))).filter(s => s.trim() !== ''), [availableSymbols]);
+    const parsedAvailableSymbols = useMemo(() => Array.from(new Set(parsePseudoSymbolicAvailableSymbols(availableSymbols))).filter(s => s.trim() !== ""), [availableSymbols]);
 
     const inequalityModalRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -301,7 +301,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const onQuestionReminderClick = () => setShowQuestionReminder(prev => !prev);
     
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
-    const disableLetters = availableSymbols?.includes('_no_alphabet') ?? false;
+    const disableLetters = availableSymbols?.includes("_no_alphabet") ?? false;
 
     // Setting up the Inequality `sketch` object
     const sketch = useRef<Nullable<Inequality>>(null);
@@ -334,8 +334,8 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const dispatch = useAppDispatch();
     const showHelpModal = () => dispatch(openActiveModal({
         closeAction: () => { store.dispatch(closeActiveModal()) },
-        size: 'xl',
-        title: 'Quick Help',
+        size: "xl",
+        title: "Quick Help",
         body: <PageFragment fragmentId={`eqn_editor_help_modal_${editorMode}`}/>
     }));
 
@@ -365,11 +365,11 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             if (menuItem) {
                 potentialSymbolSpec.current = JSON.parse(menuItem.getAttribute("data-item") || "");
                 movingMenuItem.current = (menuItem.cloneNode(true) as HTMLElement);
-                movingMenuItem.current.id = 'moving-menu-item';
-                movingMenuItem.current.style.position = 'absolute';
-                movingMenuItem.current.style.opacity = '0.5';
-                movingMenuItem.current.style.zIndex = '255';
-                movingMenuItem.current.style.pointerEvents = 'none';
+                movingMenuItem.current.id = "moving-menu-item";
+                movingMenuItem.current.style.position = "absolute";
+                movingMenuItem.current.style.opacity = "0.5";
+                movingMenuItem.current.style.zIndex = "255";
+                movingMenuItem.current.style.pointerEvents = "none";
                 document.body.appendChild(movingMenuItem.current);
 
                 disappearingMenuItem.current = menuItem;
@@ -420,7 +420,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     }, []);
 
     const handleKeyPress = useCallback((ev: KeyboardEvent) => {
-        if (ev.code === 'Escape') close();
+        if (ev.code === "Escape") close();
     }, []);
 
     // --- Rendering ---
