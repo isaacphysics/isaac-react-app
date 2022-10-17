@@ -269,8 +269,8 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
             </div>
             <div id="inequality-menu-tabs" className="menu-tabs">
                 <ul>
-                    {["maths", "chemistry"].includes(editorMode) && <>
-                        <InequalityMenuTab menu={"numbers"} latexTitle={"1\\, 2\\, 3"}/>
+                    {["maths", "chemistry"].includes(editorMode) && <InequalityMenuTab menu={"numbers"} latexTitle={"1\\, 2\\, 3"}/>}
+                    {["maths", "logic"].includes(editorMode) && <>
                         {!disableLetters && <InequalityMenuTab menu={"letters"} subMenu={editorMode === 'logic' ? "upperCaseLetters" : "lowerCaseLetters"} latexTitle={"Ab\\ \\Delta \\gamma"}/>}
                         <InequalityMenuTab menu={"basicFunctions"} latexTitle={functionsTabLabel}/>
                     </>}
@@ -278,7 +278,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                     {editorMode === "chemistry" && <>
                         <InequalityMenuTab menu={"elements"} latexTitle={isDefined(availableSymbols) && availableSymbols.length > 0 && menuItems.chemicalElements.map(i => i.type).includes("Particle") ? "\\text{He Li}\\ \\alpha" : "\\text{H He Li}"}/>
                         {menuItems.chemicalParticles.length > 0 && <InequalityMenuTab menu={"particles"} latexTitle={"\\alpha\\ \\gamma\\ \\text{e}"}/>}
-                        <InequalityMenuTab menu={"operations"} latexTitle={"(aq)\\, (g)\\, (l)"}/>
+                        <InequalityMenuTab menu={"states"} latexTitle={"(aq)\\, (g)\\, (l)"}/>
                         <InequalityMenuTab menu={"operations"} latexTitle={"\\rightarrow\\, \\rightleftharpoons\\, +"}/>
                     </>}
                 </ul>
