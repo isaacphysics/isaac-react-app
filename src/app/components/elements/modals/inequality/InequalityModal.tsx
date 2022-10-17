@@ -37,30 +37,6 @@ import {
     sanitiseInequalityState
 } from "./utils";
 
-interface InequalityModalProps {
-    availableSymbols?: string[];
-    close: () => void;
-    onEditorStateChange?: (state: any) => void;
-    initialEditorSymbols: any;
-    editorMode: EditorMode;
-    logicSyntax?: LogicSyntax;
-    questionDoc?: ContentDTO;
-}
-
-interface InequalityMenuProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    editorMode: EditorMode;
-    logicSyntax: LogicSyntax;
-    defaultMenu: boolean;
-    disableLetters: boolean;
-    menuItems: MenuItems;
-    availableSymbols: string[] | undefined;
-}
-
-type InequalityMenuTabType = "numbers" | "letters" | "basicFunctions" | "mathsOtherFunctions" | "maths" | "logic" | "elements" | "particles" | "states" | "operations" | null;
-type InequalityMenuSubMenuTabType = "upperCaseLetters" | "lowerCaseLetters" | "trigFunctions" | "hypFunctions" | "logFunctions" | "derivatives" | "lowerCaseGreekLetters" | "upperCaseGreekLetters" | null;
-
 const MenuItem = (props: MenuItemProps) => {
     return <li
         data-item={JSON.stringify(props)} // TODO Come up with a better way than this.
@@ -82,6 +58,8 @@ export const TabTriangle = () =>
           <polygon points="0,0 136,0 68,23"/>
     </svg>;
 
+type InequalityMenuTabType = "numbers" | "letters" | "basicFunctions" | "mathsOtherFunctions" | "maths" | "logic" | "elements" | "particles" | "states" | "operations" | null;
+type InequalityMenuSubMenuTabType = "upperCaseLetters" | "lowerCaseLetters" | "trigFunctions" | "hypFunctions" | "logFunctions" | "derivatives" | "lowerCaseGreekLetters" | "upperCaseGreekLetters" | null;
 const InequalityMenuContext = React.createContext<{activeMenu: [InequalityMenuTabType, InequalityMenuSubMenuTabType], openNewMenuTab: (newMenu: [InequalityMenuTabType, InequalityMenuSubMenuTabType]) => void} | undefined>(undefined);
 
 const InequalityMenuTab = ({menu, latexTitle, subMenu, className, isSubMenu = false}: {menu: InequalityMenuTabType; subMenu?: InequalityMenuSubMenuTabType; latexTitle: string; className?: string; isSubMenu?: boolean}) => {
@@ -160,6 +138,16 @@ const LettersMenu = ({defaultMenu, menuItems, editorMode, activeSubMenu}: {defau
     }
 };
 
+interface InequalityMenuProps {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    editorMode: EditorMode;
+    logicSyntax: LogicSyntax;
+    defaultMenu: boolean;
+    disableLetters: boolean;
+    menuItems: MenuItems;
+    availableSymbols: string[] | undefined;
+}
 const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({open, setOpen, editorMode, logicSyntax, defaultMenu, disableLetters, menuItems, availableSymbols}, menuRef) => {
     // Logic for what menu tab is currently open
     const [[activeMenu, activeSubMenu], setActiveMenu] = useState<[InequalityMenuTabType, InequalityMenuSubMenuTabType]>([null, editorMode === "logic" ? "upperCaseLetters" : "lowerCaseLetters"]);
@@ -299,6 +287,15 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
     </nav>;
 });
 
+interface InequalityModalProps {
+    availableSymbols?: string[];
+    close: () => void;
+    onEditorStateChange?: (state: any) => void;
+    initialEditorSymbols: any;
+    editorMode: EditorMode;
+    logicSyntax?: LogicSyntax;
+    questionDoc?: ContentDTO;
+}
 const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEditorStateChange, questionDoc, initialEditorSymbols}: InequalityModalProps) => {
     const parsedAvailableSymbols = useMemo(() => Array.from(new Set(parsePseudoSymbolicAvailableSymbols(availableSymbols))).filter(s => s.trim() !== ''), [availableSymbols]);
 
