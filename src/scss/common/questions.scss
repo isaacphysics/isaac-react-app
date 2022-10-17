@@ -324,6 +324,16 @@ button {
   }
 }
 
+.item-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+  // gridAutoRows: "max-content",
+  // gridTemplateColumns: "repeat(2, 1fr)",
+  min-height: 64px;
+}
+
 .cloze-item {
   touch-action: none;
   position: relative;

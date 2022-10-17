@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState
-} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
     ClozeValidationResponseDTO,
@@ -13,35 +7,38 @@ import {
     ItemChoiceDTO,
     ItemDTO
 } from "../../../IsaacApiTypes";
-import {CLOZE_DROP_ZONE_ID_PREFIX, CLOZE_ITEM_SECTION_ID, isDefined, useCurrentQuestionAttempt} from "../../services";
+import {
+    CLOZE_DROP_ZONE_ID_PREFIX,
+    CLOZE_ITEM_SECTION_ID,
+    customKeyboardCoordinates,
+    isDefined,
+    useCurrentQuestionAttempt
+} from "../../services";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
+    Announcements,
     closestCenter,
+    closestCorners,
+    CollisionDetection,
     DndContext,
     DragEndEvent,
     DragOverlay,
     DragStartEvent,
     KeyboardSensor,
     MouseSensor,
+    rectIntersection,
+    ScreenReaderInstructions,
     TouchSensor,
+    UniqueIdentifier,
     useDroppable,
     useSensor,
-    useSensors,
-    CollisionDetection,
-    rectIntersection,
-    Announcements,
-    ScreenReaderInstructions,
-    UniqueIdentifier, closestCorners
+    useSensors
 } from "@dnd-kit/core";
 import {ClozeDropRegionContext, ClozeItemDTO, IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Item} from "../elements/markup/portals/InlineDropZones";
 import {Immutable} from "immer";
-import {
-    arraySwap,
-    SortableContext
-} from "@dnd-kit/sortable";
-import {customKeyboardCoordinates} from "../../services";
+import {arraySwap, SortableContext} from "@dnd-kit/sortable";
 
 const composeCollisionAlgorithms = (first: CollisionDetection, second: CollisionDetection): CollisionDetection => (args) => {
     const collisions = first(args);
@@ -69,16 +66,6 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}
     });
     const isOverContainer = isOver || (over ? isDefined(items.find(i => i.id === over.id)) : false);
 
-    const itemSectionStyle: React.CSSProperties = {
-        display: "flex",
-        flexWrap: "wrap",
-        alignContent: "flex-start",
-        alignItems: "center",
-        // gridAutoRows: "max-content",
-        // gridTemplateColumns: "repeat(2, 1fr)",
-        minHeight: 64
-    };
-
     return <div className={"mb-3"}>
         <Label className="mt-3">Items: </Label>
         <Label className={"sr-only"} id={"item-section-info"}>
@@ -88,7 +75,7 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}
             item being hovered over.
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-labelledby={"item-section-info"} ref={setNodeRef} style={itemSectionStyle} aria-label={"Non-selected items"} className={`rounded p-2 bg-grey ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-labelledby={"item-section-info"} ref={setNodeRef} aria-label={"Non-selected items"} className={`item-section rounded p-2 bg-grey ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <Item key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
