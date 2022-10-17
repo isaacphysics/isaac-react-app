@@ -87,13 +87,17 @@ button.btn.btn-link.login-b,
   display: none;
 
   @include respond-above(sm) {
-    display: inline-block;
+    display: block;
   }
 
   a {
+    color: $black;
+    font-family: $primary-font;
     font-size: 0.875rem;
+    font-weight: 400;
     text-decoration: none;
     text-transform: uppercase;
+    display: block;
 
     &:hover {
       @include respond-above(sm) {
