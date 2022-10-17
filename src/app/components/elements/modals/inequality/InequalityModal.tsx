@@ -218,7 +218,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                         <div className={classNames("menu-item", isDefined(numberInputValue) ? "active" : "inactive")}
                              data-item={isDefined(numberInputValue) ? JSON.stringify({ type: 'Num', properties: { significand: `${numberInputValue}`} }) : null}
                         >
-                            {/* The `span` with a `katex` class is for some reason required  */}
+                            {/* The `span` with a `katex` class is for some reason required for the empty hexagon to have correct layout */}
                             <VHexagon/>{isDefined(numberInputValue) ? <Markup encoding={"latex"} className={"d-block"}>{`$${numberInputValue}$`}</Markup> : <span className={"katex"}/>}
                         </div>
                         {isDefined(numberInputValue) && <div className="clear-number" role="button" tabIndex={0} onClick={clearNumberInputValue} onKeyUp={clearNumberInputValue}/>}
