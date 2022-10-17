@@ -1,19 +1,7 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, {
-    FormEvent,
-    useCallback,
-    useContext,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useRef,
-    useState
-} from "react";
+import React, {FormEvent, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
-import {
-    GREEK_LETTERS_MAP,
-    isDefined
-} from "../../../../services";
+import {GREEK_LETTERS_MAP, isDefined} from "../../../../services";
 import {IsaacContentValueOrChildren} from '../../../content/IsaacContentValueOrChildren';
 import {ContentDTO} from '../../../../../IsaacApiTypes';
 import {Input} from "reactstrap";
@@ -28,13 +16,14 @@ import {
     LOG_FUNCTION_NAMES,
     LogicSyntax,
     LOWER_CASE_GREEK_LETTERS,
-    MenuItemProps, MenuItems,
+    MenuItemProps,
+    MenuItems,
     TRIG_FUNCTION_NAMES,
     UPPER_CASE_GREEK_LETTERS
 } from "./constants";
 import {closeActiveModal, openActiveModal, store, useAppDispatch} from "../../../../state";
 import {PageFragment} from "../../PageFragment";
-import {uniq, uniqWith, isEqual} from "lodash";
+import {isEqual, uniq, uniqWith} from "lodash";
 import {
     generateChemicalElementMenuItem,
     generateDefaultMenuItems,
@@ -44,8 +33,8 @@ import {
     generateMathsLogFunctionItem,
     generateMathsTrigFunctionItem,
     generateSingleLetterMenuItem,
-    sanitiseInequalityState,
-    parsePseudoSymbolicAvailableSymbols
+    parsePseudoSymbolicAvailableSymbols,
+    sanitiseInequalityState
 } from "./utils";
 
 interface InequalityModalProps {
@@ -113,7 +102,7 @@ const InequalityMenuNumber = ({n, update}: {n: number, update: () => void}) => {
         className="key menu-item number"
         role="button"
         tabIndex={0}
-        data-item={JSON.stringify({ type: "Num", properties: { significand: n } })}
+        data-item={JSON.stringify({ type: "Num", properties: { significand: n.toString() } })}
         onClick={update}
         onTouchEnd={update}
         onKeyUp={update}
@@ -238,11 +227,11 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                         </div>
                     </div>
                     <div className="input-box">
-                        {/* TODO visual problem with numerical input hexagon */}
                         <div className={classNames("menu-item", isDefined(numberInputValue) ? "active" : "inactive")}
                              data-item={isDefined(numberInputValue) ? JSON.stringify({ type: 'Num', properties: { significand: `${numberInputValue}`} }) : null}
                         >
-                            <VHexagon/><Markup encoding={"latex"}>{isDefined(numberInputValue) ? `$${numberInputValue}$` : ""}</Markup>
+                            {/* The `span` with a `katex` class is for some reason required  */}
+                            <VHexagon/>{isDefined(numberInputValue) ? <Markup encoding={"latex"} className={"d-block"}>{`$${numberInputValue}$`}</Markup> : <span className={"katex"}/>}
                         </div>
                         {isDefined(numberInputValue) && <div className="clear-number" role="button" tabIndex={0} onClick={clearNumberInputValue} onKeyUp={clearNumberInputValue}/>}
                     </div>
@@ -363,6 +352,14 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             }
         };
         sketch.current = newSketch;
+        return () => {
+            if (sketch.current) {
+                sketch.current.onNewEditorState = () => null;
+                sketch.current.onCloseMenus = () => null;
+                sketch.current.isTrashActive = () => false;
+                sketch.current = null;
+            }
+        };
     }, [inequalityModalRef.current]);
     const [editorState, setEditorState] = useState<any>({});
     useEffect(() => {
@@ -696,12 +693,6 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             document.body.style.overflow = '';
             document.body.style.touchAction = 'auto';
 
-            if (sketch.current) {
-                sketch.current.onNewEditorState = () => null;
-                sketch.current.onCloseMenus = () => null;
-                sketch.current.isTrashActive = () => false;
-                sketch.current = null as unknown as Inequality; // It doesn't matter about the typings at this point because the component is being unmounted
-            }
             const canvas = inequalityModalRef.current?.getElementsByTagName('canvas')[0];
             if (canvas) {
                 inequalityModalRef.current.removeChild(canvas);
