@@ -82,13 +82,13 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ClozeItemDTO>[]}
     </div>;
 };
 
-// A slightly stutter-y autoscroll that can be toggled on and off
-const useAutoScroll = ({acceleration, interval}: {acceleration?: number, interval?: number} = {}) => {
-    const [scrollAmount, setScrollAmount] = useState<number>(0);
+const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
+    return ["touchstart", "touchmove", "touchend", "touchcancel"].includes(event.type);
+};
 
-    const isTouchEvent = (event: MouseEvent | TouchEvent): event is TouchEvent => {
-        return ["touchstart", "touchmove", "touchend", "touchcancel"].includes(event.type);
-    };
+// A slightly stutter-y autoscroll that can be toggled on and off
+const useAutoScroll = ({active, acceleration, interval}: {active: boolean; acceleration?: number, interval?: number} = {active: false}) => {
+    const [scrollAmount, setScrollAmount] = useState<number>(0);
 
     const autoScrollListener = useCallback((event: MouseEvent | TouchEvent) => {
         // TODO could try to support different scrolling contexts, but this may not be needed
@@ -123,16 +123,17 @@ const useAutoScroll = ({acceleration, interval}: {acceleration?: number, interva
         return updateScrollAmount(scrollAmount, acceleration, interval);
     }, [scrollAmount, acceleration, interval]);
 
-    const activateScroll = () => {
-        window.addEventListener("mousemove", autoScrollListener);
-        window.addEventListener("touchmove", autoScrollListener);
-    }
-    const deactivateScroll = () => {
-        window.removeEventListener("mousemove", autoScrollListener);
-        window.removeEventListener("touchmove", autoScrollListener);
-        setScrollAmount(0);
-    }
-    return {activateScroll, deactivateScroll};
+    useEffect(() => {
+        if (active) {
+            window.addEventListener("mousemove", autoScrollListener);
+            window.addEventListener("touchmove", autoScrollListener);
+            return () => {
+                window.removeEventListener("mousemove", autoScrollListener);
+                window.removeEventListener("touchmove", autoScrollListener);
+                setScrollAmount(0);
+            }
+        }
+    }, [active]);
 };
 
 const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ClozeValidationResponseDTO>) => {
@@ -197,8 +198,6 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     const findItemById = (id: string) => nonSelectedItems.find(i => i.replacementId === id) ?? inlineDropValues.find(i => i && i.replacementId === id);
 
-    const {activateScroll, deactivateScroll} = useAutoScroll({acceleration: 3, interval: 5});
-
     const [usingKeyboard, setUsingKeyboard] = useState<boolean>(false);
 
     // Which item is being dragged currently, if any
@@ -207,10 +206,11 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         setActiveItem(findItemById(event.active.id as string));
     };
     const stopItemDrag = () => {
-        deactivateScroll();
         setActiveItem(undefined);
         setUsingKeyboard(false);
     };
+
+    useAutoScroll({active: isDefined(activeItem) && !usingKeyboard, acceleration: 5, interval: 5});
 
     const registerInlineDropRegion = useCallback((dropRegionId: string, index: number) => {
         if (!registeredDropRegionIDs.has(dropRegionId)) {
@@ -334,16 +334,14 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             // Require the mouse to move by 10 pixels before activating
             activationConstraint: {
                 distance: 10,
-            },
-            onActivation: activateScroll
+            }
         }),
         useSensor(TouchSensor, {
             // Press delay of 250ms, with tolerance of 5px of movement
             activationConstraint: {
                 delay: 250,
                 tolerance: 5,
-            },
-            onActivation: activateScroll
+            }
         }),
         useSensor(KeyboardSensor, {
             coordinateGetter: customKeyboardCoordinates,
@@ -354,6 +352,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
     // A nicer closestCenter collision detection that doesn't consider the center of the item section if it contains
     // items and you're currently hovering over it
     const customCollision: CollisionDetection = useCallback((args) => {
+        if (usingKeyboard) {
+            return closestCenter(args);
+        }
         const justDropZones = args.droppableContainers.filter(isDropZone);
         const initialCollisions = composeCollisionAlgorithms(rectIntersection, closestCorners)({...args, droppableContainers: justDropZones});
         if (initialCollisions.length > 0 && initialCollisions[0].id === CLOZE_ITEM_SECTION_ID) {
@@ -362,7 +363,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             return nsiCollisions.length > 0 ? nsiCollisions : initialCollisions;
         }
         return initialCollisions;
-    }, [nonSelectedItems]);
+    }, [nonSelectedItems, usingKeyboard]);
 
     const accessibility = useMemo<{announcements: Announcements, container?: Element | undefined, restoreFocus?: boolean, screenReaderInstructions: ScreenReaderInstructions}>(() => ({
         restoreFocus: false,

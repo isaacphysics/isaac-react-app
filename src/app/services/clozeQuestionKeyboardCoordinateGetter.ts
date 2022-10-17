@@ -20,6 +20,7 @@ export const customKeyboardCoordinates: KeyboardCoordinateGetter = (
         context: {
             active,
             collisionRect,
+            draggingNodeRect,
             droppableContainers,
             over
         }
@@ -58,8 +59,8 @@ export const customKeyboardCoordinates: KeyboardCoordinateGetter = (
     }
 
     const rect = nextDroppable?.rect.current;
-    return rect ? {
-        x: rect.left + rect.width / 2,
-        y: rect.top + rect.height / 2
+    return rect && draggingNodeRect ? {
+        x: rect.left + rect.width / 2 - draggingNodeRect?.width / 2,
+        y: rect.top + rect.height / 2 - draggingNodeRect?.height / 2
     } : undefined;
 };
