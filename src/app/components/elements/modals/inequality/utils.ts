@@ -334,7 +334,6 @@ export function generateChemicalElementMenuItem(symbol: string): MenuItemProps |
 }
 
 export const generateDefaultMenuItems = (parsedAvailableSymbols: string[], logicSyntax?: LogicSyntax): MenuItems => ({
-    // ...this.state.menuItems,
     upperCaseLetters: [],
     lowerCaseLetters: [],
     upperCaseGreekLetters: [],
@@ -413,4 +412,4 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
         }
     }
     return theseSymbols;
-}
+};

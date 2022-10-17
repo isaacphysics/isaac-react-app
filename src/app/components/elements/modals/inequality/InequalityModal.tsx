@@ -287,6 +287,328 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
     </nav>;
 });
 
+// --- Callback/effect definitions ---
+interface InequalityHandlers {
+    onTouchStart: (e: TouchEvent) => void;
+    handleKeyPress: (ev: KeyboardEvent) => void;
+    onTouchMove: (e: TouchEvent) => void;
+    onMouseMove: (e: MouseEvent) => void;
+    onMouseDown: (e: MouseEvent) => void;
+    onCursorMoveEnd: () => void;
+}
+function setupAndTeardownDocStyleAndListeners({onCursorMoveEnd, onMouseMove, onTouchMove, handleKeyPress, onMouseDown, onTouchStart, inequalityModalRef}: InequalityHandlers & {inequalityModalRef: React.RefObject<HTMLDivElement>}) {
+    window.addEventListener("keyup", handleKeyPress);
+
+    if (inequalityModalRef.current) {
+        inequalityModalRef.current.addEventListener("mousedown", onMouseDown);
+        inequalityModalRef.current.addEventListener("touchstart", onTouchStart);
+        inequalityModalRef.current.addEventListener("mousemove", onMouseMove);
+        inequalityModalRef.current.addEventListener("touchmove", onTouchMove);
+    }
+    // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
+    document.body.addEventListener("mouseup", onCursorMoveEnd);
+    document.body.addEventListener("touchend", onCursorMoveEnd);
+
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.style.width = '100vw';
+    document.documentElement.style.height = '100vh';
+    document.documentElement.style.touchAction = 'none';
+    document.body.style.overflow = "hidden";
+    document.body.style.width = '100vw';
+    document.body.style.height = '100vh';
+    document.body.style.touchAction = 'none';
+
+    return () => {
+        window.removeEventListener("keyup", handleKeyPress);
+
+        if (inequalityModalRef.current) {
+            inequalityModalRef.current.removeEventListener('mousedown', onMouseDown);
+            inequalityModalRef.current.removeEventListener('touchstart', onTouchStart);
+            inequalityModalRef.current.removeEventListener('mousemove', onMouseMove);
+            inequalityModalRef.current.removeEventListener('touchmove', onTouchMove);
+        }
+        // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
+        document.body.removeEventListener("mouseup", onCursorMoveEnd);
+        document.body.removeEventListener("touchend", onCursorMoveEnd);
+
+        document.documentElement.style.width = '';
+        document.documentElement.style.height = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.touchAction = 'auto';
+        document.body.style.width = '';
+        document.body.style.height = '';
+        document.body.style.overflow = '';
+        document.body.style.touchAction = 'auto';
+
+        const canvas = inequalityModalRef.current?.getElementsByTagName('canvas')[0];
+        if (canvas) {
+            inequalityModalRef.current.removeChild(canvas);
+        }
+    };
+}
+
+function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbols}: {editorMode: EditorMode; logicSyntax?: LogicSyntax; parsedAvailableSymbols: string[]}) {
+    const baseItems = generateDefaultMenuItems(parsedAvailableSymbols, logicSyntax);
+
+    if (parsedAvailableSymbols.length > 0) {
+        // ~~~ Assuming these are only letters... might become more complicated in the future.
+        // THE FUTURE IS HERE! Sorry.
+        const customMenuItems: {mathsDerivatives: MenuItemProps[]; letters: MenuItemProps[]; otherFunctions: MenuItemProps[]; chemicalElements: MenuItemProps[]} = {
+            mathsDerivatives: new Array<MenuItemProps>(),
+            letters: new Array<MenuItemProps>(),
+            otherFunctions: new Array<MenuItemProps>(),
+            chemicalElements: new Array<MenuItemProps>(),
+        };
+
+        parsedAvailableSymbols.forEach((l) => {
+            const availableSymbol = l.trim();
+            if (availableSymbol.endsWith('()')) {
+                // Functions
+                const functionName = availableSymbol.replace('()', '');
+                if (TRIG_FUNCTION_NAMES.includes(functionName)) {
+                    customMenuItems.otherFunctions.push(generateMathsTrigFunctionItem(functionName));
+                } else if (HYP_FUNCTION_NAMES.includes(functionName)) {
+                    customMenuItems.otherFunctions.push(generateMathsTrigFunctionItem(functionName));
+                } else if (LOG_FUNCTION_NAMES.includes(functionName)) {
+                    customMenuItems.otherFunctions.push(generateMathsLogFunctionItem(functionName));
+                } else {
+                    // What
+                    // eslint-disable-next-line no-console
+                    console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
+                }
+            } else if (availableSymbol.startsWith('Derivative')) {
+                const items = generateMathsDerivativeAndLetters(availableSymbol);
+                if (items.derivative) {
+                    customMenuItems.mathsDerivatives.push(...items.derivative);
+                    customMenuItems.letters.push(...items.derivative);
+                }
+                if (items.letters) {
+                    customMenuItems.letters.push(...items.letters);
+                }
+            } else if (DIFFERENTIAL_REGEX.test(availableSymbol)) {
+                const items = generateMathsDifferentialAndLetters(availableSymbol);
+                if (items.differential) {
+                    customMenuItems.mathsDerivatives.push(items.differential);
+                    customMenuItems.letters.push(items.differential);
+                }
+                if (items.letters) {
+                    customMenuItems.letters.push(...items.letters);
+                }
+            } else {
+                // Everything else is a letter, unless we are doing chemistry
+                if (editorMode === "chemistry") {
+                    // Available chemical elements
+                    const item = generateChemicalElementMenuItem(availableSymbol);
+                    if (item) {
+                        customMenuItems.chemicalElements.push(item);
+                    }
+                } else {
+                    const item = generateLetterMenuItem(availableSymbol);
+                    if (isDefined(item)) {
+                        customMenuItems.letters.push(item);
+                    }
+                }
+            }
+        });
+        return [{
+            ...baseItems,
+            mathsDerivatives: [ ...baseItems.mathsDerivatives, ...customMenuItems.mathsDerivatives ],
+            letters: uniqWith([ ...baseItems.letters, ...customMenuItems.letters ], (a, b) => isEqual(a, b))/*.sort((a: MenuItem, b: MenuItem) => {
+                        if ((a.type === 'Symbol' && b.type === 'Symbol') || (a.type !== 'Symbol' && b.type !== 'Symbol')) {
+                            return a.menu.label.localeCompare(b.menu.label);
+                        }
+                        if (a.type === 'Derivative' && b.type === 'Differential') {
+                            return -1;
+                        } else if (a.type === 'Differential' && b.type === 'Derivative') {
+                            return 1;
+                        }
+                        if (a.type === 'Symbol' && b.type !== 'Symbol') {
+                            return -1;
+                        } else if (a.type !== 'Symbol' && b.type === 'Symbol') {
+                            return 1;
+                        }
+                        return 0;
+                    })*/,
+            otherFunctions: [ ...baseItems.otherFunctions, ...customMenuItems.otherFunctions ],
+            chemicalElements: [ ...baseItems.chemicalElements, ...customMenuItems.chemicalElements ],
+        }, false] as [MenuItems, boolean];
+    } else {
+        if (editorMode === "logic") {
+            // T and F are reserved in logic. The jury is still out on t and f.
+            return [{
+                ...baseItems,
+                upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map(letter => generateSingleLetterMenuItem(letter)),
+                lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map(letter => generateSingleLetterMenuItem(letter)),
+            }, true] as [MenuItems, boolean];
+        } else if (editorMode === "chemistry") {
+            return [{
+                ...baseItems,
+                chemicalElements: CHEMICAL_ELEMENTS.map(generateChemicalElementMenuItem),
+                chemicalParticles: Object.keys(CHEMICAL_PARTICLES).map(generateChemicalElementMenuItem),
+            }, true] as [MenuItems, boolean];
+        } else {
+            // Assuming editorMode === 'maths'
+            return [{
+                ...baseItems,
+                upperCaseLetters: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => generateSingleLetterMenuItem(letter)),
+                lowerCaseLetters: "abcdefghijklmnopqrstuvwxyz".split("").map(letter => generateSingleLetterMenuItem(letter)),
+                upperCaseGreekLetters: UPPER_CASE_GREEK_LETTERS.map( letter => generateSingleLetterMenuItem(GREEK_LETTERS_MAP[letter] || letter, GREEK_LETTERS_MAP[letter] ? '\\' + letter : letter) ),
+                lowerCaseGreekLetters: LOWER_CASE_GREEK_LETTERS.map( letter => generateSingleLetterMenuItem(GREEK_LETTERS_MAP[letter] || letter, GREEK_LETTERS_MAP[letter] ? '\\' + letter : letter) ),
+            }, true] as [MenuItems, boolean];
+        }
+    }
+}
+
+// --- Event handlers (the longer ones at least) ---
+interface HandlerArgs {
+    previousCursor: React.MutableRefObject<{x: number; y: number} | null>;
+    potentialSymbolSpec: React.MutableRefObject<MenuItemProps | null>;
+    movingMenuItem: React.MutableRefObject<HTMLElement | null>;
+    movingMenuBar: React.MutableRefObject<HTMLElement | null>;
+    disappearingMenuItem: React.MutableRefObject<HTMLElement | null>;
+    sketch: React.RefObject<Nullable<Inequality>>;
+}
+function handleMoveCallback({previousCursor, movingMenuBar, movingMenuItem, potentialSymbolSpec, sketch}: HandlerArgs, isTrashActive: React.MutableRefObject<boolean>, menuRef: React.RefObject<HTMLDivElement>, setMenuOpen: (b: boolean) => void, x: number, y: number) {
+
+    const trashCan = document.getElementById('inequality-trash');
+    if (trashCan) {
+        const trashCanRect = trashCan.getBoundingClientRect();
+        if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
+            trashCan.classList.add('active');
+            isTrashActive.current = true;
+        } else {
+            trashCan.classList.remove('active');
+            isTrashActive.current = false;
+        }
+    }
+
+    // No need to run any further if we are not dealing with a menu item.
+    if (!movingMenuItem.current) return;
+
+    if (previousCursor.current) {
+        const dx =  x - previousCursor.current.x;
+        if (movingMenuBar.current) {
+            const menuBarRect = movingMenuBar.current.getBoundingClientRect();
+            const menuItems = movingMenuBar.current.getElementsByClassName('menu-item');
+            const lastMenuItem = menuItems.item(menuItems.length-1);
+            if (lastMenuItem) {
+                const newUlLeft = Math.min(0, menuBarRect.left + dx);
+                const lastMenuItemRect = lastMenuItem.getBoundingClientRect();
+                if (lastMenuItemRect.right > window.innerWidth || dx >= 0) {
+                    movingMenuBar.current.style.left = `${newUlLeft}px`;
+                }
+            }
+        }
+        movingMenuItem.current.style.top = `${y}px`;
+        movingMenuItem.current.style.left = `${x}px`;
+
+        // Auto-close the menu on small-screens when dragging outside the area
+        if (window.innerWidth < 1024) {
+            const menuBox = menuRef.current?.getBoundingClientRect();
+            if (isDefined(menuBox)) {
+                if (previousCursor.current.y <= menuBox.height && y > menuBox.height) {
+                    setMenuOpen(false);
+                }
+            }
+        }
+    }
+    if (potentialSymbolSpec.current && sketch.current) {
+        sketch.current.updatePotentialSymbol(potentialSymbolSpec.current as WidgetSpec, x, y);
+    }
+
+    previousCursor.current = { x, y };
+}
+
+function onCursorMoveEndCallback({movingMenuItem, previousCursor, sketch, disappearingMenuItem, movingMenuBar, potentialSymbolSpec}: HandlerArgs) {
+    // No need to run if we are not dealing with a menu item.
+    if (!movingMenuItem.current) return;
+
+    const menuTabs = document.getElementById('inequality-menu-tabs') as Element;
+    const menuTabsRect = menuTabs ? menuTabs.getBoundingClientRect() : null;
+
+    const trashCan = document.getElementById('inequality-trash') as Element;
+    const trashCanRect = trashCan ? trashCan.getBoundingClientRect() : null;
+
+    if (previousCursor.current && sketch.current) {
+        if (menuTabsRect && previousCursor.current.y <= menuTabsRect.top) {
+            sketch.current.abortPotentialSymbol();
+        } else if (trashCanRect &&
+            previousCursor.current.x >= trashCanRect.left &&
+            previousCursor.current.x <= trashCanRect.right &&
+            previousCursor.current.y >= trashCanRect.top &&
+            previousCursor.current.y <= trashCanRect.bottom) {
+            sketch.current.abortPotentialSymbol();
+        } else {
+            sketch.current.commitPotentialSymbol();
+        }
+    }
+
+    previousCursor.current = null;
+    document.body.removeChild(movingMenuItem.current);
+    if (disappearingMenuItem.current) {
+        disappearingMenuItem.current.style.opacity = '1';
+        disappearingMenuItem.current = null;
+    }
+    movingMenuItem.current = null;
+    movingMenuBar.current = null;
+    potentialSymbolSpec.current = null;
+}
+
+interface PrepareInequalityArgs {
+    editorMode?: EditorMode;
+    logicSyntax?: LogicSyntax;
+    inequalityModalRef: React.RefObject<HTMLDivElement>;
+    isTrashActive: React.MutableRefObject<boolean>;
+    sketch: React.MutableRefObject<Nullable<Inequality>>;
+    initialEditorSymbols: { type: string; properties: any }[];
+    onEditorStateChange?: (state: any) => void;
+    setEditorState: (state: any) => void;
+}
+function prepareInequality({editorMode, inequalityModalRef, initialEditorSymbols, isTrashActive, sketch, logicSyntax, setEditorState, onEditorStateChange}: PrepareInequalityArgs) {
+    const { sketch: newSketch } = makeInequality(
+        inequalityModalRef.current,
+        window.innerWidth,
+        window.innerHeight,
+        initialEditorSymbols,
+        {
+            editorMode: editorMode ?? "logic",
+            logicSyntax: logicSyntax ?? "logic",
+            textEntry: false,
+            fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
+            fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'
+        }
+    );
+    if (!isDefined(newSketch)) {
+        throw new Error("Unable to initialize inequality.");
+    }
+    newSketch.log = {
+        initialState: [],
+        actions: [{
+            event: "OPEN",
+            timestamp: Date.now()
+        }]
+    };
+    newSketch.onCloseMenus = () => undefined;
+    newSketch.isTrashActive = () => isTrashActive.current;
+    newSketch.onNewEditorState = (state: any) => {
+        const modal = inequalityModalRef.current;
+        if (modal) {
+            const newState = sanitiseInequalityState(state);
+            setEditorState((prev: any) => ({...prev, ...newState}));
+            onEditorStateChange?.(newState);
+        }
+    };
+    sketch.current = newSketch;
+    return () => {
+        if (sketch.current) {
+            sketch.current.onNewEditorState = () => null;
+            sketch.current.onCloseMenus = () => null;
+            sketch.current.isTrashActive = () => false;
+            sketch.current = null;
+        }
+    };
+}
+
 interface InequalityModalProps {
     availableSymbols?: string[];
     close: () => void;
@@ -311,54 +633,19 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
 
     // Setting up the Inequality `sketch` object
     const sketch = useRef<Nullable<Inequality>>(null);
-    useLayoutEffect(() => {
-        console.log("initialising sketch with: ", inequalityModalRef.current);
-        // TODO seems like the sketch is broken because the inequality modal div element disappears from underneath it
-        // Using `createRef` instead seems to half fix it for some reason
-        const { sketch: newSketch } = makeInequality(
-            inequalityModalRef.current,
-            window.innerWidth,
-            window.innerHeight,
-            initialEditorSymbols,
-            {
-                editorMode: editorMode ?? "logic",
-                logicSyntax: logicSyntax ?? "logic",
-                textEntry: false,
-                fontItalicPath: '/assets/fonts/STIXGeneral-Italic.ttf',
-                fontRegularPath: '/assets/fonts/STIXGeneral-Regular.ttf'
-            }
-        );
-        if (!isDefined(newSketch)) {
-            throw new Error("Unable to initialize inequality.");
-        }
-        newSketch.log = {
-            initialState: [],
-            actions: [{
-                event: "OPEN",
-                timestamp: Date.now()
-            }]
-        };
-        newSketch.onCloseMenus = () => undefined;
-        newSketch.isTrashActive = () => isTrashActive.current;
-        newSketch.onNewEditorState = (state: any) => {
-            const modal = inequalityModalRef.current;
-            if (modal) {
-                const newState = sanitiseInequalityState(state);
-                setEditorState((prev: any) => ({...prev, ...newState}));
-                onEditorStateChange?.(newState);
-            }
-        };
-        sketch.current = newSketch;
-        return () => {
-            if (sketch.current) {
-                sketch.current.onNewEditorState = () => null;
-                sketch.current.onCloseMenus = () => null;
-                sketch.current.isTrashActive = () => false;
-                sketch.current = null;
-            }
-        };
-    }, [inequalityModalRef.current]);
     const [editorState, setEditorState] = useState<any>({});
+    useLayoutEffect(() => {
+        return prepareInequality({
+            sketch,
+            inequalityModalRef,
+            isTrashActive,
+            initialEditorSymbols,
+            editorMode,
+            logicSyntax,
+            onEditorStateChange,
+            setEditorState
+        });
+    }, [inequalityModalRef.current]);
     useEffect(() => {
         if (!isDefined(sketch.current)) return;
         sketch.current.onNewEditorState = (state: any) => {
@@ -391,6 +678,15 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     const movingMenuBar = useRef<HTMLElement | null>(null);
     const disappearingMenuItem = useRef<HTMLElement | null>(null);
 
+    const handlerState: HandlerArgs = {
+        previousCursor,
+        potentialSymbolSpec,
+        movingMenuItem,
+        movingMenuBar,
+        disappearingMenuItem,
+        sketch
+    };
+
     const prepareAbsoluteElement = useCallback((element?: Element | null) => {
         if (element) {
             const menuItem = element.closest<HTMLElement>(".menu-item");
@@ -413,53 +709,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     }, []);
 
     const handleMove = useCallback((target: HTMLElement, x: number, y: number) => {
-        const trashCan = document.getElementById('inequality-trash');
-        if (trashCan) {
-            const trashCanRect = trashCan.getBoundingClientRect();
-            if (trashCanRect && x >= trashCanRect.left && x <= trashCanRect.right && y >= trashCanRect.top && y <= trashCanRect.bottom) {
-                trashCan.classList.add('active');
-                isTrashActive.current = true;
-            } else {
-                trashCan.classList.remove('active');
-                isTrashActive.current = false;
-            }
-        }
-
-        // No need to run any further if we are not dealing with a menu item.
-        if (!movingMenuItem.current) return;
-
-        if (previousCursor.current) {
-            const dx =  x - previousCursor.current.x;
-            if (movingMenuBar.current) {
-                const menuBarRect = movingMenuBar.current.getBoundingClientRect();
-                const menuItems = movingMenuBar.current.getElementsByClassName('menu-item');
-                const lastMenuItem = menuItems.item(menuItems.length-1);
-                if (lastMenuItem) {
-                    const newUlLeft = Math.min(0, menuBarRect.left + dx);
-                    const lastMenuItemRect = lastMenuItem.getBoundingClientRect();
-                    if (lastMenuItemRect.right > window.innerWidth || dx >= 0) {
-                        movingMenuBar.current.style.left = `${newUlLeft}px`;
-                    }
-                }
-            }
-            movingMenuItem.current.style.top = `${y}px`;
-            movingMenuItem.current.style.left = `${x}px`;
-
-            // Auto-close the menu on small-screens when dragging outside the area
-            if (window.innerWidth < 1024) {
-                const menuBox = menuRef.current?.getBoundingClientRect();
-                if (isDefined(menuBox)) {
-                    if (previousCursor.current.y <= menuBox.height && y > menuBox.height) {
-                        setMenuOpen(false);
-                    }
-                }
-            }
-        }
-        if (potentialSymbolSpec.current && sketch.current) {
-            sketch.current.updatePotentialSymbol(potentialSymbolSpec.current as WidgetSpec, x, y);
-        }
-
-        previousCursor.current = { x, y };
+        return handleMoveCallback(handlerState, isTrashActive, menuRef, setMenuOpen, x, y);
     }, []);
 
     const onMouseDown = useCallback((e: MouseEvent) => {
@@ -494,38 +744,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     }, []);
 
 	const onCursorMoveEnd = useCallback(() => {
-        // No need to run if we are not dealing with a menu item.
-        if (!movingMenuItem.current) return;
-
-        const menuTabs = document.getElementById('inequality-menu-tabs') as Element;
-        const menuTabsRect = menuTabs ? menuTabs.getBoundingClientRect() : null;
-
-        const trashCan = document.getElementById('inequality-trash') as Element;
-        const trashCanRect = trashCan ? trashCan.getBoundingClientRect() : null;
-
-        if (previousCursor.current && sketch.current) {
-            if (menuTabsRect && previousCursor.current.y <= menuTabsRect.top) {
-                sketch.current.abortPotentialSymbol();
-            } else if (trashCanRect &&
-                previousCursor.current.x >= trashCanRect.left &&
-                previousCursor.current.x <= trashCanRect.right &&
-                previousCursor.current.y >= trashCanRect.top &&
-                previousCursor.current.y <= trashCanRect.bottom) {
-                sketch.current.abortPotentialSymbol();
-            } else {
-                sketch.current.commitPotentialSymbol();
-            }
-        }
-
-        previousCursor.current = null;
-        document.body.removeChild(movingMenuItem.current);
-        if (disappearingMenuItem.current) {
-            disappearingMenuItem.current.style.opacity = '1';
-            disappearingMenuItem.current = null;
-        }
-        movingMenuItem.current = null;
-        movingMenuBar.current = null;
-        potentialSymbolSpec.current = null;
+        onCursorMoveEndCallback(handlerState);
     }, []);
 
     const handleKeyPress = useCallback((ev: KeyboardEvent) => {
@@ -535,166 +754,19 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
     // --- Rendering ---
 
     const [menuItems, defaultMenu] = useMemo<[MenuItems, boolean]>(() => {
-        const baseItems = generateDefaultMenuItems(parsedAvailableSymbols, logicSyntax);
-
-        if (isDefined(parsedAvailableSymbols) && Array.isArray(parsedAvailableSymbols) && parsedAvailableSymbols.length > 0) {
-            // ~~~ Assuming these are only letters... might become more complicated in the future.
-            // THE FUTURE IS HERE! Sorry.
-            const customMenuItems: {mathsDerivatives: MenuItemProps[]; letters: MenuItemProps[]; otherFunctions: MenuItemProps[]; chemicalElements: MenuItemProps[]} = {
-                mathsDerivatives: new Array<MenuItemProps>(),
-                letters: new Array<MenuItemProps>(),
-                otherFunctions: new Array<MenuItemProps>(),
-                chemicalElements: new Array<MenuItemProps>(),
-            };
-
-            parsedAvailableSymbols.forEach((l) => {
-                const availableSymbol = l.trim();
-                if (availableSymbol.endsWith('()')) {
-                    // Functions
-                    const functionName = availableSymbol.replace('()', '');
-                    if (TRIG_FUNCTION_NAMES.includes(functionName)) {
-                        customMenuItems.otherFunctions.push(generateMathsTrigFunctionItem(functionName));
-                    } else if (HYP_FUNCTION_NAMES.includes(functionName)) {
-                        customMenuItems.otherFunctions.push(generateMathsTrigFunctionItem(functionName));
-                    } else if (LOG_FUNCTION_NAMES.includes(functionName)) {
-                        customMenuItems.otherFunctions.push(generateMathsLogFunctionItem(functionName));
-                    } else {
-                        // What
-                        // eslint-disable-next-line no-console
-                        console.warn(`Could not parse available symbol "${availableSymbol} as a function"`);
-                    }
-                } else if (availableSymbol.startsWith('Derivative')) {
-                    const items = generateMathsDerivativeAndLetters(availableSymbol);
-                    if (items.derivative) {
-                        customMenuItems.mathsDerivatives.push(...items.derivative);
-                        customMenuItems.letters.push(...items.derivative);
-                    }
-                    if (items.letters) {
-                        customMenuItems.letters.push(...items.letters);
-                    }
-                } else if (DIFFERENTIAL_REGEX.test(availableSymbol)) {
-                    const items = generateMathsDifferentialAndLetters(availableSymbol);
-                    if (items.differential) {
-                        customMenuItems.mathsDerivatives.push(items.differential);
-                        customMenuItems.letters.push(items.differential);
-                    }
-                    if (items.letters) {
-                        customMenuItems.letters.push(...items.letters);
-                    }
-                } else {
-                    // Everything else is a letter, unless we are doing chemistry
-                    if (editorMode === "chemistry") {
-                        // Available chemical elements
-                        const item = generateChemicalElementMenuItem(availableSymbol);
-                        if (item) {
-                            customMenuItems.chemicalElements.push(item);
-                        }
-                    } else {
-                        const item = generateLetterMenuItem(availableSymbol);
-                        if (isDefined(item)) {
-                            customMenuItems.letters.push(item);
-                        }
-                    }
-                }
-            });
-            return [{
-                ...baseItems,
-                mathsDerivatives: [ ...baseItems.mathsDerivatives, ...customMenuItems.mathsDerivatives ],
-                letters: uniqWith([ ...baseItems.letters, ...customMenuItems.letters ], (a, b) => isEqual(a, b))/*.sort((a: MenuItem, b: MenuItem) => {
-                        if ((a.type === 'Symbol' && b.type === 'Symbol') || (a.type !== 'Symbol' && b.type !== 'Symbol')) {
-                            return a.menu.label.localeCompare(b.menu.label);
-                        }
-                        if (a.type === 'Derivative' && b.type === 'Differential') {
-                            return -1;
-                        } else if (a.type === 'Differential' && b.type === 'Derivative') {
-                            return 1;
-                        }
-                        if (a.type === 'Symbol' && b.type !== 'Symbol') {
-                            return -1;
-                        } else if (a.type !== 'Symbol' && b.type === 'Symbol') {
-                            return 1;
-                        }
-                        return 0;
-                    })*/,
-                otherFunctions: [ ...baseItems.otherFunctions, ...customMenuItems.otherFunctions ],
-                chemicalElements: [ ...baseItems.chemicalElements, ...customMenuItems.chemicalElements ],
-            }, false] as [MenuItems, boolean];
-        } else {
-            if (editorMode === "logic") {
-                // T and F are reserved in logic. The jury is still out on t and f.
-                return [{
-                    ...baseItems,
-                    upperCaseLetters: "ABCDEGHIJKLMNOPQRSUVWXYZ".split("").map(letter => generateSingleLetterMenuItem(letter)),
-                    lowerCaseLetters: "abcdeghijklmnopqrsuvwxyz".split("").map(letter => generateSingleLetterMenuItem(letter)),
-                }, true] as [MenuItems, boolean];
-            } else if (editorMode === "chemistry") {
-                return [{
-                    ...baseItems,
-                    chemicalElements: CHEMICAL_ELEMENTS.map(generateChemicalElementMenuItem),
-                    chemicalParticles: Object.keys(CHEMICAL_PARTICLES).map(generateChemicalElementMenuItem),
-                }, true] as [MenuItems, boolean];
-            } else {
-                // Assuming editorMode === 'maths'
-                return [{
-                    ...baseItems,
-                    upperCaseLetters: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => generateSingleLetterMenuItem(letter)),
-                    lowerCaseLetters: "abcdefghijklmnopqrstuvwxyz".split("").map(letter => generateSingleLetterMenuItem(letter)),
-                    upperCaseGreekLetters: UPPER_CASE_GREEK_LETTERS.map( letter => generateSingleLetterMenuItem(GREEK_LETTERS_MAP[letter] || letter, GREEK_LETTERS_MAP[letter] ? '\\' + letter : letter) ),
-                    lowerCaseGreekLetters: LOWER_CASE_GREEK_LETTERS.map( letter => generateSingleLetterMenuItem(GREEK_LETTERS_MAP[letter] || letter, GREEK_LETTERS_MAP[letter] ? '\\' + letter : letter) ),
-                }, true] as [MenuItems, boolean];
-            }
-        }
+        return generateMenuItems({editorMode, logicSyntax: logicSyntax, parsedAvailableSymbols});
     }, [parsedAvailableSymbols]);
 
     useEffect(() => {
-        window.addEventListener("keyup", handleKeyPress);
-
-        if (inequalityModalRef.current) {
-            inequalityModalRef.current.addEventListener("mousedown", onMouseDown);
-            inequalityModalRef.current.addEventListener("touchstart", onTouchStart);
-            inequalityModalRef.current.addEventListener("mousemove", onMouseMove);
-            inequalityModalRef.current.addEventListener("touchmove", onTouchMove);
-        }
-        // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
-        document.body.addEventListener("mouseup", onCursorMoveEnd);
-        document.body.addEventListener("touchend", onCursorMoveEnd);
-
-        document.documentElement.style.overflow = "hidden";
-        document.documentElement.style.width = '100vw';
-        document.documentElement.style.height = '100vh';
-        document.documentElement.style.touchAction = 'none';
-        document.body.style.overflow = "hidden";
-        document.body.style.width = '100vw';
-        document.body.style.height = '100vh';
-        document.body.style.touchAction = 'none';
-
-        return () => {
-            window.removeEventListener("keyup", handleKeyPress);
-
-            if (inequalityModalRef.current) {
-                inequalityModalRef.current.removeEventListener('mousedown', onMouseDown);
-                inequalityModalRef.current.removeEventListener('touchstart', onTouchStart);
-                inequalityModalRef.current.removeEventListener('mousemove', onMouseMove);
-                inequalityModalRef.current.removeEventListener('touchmove', onTouchMove);
-            }
-            // MouseUp and TouchEnd on body because they are not intercepted by inequalityElement (I blame dark magic)
-            document.body.removeEventListener("mouseup", onCursorMoveEnd);
-            document.body.removeEventListener("touchend", onCursorMoveEnd);
-
-            document.documentElement.style.width = '';
-            document.documentElement.style.height = '';
-            document.documentElement.style.overflow = '';
-            document.documentElement.style.touchAction = 'auto';
-            document.body.style.width = '';
-            document.body.style.height = '';
-            document.body.style.overflow = '';
-            document.body.style.touchAction = 'auto';
-
-            const canvas = inequalityModalRef.current?.getElementsByTagName('canvas')[0];
-            if (canvas) {
-                inequalityModalRef.current.removeChild(canvas);
-            }
-        };
+        return setupAndTeardownDocStyleAndListeners({
+            inequalityModalRef,
+            handleKeyPress,
+            onMouseDown,
+            onTouchStart,
+            onMouseMove,
+            onTouchMove,
+            onCursorMoveEnd
+        });
     }, [inequalityModalRef.current]);
 
     const previewTexString = editorState.result?.tex as string;
