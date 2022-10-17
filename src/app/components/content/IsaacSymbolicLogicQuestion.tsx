@@ -8,6 +8,7 @@ import {
     isDefined,
     isStaff,
     jsonHelper,
+    sanitiseInequalityState,
     useCurrentQuestionAttempt,
     useUserContext
 } from "../../services";
@@ -17,7 +18,6 @@ import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import {sanitiseInequalityState} from "../elements/modals/inequality/utils";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 

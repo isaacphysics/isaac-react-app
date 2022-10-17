@@ -2,7 +2,7 @@ import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} 
 import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
-import {ifKeyIsEnter, isDefined, isStaff, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isDefined, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
@@ -10,7 +10,6 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
 import {selectors, useAppSelector} from "../../state";
 import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
-import {sanitiseInequalityState} from "../elements/modals/inequality/utils";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 

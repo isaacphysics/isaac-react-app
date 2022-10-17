@@ -7,6 +7,8 @@ import {
     ifKeyIsEnter,
     isDefined,
     jsonHelper,
+    sanitiseInequalityState,
+    parsePseudoSymbolicAvailableSymbols,
     useCurrentQuestionAttempt
 } from "../../services";
 import {Inequality, makeInequality} from "inequality";
@@ -14,7 +16,6 @@ import {parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-import {sanitiseInequalityState, parsePseudoSymbolicAvailableSymbols} from "../elements/modals/inequality/utils";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
