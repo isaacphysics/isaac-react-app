@@ -50,7 +50,7 @@ import Select from "react-select";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
-import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import {combineQueries, ShowLoadingQuery, discardResults} from "../handlers/ShowLoadingQuery";
 import {AddGameboardButtons} from "./SetAssignments";
 
 interface AssignmentListEntryProps {
@@ -66,9 +66,11 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         }
     }
     const assignmentStartDate = getAssignmentStartDate(assignment);
+    const gameboardTitle = assignment.gameboard?.title ?? "No gameboard title";
+    const gameboardLink = assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined;
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
-            <h4><a target={"_blank"} rel={"noreferrer noopener"} href={assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined}>{assignment.gameboard?.title ?? "No gameboard title"}</a></h4>
+            <h4><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></h4>
             <div className={"ml-auto text-right"}>
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Copy
@@ -129,7 +131,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
             </svg>
         </div>
         {open && <div className={"date-assignment-list"}>
-            {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboardId ? boardsById[a.gameboardId] : undefined}}/> )}
+            {assignments.map(a => <AssignmentListEntry key={a.id} assignment={{...a, gameboard: a.gameboard ?? (a.gameboardId ? boardsById[a.gameboardId] : undefined)}}/> )}
         </div>}
     </>
 }
@@ -245,6 +247,8 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         return selectedGroups.filter(g => g.value && boardIdsByGroupId[g.value]?.includes(selectedGameboard[0]?.value)).map(g => g.label);
     }, [selectedGroups, boardIdsByGroupId, selectedGameboard]);
 
+    const gameboardToPreview = selectedGameboard && boardsById[selectedGameboard[0].value];
+
     return <Modal isOpen={showAssignmentModal} toggle={toggleAssignModal}>
         <ModalHeader close={
             <button className="close" onClick={toggleAssignModal}>
@@ -273,7 +277,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 </Alert>}
                 {selectedGameboard && selectedGameboard?.[0]?.value && boardsById[selectedGameboard[0].value] && boardsById[selectedGameboard[0].value]?.contents && <Card className={"my-1"} >
                     <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"} gameboard preview</Button></CardHeader>
-                    {showGameboardPreview && <GameboardViewerInner gameboard={boardsById[selectedGameboard[0].value]}/>}
+                    {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
                     {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide gameboard preview</Button></CardFooter>}
                 </Card>}
             </Label>
@@ -334,11 +338,11 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
 
     // --- Slow-to-calculate constant lookup maps for ease of locating gameboards, groups, etc. ---
 
-    const boardsById = useMemo<{[id: string]: GameboardDTO}>(() => {
+    const boardsById = useMemo<{[id: string]: GameboardDTO | undefined}>(() => {
         return gameboards?.boards.reduce((acc, b) => b.id ? {...acc, [b.id]: b} : acc, {} as {[id: string]: GameboardDTO}) ?? {};
     }, [gameboards]);
 
-    const groupsById = useMemo<{[id: number]: UserGroupDTO}>(() => {
+    const groupsById = useMemo<{[id: number]: UserGroupDTO | undefined}>(() => {
         return groups?.reduce((acc, g) => g.id ? {...acc, [g.id]: g} : acc, {} as {[id: number]: UserGroupDTO}) ?? {};
     }, [groups]);
 
@@ -382,7 +386,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         return d;
     });
 
-    // The assignments that will be shown in the schedule, filtered and grouped by date
+    // The assignments that will be shown in the schedule, filtered by groups, and grouped by date
     const assignmentsGroupedByDate = useMemo<AssignmentsGroupedByDate>(() => {
         if (!assignmentsSetByMe) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
@@ -457,10 +461,9 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             headerScrollerObserver.current = new IntersectionObserver(headerScrollerCallback, options);
             headerScrollerObserver.current.observe(headerScrollerSentinel.current);
             headerScrollerFlag.current = true;
-            // Uncommenting this return, disconnects the observer. Not sure why.
-            // return () => alphabetScrollerObserver?.current?.disconnect();
+            return () => headerScrollerObserver?.current?.disconnect();
         }
-    });
+    }, [assignmentsSetByMe, gameboards]);
 
     const header = <Card className={"container py-2 px-3 w-100"}>
         <Row>
@@ -525,13 +528,11 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             Assign a gameboard from...
         </h4>
         <AddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
-        <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
-            {/*
-                Setting `combineResult` to `() => true` (3rd param of `combineQueries`) is a bit of a hack that lets you
-                skip the combine query step and throw away the two results. It has to be `true` otherwise the resulting
-                query will be handled as if it failed.
-            */}
-            <ShowLoadingQuery defaultErrorTitle="Error loading assignments and/or gameboards" query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, () => true)}>
+        <ShowLoadingQuery
+            defaultErrorTitle="Error loading assignments and/or gameboards"
+            query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, discardResults)}
+        >
+            <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2">
                     {!isStaff(user) && <Alert className="mt-2" color="info">
                         The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned gameboard.
@@ -547,11 +548,11 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                     </div>
 
                     {/* Groups-related alerts */}
-                    {groups && groups.length === 0 && <Alert color="warning">
+                    {groups && groups.length === 0 && <Alert color="warning" className="mt-2">
                         You have not created any groups to assign work to.
                         Please <Link to="/groups">create a group here first.</Link>
                     </Alert>}
-                    {groupsToInclude.length > 0 && <Alert color="warning" className="mt-2">
+                    {groupsToInclude.length > 0 && assignmentsGroupedByDate.length === 0 && <Alert color="warning" className="mt-2">
                         There are no assignments set to group{groupsToInclude.length > 1 ? "s" : ""}: {groupsToInclude.map(g => g.label).join(", ")}
                     </Alert>}
 
@@ -583,7 +584,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                     toggleAssignModal={toggleAssignModal}
                     assignmentToCopy={assignmentToCopy}
                 />
-            </ShowLoadingQuery>
-        </AssignmentScheduleContext.Provider>
+            </AssignmentScheduleContext.Provider>
+        </ShowLoadingQuery>
     </Container>;
 }

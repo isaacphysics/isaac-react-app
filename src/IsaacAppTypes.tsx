@@ -649,8 +649,8 @@ export const ConfidenceContext = React.createContext<{recordConfidence: boolean}
 export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
-    boardsById: {[id: string]: GameboardDTO};
-    groupsById: {[id: number]: AppGroup};
+    boardsById: {[id: string]: GameboardDTO | undefined};
+    groupsById: {[id: number]: AppGroup | undefined};
     groupFilter: {[id: number]: boolean};
     boardIdsByGroupId: {[id: number]: string[] | undefined};
     groups: AppGroup[];
