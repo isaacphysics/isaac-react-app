@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, {
-    createRef,
     FormEvent,
     useCallback,
     useContext,
@@ -201,8 +200,8 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
     const [parsedChemicalElements, upperCaseWarning] = useMemo<[MenuItemProps[] | undefined, boolean]>(() => {
         if (isDefined(unparsedChemicalElements)) {
             const splitUnparsed = unparsedChemicalElements.replace(/[^a-z]+/img, ',').split(',').filter(s => s !== '');
-            const upperCaseWarning = splitUnparsed.some(e => e[0] !== e[0].toUpperCase());
             const splitChemicalElements = splitUnparsed.filter(s => CHEMICAL_ELEMENTS.includes(s));
+            const upperCaseWarning = splitUnparsed.some(e => e[0] !== e[0].toUpperCase());
             return [uniq(splitChemicalElements).map(generateChemicalElementMenuItem).filter(isDefined), upperCaseWarning];
         }
         return [undefined, false];
@@ -378,6 +377,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         };
     }, [onEditorStateChange]);
 
+    // Help modal logic
     const dispatch = useAppDispatch();
     const showHelpModal = () => dispatch(openActiveModal({
         closeAction: () => { store.dispatch(closeActiveModal()) },
@@ -386,7 +386,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         body: <PageFragment fragmentId={`eqn_editor_help_modal_${editorMode}`}/>
     }));
 
-    // --- Event handlers (mouse and touch) ---
+    // --- Event handlers (mouse, touch and keyboard) ---
 
     // WARNING Cursor coordinates on mobile are floating point and this makes
     // math sad, therefore ROUND EVERYTHING OR FACE MADNESS
