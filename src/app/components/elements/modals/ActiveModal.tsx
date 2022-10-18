@@ -1,17 +1,21 @@
-import React, {useMemo} from "react";
+import React from "react";
 import {closeActiveModal, useActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
 import {ActiveModalSpecification} from "../../../../IsaacAppTypes";
 import {Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
+import {ModalId, ModalTypeRegistry} from "./index";
 
+interface BaseActiveModalProps {
+    closeModal: () => void;
+}
 // Allows specifying a modal that connects to the `currentActiveModal` Redux state to ensure only one modal is open at
 // a time.
 //
 // The `specification` parameter can depend on some data that is stored in the `currentActiveModal` state, which can be
 // set by who/whatever activates this modal.
-export function buildActiveModal<T extends {} = {}>(id: string, componentName: string, specification: (props: T) => ActiveModalSpecification): React.FC<T> {
-    const ActiveModal: React.FC<T> = (props) => {
-        const {closeModal, modalProps} = useActiveModal(id);
+export function buildActiveModal<Id extends ModalId, Args = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Partial<Args> & BaseActiveModalProps) => ActiveModalSpecification): React.FC<Partial<Args>> {
+    const ActiveModal: React.FC<Partial<Args>> = (props) => {
+        const {data, closeModal, modalProps} = useActiveModal<Partial<Args>>(id);
         const {
             title,
             body: Body,
@@ -22,7 +26,7 @@ export function buildActiveModal<T extends {} = {}>(id: string, componentName: s
             noPadding,
             overflowVisible,
             closeAction
-        } = specification(props);
+        } = specification({...props, ...data, closeModal});
 
         return <Modal {...modalProps} size={size ?? "lg"} centered={centered ?? true}>
             {<ModalHeader
@@ -51,7 +55,7 @@ interface ActiveModalProps {
     activeModal?: ActiveModalSpecification | null;
 }
 export const ActiveModal = ({activeModal}: ActiveModalProps) => {
-    const ModalBody = activeModal && activeModal.body;
+    const Body = activeModal && activeModal.body;
     const dispatch = useAppDispatch();
 
     const toggle = () => {
@@ -75,7 +79,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
                 {activeModal.title}
             </ModalHeader>}
             <ModalBody className={classNames({"pt-0": !activeModal.title, "pb-2 mx-4": !activeModal?.noPadding, "pb-0": activeModal?.noPadding, "overflow-visible": activeModal?.overflowVisible})}>
-                {typeof ModalBody === "function" ? <ModalBody /> : ModalBody}
+                {typeof Body === "function" ? <Body /> : Body}
             </ModalBody>
             {activeModal.buttons &&
                 <ModalFooter className="mb-4 mx-2 align-self-center">

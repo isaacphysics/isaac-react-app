@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {useParams} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Button, Container} from "reactstrap";
-import {isaacApi, openActiveModal, useAppDispatch} from "../../state";
+import {_openActiveModal, isaacApi, useAppDispatch} from "../../state";
 import {AssignmentProgressPageSettingsContext, EnhancedAssignmentWithProgress} from "../../../IsaacAppTypes";
 import {
     ASSIGNMENT_PROGRESS_CRUMB,
@@ -11,9 +11,9 @@ import {
 } from "../../services";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {AssignmentProgressFetchError, AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
-import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
+import {DownloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 
 const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
     const dispatch = useAppDispatch();
@@ -22,7 +22,7 @@ const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWith
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
         event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+        dispatch(_openActiveModal("download-link", {link: event.currentTarget.href}));
     }
 
     return <div className={"assignment-progress-details single-assignment" + (pageSettings.colourBlind ? " colour-blind" : "")}>
@@ -49,6 +49,7 @@ export const SingleAssignmentProgress = () => {
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 
     return <ShowLoading until={assignmentProgress}>
+        <DownloadLinkModal/>
         <Container>
             <TitleAndBreadcrumb intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
                 currentPageTitle={`Assignment Progress: ${assignment?.gameboard?.title || "Assignment Progress" }`}

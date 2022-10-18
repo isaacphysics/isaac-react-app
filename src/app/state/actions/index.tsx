@@ -82,7 +82,6 @@ import {
     store
 } from "../index";
 import {Immutable} from "immer";
-import {ModalId} from "../../components/elements/modals";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -594,9 +593,6 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
             body: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
         }) as any);
     }
-};
-export const openIsaacBooksModal = () => async (dispatch: AppDispatch) => {
-    dispatch(_openActiveModal(ModalId.isaacBooks));
 };
 export const revokeAuthorisationAfterPrompt = (userId: number, otherUser: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(userId, otherUser)) as any);

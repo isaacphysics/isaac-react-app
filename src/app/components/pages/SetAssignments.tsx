@@ -25,7 +25,7 @@ import {
     assignGameboard,
     isaacApi,
     loadGroups,
-    openIsaacBooksModal,
+    _openActiveModal,
     selectors,
     setAssignBoardPath,
     showErrorToast,
@@ -71,6 +71,7 @@ import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import Select from "react-select";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
+import {IsaacBooksModal} from "../elements/modals/IsaacBooksModal";
 
 type BoardProps = {
     user: RegisteredUserDTO;
@@ -348,7 +349,7 @@ export const AddGameboardButtons = ({className, redirectBackTo}: {className: str
                 // Physics
                 <Button role={"link"} onClick={() => {
                     setAssignBoardPath(redirectBackTo);
-                    dispatch(openIsaacBooksModal());
+                    dispatch(_openActiveModal("isaac-books"));
                 }} color="secondary" block className="px-3">
                     our books
                 </Button>,
@@ -414,6 +415,7 @@ export const SetAssignments = () => {
     </span>;
 
     return <Container>
+        <IsaacBooksModal/>
         <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} modalId="set_assignments_help"/>
         <h4 className="mt-4 mb-3">
             Add a gameboard from ...

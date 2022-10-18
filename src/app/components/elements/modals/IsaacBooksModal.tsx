@@ -1,10 +1,9 @@
-import {closeActiveModal, store, useAppDispatch} from "../../../state";
+import {closeActiveModal, useAppDispatch} from "../../../state";
 import React from "react";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {siteSpecific} from "../../../services";
 import {buildActiveModal} from "./ActiveModal";
-import {ModalId} from "./index";
 
 interface BookInfo {
     title: string;
@@ -68,7 +67,7 @@ export const BookModalBody = () => {
 };
 
 export const IsaacBooksModal = buildActiveModal(
-    ModalId.isaacBooks,
+    "isaac-books",
     "IsaacBooksModal",
     () => ({
         title: "Isaac Skills Books",

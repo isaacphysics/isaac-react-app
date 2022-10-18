@@ -14,7 +14,7 @@ import {
     loadGroups,
     loadQuizAssignmentFeedback,
     loadQuizAssignments,
-    openActiveModal,
+    _openActiveModal,
     selectors,
     useAppDispatch,
     useAppSelector,
@@ -58,13 +58,13 @@ import {
     useAssignmentProgressAccessibilitySettings,
     WEBMASTER_EMAIL
 } from "../../services";
-import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {Tabs} from "../elements/Tabs";
 import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
+import {DownloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 
 enum SortOrder {
     "Alphabetical" = "Alphabetical",
@@ -355,7 +355,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) {
         event.stopPropagation();
         event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+        dispatch(_openActiveModal("download-link", {link: event.currentTarget.href}));
     }
 
     function openSingleAssignment(event: React.MouseEvent<HTMLButtonElement & HTMLAnchorElement>) {
@@ -475,7 +475,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
     function openAssignmentDownloadLink(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
         event.stopPropagation();
         event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+        dispatch(_openActiveModal("download-link", {link: event.currentTarget.href}));
     }
 
     function openSingleAssignment(event: React.MouseEvent<HTMLAnchorElement & HTMLButtonElement>) {
@@ -544,7 +544,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
     const openDownloadLink = useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
         event.stopPropagation();
         event.preventDefault();
-        dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
+        dispatch(_openActiveModal("download-link", {link: event.currentTarget.href}));
     }, [dispatch]);
 
     const {assignmentCount} = useGroupAssignmentSummary(group.id);
@@ -595,6 +595,7 @@ export function AssignmentProgress() {
     </span>;
 
     return <>
+        <DownloadLinkModal/>
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={siteSpecific("Assignment Progress", "My markbook")}

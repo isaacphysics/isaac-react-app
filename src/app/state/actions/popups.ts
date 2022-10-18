@@ -6,12 +6,15 @@ import {
     useAppSelector,
     selectors
 } from "../index";
-import {Dispatch, useCallback, useEffect, useMemo} from "react";
-import {Action, ActiveModalSpecification, Toast} from "../../../IsaacAppTypes";
+import {Dispatch, useCallback, useEffect, useMemo, useState} from "react";
+import {Action, ActiveModal, ActiveModalSpecification, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE} from "../../services";
 import ReactGA from "react-ga";
 import {ModalProps} from "reactstrap/es/Modal";
-import {createAsyncThunk} from "@reduxjs/toolkit";
+import {AsyncThunk, createAsyncThunk, ThunkAction} from "@reduxjs/toolkit";
+import {ModalId, ModalTypeRegistry} from "../../components/elements/modals";
+import {AnyAction} from "redux";
+import {ThunkDispatch} from "redux-thunk";
 
 // Toasts
 const removeToast = (toastId: string) => (dispatch: Dispatch<Action>) => {
@@ -72,13 +75,9 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
 // Modals
 export const openActiveModal = (activeModal: ActiveModalSpecification) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
-// Short-hand for `currentActiveModalSlice.actions.openActiveModal(id)`
-export const _openActiveModal = createAsyncThunk(
-    "openActiveModal",
-    (id: string, {dispatch}) => {
-        return dispatch(currentActiveModalSlice.actions.openActiveModal(id));
-    }
-);
+export const _openActiveModal = <Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, data?: Partial<Args>) => {
+    return (dispatch: AppDispatch | ThunkDispatch<unknown, unknown, AnyAction>) => dispatch(currentActiveModalSlice.actions.openActiveModal({id, data}));
+}
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
@@ -100,15 +99,21 @@ interface UseActiveModalOptions {
 // You can pass static (non-updatable) data into the `openModal` function. This lets the caller pass data back up to
 // the component which called the `useActiveModal` hook. This could be helpful if you are opening the modal from
 // deeply nested UI components for example.
-export const useActiveModal = (id: string, options: UseActiveModalOptions = {}): {openModal: () => void; closeModal: () => void; modalProps: ModalProps} => {
+export const useActiveModal = <T extends {}>(id: string, options: UseActiveModalOptions = {}): {openModal: () => void; closeModal: () => void; modalProps: ModalProps, data?: T} => {
     const dispatch = useAppDispatch();
-    const currentModalId = useAppSelector(selectors.notifications.currentActiveModal);
+    const {id: currentModalId, data} = useAppSelector(selectors.notifications.currentActiveModal) ?? {};
     const isOpen = currentModalId === id;
+
+    const [lastData, setLastData] = useState<T | undefined>(undefined);
+    // On modal open, always set last data to current data
+    useEffect(() => {
+        if (isOpen) setLastData(data);
+    }, [isOpen]);
 
     const {isOpen: forceOpen, testId} = options;
 
     const openModal = useCallback(() => {
-        dispatch(currentActiveModalSlice.actions.openActiveModal(id));
+        dispatch(currentActiveModalSlice.actions.openActiveModal({id, data}));
     }, [isOpen]);
     const closeModal = useCallback(() => {
         dispatch(currentActiveModalSlice.actions.closeActiveModal(id));
@@ -131,6 +136,7 @@ export const useActiveModal = (id: string, options: UseActiveModalOptions = {}):
     }), [isOpen, openModal, closeModal, toggle, testId]);
 
     return {
+        data: lastData,
         openModal,
         closeModal,
         modalProps

@@ -73,7 +73,7 @@ notificationCheckerMiddleware.startListening({
             }));
             persistence.session.remove(KEY.FIRST_ANON_QUESTION);
             persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
-            await dispatch(_openActiveModal(ModalId.loginOrSignUp));
+            await dispatch(_openActiveModal("login-or-sign-up"));
         }
     }
 });

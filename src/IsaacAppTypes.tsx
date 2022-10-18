@@ -32,6 +32,7 @@ import {
 } from "./app/services";
 import {DropResult} from "react-beautiful-dnd";
 import {Immutable} from "immer";
+import {ModalId} from "./app/components/elements/modals";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
@@ -569,14 +570,19 @@ export interface Toast {
 
 export interface ActiveModalSpecification {
     title?: string;
-    body: any;
+    body: (() => JSX.Element | null) | JSX.Element | null | string;
     centered?: boolean;
     noPadding?: boolean;
     closeAction?: () => void;
     closeLabelOverride?: string;
     size?: string;
-    buttons?: any[];
+    buttons?: (JSX.Element | null)[];
     overflowVisible?: boolean;
+}
+
+export interface ActiveModal {
+    id: string;
+    data?: any;
 }
 
 export enum BoardOrder {

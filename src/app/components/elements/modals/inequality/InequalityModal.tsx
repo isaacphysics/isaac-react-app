@@ -283,8 +283,8 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
     </nav>;
 });
 
-export const InequalityHelpModal = buildActiveModal<{editorMode: string}>(
-    ModalId.inequalityHelp,
+export const InequalityHelpModal = buildActiveModal(
+    "eqn-editor-help",
     "InequalityHelpModal",
     ({editorMode}) => ({
         size: "xl",
@@ -446,7 +446,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
 
     // Help modal logic
     const dispatch = useAppDispatch();
-    const showHelpModal = () => dispatch(_openActiveModal(ModalId.inequalityHelp));
+    const showHelpModal = () => dispatch(_openActiveModal("eqn-editor-help"));
 
     // Raw KaTeX preview of the Inequality result
     const previewTexString = editorState.result?.tex as string;

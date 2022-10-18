@@ -101,7 +101,7 @@ const LoginOrSignUpBody = () => {
 };
 
 export const LoginOrSignUpModal = buildActiveModal(
-    ModalId.loginOrSignUp,
+    "login-or-sign-up",
     "LoginOrSignUpModal",
     () => ({
         noPadding: true,
