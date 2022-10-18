@@ -1,4 +1,4 @@
-import React, {RefObject, useCallback, useEffect, useRef, useState} from "react";
+import React, {RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 import {NOT_FOUND} from "./";
 
@@ -83,7 +83,7 @@ export const isFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): res
 // I'm not sure what the types need to be for contains() to be happy
 // Could also look at https://github.com/airbnb/react-outside-click-handler
 export function useOutsideCallback(ref: RefObject<any>, callback : () => void, deps : React.DependencyList) {
-    useEffect(() => {
+    useLayoutEffect(() => {
         /**
          * Run callback if clicked outside element
          */

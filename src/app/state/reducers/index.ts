@@ -54,7 +54,8 @@ import {
     questionSearchResult,
     search,
     isaacApi,
-    gameboardsSlice
+    gameboardsSlice,
+    currentActiveModalSlice
 } from "../index";
 
 const appReducer = combineReducers({
@@ -74,6 +75,7 @@ const appReducer = combineReducers({
     // Notifiers
     toasts,
     activeModals,
+    currentActiveModal: currentActiveModalSlice.reducer,
     notifications,
 
     // Static Content

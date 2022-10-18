@@ -16,7 +16,7 @@ import {
 } from "../../../state";
 import {Button, Col, CustomInput, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Table} from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
+import {ActiveModalSpecification, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {bookingStatusMap, isLoggedIn, NOT_FOUND} from "../../../services";
 import _orderBy from "lodash/orderBy";
@@ -370,7 +370,7 @@ const ReservationsModal = () => {
     </React.Fragment>
 };
 
-export const reservationsModal = (): ActiveModal => {
+export const reservationsModal = (): ActiveModalSpecification => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         size: 'xl',

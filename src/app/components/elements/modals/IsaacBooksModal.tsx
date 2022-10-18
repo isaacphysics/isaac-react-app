@@ -3,6 +3,8 @@ import React from "react";
 import {Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {siteSpecific} from "../../../services";
+import {buildActiveModal} from "./ActiveModal";
+import {ModalId} from "./index";
 
 interface BookInfo {
     title: string;
@@ -65,8 +67,11 @@ export const BookModalBody = () => {
     </Row>;
 };
 
-export const isaacBooksModal = () => ({
-    closeAction: () => {store.dispatch(closeActiveModal())},
-    title: "Isaac Skills Books",
-    body: <BookModalBody/>
-});
+export const IsaacBooksModal = buildActiveModal(
+    ModalId.isaacBooks,
+    "IsaacBooksModal",
+    {
+        title: "Isaac Skills Books",
+        body: <BookModalBody/>
+    }
+);

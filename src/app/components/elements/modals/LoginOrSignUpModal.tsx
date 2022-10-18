@@ -5,6 +5,8 @@ import {useLocation} from "react-router-dom";
 import {EmailPasswordInputs, GoogleSignInButton, PasswordResetButton, TFAInput, useLoginLogic} from "../../pages/LogIn";
 import {isCS, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
+import {buildActiveModal} from "./ActiveModal";
+import {ModalId} from "./index";
 
 const LoginOrSignUpBody = () => {
 
@@ -98,9 +100,11 @@ const LoginOrSignUpBody = () => {
     </Row>;
 };
 
-export const loginOrSignUpModal = {
-    centered: true,
-    noPadding: true,
-    closeAction: () => {store.dispatch(closeActiveModal())},
-    body: LoginOrSignUpBody
-};
+export const LoginOrSignUpModal = buildActiveModal(
+    ModalId.loginOrSignUp,
+    "LoginOrSignUpModal",
+    {
+        noPadding: true,
+        body: LoginOrSignUpBody
+    }
+);

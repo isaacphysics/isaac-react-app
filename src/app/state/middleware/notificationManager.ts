@@ -1,4 +1,3 @@
-import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {
     ACTION_TYPE,
     allRequiredInformationIsPresent,
@@ -9,16 +8,27 @@ import {
     withinLast2Hours,
     withinLast50Minutes
 } from "../../services";
-import {Action} from "../../../IsaacAppTypes";
-import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
+import {
+    _openActiveModal,
+    AppState,
+    logAction,
+    needToUpdateUserContextDetails,
+    openActiveModal,
+    routerPageChange
+} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
-import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
+import {ModalId} from "../../components/elements/modals";
+import {createListenerMiddleware} from "@reduxjs/toolkit";
 
-export const notificationCheckerMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
+export const notificationCheckerMiddleware = createListenerMiddleware();
 
-    const state = middlewareApi.getState();
-    if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
+notificationCheckerMiddleware.startListening({
+    predicate: (action) => {
+        return [ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)
+    },
+    effect: async (action, {dispatch, getState}) => {
+        const state = getState() as AppState;
         // Get user object either from the action or state
         const user = action.type === ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS
             ? action.user
@@ -29,7 +39,7 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
         if (isDefined(user)) {
             // Required account info modal - takes precedence over stage/exam board re-confirmation modal, and is only
             // shown once every 50 minutes (using a key in clients browser storage)
-            if (isDefined(state.userPreferences) && !allRequiredInformationIsPresent(user, state.userPreferences, user.registeredContexts) &&
+            if (isDefined(state?.userPreferences) && !allRequiredInformationIsPresent(user, state?.userPreferences, user.registeredContexts) &&
                 !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))) {
                 persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
                 await dispatch(openActiveModal(requiredAccountInformationModal));
@@ -43,25 +53,27 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
             }
         }
     }
+});
 
-    if (action.type === ACTION_TYPE.QUESTION_ATTEMPT_REQUEST) {
+notificationCheckerMiddleware.startListening({
+    predicate: action => action.type === ACTION_TYPE.QUESTION_ATTEMPT_REQUEST,
+    effect: async (action, {dispatch, getState}) => {
+        const state = getState() as AppState;
         const lastQuestionId = persistence.session.load(KEY.FIRST_ANON_QUESTION);
 
         if (lastQuestionId === null) {
             persistence.session.save(KEY.FIRST_ANON_QUESTION, action.questionId);
         } else if (
-                state && !isLoggedIn(state.user) &&
-                lastQuestionId !== action.questionId &&
-                !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
-            ) {
-                dispatch(logAction({
-                    type: "LOGIN_MODAL_SHOWN"
-                }));
-                persistence.session.remove(KEY.FIRST_ANON_QUESTION);
-                persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(loginOrSignUpModal) as any);
+            state && !isLoggedIn(state?.user) &&
+            lastQuestionId !== action.questionId &&
+            !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
+        ) {
+            dispatch(logAction({
+                type: "LOGIN_MODAL_SHOWN"
+            }));
+            persistence.session.remove(KEY.FIRST_ANON_QUESTION);
+            persistence.save(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME, new Date().toString());
+            await dispatch(_openActiveModal(ModalId.loginOrSignUp));
         }
     }
-
-    return dispatch(action);
-};
+});
