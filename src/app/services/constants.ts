@@ -867,7 +867,7 @@ export enum TAG_ID {
     aromaticity = "aromaticity",
     organicReactions = "organic_reactions",
     isomerism = "isomerism",
-    reactionsGeneral = "aromatic_reactions",
+    aromaticReactions = "aromatic_reactions",
 }
 
 export enum TAG_LEVEL {

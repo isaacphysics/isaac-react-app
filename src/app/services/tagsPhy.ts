@@ -112,7 +112,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.periodicTable, title: "Periodic Table", parent: TAG_ID.inorganic},
         {id: TAG_ID.bonding, title: "Bonding", parent: TAG_ID.inorganic},
         {id: TAG_ID.redox, title: "Redox", parent: TAG_ID.inorganic},
-        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic, comingSoonDate: "soon"},
+        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic},
         // Physical
         {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
         {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
@@ -136,7 +136,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
         {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
-        {id: TAG_ID.reactionsGeneral, title: "Reactions (general)", parent: TAG_ID.organic},
+        {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}
