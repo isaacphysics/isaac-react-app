@@ -3,6 +3,7 @@ import React from "react";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../../elements/PageFragment";
 import {BookChapter} from "../../elements/BookChapter";
+import {BookChapterModal} from "../../elements/modals/BookChapterModal";
 
 export const PhysicsSkills19 = () => {
 
@@ -11,6 +12,7 @@ export const PhysicsSkills19 = () => {
     </span>;
 
     return <Container>
+        <BookChapterModal/>
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="Mastering Essential Pre-University Physics" help={pageHelp} modalId="physics_skills_19_help" />

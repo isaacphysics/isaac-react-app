@@ -16,6 +16,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
+import {buildActiveModal} from "./ActiveModal";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
@@ -122,7 +123,11 @@ const UserContextReconfimationModalBody = () => {
     </Form>;
 }
 
-export const userContextReconfimationModal = {
-    title: "Please review your details",
-    body: <UserContextReconfimationModalBody />,
-}
+export const UserContextReconfimationModal = buildActiveModal(
+    "user-context-reconfirmation",
+    "UserContextReconfimationModal",
+    () => ({
+        title: "Please review your details",
+        body: <UserContextReconfimationModalBody/>,
+    })
+);

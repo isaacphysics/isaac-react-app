@@ -29,7 +29,6 @@ import {
     setupAndTeardownDocStyleAndListeners
 } from "./utils";
 import {buildActiveModal} from "../ActiveModal";
-import {ModalId} from "../index";
 
 // This file contains the React components associated with the Inequality modal
 

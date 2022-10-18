@@ -4,6 +4,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {SUBJECTS} from "../../../services";
 import {PageFragment} from "../../elements/PageFragment";
 import {BookChapter} from "../../elements/BookChapter";
+import {BookChapterModal} from "../../elements/modals/BookChapterModal";
 
 export const PhysBookGcse = () => {
 
@@ -12,6 +13,7 @@ export const PhysBookGcse = () => {
     </span>;
 
     return <Container className="physics">
+        <BookChapterModal/>
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="Mastering Essential GCSE Physics" help={pageHelp} modalId="gcse_book_help" />

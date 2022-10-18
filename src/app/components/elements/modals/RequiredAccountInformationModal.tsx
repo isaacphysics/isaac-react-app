@@ -22,6 +22,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Link} from "react-router-dom";
+import {buildActiveModal} from "./ActiveModal";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -137,7 +138,11 @@ const RequiredAccountInfoBody = () => {
     </RS.Form>;
 };
 
-export const requiredAccountInformationModal = {
-    title: "Required account information",
-    body: <RequiredAccountInfoBody />,
-};
+export const RequiredAccountInformationModal = buildActiveModal(
+    "required-account-information",
+    "RequiredAccountInformationModal",
+    () => ({
+        title: "Required account information",
+        body: <RequiredAccountInfoBody/>,
+    })
+);

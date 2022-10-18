@@ -5,6 +5,7 @@ import {SUBJECTS} from "../../../services";
 import {PageFragment} from "../../elements/PageFragment";
 import {BookChapter} from "../../elements/BookChapter";
 import {Tabs} from "../../elements/Tabs";
+import {BookChapterModal} from "../../elements/modals/BookChapterModal";
 
 export const MathsBookGcse = () => {
 
@@ -13,6 +14,7 @@ export const MathsBookGcse = () => {
     </span>;
 
     return <Container className="maths">
+        <BookChapterModal/>
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="Using Essential GCSE Mathematics" help={pageHelp} />

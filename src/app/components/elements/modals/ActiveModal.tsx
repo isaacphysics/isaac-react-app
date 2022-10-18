@@ -5,17 +5,20 @@ import {ActiveModalSpecification} from "../../../../IsaacAppTypes";
 import {Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalId, ModalTypeRegistry} from "./index";
 
-interface BaseActiveModalProps {
+interface BaseActiveModalSpecificationArgs {
     closeModal: () => void;
+}
+interface BaseActiveModalProps {
+    uId?: string | number;
 }
 // Allows specifying a modal that connects to the `currentActiveModal` Redux state to ensure only one modal is open at
 // a time.
 //
 // The `specification` parameter can depend on some data that is stored in the `currentActiveModal` state, which can be
 // set by who/whatever activates this modal.
-export function buildActiveModal<Id extends ModalId, Args = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Partial<Args> & BaseActiveModalProps) => ActiveModalSpecification): React.FC<Partial<Args>> {
-    const ActiveModal: React.FC<Partial<Args>> = (props) => {
-        const {data, closeModal, modalProps} = useActiveModal<Partial<Args>>(id);
+export function buildActiveModal<Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Partial<Args> & BaseActiveModalSpecificationArgs) => ActiveModalSpecification): React.FC<Partial<Args> & BaseActiveModalProps> {
+    const ActiveModal: React.FC<Partial<Args> & BaseActiveModalProps> = (props) => {
+        const {data, closeModal, modalProps} = useActiveModal<Partial<Args>>(props.uId ? `${id}-${props.uId}` : id);
         const {
             title,
             body: Body,

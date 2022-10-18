@@ -9,16 +9,12 @@ import {
     withinLast50Minutes
 } from "../../services";
 import {
-    _openActiveModal,
     AppState,
     logAction,
     needToUpdateUserContextDetails,
-    openActiveModal,
+    _openActiveModal,
     routerPageChange
 } from "../index";
-import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
-import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
-import {ModalId} from "../../components/elements/modals";
 import {createListenerMiddleware} from "@reduxjs/toolkit";
 
 export const notificationCheckerMiddleware = createListenerMiddleware();
@@ -42,14 +38,14 @@ notificationCheckerMiddleware.startListening({
             if (isDefined(state?.userPreferences) && !allRequiredInformationIsPresent(user, state?.userPreferences, user.registeredContexts) &&
                 !withinLast50Minutes(persistence.load(KEY.REQUIRED_MODAL_SHOWN_TIME))) {
                 persistence.save(KEY.REQUIRED_MODAL_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(requiredAccountInformationModal));
+                await dispatch(_openActiveModal("required-account-information"));
             }
             // User context re-confirmation modal - used to request a user to update their stage and/or exam board
             // once every academic year.
             else if (needToUpdateUserContextDetails(user.registeredContextsLastConfirmed) &&
                      !withinLast50Minutes(persistence.load(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME))) {
                 persistence.save(KEY.RECONFIRM_USER_CONTEXT_SHOWN_TIME, new Date().toString());
-                await dispatch(openActiveModal(userContextReconfimationModal));
+                await dispatch(_openActiveModal("user-context-reconfirmation"));
             }
         }
     }

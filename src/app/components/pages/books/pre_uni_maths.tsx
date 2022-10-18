@@ -4,6 +4,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {SUBJECTS} from "../../../services";
 import {PageFragment} from "../../elements/PageFragment";
 import {BookChapter} from "../../elements/BookChapter";
+import {BookChapterModal} from "../../elements/modals/BookChapterModal";
 
 export const PreUniMaths = () => {
 
@@ -12,6 +13,7 @@ export const PreUniMaths = () => {
     </span>;
 
     return <Container className="maths">
+        <BookChapterModal/>
         <Col>
             <div className="book-intro">
                 <TitleAndBreadcrumb className="mb-5" currentPageTitle="Pre-University Mathematics for Sciences" help={pageHelp} modalId="maths_book_help"/>

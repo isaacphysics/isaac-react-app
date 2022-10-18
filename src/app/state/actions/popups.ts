@@ -75,8 +75,8 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
 // Modals
 export const openActiveModal = (activeModal: ActiveModalSpecification) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
-export const _openActiveModal = <Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, data?: Partial<Args>) => {
-    return (dispatch: AppDispatch | ThunkDispatch<unknown, unknown, AnyAction>) => dispatch(currentActiveModalSlice.actions.openActiveModal({id, data}));
+export const _openActiveModal = <Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, data?: Partial<Args>, uId?: string | number) => {
+    return (dispatch: AppDispatch | ThunkDispatch<unknown, unknown, AnyAction>) => dispatch(currentActiveModalSlice.actions.openActiveModal({id: uId ? `${id}-${uId}` : id, data}));
 }
 
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
