@@ -3,7 +3,6 @@ import {ActiveModal} from "./ActiveModal";
 import {AppState, useAppSelector} from "../../../state";
 import {LoginOrSignUpModal} from "./LoginOrSignUpModal";
 import {IsaacBooksModal} from "./IsaacBooksModal";
-import {InequalityHelpModal} from "./InequalityHelpModal";
 
 export const ActiveModals = () => {
     const activeModals = useAppSelector((state: AppState) => state && state.activeModals);
@@ -18,6 +17,5 @@ export const IsaacModals = () => {
     return <>
         <LoginOrSignUpModal/>
         <IsaacBooksModal/>
-        <InequalityHelpModal/>
     </>;
 };

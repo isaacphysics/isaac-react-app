@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {closeActiveModal, useActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
 import {ActiveModalSpecification} from "../../../../IsaacAppTypes";
@@ -9,9 +9,9 @@ import {Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 //
 // The `specification` parameter can depend on some data that is stored in the `currentActiveModal` state, which can be
 // set by who/whatever activates this modal.
-export function buildActiveModal<T>(id: string, componentName: string, specification: ActiveModalSpecification | ((data: T) => ActiveModalSpecification)): React.FC {
-    const ActiveModal: React.FC = () => {
-        const {data, closeModal, modalProps} = useActiveModal<T>(id);
+export function buildActiveModal<T extends {} = {}>(id: string, componentName: string, specification: (props: T) => ActiveModalSpecification): React.FC<T> {
+    const ActiveModal: React.FC<T> = (props) => {
+        const {closeModal, modalProps} = useActiveModal(id);
         const {
             title,
             body: Body,
@@ -22,11 +22,7 @@ export function buildActiveModal<T>(id: string, componentName: string, specifica
             noPadding,
             overflowVisible,
             closeAction
-        } = (
-            typeof specification === "function"
-                ? (data ? specification(data) : {})
-                : specification
-        ) as ActiveModalSpecification | {[key: string]: undefined};
+        } = useMemo<ActiveModalSpecification>(() => specification(props), [props, specification]);
 
         return <Modal {...modalProps} size={size ?? "lg"} centered={centered ?? true}>
             {<ModalHeader

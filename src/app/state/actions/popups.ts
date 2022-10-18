@@ -72,12 +72,11 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
 // Modals
 export const openActiveModal = (activeModal: ActiveModalSpecification) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
+// Short-hand for `currentActiveModalSlice.actions.openActiveModal(id)`
 export const _openActiveModal = createAsyncThunk(
     "openActiveModal",
-    (idOrIdAndData: string | {id: string, staticData: any}, {dispatch}) => {
-        const id = typeof idOrIdAndData === "string" ? idOrIdAndData : idOrIdAndData.id;
-        const staticData = typeof idOrIdAndData === "string" ? undefined : idOrIdAndData.staticData;
-        return dispatch(currentActiveModalSlice.actions.openActiveModal({id, staticData}));
+    (id: string, {dispatch}) => {
+        return dispatch(currentActiveModalSlice.actions.openActiveModal(id));
     }
 );
 
@@ -86,7 +85,6 @@ export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 interface UseActiveModalOptions {
     isOpen?: boolean;
     testId?: string;
-    passDataToOpenModal?: boolean;
 }
 // A hook that abstracts connecting a modal element to the `currentActiveModal` Redux state. When the modal is opened
 // or closed via either the returned functions or the `isOpen` option, the `currentActiveModal` state is modified to
@@ -99,29 +97,25 @@ interface UseActiveModalOptions {
 //     ...
 // </Modal>
 // ```
-// If you want to be able to pass static (non-updatable) data into the `openModal` function, set the option
-// `passDataToOpenModal` to `true`. This lets the caller of `openModal` to pass data back up to the component
-// which called the `useActiveModal` hook. This could be helpful if you are opening the modal from deeply nested
-// UI components for example.
-export const useActiveModal = <T>(id: string, options: UseActiveModalOptions = {passDataToOpenModal: false}): {openModal: (staticData?: T) => void; closeModal: () => void; data?: T; modalProps: ModalProps} => {
+// You can pass static (non-updatable) data into the `openModal` function. This lets the caller pass data back up to
+// the component which called the `useActiveModal` hook. This could be helpful if you are opening the modal from
+// deeply nested UI components for example.
+export const useActiveModal = (id: string, options: UseActiveModalOptions = {}): {openModal: () => void; closeModal: () => void; modalProps: ModalProps} => {
     const dispatch = useAppDispatch();
-    const {id: currentModalId, staticData: currentModalData} = useAppSelector(selectors.notifications.currentActiveModal) ?? {};
+    const currentModalId = useAppSelector(selectors.notifications.currentActiveModal);
     const isOpen = currentModalId === id;
 
-    const {isOpen: forceOpen, testId, passDataToOpenModal} = options;
+    const {isOpen: forceOpen, testId} = options;
 
-    const openModal = useCallback((staticData?: T) => {
-        dispatch(currentActiveModalSlice.actions.openActiveModal({
-            id,
-            staticData: passDataToOpenModal ? staticData : undefined
-        }));
-    }, [id, passDataToOpenModal]);
+    const openModal = useCallback(() => {
+        dispatch(currentActiveModalSlice.actions.openActiveModal(id));
+    }, [isOpen]);
     const closeModal = useCallback(() => {
         dispatch(currentActiveModalSlice.actions.closeActiveModal(id));
-    }, [id]);
+    }, [isOpen]);
     const toggle = useCallback(() => {
         (isOpen ? openModal : closeModal)();
-    }, [id, isOpen]);
+    }, [isOpen]);
 
     useEffect(() => {
         if (forceOpen === undefined) return;
@@ -131,10 +125,6 @@ export const useActiveModal = <T>(id: string, options: UseActiveModalOptions = {
     const modalProps = useMemo<ModalProps>(() => ({
         isOpen,
         toggle,
-        // Make sure that if the modal is opened or closed some other way, we record that in Redux and close any
-        // other active modals
-        onOpened: openModal,
-        onClosed: closeModal,
         // Miscellaneous props for accessibility, testing, etc.
         returnFocusAfterClose: true,
         "data-testid": testId ?? "active-modal"
@@ -143,7 +133,6 @@ export const useActiveModal = <T>(id: string, options: UseActiveModalOptions = {
     return {
         openModal,
         closeModal,
-        data: isOpen ? (currentModalData as T | undefined) : undefined,
-        modalProps,
+        modalProps
     };
 };

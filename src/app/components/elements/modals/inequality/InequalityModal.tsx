@@ -17,7 +17,7 @@ import {
     MenuItemProps,
     MenuItems
 } from "./constants";
-import {closeActiveModal, openActiveModal, store, useAppDispatch} from "../../../../state";
+import {_openActiveModal, useAppDispatch} from "../../../../state";
 import {PageFragment} from "../../PageFragment";
 import {uniq} from "lodash";
 import {
@@ -28,6 +28,8 @@ import {
     prepareInequality,
     setupAndTeardownDocStyleAndListeners
 } from "./utils";
+import {buildActiveModal} from "../ActiveModal";
+import {ModalId} from "../index";
 
 // This file contains the React components associated with the Inequality modal
 
@@ -281,6 +283,16 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
     </nav>;
 });
 
+export const InequalityHelpModal = buildActiveModal<{editorMode: string}>(
+    ModalId.inequalityHelp,
+    "InequalityHelpModal",
+    ({editorMode}) => ({
+        size: "xl",
+        title: "Quick Help",
+        body: <PageFragment fragmentId={`eqn_editor_help_modal_${editorMode}`}/>
+    })
+);
+
 interface InequalityModalProps {
     availableSymbols?: string[];
     close: () => void;
@@ -329,15 +341,6 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             }
         };
     }, [onEditorStateChange]);
-
-    // Help modal logic
-    const dispatch = useAppDispatch();
-    const showHelpModal = () => dispatch(openActiveModal({
-        closeAction: () => { store.dispatch(closeActiveModal()) },
-        size: "xl",
-        title: "Quick Help",
-        body: <PageFragment fragmentId={`eqn_editor_help_modal_${editorMode}`}/>
-    }));
 
     // --- Event handlers (mouse, touch and keyboard) ---
 
@@ -441,9 +444,15 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         });
     }, [inequalityModalRef.current]);
 
+    // Help modal logic
+    const dispatch = useAppDispatch();
+    const showHelpModal = () => dispatch(_openActiveModal(ModalId.inequalityHelp));
+
+    // Raw KaTeX preview of the Inequality result
     const previewTexString = editorState.result?.tex as string;
 
     return <div id="inequality-modal" ref={inequalityModalRef}>
+        <InequalityHelpModal editorMode={editorMode}/>
         <div
             className="inequality-ui confirm button"
             role="button" tabIndex={-1}

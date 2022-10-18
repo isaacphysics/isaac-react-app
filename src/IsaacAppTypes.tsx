@@ -579,11 +579,6 @@ export interface ActiveModalSpecification {
     overflowVisible?: boolean;
 }
 
-export interface ActiveModal {
-    id: string;
-    staticData?: any;
-}
-
 export enum BoardOrder {
     "created" = "created",
     "-created" = "-created",

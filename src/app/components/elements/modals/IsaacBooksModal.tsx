@@ -70,8 +70,8 @@ export const BookModalBody = () => {
 export const IsaacBooksModal = buildActiveModal(
     ModalId.isaacBooks,
     "IsaacBooksModal",
-    {
+    () => ({
         title: "Isaac Skills Books",
-        body: <BookModalBody/>
-    }
+        body: BookModalBody
+    })
 );
