@@ -4,6 +4,43 @@ import classNames from "classnames";
 import {ActiveModalSpecification} from "../../../../IsaacAppTypes";
 import {Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {ModalId, ModalTypeRegistry} from "./index";
+import {ModalProps} from "reactstrap/es/Modal";
+
+interface IsaacModalProps {
+    options: Omit<ActiveModalSpecification, "body" | "title">,
+    modalProps: ModalProps,
+    closeModal: () => void;
+    title?: string
+}
+export const IsaacModal = ({options, modalProps, children, closeModal, title}: React.PropsWithChildren<IsaacModalProps>) => {
+    const {
+        buttons,
+        centered,
+        closeLabelOverride,
+        size,
+        noPadding,
+        overflowVisible,
+        closeAction
+    } = options;
+
+    return <Modal {...modalProps} size={size ?? "lg"} centered={centered ?? true}>
+        {<ModalHeader
+            className={classNames({"h-title pb-5 mb-4": !!title}, {"position-absolute": !title})}
+            style={title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
+            close={<button className="close" onClick={() => {closeAction?.(); closeModal();}}>
+                {closeLabelOverride || "Close"}
+            </button>}
+        >
+            {title}
+        </ModalHeader>}
+        <ModalBody className={classNames({"pt-0": !title, "pb-2 mx-4": !noPadding, "pb-0": noPadding, "overflow-visible": overflowVisible})}>
+            {children}
+        </ModalBody>
+        {buttons && <ModalFooter className="mb-4 mx-2 align-self-center">
+            {buttons}
+        </ModalFooter>}
+    </Modal>;
+}
 
 interface BaseActiveModalSpecificationArgs {
     closeModal: () => void;
@@ -20,34 +57,14 @@ export function buildActiveModal<Id extends ModalId, Args extends {} = ModalType
     const ActiveModal: React.FC<Partial<Args> & BaseActiveModalProps> = (props) => {
         const {data, closeModal, modalProps} = useActiveModal<Partial<Args>>(props.uId ? `${id}-${props.uId}` : id);
         const {
-            title,
             body: Body,
-            buttons,
-            centered,
-            closeLabelOverride,
-            size,
-            noPadding,
-            overflowVisible,
-            closeAction
+            title,
+            ...rest
         } = specification({...props, ...data, closeModal});
 
-        return <Modal {...modalProps} size={size ?? "lg"} centered={centered ?? true}>
-            {<ModalHeader
-                className={classNames({"h-title pb-5 mb-4": !!title}, {"position-absolute": !title})}
-                style={title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
-                close={<button className="close" onClick={() => {closeAction?.(); closeModal();}}>
-                    {closeLabelOverride || "Close"}
-                </button>}
-            >
-                {title}
-            </ModalHeader>}
-            <ModalBody className={classNames({"pt-0": !title, "pb-2 mx-4": !noPadding, "pb-0": noPadding, "overflow-visible": overflowVisible})}>
-                {typeof Body === "function" ? <Body /> : Body}
-            </ModalBody>
-            {buttons && <ModalFooter className="mb-4 mx-2 align-self-center">
-                {buttons}
-            </ModalFooter>}
-        </Modal>;
+        return <IsaacModal title={title} options={rest} modalProps={modalProps} closeModal={closeModal}>
+            {typeof Body === "function" ? <Body /> : Body}
+        </IsaacModal>;
     };
     ActiveModal.displayName = componentName;
     return ActiveModal;

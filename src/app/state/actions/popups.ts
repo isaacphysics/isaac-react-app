@@ -7,11 +7,10 @@ import {
     selectors
 } from "../index";
 import {Dispatch, useCallback, useEffect, useMemo, useState} from "react";
-import {Action, ActiveModal, ActiveModalSpecification, Toast} from "../../../IsaacAppTypes";
+import {Action, ActiveModalSpecification, Toast} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, API_REQUEST_FAILURE_MESSAGE} from "../../services";
 import ReactGA from "react-ga";
 import {ModalProps} from "reactstrap/es/Modal";
-import {AsyncThunk, createAsyncThunk, ThunkAction} from "@reduxjs/toolkit";
 import {ModalId, ModalTypeRegistry} from "../../components/elements/modals";
 import {AnyAction} from "redux";
 import {ThunkDispatch} from "redux-thunk";

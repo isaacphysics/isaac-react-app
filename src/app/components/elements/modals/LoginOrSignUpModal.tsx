@@ -1,18 +1,13 @@
 import React, {useEffect} from "react";
 import {Button, Col, CustomInput, Form, Row} from "reactstrap";
-import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
+import {selectors, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {EmailPasswordInputs, GoogleSignInButton, PasswordResetButton, TFAInput, useLoginLogic} from "../../pages/LogIn";
 import {isCS, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 import {buildActiveModal} from "./ActiveModal";
-import {ModalId} from "./index";
 
-const LoginOrSignUpBody = () => {
-
-    const dispatch = useAppDispatch();
-    const closeModal = () => dispatch(closeActiveModal());
-
+const LoginOrSignUpBody = ({closeModal}: {closeModal: () => void}) => {
     const user = useAppSelector(selectors.user.orNull);
     const location = useLocation();
 
@@ -103,8 +98,8 @@ const LoginOrSignUpBody = () => {
 export const LoginOrSignUpModal = buildActiveModal(
     "login-or-sign-up",
     "LoginOrSignUpModal",
-    () => ({
+    ({closeModal}) => ({
         noPadding: true,
-        body: LoginOrSignUpBody
+        body: () => <LoginOrSignUpBody closeModal={closeModal}/>
     })
 );

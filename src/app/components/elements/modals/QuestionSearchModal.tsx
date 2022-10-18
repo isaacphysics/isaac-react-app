@@ -2,7 +2,6 @@ import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from "
 import {
     AppState,
     clearQuestionSearch,
-    closeActiveModal,
     searchQuestions,
     useAppDispatch,
     useAppSelector
@@ -46,13 +45,14 @@ const selectStyle = {
 }
 
 interface QuestionSearchModalProps {
+    closeModal: () => void;
     originalSelectedQuestions: Map<string, ContentSummary>;
     setOriginalSelectedQuestions: (m: Map<string, ContentSummary>) => void;
     originalQuestionOrder: string[];
     setOriginalQuestionOrder: (a: string[]) => void;
     eventLog: object[];
 }
-export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
+export const QuestionSearchModal = ({closeModal, originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
 
@@ -156,7 +156,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 onClick={() => {
                     setOriginalSelectedQuestions(selectedQuestions);
                     setOriginalQuestionOrder(questionOrder);
-                    dispatch(closeActiveModal());
+                    closeModal();
                 }}
             />
         </div>

@@ -1,9 +1,10 @@
 import React from 'react';
-import {closeActiveModal, getRTKQueryErrorMessage, useAppDispatch} from "../../../state";
+import {getRTKQueryErrorMessage, useAppDispatch} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Label, Row} from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
+import {buildActiveModal} from "./ActiveModal";
 
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Row className="mb-2">
@@ -21,9 +22,7 @@ const GameboardSuccessfullyCreated = () =>
         </Label>
     </Row>;
 
-const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {
-    const dispatch = useAppDispatch();
-    const closeModal = () => dispatch(closeActiveModal());
+const GameboardCreatedModalButtons = ({gameboardId, resetBuilder, closeModal}: {gameboardId: string | undefined, resetBuilder: () => void; closeModal: () => void}) => {
     return <Row>
         <Col className="mb-1">
             <Button
@@ -52,13 +51,20 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
     </Row>
 }
 
-export const GameboardCreatedModal = ({gameboardId, error, resetBuilder}: {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined, resetBuilder: () => void}) => {
-    const errorMessage = getRTKQueryErrorMessage(error).message;
-    return <div>
-        {gameboardId
-            ? <GameboardSuccessfullyCreated/>
-            : <GameboardNotFound errorMessage={errorMessage}/>
+export const GameboardCreatedModal = buildActiveModal(
+    "gameboard-created-modal",
+    "GameboardCreatedModal",
+    ({gameboardId, closeModal, error, resetBuilder}) => ({
+        title: gameboardId ? "Gameboard created" : "Gameboard creation failed",
+        body: () => {
+            const errorMessage = getRTKQueryErrorMessage(error).message;
+            return <div>
+                {gameboardId
+                    ? <GameboardSuccessfullyCreated/>
+                    : <GameboardNotFound errorMessage={errorMessage}/>
+                }
+                {resetBuilder && <GameboardCreatedModalButtons closeModal={closeModal} resetBuilder={resetBuilder} gameboardId={gameboardId} />}
+            </div>
         }
-        <GameboardCreatedModalButtons resetBuilder={resetBuilder} gameboardId={gameboardId} />
-    </div>;
-};
+    })
+);

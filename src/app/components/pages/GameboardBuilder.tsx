@@ -1,10 +1,9 @@
 import React, {lazy, useEffect, useRef, useState} from 'react';
 import {
-    closeActiveModal,
     isaacApi,
     logAction,
-    openActiveModal,
-    useAppDispatch,
+    _openActiveModal,
+    useAppDispatch, useActiveModal,
 } from "../../state";
 import {Button, Card, CardBody, Col, Container, Input, Label, Row, Spinner, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -38,6 +37,7 @@ import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
+import {IsaacModal} from "../elements/modals/ActiveModal";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -137,7 +137,20 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setTimeout(() => sentinel.current?.scrollIntoView(), 50);
     };
 
+    const {openModal, closeModal, modalProps} = useActiveModal("question-search-modal");
+
     return <Container id="gameboard-builder">
+        <GameboardCreatedModal/>
+        <IsaacModal modalProps={modalProps} closeModal={closeModal} title={"Search questions"} options={{closeLabelOverride: "CANCEL", size: "xl"}}>
+            <QuestionSearchModal
+                closeModal={closeModal}
+                originalSelectedQuestions={selectedQuestions}
+                setOriginalSelectedQuestions={setSelectedQuestions}
+                originalQuestionOrder={questionOrder}
+                setOriginalQuestionOrder={setQuestionOrder}
+                eventLog={eventLog}
+            />
+        </IsaacModal>
         <div ref={sentinel}/>
         <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp} modalId="gameboard_builder_help"/>
 
@@ -250,21 +263,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             color="primary" outline
                                                             onClick={() => {
                                                                 logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
-                                                                dispatch(openActiveModal({
-                                                                    closeAction: () => {
-                                                                        dispatch(closeActiveModal())
-                                                                    },
-                                                                    closeLabelOverride: "CANCEL",
-                                                                    size: "xl",
-                                                                    title: "Search questions",
-                                                                    body: <QuestionSearchModal
-                                                                        originalSelectedQuestions={selectedQuestions}
-                                                                        setOriginalSelectedQuestions={setSelectedQuestions}
-                                                                        originalQuestionOrder={questionOrder}
-                                                                        setOriginalQuestionOrder={setQuestionOrder}
-                                                                        eventLog={eventLog}
-                                                                    />
-                                                                }))
+                                                                openModal();
                                                             }}
                                                         >
                                                             {siteSpecific("Add Questions", "Add questions")}
@@ -326,11 +325,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             }).then(gameboardOrError => {
                                 const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
                                 const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
-                                dispatch(openActiveModal({
-                                    closeAction: () => dispatch(closeActiveModal()),
-                                    title: gameboardId ? "Gameboard created" : "Gameboard creation failed",
-                                    body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
-                                }));
+                                dispatch(_openActiveModal("gameboard-created-modal", {resetBuilder, gameboardId, error}));
                             });
 
                             logEvent(eventLog, "SAVE_GAMEBOARD", {});
