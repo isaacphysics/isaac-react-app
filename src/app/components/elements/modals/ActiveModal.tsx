@@ -22,7 +22,7 @@ export function buildActiveModal<T extends {} = {}>(id: string, componentName: s
             noPadding,
             overflowVisible,
             closeAction
-        } = useMemo<ActiveModalSpecification>(() => specification(props), [props, specification]);
+        } = specification(props);
 
         return <Modal {...modalProps} size={size ?? "lg"} centered={centered ?? true}>
             {<ModalHeader
