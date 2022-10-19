@@ -355,14 +355,26 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         if (usingKeyboard) {
             return closestCenter(args);
         }
-        const justDropZones = args.droppableContainers.filter(isDropZone);
-        const initialCollisions = composeCollisionAlgorithms(rectIntersection, closestCorners)({...args, droppableContainers: justDropZones});
-        if (initialCollisions.length > 0 && initialCollisions[0].id === CLOZE_ITEM_SECTION_ID) {
+
+        // Mouse collision should work like so
+        // - If colliding with the item section by rect collision
+        //   - Check if we are also colliding with an item in the item section (in the same list of collisions)
+        //   - If so do closest center collision only within non-selected items
+        //   - If not return initial list of collisions
+        // - Else use closest corners between only the item section and drop-zones
+
+        const initialCollisions = rectIntersection(args);
+        const itemSection = initialCollisions.find(c => c.id === CLOZE_ITEM_SECTION_ID);
+        if (itemSection) {
             const justNonSelectedItems = args.droppableContainers.filter(dc => nonSelectedItems.findIndex(i => i.replacementId === dc.id) !== -1);
-            const nsiCollisions = closestCenter({...args, droppableContainers: justNonSelectedItems});
-            return nsiCollisions.length > 0 ? nsiCollisions : initialCollisions;
+            const rectNSICollisions = initialCollisions.filter(c => !isDropZone(c) && c.id !== CLOZE_ITEM_SECTION_ID);
+            if (rectNSICollisions.length > 0) {
+                return closestCenter({...args, droppableContainers: justNonSelectedItems});
+            }
+            return initialCollisions;
         }
-        return initialCollisions;
+        const justDropZonesAndItemSection = args.droppableContainers.filter(c => isDropZone(c) || c.id === CLOZE_ITEM_SECTION_ID);
+        return closestCenter({...args, droppableContainers: justDropZonesAndItemSection});
     }, [nonSelectedItems, usingKeyboard]);
 
     const accessibility = useMemo<{announcements: Announcements, container?: Element | undefined, restoreFocus?: boolean, screenReaderInstructions: ScreenReaderInstructions}>(() => ({
