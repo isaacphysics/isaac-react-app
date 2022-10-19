@@ -75,7 +75,7 @@ export function ResultRow({row, assignment}: ResultRowProps) {
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
-    const {openModal, modalProps, closeModal} = useActiveModal(`assignment-result-row-${assignment.id}-${row.user?.id}`);
+    const {openModal: promptReturnToStudent, modalProps, closeModal} = useActiveModal(`assignment-result-row-${assignment.id}-${row.user?.id}`);
 
     const returnToStudent = async () => {
         try {
@@ -128,7 +128,7 @@ export function ResultRow({row, assignment}: ResultRowProps) {
                         </div>
                     </Button>
                     {!working && dropdownOpen && <div className="py-2 px-3">
-                        <Button size="sm" onClick={openModal}>Allow another attempt</Button>
+                        <Button size="sm" onClick={promptReturnToStudent}>Allow another attempt</Button>
                     </div>}
                 </>
             :   <>
