@@ -18,7 +18,7 @@ export const TokenVerificationModal = buildActiveModal(
             <p>Are you sure you would like to give the following Isaac users access to your data?</p>
             <Table bordered>
                 <tbody>
-                {usersToGrantAccess.map((member) => (<tr key={member.id}>
+                {usersToGrantAccess?.map((member) => (<tr key={member.id}>
                     <td>
                         <span className="group-table-person" />
                         {extractTeacherName(member)} - ({member.email})
@@ -51,7 +51,7 @@ export const TokenVerificationModal = buildActiveModal(
             <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {dispatch(authenticateWithToken(authToken))}}>
+            <Button key={0} color="secondary" onClick={() => {if (authToken) dispatch(authenticateWithToken(authToken))}}>
                 Confirm
             </Button>,
         ]
@@ -74,7 +74,7 @@ export const RevocationConfirmationModal = buildActiveModal(
             <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {dispatch(revokeAuthorisation(userId, userToRevoke))}}>
+            <Button key={0} color="secondary" onClick={() => {if (userId && userToRevoke) dispatch(revokeAuthorisation(userId, userToRevoke))}}>
                 Confirm
             </Button>,
         ]
@@ -86,19 +86,17 @@ export const ReleaseConfirmationModal = buildActiveModal(
     "ReleaseConfirmationModal",
     ({userId, dispatch, closeModal, otherUser}) => ({
         title: "Remove access to students' data",
-        body: <>
-            <p>
-                Are you sure you want to end your access to <strong>{otherUser.givenName} {otherUser.familyName}</strong>
-                &apos;s data?
-                <br />
-                You will need to ask them to grant access again in the future if you change your mind.
-            </p>
-        </>,
+        body: <p>
+            Are you sure you want to end your access to <strong>{otherUser?.givenName} {otherUser?.familyName}</strong>
+            &apos;s data?
+            <br />
+            You will need to ask them to grant access again in the future if you change your mind.
+        </p>,
         buttons: [
             <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {dispatch(releaseAuthorisation(userId, otherUser))}}>
+            <Button key={0} color="secondary" onClick={() => {if (userId && otherUser) dispatch(releaseAuthorisation(userId, otherUser))}}>
                 Confirm
             </Button>,
         ]
@@ -119,7 +117,7 @@ export const ReleaseAllConfirmationModal = buildActiveModal(
             <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
             </Button>,
-            <Button key={0} color="secondary" onClick={() => {dispatch(releaseAllAuthorisations(userId))}}>
+            <Button key={0} color="secondary" onClick={() => {if (userId) dispatch(releaseAllAuthorisations(userId))}}>
                 Confirm
             </Button>,
         ]

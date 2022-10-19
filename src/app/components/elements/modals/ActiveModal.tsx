@@ -55,7 +55,7 @@ export interface BaseActiveModalProps {
 // The `specification` parameter can depend on some data that is stored in the `currentActiveModal` state, which can be
 // set by who/whatever activates this modal. We assume that every time `specification` is called, it will have all the
 // required arguments, passed either by the `data` parameter of `openActiveModal`, or in the components props.
-export function buildActiveModal<Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Args & BaseActiveModalSpecificationArgs) => ActiveModalSpecification): React.FC<Partial<Args> & BaseActiveModalProps> {
+export function buildActiveModal<Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Partial<Args> & BaseActiveModalSpecificationArgs) => ActiveModalSpecification): React.FC<Partial<Args> & BaseActiveModalProps> {
     const ActiveModal: React.FC<Partial<Args> & BaseActiveModalProps> = (props) => {
         const {data, closeModal, modalProps} = useActiveModal<Partial<Args>>(props.uId ? `${id}-${props.uId}` : id);
         const dispatch = useAppDispatch();
@@ -63,7 +63,7 @@ export function buildActiveModal<Id extends ModalId, Args extends {} = ModalType
             body: Body,
             title,
             ...rest
-        } = specification({...props, ...data, closeModal, dispatch} as Args & BaseActiveModalSpecificationArgs);
+        } = specification({...props, ...data, closeModal, dispatch});
 
         return <IsaacModal title={title} options={rest} modalProps={modalProps} closeModal={closeModal}>
             {typeof Body === "function" ? <Body /> : Body}

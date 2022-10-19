@@ -2,16 +2,16 @@ import React, {useState} from "react";
 import {UserSummaryForAdminUsersDTO} from "../../../../IsaacApiTypes";
 import {AdditionalInformation, AugmentedEvent} from "../../../../IsaacAppTypes";
 import {bookUserOnEvent, showToast, useAppDispatch} from "../../../state";
-import {atLeastOne, formatBookingModalConfirmMessage, zeroOrLess} from "../../../services";
+import {atLeastOne, formatBookingModalConfirmMessage, isDefined, zeroOrLess} from "../../../services";
 import {EventBookingForm} from "../EventBookingForm";
 import {FAILURE_TOAST} from "../../navigation/Toasts";
 import {buildActiveModal} from "./ActiveModal";
 import {Form, Input, Label} from "reactstrap";
 
 export interface UserBookingModalProps {
-    selectedUser: UserSummaryForAdminUsersDTO;
-    selectedEvent: AugmentedEvent;
-    eventBookingIds: number[];
+    selectedUser?: UserSummaryForAdminUsersDTO;
+    selectedEvent?: AugmentedEvent;
+    eventBookingIds?: number[];
 }
 function UserBookingModalBody({selectedUser, eventBookingIds, selectedEvent}: UserBookingModalProps) {
     const dispatch = useAppDispatch();
@@ -21,6 +21,9 @@ function UserBookingModalBody({selectedUser, eventBookingIds, selectedEvent}: Us
     function updateAdditionalInformation(update: AdditionalInformation) {
         setAdditionalInformation(Object.assign({}, additionalInformation, update));
     }
+
+    if (!isDefined(selectedEvent) || !isDefined(selectedUser) || !isDefined(eventBookingIds)) return null;
+
     const userCanBeBookedOnEvent = selectedEvent.eventStatus != 'WAITING_LIST_ONLY' &&
         !eventBookingIds.includes(selectedUser.id as number) && atLeastOne(selectedEvent.placesAvailable);
     const userCanBeAddedToWaitingList = selectedEvent.eventStatus == 'WAITING_LIST_ONLY' ||
@@ -32,7 +35,7 @@ function UserBookingModalBody({selectedUser, eventBookingIds, selectedEvent}: Us
             dispatch(showToast(Object.assign({}, FAILURE_TOAST, {title: "Event booking failed", body: "You must provide an authorisation reason to complete this request."})));
             return;
         }
-        dispatch(bookUserOnEvent(selectedEvent.id as string, selectedUser.id as number, additionalInformation))
+        dispatch(bookUserOnEvent(selectedEvent?.id as string, selectedUser?.id as number, additionalInformation))
     }
 
     return <Form onSubmit={makeUserBooking} className="mb-4">

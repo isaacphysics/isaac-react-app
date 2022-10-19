@@ -71,17 +71,20 @@ export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
 }
 
 // Modals
+
+// TODO deprecate and replace with below function
 export const openActiveModal = (activeModal: ActiveModalSpecification) => ({type: ACTION_TYPE.ACTIVE_MODAL_OPEN, activeModal});
 
 export const _openActiveModal = <Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, data?: Partial<Args>, uId?: string | number) => {
     return (dispatch: AppDispatch | ThunkDispatch<unknown, unknown, AnyAction>) => dispatch(currentActiveModalSlice.actions.openActiveModal({id: uId ? `${id}-${uId}` : id, data}));
 }
 
+// TODO deprecate and replace with below function
+export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
+
 export const _closeActiveModal = (id: ModalId, uId?: string | number) => {
     return (dispatch: AppDispatch | ThunkDispatch<unknown, unknown, AnyAction>) => dispatch(currentActiveModalSlice.actions.closeActiveModal(uId ? `${id}-${uId}` : id));
 }
-
-export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
 interface UseActiveModalOptions {
     isOpen?: boolean;
@@ -112,6 +115,7 @@ export const useActiveModal = <T extends {}>(id: string, options: UseActiveModal
     const {isOpen: forceOpen, testId} = options;
 
     const openModal = useCallback(() => {
+        dispatch(closeActiveModal());
         dispatch(currentActiveModalSlice.actions.openActiveModal({id, data}));
     }, [isOpen]);
     const closeModal = useCallback(() => {
