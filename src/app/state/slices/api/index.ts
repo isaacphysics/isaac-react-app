@@ -54,9 +54,9 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
     if (result.error && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
         if (result.error.status === 502) {
             // A '502 Bad Gateway' response means that the API no longer exists:
-            api.dispatch(errorSlice.actions.apiGoneAway);
+            api.dispatch(errorSlice.actions.apiGoneAway());
         } else {
-            api.dispatch(errorSlice.actions.apiServerError);
+            api.dispatch(errorSlice.actions.apiServerError());
         }
         // eslint-disable-next-line no-console
         console.warn("Error from API:", result.error);

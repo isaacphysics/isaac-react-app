@@ -1693,11 +1693,11 @@ export const registerPageChange = (path: string) => {
 };
 
 export const handleServerError = () => {
-    store.dispatch(errorSlice.actions.apiServerError);
+    store.dispatch(errorSlice.actions.apiServerError());
 };
 
 export const handleApiGoneAway = () => {
-    store.dispatch(errorSlice.actions.apiGoneAway);
+    store.dispatch(errorSlice.actions.apiGoneAway());
 };
 
 export const setAssignBoardPath = (path: string) => {
