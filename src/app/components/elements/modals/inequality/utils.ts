@@ -645,7 +645,7 @@ interface PrepareInequalityArgs {
     setEditorState: (state: any) => void;
 }
 export function prepareInequality({editorMode, inequalityModalRef, initialEditorSymbols, isTrashActive, sketch, logicSyntax, setEditorState, onEditorStateChange}: PrepareInequalityArgs) {
-    const { sketch: newSketch } = makeInequality(
+    const { sketch: newSketch, p } = makeInequality(
         inequalityModalRef.current,
         window.innerWidth,
         window.innerHeight,
@@ -680,6 +680,7 @@ export function prepareInequality({editorMode, inequalityModalRef, initialEditor
     };
     sketch.current = newSketch;
     return () => {
+        p.remove();
         if (sketch.current) {
             sketch.current.onNewEditorState = () => null;
             sketch.current.onCloseMenus = () => null;
