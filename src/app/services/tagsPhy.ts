@@ -121,10 +121,10 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.acidsAndBases, title: "Acids & Bases", parent: TAG_ID.physical},
         {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
         // Analytical
-        {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
+        {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical},
         {id: TAG_ID.massSpectrometry, title: `Mass Spectro${softHyphen}metry`, parent: TAG_ID.analytical},
-        {id: TAG_ID.infraredSpectroscopy, title: `IR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
-        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
+        {id: TAG_ID.infraredSpectroscopy, title: `IR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
+        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
         {id: TAG_ID.electronicSpectroscopy, title: `Electronic Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
         // Foundations
         {id: TAG_ID.numericalSkills, title: "Numerical Skills", parent: TAG_ID.foundations},
