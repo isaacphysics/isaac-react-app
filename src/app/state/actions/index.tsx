@@ -1168,10 +1168,11 @@ export const selectGroup = (group: UserGroupDTO | null) => async (dispatch: Disp
     dispatch({type: ACTION_TYPE.GROUPS_SELECT, group});
 };
 
-export const createGroup = (groupName: string) => async (dispatch: Dispatch<Action>) => {
+export const createGroup = (groupName: string) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.GROUPS_CREATE_REQUEST});
     try {
         const newGroup = await api.groups.create(groupName);
+        dispatch(isaacApi.util.invalidateTags(["AllSetAssignments", "AllSetTests", "AssignmentProgress"]));
         dispatch({type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: newGroup.data});
         return newGroup.data as AppGroup;
     } catch (e) {
@@ -1180,10 +1181,11 @@ export const createGroup = (groupName: string) => async (dispatch: Dispatch<Acti
     }
 };
 
-export const deleteGroup = (group: UserGroupDTO) => async (dispatch: Dispatch<any>) => {
+export const deleteGroup = (group: UserGroupDTO) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.GROUPS_DELETE_REQUEST});
     try {
         await api.groups.delete(group);
+        dispatch(isaacApi.util.invalidateTags(["AllSetAssignments", "AllSetTests", "AssignmentProgress", {type: "GroupAssignments", id: group.id}, {type: "GroupTests", id: group.id}]));
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup: group});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE, deletedGroup: group});
