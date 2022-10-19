@@ -404,6 +404,7 @@ const isaacApi = createApi({
                 url: "/groups",
                 body: {groupName},
             }),
+            invalidatesTags: ["AllSetAssignments", "AllMyAssignments", "AllSetTests", "AssignmentProgress"],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: (_, newGroup, {dispatch}) => {
                     // Created groups are active by default, so don't need to update cache for archived groups
@@ -423,7 +424,7 @@ const isaacApi = createApi({
                 method: "DELETE",
                 url: `/groups/${groupId}`,
             }),
-            invalidatesTags: (_, error, groupId) => !isDefined(error) ? [{type: "GroupAssignments", id: groupId}] : [],
+            invalidatesTags: (_, error, groupId) => ["AllSetAssignments", "AllMyAssignments", "AllSetTests", "AssignmentProgress", {type: "GroupAssignments", id: groupId}, {type: "GroupTests", id: groupId}],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: (groupId, _, {dispatch}) => {
                     [true, false].forEach(archivedGroupsOnly => dispatch(isaacApi.util.updateQueryData(
