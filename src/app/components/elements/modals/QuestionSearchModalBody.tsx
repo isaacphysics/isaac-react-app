@@ -52,7 +52,7 @@ interface QuestionSearchModalProps {
     setOriginalQuestionOrder: (a: string[]) => void;
     eventLog: object[];
 }
-export const QuestionSearchModal = ({closeModal, originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
+export const QuestionSearchModalBody = ({closeModal, originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
 

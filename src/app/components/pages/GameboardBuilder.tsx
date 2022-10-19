@@ -8,7 +8,7 @@ import {
 import {Button, Card, CardBody, Col, Container, Input, Label, Row, Spinner, Table} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
+import {QuestionSearchModalBody} from "../elements/modals/QuestionSearchModalBody";
 import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
 import {
@@ -142,7 +142,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     return <Container id="gameboard-builder">
         <GameboardCreatedModal/>
         <IsaacModal modalProps={modalProps} closeModal={closeModal} title={"Search questions"} options={{closeLabelOverride: "CANCEL", size: "xl"}}>
-            <QuestionSearchModal
+            <QuestionSearchModalBody
                 closeModal={closeModal}
                 originalSelectedQuestions={selectedQuestions}
                 setOriginalSelectedQuestions={setSelectedQuestions}
