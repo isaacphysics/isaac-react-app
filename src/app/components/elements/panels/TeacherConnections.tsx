@@ -18,7 +18,12 @@ import {
 } from "../../../state";
 import classnames from "classnames";
 import {extractTeacherName, isLoggedIn, isStudent, MEMBERSHIP_STATUS} from "../../../services";
-
+import {
+    ReleaseAllConfirmationModal,
+    ReleaseConfirmationModal,
+    RevocationConfirmationModal,
+    TokenVerificationModal
+} from "../modals/TeacherConnectionModalCreators";
 
 interface TeacherConnectionsProps {
     user: PotentialUser;
@@ -56,6 +61,10 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     }
 
     return <RS.CardBody>
+        <TokenVerificationModal/>
+        <RevocationConfirmationModal/>
+        <ReleaseConfirmationModal/>
+        <ReleaseAllConfirmationModal/>
         <RS.Container>
             <h3>
                 <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>

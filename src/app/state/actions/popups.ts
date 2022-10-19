@@ -77,6 +77,10 @@ export const _openActiveModal = <Id extends ModalId, Args extends {} = ModalType
     return (dispatch: AppDispatch | ThunkDispatch<unknown, unknown, AnyAction>) => dispatch(currentActiveModalSlice.actions.openActiveModal({id: uId ? `${id}-${uId}` : id, data}));
 }
 
+export const _closeActiveModal = (id: ModalId, uId?: string | number) => {
+    return (dispatch: AppDispatch | ThunkDispatch<unknown, unknown, AnyAction>) => dispatch(currentActiveModalSlice.actions.closeActiveModal(uId ? `${id}-${uId}` : id));
+}
+
 export const closeActiveModal = () => ({type: ACTION_TYPE.ACTIVE_MODAL_CLOSE});
 
 interface UseActiveModalOptions {

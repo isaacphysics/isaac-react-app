@@ -325,6 +325,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             }).then(gameboardOrError => {
                                 const error = 'error' in gameboardOrError ? gameboardOrError.error : undefined;
                                 const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
+
+                                // TODO fix the non-serialisable state here (resetBuilder) by moving modal into this component
                                 dispatch(_openActiveModal("gameboard-created-modal", {resetBuilder, gameboardId, error}));
                             });
 

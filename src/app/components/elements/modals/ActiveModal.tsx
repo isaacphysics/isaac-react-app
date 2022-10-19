@@ -1,5 +1,5 @@
 import React from "react";
-import {closeActiveModal, useActiveModal, useAppDispatch} from "../../../state";
+import {AppDispatch, closeActiveModal, useActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
 import {ActiveModalSpecification} from "../../../../IsaacAppTypes";
 import {Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
@@ -44,6 +44,7 @@ export const IsaacModal = ({options, modalProps, children, closeModal, title}: R
 
 export interface BaseActiveModalSpecificationArgs {
     closeModal: () => void;
+    dispatch: AppDispatch;
 }
 export interface BaseActiveModalProps {
     uId?: string | number;
@@ -57,11 +58,12 @@ export interface BaseActiveModalProps {
 export function buildActiveModal<Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Args & BaseActiveModalSpecificationArgs) => ActiveModalSpecification): React.FC<Partial<Args> & BaseActiveModalProps> {
     const ActiveModal: React.FC<Partial<Args> & BaseActiveModalProps> = (props) => {
         const {data, closeModal, modalProps} = useActiveModal<Partial<Args>>(props.uId ? `${id}-${props.uId}` : id);
+        const dispatch = useAppDispatch();
         const {
             body: Body,
             title,
             ...rest
-        } = specification({...props, ...data, closeModal} as Args & BaseActiveModalSpecificationArgs);
+        } = specification({...props, ...data, closeModal, dispatch} as Args & BaseActiveModalSpecificationArgs);
 
         return <IsaacModal title={title} options={rest} modalProps={modalProps} closeModal={closeModal}>
             {typeof Body === "function" ? <Body /> : Body}

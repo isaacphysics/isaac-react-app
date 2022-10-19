@@ -1,32 +1,31 @@
 import React from "react";
-import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {
     authenticateWithToken,
-    closeActiveModal,
     releaseAllAuthorisations,
     releaseAuthorisation,
-    revokeAuthorisation,
-    store
+    revokeAuthorisation
 } from "../../../state";
-import * as RS from "reactstrap";
 import {extractTeacherName} from "../../../services";
+import {buildActiveModal} from "./ActiveModal";
+import {Button, Table} from "reactstrap";
 
-export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
-    return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+export const TokenVerificationModal = buildActiveModal(
+    "token-verification-modal",
+    "TokenVerificationModal",
+    ({usersToGrantAccess, closeModal, authToken, userId, dispatch}) => ({
         title: "Sharing your data",
-        body: <React.Fragment>
+        body: <>
             <p>Are you sure you would like to give the following Isaac users access to your data?</p>
-            <RS.Table bordered>
+            <Table bordered>
                 <tbody>
-                    {usersToGrantAccess.map((member) => (<tr key={member.id}>
-                        <td>
-                            <span className="group-table-person" />
-                            {extractTeacherName(member)} - ({member.email})
-                        </td>
-                    </tr>))}
+                {usersToGrantAccess.map((member) => (<tr key={member.id}>
+                    <td>
+                        <span className="group-table-person" />
+                        {extractTeacherName(member)} - ({member.email})
+                    </td>
+                </tr>))}
                 </tbody>
-            </RS.Table>
+            </Table>
 
             {/* TODO Highlight already authorised teachers */}
             {/*{anyUsersAlreadyAuthorised && <p>*/}
@@ -47,83 +46,82 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
                     <a href="/privacy" target="_blank">Privacy Policy</a>.
                 </small>
             </p>
-        </React.Fragment>,
+        </>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
-            </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(authenticateWithToken(authToken))}}>
+            </Button>,
+            <Button key={0} color="secondary" onClick={() => {dispatch(authenticateWithToken(authToken))}}>
                 Confirm
-            </RS.Button>,
+            </Button>,
         ]
-    }
-};
+    })
+);
 
-export const revocationConfirmationModal = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => {
-    return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+export const RevocationConfirmationModal = buildActiveModal(
+    "revocation-confirmation-modal",
+    "RevocationConfirmationModal",
+    ({userId, userToRevoke, closeModal, dispatch}) => ({
         title: "Revoke access to your data",
-        body: <React.Fragment>
-            <p>
-                The user <strong>{extractTeacherName(userToRevoke)}</strong>
-                {" "}
-                will no longer be able to access your data.
-                <br />
-                Are you sure you want to revoke access for this user?
-            </p>
-        </React.Fragment>,
+        body: <p>
+            The user <strong>{extractTeacherName(userToRevoke)}</strong>
+            {" "}
+            will no longer be able to access your data.
+            <br />
+            Are you sure you want to revoke access for this user?
+        </p>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
-            </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(revokeAuthorisation(userId, userToRevoke))}}>
+            </Button>,
+            <Button key={0} color="secondary" onClick={() => {dispatch(revokeAuthorisation(userId, userToRevoke))}}>
                 Confirm
-            </RS.Button>,
+            </Button>,
         ]
-    }
-};
+    })
+);
 
-export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryDTO) => {
-    return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+export const ReleaseConfirmationModal = buildActiveModal(
+    "release-confirmation-modal",
+    "ReleaseConfirmationModal",
+    ({userId, dispatch, closeModal, otherUser}) => ({
         title: "Remove access to students' data",
-        body: <React.Fragment>
+        body: <>
             <p>
                 Are you sure you want to end your access to <strong>{otherUser.givenName} {otherUser.familyName}</strong>
                 &apos;s data?
                 <br />
                 You will need to ask them to grant access again in the future if you change your mind.
             </p>
-        </React.Fragment>,
+        </>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
-            </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAuthorisation(userId, otherUser))}}>
+            </Button>,
+            <Button key={0} color="secondary" onClick={() => {dispatch(releaseAuthorisation(userId, otherUser))}}>
                 Confirm
-            </RS.Button>,
+            </Button>,
         ]
-    }
-};
+    })
+);
 
-export const releaseAllConfirmationModal = (userId: number) => {
-    return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
+export const ReleaseAllConfirmationModal = buildActiveModal(
+    "release-all-confirmation-modal",
+    "ReleaseAllConfirmationModal",
+    ({userId, closeModal, dispatch}) => ({
         title: "Remove access to all students' data",
-        body: <React.Fragment>
-            <p>
-                Are you sure you want to end your access to all students&apos; data?
-                <br />
-                You will need to ask them to grant access again in the future if you change your mind.
-            </p>
-        </React.Fragment>,
+        body: <p>
+            Are you sure you want to end your access to all students&apos; data?
+            <br />
+            You will need to ask them to grant access again in the future if you change your mind.
+        </p>,
         buttons: [
-            <RS.Button key={1} color="primary" outline onClick={() => {store.dispatch(closeActiveModal())}}>
+            <Button key={1} color="primary" outline onClick={closeModal}>
                 Cancel
-            </RS.Button>,
-            <RS.Button key={0} color="secondary" onClick={() => {store.dispatch(releaseAllAuthorisations(userId))}}>
+            </Button>,
+            <Button key={0} color="secondary" onClick={() => {dispatch(releaseAllAuthorisations(userId))}}>
                 Confirm
-            </RS.Button>,
+            </Button>,
         ]
-    }
-};
+    })
+);

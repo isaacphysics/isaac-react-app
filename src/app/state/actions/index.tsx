@@ -52,12 +52,6 @@ import {
     UserSummaryWithEmailAddressDTO
 } from "../../../IsaacApiTypes";
 import {
-    releaseAllConfirmationModal,
-    releaseConfirmationModal,
-    revocationConfirmationModal,
-    tokenVerificationModal
-} from "../../components/elements/modals/TeacherConnectionModalCreators";
-import {
     additionalManagerRemovalModal,
     groupInvitationModal,
     groupManagersModal
@@ -78,7 +72,9 @@ import {
     routerPageChange,
     selectors,
     showToast,
-    store
+    store,
+    _openActiveModal,
+    _closeActiveModal
 } from "../index";
 import {Immutable} from "immer";
 
@@ -525,7 +521,7 @@ export const getActiveAuthorisations = (userId?: number) => async (dispatch: Dis
     }
 };
 
-export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAuthenticationToken: string | null) => async (dispatch: Dispatch<Action>) => {
+export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAuthenticationToken: string | null) => async (dispatch: AppDispatch) => {
     if (!userSubmittedAuthenticationToken) {
         dispatch(showToast({
             color: "danger", title: "No group code provided", body: "You have to enter a group code!"}) as any);
@@ -549,7 +545,7 @@ export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAu
         // const usersAlreadyAuthorised = (state && state.activeAuthorisations && state.activeAuthorisations
         //     .filter((currentAuthorisation) => (toGrantIds as number[]).includes(currentAuthorisation.id as number)));
 
-        dispatch(openActiveModal(tokenVerificationModal(userId, authenticationToken, usersToGrantAccess)) as any);
+        dispatch(_openActiveModal("token-verification-modal", {userId, authenticationToken, usersToGrantAccess}));
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_FAILURE});
         if (e.status == 429) {
@@ -593,10 +589,10 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: Dis
         }) as any);
     }
 };
-export const revokeAuthorisationAfterPrompt = (userId: number, otherUser: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(revocationConfirmationModal(userId, otherUser)) as any);
+export const revokeAuthorisationAfterPrompt = (userId: number, otherUser: UserSummaryWithEmailAddressDTO) => async (dispatch: AppDispatch) => {
+    dispatch(_openActiveModal("revocation-confirmation-modal", {userId, userToRevoke: otherUser}));
 };
-export const revokeAuthorisation = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
+export const revokeAuthorisation = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => async (dispatch: AppDispatch) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_REQUEST});
         await api.authorisations.revoke(userToRevoke.id as number);
@@ -606,7 +602,7 @@ export const revokeAuthorisation = (userId: number, userToRevoke: UserSummaryWit
             body: "You have revoked access to your data."
         }) as any);
         dispatch(getActiveAuthorisations(userId) as any);
-        dispatch(closeActiveModal() as any);
+        dispatch(_closeActiveModal("revocation-confirmation-modal"));
     } catch (e) {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_REVOKE_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("Revoke operation failed", e));
@@ -628,16 +624,16 @@ export const getStudentAuthorisations = (userId?: number) => async (dispatch: Di
     }
 };
 
-export const releaseAuthorisationAfterPrompt = (userId: number, student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(releaseConfirmationModal(userId, student)) as any);
+export const releaseAuthorisationAfterPrompt = (userId: number, student: UserSummaryDTO) => async (dispatch: AppDispatch) => {
+    dispatch(_openActiveModal("release-confirmation-modal", {userId, otherUser: student}));
 };
-export const releaseAuthorisation = (userId: number, student: UserSummaryDTO) => async (dispatch: Dispatch<Action>) => {
+export const releaseAuthorisation = (userId: number, student: UserSummaryDTO) => async (dispatch: AppDispatch) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_REQUEST});
         await api.authorisations.release(student.id as number);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_USER_RESPONSE_SUCCESS});
         dispatch(getStudentAuthorisations(userId) as any);
-        dispatch(closeActiveModal() as any);
+        dispatch(_closeActiveModal("release-confirmation-modal"));
         dispatch(showToast({
             color: "success", title: "Access removed", timeout: 5000,
             body: "You have ended your access to your student's data."
@@ -648,16 +644,16 @@ export const releaseAuthorisation = (userId: number, student: UserSummaryDTO) =>
     }
 };
 
-export const releaseAllAuthorisationsAfterPrompt = (userId: number) => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(releaseAllConfirmationModal(userId)) as any);
+export const releaseAllAuthorisationsAfterPrompt = (userId: number) => async (dispatch: AppDispatch) => {
+    dispatch(_openActiveModal("release-all-confirmation-modal", {userId}));
 };
-export const releaseAllAuthorisations = (userId: number) => async (dispatch: Dispatch<Action>) => {
+export const releaseAllAuthorisations = (userId: number) => async (dispatch: AppDispatch) => {
     try {
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_REQUEST});
         await api.authorisations.releaseAll();
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_RELEASE_ALL_USERS_RESPONSE_SUCCESS});
         dispatch(getStudentAuthorisations(userId) as any);
-        dispatch(closeActiveModal() as any);
+        dispatch(_closeActiveModal("release-all-confirmation-modal"));
         dispatch(showToast({
             color: "success", title: "Access removed", timeout: 5000,
             body: "You have ended your access to all of your students' data."

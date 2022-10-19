@@ -2,6 +2,7 @@ import {EditorMode} from "./inequality/constants";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
 import {UserBookingModalProps} from "./UserBookingModal";
+import {UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 
 // This is a list of modals that have proper support for being opened from anywhere using `openActiveModal`, along
 // with the extra data you can pass to the modal to customise it. The extra data MUST BE SERIALISABLE!
@@ -14,6 +15,10 @@ export type ModalTypeRegistry = {
     "user-context-reconfirmation": {};
     "required-account-information": {};
     "user-booking-modal": UserBookingModalProps;
+    "token-verification-modal": {userId: number; authToken: string; usersToGrantAccess: UserSummaryWithEmailAddressDTO[]};
+    "revocation-confirmation-modal": {userId: number; userToRevoke: UserSummaryWithEmailAddressDTO};
+    "release-confirmation-modal": {userId: number; otherUser: UserSummaryWithEmailAddressDTO};
+    "release-all-confirmation-modal": {userId: number};
     "gameboard-created-modal": {gameboardId: string | undefined, error: FetchBaseQueryError | SerializedError | undefined, resetBuilder: () => void};
 };
 export type ModalId = keyof ModalTypeRegistry;
