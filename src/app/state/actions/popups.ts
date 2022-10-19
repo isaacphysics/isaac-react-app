@@ -55,7 +55,6 @@ export const showSuccessToast = (title: string, body: string) => showToast({
 });
 
 export function showRTKQueryErrorToastIfNeeded(error: string, response: any) {
-    console.log(response);
     if (response) {
         if (response.error) {
             if (response.error.status < 500) {
@@ -89,15 +88,12 @@ interface UseActiveModalOptions {
 // reflect that change.
 //
 // The hook returns two functions - `openModal` and `closeModal` - along with a set of reactstrap `Modal` props that
-// you should pass to the `Modal` you want to connect to the active modal setup.
+// you should pass to the modal you want to connect to the active modal setup.
 // ```
-// <Modal {...modalProps}>
+// <IsaacModal modalProps={modalProps} closeModal={closeModal} ... >
 //     ...
-// </Modal>
+// </IsaacModal>
 // ```
-// You can pass static (non-updatable) data into the `openModal` function. This lets the caller pass data back up to
-// the component which called the `useActiveModal` hook. This could be helpful if you are opening the modal from
-// deeply nested UI components for example.
 export const useActiveModal = <T extends {}>(id: string, options: UseActiveModalOptions = {}): {openModal: () => void; closeModal: () => void; modalProps: ModalProps, data?: T} => {
     const dispatch = useAppDispatch();
     const {id: currentModalId, data} = useAppSelector(selectors.notifications.currentActiveModal) ?? {};
@@ -118,7 +114,7 @@ export const useActiveModal = <T extends {}>(id: string, options: UseActiveModal
         dispatch(currentActiveModalSlice.actions.closeActiveModal(id));
     }, [isOpen]);
     const toggle = useCallback(() => {
-        (isOpen ? openModal : closeModal)();
+        (isOpen ? closeModal : openModal)();
     }, [isOpen]);
 
     useEffect(() => {

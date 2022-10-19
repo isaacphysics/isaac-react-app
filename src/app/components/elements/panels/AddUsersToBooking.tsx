@@ -2,16 +2,15 @@ import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
+    _openActiveModal,
     adminUserSearchRequest,
     AppState,
-    openActiveModal,
     selectors,
     useAppDispatch,
     useAppSelector
 } from "../../../state";
 import {atLeastOne, formatManageBookingActionButtonMessage, NOT_FOUND, zeroOrLess} from "../../../services";
 import {DateString} from "../DateString";
-import {userBookingModal} from "../modals/UserBookingModal";
 
 export const AddUsersToBooking = () => {
     const dispatch = useAppDispatch();
@@ -96,7 +95,7 @@ export const AddUsersToBooking = () => {
                     {selectedEvent && selectedEvent !== NOT_FOUND && userResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
                             {!userBookings.includes(result.id as number) &&
-                            <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
+                            <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(_openActiveModal("user-booking-modal", {selectedUser: result, selectedEvent, eventBookingIds: userBookings}))}>
                                 {formatManageBookingActionButtonMessage(selectedEvent)}
                             </RS.Button>
                             }

@@ -8,6 +8,7 @@ import {SelectedEventDetails} from "../elements/panels/SelectedEventDetails";
 import {ManageExistingBookings} from "../elements/panels/ManageExistingBookings";
 import {AddUsersToBooking} from "../elements/panels/AddUsersToBooking";
 import {EventAttendance} from "../elements/panels/EventAttendance";
+import {UserBookingModal} from "../elements/modals/UserBookingModal";
 
 export const EventManager = ({user}: {user: PotentialUser}) => {
     const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export const EventManager = ({user}: {user: PotentialUser}) => {
     }, [selectedEventId]);
 
     return  <RS.Container>
+        <UserBookingModal/>
         <TitleAndBreadcrumb intermediateCrumbs={[ADMIN_CRUMB]} currentPageTitle="Event booking admin"/>
         <div className="my-5">
             <EventOverviews user={user} setSelectedEventId={setSelectedEventId} />

@@ -7,7 +7,7 @@ import {ModalId, ModalTypeRegistry} from "./index";
 import {ModalProps} from "reactstrap/es/Modal";
 
 interface IsaacModalProps {
-    options: Omit<ActiveModalSpecification, "body" | "title">,
+    options?: Omit<ActiveModalSpecification, "body" | "title">,
     modalProps: ModalProps,
     closeModal: () => void;
     title?: string
@@ -21,7 +21,7 @@ export const IsaacModal = ({options, modalProps, children, closeModal, title}: R
         noPadding,
         overflowVisible,
         closeAction
-    } = options;
+    } = options ?? {};
 
     return <Modal {...modalProps} size={size ?? "lg"} centered={centered ?? true}>
         {<ModalHeader
@@ -42,25 +42,26 @@ export const IsaacModal = ({options, modalProps, children, closeModal, title}: R
     </Modal>;
 }
 
-interface BaseActiveModalSpecificationArgs {
+export interface BaseActiveModalSpecificationArgs {
     closeModal: () => void;
 }
-interface BaseActiveModalProps {
+export interface BaseActiveModalProps {
     uId?: string | number;
 }
 // Allows specifying a modal that connects to the `currentActiveModal` Redux state to ensure only one modal is open at
 // a time.
 //
 // The `specification` parameter can depend on some data that is stored in the `currentActiveModal` state, which can be
-// set by who/whatever activates this modal.
-export function buildActiveModal<Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Partial<Args> & BaseActiveModalSpecificationArgs) => ActiveModalSpecification): React.FC<Partial<Args> & BaseActiveModalProps> {
+// set by who/whatever activates this modal. We assume that every time `specification` is called, it will have all the
+// required arguments, passed either by the `data` parameter of `openActiveModal`, or in the components props.
+export function buildActiveModal<Id extends ModalId, Args extends {} = ModalTypeRegistry[Id]>(id: Id, componentName: string, specification: (props: Args & BaseActiveModalSpecificationArgs) => ActiveModalSpecification): React.FC<Partial<Args> & BaseActiveModalProps> {
     const ActiveModal: React.FC<Partial<Args> & BaseActiveModalProps> = (props) => {
         const {data, closeModal, modalProps} = useActiveModal<Partial<Args>>(props.uId ? `${id}-${props.uId}` : id);
         const {
             body: Body,
             title,
             ...rest
-        } = specification({...props, ...data, closeModal});
+        } = specification({...props, ...data, closeModal} as Args & BaseActiveModalSpecificationArgs);
 
         return <IsaacModal title={title} options={rest} modalProps={modalProps} closeModal={closeModal}>
             {typeof Body === "function" ? <Body /> : Body}

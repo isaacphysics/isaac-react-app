@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useState} from "react";
 import {
     AppState,
     cancelReservationsOnEvent,
-    closeActiveModal,
     getEventBookingsForAllGroups,
     getEventBookingsForGroup,
     getGroupMembers,
@@ -10,20 +9,19 @@ import {
     reserveUsersOnEvent,
     selectGroup,
     selectors,
-    store,
     useAppDispatch,
     useAppSelector
 } from "../../../state";
 import {Button, Col, CustomInput, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Table} from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {ActiveModalSpecification, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
+import {AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {bookingStatusMap, isLoggedIn, NOT_FOUND} from "../../../services";
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
 
-const ReservationsModal = () => {
+export const ReservationsModalBody = ({closeModal}: {closeModal: () => void}) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
     const activeGroups = useAppSelector(selectors.groups.active);
@@ -241,7 +239,7 @@ const ReservationsModal = () => {
                             </React.Fragment>
                         </ShowLoading>
                     </Col>
-                    {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={() => dispatch(closeActiveModal())}>Manage groups</Link> page to book your students onto an event</p>}
+                    {activeFilteredGroups && activeFilteredGroups.length === 0 && <p>Create a groups from the <Link to="/groups" onClick={closeModal}>Manage groups</Link> page to book your students onto an event</p>}
                     <Col cols={12} lg={{size: 8, offset: 1}} xl={{size: 9, offset: 0}}>
                         {activeFilteredGroups && activeFilteredGroups.length > 0 && (!currentGroup || !currentGroup.members) && <p>Select one of your groups from the dropdown menu to see its members.</p>}
                         {currentGroup && currentGroup.members && currentGroup.members.length == 0 && <p>This group has no members. Please select another group.</p>}
@@ -368,14 +366,4 @@ const ReservationsModal = () => {
             </Col>}
         </div>
     </React.Fragment>
-};
-
-export const reservationsModal = (): ActiveModalSpecification => {
-    return {
-        closeAction: () => {store.dispatch(closeActiveModal())},
-        size: 'xl',
-        title: "Group reservations",
-        body: <ReservationsModal />,
-        overflowVisible: true
-    }
 };

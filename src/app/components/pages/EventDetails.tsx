@@ -6,11 +6,10 @@ import {
     addMyselfToWaitingList,
     AppState,
     bookMyselfOnEvent,
-    cancelMyBooking,
+    cancelMyBooking, closeActiveModal,
     getEvent,
-    openActiveModal,
     selectors,
-    showToast,
+    showToast, store, useActiveModal,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -41,15 +40,16 @@ import {
     validateBookingSubmission,
     zeroOrLess
 } from "../../services";
-import {AdditionalInformation} from "../../../IsaacAppTypes";
+import {ActiveModalSpecification, AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
-import {reservationsModal} from "../elements/modals/ReservationsModal";
+import {ReservationsModalBody} from "../elements/modals/ReservationsModal";
 import {IsaacContent} from "../content/IsaacContent";
 import {EditContentButton} from "../elements/EditContentButton";
 import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
+import {IsaacModal} from "../elements/modals/ActiveModal";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -140,7 +140,12 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             iconAnchor: [12, 41]
         });
 
+        const {openModal: openReservationsModal, closeModal, modalProps} = useActiveModal("reservations-modal");
+
         return <RS.Container className="events mb-5">
+            <IsaacModal title={"Group reservations"} modalProps={modalProps} closeModal={closeModal} options={{size: 'xl', overflowVisible: true}}>
+                <ReservationsModalBody closeModal={closeModal} />
+            </IsaacModal>
             <TitleAndBreadcrumb
                 currentPageTitle={event.title as string} subTitle={event.subtitle}
                 breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
@@ -314,9 +319,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                     </RS.Button>
                                     }
                                     {canReserveSpaces &&
-                                    <RS.Button color="primary" onClick={() => {
-                                        dispatch(openActiveModal(reservationsModal()))
-                                    }}>
+                                    <RS.Button color="primary" onClick={openReservationsModal}>
                                         Manage reservations
                                     </RS.Button>
                                     }

@@ -1,10 +1,11 @@
 import React, {useContext, useState} from "react";
-import {closeActiveModal, openActiveModal, returnQuizToStudent, useAppDispatch} from "../../../state";
+import {returnQuizToStudent, useActiveModal, useAppDispatch} from "../../../state";
 import {Button} from "reactstrap";
 import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
 import {isQuestion, siteSpecific} from "../../../services";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {IsaacModal} from "../modals/ActiveModal";
 
 export const ICON = siteSpecific(
     {
@@ -74,31 +75,15 @@ export function ResultRow({row, assignment}: ResultRowProps) {
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
-    const returnToStudent = async () => {
-        dispatch(openActiveModal({
-            closeAction: () => {
-                dispatch(closeActiveModal())
-            },
-            title: "Allow another attempt?",
-            body: "This will allow the student to attempt the test again.",
-            buttons: [
-                <Button key={1} color="primary" outline target="_blank" onClick={() => {dispatch(closeActiveModal())}}>
-                    Cancel
-                </Button>,
-                <Button key={0} color="primary" target="_blank" onClick={_returnToStudent}>
-                    Confirm
-                </Button>,
-        ]
-        }));    
-    }
+    const {openModal, modalProps, closeModal} = useActiveModal(`assignment-result-row-${assignment.id}-${row.user?.id}`);
 
-    const _returnToStudent = async () => {
+    const returnToStudent = async () => {
         try {
             setWorking(true);
             await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
         } finally {
             setWorking(false);
-            dispatch(closeActiveModal());
+            closeModal();
         }
     };
 
@@ -113,6 +98,18 @@ export function ResultRow({row, assignment}: ResultRowProps) {
     }
     const valid = message === undefined;
     return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
+        <IsaacModal options={{
+            buttons: [
+                <Button key={1} color="primary" outline target="_blank" onClick={closeModal}>
+                    Cancel
+                </Button>,
+                <Button key={0} color="primary" target="_blank" onClick={returnToStudent}>
+                    Confirm
+                </Button>,
+            ]
+        }} modalProps={modalProps} closeModal={closeModal} title={"Allow another attempt?"}>
+            This will allow the student to attempt the test again.
+        </IsaacModal>
         <td className="student-name">
             {valid ?
                 <>
@@ -131,7 +128,7 @@ export function ResultRow({row, assignment}: ResultRowProps) {
                         </div>
                     </Button>
                     {!working && dropdownOpen && <div className="py-2 px-3">
-                        <Button size="sm" onClick={returnToStudent}>Allow another attempt</Button>
+                        <Button size="sm" onClick={openModal}>Allow another attempt</Button>
                     </div>}
                 </>
             :   <>

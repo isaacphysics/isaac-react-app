@@ -68,14 +68,13 @@ import ReactGA from "react-ga";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {groupEmailModal} from "../../components/elements/modals/GroupEmailModal";
 import {
-    _openActiveModal,
+    openActiveModal,
     AppDispatch,
     AppState,
     closeActiveModal,
     errorSlice,
     isaacApi,
     logAction,
-    openActiveModal,
     routerPageChange,
     selectors,
     showToast,

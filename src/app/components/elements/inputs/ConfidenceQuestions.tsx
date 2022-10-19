@@ -1,11 +1,12 @@
 import {Button, Col, Row} from "reactstrap";
 import React, {useEffect, useState} from "react";
-import {closeActiveModal, logAction, openActiveModal, store, useAppDispatch} from "../../../state";
+import {logAction, useActiveModal, useAppDispatch} from "../../../state";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
 import {isCS, isPhy, siteSpecific} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
+import {IsaacModal} from "../modals/ActiveModal";
 
 type ActiveConfidenceState = "initial" | "followUp"
 export type ConfidenceState = ActiveConfidenceState | "hidden";
@@ -81,16 +82,6 @@ interface ConfidenceQuestionsProps {
     answer?: any;
 }
 
-const confidenceInformationModal = () => openActiveModal({
-    closeAction: () => store.dispatch(closeActiveModal()),
-    title: "Information",
-    body: <div className="mb-4">
-        We regularly review and update the Isaac platform’s content and would like your input in order to
-        prioritise content and assess the impact of updates. Data captured with these buttons will help us
-        identify priority areas.
-    </div>
-});
-
 type ValidationPendingState =
   | {
     pending: true,
@@ -154,14 +145,23 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
 
     const disabled = state === "initial" && disableInitialState === true;
 
+    const {modalProps, closeModal, openModal} = useActiveModal(`confidence-information-modal-${identifier}`);
+
     return <div className={classNames("quick-question-options", {"quick-question-secondary": isCS && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isCS, "quick-question-muted": disabled})}>
+        <IsaacModal modalProps={modalProps} closeModal={closeModal} title={"Information"}>
+            <div className="mb-4">
+                We regularly review and update the Isaac platform’s content and would like your input in order to
+                prioritise content and assess the impact of updates. Data captured with these buttons will help us
+                identify priority areas.
+            </div>
+        </IsaacModal>
         {state === "initial" && <Row>
             <Col md="9">
                 <h4 className={classNames({"text-muted": disabled && isCS})}>{confidenceVariables?.title}</h4>
             </Col>
             <Col md="auto" className="ml-auto text-center not-mobile">
                 <Button outline color="primary" className={classNames("confidence-help", {"border-muted": disabled && isCS})} size="sm"
-                        onClick={() => dispatch(confidenceInformationModal())}>
+                        onClick={openModal}>
                     <i className={classNames({"text-muted": disabled && isCS})}>i</i>
                 </Button>
             </Col>
