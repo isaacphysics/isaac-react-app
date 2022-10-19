@@ -6,10 +6,11 @@ import {
     addMyselfToWaitingList,
     AppState,
     bookMyselfOnEvent,
-    cancelMyBooking, closeActiveModal,
+    cancelMyBooking,
     getEvent,
     selectors,
-    showToast, store, useActiveModal,
+    showToast,
+    useActiveModal,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -40,7 +41,7 @@ import {
     validateBookingSubmission,
     zeroOrLess
 } from "../../services";
-import {ActiveModalSpecification, AdditionalInformation} from "../../../IsaacAppTypes";
+import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
 import {Link} from "react-router-dom";
 import {EventBookingForm} from "../elements/EventBookingForm";
@@ -97,6 +98,8 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
         }
     }
 
+    const {openModal: openReservationsModal, closeModal, modalProps} = useActiveModal("reservations-modal");
+
     return <ShowLoading until={event} thenRender={event => {
         const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event)
 
@@ -139,8 +142,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
             iconAnchor: [12, 41]
         });
-
-        const {openModal: openReservationsModal, closeModal, modalProps} = useActiveModal("reservations-modal");
 
         return <RS.Container className="events mb-5">
             <IsaacModal title={"Group reservations"} modalProps={modalProps} closeModal={closeModal} options={{size: 'xl', overflowVisible: true}}>
