@@ -15,8 +15,7 @@ import {
     scrollVerticallyIntoView,
     TAG_ID,
     tags,
-    useUrlHashValue,
-    useUserContext
+    useUrlHashValue
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
 import Select from "react-select";
@@ -69,7 +68,6 @@ export const Glossary = () => {
     const topics = tags.allTopicTags.sort((a,b) => a.title.localeCompare(b.title));
     const [filterTopic, setFilterTopic] = useState<Tag>();
     const rawGlossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
-    const {examBoard} = useUserContext();
 
     const glossaryTerms = useMemo(() => {
         function groupTerms(sortedTerms: GlossaryTermDTO[] | undefined): { [key: string]: GlossaryTermDTO[] } | undefined {
@@ -91,10 +89,8 @@ export const Glossary = () => {
                 ? rawGlossaryTerms
                 : rawGlossaryTerms?.filter(e => e.value?.match(regex))
             )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
-             ?.filter(t => t.examBoard === "" || t.examBoard === examBoard);
-
         return groupTerms(sortedAndFilteredTerms);
-    }, [rawGlossaryTerms, filterTopic, searchText, examBoard]);
+    }, [rawGlossaryTerms, filterTopic, searchText]);
 
     /* Stores a reference to each glossary term component (specifically their inner paragraph tags) */
     const glossaryTermRefs = useRef<Map<string, HTMLElement>>(new Map<string, HTMLElement>());
@@ -260,8 +256,7 @@ export const Glossary = () => {
                         </h2>
                     </Col>
                     <Col>
-                        {terms.map(term => (!isDefined(term.examBoard) || term.examBoard === '' || examBoard === term.examBoard) &&
-                            <IsaacGlossaryTerm
+                        {terms.map(term => <IsaacGlossaryTerm
                                 ref={(el: HTMLElement) => {
                                     glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
                                 }}

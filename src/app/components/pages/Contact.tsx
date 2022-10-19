@@ -25,16 +25,31 @@ const determineUrlQueryPresets = (user?: PotentialUser | null) => {
     const urlQuery = queryString.parse(location.search);
     let presetSubject = "";
     let presetMessage = "";
+    let presetPlaceholder = "";
+
     if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && user?.role !== "TEACHER") {
         presetSubject = "Teacher Account Request";
         presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset == 'accountDeletion' && user?.loggedIn) {
         presetSubject = "Account Deletion Request";
         presetMessage = `Hello,\n\nPlease could you delete my Isaac ${SITE_SUBJECT_TITLE} account.\n\nThanks, \n\n` + user.givenName + " " + user.familyName;
+    } else if (urlQuery?.preset == 'contentProblem') {
+        presetSubject = "Content problem";
+        presetPlaceholder = "Please describe the problem here."
+        if (urlQuery?.accordion) {
+            presetSubject += ` in "${urlQuery.accordion}"`
+        }
+        else if (urlQuery?.page) {
+            presetSubject += ` in "${urlQuery.page}"`
+        }
+        if (urlQuery?.section != null) {
+            presetSubject += `, section "${urlQuery.section}"`
+        }
     }
     return [
         urlQuery.subject as string || presetSubject,
-        urlQuery.message as string || presetMessage
+        urlQuery.message as string || presetMessage,
+        urlQuery.placeholder as string || presetPlaceholder
     ];
 };
 
@@ -42,7 +57,7 @@ export const Contact = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => state?.error || null);
-    const [presetSubject, presetMessage] = determineUrlQueryPresets(user);
+    const [presetSubject, presetMessage, presetPlaceholder] = determineUrlQueryPresets(user);
     const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
     const [email, setEmail] = useState(user && user.loggedIn && user.email || "");
@@ -160,6 +175,7 @@ export const Contact = () => {
                                             <FormGroup>
                                                 <Label htmlFor="message-input" className="form-required">Message</Label>
                                                 <Input id="message-input" type="textarea" name="message" rows={7} value={message}
+                                                    placeholder={presetPlaceholder}
                                                     onChange={e => setMessage(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>

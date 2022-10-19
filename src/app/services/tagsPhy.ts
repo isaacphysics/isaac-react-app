@@ -112,7 +112,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.periodicTable, title: "Periodic Table", parent: TAG_ID.inorganic},
         {id: TAG_ID.bonding, title: "Bonding", parent: TAG_ID.inorganic},
         {id: TAG_ID.redox, title: "Redox", parent: TAG_ID.inorganic},
-        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic, comingSoonDate: "soon"},
+        {id: TAG_ID.transitionMetals, title: `Transi${softHyphen}tional Metals`, parent: TAG_ID.inorganic},
         // Physical
         {id: TAG_ID.kinetics, title: "Kinetics", parent: TAG_ID.physical},
         {id: TAG_ID.energetics, title: `Energe${softHyphen}tics`, parent: TAG_ID.physical},
@@ -121,10 +121,10 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.acidsAndBases, title: "Acids & Bases", parent: TAG_ID.physical},
         {id: TAG_ID.electrochemistry, title: `Electro${softHyphen}chemistry`, parent: TAG_ID.physical},
         // Analytical
-        {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
+        {id: TAG_ID.chromatography, title: `Chroma${softHyphen}tography`, parent: TAG_ID.analytical},
         {id: TAG_ID.massSpectrometry, title: `Mass Spectro${softHyphen}metry`, parent: TAG_ID.analytical},
-        {id: TAG_ID.infraredSpectroscopy, title: `IR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
-        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical, comingSoonDate: "soon"},
+        {id: TAG_ID.infraredSpectroscopy, title: `IR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
+        {id: TAG_ID.nmrSpectroscopy, title: `NMR Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
         {id: TAG_ID.electronicSpectroscopy, title: `Electronic Spectro${softHyphen}scopy`, parent: TAG_ID.analytical},
         // Foundations
         {id: TAG_ID.numericalSkills, title: "Numerical Skills", parent: TAG_ID.foundations},
@@ -135,8 +135,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.functionalGroups, title: "Functional Groups", parent: TAG_ID.organic},
         {id: TAG_ID.isomerism, title: "Isomerism", parent: TAG_ID.organic},
         {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
-        {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic, comingSoonDate: "soon"},
-        {id: TAG_ID.reactionsGeneral, title: "Reactions (general)", parent: TAG_ID.organic, comingSoonDate: "soon"},
+        {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
+        {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}

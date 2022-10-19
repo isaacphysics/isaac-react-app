@@ -164,9 +164,7 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
 export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
-        const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
-
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([
             dispatch(getUserAuthSettings() as any),
@@ -174,10 +172,7 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
         ]);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-
-        history.push(afterAuthPath);
-
+        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE, errorMessage: extractMessage(e)});
         dispatch(showAxiosErrorToastIfNeeded("Error with verification code.", e));
@@ -254,9 +249,9 @@ export const updateCurrentUser = (
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
-            const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH);
-            persistence.remove(KEY.AFTER_AUTH_PATH);
-            redirect && history.push(afterAuthPath || '/account', {firstLogin: isFirstLogin});
+            if (redirect) {
+                history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
+            }
         } else if (!editingOtherUser) {
             dispatch(showToast({
                 title: "Account settings updated",
@@ -332,7 +327,6 @@ export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => 
 
 export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
-    const afterAuthPath = persistence.load(KEY.AFTER_AUTH_PATH) || '/';
 
     try {
         const result = await api.authentication.login(provider, credentials);
@@ -348,9 +342,7 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
             dispatch(getUserPreferences() as any)
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
-        persistence.remove(KEY.AFTER_AUTH_PATH);
-        history.push(afterAuthPath);
-
+        history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
     } catch (e: any) {
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE, errorMessage: extractMessage(e)})
     }

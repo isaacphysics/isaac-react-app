@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "2.5.4-SNAPSHOT",
+  "version": "2.6.2-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -20,11 +20,11 @@
     "html-to-text": "^8.2.0",
     "identity-obj-proxy": "3.0.0",
     "immer": "^9.0.15",
-    "inequality": "^0.9.37",
-    "inequality-grammar": "0.11.0",
-    "isaac-graph-sketcher": "0.9.4",
+    "inequality": "^1.0.0",
+    "inequality-grammar": "1.0.0",
+    "isaac-graph-sketcher": "0.9.5",
     "js-cookie": "^3.0.1",
-    "katex": "^0.15.1",
+    "katex": "^0.16.2",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
     "p5": "^1.4.1",

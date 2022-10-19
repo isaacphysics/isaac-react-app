@@ -26,6 +26,7 @@ import {
 import {history, isCS, SITE_SUBJECT_TITLE} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
+import {Loading} from "../handlers/IsaacSpinner";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -222,7 +223,7 @@ export const LogIn = () => {
     }, [totpChallengePending]);
 
     if (user && user.loggedIn) {
-        return <Redirect to="/" />;
+        return logInAttempted ? <Loading/> : <Redirect to="/"/>;
     }
 
     const metaDescriptionCS = "Log in to your account. Access free GCSE and A level Computer Science resources. Use our materials to learn and revise for your exams.";

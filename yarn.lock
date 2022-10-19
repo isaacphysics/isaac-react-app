@@ -4844,19 +4844,19 @@ indent-string@^4.0.0:
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-4.0.0.tgz#624f8f4497d619b2d9768531d58f4122854d7251"
   integrity sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==
 
-inequality-grammar@0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/inequality-grammar/-/inequality-grammar-0.11.0.tgz#976099db9d01a4e3f651c2fcae9d4b739ea276d8"
-  integrity sha512-kvm/lXvYnxTne7wFFTA3yr3bgv1ydOlO2BQUbtmjhWtGlq8aRpGahpRbXMiYziBG+yZnXhMbBq6ZpnA8cDE5mQ==
+inequality-grammar@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/inequality-grammar/-/inequality-grammar-1.0.0.tgz#e08db3aa2a7c6097cb231b158a22120c1a770b91"
+  integrity sha512-IKVkZ90n3uatDTYlAepJh/NSGjpT/aoHB1Is+mVy80rTsMg3tjTqep7njSGh2dSR7xoFiUxzC2k6vOJTeQLUqw==
   dependencies:
     lodash "^4.17.21"
     moo "^0.5.1"
     nearley "^2.20.1"
 
-inequality@^0.9.37:
-  version "0.9.37"
-  resolved "https://registry.yarnpkg.com/inequality/-/inequality-0.9.37.tgz#c6cbc427ebfc2255807bc6bdf920ff3b9d39b27b"
-  integrity sha512-BaFAyF8rxUpb3EusMSGHRjzcilNrvigelk7r46mGozPWqgxvGMjU0jJz55M42sEtqELtZi1EUsDOZ9WTy8pjOg==
+inequality@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/inequality/-/inequality-1.0.0.tgz#e665b9d7b777a8bde383c630a2fe2e369bce528d"
+  integrity sha512-YN5TM3+a4+fZZNXlIxSN0v1PgoBWLVnkFDR1VAvOMojEb82xG5ZaafV3Y+6ARCI8QfmhWPe+CulkORcuXggjIA==
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -5146,10 +5146,10 @@ is-wsl@^2.2.0:
   dependencies:
     is-docker "^2.0.0"
 
-isaac-graph-sketcher@0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.9.4.tgz#4fdae3fa433b9b24ce92eb5508263fbea5801412"
-  integrity sha512-SUe2KLurlWqX6ckQrenZHpeiH1C8+7kikkmByool+dPuwBFLQoc+7fpujqn0lk8v5q77R1k1Ko0WCHyn60ZOPg==
+isaac-graph-sketcher@0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.9.5.tgz#01aff50a4d8f07b2920a2bfc0df77b9733e8b7a4"
+  integrity sha512-6dit4PJQfNqg7ReoC6sk7HGCK9SiCKhWrSAzqFJqS90PtgdDe6deqYE/BsSseDOlQGZpsQff6nl366W5J4WB1A==
 
 isarray@0.0.1:
   version "0.0.1"
@@ -5840,10 +5840,10 @@ json5@2.x, json5@^2.1.2, json5@^2.2.1:
     array-includes "^3.1.5"
     object.assign "^4.1.3"
 
-katex@^0.15.1:
-  version "0.15.6"
-  resolved "https://registry.yarnpkg.com/katex/-/katex-0.15.6.tgz#c4e2f6ced2ac4de1ef6f737fe7c67d3026baa0e5"
-  integrity sha512-UpzJy4yrnqnhXvRPhjEuLA4lcPn6eRngixW7Q3TJErjg3Aw2PuLFBzTkdUb89UtumxjhHTqL3a5GDGETMSwgJA==
+katex@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.2.tgz#9d3dc2a7e65fb8aa31101b1f86888ec40eed7b24"
+  integrity sha512-70DJdQAyh9EMsthw3AaQlDyFf54X7nWEUIa5W+rq8XOpEk//w5Th7/8SqFqpvi/KZ2t6MHUj4f9wLmztBmAYQA==
   dependencies:
     commander "^8.0.0"
 
