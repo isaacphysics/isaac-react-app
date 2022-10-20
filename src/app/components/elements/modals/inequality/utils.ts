@@ -680,12 +680,12 @@ export function prepareInequality({editorMode, inequalityModalRef, initialEditor
     };
     sketch.current = newSketch;
     return () => {
-        p.remove();
         if (sketch.current) {
             sketch.current.onNewEditorState = () => null;
             sketch.current.onCloseMenus = () => null;
             sketch.current.isTrashActive = () => false;
             sketch.current = null;
         }
+        p.remove();
     };
 }
