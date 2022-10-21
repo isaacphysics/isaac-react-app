@@ -65,7 +65,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
     const event = useAppSelector((state: AppState) => state && state.currentEvent);
     const user = useAppSelector(selectors.user.orNull);
     useEffect(() => {
-        dispatch(getEvent(eventId))
+        dispatch(getEvent(eventId));
     }, [dispatch, eventId]);
 
     const [bookingFormOpen, setBookingFormOpen] = useState(false);
@@ -98,11 +98,11 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
     }
 
     return <ShowLoading until={event} thenRender={event => {
-        const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event)
+        const studentOnlyRestrictionSatisfied = userSatisfiesStudentOnlyRestrictionForEvent(user, event);
 
-        const canMakeABooking = userCanMakeEventBooking(user, event)
-        const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event)
-        const canReserveSpaces = userCanReserveEventSpaces(user, event)
+        const canMakeABooking = userCanMakeEventBooking(user, event);
+        const canBeAddedToWaitingList = userCanBeAddedToEventWaitingList(user, event);
+        const canReserveSpaces = userCanReserveEventSpaces(user, event);
 
         const isVirtual = event.tags?.includes("virtual");
 

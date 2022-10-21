@@ -35,10 +35,18 @@ export const handlers = [
         )
     }),
     rest.get(API_PATH + "/groups", (req, res, ctx) => {
-        // req.url.searchParams.get("archived_groups_only") should be checked?
+        const archived = req.url.searchParams.get("archived_groups_only") === "true";
+        const groups = mockGroups.filter(g => g.archived === archived);
         return res(
             ctx.status(200),
-            ctx.json(mockGroups)
+            ctx.json(groups)
+        );
+    }),
+    rest.get(API_PATH + "/groups/:groupId/membership", (req, res, ctx) => {
+        // TODO could get members from mock data if groupId refers to a known mock group
+        return res(
+            ctx.status(200),
+            ctx.json([])
         );
     }),
     rest.get(API_PATH + "/assignments", (req, res, ctx) => {
@@ -54,7 +62,7 @@ export const handlers = [
         );
     }),
     rest.get(API_PATH + "/assignments/assign/:assignmentId", (req, res, ctx) => {
-        const {_assignmentId} = req.params;
+        const {assignmentId: _assignmentId} = req.params;
         const assignmentId = parseInt(_assignmentId as string);
         // FIXME augment the returned assignment like in the API
         const assignments = mockSetAssignments.filter(a => a.id === assignmentId);

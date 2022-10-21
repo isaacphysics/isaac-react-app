@@ -1,11 +1,4 @@
-import {
-    assignGameboard,
-    isaacApi,
-    loadGroups,
-    selectors,
-    useAppDispatch,
-    useAppSelector
-} from "../../state";
+import {assignGameboard, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {groupBy, mapValues, range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -319,17 +312,11 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
 
 type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
-    // TODO replace with query hook after groups refactor
-    const dispatch = useAppDispatch();
-    const groups = useAppSelector(selectors.groups.active) ?? undefined;
-    useEffect(() => {
-        dispatch(loadGroups(false));
-    }, []);
-
     const assignmentsSetByMeQuery = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
     const gameboardsQuery = isaacApi.endpoints.getGameboards.useQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
     const { data: gameboards } = gameboardsQuery;
+    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
 
     const [viewBy, setViewBy] = useState<"startDate" | "dueDate">("startDate");
 

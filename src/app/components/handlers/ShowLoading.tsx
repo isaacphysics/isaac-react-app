@@ -1,8 +1,7 @@
 import React, {ReactElement, ReactNode, useEffect, useState} from "react";
-import {isDefined, NOT_FOUND} from "../../services";
+import {NOT_FOUND} from "../../services";
 import {NotFound} from "../pages/NotFound";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {AppState, useAppSelector} from "../../state";
 import {IsaacSpinner} from "./IsaacSpinner";
 
 interface ShowLoadingProps<T> {
@@ -48,24 +47,4 @@ export const ShowLoading = <T extends {}>({until, children, thenRender, placehol
         default:
             return children || (thenRender && thenRender(until));
     }
-};
-
-interface WithLoadedSelectorProps<T> extends Omit<ShowLoadingProps<T>, 'until'> {
-    selector: (state: AppState) => T | NOT_FOUND_TYPE | null | undefined;
-    loadingThunk: () => void;
-}
-
-export const WithLoadedSelector = <T extends {}>({selector, loadingThunk, ...rest}: WithLoadedSelectorProps<T>) => {
-    const value = useAppSelector(selector);
-    useEffect(() => {
-        if (loadingThunk) {
-            if (!isDefined(value)) {
-                loadingThunk();
-            }
-        }
-        // Only run the loading thunk once, so no deps on until
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loadingThunk]);
-
-    return <ShowLoading {...rest} until={value} />;
 };

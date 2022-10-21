@@ -9,9 +9,7 @@ import React, {
     useState
 } from "react";
 import {
-    getRTKQueryErrorMessage,
     isaacApi,
-    loadGroups,
     loadQuizAssignmentFeedback,
     loadQuizAssignments,
     openActiveModal,
@@ -22,7 +20,6 @@ import {
     useGroupAssignmentSummary
 } from "../../state";
 import {
-    Alert,
     Button,
     Col,
     Container,
@@ -33,7 +30,6 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {ShowLoading} from "../handlers/ShowLoading";
 import {orderBy, sortBy} from "lodash";
 import {
     AppAssignmentProgress,
@@ -53,40 +49,19 @@ import {
     isDefined,
     isFound,
     MARKBOOK_TYPE_TAB,
-    SITE_SUBJECT_TITLE,
     siteSpecific,
-    useAssignmentProgressAccessibilitySettings,
-    WEBMASTER_EMAIL
+    useAssignmentProgressAccessibilitySettings
 } from "../../services";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {Tabs} from "../elements/Tabs";
 import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
-import {SerializedError} from "@reduxjs/toolkit";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 enum SortOrder {
-    "Alphabetical" = "Alphabetical",
-    "Date Created" = "Date Created"
-}
-
-interface AssignmentProgressLegendProps {
-    showQuestionKey?: boolean;
-}
-
-export const AssignmentProgressFetchError = ({error}: {error: FetchBaseQueryError | SerializedError}) => {
-    const errorDetails = getRTKQueryErrorMessage(error);
-    return <Alert color={"warning"}>
-        Error fetching assignment progress: {errorDetails.message}
-        <br/>
-        {errorDetails.status ? `Status code: ${errorDetails.status}` : ""}
-        <br/>
-        You may want to refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
-        this continues to happen.
-        Please include in your email the name and email associated with this
-        Isaac {SITE_SUBJECT_TITLE} account, alongside the details of the error given above.
-    </Alert>;
+    Alphabetical = "Alphabetical",
+    DateCreated = "Date Created"
 }
 
 export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
@@ -335,17 +310,15 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 };
 
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
-    const { data: assignmentProgress, isError: assignmentProgressError, error } = isaacApi.endpoints.getAssignmentProgress.useQuery(assignment.id);
-
-    const assignmentWithProgress = assignmentProgress
-        ? {...assignment, progress: assignmentProgress}
-        : undefined;
-
-    return assignmentWithProgress
-        ? <ProgressDetails assignment={assignmentWithProgress} />
-        : (assignmentProgressError
-            ? <AssignmentProgressFetchError error={error} />
-            : <div className="p-4 text-center"><IsaacSpinner size="md" /></div>);
+    const assignmentProgressQuery = isaacApi.endpoints.getAssignmentProgress.useQuery(assignment.id);
+    return <ShowLoadingQuery
+        query={assignmentProgressQuery}
+        defaultErrorTitle={"Error fetching assignment progress"}
+        thenRender={(progress) => {
+            const assignmentWithProgress = {...assignment, progress: progress};
+            return <ProgressDetails assignment={assignmentWithProgress} />;
+        }}
+    />;
 };
 
 const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
@@ -381,7 +354,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
     </div>
 };
 
-export const AssignmentProgressLegend = ({showQuestionKey}: AssignmentProgressLegendProps) => {
+export const AssignmentProgressLegend = ({showQuestionKey}: {showQuestionKey?: boolean}) => {
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     return <div className="p-4"><div className="assignment-progress-legend">
         {showQuestionKey && <>
@@ -567,26 +540,12 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 
 export function AssignmentProgress() {
     const dispatch = useAppDispatch();
-
-    const groups = useAppSelector(selectors.groups.active);
+    const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
     const pageSettings = useAssignmentProgressAccessibilitySettings();
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    let sortedGroups;
-    if (groups) {
-        switch(sortOrder) {
-            case SortOrder.Alphabetical:
-                sortedGroups = sortBy(groups, g => g.groupName && g.groupName.toLowerCase());
-                break;
-            case SortOrder["Date Created"]:
-                sortedGroups = sortBy(groups, g => g.created).reverse();
-                break;
-        }
-    }
-
     useEffect(() => {
-        dispatch(loadGroups(false));
         dispatch(loadQuizAssignments());
     }, [dispatch]);
 
@@ -618,17 +577,24 @@ export function AssignmentProgress() {
                 </Col>
             </Row>
         </Container>
-        <div className="assignment-progress-container mb-5">
-            <ShowLoading until={sortedGroups}>
-                <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                    {sortedGroups && sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
-                </AssignmentProgressPageSettingsContext.Provider>
-                {sortedGroups && sortedGroups.length == 0 && <Container className="py-5">
-                    <h3 className="text-center">
-                        You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
-                    </h3>
-                </Container>}
-            </ShowLoading>
-        </div>
+        <ShowLoadingQuery
+            query={groupsQuery}
+            defaultErrorTitle={"Error fetching groups"}
+            thenRender={(groups) => {
+                const sortedGroups = sortOrder === SortOrder.Alphabetical
+                    ? sortBy(groups, g => g.groupName && g.groupName.toLowerCase())
+                    : sortBy(groups, g => g.created).reverse();
+                return <div className="assignment-progress-container mb-5">
+                    <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
+                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
+                    </AssignmentProgressPageSettingsContext.Provider>
+                    {sortedGroups.length === 0 && <Container className="py-5">
+                        <h3 className="text-center">
+                            You&apos;ll need to create a group using <Link to="/groups">Manage groups</Link> to set an assignment.
+                        </h3>
+                    </Container>}
+                </div>;
+            }}
+        />
     </>;
 }

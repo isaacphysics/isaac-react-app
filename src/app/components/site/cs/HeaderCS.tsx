@@ -10,7 +10,7 @@ export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
-    return <header className="light">
+    return <header className="light" data-testid={"header"}>
         <Container className="container-fluid px-0">
             <Row>
                 <Col>
