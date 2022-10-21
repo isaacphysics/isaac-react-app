@@ -44,8 +44,8 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
         }
     }
 
-    augmentedEvent.isNotClosed = false; //!["CLOSED", "CANCELLED"].includes(event.eventStatus as string);
-    augmentedEvent.isCancelled = true; //event.eventStatus === "CANCELLED";
+    augmentedEvent.isNotClosed = !["CLOSED", "CANCELLED"].includes(event.eventStatus as string);
+    augmentedEvent.isCancelled = event.eventStatus === "CANCELLED";
     augmentedEvent.isWaitingListOnly = event.eventStatus === "WAITING_LIST_ONLY";
 
     // we have to fix the event image url.
