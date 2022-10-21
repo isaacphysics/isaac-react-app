@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
+import {Alert} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -39,7 +40,9 @@ import {
     userCanReserveEventSpaces,
     userSatisfiesStudentOnlyRestrictionForEvent,
     validateBookingSubmission,
-    zeroOrLess
+    zeroOrLess,
+    isAdminOrEventManager,
+    isEventLeader
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -196,8 +199,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         <td>When:</td>
                                         <td>
                                             {formatEventDetailsDate(event)}
-                                            {event.hasExpired &&
-                                            <div className="alert-danger text-center">This event is in the past.</div>}
+                                            {event.hasExpired && <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>
                                     {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
@@ -234,7 +236,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                                 }
                                             </td>
                                         </tr>}
-                                    {event.bookingDeadline &&
+                                    {(isEventLeader(user) || isAdminOrEventManager(user) || event.isNotClosed) && event.bookingDeadline &&
                                         <tr>
                                             <td>Booking Deadline:</td>
                                             <td>
@@ -247,6 +249,10 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         </tr>}
                                 </tbody>
                             </RS.Table>
+
+                            {event.isCancelled && <Alert color={"danger"}>
+                                This event has been cancelled.
+                            </Alert>}
 
                             {/* Event body copy */}
                             <div className="mb-3">
