@@ -561,7 +561,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: App
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
-        dispatch(isaacApi.util.invalidateTags(["MyGroupMemberships", "AllMyAssignments"]));
+        dispatch(isaacApi.util.invalidateTags(["Groups", "GroupMemberships", "MyGroupMemberships", "AllMyAssignments"]));
         dispatch(showToast({
             color: "success", title: "Granted access", timeout: 5000,
             body: "You have granted access to your data."

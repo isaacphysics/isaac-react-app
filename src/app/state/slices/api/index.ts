@@ -520,6 +520,7 @@ const isaacApi = createApi({
                 },
                 errorTitle: "Loading group members failed"
             }),
+            keepUnusedDataFor: 0,
             transformResponse: anonymiseListIfNeededWith<UserSummaryWithGroupMembershipDTO>(anonymisationFunctions.userSummary())
         }),
 
