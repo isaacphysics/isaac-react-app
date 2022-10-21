@@ -218,7 +218,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                               placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>
-                        <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                        <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             a*x^2 + b x + c<br />

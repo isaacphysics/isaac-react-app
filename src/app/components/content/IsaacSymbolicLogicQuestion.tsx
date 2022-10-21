@@ -227,7 +227,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                            placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
                         <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>
-                        <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                        <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             A AND (B XOR NOT C)<br />

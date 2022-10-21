@@ -235,7 +235,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                                 placeholder="Type your expression here"/>
                             <InputGroupAddon addonType="append">
                                 <Button type="button" className="eqn-editor-help pt-2" id='inequality-help' size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>
-                                {editorMode === 'maths' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                {editorMode === 'maths' && <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
                                     <br />
                                     a*x^2 + b x + c<br />
@@ -245,7 +245,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                                     <br />
                                     As you type, the box below will preview the result.
                                 </UncontrolledTooltip>}
-                                {editorMode === 'logic' && <UncontrolledTooltip placement="bottom" autohide={false} target='inequality-help'>
+                                {editorMode === 'logic' && <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
                                     <br />
                                     A AND (B XOR NOT C)<br />
