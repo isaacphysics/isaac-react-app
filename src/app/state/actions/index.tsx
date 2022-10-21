@@ -561,6 +561,8 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: App
         await api.authorisations.useToken(authToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_APPLY_RESPONSE_SUCCESS});
         dispatch(getActiveAuthorisations() as any);
+        // TODO it would be better if we update the groups cache instead of invalidating it, but we don't know the
+        //  group id here (yet)
         dispatch(isaacApi.util.invalidateTags(["Groups", "GroupMemberships", "MyGroupMemberships", "AllMyAssignments"]));
         dispatch(showToast({
             color: "success", title: "Granted access", timeout: 5000,

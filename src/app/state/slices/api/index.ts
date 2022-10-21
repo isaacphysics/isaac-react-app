@@ -141,6 +141,7 @@ const isaacApi = createApi({
     tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "AllMyAssignments", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
+    keepUnusedDataFor: 0,
     endpoints: (build) => ({
 
         // === Content ===
@@ -164,13 +165,15 @@ const isaacApi = createApi({
             },
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Unable to display news"
-            })
+            }),
+            keepUnusedDataFor: 60
         }),
 
         getPageFragment: build.query<IsaacConceptPageDTO, string>({
             query: (fragmentId) => ({
                 url: `/pages/fragments/${fragmentId}`
-            })
+            }),
+            keepUnusedDataFor: 60
         }),
 
         // === Gameboards ===
@@ -210,7 +213,8 @@ const isaacApi = createApi({
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Error loading wildcards"
-            })
+            }),
+            keepUnusedDataFor: 60
         }),
         
         createGameboard: build.mutation<GameboardDTO, {gameboard: GameboardDTO, previousId?: string}>({
