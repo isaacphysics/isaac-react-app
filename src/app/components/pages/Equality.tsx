@@ -2,15 +2,16 @@ import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} 
 import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
-import {ifKeyIsEnter, isDefined, isStaff, sanitiseInequalityState, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isDefined, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, parseMathsExpression, ParsingError} from 'inequality-grammar';
 import {selectors, useAppSelector} from "../../state";
+import {EditorMode, LogicSyntax} from "../elements/modals/inequality/constants";
 
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: string; mode?: string; symbols?: string}>) => {
     const queryParams = queryString.parse(location.search);
@@ -18,12 +19,12 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     const [modalVisible, setModalVisible] = useState(false);
     const initialEditorSymbols = useRef<string[]>([]);
     const [currentAttempt, setCurrentAttempt] = useState<any>({type: 'formula', value: {}, pythonExpression: ''});
-    const [editorSyntax, setEditorSyntax] = useState('logic');
+    const [editorSyntax, setEditorSyntax] = useState<LogicSyntax>('logic');
     const [textInput, setTextInput] = useState('');
     const [errors, setErrors] = useState<string[]>();
     const user = useAppSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
-    const [editorMode, setEditorMode] = useState(queryParams.mode || siteSpecific('maths', 'logic'));
+    const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
     const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
 
     /*** Text based input stuff */
@@ -212,7 +213,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                 <Col md={{size: 2}} className="py-4 syntax-picker mode-picker">
                     <div>
                         <Label for="inequality-mode-select">Editor mode:</Label>
-                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode as string} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorMode(e.target.value)}>
+                        <Input type="select" name="mode" id="inequality-mode-select" value={editorMode as string} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditorMode(e.target.value as EditorMode)}>
                             <option value="maths">Maths</option>
                             <option value="chemistry">Chemistry</option>
                             <option value="logic">Boolean Logic</option>
@@ -220,7 +221,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                     </div>
                     {(editorMode === 'logic') && <div className="mt-4">
                         <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
-                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEditorSyntax(e.target.value); _updateEquation(textInput); } }>
+                        <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEditorSyntax(e.target.value as LogicSyntax); _updateEquation(textInput); } }>
                             <option value="logic">Boolean Logic</option>
                             <option value="binary">Digital Electronics</option>
                         </Input>
@@ -279,9 +280,8 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                             }}
                             availableSymbols={availableSymbols || []}
                             initialEditorSymbols={initialEditorSymbols.current}
-                            editorMode={editorMode as string}
+                            editorMode={editorMode}
                             logicSyntax={editorSyntax}
-                            visible={modalVisible}
                         />}
                     </div>
                 </Col>
