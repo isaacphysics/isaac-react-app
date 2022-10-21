@@ -399,7 +399,8 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading groups failed"
             }),
-            transformResponse: anonymiseListIfNeededWith<AppGroup>(anonymisationFunctions.appGroup)
+            transformResponse: anonymiseListIfNeededWith<AppGroup>(anonymisationFunctions.appGroup),
+            keepUnusedDataFor: 60
         }),
 
         createGroup: build.mutation<AppGroup, string>({
