@@ -18,7 +18,6 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
     Announcements,
     closestCenter,
-    closestCorners,
     CollisionDetection,
     DndContext,
     DragEndEvent,
