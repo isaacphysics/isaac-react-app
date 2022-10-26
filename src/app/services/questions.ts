@@ -66,6 +66,53 @@ export const HUMAN_QUESTION_TAGS = new Map([
     ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"]
 ]);
 
+export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
+    return questions?.filter(question => question.id == questionPartId)[0];
+}
+
+function fastTrackConceptEnumerator(questionId: string) {
+    // Magic, unfortunately
+    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
+}
+
+export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
+    let title = doc.title as string;
+
+    // FastTrack title renaming
+    if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && doc.id
+        && (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower'))) {
+        title += " " + fastTrackConceptEnumerator(doc.id) + (doc.tags.includes('ft_lower') ? "ii" : "i");
+    }
+
+    return title;
+}
+
+// Inequality specific functions
+
+export function sanitiseInequalityState(state: any) {
+    const saneState = JSON.parse(JSON.stringify(state));
+    if (saneState.result?.tex) {
+        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
+    }
+    if (saneState.result?.python) {
+        saneState.result.python = saneState.result.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
+    }
+    if (saneState.result?.uniqueSymbols) {
+        saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
+    }
+    if (saneState.symbols) {
+        for (const symbol of saneState.symbols) {
+            if (symbol.expression.latex) {
+                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
+            }
+            if (symbol.expression.python) {
+                symbol.expression.python = symbol.expression.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
+            }
+        }
+    }
+    return saneState;
+}
+
 export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[]) => {
     if (!availableSymbols) return;
     const theseSymbols = availableSymbols.slice(0).map(s => s.trim());
@@ -99,52 +146,7 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
         }
     }
     return theseSymbols;
-}
-
-export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
-    return questions?.filter(question => question.id == questionPartId)[0];
-}
-
-export function sanitiseInequalityState(state: any) {
-    const saneState = JSON.parse(JSON.stringify(state));
-    if (saneState.result?.tex) {
-        saneState.result.tex = saneState.result.tex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
-    }
-    if (saneState.result?.python) {
-        saneState.result.python = saneState.result.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
-    }
-    if (saneState.result?.uniqueSymbols) {
-        saneState.result.uniqueSymbols = saneState.result.uniqueSymbols.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
-    }
-    if (saneState.symbols) {
-        for (const symbol of saneState.symbols) {
-            if (symbol.expression.latex) {
-                symbol.expression.latex = symbol.expression.latex.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] ? '\\' + REVERSE_GREEK_LETTERS_MAP[l] : l).join('');
-            }
-            if (symbol.expression.python) {
-                symbol.expression.python = symbol.expression.python.split('').map((l: string) => REVERSE_GREEK_LETTERS_MAP[l] || l).join('');
-            }
-        }
-    }
-    return saneState;
-}
-
-function fastTrackConceptEnumerator(questionId: string) {
-    // Magic, unfortunately
-    return "_abcdefghijk".indexOf(questionId.split('_')[2].slice(-1));
-}
-
-export function generateQuestionTitle(doc : ContentDTO | ContentSummaryDTO) {
-    let title = doc.title as string;
-
-    // FastTrack title renaming
-    if (doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION && doc.id
-        && (doc.tags?.includes('ft_upper') || doc.tags?.includes('ft_lower'))) {
-        title += " " + fastTrackConceptEnumerator(doc.id) + (doc.tags.includes('ft_lower') ? "ii" : "i");
-    }
-
-    return title;
-}
+};
 
 /**
  * Essentially a useState for the current question attempt - used in all question components.

@@ -1,19 +1,18 @@
 import {union, mapValues} from "lodash"
-import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList, userGroupDTOs} from "../test-factory";
+import {questionDTOs, registeredUserDTOs, searchResultsList, unitsList} from "../test-factory";
 import {ACTION_TYPE} from "../../app/services";
-import {Action, AppGroup, AppGroupMembership, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
-import {GameboardDTO, UserSummaryWithEmailAddressDTO, UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
+import {Action, AppQuestionDTO, PotentialUser} from "../../IsaacAppTypes";
+import {GameboardDTO} from "../../IsaacApiTypes";
 import {createMockAPIAction} from "./utils";
 import {AnyAction} from "redux";
 import {
     AppState,
     BoardsState,
-    GroupsState,
     constants,
     gameboardsSlice,
-    groups,
     questions,
-    rootReducer, search,
+    rootReducer,
+    search,
     toasts,
     user,
     selectors
@@ -226,179 +225,6 @@ describe("toasts reducer", () => {
         const previousState = [sampleToast, moreToast];
         const actualNextState = toasts(previousState, toastsShowAction);
         expect(actualNextState).toEqual([sampleToast]);
-    });
-});
-
-describe("groups reducer", () => {
-    it("returns null as an initial value", () => {
-        const actualState = groups(undefined, ignoredTestAction);
-        expect(actualState).toBe(null);
-    });
-
-    // @ts-ignore It's not a complete state
-    const groupSelector = mapValues(selectors.groups, f => (groupsState: GroupsState) => f({groups: groupsState}));
-
-    it("can get new active groups", () => {
-        const testGroups = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
-        const action: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(testGroups), archivedGroupsOnly: false};
-        const previousStates = [{}, null, {active: undefined, cache: testGroups}, {active: [3, 4], cache: testGroups}];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual(Object.values(testGroups));
-        });
-    });
-    it("can get new archived groups", () => {
-        const testGroups = {10: userGroupDTOs.archivedX};
-        const action: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(testGroups), archivedGroupsOnly: true};
-        const previousStates = [{}, null, {active: undefined, cache: {}}, {active: [3, 4], cache: testGroups}, {active: undefined, archived: [3, 4], cache: testGroups}, {archived: [1], active: [3, 4], cache: {}}];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.archived(actualNextState)).toEqual(Object.values(testGroups));
-        });
-    });
-    it("can merge new archived groups", () => {
-        const cache = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
-        const testGroups = {10: userGroupDTOs.archivedX};
-        const action: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(testGroups), archivedGroupsOnly: true};
-        const previousStates = [{active: undefined, cache: cache}, {active: [3, 4], cache: cache}, {active: undefined, archived: [3, 4], cache: cache}, {archived: [1], active: [3, 4], cache: cache}];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.archived(actualNextState)).toEqual(Object.values(testGroups));
-        });
-    });
-
-    const activeGroups = {1: userGroupDTOs.one, 2: userGroupDTOs.two};
-    const someActiveGroups = {active: [1, 2], cache: activeGroups, archived: []};
-
-    it("can select a group", () => {
-        const action: Action = {type: ACTION_TYPE.GROUPS_SELECT, group: userGroupDTOs.two};
-        const previousStates = [someActiveGroups];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.current(actualNextState)).toEqual(userGroupDTOs.two);
-        });
-    });
-
-    it("can create a group", () => {
-        const action: Action = {type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS, newGroup: userGroupDTOs.three};
-        const previousStates = [someActiveGroups];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([...Object.values(activeGroups), userGroupDTOs.three]);
-        });
-    });
-
-    it("can update a group", () => {
-        const updatedGroup = {...userGroupDTOs.two, groupName: "Updated name"};
-        const action: Action = {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS, updatedGroup};
-        const previousStates = [someActiveGroups];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            const newGroups = groupSelector.active(actualNextState);
-            expect(newGroups).toBeDefined();
-            expect(newGroups).toHaveProperty('length');
-            expect((newGroups as AppGroup[]).length).toEqual(2);
-            expect(newGroups).toEqual([userGroupDTOs.one, updatedGroup]);
-        });
-    });
-
-    it("can delete a group", () => {
-        const deletedGroup = {...userGroupDTOs.two};
-        const action: Action = {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS, deletedGroup};
-        const previousStates = [someActiveGroups];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            const newGroups = groupSelector.active(actualNextState);
-            expect(newGroups).toBeDefined();
-            expect(newGroups).toHaveProperty('length');
-            expect((newGroups as AppGroup[]).length).toEqual(1);
-            expect(newGroups).toEqual([userGroupDTOs.one]);
-        });
-    });
-
-    it("can update a token", () => {
-        const token = "THX1138";
-        const action: Action = {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS, group: userGroupDTOs.two, token};
-        const previousStates = [someActiveGroups];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, token}]);
-        });
-    });
-
-    it("can update members", () => {
-        const members: UserSummaryWithGroupMembershipDTO[] = [{
-            ...registeredUserDTOs.profWheeler,
-            groupMembershipInformation: {status: "ACTIVE"}
-        }];
-        const action: Action = {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: userGroupDTOs.two, members};
-        const previousStates = [someActiveGroups];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members}]);
-        });
-    });
-
-    // This isn't actually achieved.
-    /*it.skip("members are preserved across updates", () => {
-        const members: UserSummaryWithGroupMembershipDTO[] = [{
-            ...registeredUserDTOs.profWheeler,
-            groupMembershipInformation: {status: "ACTIVE"}
-        }];
-        const action: Action = {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: userGroupDTOs.two, members};
-        const previousStates = [someActiveGroups, groups(someActiveGroups, action)];
-
-        const action2: Action = {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS, groups: Object.values(activeGroups), archivedGroupsOnly: false};
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action2);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members}]);
-        });
-    });*/
-
-    it("can delete members", () => {
-        const members: AppGroupMembership[] = [{
-            ...registeredUserDTOs.profWheeler,
-            groupMembershipInformation: {
-                status: "ACTIVE",
-                userId: 2,
-                groupId: 2
-            }
-        }];
-        const prepareAction: Action = {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS, group: userGroupDTOs.two, members};
-
-        const member = members[0];
-        const action: Action = {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS, member};
-        const previousStates = [groups(someActiveGroups, prepareAction)];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([userGroupDTOs.one, {...userGroupDTOs.two, members: []}]);
-        });
-    });
-
-    it("can add a manager", () => {
-        const manager: UserSummaryWithEmailAddressDTO = {
-            ...registeredUserDTOs.profWheeler
-        };
-        const action: Action = {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS, group: userGroupDTOs.one, managerEmail: manager.email as string, newGroup: {...userGroupDTOs.one, additionalManagers: [manager]}};
-        const previousStates = [someActiveGroups];
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([{...userGroupDTOs.one, additionalManagers: [manager]}, userGroupDTOs.two]);
-        });
-    });
-
-    it("can remove a manager", () => {
-        const manager: UserSummaryWithEmailAddressDTO = {
-            ...registeredUserDTOs.profWheeler
-        };
-        const prepareAction: Action = {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS, group: userGroupDTOs.one, managerEmail: manager.email as string, newGroup: {...userGroupDTOs.one, additionalManagers: [manager]}};
-        const previousStates = [groups(someActiveGroups, prepareAction)];
-
-        const action: Action = {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS, group: userGroupDTOs.one, manager};
-        previousStates.map((previousState) => {
-            const actualNextState = groups(previousState, action);
-            expect(groupSelector.active(actualNextState)).toEqual([{...userGroupDTOs.one, additionalManagers: []}, userGroupDTOs.two]);
-        });
     });
 });
 

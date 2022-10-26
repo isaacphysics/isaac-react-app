@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
+import React, {ChangeEvent, useCallback, useMemo, useState} from "react";
 import {
     Alert,
     Button,
@@ -24,7 +24,6 @@ import {Link, useLocation} from "react-router-dom";
 import {
     assignGameboard,
     isaacApi,
-    loadGroups,
     openIsaacBooksModal,
     selectors,
     setAssignBoardPath,
@@ -222,7 +221,7 @@ const Board = (props: BoardProps) => {
 
     return <>
         <Modal isOpen={modal} data-testid={"set-assignment-modal"} toggle={toggleAssignModal}>
-            <ModalHeader role={"heading"} className={"text-break"} close={
+            <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
                 <button role={"button"} className={"close text-nowrap"} onClick={toggleAssignModal}>
                     Close
                 </button>
@@ -370,10 +369,9 @@ export const AddGameboardButtons = ({className, redirectBackTo}: {className: str
 };
 
 export const SetAssignments = () => {
-    const dispatch = useAppDispatch();
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const groups = useAppSelector(selectors.groups.active);
+    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
     const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
         assignmentsSetByMe?.reduce((acc, assignment) => {
@@ -385,10 +383,6 @@ export const SetAssignments = () => {
             return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
         }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {}
     , [assignmentsSetByMe]);
-
-    useEffect(() => {
-        dispatch(loadGroups(false));
-    }, []);
 
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);

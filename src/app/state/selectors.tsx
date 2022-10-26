@@ -1,41 +1,9 @@
-import {anonymisationFunctions, anonymiseIfNeededWith, AppState} from "./index";
-import {isDefined, KEY, persistence, NOT_FOUND} from "../services";
-import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
+import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState, isaacApi} from "./index";
+import {KEY, persistence, NOT_FOUND, isDefined} from "../services";
 import {QuizAssignmentDTO} from "../../IsaacApiTypes";
+import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 
 export const selectors = {
-    groups: {
-        current: (state: AppState) => {
-            if (!state) return null;
-            if (!state.groups) return null;
-            if (!state.groups.cache) return null;
-            const activeId = state.groups.selectedGroupId;
-            if (!activeId) return null;
-            return anonymiseIfNeededWith(anonymisationFunctions.appGroup)(state.groups.cache[activeId]);
-        },
-        active: (state: AppState) => {
-            if (!state) return null;
-            if (!state.groups) return null;
-            if (!state.groups.cache) return null;
-            if (!state.groups.active) return null;
-            // typescript can't pass the non-null inside the first map function here, so we use optional chaining to
-            // appease it (but it's unneeded really)
-            return state.groups.active.map(groupId => state?.groups?.cache?.[groupId]).filter(isDefined).map(anonymiseIfNeededWith(anonymisationFunctions.appGroup));
-        },
-        archived: (state: AppState) => {
-            if (!state) return null;
-            if (!state.groups) return null;
-            if (!state.groups.cache) return null;
-            if (!state.groups.archived) return null;
-            // typescript can't pass the non-null inside the first map function here, so we use optional chaining to
-            // appease it (but it's unneeded really)
-            return state.groups.archived.map(groupId => state?.groups?.cache?.[groupId]).filter(isDefined).map(anonymiseIfNeededWith(anonymisationFunctions.appGroup));
-        },
-        groups: (state: AppState) => ({
-            active: selectors.groups.active(state),
-            archived: selectors.groups.archived(state)
-        }),
-    },
 
     topic: {
         currentTopic: (state: AppState) => {
@@ -77,6 +45,7 @@ export const selectors = {
 
     user:  {
         orNull: (state: AppState) => state?.user || null,
+        loggedInOrNull: (state: AppState) => state?.user?.loggedIn && state.user || null,
         progress: (state: AppState) => state?.myProgress,
         snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
         achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
@@ -101,7 +70,7 @@ export const selectors = {
     connections: {
         activeAuthorisations: (state: AppState) => state?.activeAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations)(state?.activeAuthorisations),
         otherUserAuthorisations: (state: AppState) => state?.otherUserAuthorisations && anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations)(state?.otherUserAuthorisations),
-        groupMemberships: (state: AppState) => state?.groupMemberships && anonymiseIfNeededWith(anonymisationFunctions.groupMemberships)(state?.groupMemberships)
+        groupMemberships: (state: AppState) => state?.groupMemberships && anonymiseListIfNeededWith(anonymisationFunctions.groupMembershipDetail)(state?.groupMemberships)
     },
 
     quizzes: {
@@ -124,13 +93,14 @@ export const selectors = {
     },
 };
 
+// TODO make sure this works!!!
 function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null | undefined): AppQuizAssignment[] | NOT_FOUND_TYPE | undefined | null {
     if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
         return quizAssignments;
     }
-    const groupCache = state?.groups?.cache ?? {};
+    const {data: activeGroups} = isaacApi.endpoints.getGroups.select(false)(state as any);
     return quizAssignments.map(assignment => {
-        const groupName = groupCache[assignment.groupId as number]?.groupName;
+        const groupName = activeGroups?.find(g => g.id === assignment.groupId)?.groupName;
         return {
             ...assignment,
             groupName,

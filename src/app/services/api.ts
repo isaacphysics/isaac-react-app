@@ -3,7 +3,6 @@ import {
     API_PATH,
     EventStageFilter,
     EventTypeFilter,
-    MEMBERSHIP_STATUS,
     securePadCredentials,
     securePadPasswordReset,
     TAG_ID
@@ -221,9 +220,6 @@ export const api = {
         adminGetOtherUsers: (userId: number): AxiosPromise<ApiTypes.UserSummaryDTO[]> => {
             return endpoint.get(`/authorisations/other_users/${userId}`);
         },
-        getToken: (groupId: number): AxiosPromise<AppTypes.AppGroupTokenDTO> => {
-            return endpoint.get(`/authorisations/token/${groupId}`);
-        },
         getTokenOwner: (token: string): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get(`/authorisations/token/${token}/owner`);
         },
@@ -330,42 +326,6 @@ export const api = {
     contactForm: {
         send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});
-        }
-    },
-    groups: {
-        get: (archivedGroupsOnly: boolean): AxiosPromise<ApiTypes.UserGroupDTO[]> => {
-            return endpoint.get(`/groups?archived_groups_only=${archivedGroupsOnly}`);
-        },
-        create: (groupName: string): AxiosPromise<ApiTypes.UserGroupDTO> => {
-            return endpoint.post(`/groups`, {groupName});
-        },
-        delete: (group: ApiTypes.UserGroupDTO): AxiosPromise => {
-            return endpoint.delete(`/groups/${group.id}`);
-        },
-        update: (updatedGroup: AppTypes.AppGroup): AxiosPromise => {
-            return endpoint.post(`/groups/${updatedGroup.id}`, {...updatedGroup, members: undefined});
-        },
-        getMemberships: (): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get("/groups/membership");
-        },
-        adminGetMemberships: (userId: number): AxiosPromise<AppTypes.GroupMembershipDetailDTO[]> => {
-            return endpoint.get(`/groups/membership/${userId}`);
-        },
-        changeMyMembershipStatus: (groupId: number, newStatus: MEMBERSHIP_STATUS) => {
-            return endpoint.post(`/groups/membership/${groupId}/${newStatus}`);
-        },
-        getMembers: (group: ApiTypes.UserGroupDTO): AxiosPromise<ApiTypes.UserSummaryWithGroupMembershipDTO[]> => {
-            return endpoint.get(`/groups/${group.id}/membership`);
-        },
-        deleteMember: (member: AppTypes.AppGroupMembership): AxiosPromise => {
-            const info = member.groupMembershipInformation;
-            return endpoint.delete(`/groups/${info.groupId}/membership/${info.userId}`);
-        },
-        addManager: (group: AppTypes.AppGroup, managerEmail: string): AxiosPromise => {
-            return endpoint.post(`/groups/${group.id}/manager`, {email: managerEmail});
-        },
-        deleteManager: (group: AppTypes.AppGroup, manager: ApiTypes.UserSummaryWithEmailAddressDTO): AxiosPromise => {
-            return endpoint.delete(`/groups/${group.id}/manager/${manager.id}`);
         }
     },
     events: {

@@ -28,6 +28,20 @@
   &-cross {
     background-image: url(/assets/untick.svg);
   }
+  &-report {
+    background-image: url(/assets/flag-accordion.svg);
+    background-color: transparent;
+    opacity: 0.4;
+    align-self: flex-end;
+    margin-bottom: 1.5rem;
+    margin-right: 1rem;
+    &:hover {
+      opacity: 1;
+    }
+    &:focus-visible {
+      opacity: 1;
+    }
+  }
 }
 
 // Nomensa accordions.scss

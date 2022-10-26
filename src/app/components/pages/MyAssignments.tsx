@@ -17,6 +17,8 @@ export const MyAssignments = () => {
     const dispatch = useAppDispatch();
     useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
 
+    // TODO don't refetch "my assignments" every component mount, an instead invalidate cache when actions occur
+    //  that require refetching.
     const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const myAssignments = filterAssignmentsByStatus(assignments);
 

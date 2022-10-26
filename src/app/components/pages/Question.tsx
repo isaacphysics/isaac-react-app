@@ -32,6 +32,7 @@ import queryString from "query-string";
 import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarningBanner";
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {ReportButton} from "../elements/ReportButton";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -88,6 +89,9 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                         </div>
                         <div className="question-actions not-mobile">
                             <PrintButton questionPage />
+                        </div>
+                        <div className="question-actions">
+                            <ReportButton pageId={questionId}/>
                         </div>
                     </div>
                     <Row className="question-content-container">

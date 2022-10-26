@@ -125,6 +125,8 @@ export const assignGameboard = createAsyncThunk(
                 undefined,
                 (assignmentsByMe) => assignmentsByMe.concat(newAssignments)
             ));
+            // FIXME if groupId doesn't correspond to a cache entry then the assignment to that group won't get cached below
+            //  one fix would be to use "upsertQueryData" (or whatever it gets called) when it's released
             successfulIds.forEach(groupId => {
                 appDispatch(isaacApi.util.updateQueryData(
                     "getMySetAssignments",

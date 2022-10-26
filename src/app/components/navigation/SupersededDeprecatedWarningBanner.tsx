@@ -16,6 +16,11 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
         return RenderNothing;
     }
 
+    // If doc is not deprecated and the user is a student we don't have anything to show them in this warning
+    if (!doc.deprecated && isStudent(user)) {
+        return RenderNothing;
+    }
+
     const contentType = doc.type === "isaacQuestionPage" ? "question" : "page";
 
     const teacherMessage = isTeacher(user) && <React.Fragment>

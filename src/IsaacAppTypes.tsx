@@ -263,45 +263,9 @@ export type Action =
     | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 
-    | {type: ACTION_TYPE.GROUPS_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS; groups: ApiTypes.UserGroupDTO[]; archivedGroupsOnly: boolean}
-
-    | {type: ACTION_TYPE.GROUPS_SELECT; group: ApiTypes.UserGroupDTO | null}
-
-    | {type: ACTION_TYPE.GROUPS_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS; newGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_DELETE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS; deletedGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE; deletedGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS; updatedGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE; updatedGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; members: ApiTypes.UserSummaryWithGroupMembershipDTO[]}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_TOKEN_REQUEST; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; token: string}
-    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
-
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST; group: ApiTypes.UserGroupDTO; managerEmail: string}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; managerEmail: string; newGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; managerEmail: string}
-
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
@@ -655,8 +619,8 @@ export const ConfidenceContext = React.createContext<{recordConfidence: boolean}
 export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
-    boardsById: {[id: string]: GameboardDTO};
-    groupsById: {[id: number]: AppGroup};
+    boardsById: {[id: string]: GameboardDTO | undefined};
+    groupsById: {[id: number]: AppGroup | undefined};
     groupFilter: {[id: number]: boolean};
     boardIdsByGroupId: {[id: number]: string[] | undefined};
     groups: AppGroup[];
