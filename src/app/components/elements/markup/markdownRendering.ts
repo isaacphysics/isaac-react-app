@@ -1,9 +1,6 @@
-import {isPhy, MARKDOWN_RENDERER} from "../../../services";
+import {dropZoneRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-
-// Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
-export const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     const href = utils.escapeHtml(tokens[idx].href || "");
