@@ -11,7 +11,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
-
+// This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const dispatch = useAppDispatch();

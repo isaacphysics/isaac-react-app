@@ -35,6 +35,13 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.maths},
         {id: TAG_ID.calculus, title: "Calculus", parent: TAG_ID.maths},
         {id: TAG_ID.statistics, title: "Statistics", parent: TAG_ID.maths},
+        // Biology Fields
+        {id: TAG_ID.cellBiology, title: "Cell Biology", parent: TAG_ID.biology},
+        {id: TAG_ID.biochemistry, title: `Bio${softHyphen}chemistry`, parent: TAG_ID.biology},
+        {id: TAG_ID.genetics, title: "Genetics", parent: TAG_ID.biology},
+        {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology, comingSoonDate: "soon"},
+        {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology, comingSoonDate: "soon"},
+        {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology, comingSoonDate: "soon"},
 
         // --- Physics Topics ---
 
@@ -137,6 +144,23 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
         {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
+
+        // --- Biology Topics ---
+        // Cell biology
+        {id: TAG_ID.cellsViruses, title: "Cells & Viruses", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.mitosis, title: "Mitosis", parent: TAG_ID.cellBiology},
+        // Biochemistry
+        {id: TAG_ID.proteins, title: "Proteins", parent: TAG_ID.biochemistry},
+        // Genetics
+        {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics},
+        {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},
+        {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics},
+        // Physiology
+
+        // Ecology
+
+        // Evolution
+
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}

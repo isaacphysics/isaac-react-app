@@ -731,6 +731,13 @@ export enum TAG_ID {
     functions = "functions",
     calculus = "calculus",
     number = "number",
+    // Biology Fields
+    biochemistry = "biochemistry",
+    cellBiology = "cell_biology",
+    ecology = "ecology",
+    evolution = "evolution",
+    genetics = "genetics",
+    physiology = "physiology",
 
     // Physics Topics ---
 
@@ -833,6 +840,24 @@ export enum TAG_ID {
     organicReactions = "organic_reactions",
     isomerism = "isomerism",
     aromaticReactions = "aromatic_reactions",
+
+    // Biology Topics ---
+
+    // Cell biology
+    cellsViruses = "cells_viruses",
+    mitosis = "mitosis",
+    // Biochemistry
+    proteins = "proteins",
+    // Genetics
+    dnaReplication = "dna_replication",
+    transcription = "transcription",
+    translation = "translation"
+    // Physiology
+
+    // Ecology
+
+    // Evolution
+
 }
 
 export enum TAG_LEVEL {
