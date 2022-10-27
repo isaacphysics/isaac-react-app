@@ -65,8 +65,10 @@ export const assignGameboard = createAsyncThunk(
         }
 
         if (dueDate !== undefined && scheduledStartDate !== undefined) {
-            if ((dueDate.valueOf() - scheduledStartDate.valueOf()) <= 0) {
-                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be strictly after scheduled start date.", timeout: 5000}));
+            const scheduledStartDay = new Date(scheduledStartDate.valueOf());
+            scheduledStartDay.setHours(0, 0, 0, 0);
+            if (scheduledStartDay.valueOf() > dueDate.valueOf()) {
+                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be on or after scheduled start date.", timeout: 5000}));
                 return rejectWithValue(null);
             }
         }
