@@ -1,22 +1,25 @@
 import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
-import {useAppSelector} from "../../state/store";
+import {selectors, useAppSelector} from "../../state";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
-import {ifKeyIsEnter} from "../../services/navigation";
-import {selectors} from "../../state/selectors";
-import {sanitiseInequalityState, useCurrentQuestionAttempt} from '../../services/questions';
+import {
+    ifKeyIsEnter,
+    isDefined,
+    isStaff,
+    jsonHelper,
+    sanitiseInequalityState,
+    useCurrentQuestionAttempt,
+    useUserContext
+} from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
-import {jsonHelper} from "../../services/json";
 import {Button, Input, InputGroup, InputGroupAddon, UncontrolledTooltip} from 'reactstrap';
 import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
-import {isDefined} from '../../services/miscUtils';
-import {isStaff} from '../../services/user';
-import {useUserContext} from "../../services/userContext";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+
+const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 // Magic starts here
 interface ChildrenMap {
@@ -213,7 +216,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
-                visible={modalVisible}
                 editorMode='logic'
                 logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 questionDoc={doc}
@@ -225,7 +227,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                            placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
                         <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>
-                        <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                        <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             A AND (B XOR NOT C)<br />

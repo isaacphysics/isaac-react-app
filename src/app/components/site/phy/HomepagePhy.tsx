@@ -1,15 +1,14 @@
 import React, {useEffect} from "react";
-import {useAppSelector} from "../../../state/store";
+import {isaacApi, selectors, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
-import {selectors} from "../../../state/selectors";
+import {above, SITE_SUBJECT_TITLE, useDeviceSize} from "../../../services";
 import {WarningBanner} from "../../navigation/WarningBanner";
-import {above, useDeviceSize} from "../../../services/device";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
+    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "physics"});
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
@@ -93,7 +92,7 @@ export const HomepagePhy = () => {
                 <h2 className="h-title mb-4 mt-4 pt-2 mt-sm-5 pt-sm-0">News and features</h2>
                 <Row className="eventList pt-1 pattern-03-reverse">
                     <Col>
-                        <NewsCarousel showTitle={true} descending={false} subject="physics" className={`mx-sm-n4`} />
+                        <NewsCarousel items={news} showTitle className={"mx-sm-n4"} />
                     </Col>
                 </Row>
             </Container>

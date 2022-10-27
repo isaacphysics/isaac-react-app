@@ -16,10 +16,10 @@ import {
     NotDraggingStyle,
 } from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
-import {useCurrentQuestionAttempt} from "../../services/questions";
-import {isDefined} from "../../services/miscUtils";
+import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
+import {Immutable} from "immer";
 
 // REMINDER: If you change this, you also have to change $parsons-step in questions.scss
 const PARSONS_MAX_INDENT = 3;
@@ -29,7 +29,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ParsonsChoiceDTO>(questionId);
 
-    const [ availableItems, setAvailableItems ] = useState<ParsonsItemDTO[]>([...doc.items ?? []]);
+    const [ availableItems, setAvailableItems ] = useState<Immutable<ParsonsItemDTO>[]>([...doc.items ?? []]);
     const [ draggedElement, setDraggedElement ] = useState<HTMLElement | null>(null);
     const [ initialX, setInitialX ] = useState<number | null>(null);
     const [ currentIndent, setCurrentIndent ] = useState<number | null>(null);
@@ -94,11 +94,10 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         }
     }
 
-    const moveItem = (src: ParsonsItemDTO[] | undefined, fromIndex: number, dst: ParsonsItemDTO[] | undefined, toIndex: number, indent: number) => {
+    const moveItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ParsonsItemDTO>[] | undefined, toIndex: number, indent: number) => {
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
-        srcItem.indentation = indent;
-        dst.splice(toIndex, 0, srcItem);
+        dst.splice(toIndex, 0, {...srcItem, indentation: indent});
     }
 
     const onDragStart = (initial: DragStart) => {
@@ -177,9 +176,10 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
 
         const items = [...(currentAttempt.items || [])];
         if (isDefined(items[index].indentation)) {
-            items[index].indentation = Math.max((items[index].indentation || 0) - 1, 0);
+            const indentedItem = {...items[index], indentation: Math.max((items[index].indentation || 0) - 1, 0)};
+            items.splice(index, 1, indentedItem);
         }
-        dispatchSetCurrentAttempt({...currentAttempt, ...{ items }});
+        dispatchSetCurrentAttempt({...currentAttempt, items});
     }
 
     const increaseIndentation = (index: number) => {
@@ -188,12 +188,13 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         const items = [...(currentAttempt.items || [])];
         // This condition is insane but of course 0, undefined, and null are all false-y.
         if (isDefined(items[index].indentation)) {
-            items[index].indentation = Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT));
+            const indentedItem = {...items[index], indentation: Math.min((items[index].indentation || 0) + 1, Math.min((items[Math.max(index-1, 0)].indentation || 0) + 1, PARSONS_MAX_INDENT))};
+            items.splice(index, 1, indentedItem);
         }
-        dispatchSetCurrentAttempt({...currentAttempt, ...{ items }});
+        dispatchSetCurrentAttempt({...currentAttempt, items});
     }
 
-    const onCurrentAttemptUpdate = (newCurrentAttempt?: ParsonsChoiceDTO, newAvailableItems?: ParsonsItemDTO[]) => {
+    const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ParsonsChoiceDTO>, newAvailableItems?: Immutable<ParsonsItemDTO>[]) => {
         if (!newCurrentAttempt) {
             const defaultAttempt: ParsonsChoiceDTO = {
                 type: "parsonsChoice",
@@ -207,7 +208,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
             // This also takes care of updating the two lists when a user moves items from one to the other.
             let fixedAvailableItems: ParsonsItemDTO[] = [];
-            const currentAttemptItems: ParsonsItemDTO[] = newCurrentAttempt.items || [];
+            const currentAttemptItems = newCurrentAttempt.items || [];
             if (doc.items) {
                 fixedAvailableItems = doc.items.filter(item => {
                     let found = false;
@@ -232,7 +233,6 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     }
 
     useEffect(() => {
-        onCurrentAttemptUpdate(currentAttempt, availableItems);
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('touchmove', onMouseMove);
         window.addEventListener('keyup', onKeyUp);
@@ -241,11 +241,11 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             window.removeEventListener('touchmove', onMouseMove);
             window.removeEventListener('keyup', onKeyUp);
         }
-    });
+    }, []);
 
     useEffect(() => {
         onCurrentAttemptUpdate(currentAttempt, availableItems);
-    }, [currentAttempt, availableItems])
+    }, [currentAttempt, availableItems]);
 
     return <div className="parsons-question">
         <div className="question-content">
@@ -292,7 +292,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                     <h4 className="mt-sm-4 mt-md-0">Your answer</h4>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
-                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0)})}>
+                            return <div id="parsons-choice-area" ref={provided.innerRef} className={classNames("parsons-items", draggedElement ? "is-dragging" : "", {[`ghost-indent-${currentIndent}`]: currentIndent !== null, "empty": !(currentAttempt && currentAttempt.items && currentAttempt.items.length > 0)})}>
                                 {currentAttempt && currentAttempt.items && currentAttempt.items.map((item, index) => {
                                     const canDecreaseIndentation = canIndent && isDefined(item?.indentation) && item.indentation > 0;
                                     const canIncreaseIndentation = canIndent && isDefined(item?.indentation) && index !== 0 && item.indentation <= getPreviousItemIndentation(index) && item.indentation < PARSONS_MAX_INDENT;

@@ -4,12 +4,12 @@ import './scss/phy/isaac.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
-import {store} from "./app/state/store";
+import {store} from "./app/state";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
-import {printAsciiArtLogoToConsole} from "./app/services/easterEggs/phyLogoAsciiArt";
+import {printAsciiArtLogoToConsolePhy} from "./app/services";
 import {Helmet} from "react-helmet";
 
-printAsciiArtLogoToConsole();
+printAsciiArtLogoToConsolePhy();
 
 ReactDOM.render(
     <React.StrictMode>

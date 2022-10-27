@@ -3,17 +3,17 @@ import * as RS from "reactstrap";
 import {ContentSummaryDTO} from "../../../../IsaacApiTypes";
 import {
     audienceStyle,
+    DOCUMENT_TYPE,
+    documentTypePathPrefix,
+    isCS,
     isIntendedAudience,
     makeIntendedAudienceComparator,
     notRelevantMessage,
     stringifyAudience,
     useUserContext
-} from "../../../services/userContext";
+} from "../../../services";
 import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../state/store";
-import {selectors} from "../../../state/selectors";
-import {DOCUMENT_TYPE, documentTypePathPrefix} from "../../../services/constants";
-import {isCS} from "../../../services/siteConstants";
+import {selectors, useAppSelector} from "../../../state";
 import classNames from "classnames";
 import {Markup} from "../markup";
 

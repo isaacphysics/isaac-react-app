@@ -1,79 +1,63 @@
-import React, {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {Link, withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
-
+import React, {useCallback, useEffect, useMemo} from "react";
+import {loadQuizPreview, selectors, useAppDispatch, useAppSelector} from "../../../state";
+import {Link, useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
-import {loadQuizPreview} from "../../../state/actions/quizzes";
-import {isDefined} from "../../../services/miscUtils";
-import {useQuizQuestions, useQuizSections} from "../../../services/quiz";
-import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps, QuizPagination} from "../../elements/quiz/QuizAttemptComponent";
+import {isDefined, useQuizQuestions, useQuizSections} from "../../../services";
+import {
+    myQuizzesCrumbs,
+    QuizAttemptComponent,
+    QuizAttemptProps,
+    QuizPagination
+} from "../../elements/quiz/QuizAttemptComponent";
 import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {selectors} from "../../../state/selectors";
+import {Alert, Button, Container} from "reactstrap";
 
-interface QuizDoAsssignmentProps {
-    match: {params: {quizId: string, page: string}}
-}
-
-const pageLink = (quizAttempt: QuizAttemptDTO, page?: number) => {
-    const url = `/test/preview/${quizAttempt.quizId}`;
-    if (page !== undefined) {
-        return `${url}/page/${page}`;
-    } else {
-        return url;
-    }
-};
-
-
-function QuizFooter(props: QuizAttemptProps) {
-    const {attempt, page, pageLink} = props;
-
-    let controls;
-    if (page === null) {
-        controls = <>
-            <Spacer/>
-            <RS.Button color="primary" tag={Link} replace to={pageLink(attempt, 1)}>{"View questions"}</RS.Button>
-        </>;
-    } else {
-        controls = <QuizPagination {...props} page={page} finalLabel="Back to Contents" />;
-    }
-
-    return <>
-        <div className="d-flex border-top pt-2 my-2 align-items-center">
-            {controls}
-        </div>
-    </>;
-}
+const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
+    <div className="d-flex border-top pt-2 my-2 align-items-center">
+        {isDefined(page)
+            ? <QuizPagination {...rest} page={page} pageLink={pageLink} finalLabel="Back to Contents" />
+            : <>
+                <Spacer/>
+                <Button color="primary" tag={Link} replace to={pageLink(1)}>{"View questions"}</Button>
+            </>}
+    </div>;
 
 const pageHelp = <span>
     Preview the questions on this test.
 </span>;
 
-const QuizPreviewComponent = ({match: {params: {quizId, page}}}: QuizDoAsssignmentProps) => {
-
+export const QuizPreview = () => {
     const {quiz, error} = useAppSelector(selectors.quizzes.preview);
+    const {page, quizId} = useParams<{quizId: string; page?: string;}>();
 
     const dispatch = useAppDispatch();
-
     useEffect(() => {
         dispatch(loadQuizPreview(quizId));
     }, [dispatch, quizId]);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : null;
 
-    const attempt = quiz ? {
-        quiz,
-        quizId,
-    } as QuizAttemptDTO : null;
+    const attempt = useMemo<QuizAttemptDTO | undefined>(() =>
+        quiz
+            ? {
+                quiz,
+                quizId: quiz.id,
+            }
+            : undefined
+    , [quiz]);
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
 
+    const pageLink = useCallback((page?: number) =>
+        `/test/preview/${quizId}` + (isDefined(page) ? `/page/${page}` : "")
+    , [quizId]);
+
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
 
-    return <RS.Container className="mb-5">
+    return <Container className="mb-5">
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent preview {...subProps} />
@@ -81,13 +65,11 @@ const QuizPreviewComponent = ({match: {params: {quizId, page}}}: QuizDoAsssignme
             </>}
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle="Test Preview" intermediateCrumbs={myQuizzesCrumbs} />
-                <RS.Alert color="danger">
+                <Alert color="danger">
                     <h4 className="alert-heading">Error loading test preview</h4>
                     <p>{error}</p>
-                </RS.Alert>
+                </Alert>
             </>}
         </ShowLoading>
-    </RS.Container>;
+    </Container>;
 };
-
-export const QuizPreview = withRouter(QuizPreviewComponent);

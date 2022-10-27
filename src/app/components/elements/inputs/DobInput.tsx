@@ -1,7 +1,7 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import {isDobOverThirteen} from "../../../services/validation";
+import {isDobOverThirteen} from "../../../services";
 import {DateInput} from "./DateInput";
 
 interface DobInputProps {

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
+import React, {ChangeEvent, useCallback, useMemo, useState} from "react";
 import {
     Alert,
     Button,
@@ -20,87 +20,80 @@ import {
     Table,
     UncontrolledTooltip
 } from "reactstrap";
-import {Link, withRouter} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {
-    assignBoard,
-    deleteBoard,
-    loadGroups,
-    loadGroupsForBoard,
+    assignGameboard,
+    isaacApi,
     openIsaacBooksModal,
-    showToast,
-    unassignBoard
-} from "../../state/actions";
+    selectors,
+    setAssignBoardPath,
+    showErrorToast,
+    unlinkUserFromGameboard,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
-import {AppGameBoard, BoardOrder, Boards, Toast} from "../../../IsaacAppTypes";
-import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {selectors} from "../../state/selectors";
 import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
+    above,
     allPropertiesFromAGameboard,
+    below,
     BOARD_ORDER_NAMES,
     BoardCreators,
     BoardLimit,
     BoardSubjects,
     BoardViews,
     determineGameboardSubjects,
+    difficultiesOrdered,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
+    isAdminOrEventManager,
+    isDefined,
+    isPhy,
+    isStaff,
+    Item,
+    itemise,
+    selectOnChange,
+    siteSpecific,
+    sortIcon,
+    stageLabelMap,
+    stagesOrdered,
+    useDeviceSize,
     useGameboards
-} from "../../services/gameboards";
-import {connect} from "react-redux";
-import {useAppSelector} from "../../state/store";
+} from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
-import {isPhy, siteSpecific} from "../../services/siteConstants";
-import {isAdminOrEventManager, isStaff} from "../../services/user";
-import {isDefined} from "../../services/miscUtils";
-import {difficultiesOrdered, sortIcon, stageLabelMap, stagesOrdered} from "../../services/constants";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
-import {above, below, useDeviceSize} from "../../services/device";
 import Select from "react-select";
-import {Item, itemise, selectOnChange} from "../../services/select";
+import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
+import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
 
-const stateToProps = (state: AppState) => ({
-    user: (state && state.user) as RegisteredUserDTO,
-    groups: selectors.groups.active(state)
-});
-
-const dispatchToProps = {loadGroups, loadGroupsForBoard, deleteBoard, assignBoard, unassignBoard, showToast, openIsaacBooksModal};
-
-interface SetAssignmentsPageProps {
+type BoardProps = {
     user: RegisteredUserDTO;
-    groups: UserGroupDTO[] | null;
-    loadGroups: (getArchived: boolean) => void;
-    loadGroupsForBoard: (board: GameboardDTO) => void;
-    deleteBoard: (board: GameboardDTO) => void;
-    assignBoard: (board: GameboardDTO, groups: Item<number>[], dueDate?: Date, assignmentNotes?: string) => Promise<boolean>;
-    unassignBoard: (board: GameboardDTO, group: UserGroupDTO) => void;
-    showToast: (toast: Toast) => void;
-    location: {hash: string};
-    openIsaacBooksModal: () => void;
-}
-
-type BoardProps = SetAssignmentsPageProps & {
-    board: AppGameBoard;
+    groups: UserGroupDTO[];
+    board: GameboardDTO;
+    assignees: BoardAssignee[];
     boardView: BoardViews;
     boards?: Boards;
 }
 
-const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
+const AssignGroup = ({groups, board}: BoardProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
+    const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
     const [assignmentNotes, setAssignmentNotes] = useState<string>();
     const user = useAppSelector(selectors.user.orNull);
+    const dispatch = useAppDispatch();
 
     function assign() {
-        assignBoard(board, selectedGroups, dueDate, assignmentNotes).then(success => {
+        dispatch(assignGameboard({boardId: board.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
+                setScheduledStartDate(undefined);
                 setAssignmentNotes('');
             }
         });
@@ -108,18 +101,33 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
 
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getMonth() + 1;
+    const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() >= dueDate.valueOf() : false;
+
+    function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
+        const utcDate = e.target.valueAsDate as Date;
+        const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
+        // Sets the scheduled date to 7AM in the timezone of the browser.
+        setScheduledStartDate(scheduledDate)
+    }
 
     return <Container className="py-2">
         <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
             <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
+                    value={selectedGroups}
                     closeMenuOnSelect={!isStaff(user)}
                     onChange={selectOnChange(setSelectedGroups, false)}
-                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id, g.groupName))}
+                    options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
-        <Label className="w-100 pb-2">Due Date Reminder <span className="text-muted"> (optional)</span>
+        {/* TODO remove staff role requirement */}
+        {isStaff(user) && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                       onChange={setScheduledStartDateAtSevenAM} />
+        </Label>}
+        <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after start date.</small>}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -137,57 +145,85 @@ const AssignGroup = ({groups, board, assignBoard}: BoardProps) => {
             className="mt-2 mb-2"
             block color={siteSpecific("secondary", "primary")}
             onClick={assign}
+            role={"button"}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
         >Assign to group{selectedGroups.length > 1 ? "s" : ""}</Button>
     </Container>;
 };
 
+interface HexagonGroupsButtonProps {
+    toggleAssignModal: () => void;
+    boardSubjects: string[];
+    assignees: BoardAssignee[];
+    id: string;
+}
+const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
+    <button onClick={toggleAssignModal} id={id} className="board-subject-hexagon-container">
+        {generateGameboardSubjectHexagons(boardSubjects)}
+        <span className="groups-assigned" title={"Groups assigned"}>
+                <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
+                group{(!assignees || assignees.length != 1) && "s"}
+            {isDefined(assignees) &&
+            <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
+                "No groups have been assigned."
+                : ("Gameboard assigned to: " + assignees.map(g => g.groupName).join(", "))}
+            </UncontrolledTooltip>}
+            </span>
+    </button>;
+
 const Board = (props: BoardProps) => {
-    const {user, board, boardView, loadGroupsForBoard, deleteBoard, unassignBoard, showToast, location: {hash}} = props;
+    const {user, board, assignees, boardView} = props;
+    const dispatch = useAppDispatch();
+    const {hash} = useLocation();
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
     const deviceSize = useDeviceSize();
 
-    useEffect(() => {loadGroupsForBoard(board);}, [board.id]);
+    const [ unassignBoard ] = isaacApi.endpoints.unassignGameboard.useMutation();
 
     const assignmentLink = `/assignment/${board.id}`;
-
-    const hasAssignedGroups = board.assignedGroups && board.assignedGroups.length > 0;
+    const hasAssignedGroups = assignees && assignees.length > 0;
 
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
             if (isAdminOrEventManager(user)) {
                 alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
             } else {
-                showToast({color: "failure", title: "Gameboard Deletion Not Allowed", body: "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups.", timeout: 5000});
+                dispatch(showErrorToast("Gameboard Deletion Not Allowed", "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups."));
                 return;
             }
         }
 
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            deleteBoard(board);
+            dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title}));
         }
     }
 
-    function confirmUnassignBoard(group: UserGroupDTO) {
-        if (confirm("Are you sure you want to unassign this gameboard from this group?")) {
-            unassignBoard(board, group);
+    function confirmUnassignBoard(groupId: number, groupName?: string) {
+        if (board.id && confirm(`Are you sure you want to unassign this gameboard from ${groupName ? `group ${groupName}` : "this group"}?`)) {
+            unassignBoard({boardId: board.id, groupId});
         }
     }
 
     const [modal, setModal] = useState(board.id === hashAnchor);
-    const toggleAssignModal = () => setModal(s => !s);
+    const toggleAssignModal = useCallback(() => setModal(s => !s), [setModal]);
 
     const hexagonId = `board-hex-${board.id}`;
 
-    const boardSubjects = determineGameboardSubjects(board);
-    const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
-    const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
+    const boardSubjects = useMemo(() => determineGameboardSubjects(board), [board]);
+    const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
+    const boardDifficulties = useMemo(() => allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered), [board]);
+
+    const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
+
+    // TODO remove is staff role requirement
+    const startedAssignees = useMemo(() => isStaff(user) ? assignees.filter(hasStarted) : assignees, [assignees]);
+    const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
 
     return <>
-        <Modal isOpen={modal} toggle={toggleAssignModal}>
-            <ModalHeader close={
-                <button className="close" onClick={toggleAssignModal}>
-                    {"Close"}
+        <Modal isOpen={modal} data-testid={"set-assignment-modal"} toggle={toggleAssignModal}>
+            <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
+                <button role={"button"} className={"close text-nowrap"} onClick={toggleAssignModal}>
+                    Close
                 </button>
             }>
                 {board.title}
@@ -197,16 +233,39 @@ const Board = (props: BoardProps) => {
                 <hr className="text-center" />
                 <AssignGroup {...props} />
                 <hr className="text-center" />
-                <div className="py-2">
+                <div className="py-2 border-bottom">
                     <Label>Board currently assigned to:</Label>
-                    {board.assignedGroups && hasAssignedGroups && <Container className="mb-4">{board.assignedGroups.map(group =>
-                        <Row key={group.id} className="px-1">
-                            <span className="flex-grow-1">{group.groupName}</span>
-                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(group)}>×</button>
-                        </Row>
-                    )}</Container>}
-                    {!hasAssignedGroups && <p>No groups.</p>}
+                    {startedAssignees.length > 0
+                        ? <Container className="mb-4">{startedAssignees.map(assignee =>
+                            <Row data-testid={"current-assignment"} key={assignee.groupId} className="px-1">
+                                <span className="flex-grow-1">{assignee.groupName}</span>
+                                <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                            </Row>
+                        )}</Container>
+                        : <p>No groups.</p>}
                 </div>
+                {/* TODO remove staff role requirement */}
+                {isStaff(user) && <div className="py-2">
+                    <Label>Pending assignments: <span className="icon-help mx-1" id={`pending-assignments-help-${board.id}`}/></Label>
+                    <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board.id}`}>
+                        Assignments that are scheduled to begin at a future date. Once the start date passes, students
+                        will be able to see the assignment, and will receive a notification email.
+                    </UncontrolledTooltip>
+                    {scheduledAssignees.length > 0
+                        ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
+                            <Row data-testid={"pending-assignment"} key={assignee.groupId} className="px-1">
+                                <span className="flex-grow-1">{assignee.groupName}</span>
+                                {assignee.startDate && <>
+                                    <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"
+                                        ? new Date(assignee.startDate)
+                                        : assignee.startDate).toDateString()}
+                                    </span>
+                                </>}
+                                <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                            </Row>
+                        )}</Container>
+                        : <p>No groups.</p>}
+                </div>}
             </ModalBody>
             <ModalFooter>
                 <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
@@ -214,22 +273,11 @@ const Board = (props: BoardProps) => {
         </Modal>
         {boardView == BoardViews.table ?
             // Table view
-            <tr key={board.id} className="board-card">
+            <tr className="board-card" data-testid={"assignment-gameboard-table-row"}>
                 <td>
                     <div className="board-subject-hexagon-container table-view">
-                        <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
-                            {generateGameboardSubjectHexagons(boardSubjects)}
-                            <span className="groups-assigned">
-                                <strong>{board.assignedGroups ? board.assignedGroups.length : <Spinner size="sm" />}</strong>
-                                group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
-                                {board.assignedGroups &&
-                                <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
-                                    "No groups have been assigned."
-                                    : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
-                                </UncontrolledTooltip>
-                                }
-                            </span>
-                        </button>
+                        <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
+                                             assignees={assignees} boardSubjects={boardSubjects} />
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
@@ -252,22 +300,11 @@ const Board = (props: BoardProps) => {
             </tr>
             :
             // Card view
-            <Card key={board.id} className="board-card card-neat">
+            <Card aria-label={`Gameboard ${board.title}`} className="board-card card-neat" data-testid={"assignment-gameboard-card"}>
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <button onClick={toggleAssignModal} id={hexagonId} className="board-subject-hexagon-container">
-                        {generateGameboardSubjectHexagons(boardSubjects)}
-                        <span className="groups-assigned">
-                            <strong>{board.assignedGroups ? board.assignedGroups.length : <IsaacSpinner size="sm" />}</strong>
-                            group{(!board.assignedGroups || board.assignedGroups.length != 1) && "s"}
-                            {board.assignedGroups &&
-                            <UncontrolledTooltip target={"#" + hexagonId}>{board.assignedGroups.length === 0 ?
-                                "No groups have been assigned."
-                                : ("Gameboard assigned to: " + board.assignedGroups.map(g => g.groupName).join(", "))}
-                            </UncontrolledTooltip>
-                            }
-                        </span>
-                    </button>
+                    <HexagonGroupsButton toggleAssignModal={toggleAssignModal} id={hexagonId}
+                                         assignees={assignees} boardSubjects={boardSubjects} />
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
@@ -293,19 +330,59 @@ const Board = (props: BoardProps) => {
                     </Row>
                 </CardBody>
                 <CardFooter>
-                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>{"Assign / Unassign"}</Button>
+                    <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>Assign / Unassign</Button>
                 </CardFooter>
             </Card>
         }
     </>;
 };
 
-const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
-    const {groups, loadGroups, openIsaacBooksModal} = props;
+export const AddGameboardButtons = ({className, redirectBackTo}: {className: string, redirectBackTo: string}) => {
+    const dispatch = useAppDispatch();
+    return <Row className={className}>
+        <Col md={6} lg={4} className="pt-1">
+            {siteSpecific(
+                // Physics
+                <Button role={"link"} onClick={() => {
+                    setAssignBoardPath(redirectBackTo);
+                    dispatch(openIsaacBooksModal());
+                }} color="secondary" block className="px-3">
+                    our books
+                </Button>,
+                // Computer science
+                <Button tag={Link} to={"/pages/gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    Pre-made gameboards
+                </Button>
+            )}
+        </Col>
+        <Col md={6} lg={4} className="pt-1">
+            <Button tag={Link} to={siteSpecific("/pages/pre_made_gameboards", "/topics")} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                {siteSpecific("our Boards for Lessons", "Topics list")}
+            </Button>
+        </Col>
+        <Col md={12} lg={4} className="pt-1">
+            <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                {siteSpecific("create a gameboard", "Create gameboard")}
+            </Button>
+        </Col>
+    </Row>;
+};
 
-    const user = useAppSelector((state: AppState) => (state && state.user) as RegisteredUserDTO || null);
-
-    useEffect(() => loadGroups(false), []);
+export const SetAssignments = () => {
+    // We know the user is logged in and is at least a teacher in order to visit this page
+    const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
+    const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
+    const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
+        assignmentsSetByMe?.reduce((acc, assignment) => {
+            if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;
+            const newAssignee = {groupId: assignment.groupId, groupName: assignment.groupName, startDate: assignment.scheduledStartDate};
+            if (!(assignment.gameboardId in acc)) {
+                return {...acc, [assignment.gameboardId]: [newAssignee]};
+            }
+            return {...acc, [assignment.gameboardId]: [...acc[assignment.gameboardId], newAssignee]};
+        }, {} as {[gameboardId: string]: BoardAssignee[]}) ?? {}
+    , [assignmentsSetByMe]);
 
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
@@ -318,23 +395,13 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         boardTitleFilter, setBoardTitleFilter
     } = useGameboards(BoardViews.card, BoardLimit.six);
 
-    const isaacAssignmentButtons = {
-        second: {
-            link: siteSpecific("/pages/pre_made_gameboards", "/topics"),
-            text: siteSpecific("our Boards for Lessons", "Topics list")
-        },
-        third: {
-            text: siteSpecific("create a gameboard", "Create gameboard")
-        }
-    };
-
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
 
     const pageHelp = <span>
         Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
-        <br />
+        <br/>
         Students in the group will be emailed when you set a new assignment.
     </span>;
 
@@ -343,35 +410,22 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
         <h4 className="mt-4 mb-3">
             Add a gameboard from ...
         </h4>
-        <Row className="mb-4">
-            <Col md={6} lg={4} className="pt-1">
-                {siteSpecific(
-                    // Physics
-                    <Button tag={Link} onClick={openIsaacBooksModal} color="secondary" block className="px-3">
-                        our books
-                    </Button>,
-                    // Computer science
-                    <Button tag={Link} to={"/pages/gameboards"} color="secondary" block>
-                        Pre-made gameboards
-                    </Button>
-                )}
-            </Col>
-            <Col md={6} lg={4} className="pt-1">
-                <Button tag={Link} to={isaacAssignmentButtons.second.link} color="secondary" block>
-                    {isaacAssignmentButtons.second.text}
-                </Button>
-            </Col>
-            <Col md={12} lg={4} className="pt-1">
-                <Button tag={Link} to={"/gameboard_builder"} color="secondary" block>
-                    {isaacAssignmentButtons.third.text}
-                </Button>
-            </Col>
-        </Row>
-        {groups && groups.length == 0 && <Alert color="warning">You have not created any groups to assign work to. Please <Link to="/groups">create a group here first.</Link></Alert>}
-        {boards && boards.totalResults == 0 ? <h3 className="text-center mt-4 mb-5">You have no gameboards to assign; use one of the options above to find one.</h3> :
-            <>
-                {boards && boards.totalResults > 0 && <h4>You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...</h4>}
-                {!boards && <h4>You have <IsaacSpinner size="sm" inline /> gameboards ready to assign...</h4>}
+        <AddGameboardButtons className={"mb-4"} redirectBackTo={"/set_assignments"}/>
+        {groups && groups.length === 0 && <Alert color="warning">
+            You have not created any groups to assign work to.
+            Please <Link to="/groups">create a group here first.</Link>
+        </Alert>}
+        {boards && boards.totalResults === 0
+            ? <h3 className="text-center mt-4 mb-5">
+                You have no gameboards to assign; use one of the options above to find one.
+            </h3>
+            : <>
+                {boards && boards.totalResults > 0 && <h4>
+                    You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...
+                </h4>}
+                {!boards && <h4>
+                    You have <IsaacSpinner size="sm" inline/> gameboards ready to assign...
+                </h4>}
                 <Row>
                     <Col sm={6} lg={3} xl={2}>
                         <Label className="w-100">
@@ -380,7 +434,7 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                         </Input>
                         </Label>
                     </Col>
-                    <div className="d-lg-none w-100" />
+                    <div className="d-lg-none w-100"/>
                     {boardView === BoardViews.card &&
                     <>
                         <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
@@ -405,17 +459,22 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                             // Card view
                             <>
                                 <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
-                                    {boards.boards && boards.boards.map(board => <Col>
-                                        <Board {...props}
-                                           key={board.id}
-                                           board={board}
-                                           boardView={boardView}
-                                        />
-                                    </Col>)}
+                                    {boards.boards && boards.boards.map(board =>
+                                        <Col key={board.id}>
+                                            <Board
+                                                user={user}
+                                                groups={groups ?? []}
+                                                board={board}
+                                                boardView={boardView}
+                                                assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                            />
+                                        </Col>)}
                                 </Row>
                                 <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
-                                    <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong></p>
-                                    {boards.boards.length < boards.totalResults && <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner/> : "View more"}</Button>}
+                                    <p>Showing <strong>{boards.boards.length}</strong> of <strong>{boards.totalResults}</strong>
+                                    </p>
+                                    {boards.boards.length < boards.totalResults &&
+                                    <Button onClick={viewMore} disabled={loading}>{loading ? <Spinner/> : "View more"}</Button>}
                                 </div>
                             </>
                             :
@@ -425,21 +484,27 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                     <Row>
                                         <Col lg={4}>
                                             <Label className="w-100">
-                                                Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
+                                                Filter boards <Input type="text"
+                                                                     onChange={(e) => setBoardTitleFilter(e.target.value)}
+                                                                     placeholder="Filter boards by name"/>
                                             </Label>
                                         </Col>
                                         {isPhy && <Col sm={6} lg={2}>
                                             <Label className="w-100">
-                                                Subject <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
-                                                {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
+                                                Subject <Input type="select" value={boardSubject}
+                                                               onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
+                                                {Object.values(BoardSubjects).map(subject => <option key={subject}
+                                                                                                     value={subject}>{subject}</option>)}
                                             </Input>
                                             </Label>
                                         </Col>}
                                         <Col lg={siteSpecific(2, {size: 2, offset: 6})}>
                                             <Label className="w-100">
-                                                Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
-                                                {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
-                                                </Input>
+                                                Creator <Input type="select" value={boardCreator}
+                                                               onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
+                                                {Object.values(BoardCreators).map(creator => <option key={creator}
+                                                                                                     value={creator}>{creator}</option>)}
+                                            </Input>
                                             </Label>
                                         </Col>
                                     </Row>
@@ -448,22 +513,28 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                         <Table className="mb-0">
                                             <thead>
                                             <tr>
-                                                <th className="text-center align-middle"><span className="pl-2 pr-2">Groups</span></th>
+                                                <th className="text-center align-middle"><span
+                                                    className="pl-2 pr-2">Groups</span></th>
                                                 <th className="align-middle pointer-cursor">
-                                                    <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
-                                                        Board name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
+                                                    <button className="table-button"
+                                                            onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
+                                                        Board
+                                                        name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                     </button>
                                                 </th>
                                                 <th className="text-center align-middle">Difficulties</th>
                                                 <th className="text-center align-middle">Creator</th>
                                                 <th className="text-center align-middle pointer-cursor">
-                                                    <button className="table-button" onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
+                                                    <button className="table-button"
+                                                            onClick={() => boardOrder == BoardOrder.created ? setBoardOrder(BoardOrder["-created"]) : setBoardOrder(BoardOrder.created)}>
                                                         Created {boardOrder == BoardOrder.created ? sortIcon.ascending : boardOrder == BoardOrder["-created"] ? sortIcon.descending : sortIcon.sortable}
                                                     </button>
                                                 </th>
                                                 <th className="text-center align-middle pointer-cursor">
-                                                    <button className="table-button" onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
-                                                        Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
+                                                    <button className="table-button"
+                                                            onClick={() => boardOrder == BoardOrder.visited ? setBoardOrder(BoardOrder["-visited"]) : setBoardOrder(BoardOrder.visited)}>
+                                                        Last
+                                                        viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                                                     </button>
                                                 </th>
                                                 <th className="text-center align-middle">Assignments</th>
@@ -477,11 +548,13 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                                     && (boardSubject == "All" || (determineGameboardSubjects(board).includes(boardSubject.toLowerCase()))))
                                                 .map(board =>
                                                     <Board
-                                                        {...props}
                                                         key={board.id}
+                                                        groups={groups ?? []}
+                                                        user={user}
                                                         board={board}
                                                         boardView={boardView}
                                                         boards={boards}
+                                                        assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
                                                     />)
                                             }
                                             </tbody>
@@ -489,10 +562,8 @@ const SetAssignmentsPageComponent = (props: SetAssignmentsPageProps) => {
                                     </div>
                                 </CardBody>
                             </Card>}
-                        </div>}
+                    </div>}
                 </ShowLoading>
             </>}
     </Container>;
 };
-
-export const SetAssignments = withRouter(connect(stateToProps, dispatchToProps)(SetAssignmentsPageComponent)); // Cautious about removing connect as there is a promise then callback on assignBoard

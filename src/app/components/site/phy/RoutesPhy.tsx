@@ -7,14 +7,12 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isTeacher} from "../../../services/user";
+import {isTeacher} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
-import {GroupProgress} from "../../pages/GroupProgress";
-// import {SingleGroupProgress} from "../../pages/SingleGroupProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
 import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
@@ -27,8 +25,6 @@ export const RoutesPhy = [
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTeacher} component={AssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTeacher} component={SingleAssignmentProgress} />,
-    <TrackedRoute key={key++} exact path="/group_progress" ifUser={isTeacher} component={GroupProgress} />,
-    // <TrackedRoute key={key++} exact path="/group_progress/:groupId" ifUser={isTeacher} component={SingleGroupProgress} />,
 
     // Books
     <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,

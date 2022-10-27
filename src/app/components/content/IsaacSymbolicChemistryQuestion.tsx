@@ -2,13 +2,11 @@ import React, {lazy, useEffect, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
-import {ifKeyIsEnter} from "../../services/navigation";
-import {useCurrentQuestionAttempt} from "../../services/questions";
+import {ifKeyIsEnter, isDefined, jsonHelper, useCurrentQuestionAttempt} from "../../services";
 import _flattenDeep from 'lodash/flattenDeep';
-import {jsonHelper} from "../../services/json";
-import { isDefined } from '../../services/miscUtils';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+
+const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacSymbolicChemistryQuestionDTO>) => {
 
@@ -59,8 +57,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
-                visible={modalVisible}
-                editorMode='chemistry'
+                editorMode="chemistry"
                 questionDoc={doc}
             />}
         </div>

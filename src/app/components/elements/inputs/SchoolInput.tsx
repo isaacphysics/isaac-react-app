@@ -2,9 +2,7 @@ import React, {useEffect, useState} from "react";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
-import {api} from "../../../services/api";
-import {validateUserSchool} from "../../../services/validation";
-import {schoolNameWithPostcode} from "../../../services/user";
+import {api, schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import {throttle} from "lodash";
 import classNames from "classnames";
 
@@ -20,7 +18,7 @@ interface SchoolInputProps {
 const NOT_APPLICABLE = "N/A";
 
 
-const getSchoolPromise = (schoolSearchText: string) =>
+const getSchoolPromise = (schoolSearchText: string): Promise<any> =>
     new Promise(resolve => {
         resolve(api.schools.search(schoolSearchText).then(({data}) => {
             let temp: any = [];

@@ -4,12 +4,10 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history} from "../../services/history";
+import {history, isDefined, isCS, siteSpecific} from "../../services";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
-import {isCS, siteSpecific} from "../../services/siteConstants";
-import {isDefined} from "../../services/miscUtils";
 import {MetaDescription} from "../elements/MetaDescription";
 
 type SupportType = "student" | "teacher";
@@ -46,11 +44,11 @@ const support: {student: SupportCategories; teacher: SupportCategories} = siteSp
             title: "Teacher FAQ",
             categories: {
                 general: { category: "general", title: "Get started", icon: "faq" },
-                assignments: { category: "assignments", title: "Assign work", icon: "faq" },
+                assignments: { category: "assignments", title: "Set work", icon: "faq" },
                 progress: { category: "progress", title: "View student progress", icon: "faq" },
                 suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
                 partner: { category: "partner", title: "Partner with us", icon: "teacher-hat" },
-                direct: { category: "direct", title: "One-to-one support", icon: "teacher-hat"},
+                direct: { category: "direct", title: "Teacher support", icon: "teacher-hat"},
                 troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
                 legal: { category: "legal", title: "Legal", icon: "faq"}
             }

@@ -1,6 +1,6 @@
 import {useLocation} from "react-router-dom";
 import * as queryString from "querystring";
-import { isDefined } from "./miscUtils";
+import {isDefined} from "./";
 
 function firstIfList(value: string | string[]): string {
     if (typeof value !== "string") {

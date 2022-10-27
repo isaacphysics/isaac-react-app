@@ -1,6 +1,6 @@
+import {isDefined} from "./";
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
 import {Role} from "../../IsaacApiTypes";
-import {isDefined} from "./miscUtils";
 
 export function isLoggedIn(user?: PotentialUser | null): user is LoggedInUser {
     return user ? user.loggedIn : false;

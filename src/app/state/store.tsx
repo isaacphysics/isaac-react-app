@@ -1,17 +1,25 @@
 import {Middleware} from "redux";
 import reduxLogger from "redux-logger";
-import {AppState, rootReducer} from "./reducers";
-import {userConsistencyCheckerMiddleware} from "./middleware/userConsistencyChecker";
-import {notificationCheckerMiddleware} from "./middleware/notificationManager";
+import {
+    AppState,
+    isaacApi,
+    rootReducer,
+    userConsistencyCheckerMiddleware,
+    notificationCheckerMiddleware,
+    hidePreviousQuestionAttemptMiddleware
+} from "./";
 import {configureStore} from "@reduxjs/toolkit";
-import {isaacApi} from "./slices/api";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 
 export const middleware: Middleware[] = [
+    hidePreviousQuestionAttemptMiddleware,
     userConsistencyCheckerMiddleware,
     notificationCheckerMiddleware,
     isaacApi.middleware
 ];
+const defaultMiddlewareOptions = {
+    serializableCheck: process.env.NODE_ENV !== 'test'
+}
 
 export const store = configureStore({
     reducer: rootReducer,
@@ -19,7 +27,7 @@ export const store = configureStore({
     // in development, with only thunk included in production.
     // See https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
     middleware: (getDefaultMiddleware) => {
-        const newMiddleware = getDefaultMiddleware().concat(middleware);
+        const newMiddleware = getDefaultMiddleware(defaultMiddlewareOptions).concat(middleware);
         // @ts-ignore
         if (process.env.NODE_ENV !== 'production' && !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
             newMiddleware.concat([reduxLogger]);

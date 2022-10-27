@@ -3,15 +3,17 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Col, Row} from "reactstrap";
 import classNames from "classnames";
-import {siteSpecific} from "../../services/siteConstants";
+import {siteSpecific} from "../../services";
 
 const calloutStyle = siteSpecific({
-        width: "52",
-        height: "52",
-        src: "/assets/phy/callout-icon-notepad.svg",
+        width: "43",
+        height: "43",
+        // SVG taken from https://www.svgrepo.com/svg/914/speech-bubble, no attribution needed
+        src: "/assets/phy/callout-speech-bubble.svg",
         style: {
-            marginTop: -12,
-            marginRight: -15
+            marginTop: -7,
+            marginLeft: -2,
+            marginRight: 18
         },
         colour: "t-grey"
     },{
@@ -28,7 +30,7 @@ const calloutStyle = siteSpecific({
 export const IsaacCallout = ({doc}: {doc: ContentDTO}) =>
     <Row className={classNames("isaac-callout", calloutStyle.colour)}>
         <Col>
-            <img className={"float-right"} style={calloutStyle.style} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
+            <img className={siteSpecific("float-left", "float-right")} style={calloutStyle.style} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
             <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children} />
         </Col>
     </Row>;

@@ -29,18 +29,14 @@ import {
     STAGE,
     TAG_ID,
     TAG_LEVEL
-} from "./app/services/constants";
+} from "./app/services";
 import {DropResult} from "react-beautiful-dnd";
+import {Immutable} from "immer";
 
 export type Action =
     | {type: ACTION_TYPE.TEST_ACTION}
 
     | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
-
-    | {type: ACTION_TYPE.ROUTER_PAGE_CHANGE; path: string}
-
-    | {type: ACTION_TYPE.API_SERVER_ERROR}
-    | {type: ACTION_TYPE.API_GONE_AWAY}
 
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -67,10 +63,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_STAGE; stage: STAGE}
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_EXAM_BOARD; examBoard: EXAM_BOARD}
-    | {type: ACTION_TYPE.TRANSIENT_USER_CONTEXT_SET_SHOW_OTHER_CONTENT; showOtherContent: boolean}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -185,9 +177,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS; groupId: number; newStatus: MEMBERSHIP_STATUS}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.GROUP_PROGRESS_REQUEST}
-    | {type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_SUCCESS; groupId: number; progress: ApiTypes.UserGameboardProgressSummaryDTO[]}
-    | {type: ACTION_TYPE.GROUP_PROGRESS_RESPONSE_FAILURE; groupId: number}
 
     | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
     | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
@@ -209,21 +198,17 @@ export type Action =
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
     | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.FRAGMENT_REQUEST; id: string}
-    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_SUCCESS; id: string; doc: ApiTypes.ContentDTO}
-    | {type: ACTION_TYPE.FRAGMENT_RESPONSE_FAILURE; id: string}
-
     | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; question: ApiTypes.QuestionDTO; accordionClientId?: string}
-    | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionId: string}
-    | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: ApiTypes.ChoiceDTO}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string}
+    | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
+    | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO>}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date}
     | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
-    | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>}
+    | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
 
     | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
     | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
@@ -257,28 +242,9 @@ export type Action =
     | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
     | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.GAMEBOARD_REQUEST; gameboardId: string | null}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_SUCCESS; gameboard: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_NO_CONTENT}
-    | {type: ACTION_TYPE.GAMEBOARD_RESPONSE_FAILURE; gameboardId: string | null}
-
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_SUCCESS; wildcards: ApiTypes.IsaacWildcard[]}
-    | {type: ACTION_TYPE.GAMEBOARD_WILDCARDS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.ASSIGNMENTS_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
-
-    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_REQUEST}
-    | {type: ACTION_TYPE.ASSIGNMENTS_BY_ME_RESPONSE_SUCCESS; assignments: ApiTypes.AssignmentDTO[]}
-
-    | {type: ACTION_TYPE.PROGRESS_REQUEST; assignment: ApiTypes.AssignmentDTO}
-    | {type: ACTION_TYPE.PROGRESS_RESPONSE_SUCCESS; assignment: ApiTypes.AssignmentDTO; progress: AppAssignmentProgress[]}
-    | {type: ACTION_TYPE.PROGRESS_RESPONSE_FAILURE; assignment: ApiTypes.AssignmentDTO}
 
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
     | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
@@ -298,49 +264,9 @@ export type Action =
     | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 
-    | {type: ACTION_TYPE.GROUPS_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS; groups: ApiTypes.UserGroupDTO[]; archivedGroupsOnly: boolean}
-
-    | {type: ACTION_TYPE.GROUPS_SELECT; group: ApiTypes.UserGroupDTO | null}
-
-    | {type: ACTION_TYPE.GROUPS_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS; newGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_DELETE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS; deletedGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE; deletedGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS; updatedGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE; updatedGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; members: ApiTypes.UserSummaryWithGroupMembershipDTO[]}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_TOKEN_REQUEST; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; token: string}
-    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
-
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST; group: ApiTypes.UserGroupDTO; managerEmail: string}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; managerEmail: string; newGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; managerEmail: string}
-
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-
-    | {type: ACTION_TYPE.NEWS_REQUEST}
-    | {type: ACTION_TYPE.NEWS_RESPONSE_SUCCESS; theNews: ApiTypes.IsaacPodDTO[]}
-    | {type: ACTION_TYPE.NEWS_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
@@ -419,33 +345,6 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.BOARDS_REQUEST; accumulate: boolean}
-    | {type: ACTION_TYPE.BOARDS_RESPONSE_SUCCESS; boards: ApiTypes.GameboardListDTO; accumulate: boolean}
-
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_SUCCESS; gameboardId: string; gameboardTitle?: string}
-    | {type: ACTION_TYPE.GAMEBOARD_ADD_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_SUCCESS; gameboardId: string}
-    | {type: ACTION_TYPE.GAMEBOARD_CREATE_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.BOARDS_GROUPS_REQUEST; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groups: {[key: string]: ApiTypes.UserGroupDTO[]}}
-    | {type: ACTION_TYPE.BOARDS_GROUPS_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
-
-    | {type: ACTION_TYPE.BOARDS_DELETE_REQUEST; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO}
-    | {type: ACTION_TYPE.BOARDS_DELETE_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO}
-
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_REQUEST; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.BOARDS_UNASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; group: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_REQUEST; assignments: AssignmentDTO[]}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_SUCCESS; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
-    | {type: ACTION_TYPE.BOARDS_ASSIGN_RESPONSE_FAILURE; board: ApiTypes.GameboardDTO; groupIds: number[]; dueDate?: number}
-
     | {type: ACTION_TYPE.CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
@@ -453,10 +352,6 @@ export type Action =
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
-
-    | {type: ACTION_TYPE.PRINTING_SET_HINTS; hintsEnabled: boolean}
-
-    | {type: ACTION_TYPE.SET_MAIN_CONTENT_ID; id: string}
 
     | {type: ACTION_TYPE.QUIZZES_REQUEST}
     | {type: ACTION_TYPE.QUIZZES_RESPONSE_FAILURE}
@@ -519,8 +414,8 @@ export interface IsaacQuestionProps<T extends QuestionDTO> {
 }
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
-    validationResponse?: ApiTypes.QuestionValidationResponseDTO;
-    currentAttempt?: ApiTypes.ChoiceDTO;
+    validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO>;
+    currentAttempt?: Immutable<ApiTypes.ChoiceDTO>;
     canSubmit?: boolean;
     locked?: Date;
     accordionClientId?: string;
@@ -575,6 +470,7 @@ export interface BooleanNotation {
 
 export interface DisplaySettings {
     HIDE_NON_AUDIENCE_CONTENT?: boolean;
+    HIDE_QUESTION_ATTEMPTS?: boolean;
 }
 
 export interface UserPreferencesDTO {
@@ -591,7 +487,7 @@ export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
     choice: C;
 }
 
-export function isValidatedChoice(choice: ApiTypes.ChoiceDTO|ValidatedChoice<ApiTypes.ChoiceDTO>): choice is ValidatedChoice<ApiTypes.ChoiceDTO> {
+export function isValidatedChoice(choice: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>): choice is Immutable<ValidatedChoice<ApiTypes.ChoiceDTO>> {
     return choice.hasOwnProperty("frontEndValidation");
 }
 
@@ -660,18 +556,16 @@ export enum BoardOrder {
 
 export type NumberOfBoards = number | "ALL";
 
-export type AppGameBoard = ApiTypes.GameboardDTO & {assignedGroups?: ApiTypes.UserGroupDTO[]};
-
 export interface Boards {
     boards: GameboardDTO[];
     totalResults: number;
 }
 
+export type BoardAssignee = {groupId: number, groupName?: string; startDate?: Date | number};
+
 export interface BoardAssignees {
-    boardAssignees?: {[key: string]: number[]};
+    boardAssignees?: {[key: string]: BoardAssignee[]};
 }
-
-
 
 // Admin Content Errors:
 export interface ContentErrorItem {
@@ -696,6 +590,14 @@ export interface AdminStatsResponse {
     userRoles: any;
     userSchoolInfo: any;
     viewQuestionEvents: number;
+    viewConceptEvents: number;
+}
+
+export interface ValidAssignmentWithListingDate extends AssignmentDTO {
+    gameboardId: string;
+    groupId: number;
+    id: number;
+    listingDate: Date;
 }
 
 export interface FigureNumbersById {[figureId: string]: number}
@@ -708,6 +610,20 @@ export const ClozeDropRegionContext = React.createContext<{register: (id: string
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
+export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
+export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
+export const AssignmentScheduleContext = React.createContext<{
+    boardsById: {[id: string]: GameboardDTO | undefined};
+    groupsById: {[id: number]: AppGroup | undefined};
+    groupFilter: {[id: number]: boolean};
+    boardIdsByGroupId: {[id: number]: string[] | undefined};
+    groups: AppGroup[];
+    gameboards: GameboardDTO[];
+    openAssignmentModal: (assignment: ValidAssignmentWithListingDate) => void;
+    collapsed: boolean;
+    setCollapsed: (b: boolean) => void;
+    viewBy: "startDate" | "dueDate";
+}>({boardsById: {}, groupsById: {}, groupFilter: {}, boardIdsByGroupId: {}, groups: [], gameboards: [], openAssignmentModal: () => {}, collapsed: false, setCollapsed: () => {}, viewBy: "startDate"});
 
 export interface AppAssignmentProgress {
     user: ApiTypes.UserSummaryDTO;
@@ -947,8 +863,13 @@ export type EnhancedGameboard = GameboardDTO & {
     contents: (GameboardItem & { questionPartsTotal: number })[];
 };
 
-export type SingleEnhancedAssignment = AssignmentDTO & {
+export type EnhancedAssignment = AssignmentDTO & {
+    id: number;
     gameboard: EnhancedGameboard;
+};
+
+export type EnhancedAssignmentWithProgress = EnhancedAssignment & {
+    progress: AppAssignmentProgress[];
 };
 
 export interface PageSettings {
@@ -956,13 +877,6 @@ export interface PageSettings {
     setColourBlind: (newValue: boolean) => void;
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
-}
-
-export interface SingleProgressDetailsProps {
-    assignmentId: number;
-    assignment: SingleEnhancedAssignment;
-    progress: AppAssignmentProgress[];
-    pageSettings: PageSettings;
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;
@@ -975,4 +889,9 @@ export const QuizFeedbackModes: QuizFeedbackMode[] = ["NONE", "OVERALL_MARK", "S
 
 export interface ClozeItemDTO extends ItemDTO {
     replacementId?: string;
+}
+
+export interface NewsItemProps {
+    subject: "news" | "physics";
+    orderDecending?: boolean;
 }

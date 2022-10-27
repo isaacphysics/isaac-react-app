@@ -1,6 +1,6 @@
 import {ContentSummaryDTO, ResultsWrapper} from "../../../IsaacApiTypes";
 import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
 
 type SearchState = {searchResults: ResultsWrapper<ContentSummaryDTO> | null} | null;
 export const search = (search: SearchState = null, action: Action) => {

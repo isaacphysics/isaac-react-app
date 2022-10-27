@@ -3,11 +3,18 @@ import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
-import {WEBMASTER_EMAIL} from "../../services/siteConstants";
+import {WEBMASTER_EMAIL} from "../../services";
 import {FallbackProps} from "react-error-boundary";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {selectors} from "../../state/selectors";
-import {logAction} from "../../state/actions";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {Loading} from "../handlers/IsaacSpinner";
+
+export const ChunkOrClientError = ({resetErrorBoundary, error}: FallbackProps) => {
+    const isChunkError = error.name === "ChunkLoadError";
+    useEffect(() => {
+        if (isChunkError) location.reload();
+    }, [isChunkError]);
+    return isChunkError ? <Loading/> : <ClientError error={error} resetErrorBoundary={resetErrorBoundary}/>;
+}
 
 export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     const dispatch = useAppDispatch();

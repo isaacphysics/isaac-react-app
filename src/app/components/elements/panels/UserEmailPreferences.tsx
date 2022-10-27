@@ -2,10 +2,8 @@ import {CardBody, FormGroup, Table} from "reactstrap";
 import React, {useEffect} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
-import {useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
-import {validateEmailPreferences} from "../../../services/validation";
-import {siteSpecific, SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {AppState, useAppSelector} from "../../../state";
+import {SITE_SUBJECT_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences;

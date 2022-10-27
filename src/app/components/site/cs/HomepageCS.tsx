@@ -1,13 +1,14 @@
 import React, {useEffect} from "react";
-import {useAppSelector} from "../../../state/store";
+import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {Link} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
 import {EventsCarousel} from "../../elements/EventsCarousel";
-import {selectors} from "../../../state/selectors";
+import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
+import classNames from "classnames";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -16,13 +17,17 @@ interface ShowMeButtonsProps {
 export const HomepageCS = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
+    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
+
+    const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
+    const carouselNewsItems = news ? (user?.loggedIn ? news.slice(1) : news) : [];
 
     const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
         <h3>Show me</h3>
         <Row>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
                 <Button size="lg" tag={Link} to={"/topics/gcse"} color="secondary" block>
-                    GCSE resources <Badge color="secondary" className="ml-1 border">BETA</Badge>
+                    GCSE resources
                 </Button>
             </Col>
             <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
@@ -41,21 +46,17 @@ export const HomepageCS = () => {
     return <div id="homepage">
         <section id="call-to-action" className="homepageHero">
             <Container className="pt-4 z1">
-                {user && user.loggedIn ? <>
+                {user?.loggedIn ? <>
                         <Row className="pt-4">
-                            <Col md="9" lg="7" className="d-none d-sm-block order-last my-lg-4 text-center">
-                                <img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />
-                            </Col>
-                            <Col md="3" lg="5">
-                                <Container className="pb-2 d-block">
+                            <Col md="12" lg="5" className={"pt-lg-4"}>
+                                <Container className={"mb-4"}>
                                     <h1 id="homepageName">Welcome {user.givenName}</h1>
                                 </Container>
-                                <ShowMeButtons className="d-none d-lg-block mt-xl-2" />
+                                <ShowMeButtons className={"pt-xl-2"}/>
+                                {/*<img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />*/}
                             </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <ShowMeButtons className="d-block d-lg-none" />
+                            <Col data-testid={"featured-news-item"} md="12" lg="7" className="d-none d-lg-block">
+                                <FeaturedNewsItem item={featuredNewsItem} />
                             </Col>
                         </Row>
                     </>
@@ -102,11 +103,11 @@ export const HomepageCS = () => {
             </Container>
         </section>
 
-        {!(user && user.loggedIn) && <Container>
+        {!user?.loggedIn && <Container>
             <hr/>
         </Container>}
 
-        {!(user && user.loggedIn) && <section id="why-sign-up" className="row sign-up-tabs">
+        {!user?.loggedIn && <section id="why-sign-up" className="row sign-up-tabs">
             <Container>
                 <Col className="pb-5 pt-4 pattern-04">
                     <h2 className="text-center mb-5">Why sign up?</h2>
@@ -116,10 +117,13 @@ export const HomepageCS = () => {
         </section>}
 
         <section id="news">
-            <Container className="pt-4 pb-5">
-                <div className="eventList pt-5 pattern-03-reverse">
+            <Container className={classNames("pt-4 pb-5", {"mt-lg-n5 pt-lg-0": user?.loggedIn ?? false})}>
+                <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
                     <h2 className="h-title mb-4">News</h2>
-                    <NewsCarousel descending={true} subject="news"/>
+                    {user?.loggedIn && <div className={"d-block d-lg-none mb-4 mb-lg-0"}>
+                        <FeaturedNewsItem item={featuredNewsItem} />
+                    </div>}
+                    <NewsCarousel items={carouselNewsItems} />
                 </div>
             </Container>
         </section>
@@ -151,7 +155,7 @@ export const HomepageCS = () => {
             </Container>
         </section>
 
-        {!(user && user.loggedIn) && <section className="row">
+        {!user?.loggedIn && <section className="row">
             <Container>
                 <Col className="py-4 px-5 mb-5 d-flex align-items-center flex-column flex-md-row border border-dark">
                     <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">

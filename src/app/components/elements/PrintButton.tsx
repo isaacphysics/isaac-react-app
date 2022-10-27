@@ -1,6 +1,5 @@
-import {setPrintingHints} from "../../state/actions";
 import React, {useState} from "react";
-import {useAppDispatch} from "../../state/store";
+import {printingSettingsSlice, useAppDispatch} from "../../state";
 
 interface PrintProps {
     questionPage?: boolean;
@@ -12,7 +11,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
     const dispatch = useAppDispatch();
 
     return questionPage ?
-        <React.Fragment>
+        <>
             <button
                 className="print-icon btn-action"
                 onClick={() => setQuestionPrintOpen(!questionPrintOpen)}
@@ -24,7 +23,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         <button
                             className="a-alt btn btn-link btn-sm"
                             onClick={() => {
-                                dispatch(setPrintingHints(true));
+                                dispatch(printingSettingsSlice.actions.enableHints(true));
                                 setTimeout(window.print, 100);
                             }}
                         ><span className="sr-only">Print </span>With hints
@@ -33,23 +32,21 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                         <button
                             className="a-alt btn btn-link btn-sm"
                             onClick={() => {
-                                dispatch(setPrintingHints(false));
+                                dispatch(printingSettingsSlice.actions.enableHints(false));
                                 setTimeout(window.print, 100);
                             }}
                         ><span className="sr-only">Print </span>Without hints</button>
                     </div>
                 </div>
             }
-        </React.Fragment>
+        </>
         :
-        <React.Fragment>
-            <button
-                className="print-icon btn-action"
-                onClick={() => {
-                    dispatch(setPrintingHints(false));
-                    setTimeout(window.print, 100);
-                }}
-                aria-label="Print page"
-            />
-        </React.Fragment>
+        <button
+            className="print-icon btn-action"
+            onClick={() => {
+                dispatch(printingSettingsSlice.actions.enableHints(false));
+                setTimeout(window.print, 100);
+            }}
+            aria-label="Print page"
+        />
 };

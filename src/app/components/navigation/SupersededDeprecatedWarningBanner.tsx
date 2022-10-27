@@ -2,10 +2,8 @@ import React from "react";
 import * as RS from "reactstrap";
 import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {selectors} from "../../state/selectors";
-import {isStudent, isTeacher} from "../../services/user";
-import {goToSupersededByQuestion} from "../../state/actions";
+import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {isStudent, isTeacher} from "../../services";
 
 export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
     const dispatch = useAppDispatch();
@@ -15,6 +13,11 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
 
     // If doc.deprecated or supersededBy is falsey, render nothing
     if (!doc.deprecated && !supersededBy) {
+        return RenderNothing;
+    }
+
+    // If doc is not deprecated and the user is a student we don't have anything to show them in this warning
+    if (!doc.deprecated && isStudent(user)) {
         return RenderNothing;
     }
 

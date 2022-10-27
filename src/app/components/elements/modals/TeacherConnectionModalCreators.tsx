@@ -5,11 +5,11 @@ import {
     closeActiveModal,
     releaseAllAuthorisations,
     releaseAuthorisation,
-    revokeAuthorisation
-} from "../../../state/actions";
-import {store} from "../../../state/store";
+    revokeAuthorisation,
+    store
+} from "../../../state";
 import * as RS from "reactstrap";
-import {extractTeacherName} from "../../../services/user";
+import {extractTeacherName} from "../../../services";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {

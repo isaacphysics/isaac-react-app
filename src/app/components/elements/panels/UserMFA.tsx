@@ -2,12 +2,9 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {useAppSelector} from "../../../state/store";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {isaacApi, selectors, useAppSelector} from "../../../state";
+import {isDefined, SITE_SUBJECT_TITLE} from "../../../services";
 import QRCode from 'qrcode';
-import {selectors} from "../../../state/selectors";
-import {isaacApi} from "../../../state/slices/api";
-import {isDefined} from "../../../services/miscUtils";
 
 interface UserMFAProps {
     userToUpdate: ValidationUser;

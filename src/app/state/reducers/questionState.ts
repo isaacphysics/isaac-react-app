@@ -1,5 +1,6 @@
 import {Action, AppQuestionDTO, isValidatedChoice} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services/constants";
+import {ACTION_TYPE} from "../../services";
+import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
 
 export const question = (question: AppQuestionDTO, action: Action) => {
     switch (action.type) {
@@ -35,15 +36,16 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
     switch (action.type) {
         case ACTION_TYPE.QUESTION_REGISTRATION: {
             const currentQuestions = qs !== null ? [...qs.questions] : [];
-            const bestAttempt = action.question.bestAttempt;
-            const newQuestion: AppQuestionDTO = bestAttempt ?
-                {...action.question, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
-                {...action.question, accordionClientId: action.accordionClientId};
-            const newQuestions = [...currentQuestions, newQuestion];
-            return augmentQuestions(newQuestions);
+            const newQuestions = action.questions.map(q => {
+                const bestAttempt = q.bestAttempt;
+                return bestAttempt ?
+                    {...q, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
+                    {...q, accordionClientId: action.accordionClientId};
+            });
+            return augmentQuestions(currentQuestions.concat(newQuestions));
         }
         case ACTION_TYPE.QUESTION_DEREGISTRATION: {
-            const filteredQuestions = qs && qs.questions.filter((q) => q.id != action.questionId);
+            const filteredQuestions = qs && qs.questions.filter((q) => q.id && !action.questionIds.includes(q.id));
             return filteredQuestions && filteredQuestions.length ? augmentQuestions(filteredQuestions) : null;
         }
         // Delegate processing the question matching action.questionId to the question reducer
@@ -54,6 +56,24 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
         case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
             return qs && augmentQuestions(qs.questions.map((q) => q.id === action.questionId ? question(q, action) : q));
         }
+        // If we receive user preferences, then check for the "hide question attempts" preference. If the preference is
+        // there then we clear all attempt info from stored questions that have a best attempt, since the current attempt
+        // could have been filled with the best attempt (see the case for `ACTION_TYPE.QUESTION_REGISTRATION` above)
+        // This reducer case mainly occurs on page refresh/load, where the question attempt data is returned *before
+        // the user preferences*, which means the `hidePreviousQuestionAttempt` middleware doesn't work as intended.
+        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
+            if (qs && action.userPreferences.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS) {
+                return {
+                    ...qs,
+                    questions: qs.questions.map(q => q.bestAttempt ? {
+                        ...q,
+                        bestAttempt: BEST_ATTEMPT_HIDDEN,
+                        currentAttempt: undefined,
+                        validationResponse: undefined
+                    } : q)
+                };
+            }
+            return qs;
         default: {
             return qs;
         }

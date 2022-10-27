@@ -1,17 +1,22 @@
 import {ContentSummaryDTO, IsaacQuizDTO, QuizFeedbackMode} from "../../../../IsaacApiTypes";
-import {AppGroup} from "../../../../IsaacAppTypes";
-import {AppDispatch} from "../../../state/store";
-import {useAppDispatch} from "../../../state/store";
+import {
+    AppDispatch,
+    closeActiveModal,
+    hideToast,
+    isaacApi,
+    setQuiz,
+    showQuizSettingModal,
+    showToast,
+    useAppDispatch
+} from "../../../state";
 import React, {useState} from "react";
-import {Item, selectOnChange} from "../../../services/select";
+import {isDefined, Item, selectOnChange} from "../../../services";
 import {range} from "lodash";
 import {currentYear, DateInput} from "../inputs/DateInput";
-import {isDefined} from "../../../services/miscUtils";
 import * as RS from "reactstrap";
 import Select from "react-select";
-import {closeActiveModal, hideToast, showToast} from "../../../state/actions";
-import {setQuiz, showQuizSettingModal} from "../../../state/actions/quizzes";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
@@ -35,13 +40,14 @@ type ControlName = 'group' | 'dueDate' | 'feedbackMode';
 
 interface QuizSettingModalProps {
     quiz: ContentSummaryDTO | IsaacQuizDTO;
-    groups: AppGroup[];
     dueDate?: Date | null;
     feedbackMode?: QuizFeedbackMode | null;
 }
 
-export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
+export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
+    const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
+
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
     const [submitting, setSubmitting] = useState(false);
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
@@ -52,8 +58,6 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
     const now = new Date();
     const currentMonth = now.getMonth() + 1;
     const currentDay = now.getDate();
-
-    const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
 
     function addValidated(what: ControlName) {
         setValidated(validated => {
@@ -67,18 +71,25 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
 
     return <div className="mb-4">
         <RS.Label className="w-100 mb-4">Set test to the following groups:<br/>
-            <Select
-                options={groupOptions}
-                onChange={(s) => {
-                    selectOnChange(setSelectedGroups, false)(s);
-                    addValidated('group');
-                }}
-                onBlur={() => addValidated('group')}
-                isSearchable
-                menuPortalTarget={document.body}
-                styles={{
-                    control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
-                    menuPortal: base => ({...base, zIndex: 9999}),
+            <ShowLoadingQuery
+                query={groupsQuery}
+                defaultErrorTitle={"Error fetching groups"}
+                thenRender={groups => {
+                    const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
+                    return <Select
+                        options={groupOptions}
+                        onChange={(s) => {
+                            selectOnChange(setSelectedGroups, false)(s);
+                            addValidated('group');
+                        }}
+                        onBlur={() => addValidated('group')}
+                        isSearchable
+                        menuPortalTarget={document.body}
+                        styles={{
+                            control: (styles) => ({...styles, ...(groupInvalid ? {borderColor: '#dc3545'} : {})}),
+                            menuPortal: base => ({...base, zIndex: 9999}),
+                        }}
+                    />
                 }}
             />
             {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
@@ -86,7 +97,7 @@ export function QuizSettingModal({quiz, groups, dueDate: initialDueDate, feedbac
         <RS.Label className="w-100 mb-4">Set an optional due date:<br/>
             <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
                        defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
-            {dueDateInvalid && <RS.FormFeedback>Due date must be after today</RS.FormFeedback>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after today.</small>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">What level of feedback should students get:<br/>
             <Select

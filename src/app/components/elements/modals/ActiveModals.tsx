@@ -1,6 +1,5 @@
 import React from "react";
-import {useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
+import {AppState, useAppSelector} from "../../../state";
 import {ActiveModal} from "./ActiveModal";
 
 export const ActiveModals = () => {

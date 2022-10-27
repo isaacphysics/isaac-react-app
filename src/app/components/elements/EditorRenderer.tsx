@@ -1,15 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Col, Row} from "reactstrap";
-import {siteSpecific} from "../../services/siteConstants";
+import {EDITOR_ORIGIN, SITE_SUBJECT_TITLE, siteSpecific} from "../../services";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {Provider} from "react-redux";
-import {useAppDispatch} from "../../state/store";
-import {store} from "../../state/store";
+import {fetchGlossaryTerms, store, useAppDispatch} from "../../state";
 import {StaticRouter} from "react-router";
-import {fetchGlossaryTerms} from "../../state/actions";
-import {EDITOR_ORIGIN} from "../../services/constants";
 
 function getType(doc: any) {
     if (!doc) {
@@ -35,7 +32,7 @@ function EditorListener() {
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
-    const listener = useCallback((event) => {
+    const listener = useCallback((event: MessageEvent) => {
         if (!event.origin?.includes("localhost") && event.origin !== EDITOR_ORIGIN) {
             console.warn("Ignoring message from unexpected origin (" + event.origin + ")!")
             return;
@@ -68,7 +65,7 @@ function EditorListener() {
             </Col>
         </Row>
         : <div>
-            <em>Waiting for content...</em>
+            <em>Waiting for {SITE_SUBJECT_TITLE} content...</em>
         </div>;
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {ExternalLink} from "../ExternalLink";
-import {siteSpecific} from "../../../services/siteConstants";
+import {siteSpecific} from "../../../services";
 
 export const ListGroupFooterBottom = () => siteSpecific(
     // Physics

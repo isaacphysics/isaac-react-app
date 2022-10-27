@@ -4,8 +4,7 @@ import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString} from "../DateString";
-import {formatEventCardDate} from "../../../services/events";
-import {isPhy} from "../../../services/siteConstants";
+import {formatEventCardDate, isPhy} from "../../../services";
 
 export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
     const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus} = event;

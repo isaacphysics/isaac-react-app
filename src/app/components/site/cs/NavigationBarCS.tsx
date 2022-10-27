@@ -6,9 +6,8 @@ import {
     NavigationSection,
     useAssignmentsCount
 } from "../../navigation/NavigationBar";
-import {useAppSelector} from "../../../state/store";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services/user";
-import {selectors} from "../../../state/selectors";
+import {useAppSelector, selectors} from "../../../state";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services";
 
 export const NavigationBarCS = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -32,7 +31,7 @@ export const NavigationBarCS = () => {
         </NavigationSection>}
 
         <NavigationSection title="Learn">
-            <LinkItem to="/topics/gcse" badgeTitle="BETA">GCSE topics</LinkItem>
+            <LinkItem to="/topics/gcse">GCSE topics</LinkItem>
             <LinkItem to="/topics/a_level">A level topics</LinkItem>
             <LinkItem to="/gameboards/new">Question Finder</LinkItem>
             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>

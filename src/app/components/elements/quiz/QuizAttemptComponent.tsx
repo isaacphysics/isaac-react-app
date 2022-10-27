@@ -6,27 +6,21 @@ import {
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
-import {isDefined} from "../../../services/miscUtils";
-import {extractTeacherName} from "../../../services/user";
+import {below, extractTeacherName, isDefined, siteSpecific, useDeviceSize} from "../../../services";
 import {Spacer} from "../Spacer";
 import {formatDate} from "../DateString";
 import {Link} from "react-router-dom";
 import {QuizAttemptContext} from "../../../../IsaacAppTypes";
 import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
-import * as RS from "reactstrap";
-import {Col, Row} from "reactstrap";
+import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
-import {showQuizSettingModal} from "../../../state/actions/quizzes";
-import {useAppDispatch} from "../../../state/store";
-import {siteSpecific} from "../../../services/siteConstants";
-import {below, useDeviceSize} from "../../../services/device";
+import {closeActiveModal, openActiveModal, showQuizSettingModal, useAppDispatch} from "../../../state";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
-import {closeActiveModal, openActiveModal} from "../../../state/actions";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {EditContentButton} from "../EditContentButton";
 
-type PageLinkCreator = (attempt: QuizAttemptDTO, page?: number, studentId?: string, quizAssignmentId?: string) => string;
+type PageLinkCreator = (page?: number) => string;
 
 export interface QuizAttemptProps {
     attempt: QuizAttemptDTO;
@@ -36,8 +30,6 @@ export interface QuizAttemptProps {
     pageLink: PageLinkCreator;
     pageHelp: React.ReactElement;
     preview?: boolean;
-    studentId?: string;
-    quizAssignmentId?: string;
     studentUser?: UserSummaryDTO;
 }
 
@@ -45,7 +37,7 @@ function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
     return questions.filter(q => q.id?.startsWith(section.id as string + "|"));
 }
 
-function QuizContents({attempt, sections, questions, pageLink, studentId, quizAssignmentId}: QuizAttemptProps) {
+function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps) {
     if (isDefined(attempt.completedDate)) {
         return attempt.feedbackMode === "NONE" ?
             <h4>No feedback available</h4>
@@ -65,7 +57,7 @@ function QuizContents({attempt, sections, questions, pageLink, studentId, quizAs
                         const section = sections[k];
                         return <tr key={k}>
                             {attempt.feedbackMode === 'DETAILED_FEEDBACK' ?
-                                <td><Link replace to={pageLink(attempt, index + 1, studentId, quizAssignmentId)}>{section.title}</Link></td> :
+                                <td><Link replace to={pageLink(index + 1)}>{section.title}</Link></td> :
                                 <td>{section.title}</td>
                             }
                             <td>
@@ -88,7 +80,7 @@ function QuizContents({attempt, sections, questions, pageLink, studentId, quizAs
                     const answerCount = questionsInSection.filter(q => q.bestAttempt !== undefined).length;
                     const completed = questionsInSection.length === answerCount;
                     return <li key={k}>
-                        <Link replace to={pageLink(attempt, index + 1, studentId, quizAssignmentId)}>{section.title}</Link>
+                        <Link replace to={pageLink(index + 1)}>{section.title}</Link>
                         {" "}
                         <small className="text-muted">{completed ? "Completed" : anyStarted ? `${answerCount} / ${questionsInSection.length}` : ""}</small>
                     </li>;
@@ -107,7 +99,7 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
             <div className="d-flex">
                 <span>You are previewing this test.</span>
                 <Spacer />
-                <RS.Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</RS.Button>
+                <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>
             </div>
         </>;
     } else if (isDefined(assignment)) {
@@ -156,11 +148,11 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
                 <UserContextPicker className="no-print text-right"/>
                 <Row>
                     {rubric && renderRubric && <Col className="text-right">
-                        <RS.Button color="tertiary" outline className="mb-4"
+                        <Button color="tertiary" outline className="mb-4"
                             alt="Show instructions" title="Show instructions in a modal"
                             onClick={() => {rubric && openQuestionModal(attempt)}}>
                             Show instructions
-                        </RS.Button>
+                        </Button>
                     </Col>}
                 </Row>
                 <WithFigureNumbering doc={section}>
@@ -169,13 +161,13 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
             </Col>
         </Row>
     :
-        <RS.Alert color="danger">Test section {page} not found</RS.Alert>
+        <Alert color="danger">Test section {page} not found</Alert>
     ;
 }
 
 export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
 export const teacherQuizzesCrumbs = [{title: "Set tests", to: `/set_tests`}];
-const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentId, quizAssignmentId, studentUser}: QuizAttemptProps) => {
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
@@ -195,7 +187,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentId, quizA
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
         const sectionTitle = section?.title ?? "Section " + page;
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
-                                   intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink(attempt, undefined, studentId, quizAssignmentId)}]}/>;
+                                   intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}/>;
     }
 };
 
@@ -204,17 +196,17 @@ interface QuizPaginationProps {
     finalLabel: string;
 }
 
-export function QuizPagination({attempt, page, sections, pageLink, finalLabel, studentId, quizAssignmentId}: QuizAttemptProps & QuizPaginationProps) {
+export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttemptProps & QuizPaginationProps) {
     const deviceSize = useDeviceSize();
     const sectionCount = Object.keys(sections).length;
-    const backLink = pageLink(attempt, page > 1 ? page - 1 : undefined, studentId, quizAssignmentId);
+    const backLink = pageLink(page > 1 ? page - 1 : undefined);
     const finalSection = page === sectionCount;
-    const nextLink = pageLink(attempt, !finalSection ? page + 1 : undefined, studentId, quizAssignmentId);
+    const nextLink = pageLink(!finalSection ? page + 1 : undefined);
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
-        <RS.Button color="primary" outline size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={backLink}>Back</RS.Button>
+        <Button color="primary" outline size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={backLink}>Back</Button>
         <div className="d-none d-md-block">Section {page} / {sectionCount}</div>
-        <RS.Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={nextLink}>{finalSection ? finalLabel : "Next"}</RS.Button>
+        <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} replace to={nextLink}>{finalSection ? finalLabel : "Next"}</Button>
     </div>;
 }
 
@@ -227,7 +219,7 @@ export function QuizAttemptComponent(props: QuizAttemptProps) {
         <QuizTitle {...props} />
         {page === null ?
             <div className="mt-4">
-                {!isDefined(props.studentId) && <QuizHeader {...props} />}
+                {!isDefined(props.studentUser?.id) && <QuizHeader {...props} />}
                 <QuizRubric {...props}/>
                 <QuizContents {...props} />
             </div>

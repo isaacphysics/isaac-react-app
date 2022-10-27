@@ -50,7 +50,7 @@ export const useTableCompatiblePortalsInHtml = portalsInHtmlHookBuilder(TABLE_CO
 // referring to an element) to cause component updates
 export function useStatefulElementRef<T>(): [T | undefined, (ref: any) => void] {
     const [ ref, setRef ] = useState<T>();
-    const updateRef = useCallback(ref => {
+    const updateRef = useCallback((ref: T) => {
         if (ref !== null) {
             setRef(ref);
         }

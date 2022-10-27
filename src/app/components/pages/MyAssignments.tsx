@@ -1,22 +1,25 @@
 import React, {MouseEvent, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {loadMyAssignments, logAction} from "../../state/actions";
+import {isaacApi, logAction, useAppDispatch} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {AppState} from "../../state/reducers";
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Col, Container, Input, Label, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {filterAssignmentsByStatus, filterAssignmentsByProperties,
-    getDistinctAssignmentGroups, getDistinctAssignmentSetters} from "../../services/assignments";
-import {ifKeyIsEnter} from "../../services/navigation";
+import {
+    filterAssignmentsByProperties,
+    filterAssignmentsByStatus,
+    getDistinctAssignmentGroups,
+    getDistinctAssignmentSetters,
+    ifKeyIsEnter
+} from "../../services";
 import {Assignments} from "../elements/Assignments";
 
 export const MyAssignments = () => {
     const dispatch = useAppDispatch();
-    useEffect(() => {dispatch(loadMyAssignments())}, [dispatch]);
     useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
 
-    const assignments = useAppSelector((state: AppState) => state?.assignments || null);
+    // TODO don't refetch "my assignments" every component mount, an instead invalidate cache when actions occur
+    //  that require refetching.
+    const { data: assignments } = isaacApi.endpoints.getMyAssignments.useQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
     const myAssignments = filterAssignmentsByStatus(assignments);
 
     const [activeTab, setActiveTab] = useState(0);
@@ -29,10 +32,10 @@ export const MyAssignments = () => {
         event.preventDefault();
     } || undefined;
 
-    const tabs: [React.ReactElement, AssignmentDTO[]][] = [
-        [<span key={1}><span className="d-none d-md-inline">Assignments </span>To&nbsp;Do</span>, myAssignments.inProgressRecent],
-        [<span key={2}>Older<span className="d-none d-md-inline"> Assignments</span></span>, myAssignments.inProgressOld],
-        [<span key={3}><span className="d-none d-md-inline">Completed Assignments</span><span className="d-inline d-md-none">Done</span></span>, myAssignments.completed]
+    const tabs: [React.ReactElement, AssignmentDTO[], string][] = [
+        [<span key={1}><span className="d-none d-md-inline">Assignments </span>To&nbsp;Do</span>, myAssignments.inProgressRecent, "Assignments To Do"],
+        [<span key={2}>Older<span className="d-none d-md-inline"> Assignments</span></span>, myAssignments.inProgressOld, "Older Assignments"],
+        [<span key={3}><span className="d-none d-md-inline">Completed Assignments</span><span className="d-inline d-md-none">Done</span></span>, myAssignments.completed, "Completed Assignments"]
     ];
 
     const pageHelp = <span>
@@ -46,13 +49,14 @@ export const MyAssignments = () => {
             <CardBody className="pt-0">
                 <ShowLoading until={assignments}>
                     <Nav className="mt-4 mb-3" tabs>
-                        {tabs.map(([tabTitle, tabItems], mapIndex) => {
+                        {tabs.map(([tabTitle, tabItems, tabAccessibleName], mapIndex) => {
                             const tabIndex = mapIndex;
                             const classes = activeTab === tabIndex ? "active" : "";
                             return <NavItem key={tabIndex} className="px-3">
                                 <NavLink
                                     className={classes} tabIndex={0} onClick={() => setActiveTab(tabIndex)}
                                     onKeyDown={ifKeyIsEnter(() => setActiveTab(tabIndex))}
+                                    title={`${tabAccessibleName} tab`}
                                 >
                                     {tabTitle} ({tabItems.length || 0})
                                 </NavLink>

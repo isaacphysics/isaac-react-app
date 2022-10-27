@@ -1,29 +1,33 @@
 import React, {useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {Link, RouteComponentProps, withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
-import {ShowLoading} from "../../handlers/ShowLoading";
-import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {selectors} from "../../../state/selectors";
-import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {
     loadQuizAssignments,
     loadQuizzes,
     markQuizAsCancelled,
-    showQuizSettingModal
-} from "../../../state/actions/quizzes";
+    selectors,
+    showQuizSettingModal,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
+import {Link, RouteComponentProps, withRouter} from "react-router-dom";
+import * as RS from "reactstrap";
+import {ShowLoading} from "../../handlers/ShowLoading";
+import {QuizAssignmentDTO, QuizSummaryDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
-import {loadGroups} from "../../../state/actions";
-import {MANAGE_QUIZ_TAB, NOT_FOUND} from "../../../services/constants";
-import {siteSpecific} from "../../../services/siteConstants";
+import {
+    below,
+    isDefined,
+    isEventLeaderOrStaff,
+    MANAGE_QUIZ_TAB,
+    NOT_FOUND,
+    siteSpecific,
+    useDeviceSize,
+    useQueryParams
+} from "../../../services";
 import {Tabs} from "../../elements/Tabs";
-import {below, useDeviceSize} from "../../../services/device";
-import {isDefined} from "../../../services/miscUtils";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
-import {isEventLeaderOrStaff} from "../../../services/user";
-import { useQueryParams } from "../../../services/reactRouterExtension";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -51,6 +55,8 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
             dispatch(markQuizAsCancelled(assignment.id as number));
         }
     };
+    // TODO RTKQ quiz refactor use isPending from use mutation hook to re-implement this (markQuizAsCancelled would be
+    //  the mutation trigger)
     const isCancelling = 'cancelling' in assignment && (assignment as {cancelling: boolean}).cancelling;
     return <div className="p-2">
         <RS.Card className="card-neat">
@@ -101,7 +107,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }, [hashAnchor]);
 
     useEffect(() => {
-        dispatch(loadGroups(false));
         dispatch(loadQuizzes(startIndex));
         dispatch(loadQuizAssignments());
     }, [dispatch, startIndex]);

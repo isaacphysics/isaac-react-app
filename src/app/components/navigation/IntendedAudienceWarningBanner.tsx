@@ -1,9 +1,8 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {ContentBaseDTO} from "../../../IsaacApiTypes";
-import {isIntendedAudience, notRelevantMessage, useUserContext} from "../../services/userContext";
-import {useAppSelector} from "../../state/store";
-import {selectors} from "../../state/selectors";
+import {isIntendedAudience, notRelevantMessage, useUserContext} from "../../services";
+import {selectors, useAppSelector} from "../../state";
 import {RenderNothing} from "../elements/RenderNothing";
 
 export function IntendedAudienceWarningBanner({doc}: {doc: ContentBaseDTO}) {

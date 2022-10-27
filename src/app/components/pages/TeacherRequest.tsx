@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../state/store";
+import {
+    AppState,
+    isaacApi,
+    requestEmailVerification,
+    selectors,
+    submitMessage,
+    useAppDispatch,
+    useAppSelector
+} from "../../state";
 import {
     Alert,
     Button,
@@ -14,16 +22,18 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {AppState} from "../../state/reducers";
-import {fetchFragment, requestEmailVerification, submitMessage} from "../../state/actions";
-import {validateEmail} from "../../services/validation";
+import {
+    api,
+    isPhy,
+    isTeacher,
+    schoolNameWithPostcode,
+    SITE_SUBJECT_TITLE,
+    validateEmail,
+    WEBMASTER_EMAIL
+} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {api} from "../../services/api";
 import {Link} from "react-router-dom";
-import {schoolNameWithPostcode, isTeacher} from "../../services/user";
 import {IsaacContent} from "../content/IsaacContent";
-import {isPhy, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services/siteConstants";
-import {selectors} from "../../state/selectors";
 
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
@@ -32,19 +42,19 @@ export const TeacherRequest = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
-    const warningFragment = useAppSelector((state: AppState) => state && state.fragments && state.fragments[warningFragmentId] || null);
+    const {data: warningFragment} = isaacApi.endpoints.getPageFragment.useQuery(warningFragmentId);
 
-    const [firstName, setFirstName] = useState(user && user.loggedIn && user.givenName || "");
-    const [lastName, setLastName] = useState(user && user.loggedIn && user.familyName || "");
-    const [emailAddress, setEmailAddress] = useState(user && user.loggedIn && user.email || "");
+    const [firstName, setFirstName] = useState(user?.loggedIn && user.givenName || "");
+    const [lastName, setLastName] = useState(user?.loggedIn && user.familyName || "");
+    const [emailAddress, setEmailAddress] = useState(user?.loggedIn && user.email || "");
     const [school, setSchool] = useState<string>();
     const [otherInformation, setOtherInformation] = useState("");
     const [verificationDetails, setVerificationDetails] = useState<string>();
     const [messageSent, setMessageSent] = useState(false);
-    const [emailVerified, setEmailVerified] = useState(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
+    const [emailVerified, setEmailVerified] = useState(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
     const [allowedDomain, setAllowedDomain] = useState<boolean>();
 
-    const urn = user && user.loggedIn && user.schoolId || "";
+    const urn = user?.loggedIn && user.schoolId || "";
     const subject = "Teacher Account Request";
     const message = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
@@ -58,11 +68,11 @@ export const TeacherRequest = () => {
     }
 
     function fetchSchool(urn: string) {
-        if (urn != "") {
+        if (urn !== "") {
             api.schools.getByUrn(urn).then(({data}) => {
                 setSchool(schoolNameWithPostcode(data[0]));
             });
-        } else if (user && user.loggedIn && user.schoolOther) {
+        } else if (user?.loggedIn && user.schoolOther) {
             setSchool(user.schoolOther);
         } else {
             setSchool(undefined);
@@ -70,14 +80,10 @@ export const TeacherRequest = () => {
     }
 
     useEffect(() => {
-        dispatch(fetchFragment(warningFragmentId));
-    }, [dispatch]);
-
-    useEffect(() => {
-        setFirstName(user && user.loggedIn && user.givenName || "");
-        setLastName(user && user.loggedIn && user.familyName || "");
-        setEmailAddress(user && user.loggedIn && user.email || "");
-        setEmailVerified(user && user.loggedIn && user.emailVerificationStatus == "VERIFIED");
+        setFirstName(user?.loggedIn && user.givenName || "");
+        setLastName(user?.loggedIn && user.familyName || "");
+        setEmailAddress(user?.loggedIn && user.email || "");
+        setEmailVerified(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
         fetchSchool(urn);
         isEmailDomainAllowed(emailAddress);
     }, [user]);
@@ -94,7 +100,7 @@ export const TeacherRequest = () => {
         <div className="pt-4">
             <Row>
                 <Col size={9}>
-                    {warningFragment && warningFragment != 404 && <Alert color="warning">
+                    {warningFragment && <Alert color="warning">
                         <IsaacContent doc={warningFragment} />
                     </Alert>}
                     <Card>
@@ -143,7 +149,7 @@ export const TeacherRequest = () => {
                                             <FormGroup>
                                                 <Label htmlFor="first-name-input" className="form-required">First name</Label>
                                                 <Input disabled id="first-name-input" type="text" name="first-name"
-                                                    defaultValue={user && user.loggedIn ? user.givenName : ""}
+                                                    defaultValue={user?.loggedIn ? user.givenName : ""}
                                                     onChange={e => setFirstName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
@@ -151,7 +157,7 @@ export const TeacherRequest = () => {
                                             <FormGroup>
                                                 <Label htmlFor="last-name-input" className="form-required">Last name</Label>
                                                 <Input disabled id="last-name-input" type="text" name="last-name"
-                                                    defaultValue={user && user.loggedIn ? user.familyName : ""}
+                                                    defaultValue={user?.loggedIn ? user.familyName : ""}
                                                     onChange={e => setLastName(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
@@ -162,7 +168,7 @@ export const TeacherRequest = () => {
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified || allowedDomain == false} id="email-input"
                                                     type="email" name="email"
-                                                    defaultValue={user && user.loggedIn ? user.email : ""}
+                                                    defaultValue={user?.loggedIn ? user.email : ""}
                                                     onChange={e => setEmailAddress(e.target.value)}
                                                     aria-describedby="emailValidationMessage" required/>
                                             </FormGroup>
@@ -224,7 +230,7 @@ export const TeacherRequest = () => {
                                 </CardBody>
                                 <CardFooter>
                                     <div>
-                                        <Alert color="danger" isOpen={!!errorMessage}>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></Alert>
+                                        <Alert color="danger" isOpen={!!errorMessage}><>{errorMessage} You can contact us at <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></></Alert>
                                     </div>
                                     <Row>
                                         <Col size={12} md={6}>

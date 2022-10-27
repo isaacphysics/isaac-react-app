@@ -1,11 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
-import {useIFrameMessages} from "../../services/miscUtils";
-import { v4 as uuid_v4 } from "uuid";
-import {useAppDispatch, useAppSelector} from "../../state/store";
-import {selectors} from "../../state/selectors";
-import {logAction} from "../../state/actions";
-import {CODE_EDITOR_BASE_URL} from "../../services/constants";
+import {CODE_EDITOR_BASE_URL, useIFrameMessages} from "../../services";
+import {v4 as uuid_v4} from "uuid";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 

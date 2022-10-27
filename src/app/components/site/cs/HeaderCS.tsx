@@ -1,17 +1,16 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../state/store";
+import {selectors, useAppSelector} from "../../../state";
 import {Col, Container, Row} from "reactstrap";
 import {MainSearch} from "../../elements/MainSearch";
 import {NavigationBarCS} from "./NavigationBarCS";
-import {selectors} from "../../../state/selectors";
-import {useDeviceSize} from "../../../services/device";
+import {useDeviceSize} from "../../../services";
 
 export const HeaderCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const mainContentId = useAppSelector(selectors.mainContentId.orDefault);
     const deviceSize = useDeviceSize();
-    return <header className="light">
+    return <header className="light" data-testid={"header"}>
         <Container className="container-fluid px-0">
             <Row>
                 <Col>

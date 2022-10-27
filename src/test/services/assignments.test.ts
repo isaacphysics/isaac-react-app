@@ -2,7 +2,7 @@ import {
     filterAssignmentsByProperties,
     getDistinctAssignmentGroups,
     getDistinctAssignmentSetters
-} from "../../app/services/assignments";
+} from "../../app/services";
 import {AssignmentDTO, GameboardDTO, UserSummaryDTO} from "../../IsaacApiTypes";
 
 

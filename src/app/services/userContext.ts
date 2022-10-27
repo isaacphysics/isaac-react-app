@@ -1,33 +1,34 @@
 import {
     BOOLEAN_NOTATION,
+    comparatorFromOrderedValues,
     EXAM_BOARD,
     EXAM_BOARD_NULL_OPTIONS,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
     examBoardBooleanNotationMap,
     examBoardLabelMap,
+    history,
+    isCS,
+    isDefined,
+    isLoggedIn,
+    isPhy,
     PROGRAMMING_LANGUAGE,
+    roleRequirements,
+    siteSpecific,
     STAGE,
     STAGE_NULL_OPTIONS,
     stageLabelMap,
     STAGES_CS,
     STAGES_PHY,
     stagesOrdered,
-} from "./constants";
+    useQueryParams,
+} from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {useAppSelector} from "../state/store";
-import {AppState} from "../state/reducers";
-import {isCS, isPhy, siteSpecific} from "./siteConstants";
-import {PotentialUser, ViewingContext} from "../../IsaacAppTypes";
-import {isLoggedIn, roleRequirements} from "./user";
-import {isDefined} from "./miscUtils";
-import {history} from "./history";
+import {AppState, useAppSelector} from "../state";
+import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
-import {useEffect} from "react";
-import {useQueryParams} from "./reactRouterExtension";
-import {comparatorFromOrderedValues} from "./gameboards";
-import {selectors} from "../state/selectors";
+import {useContext, useEffect} from "react";
 
 export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -100,7 +101,7 @@ export function useUserContext(): UseUserContextReturnType {
     }
 
     // Gameboard views overrides all context options
-    const currentGameboard = useAppSelector(selectors.board.currentGameboard);
+    const currentGameboard = useContext(GameboardContext);
     const {questionId} = useParams<{ questionId: string}>();
     if (questionId && queryParams.board && currentGameboard && currentGameboard.id === queryParams.board) {
         const gameboardItem = currentGameboard.contents?.filter(c => c.id === questionId)[0];
@@ -141,14 +142,20 @@ export function useUserContext(): UseUserContextReturnType {
     useEffect(() => {
         const actualParams = queryString.parse(window.location.search);
         if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
-            history.replace({
-                ...existingLocation,
-                search: queryString.stringify({
-                    ...queryParams,
-                    stage,
-                    examBoard: isCS ? examBoard : undefined,
-                }, {encode: false})
-            });
+            try {
+                history.replace({
+                    ...existingLocation,
+                    search: queryString.stringify({
+                        ...queryParams,
+                        stage,
+                        examBoard: isCS ? examBoard : undefined,
+                    }, {encode: false})
+                });
+            } catch (e) {
+                // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
+                // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
+                // trying to render, causing a loop and a spike in client-side errors.
+            }
         }
     }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
 
@@ -208,6 +215,8 @@ export function getFilteredExamBoardOptions(filter?: ExamBoardFilterOptions) {
 }
 
 const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
+    {label: "Year 7&8", value: STAGE.YEAR_7_AND_8},
+    {label: "Year 9", value: STAGE.YEAR_9},
     {label: "GCSE", value: STAGE.GCSE},
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
@@ -272,6 +281,15 @@ function produceAudienceViewingCombinations(audience: AudienceContext): ViewingC
     return audienceOptions;
 }
 
+// Find all combinations of viewing contexts from an audience of the form:
+//   {stage: ["a_level", "gcse"], examBoard: ["aqa", "ocr"]}
+// so that we have a list of the form: [
+//   {stage: "a_level", examBoard: "aqa"},
+//   {stage: "a_level", examBoard: "ocr"},
+//   {stage: "gcse", examBoard: "aqa"},
+//   {stage: "gcse", examBoard: "ocr"},
+// ].
+// Then, filter possible viewing context by creation context if any is provided.
 export function determineAudienceViews(audience?: AudienceContext[], creationContext?: AudienceContext): ViewingContext[] {
     if (audience === undefined) {return [];}
 
@@ -322,6 +340,12 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
         }
     });
     return filteredViews;
+}
+
+export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['audience'], partialViewingContext: Partial<ViewingContext>) {
+    return audience?.filter((audienceRecord) => {
+        return Object.entries(partialViewingContext).every(([key, value]) => audienceRecord[key as keyof AudienceContext]?.[0] === value);
+    }) ?? [];
 }
 
 export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {

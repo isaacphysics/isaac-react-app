@@ -1,11 +1,10 @@
 import React from "react";
-import {useAppSelector} from "../../state/store";
+import {selectors, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {Link} from "react-router-dom";
 import {LinkCard} from "../elements/cards/LinkCard";
-import {selectors} from "../../state/selectors";
 
 export const Students = () => {
     const user = useAppSelector(selectors.user.orNull);

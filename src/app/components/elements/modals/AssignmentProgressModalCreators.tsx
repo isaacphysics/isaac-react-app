@@ -1,12 +1,9 @@
 import React from "react";
-import {
-    closeActiveModal,
-} from "../../../state/actions";
-import {store} from "../../../state/store";
+import {closeActiveModal, store} from "../../../state";
 import * as RS from "reactstrap";
 import {PageFragment} from "../PageFragment";
 
-// N.B. This modal must not be referenced in actions.tsx to avoid circular dependencies
+// N.B. This modal must not be referenced in index.tsx to avoid circular dependencies
 
 export const downloadLinkModal = (link: string) => {
     return {

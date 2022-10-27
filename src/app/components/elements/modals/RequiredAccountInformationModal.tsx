@@ -1,25 +1,26 @@
-import {closeActiveModal, updateCurrentUser} from "../../../state/actions";
+import {AppState, closeActiveModal, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../../state";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";
-import {useAppDispatch, useAppSelector} from "../../../state/store";
-import {AppState} from "../../../state/reducers";
 import {
     allRequiredInformationIsPresent,
+    isCS,
+    isDefined,
+    isLoggedIn,
+    isMobile,
+    isPhy,
+    isStudent,
+    SITE_SUBJECT_TITLE,
+    TEACHER_REQUEST_ROUTE,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
     validateUserSchool
-} from "../../../services/validation";
-import {isMobile} from "../../../services/device";
-import {isLoggedIn, isStudent} from "../../../services/user";
+} from "../../../services";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
-import {isPhy, isCS, SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE} from "../../../services/siteConstants";
-import {selectors} from "../../../state/selectors";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
-import {isDefined} from "../../../services/miscUtils";
 import {Link} from "react-router-dom";
 
 const RequiredAccountInfoBody = () => {

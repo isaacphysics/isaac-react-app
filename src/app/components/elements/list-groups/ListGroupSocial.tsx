@@ -1,8 +1,7 @@
 import React from "react";
 import {ListGroup, ListGroupItem} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services/siteConstants";
+import {SITE_SUBJECT_TITLE, SOCIAL_LINKS} from "../../../services";
 import {ExternalLink} from "../ExternalLink";
-import {SOCIAL_LINKS} from "../../../services/constants";
 
 export const ListGroupSocial = () => {
     return (

@@ -2,13 +2,11 @@ import {GlossaryTermDTO} from "../../../../../IsaacApiTypes";
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import {IsaacGlossaryTerm} from "../../../content/IsaacGlossaryTerm";
-import {useAppSelector} from "../../../../state/store";
-import {AppState} from "../../../../state/reducers";
+import {useAppSelector, AppState, selectors} from "../../../../state";
 import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
 import {PortalInHtmlHook} from "./utils";
 import {Markup} from "../index";
-import {selectors} from "../../../../state/selectors";
 
 const GlossaryTerm = ({term, id, rootElement}: {term: GlossaryTermDTO, id: string, rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#${id}`);
@@ -49,7 +47,7 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     if (termElements.length === 0) return [html, () => []];
 
     for (let i = 0; i < termElements.length; i++) {
-        const termId = termElements[i].id.slice(14);
+        const termId = termElements[i].id.slice(14); // Remove "glossary-term-" prefix
         const term = getTermFromCandidateTerms(glossaryTerms.filter(term => term.id?.replace(/\|/g, '-') === termId));
 
         if (term) {
@@ -74,7 +72,9 @@ export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
             }
         } else {
             console.error('No valid term for "' + termId + '" found among the filtered terms: ', glossaryTerms);
-            termElements[i].innerHTML = segueEnvironment === "PROD" ? "" : `[Invalid glossary term ID: ${termId}]`;
+            termElements[i].innerHTML = segueEnvironment === "PROD"
+                ? (termElements[i].dataset.text ?? "")
+                : `[Invalid glossary term ID: ${termId}]`;
         }
     }
     return [

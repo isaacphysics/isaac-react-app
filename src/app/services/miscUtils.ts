@@ -1,10 +1,10 @@
 import React, {RefObject, useCallback, useEffect, useRef, useState} from "react";
 import {NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {NOT_FOUND} from "./constants";
+import {NOT_FOUND} from "./";
 
 // undefined|null checker and type guard all-in-wonder.
 // Why is this not in Typescript?
-export function isDefined<T>(value: T | undefined | null): value is T {
+export function isDefined<T>(value: T | undefined | null): value is NonNullable<T> {
     return <T>value !== undefined && <T>value !== null;
 }
 
@@ -42,7 +42,7 @@ export function useIFrameMessages(uid: string, iFrameRef?: RefObject<HTMLIFrameE
         }
     }, [targetDomainSource, targetDomainOrigin, uidRef]);
 
-    const handleReceive = useCallback(e => {
+    const handleReceive = useCallback((e: MessageEvent) => {
         // Make sure we ignore messages from this domain
         if (e.origin === window.origin) return;
 
@@ -54,7 +54,7 @@ export function useIFrameMessages(uid: string, iFrameRef?: RefObject<HTMLIFrameE
 
         if (e.data.hasOwnProperty('type')) {
             if (!targetDomainSource) {
-                setTargetDomainSource(e.source);
+                setTargetDomainSource(e.source as MessageEventSource);
                 setTargetDomainOrigin(e.origin);
             }
             setReceivedData(e.data);
@@ -75,7 +75,7 @@ export function useIFrameMessages(uid: string, iFrameRef?: RefObject<HTMLIFrameE
 }
 
 // Type guard with checks for "defined"-ness and whether the resource was found or not
-export const isFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is T => {
+export const isFound = <T>(resource: undefined | null | NOT_FOUND_TYPE | T): resource is NonNullable<T> => {
     return isDefined(resource) && resource !== NOT_FOUND;
 };
 

@@ -1,24 +1,31 @@
 import React, {useEffect} from "react";
 import {Link, useHistory, useLocation} from "react-router-dom";
 import {Badge, Col, Container, Row} from "reactstrap";
-import "../../services/tagsPhy";
-import tags from "../../services/tags";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
-import {EXAM_BOARD, EXAM_BOARDS_CS_A_LEVEL, EXAM_BOARDS_CS_GCSE, STAGE, STAGE_NULL_OPTIONS, TAG_ID} from "../../services/constants";
+import {
+    EXAM_BOARD,
+    EXAM_BOARDS_CS_A_LEVEL,
+    EXAM_BOARDS_CS_GCSE,
+    isCS,
+    KEY,
+    persistence,
+    STAGE,
+    STAGE_NULL_OPTIONS,
+    TAG_ID,
+    tags,
+    useQueryParams,
+    useUserContext
+} from "../../services";
 import {PageFragment} from "../elements/PageFragment";
 import {Tabs} from "../elements/Tabs";
 import {Redirect} from "react-router";
-import * as persistence from "../../services/localStorage";
-import {useQueryParams} from "../../services/reactRouterExtension";
-import {useUserContext} from "../../services/userContext";
 import {RenderNothing} from "../elements/RenderNothing";
-import {isCS} from "../../services/siteConstants";
 import {MetaDescription} from "../elements/MetaDescription";
 
 export function AllTopicsWithoutAStage() {
     const history = useHistory();
-    const mostRecentAllTopicsPath = persistence.load(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH);
+    const mostRecentAllTopicsPath = persistence.load(KEY.MOST_RECENT_ALL_TOPICS_PATH);
     const queryParams = useQueryParams(true);
     const userContext = useUserContext();
 
@@ -54,7 +61,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
 
     useEffect(function recordMostRecentAllTopicsStage() {
         // We use local storage to try to do the right thing when user view topics on multiple tabs
-        persistence.save(persistence.KEY.MOST_RECENT_ALL_TOPICS_PATH, stage);
+        persistence.save(KEY.MOST_RECENT_ALL_TOPICS_PATH, stage);
     }, [stage]);
 
     // This assumes that the first tab (with index 1) is 'All', and that the rest correspond with stageExamBoards

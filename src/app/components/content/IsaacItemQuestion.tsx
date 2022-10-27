@@ -2,7 +2,7 @@ import React, {ChangeEvent} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacItemQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {CustomInput, Label} from "reactstrap";
-import {useCurrentQuestionAttempt} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
 const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacItemQuestionDTO>) => {
@@ -12,18 +12,18 @@ const IsaacItemQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Isaac
     function updateItems(changeEvent: ChangeEvent<HTMLInputElement>, item: ItemDTO) {
         const selected = changeEvent.target.checked;
         const currentItems = currentAttempt && currentAttempt.items || [];
-        const itemChoice: ItemChoiceDTO = {type: "itemChoice", items: currentItems};
-
-        if (selected) {
-            if (!itemChoice.items) {
-                itemChoice.items = [item];
-            } else if (itemChoice.items.filter(i => i.id == item.id).length == 0) {
-                itemChoice.items.push(item);
+        const makeNewItems = () => {
+            if (selected) {
+                if (!currentItems) {
+                    return [item];
+                } else if (currentItems.filter(i => i.id === item.id).length === 0) {
+                    return [...currentItems, item];
+                }
+            } else if (currentItems) {
+                return currentItems.filter(i => i.id !== item.id);
             }
-        } else if (itemChoice.items) {
-            itemChoice.items = itemChoice.items.filter(i => i.id !== item.id);
-        }
-        dispatchSetCurrentAttempt(itemChoice);
+        };
+        dispatchSetCurrentAttempt({type: "itemChoice", items: makeNewItems()});
     }
 
     return (

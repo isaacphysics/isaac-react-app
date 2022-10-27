@@ -87,13 +87,17 @@ button.btn.btn-link.login-b,
   display: none;
 
   @include respond-above(sm) {
-    display: inline-block;
+    display: block;
   }
 
   a {
+    color: $black;
+    font-family: $primary-font;
     font-size: 0.875rem;
+    font-weight: 400;
     text-decoration: none;
     text-transform: uppercase;
+    display: block;
 
     &:hover {
       @include respond-above(sm) {
@@ -233,8 +237,7 @@ button.btn.btn-link.login-b,
   }
 }
 
-.print-icon {
-  background-image: url(/assets/print.svg);
+.hex-icon {
   width: 50px;
   height: 58px;
   background-repeat: no-repeat;
@@ -245,10 +248,20 @@ button.btn.btn-link.login-b,
   margin-left: 5px;
   background-color: transparent;
 }
+
+.print-icon {
+  @extend .hex-icon;
+  background-image: url(/assets/print.svg);
+}
 .not-mobile {
   @include respond-below(sm) {
     display: none;
   }
+}
+
+.report-icon {
+  @extend .hex-icon;
+  background-image: url(/assets/flag.svg);
 }
 
 .pointer-cursor {

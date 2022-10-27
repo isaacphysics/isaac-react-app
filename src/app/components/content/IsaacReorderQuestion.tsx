@@ -2,19 +2,15 @@ import React, {useEffect, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacReorderQuestionDTO, ItemChoiceDTO, ItemDTO} from "../../../IsaacApiTypes";
 import {Col, Row} from "reactstrap";
-import {
-    DragDropContext,
-    Draggable,
-    Droppable,
-    DropResult
-} from "react-beautiful-dnd";
+import {DragDropContext, Draggable, Droppable, DropResult} from "react-beautiful-dnd";
 import _differenceBy from "lodash/differenceBy";
-import {useCurrentQuestionAttempt} from "../../services/questions";
+import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import classNames from "classnames";
 import {Markup} from "../elements/markup";
+import {Immutable} from "immer";
 
-const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: ItemDTO; index: number; inAvailableItems?: boolean; readonly?: boolean}) => {
+const ReorderDraggableItem = ({item, index, inAvailableItems, readonly}: {item: Immutable<ItemDTO>; index: number; inAvailableItems?: boolean; readonly?: boolean}) => {
     return <Draggable
         key={item.id}
         draggableId={`${item.id || index}|reorder-item-choice`}
@@ -42,9 +38,9 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
 
     const {currentAttempt, dispatchSetCurrentAttempt} = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
 
-    const [availableItems, setAvailableItems] = useState<ItemDTO[]>([...doc.items ?? []]);
+    const [availableItems, setAvailableItems] = useState<Immutable<ItemDTO>[]>([...doc.items ?? []]);
 
-    const moveItem = (src: ItemDTO[] | undefined, fromIndex: number, dst: ItemDTO[] | undefined, toIndex: number) => {
+    const moveItem = (src: Immutable<ItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ItemDTO>[] | undefined, toIndex: number) => {
         if (!src || !dst) return;
         const srcItem = src.splice(fromIndex, 1)[0];
         dst.splice(toIndex, 0, srcItem);
@@ -84,7 +80,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
         }
     }
 
-    const onCurrentAttemptUpdate = (newCurrentAttempt?: ItemChoiceDTO, newAvailableItems?: ItemDTO[]) => {
+    const onCurrentAttemptUpdate = (newCurrentAttempt?: Immutable<ItemChoiceDTO>, newAvailableItems?: Immutable<ItemDTO>[]) => {
         if (!newCurrentAttempt) {
             const defaultAttempt: ItemChoiceDTO = {
                 type: "itemChoice",
@@ -98,7 +94,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             // and the current attempt is assigned afterwards, so we need to carve it out of the available items.
             // This also takes care of updating the two lists when a user moves items from one to the other.
             let fixedAvailableItems: ItemDTO[] = [];
-            const currentAttemptItems: ItemDTO[] = newCurrentAttempt.items || [];
+            const currentAttemptItems = newCurrentAttempt.items || [];
             if (doc.items) {
                 fixedAvailableItems = doc.items.filter(item => {
                     let found = false;
@@ -124,7 +120,7 @@ const IsaacReorderQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
 
     useEffect(() => {
         onCurrentAttemptUpdate(currentAttempt, availableItems);
-    }, [currentAttempt, availableItems])
+    }, [currentAttempt, availableItems]);
 
     return <div className="parsons-question">
         <div className="question-content">

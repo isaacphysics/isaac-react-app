@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
-import {siteSpecific} from "../../services/siteConstants";
+import {siteSpecific} from "../../services";
 
 export interface ConceptGameboardButtonProps {
     className?: string;
