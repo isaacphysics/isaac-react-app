@@ -453,6 +453,7 @@ export interface ParsonsChoiceDTO extends ItemChoiceDTO {
 }
 
 export interface ItemDTO extends ContentDTO {
+    altText?: string;
 }
 
 export interface ParsonsItemDTO extends ItemDTO {

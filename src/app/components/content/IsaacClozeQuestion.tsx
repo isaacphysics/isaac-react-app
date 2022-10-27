@@ -380,15 +380,15 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         restoreFocus: false,
         announcements: {
             onDragStart({active}) {
-                return `Picked up draggable item ${active.data.current?.value}.`;
+                return `Picked up draggable item ${active.data.current?.text}.`;
             },
             onDragOver({active, over}) {
-                if (!over) return usingKeyboard ? undefined : `Draggable item ${active.data.current?.value} is no longer over a droppable area.`;
+                if (!over) return usingKeyboard ? undefined : `Draggable item ${active.data.current?.text} is no longer over a droppable area.`;
 
-                if (active.id === over.id) return `Draggable item ${active.data.current?.value} is over it's previous position.`;
+                if (active.id === over.id) return `Draggable item ${active.data.current?.text} is over it's previous position.`;
 
                 if (!isDropZone(over)) {
-                    return `Swap draggable item ${active.data.current?.value} with item ${over.data.current?.value}.`;
+                    return `Swap draggable item ${active.data.current?.text} with item ${over.data.current?.text}.`;
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
                     return `Draggable item is over the items section`;
                 } else {
@@ -397,21 +397,21 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
                 }
             },
             onDragEnd({active, over}) {
-                if (!over) return `Draggable item ${active.data.current?.value} was dropped.`;
+                if (!over) return `Draggable item ${active.data.current?.text} was dropped.`;
 
-                if (active.id === over.id) return `Draggable item ${active.data.current?.value} was returned to it's previous position.`;
+                if (active.id === over.id) return `Draggable item ${active.data.current?.text} was returned to it's previous position.`;
 
                 if (!isDropZone(over)) {
-                    return `Draggable item ${active.data.current?.value} was swapped with ${over.data.current?.value}.`;
+                    return `Draggable item ${active.data.current?.text} was swapped with ${over.data.current?.text}.`;
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
                     return `Draggable item was dropped into the items section`;
                 } else {
                     const dropZoneIndex = (over.id as string).replace(CLOZE_DROP_ZONE_ID_PREFIX, "");
-                    return `Draggable item ${active.data.current?.value} was dropped into drop zone number ${dropZoneIndex}`;
+                    return `Draggable item ${active.data.current?.text} was dropped into drop zone number ${dropZoneIndex}`;
                 }
             },
             onDragCancel({active}) {
-                return `Dragging was cancelled. Draggable item ${active.data.current?.value} was returned to it's previous position.`;
+                return `Dragging was cancelled. Draggable item ${active.data.current?.text} was returned to it's previous position.`;
             }
         },
         screenReaderInstructions: { draggable: "" }
