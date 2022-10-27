@@ -845,13 +845,19 @@ export enum TAG_ID {
 
     // Cell biology
     cellsViruses = "cells_viruses",
+    membraneTransport = "membrane_transport",
     mitosis = "mitosis",
+    meiosis = "meiosis",
+    reproduction = "reproduction",
+    tissues = "tissues",
     // Biochemistry
     proteins = "proteins",
+    carbohydrates = "carbohydrates",
+    lipids = "lipids",
     // Genetics
     dnaReplication = "dna_replication",
     transcription = "transcription",
-    translation = "translation"
+    translation = "translation",
     // Physiology
 
     // Ecology
