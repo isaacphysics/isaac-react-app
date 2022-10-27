@@ -75,8 +75,8 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         </CardHeader>
         <CardBody>
             <div>Assigned to: <strong>{assignment.groupName}</strong></div>
-            {viewBy === "startDate" && assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
-            {viewBy === "dueDate" && assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
+            {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
+            {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
             {assignment.gameboard && <div>By: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
             {assignment.listingDate <= TODAY() && <div>
                 <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
@@ -131,7 +131,7 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
 
 const monthHexagon = calculateHexagonProportions(12, 1);
 const shouldOpenMonth = (month: number) => {
-    return (new Date()).getUTCMonth() === month;
+    return (new Date()).getMonth() === month;
 }
 const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, datesAndAssignments: [number, ValidAssignmentWithListingDate[]][]}) => {
     const [open, setOpen] = useState<boolean>(shouldOpenMonth(month));
@@ -227,7 +227,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         setDueDate, setScheduledStartDate, setAssignmentNotes]);
 
     const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getUTCMonth() + 1;
+    const currentMonth = (new Date()).getMonth() + 1;
 
     const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() >= dueDate.valueOf() : false;
 
@@ -240,7 +240,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         return selectedGroups.filter(g => g.value && boardIdsByGroupId[g.value]?.includes(selectedGameboard[0]?.value)).map(g => g.label);
     }, [selectedGroups, boardIdsByGroupId, selectedGameboard]);
 
-    const gameboardToPreview = selectedGameboard && boardsById[selectedGameboard[0].value];
+    const gameboardToPreview = selectedGameboard?.[0]?.value ? boardsById[selectedGameboard[0].value] : undefined;
 
     return <Modal isOpen={showAssignmentModal} toggle={toggleAssignModal}>
         <ModalHeader close={
@@ -378,17 +378,17 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         if (!assignmentsSetByMe) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
             assignmentsSetByMe
-                .map((a) => ({...a, listingDate: new Date((viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0)).valueOf())} as ValidAssignmentWithListingDate))
+                .map((a) => ({...a, listingDate: new Date(viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0).valueOf())} as ValidAssignmentWithListingDate))
                 // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
                 .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (a.listingDate.valueOf() >= earliestShowDate.valueOf()) && (viewBy === "startDate" || isDefined(a.dueDate)))
             , a => a.listingDate.valueOf()
         );
         function parseNumericKey<T>([k, v]: [string, T]): [number, T] { return [parseInt(k), v]; }
         return Object.entries(mapValues(
-            groupBy(sortedAssignments, a => a.listingDate.getUTCFullYear()),
+            groupBy(sortedAssignments, a => a.listingDate.getFullYear()),
             as => Object.entries(mapValues(
-                groupBy(as, a => a.listingDate.getUTCMonth()),
-                _as => Object.entries(groupBy(_as, a => a.listingDate.getUTCDate())).map(parseNumericKey)
+                groupBy(as, a => a.listingDate.getMonth()),
+                _as => Object.entries(groupBy(_as, a => a.listingDate.getDate())).map(parseNumericKey)
             )).map(parseNumericKey)
         )).map(parseNumericKey);
     }, [assignmentsSetByMe, groupFilter, earliestShowDate, viewBy]);
