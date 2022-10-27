@@ -11,7 +11,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physics, title: "Physics"},
         {id: TAG_ID.maths, title: "Maths"},
         {id: TAG_ID.chemistry, title: "Chemistry"},
-        {id: TAG_ID.biology, title: "Biology", hidden: true, /* comingSoonDate: "2023" */},
+        {id: TAG_ID.biology, title: "Biology"},
 
         // --- Fields ---
 
@@ -146,7 +146,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
 
         // --- Biology Topics ---
-        
+
         // Cell biology
         {id: TAG_ID.cellsViruses, title: "Cells & Viruses", parent: TAG_ID.cellBiology},
         {id: TAG_ID.membraneTransport, title: "Membrane Transport", parent: TAG_ID.cellBiology, comingSoonDate: "soon"},
