@@ -3,6 +3,7 @@ import {
     closeActiveModal,
     isaacApi,
     logAction,
+    mutationSucceeded,
     openActiveModal,
     useAppDispatch,
 } from "../../state";
@@ -109,10 +110,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 params.examBoards = userContext.examBoard;
             }
             generateTemporaryGameboard(params).then((gameboardResponse) => {
-                if (!('error' in gameboardResponse)) {
+                if (mutationSucceeded(gameboardResponse)) {
                     cloneGameboard(gameboardResponse.data);
                 } else {
-                    console.log("Failed to create gameboard from concepts.");
+                    console.error("Failed to create gameboard from concepts.");
                 }
             });
         }
@@ -122,7 +123,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
             dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
         });
-    });
+    }, []);
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
