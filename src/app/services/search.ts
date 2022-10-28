@@ -3,6 +3,7 @@ import {DOCUMENT_TYPE, isStaff, TAG_ID} from "./";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
+import {Immutable} from "immer";
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     const previousQuery = queryString.parse(history.location.search);
@@ -36,7 +37,7 @@ export const pushConceptsToHistory = function(history: History, searchText: stri
     });
 };
 
-export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: PotentialUser | null) {
+export const searchResultIsPublic = function(content: ContentSummaryDTO, user?: Immutable<PotentialUser> | null) {
     if (content.deprecated) {
         return false;
     } else if (isStaff(user)) {

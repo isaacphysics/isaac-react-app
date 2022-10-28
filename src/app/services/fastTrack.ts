@@ -6,6 +6,7 @@ import {AppState, selectors, useAppSelector} from "../state";
 import queryString from "query-string";
 import {Location} from "history";
 import {PotentialUser} from "../../IsaacAppTypes";
+import {Immutable} from "immer";
 
 export function makeUrl(url: string, queryParams?: { [p: string]: string | undefined }) {
     function valueIsNotUndefined(v: [string, string | undefined]): v is [string, string] {
@@ -119,7 +120,7 @@ interface FastTrackPageProperties {
     questionHistory: string[];
     board: string | undefined;
     userContext: UseUserContextReturnType;
-    user: PotentialUser | null;
+    user: Immutable<PotentialUser> | null;
     canSubmit: boolean;
 }
 

@@ -212,11 +212,11 @@ export const partiallyUpdateUserSnapshot = (newUserSnapshot: UserSnapshot) => as
 
 // TODO scope for pulling out a separate registerUser method from this
 export const updateCurrentUser = (
-    updatedUser: ValidationUser,
+    updatedUser: Immutable<ValidationUser>,
     updatedUserPreferences: UserPreferencesDTO,
     userContexts: UserContext[] | undefined,
     passwordCurrent: string | null,
-    currentUser: PotentialUser,
+    currentUser: Immutable<PotentialUser>,
     redirect: boolean
 ) => async (dispatch: Dispatch<Action>) => {
     // Confirm email change
@@ -428,7 +428,7 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
 
 export const requestEmailVerification = () => async (dispatch: any, getState: () => AppState) => {
     const state = getState();
-    const user: RegisteredUserDTO | null = state && state.user && state.user.loggedIn && state.user || null;
+    const user: Immutable<RegisteredUserDTO> | null = state && state.user && state.user.loggedIn && state.user || null;
     let error = "";
     if (user && user.email) {
         dispatch({type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_REQUEST});

@@ -11,6 +11,7 @@ import {
 } from "./";
 import {NOT_FOUND_TYPE, PotentialUser} from "../../IsaacAppTypes";
 import {CurrentTopicState} from "../state";
+import {Immutable} from "immer";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
@@ -20,7 +21,7 @@ const filterForQuestions = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.QUESTION);
 };
 
-export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
     const examBoardFilteredContent = contents.filter(c =>
         isPhy ||
         userContext.showOtherContent ||
@@ -31,14 +32,14 @@ export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], u
     return [relatedConcepts, relatedQuestions];
 };
 
-export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
     if (doc && doc != NOT_FOUND && doc.relatedContent) {
         return filterAndSeparateRelatedContent(doc.relatedContent, userContext, user);
     }
     return [[], []];
 };
 
-export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
     return getRelatedDocs(doc, userContext, user)[0];
 };
 
@@ -63,7 +64,7 @@ export const makeAttemptAtTopicHistory = () => {
     return [ALL_TOPICS_CRUMB]
 };
 
-export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
         if (isValidIdForTopic(contentId, currentTopic)) {
             const [relatedConcepts, relatedQuestions] =

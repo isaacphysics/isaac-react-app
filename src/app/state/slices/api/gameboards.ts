@@ -24,6 +24,7 @@ import {
     showToast
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
+import {Immutable} from "immer";
 
 export interface AssignmentSpec {
     boardId: string;
@@ -199,7 +200,7 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
 
 interface SaveGameboardParams {
     boardId: string,
-    user: PotentialUser,
+    user: Immutable<PotentialUser>,
     boardTitle?: string,
     redirectOnSuccess?: boolean
 }

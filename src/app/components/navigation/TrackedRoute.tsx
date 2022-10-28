@@ -6,6 +6,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
 import {GOOGLE_ANALYTICS_ACCOUNT_ID, isTeacher, KEY, persistence, siteSpecific} from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
+import {Immutable} from "immer";
 
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
 ReactGA.set({ anonymizeIp: true });
@@ -16,7 +17,7 @@ const trackPage = (page: string, options?: FieldsObject) => {
 };
 
 interface UserFilterProps {
-    ifUser?: (user: PotentialUser) => boolean;
+    ifUser?: (user: Immutable<PotentialUser>) => boolean;
 }
 
 type TrackedRouteProps = RouteProps & {trackingOptions?: FieldsObject; componentProps?: FieldsObject} & UserFilterProps;
