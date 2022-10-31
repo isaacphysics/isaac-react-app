@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacParsonsQuestionDTO, ParsonsChoiceDTO, ParsonsItemDTO} from "../../../IsaacApiTypes";
 import {Col, Row} from "reactstrap";
@@ -39,7 +39,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
     const canIndent = (!isDefined(doc.disableIndentation) || !doc.disableIndentation) && !readonly;
 
     // WARNING: There's a limit to how far to the right we can drag an element, presumably due to react-beautiful-dnd
-    const onMouseMove = (e: MouseEvent | TouchEvent) => {
+    const onMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
         if (draggedElement) {
             const x = draggedElement.getBoundingClientRect().left;
             let cursorX = -1;
@@ -52,8 +52,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 const d = Math.max(0, x - initialX);
                 const i = Math.min(Math.floor(d/PARSONS_INDENT_STEP), Math.min(currentMaxIndent, PARSONS_MAX_INDENT));
                 if (cursorX >= initialX) {
-                    const movingElement = document.getElementById(draggedElement.id);
-                    if (movingElement?.style) {
+                    if (draggedElement?.style) {
                         // movingElement.style.transform = `translate(${i*PARSONS_INDENT_STEP}px, 0px)`;
                     }
                 }
@@ -62,9 +61,9 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 setCurrentIndent(i);
             }
         }
-    }
+    }, [draggedElement, currentAttempt, initialX, currentMaxIndent, canIndent, currentDestinationIndex]);
 
-    const onKeyUp = (e: KeyboardEvent) => {
+    const onKeyUp = useCallback((e: KeyboardEvent) => {
         // There's a bug somewhere that adds this event twice, but only one has a non-zero timestamp.
         // The condition on draggedElement *might* be sufficient, but let's be explicit.
         if (e.timeStamp > 0 && draggedElement) {
@@ -92,7 +91,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
                 { className: className.replace((matches && matches[0]) || `indent-${localCurrentIndent}`, `indent-${newIndent}`) }
             ));
         }
-    }
+    }, [draggedElement, currentIndent, currentMaxIndent, canIndent, currentDestinationIndex]);
 
     const moveItem = (src: Immutable<ParsonsItemDTO>[] | undefined, fromIndex: number, dst: Immutable<ParsonsItemDTO>[] | undefined, toIndex: number, indent: number) => {
         if (!src || !dst) return;
@@ -241,7 +240,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly} : IsaacQuestionProps<I
             window.removeEventListener('touchmove', onMouseMove);
             window.removeEventListener('keyup', onKeyUp);
         }
-    }, []);
+    }, [onMouseMove, onKeyUp]);
 
     useEffect(() => {
         onCurrentAttemptUpdate(currentAttempt, availableItems);
