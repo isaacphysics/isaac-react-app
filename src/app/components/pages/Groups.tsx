@@ -36,7 +36,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isDefined, isStaff, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isCS, isDefined, isOwnerOrGroupManager, isStaff, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
@@ -148,7 +148,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     const [isExpanded, setExpanded] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group ? group.groupName : "");
-    const isUserGroupOwner = user.id === group?.ownerId;
+    const isUserGroupOwner = group ? isOwnerOrGroupManager(user, group) : false;
 
     useEffect(() => {
         setExpanded(false);

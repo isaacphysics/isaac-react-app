@@ -16,6 +16,7 @@ export * from "./katex-a11y";
 
 // No internal /services dependencies
 export * from "./constants";
+export * from "./groups";
 export * from "./miscUtils";
 export * from "./credentialPadding";
 export * from "./history";
