@@ -1,4 +1,4 @@
-import {CodeSnippetDTO} from "../../../IsaacApiTypes";
+import {CodeSnippetDTO, ContentDTO} from "../../../IsaacApiTypes";
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
 import hljs from 'highlight.js/lib/core';
@@ -7,12 +7,16 @@ import {ScrollShadows} from "../elements/ScrollShadows";
 import classNames from "classnames";
 import {useExpandContent} from "../elements/markup/portals/Tables";
 import {useStatefulElementRef} from "../elements/markup/portals/utils";
+import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
 }
 
 const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
+    const dispatch = useAppDispatch();
+    const rootDoc = useAppSelector(selectors.doc.get);
+
     const codeSnippetRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -21,6 +25,10 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
             highlightJsService.addLineNumbers(codeSnippetRef.current);
         }
     }, [doc]);
+
+    const logViewOnGitHub = () => {
+        dispatch(logAction({type: "VIEW_GITHUB_CODE", pageId: (rootDoc as ContentDTO).id, githubUrl: doc.url}));
+    };
 
     const [scrollPromptRef, updateScrollPromptRef] = useStatefulElementRef<HTMLDivElement>();
     const [expandRef, updateExpandRef] = useStatefulElementRef<HTMLDivElement>();
@@ -42,7 +50,7 @@ const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
             </Row>
             {doc.url && <Row>
                 <Col className="text-center mb-2">
-                    <a href={doc.url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
+                    <a href={doc.url} onClick={logViewOnGitHub} target="_blank" rel="noopener noreferrer">View on GitHub</a>
                 </Col>
             </Row>}
         </div>
