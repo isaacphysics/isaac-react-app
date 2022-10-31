@@ -5,7 +5,7 @@ import {SchoolInput} from "./inputs/SchoolInput";
 import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {examBoardLabelMap, isCS, stageLabelMap, studentOnlyEventMessage} from "../../services";
-import {castDraft, Immutable} from "immer";
+import {Immutable} from "immer";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;

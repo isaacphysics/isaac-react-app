@@ -16,8 +16,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
-import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {castDraft, Immutable} from "immer";
+import {Immutable} from "immer";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
