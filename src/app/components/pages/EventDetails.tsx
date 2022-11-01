@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import * as RS from "reactstrap";
+import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -147,20 +147,20 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             iconAnchor: [12, 41]
         });
 
-        return <RS.Container className="events mb-5">
+        return <Container className="events mb-5">
             <TitleAndBreadcrumb
                 currentPageTitle={event.title as string} subTitle={event.subtitle}
                 breadcrumbTitleOverride="Event details" intermediateCrumbs={[EVENTS_CRUMB]}
             />
             <EditContentButton doc={event}/>
 
-            <RS.Card className="mt-4 pt-2">
-                <RS.CardBody>
+            <Card className="mt-4 pt-2">
+                <CardBody>
                     {/* Detail Main */}
-                    <RS.Row>
-                        <RS.Col lg={4}>
+                    <Row>
+                        <Col lg={4}>
                             {event.eventThumbnail && <div className="mt-2">
-                                <RS.CardImg
+                                <CardImg
                                     aria-hidden={true}
                                     alt={"" /* Decorative image, should be hidden from screenreaders */}
                                     className='m-auto restrict-height' top src={event.eventThumbnail.src}
@@ -187,18 +187,18 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 </div>
                                 }
                             </div>}
-                        </RS.Col>
-                        <RS.Col lg={8} className={event.hasExpired ? "expired" : ""}>
+                        </Col>
+                        <Col lg={8} className={event.hasExpired ? "expired" : ""}>
                             {/* TODO Student/Teacher/Virtual icon */}
                             {isStaff(user) &&
-                                <RS.Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
+                                <Button color="link" onClick={googleCalendarTemplate} className="calendar-img mx-2"
                                            title="Add to Google Calendar">
                                     Add to Calendar
-                                </RS.Button>
+                                </Button>
                             }
 
                             {/* Key event info */}
-                            <RS.Table borderless className="event-key-info mb-4">
+                            <Table borderless className="event-key-info mb-4">
                                 <tbody>
                                     <tr>
                                         <td>When:</td>
@@ -229,9 +229,9 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">
                                                 You have been reserved a place on this event!
-                                                <RS.Button color="link text-success" onClick={openAndScrollToBookingForm}>
+                                                <Button color="link text-success" onClick={openAndScrollToBookingForm}>
                                                     <u>Complete your registration below</u>.
-                                                </RS.Button>
+                                                </Button>
                                             </span></span>}
                                             {canBeAddedToWaitingList && <span> - {formatAvailabilityMessage(event)}</span>}
                                             {event.userBookingStatus === "WAITING_LIST" && <span> - {formatWaitingListBookingStatusMessage(event)}</span>}
@@ -254,7 +254,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             </td>
                                         </tr>}
                                 </tbody>
-                            </RS.Table>
+                            </Table>
 
                             {/* Event body copy */}
                             <div className="mb-3">
@@ -263,10 +263,10 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
 
                             {/* Booking form */}
                             {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
-                                <RS.Card className="mb-4">
-                                    <RS.CardBody>
+                                <Card className="mb-4">
+                                    <CardBody>
                                         <h3>Event booking form</h3>
-                                        <RS.Form onSubmit={event.isATeacherEvent && !isTeacher(user) ? checkTeacherStatusThenSubmitBooking : submitBooking}>
+                                        <Form onSubmit={event.isATeacherEvent && !isTeacher(user) ? checkTeacherStatusThenSubmitBooking : submitBooking}>
                                             <EventBookingForm
                                                 event={event} targetUser={user}
                                                 additionalInformation={additionalInformation}
@@ -280,71 +280,71 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                                         You can manage access to your progress data in your <Link
                                                         to="/account#teacherconnections" target="_blank">account settings</Link>.
                                                         <br/>
-                                                        Your data will be processed in accordance with Isaac {SITE_SUBJECT_TITLE}&apos;s <Link
-                                                        to="/privacy" target="_blank">privacy policy</Link>.
+                                                        Your data will be processed in accordance with Isaac {SITE_SUBJECT_TITLE}&apos;s <Link to="/privacy" target="_blank">privacy policy</Link>.
                                                         <br/>
                                                         If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event.
-                                                        You can enable this in your <Link to="/account#emailpreferences"
-                                                                                          target="_blank">account settings</Link>.
+                                                        You can enable this in your <Link to="/account#emailpreferences" target="_blank">account settings</Link>.
                                                     </small>
                                                 </p>
 
                                                 <div className="text-center mt-4 mb-2">
-                                                    <RS.Input type="submit"
-                                                              value={formatBookingModalConfirmMessage(event, canMakeABooking)}
-                                                              className="btn btn-xl btn-secondary border-0"/>
+                                                    <Input
+                                                        type="submit"
+                                                        value={formatBookingModalConfirmMessage(event, canMakeABooking)}
+                                                        className="btn btn-xl btn-secondary border-0"
+                                                    />
                                                 </div>
                                             </div>
-                                        </RS.Form>
-                                    </RS.CardBody>
-                                </RS.Card>
+                                        </Form>
+                                    </CardBody>
+                                </Card>
                             </span>}
 
                             {/* Buttons */}
                             <div>
                                 {/* Options for un-logged-in users */}
                                 {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
-                                    <RS.Button onClick={loginAndReturn}>
+                                    <Button onClick={loginAndReturn}>
                                         {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
                                             "Login to book" :
                                             "Login to apply"
                                         }
-                                    </RS.Button>
+                                    </Button>
                                 }
 
                                 {/* Options for logged-in users */}
                                 {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
                                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
-                                    <RS.Button onClick={() => {
+                                    <Button onClick={() => {
                                         setBookingFormOpen(true)
                                     }}>
                                         {formatMakeBookingButtonMessage(event)}
-                                    </RS.Button>
+                                    </Button>
                                     }
                                     {canReserveSpaces &&
-                                    <RS.Button color="primary" onClick={() => {
+                                    <Button color="primary" onClick={() => {
                                         dispatch(openActiveModal(reservationsModal()))
                                     }}>
                                         Manage reservations
-                                    </RS.Button>
+                                    </Button>
                                     }
                                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
-                                    <RS.Button color="primary" outline onClick={() => {
+                                    <Button color="primary" outline onClick={() => {
                                         dispatch(cancelMyBooking(eventId))
                                     }}>
                                         {formatCancelBookingButtonMessage(event)}
-                                    </RS.Button>
+                                    </Button>
                                     }
                                 </React.Fragment>}
-                                <RS.Button tag={Link} to="/events" color="primary" outline>
+                                <Button tag={Link} to="/events" color="primary" outline>
                                     Back to events
-                                </RS.Button>
+                                </Button>
                             </div>
-                        </RS.Col>
-                    </RS.Row>
-                </RS.CardBody>
-            </RS.Card>
-        </RS.Container>
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>
+        </Container>
     }
     }/>;
 };
