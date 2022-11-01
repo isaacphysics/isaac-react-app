@@ -25,7 +25,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                             {isVirtualEvent && " (Virtual)"}
                         </div>))
             }
-            <RS.CardImg top src={eventThumbnail.src} alt={eventThumbnail.altText} />
+            <RS.CardImg top src={eventThumbnail.src} alt={eventThumbnail.altText || `Illustration for ${title}`} />
         </div>}
         <RS.CardBody className="d-flex flex-column">
             {title && <RS.CardTitle tag="h3">

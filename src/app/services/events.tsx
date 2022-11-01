@@ -55,7 +55,7 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
             augmentedEvent.eventThumbnail = {};
         }
         augmentedEvent.eventThumbnail.src = 'http://placehold.it/500x276';
-        augmentedEvent.eventThumbnail.altText = 'placeholder image.';
+        augmentedEvent.eventThumbnail.altText = `Illustration for ${event.title}`;
     }
 
     return augmentedEvent;
