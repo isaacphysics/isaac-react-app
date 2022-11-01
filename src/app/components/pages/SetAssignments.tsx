@@ -55,6 +55,7 @@ import {
     isStaff,
     Item,
     itemise,
+    nthHourOf,
     selectOnChange,
     siteSpecific,
     sortIcon,
@@ -101,13 +102,13 @@ const AssignGroup = ({groups, board}: BoardProps) => {
 
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getMonth() + 1;
-    const dueDateInvalid = dueDate && scheduledStartDate ? new Date(scheduledStartDate.getFullYear(), scheduledStartDate.getMonth(), scheduledStartDate.getDate()).valueOf() > dueDate.valueOf() : false;
+    const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
         const utcDate = e.target.valueAsDate as Date;
         const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
         // Sets the scheduled date to 7AM in the timezone of the browser.
-        setScheduledStartDate(scheduledDate)
+        setScheduledStartDate(scheduledDate);
     }
 
     return <Container className="py-2">
