@@ -39,7 +39,8 @@ import {
     userCanReserveEventSpaces,
     userSatisfiesStudentOnlyRestrictionForEvent,
     validateBookingSubmission,
-    zeroOrLess
+    zeroOrLess,
+    isStudent
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -50,6 +51,7 @@ import {IsaacContent} from "../content/IsaacContent";
 import {EditContentButton} from "../elements/EditContentButton";
 import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
+import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -106,8 +108,8 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
 
         const isVirtual = event.tags?.includes("virtual");
 
-        function submitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
-            formEvent.preventDefault();
+        function submitBooking(formEvent?: React.FormEvent<HTMLFormElement>) {
+            formEvent?.preventDefault();
 
             if (user && user.loggedIn) {
                 const failureToastOrTrue = validateBookingSubmission(event, user, additionalInformation);
@@ -120,6 +122,11 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                     dispatch(addMyselfToWaitingList(event.id as string, additionalInformation, event.isWaitingListOnly));
                 }
             }
+        }
+
+        function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
+            formEvent.preventDefault();
+            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, () => setBookingFormOpen(false))));
         }
 
         function openAndScrollToBookingForm() {
@@ -259,7 +266,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 <RS.Card className="mb-4">
                                     <RS.CardBody>
                                         <h3>Event booking form</h3>
-                                        <RS.Form onSubmit={submitBooking}>
+                                        <RS.Form onSubmit={event.isATeacherEvent && !isTeacher(user) ? checkTeacherStatusThenSubmitBooking : submitBooking}>
                                             <EventBookingForm
                                                 event={event} targetUser={user}
                                                 additionalInformation={additionalInformation}
