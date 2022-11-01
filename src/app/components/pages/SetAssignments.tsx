@@ -101,7 +101,7 @@ const AssignGroup = ({groups, board}: BoardProps) => {
 
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getMonth() + 1;
-    const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false;
+    const dueDateInvalid = dueDate && scheduledStartDate ? new Date(scheduledStartDate.getFullYear(), scheduledStartDate.getMonth(), scheduledStartDate.getDate()).valueOf() > dueDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
         const utcDate = e.target.valueAsDate as Date;
