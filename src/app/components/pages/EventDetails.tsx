@@ -154,7 +154,8 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                         <RS.Col lg={4}>
                             {event.eventThumbnail && <div className="mt-2">
                                 <RS.CardImg
-                                    alt={event.eventThumbnail.altText || `Illustration for ${event.title}`}
+                                    aria-hidden={true}
+                                    alt={"" /* Decorative image, should be hidden from screenreaders */}
                                     className='m-auto restrict-height' top src={event.eventThumbnail.src}
                                 />
                                 <div className="border px-2 py-1 mt-3 bg-light">

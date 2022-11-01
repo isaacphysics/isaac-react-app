@@ -99,7 +99,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
     bookingDeadline?: Date;
     prepWorkDeadline?: Date;
     location?: Location;
-    eventThumbnail?: ImageDTO;
+    eventThumbnail?: Omit<ImageDTO, "altText">; // We don't want to use event thumbnail alt text for WCAG compliance (it's a decorative image, and conveys no meaning)
     numberOfPlaces?: number;
     groupReservationLimit?: number;
     allowGroupReservations?: boolean;
