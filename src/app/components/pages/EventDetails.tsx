@@ -39,8 +39,7 @@ import {
     userCanReserveEventSpaces,
     userSatisfiesStudentOnlyRestrictionForEvent,
     validateBookingSubmission,
-    zeroOrLess,
-    isStudent
+    zeroOrLess
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
