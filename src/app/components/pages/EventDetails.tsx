@@ -10,6 +10,7 @@ import {
     getEvent,
     openActiveModal,
     selectors,
+    showErrorToast,
     showToast,
     useAppDispatch,
     useAppSelector
@@ -123,9 +124,14 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             }
         }
 
+        function stopBookingIfStudent() {
+            setBookingFormOpen(false);
+            dispatch(showErrorToast("Event booking cancelled", "You cannot sign up to a teacher event as a student."));
+        }
+
         function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
             formEvent.preventDefault();
-            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, () => setBookingFormOpen(false))));
+            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
         }
 
         function openAndScrollToBookingForm() {

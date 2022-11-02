@@ -9,7 +9,7 @@ export const teacherEventConfirmationModal = (submitBooking: () => void, stopBoo
         const close = () => {store.dispatch(closeActiveModal())};
         return <div className={"mb-4"}>
             <p>This is an event for <b>teachers only</b>. Please confirm that you are a teacher (or a teacher trainee).</p>
-            <div className={"d-flex justify-content-around"}>
+            <div className={"d-flex justify-content-around mt-2"}>
                 <Button onClick={() => {
                     submitBooking();
                     close();
@@ -21,6 +21,5 @@ export const teacherEventConfirmationModal = (submitBooking: () => void, stopBoo
             </div>
         </div>
     },
-    title: "Please confirm teacher status",
-    centered: true,
+    title: "Please confirm teacher status"
 });
