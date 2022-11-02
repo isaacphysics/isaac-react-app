@@ -40,7 +40,8 @@ import {
     userCanReserveEventSpaces,
     userSatisfiesStudentOnlyRestrictionForEvent,
     validateBookingSubmission,
-    zeroOrLess
+    zeroOrLess,
+    isPhy
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -151,6 +152,8 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
             iconAnchor: [12, 41]
         });
+
+        const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacher(user);
 
         return <Container className="events mb-5">
             <TitleAndBreadcrumb
@@ -271,7 +274,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 <Card className="mb-4">
                                     <CardBody>
                                         <h3>Event booking form</h3>
-                                        <Form onSubmit={event.isATeacherEvent && !isTeacher(user) ? checkTeacherStatusThenSubmitBooking : submitBooking}>
+                                        <Form onSubmit={checkTeacherStatus ? checkTeacherStatusThenSubmitBooking : submitBooking}>
                                             <EventBookingForm
                                                 event={event} targetUser={user}
                                                 additionalInformation={additionalInformation}
