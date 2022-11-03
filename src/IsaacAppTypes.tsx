@@ -434,7 +434,9 @@ export interface ShortcutResponse extends ContentSummaryDTO {
     hash?: string;
 }
 
-export interface UserBetaFeaturePreferences {}
+export interface UserBetaFeaturePreferences {
+    SCHEDULE_ASSIGNMENTS?: boolean;
+}
 
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;
