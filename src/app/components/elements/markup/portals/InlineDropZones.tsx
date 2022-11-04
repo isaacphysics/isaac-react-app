@@ -18,7 +18,7 @@ export function Item({item, id, type, overrideOver}: {item: Immutable<ItemDTO>, 
             role: "button",
             roleDescription: "draggable item",
         },
-        data: { type, value: item.value }
+        data: { type, text: item.altText ?? item.value }
     });
     const style: React.CSSProperties = {
         transform: CSS.Translate.toString(transform),
@@ -36,9 +36,12 @@ export function Item({item, id, type, overrideOver}: {item: Immutable<ItemDTO>, 
     }, [dropRegionContext?.shouldGetFocus]);
 
     return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-2 cloze-item")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
-        <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
-            {item.children as ContentDTO[]}
-        </IsaacContentValueOrChildren>
+        <span className={"sr-only"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
+        <span aria-hidden={true}>
+            <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
+                {item.children as ContentDTO[]}
+            </IsaacContentValueOrChildren>
+        </span>
     </Badge>;
 }
 
