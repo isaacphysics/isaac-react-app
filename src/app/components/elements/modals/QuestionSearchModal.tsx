@@ -2,7 +2,7 @@ import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from "
 import {
     AppState,
     closeActiveModal,
-    isaacApi,
+    isaacApi, mutationSucceeded,
     useAppDispatch,
     useAppSelector
 } from "../../../state";
@@ -57,7 +57,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     // Local state storing questions returned from search
     const [questions, setQuestions] = useState<ContentSummaryDTO[]>([]);
-    const [searchQuestions] = isaacApi.endpoints.searchQuestions.useLazyQuery();
+    const [searchQuestions] = isaacApi.endpoints.searchQuestions.useMutation();
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");
@@ -106,9 +106,9 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 fasttrack,
                 startIndex,
                 limit: 300
-            }).then((result) => {
-                if (result.isSuccess) {
-                    setQuestions(result.data);
+            }).then(response => {
+                if (mutationSucceeded(response)) {
+                    setQuestions(response.data);
                 }
             });
 

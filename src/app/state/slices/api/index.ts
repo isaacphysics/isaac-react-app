@@ -1,5 +1,4 @@
 import {
-    ACTION_TYPE,
     API_PATH,
     API_REQUEST_FAILURE_MESSAGE,
     FEATURED_NEWS_TAG,
@@ -52,7 +51,6 @@ import {
 } from "../../../../IsaacAppTypes";
 import {SerializedError} from "@reduxjs/toolkit";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
-import {response} from "msw";
 import {Immutable} from "immer";
 
 // This is used by default as the `baseQuery` of our API slice
@@ -156,7 +154,6 @@ const API_TAGS = [
     "Groups",
     "GroupMemberships",
     "MyGroupMemberships",
-    "QuestionSearch",
     "UserPreferences"
 ];
 
@@ -250,12 +247,11 @@ const isaacApi = createApi({
             })
         }),
 
-        searchQuestions: build.query<ContentSummaryDTO[], QuestionSearchQuery>({
+        searchQuestions: build.mutation<ContentSummaryDTO[], QuestionSearchQuery>({
             query: (query) => ({
                 url: `/pages/questions`,
                 params: query
             }),
-            providesTags: ["QuestionSearch"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to search for questions"
             }),
