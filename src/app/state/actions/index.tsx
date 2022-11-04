@@ -5,7 +5,6 @@ import {
     API_REQUEST_FAILURE_MESSAGE,
     atLeastOne,
     augmentEvent,
-    DOCUMENT_TYPE,
     EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
@@ -13,9 +12,7 @@ import {
     isDefined,
     isFirstLoginInPersistence,
     KEY,
-    persistence,
-    QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    TAG_ID
+    persistence
 } from "../../services";
 import {
     Action,
@@ -24,26 +21,19 @@ import {
     ATTENDANCE,
     CredentialsAuthDTO,
     EmailUserRoles,
-    FreeTextRule,
     PotentialUser,
-    QuestionSearchQuery,
     UserPreferencesDTO,
     UserSnapshot,
-    ValidatedChoice,
     ValidationUser,
 } from "../../../IsaacAppTypes";
 import {
     AuthenticationProvider,
-    ChoiceDTO,
     EmailTemplateDTO,
     EmailVerificationStatus,
     GlossaryTermDTO,
-    GraphChoiceDTO,
     IsaacQuestionPageDTO,
-    QuestionDTO,
     RegisteredUserDTO,
     Role,
-    TestCaseDTO,
     UserContext,
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
@@ -70,7 +60,6 @@ import {
     isaacApi,
     AppDispatch
 } from "../index";
-import {Immutable} from "immer";
 
 // Utility functions
 function isAxiosError(e: Error): e is AxiosError {
@@ -140,13 +129,13 @@ export const linkAccount = (provider: AuthenticationProvider) => async (dispatch
     }
 };
 
-export const unlinkAccount = (provider: AuthenticationProvider) => async (dispatch: Dispatch<Action>) => {
+export const unlinkAccount = (provider: AuthenticationProvider) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_REQUEST});
     try {
         await api.authentication.unlinkAccount(provider);
         dispatch({type: ACTION_TYPE.USER_AUTH_UNLINK_RESPONSE_SUCCESS, provider});
         await Promise.all([
-            dispatch(getUserAuthSettings() as any)
+            dispatch(getUserAuthSettings())
         ]);
         dispatch(showToast({
             title: "Account unlinked",
@@ -161,14 +150,14 @@ export const unlinkAccount = (provider: AuthenticationProvider) => async (dispat
     }
 };
 
-export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: Dispatch<Action>) => {
+export const submitTotpChallengeResponse = (mfaVerificationCode: string, rememberMe: boolean) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST});
     try {
         const result = await api.authentication.mfaCompleteLogin(mfaVerificationCode, rememberMe);
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(getUserAuthSettings()),
+            dispatch(isaacApi.endpoints.getUserPreferences.initiate())
         ]);
         dispatch({type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS});
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
@@ -179,25 +168,15 @@ export const submitTotpChallengeResponse = (mfaVerificationCode: string, remembe
     }
 };
 
-export const getUserPreferences = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_PREFERENCES_REQUEST});
-    try {
-        const userPreferenceSettings = await api.users.getPreferences();
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences: userPreferenceSettings.data});
-    } catch (e: any) {
-        dispatch({type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE, errorMessage: extractMessage(e)});
-    }
-};
-
-export const requestCurrentUser = () => async (dispatch: Dispatch<Action>) => {
+export const requestCurrentUser = () => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.CURRENT_USER_REQUEST});
     try {
         // Request the user
         const currentUser = await api.users.getCurrent();
         // Now with that information request auth settings and preferences asynchronously
         await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(getUserAuthSettings()),
+            dispatch(isaacApi.endpoints.getUserPreferences.initiate())
         ]);
         dispatch({type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: currentUser.data});
     } catch (e) {
@@ -325,7 +304,7 @@ export const logOutUserEverywhere = () => async (dispatch: Dispatch<Action>) => 
     }
 };
 
-export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: Dispatch<Action>) => {
+export const logInUser = (provider: AuthenticationProvider, credentials: CredentialsAuthDTO) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.USER_LOG_IN_REQUEST, provider});
 
     try {
@@ -338,8 +317,8 @@ export const logInUser = (provider: AuthenticationProvider, credentials: Credent
         }
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(getUserAuthSettings()),
+            dispatch(isaacApi.endpoints.getUserPreferences.initiate())
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: result.data});
         history.replace(persistence.pop(KEY.AFTER_AUTH_PATH) || "/");
@@ -399,14 +378,14 @@ export const handleProviderLoginRedirect = (provider: AuthenticationProvider) =>
     // TODO MT handle case when user is already logged in
 };
 
-export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: Dispatch<Action>) => {
+export const handleProviderCallback = (provider: AuthenticationProvider, parameters: string) => async (dispatch: AppDispatch) => {
     dispatch({type: ACTION_TYPE.AUTHENTICATION_HANDLE_CALLBACK});
     try {
         const providerResponse = await api.authentication.checkProviderCallback(provider, parameters);
         // Request user preferences, as we do in the requestCurrentUser action:
         await Promise.all([
-            dispatch(getUserAuthSettings() as any),
-            dispatch(getUserPreferences() as any)
+            dispatch(getUserAuthSettings()),
+            dispatch(isaacApi.endpoints.getUserPreferences.initiate())
         ]);
         dispatch({type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS, user: providerResponse.data});
         if (providerResponse.data.firstLogin) {
@@ -718,33 +697,6 @@ export const requestNotifications = () => async (dispatch: Dispatch<Action>) => 
     }
 }
 
-// Document & topic fetch
-export const fetchDoc = (documentType: DOCUMENT_TYPE, pageId: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.DOCUMENT_REQUEST, documentType: documentType, documentId: pageId});
-    let apiEndpoint;
-    switch (documentType) {
-        case DOCUMENT_TYPE.CONCEPT: apiEndpoint = api.concepts; break;
-        case DOCUMENT_TYPE.QUESTION: apiEndpoint = api.questions; break;
-        case DOCUMENT_TYPE.GENERIC: default: apiEndpoint = api.pages; break;
-    }
-    try {
-        const response = await apiEndpoint.get(pageId);
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS, doc: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE});
-    }
-};
-
-export const fetchTopicSummary = (topicName: TAG_ID) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.TOPIC_REQUEST, topicName});
-    try {
-        const response = await api.topics.get(topicName);
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS, topic: response.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE});
-    }
-};
-
 // Glossary Terms
 export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST});
@@ -753,129 +705,6 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
         dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS, terms: response.data.results as GlossaryTermDTO[]});
     } catch (e) {
         dispatch({type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE});
-    }
-};
-
-// Questions
-export const registerQuestions = (questions: QuestionDTO[], accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, questions, accordionClientId});
-};
-
-export const deregisterQuestions = (questionIds: string[]) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionIds});
-};
-
-interface Attempt {
-    attempts: number;
-    timestamp: number;
-}
-const attempts: {[questionId: string]: Attempt} = {};
-
-export const attemptQuestion = (questionId: string, attempt: Immutable<ChoiceDTO>, gameboardId?: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
-    const state = getState();
-    const isAnonymous = !(state && state.user && state.user.loggedIn);
-    const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
-
-    try {
-        dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
-        const response = await api.questions.answer(questionId, attempt);
-        dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS, questionId, response: response.data});
-        if (gameboardId) {
-            dispatch(isaacApi.util.invalidateTags([{type: "Gameboard", id: gameboardId}]));
-        }
-
-        // This mirrors the soft limit checking on the server
-        let lastAttempt = attempts[questionId];
-        if (lastAttempt && lastAttempt.timestamp + timePeriod > Date.now()) {
-            lastAttempt.attempts++;
-            lastAttempt.timestamp = Date.now();
-        } else {
-            lastAttempt = {
-                attempts: 1,
-                timestamp: Date.now()
-            };
-            attempts[questionId] = lastAttempt;
-        }
-        const softLimit = isAnonymous ? 3 : 10;
-        if (lastAttempt.attempts >= softLimit && !response.data.correct) {
-            dispatch(showToast({
-                color: "warning", title: "Approaching attempts limit", timeout: 10000,
-                body: "You have entered several guesses for this question; soon it will be temporarily locked."
-            }) as any);
-        }
-    } catch (e: any) {
-        if (e.response && e.response.status === 429) {
-            const errorMessage = e.response?.data?.errorMessage || QUESTION_ATTEMPT_THROTTLED_MESSAGE;
-            const lock = new Date((new Date()).getTime() + timePeriod);
-
-            dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId, lock});
-            dispatch(showToast({
-                color: "danger", title: "Too many attempts", timeout: 10000,
-                body: errorMessage
-            }) as any);
-            setTimeout( () => {
-                dispatch({type: ACTION_TYPE.QUESTION_UNLOCK, questionId});
-            }, timePeriod);
-        } else {
-            dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE, questionId});
-            dispatch(showToast({
-                color: "danger", title: "Question attempt failed", timeout: 5000,
-                body: "Your answer could not be checked. Please try again."
-            }) as any);
-        }
-    }
-};
-
-export function setCurrentAttempt<T extends ChoiceDTO>(questionId: string, attempt: Immutable<T | ValidatedChoice<T>>) {
-    return (dispatch: Dispatch<Action>) => dispatch({
-        type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT,
-        questionId,
-        attempt
-    });
-}
-
-let questionSearchCounter = 0;
-
-export const searchQuestions = (query: QuestionSearchQuery) => async (dispatch: Dispatch<Action>) => {
-    const searchCount = ++questionSearchCounter;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_REQUEST});
-    try {
-        const questionsResponse = await api.questions.search(query);
-        // Because some searches might take longer to return that others, check this is the most recent search still.
-        // Otherwise, we just discard the data.
-        if (searchCount === questionSearchCounter) {
-            dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: questionsResponse.data.results});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to search for questions", e));
-    }
-};
-
-export const clearQuestionSearch = async (dispatch: Dispatch<Action>) => {
-    questionSearchCounter++;
-    dispatch({type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS, questions: []});
-};
-
-export const getMyAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST});
-    try {
-        const myAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
-        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, myAnsweredQuestionsByDate: myAnsweredQuestionsByDate.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get my answered question activity data", e));
-    }
-};
-
-export const getUserAnsweredQuestionsByDate = (userId: number | string, fromDate: number, toDate: number, perDay: boolean) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST});
-    try {
-        const userAnsweredQuestionsByDate = await api.questions.answeredQuestionsByDate(userId, fromDate, toDate, perDay);
-        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS, userAnsweredQuestionsByDate: userAnsweredQuestionsByDate.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get user answered question activity data", e));
     }
 };
 
@@ -890,28 +719,6 @@ export const goToSupersededByQuestion = (page: IsaacQuestionPageDTO) => async (d
 
 // Quizzes
 const generatePostQuizUrl = (quizId: string) => `/pages/post_${quizId}`;
-
-export const submitQuizPage = (quizId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const currentState: AppState = getState();
-    try {
-        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST, quizId});
-        if (currentState && currentState.questions) {
-            await Promise.all(currentState.questions.questions.map(
-                question => {
-                    if (question.id && question.currentAttempt) {
-                        dispatch(attemptQuestion(question.id, question.currentAttempt) as any);
-                    }
-                }
-            ));
-            dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS});
-            dispatch(showToast({color: "success", title: "Test submitted", body: "Test submitted successfully", timeout: 3000}) as any);
-            history.push(generatePostQuizUrl(quizId));
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Error submitting test", e));
-    }
-};
 
 export const redirectForCompletedQuiz = (quizId: string) => (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal({
@@ -934,30 +741,6 @@ export const getQuizAssignmentResultsSummaryCSV = (assignmentId: number) => asyn
         dispatch(showAxiosErrorToastIfNeeded("Failed to load test assignment results csv", error) as any);
     }
 };
-
-// Question testing
-export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCaseDTO[]) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.TEST_QUESTION_REQUEST});
-        const testResponse = await api.questions.testFreeTextQuestion(questionChoices, testCases);
-        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS, testCaseResponses: testResponse.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to test question", e));
-    }
-};
-
-// Generate answer spec for graph sketcher
-export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST});
-        const specResponse = await api.questions.generateSpecification(graphChoice);
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: specResponse.data });
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("There was a problem generating a graph specification", e));
-    }
-}
 
 // Content version
 export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
@@ -1484,17 +1267,6 @@ export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) =>
         dispatch(showAxiosErrorToastIfNeeded("Loading Content Errors Failed", e));
     }
 };
-
-// Concepts
-export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
-    try {
-        const concepts = await api.concepts.list(conceptIds, tagIds);
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS, concepts: concepts.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Loading Concepts Failed", e));
-    }};
 
 // Fasttrack concepts
 export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upperQuestionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {

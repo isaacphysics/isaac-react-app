@@ -1,6 +1,5 @@
 import {Action, UserProgress} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
-import {AnsweredQuestionsByDate} from "../../../IsaacApiTypes";
 
 export type MyProgressState = UserProgress | null;
 export const myProgress = (myProgress: MyProgressState = null, action: Action) => {
@@ -34,35 +33,5 @@ export const userProgress = (userProgress: UserProgressState = null, action: Act
             return null;
         default:
             return userProgress;
-    }
-};
-
-type MyAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
-export const myAnsweredQuestionsByDate = (myAnsweredQuestionsByDateState: MyAnsweredQuestionsByDateState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST: {
-            return null;
-        }
-        case ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
-            return action.myAnsweredQuestionsByDate;
-        }
-        default: {
-            return myAnsweredQuestionsByDateState;
-        }
-    }
-};
-
-type UserAnsweredQuestionsByDateState = AnsweredQuestionsByDate | null;
-export const userAnsweredQuestionsByDate = (userAnsweredQuestionsByDateState: UserAnsweredQuestionsByDateState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST: {
-            return null;
-        }
-        case ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS: {
-            return action.userAnsweredQuestionsByDate;
-        }
-        default: {
-            return userAnsweredQuestionsByDateState;
-        }
     }
 };

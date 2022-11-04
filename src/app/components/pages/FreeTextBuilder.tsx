@@ -3,10 +3,10 @@ import {FreeTextRule} from "../../../IsaacAppTypes";
 import * as RS from "reactstrap";
 import {ContentBase, TestCaseDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {AppState, testQuestion, useAppDispatch, useAppSelector} from "../../state";
 import {Tabs} from "../elements/Tabs";
 import {atLeastOne} from "../../services";
 import {IsaacContent} from "../content/IsaacContent";
+import {isaacApi} from "../../state";
 
 interface AugmentedTestCase extends TestCaseDTO {
     match?: boolean;
@@ -115,8 +115,7 @@ function isEditableExplanation(explanation?: any) {
 }
 
 export const FreeTextBuilder = () => {
-    const dispatch = useAppDispatch();
-    const testCaseResponses = useAppSelector((state: AppState) => state && state.testQuestions || []);
+    const [testQuestion, {data: testCaseResponses}] = isaacApi.endpoints.testFreeTextQuestion.useMutation();
 
     const [questionChoices, setQuestionChoices] = useState<(FreeTextRule & {choiceNumber: number})[]>([JSON.parse(JSON.stringify(defaultChoiceExample))]);
     const [questionChoicesJson, setQuestionChoicesJson] = useState(convertQuestionChoicesToJson(questionChoices));
@@ -134,7 +133,7 @@ export const FreeTextBuilder = () => {
     if (choicesHashAtPreviousRequest === choicesHash(questionChoices)) {
         // augment response with whether there was a match between the expected and actual and populate the test case response map
         testCaseResponses
-            .map(response => Object.assign(response, {match: response.expected !== undefined ? response.expected === response.correct : undefined}))
+            ?.map(response => Object.assign(response, {match: response.expected !== undefined ? response.expected === response.correct : undefined}))
             .forEach(testCaseResponse => testCaseResponseMap[testCaseHash(testCaseResponse)] = testCaseResponse);
     }
     const numberOfResponseMatches = Object.values(testCaseResponseMap).filter(testCase => testCase.match).length;
@@ -148,7 +147,7 @@ export const FreeTextBuilder = () => {
             if (event) {event.preventDefault();}
             if (atLeastOneQuestionChoiceAndTestCase) {
                 setChoicesHashAtPreviousRequest(choicesHash(questionChoices));
-                dispatch(testQuestion(cleanQuestionChoices, cleanTestCases));
+                testQuestion({userDefinedChoices: cleanQuestionChoices, testCases: cleanTestCases});
             }
         }}>
             <RS.Card className="mb-4">

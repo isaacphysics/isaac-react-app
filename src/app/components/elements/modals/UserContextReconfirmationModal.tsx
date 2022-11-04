@@ -15,7 +15,7 @@ import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
 import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
+import {closeActiveModal, isaacApi, logAction, selectors, updateCurrentUser} from "../../../state";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
@@ -33,7 +33,7 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
 const UserContextReconfimationModalBody = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
-    const userPreferences = useSelector(selectors.user.preferences);
+    const {data: userPreferences} = isaacApi.endpoints.getUserPreferences.useQuery();
 
     const [userToUpdate, setUserToUpdate] = useState({...user, password: null});
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();

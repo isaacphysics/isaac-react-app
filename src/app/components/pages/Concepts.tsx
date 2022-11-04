@@ -1,6 +1,6 @@
 import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {AppState, fetchConcepts, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
 import {Col, Container, CustomInput, Form, Input, Label, Row} from "reactstrap";
 import queryString from "query-string";
@@ -14,11 +14,8 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
 export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
-    const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const concepts = useAppSelector((state: AppState) => state?.concepts?.results || null);
-
-    useEffect(() => {dispatch(fetchConcepts());}, [dispatch]);
+    const {data: concepts} = isaacApi.endpoints.listConcepts.useQuery();
 
     const searchParsed = queryString.parse(location.search);
 
@@ -62,14 +59,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
 
     useEffect(() => {doSearch();}, [conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry]);
 
-    const searchResults = concepts
-        ?.filter(c =>
+    const searchResults = concepts?.filter(c =>
             c?.title?.toLowerCase().includes((searchText || "").toLowerCase()) ||
             c?.summary?.toLowerCase().includes((searchText || "").toLowerCase())
         );
 
-    const filteredSearchResults = searchResults
-        ?.filter((result) => result?.tags?.some(t => filters.includes(t)))
+    const filteredSearchResults = searchResults?.filter((result) => result?.tags?.some(t => filters.includes(t)))
         .filter((result) => searchResultIsPublic(result, user));
 
     const shortcutAndFilteredSearchResults = (shortcutResponse || []).concat(filteredSearchResults || []);

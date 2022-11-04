@@ -11,7 +11,6 @@ import {
     totpChallengePending,
     user,
     userAuthSettings,
-    userPreferences,
     userSchoolLookup,
     errorSlice,
     mainContentIdSlice,
@@ -19,16 +18,12 @@ import {
     transientUserContextSlice,
     constants,
     glossaryTerms,
-    concepts,
-    doc,
-    graphSketcherSpec,
-    questions,
+    docSlice,
+    questionsSlice,
     activeModals,
     notifications,
     toasts,
-    myAnsweredQuestionsByDate,
     myProgress,
-    userAnsweredQuestionsByDate,
     userProgress,
     adminContentErrors,
     adminEmailTemplate,
@@ -36,7 +31,6 @@ import {
     adminUserGet,
     adminUserSearch,
     contentVersion,
-    testQuestions,
     quizAssignedToMe,
     quizAssignment,
     quizAssignments,
@@ -48,9 +42,7 @@ import {
     activeAuthorisations,
     groupMemberships,
     otherUserAuthorisations,
-    currentTopic,
     fasttrackConcepts,
-    questionSearchResult,
     search,
     isaacApi,
     gameboardsSlice
@@ -60,7 +52,6 @@ const appReducer = combineReducers({
     // User
     user,
     userAuthSettings,
-    userPreferences,
     userSchoolLookup,
     totpChallengePending,
 
@@ -80,18 +71,14 @@ const appReducer = combineReducers({
     glossaryTerms,
 
     // Content
-    doc,
-    concepts,
+    doc: docSlice.reducer,
 
     // Question
-    questions,
-    graphSketcherSpec,
+    questions: questionsSlice.reducer,
 
     // Progress
     myProgress,
-    myAnsweredQuestionsByDate,
     userProgress,
-    userAnsweredQuestionsByDate,
 
     // Admin
     adminUserGet,
@@ -100,19 +87,14 @@ const appReducer = combineReducers({
     adminStats,
     adminEmailTemplate,
     contentVersion,
-    testQuestions,
 
     // Groups
     groupMemberships,
     activeAuthorisations,
     otherUserAuthorisations,
 
-    // Topics
-    currentTopic,
-
     // Gameboards
     boards: gameboardsSlice.reducer,
-    questionSearchResult,
     fasttrackConcepts,
 
     // Search

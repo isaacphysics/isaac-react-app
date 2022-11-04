@@ -1,4 +1,11 @@
-import {AppState, closeActiveModal, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../../state";
+import {
+    closeActiveModal,
+    isaacApi,
+    selectors,
+    updateCurrentUser,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
@@ -27,7 +34,7 @@ const RequiredAccountInfoBody = () => {
     // Redux state
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
-    const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
+    const {data: userPreferences} = isaacApi.endpoints.getUserPreferences.useQuery();
     const student = isStudent({...user, loggedIn: true});
 
     // Local state

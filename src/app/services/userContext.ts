@@ -25,7 +25,7 @@ import {
 } from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {AppState, useAppSelector} from "../state";
+import {AppState, isaacApi, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
@@ -47,8 +47,8 @@ export function useUserContext(): UseUserContextReturnType {
     const queryParams = useQueryParams(true);
 
     const user = useAppSelector((state: AppState) => state && state.user);
-    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} =
-        useAppSelector((state: AppState) => state?.userPreferences) || {};
+    const {data: userPreferences} = isaacApi.endpoints.getUserPreferences.useQuery();
+    const {PROGRAMMING_LANGUAGE: programmingLanguage, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings} = userPreferences ?? {};
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
 

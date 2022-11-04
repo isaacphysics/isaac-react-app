@@ -1,11 +1,7 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {
-    getMyAnsweredQuestionsByDate,
-    getMyProgress,
-    getUserAnsweredQuestionsByDate,
-    getUserProgress,
+    isaacApi,
     selectors,
-    useAppDispatch,
     useAppSelector
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -29,6 +25,7 @@ import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
 import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const siteSpecificStats = siteSpecific(
     // Physics
@@ -70,22 +67,23 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const { userIdOfInterest } = match.params;
     const viewingOwnData = userIdOfInterest === undefined || (user.loggedIn && parseInt(userIdOfInterest) === user.id);
 
-    const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
     const achievements = useAppSelector(selectors.user.achievementsRecord);
-    const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
-    const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
-
-    useEffect(() => {
-        if (viewingOwnData && user.loggedIn) {
-            dispatch(getMyProgress());
-            dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
-        } else if (isTeacher(user)) {
-            dispatch(getUserProgress(userIdOfInterest));
-            dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
-        }
-    }, [dispatch, userIdOfInterest, viewingOwnData, user]);
+    const {data: myAnsweredQuestionsByDate} = isaacApi.endpoints.getAnsweredQuestionsByDate.useQuery(viewingOwnData && user.loggedIn
+        ? {
+            userId: user.id as number,
+            fromDate: 0,
+            toDate: Date.now(),
+            perDay: false
+        } : skipToken);
+    const {data: userAnsweredQuestionsByDate} = isaacApi.endpoints.getAnsweredQuestionsByDate.useQuery(isTeacher(user) && userIdOfInterest
+        ? {
+            userId: userIdOfInterest,
+            fromDate: 0,
+            toDate: Date.now(),
+            perDay: false
+        } : skipToken);
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 

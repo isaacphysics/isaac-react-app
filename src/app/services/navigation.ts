@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import queryString from "query-string";
-import {fetchTopicSummary, isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
+import {isaacApi, selectors, useAppSelector} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -10,8 +10,8 @@ import {
     determineTopicHistory,
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
+    isFound,
     makeAttemptAtTopicHistory,
-    NOT_FOUND,
     TAG_ID,
     useQueryParams,
     useUserContext
@@ -36,22 +36,18 @@ export interface PageNavigation {
 
 const defaultPageNavigation = (currentGameboard?: GameboardDTO) => ({breadcrumbHistory: [], currentGameboard});
 
-export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavigation => {
+export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | undefined | null): PageNavigation => {
     const {search} = useLocation();
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
-    const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
-    const dispatch = useAppDispatch();
+    const currentDocId = isFound(doc) ? doc.id as string : "";
+
     const {data: currentGameboard} = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
+    const {data: currentTopic} = isaacApi.endpoints.getTopicSummary.useQuery(topic ? topic as TAG_ID : skipToken);
 
-    useEffect(() => {
-        if (topic) dispatch(fetchTopicSummary(topic as TAG_ID));
-    }, [topic, currentDocId, dispatch]);
-
-    const currentTopic = useAppSelector(selectors.topic.currentTopic);
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
-    if (doc === null || doc === NOT_FOUND) {
+    if (!isFound(doc)) {
         return defaultPageNavigation(currentGameboard);
     }
 

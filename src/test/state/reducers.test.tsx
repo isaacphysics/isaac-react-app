@@ -10,7 +10,6 @@ import {
     BoardsState,
     constants,
     gameboardsSlice,
-    questions,
     rootReducer,
     search,
     toasts,
@@ -83,52 +82,52 @@ describe("user reducer", () => {
         })
     })
 });
-
-describe("questions reducer", () => {
-    const {aToboggan, manVsHorse} = questionDTOs;
-
-    it("returns null as an initial value", () => {
-        const actualState = questions(undefined, ignoredTestAction);
-        expect(actualState).toBe(null);
-    });
-
-    it("returns the previous state by default", () => {
-        const previousStates = [null, q([aToboggan]), q([aToboggan, manVsHorse])];
-        previousStates.map((previousState) => {
-            const actualNextState = questions(previousState, ignoredTestAction);
-            expect(actualNextState).toEqual(previousState);
-        });
-    });
-
-    it("should register a question correctly", () => {
-        const registerManVsHorse: Action = {type: ACTION_TYPE.QUESTION_REGISTRATION, questions: [manVsHorse]};
-        const testCases = [
-            [null, q([manVsHorse])],
-            [q([aToboggan]), q([aToboggan, manVsHorse])],
-            [q([aToboggan, manVsHorse]), q([aToboggan, manVsHorse, manVsHorse])] // TODO MT could be handled better
-        ];
-        testCases.map(([previousState, expectedNextState]) => {
-            const actualNextState = questions(previousState, registerManVsHorse);
-            expect(actualNextState).toEqual(expectedNextState);
-        })
-    });
-
-    it("should deregister questions correctly", () => {
-        const deregisterManVsHorse: Action =
-            {type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionIds: [(manVsHorse.id as string)]};
-        const testCases = [
-            [null, null],
-            [q([manVsHorse]), null],
-            [q([aToboggan, manVsHorse]), q([aToboggan])],
-            [q([aToboggan, manVsHorse, manVsHorse]), q([aToboggan])],
-            [q([aToboggan, aToboggan]), q([aToboggan, aToboggan])]
-        ];
-        testCases.map(([previousState, expectedNextState]) => {
-            const actualNextState = questions(previousState, deregisterManVsHorse);
-            expect(actualNextState).toEqual(expectedNextState);
-        })
-    });
-});
+//
+// describe("questions reducer", () => {
+//     const {aToboggan, manVsHorse} = questionDTOs;
+//
+//     it("returns null as an initial value", () => {
+//         const actualState = questions(undefined, ignoredTestAction);
+//         expect(actualState).toBe(null);
+//     });
+//
+//     it("returns the previous state by default", () => {
+//         const previousStates = [null, q([aToboggan]), q([aToboggan, manVsHorse])];
+//         previousStates.map((previousState) => {
+//             const actualNextState = questions(previousState, ignoredTestAction);
+//             expect(actualNextState).toEqual(previousState);
+//         });
+//     });
+//
+//     it("should register a question correctly", () => {
+//         const registerManVsHorse: Action = {type: ACTION_TYPE.QUESTION_REGISTRATION, questions: [manVsHorse]};
+//         const testCases = [
+//             [null, q([manVsHorse])],
+//             [q([aToboggan]), q([aToboggan, manVsHorse])],
+//             [q([aToboggan, manVsHorse]), q([aToboggan, manVsHorse, manVsHorse])] // TODO MT could be handled better
+//         ];
+//         testCases.map(([previousState, expectedNextState]) => {
+//             const actualNextState = questions(previousState, registerManVsHorse);
+//             expect(actualNextState).toEqual(expectedNextState);
+//         })
+//     });
+//
+//     it("should deregister questions correctly", () => {
+//         const deregisterManVsHorse: Action =
+//             {type: ACTION_TYPE.QUESTION_DEREGISTRATION, questionIds: [(manVsHorse.id as string)]};
+//         const testCases = [
+//             [null, null],
+//             [q([manVsHorse]), null],
+//             [q([aToboggan, manVsHorse]), q([aToboggan])],
+//             [q([aToboggan, manVsHorse, manVsHorse]), q([aToboggan])],
+//             [q([aToboggan, aToboggan]), q([aToboggan, aToboggan])]
+//         ];
+//         testCases.map(([previousState, expectedNextState]) => {
+//             const actualNextState = questions(previousState, deregisterManVsHorse);
+//             expect(actualNextState).toEqual(expectedNextState);
+//         })
+//     });
+// });
 
 describe("constants reducer", () => {
     it("returns null as an initial value", () => {

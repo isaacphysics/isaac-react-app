@@ -80,9 +80,6 @@ export const api = {
         getCurrent: (): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
             return endpoint.get(`/users/current_user`);
         },
-        getPreferences: (): AxiosPromise<AppTypes.UserPreferencesDTO> => {
-            return endpoint.get(`/users/user_preferences`)
-        },
         passwordReset: (params: {email: string}) => {
             return endpoint.post(`/users/resetpassword`, params);
         },
@@ -246,54 +243,6 @@ export const api = {
         },
         getTermById: (id: string): AxiosPromise<ApiTypes.GlossaryTermDTO> => {
             return endpoint.get(`/glossary/terms/${id}`);
-        }
-    },
-    questions: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacQuestionPageDTO> => {
-            return endpoint.get(`/pages/questions/${id}`);
-        },
-        search: (query: QuestionSearchQuery): AxiosPromise<QuestionSearchResponse> => {
-            return endpoint.get(`/pages/questions/`, {
-                params: query,
-            });
-        },
-        answer: (id: string, answer: Immutable<ApiTypes.ChoiceDTO>): AxiosPromise<ApiTypes.QuestionValidationResponseDTO> => {
-            return endpoint.post(`/questions/${id}/answer`, answer);
-        },
-        answeredQuestionsByDate: (userId: number | string, fromDate: number, toDate: number, perDay: boolean): AxiosPromise<ApiTypes.AnsweredQuestionsByDate> => {
-            return endpoint.get(`/questions/answered_questions/${userId}`, {
-                params: {
-                    "from_date": fromDate,
-                    "to_date": toDate,
-                    "per_day": perDay
-                }
-            })
-        },
-        testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
-            return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
-        },
-        generateSpecification: (graphChoice: ApiTypes.GraphChoiceDTO) => {
-            return endpoint.post("/questions/generateSpecification", graphChoice);
-        }
-    },
-    concepts: {
-        list: (conceptIds?: string, tagIds?: string): AxiosPromise<Concepts> => {
-            return endpoint.get('/pages/concepts', {
-                params: { limit: 999 , ids: conceptIds, tags: tagIds }
-            });
-        },
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/concepts/${id}`);
-        },
-    },
-    pages: {
-        get: (id: string): AxiosPromise<ApiTypes.IsaacConceptPageDTO> => {
-            return endpoint.get(`/pages/${id}`);
-        },
-    },
-    topics: {
-        get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
-            return endpoint.get(`/pages/topics/${topicName}`);
         }
     },
     contentVersion: {

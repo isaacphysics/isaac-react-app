@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AppState, generateSpecification, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, isaacApi, mutationSucceeded, useAppDispatch, useAppSelector} from "../../state";
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
@@ -16,11 +16,11 @@ const GraphSketcherPage = () => {
     const user = useAppSelector((state: AppState) => state && state.user || null);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
-    const graphSpec = useAppSelector(selectors.questions.graphSketcherSpec);
+    const [graphSpec, setGraphSpec] = useState<string[]>([]);
+    const [generateGraphQuestionSpec] = isaacApi.endpoints.generateGraphQuestionSpec.useMutation();
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const [initialState, setInitialState] = useState<GraphSketcherState>();
     const previewRef = useRef(null);
-    const dispatch = useAppDispatch();
 
     function openModal() {
         setModalVisible(true);
@@ -28,7 +28,11 @@ const GraphSketcherPage = () => {
 
     function closeModal() {
         if (currentAttempt?.value && isStaff(user)) {
-            dispatch(generateSpecification({ type: 'graphChoice', value: currentAttempt.value}));
+            generateGraphQuestionSpec({ type: "graphChoice", value: currentAttempt.value}).then(result => {
+                if (mutationSucceeded(result)) {
+                    setGraphSpec(result.data);
+                }
+            });
         }
         setModalVisible(false);
     }
@@ -97,8 +101,7 @@ const GraphSketcherPage = () => {
                             initialState={initialState}
                         />}
                     </div>
-                    {/* TODO af599 This needs checking, not sure why graphSpec is a {[key: number]: string} instead of a string[] */}
-                    {graphSpec && Object.keys(graphSpec).map((key) => <pre key={key}>{graphSpec[key as unknown as number]}</pre>)}
+                    {graphSpec && <pre>{graphSpec}</pre>}
                 </Col>
             </Row>
         </Container>

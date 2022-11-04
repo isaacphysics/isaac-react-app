@@ -60,9 +60,6 @@ export type Action =
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_SUCCESS}
     | {type: ACTION_TYPE.USER_AUTH_MFA_CHALLENGE_FAILURE; errorMessage: string}
-    | {type: ACTION_TYPE.USER_PREFERENCES_REQUEST}
-    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS; userPreferences: UserPreferencesDTO}
-    | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
@@ -194,33 +191,9 @@ export type Action =
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_SUCCESS; notifications: any[]}
 
-    | {type: ACTION_TYPE.DOCUMENT_REQUEST; documentType: DOCUMENT_TYPE; documentId: string}
-    | {type: ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS; doc: ApiTypes.ContentDTO}
-    | {type: ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.GLOSSARY_TERMS_REQUEST}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string}
-    | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
-    | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO>}
-    | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
-    | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE; questionId: string; lock?: Date}
-    | {type: ACTION_TYPE.QUESTION_UNLOCK; questionId: string}
-    | {type: ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>}
-
-    | {type: ACTION_TYPE.QUESTION_SEARCH_REQUEST}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_SUCCESS; questions: ApiTypes.ContentSummaryDTO[]}
-    | {type: ACTION_TYPE.QUESTION_SEARCH_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_REQUEST}
-    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; myAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
-    | {type: ACTION_TYPE.MY_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_REQUEST}
-    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_SUCCESS; userAnsweredQuestionsByDate: ApiTypes.AnsweredQuestionsByDate}
-    | {type: ACTION_TYPE.USER_QUESTION_ANSWERS_BY_DATE_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_REQUEST; quizId: string}
     | {type: ACTION_TYPE.QUIZ_SUBMISSION_RESPONSE_SUCCESS}
@@ -229,18 +202,6 @@ export type Action =
     | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_REQUEST; assignmentId: number}
     | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_SUCCESS; assignmentResultsCSV: string}
     | {type: ACTION_TYPE.QUIZ_ASSIGNMENT_RESULTS_CSV_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.TEST_QUESTION_REQUEST}
-    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS; testCaseResponses: TestCaseDTO[]}
-    | {type: ACTION_TYPE.TEST_QUESTION_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST}
-    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: {results: string[], totalResults: number}}
-    | {type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.TOPIC_REQUEST; topicName: TAG_ID}
-    | {type: ACTION_TYPE.TOPIC_RESPONSE_SUCCESS; topic: ApiTypes.IsaacTopicSummaryPageDTO}
-    | {type: ACTION_TYPE.TOPIC_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
@@ -345,10 +306,6 @@ export type Action =
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.EVENT_RECORD_ATTENDANCE_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.CONCEPTS_REQUEST}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS; concepts: Concepts}
-
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_REQUEST}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS; concepts: FasttrackConceptsState}
@@ -417,7 +374,7 @@ export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
     validationResponse?: Immutable<ApiTypes.QuestionValidationResponseDTO>;
     currentAttempt?: Immutable<ApiTypes.ChoiceDTO>;
     canSubmit?: boolean;
-    locked?: Date;
+    locked?: number;
     accordionClientId?: string;
 }
 
@@ -482,12 +439,12 @@ export interface UserPreferencesDTO {
     DISPLAY_SETTING?: DisplaySettings;
 }
 
-export interface ValidatedChoice<C extends ApiTypes.ChoiceDTO> {
+export interface ValidatedChoice<C extends ChoiceDTO> {
     frontEndValidation: boolean;
     choice: C;
 }
 
-export function isValidatedChoice(choice: Immutable<ApiTypes.ChoiceDTO | ValidatedChoice<ApiTypes.ChoiceDTO>>): choice is Immutable<ValidatedChoice<ApiTypes.ChoiceDTO>> {
+export function isValidatedChoice(choice: Immutable<ChoiceDTO | ValidatedChoice<ChoiceDTO>>): choice is Immutable<ValidatedChoice<ChoiceDTO>> {
     return choice.hasOwnProperty("frontEndValidation");
 }
 

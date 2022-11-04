@@ -1,95 +1,115 @@
-import {Action, AppQuestionDTO, isValidatedChoice} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services";
-import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
+import {AppQuestionDTO, isValidatedChoice, ValidatedChoice} from "../../../IsaacAppTypes";
+import {isDefined} from "../../services";
+import {BEST_ATTEMPT_HIDDEN, ChoiceDTO, QuestionDTO} from "../../../IsaacApiTypes";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {isaacApi} from "../slices/api";
+import produce, {Immutable} from "immer";
 
-export const question = (question: AppQuestionDTO, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
-            if (isValidatedChoice(action.attempt)) {
-                return {...question, currentAttempt: action.attempt.choice, canSubmit: action.attempt.frontEndValidation, validationResponse: undefined};
-            } else {
-                return {...question, currentAttempt: action.attempt, canSubmit: true, validationResponse: undefined};
-            }
-        case ACTION_TYPE.QUESTION_ATTEMPT_REQUEST:
-            return {...question, canSubmit: false};
-        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
-            return (!question.bestAttempt || !question.bestAttempt.correct) ?
-                {...question, validationResponse: action.response, bestAttempt: action.response} :
-                {...question, validationResponse: action.response};
-        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
-            return {...question, locked: action.lock, canSubmit: true};
-        case ACTION_TYPE.QUESTION_UNLOCK:
-            return {...question, locked: undefined};
-        default:
-            return question;
-    }
-};
-
-type QuestionsState = {questions: AppQuestionDTO[]; pageCompleted: boolean} | null;
-function augmentQuestions(questions: AppQuestionDTO[]): QuestionsState {
+type QuestionsState = {questions: Immutable<AppQuestionDTO[]>; pageCompleted: boolean} | null;
+function augmentQuestions(questions: Immutable<AppQuestionDTO[]>): QuestionsState {
     return {
         questions,
         pageCompleted: questions.every(q => q.validationResponse && q.validationResponse.correct)
+    };
+}
+
+const updateQuestion = (id: string | undefined, update: (prevQuestion: Immutable<AppQuestionDTO>) => Immutable<AppQuestionDTO>) => {
+    return (questionState: QuestionsState) => {
+        return isDefined(id) && questionState ? augmentQuestions(questionState.questions.map(q => q.id === id ? update(q) : q)) : questionState;
     }
 }
-export const questions = (qs: QuestionsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.QUESTION_REGISTRATION: {
+export const questionsSlice = createSlice({
+    name: "questions",
+    initialState: null as QuestionsState,
+    reducers: {
+        registerQuestions: (qs, action: PayloadAction<{questions: QuestionDTO[]; accordionClientId?: string}>) => {
             const currentQuestions = qs !== null ? [...qs.questions] : [];
-            const newQuestions = action.questions.map(q => {
+            const {questions, accordionClientId} = action.payload;
+            const newQuestions = questions.map(q => {
                 const bestAttempt = q.bestAttempt;
                 return bestAttempt ?
-                    {...q, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId: action.accordionClientId} :
-                    {...q, accordionClientId: action.accordionClientId};
+                    {...q, validationResponse: bestAttempt, currentAttempt: bestAttempt.answer, accordionClientId} :
+                    {...q, accordionClientId};
             });
-            return augmentQuestions(currentQuestions.concat(newQuestions));
-        }
-        case ACTION_TYPE.QUESTION_DEREGISTRATION: {
-            const filteredQuestions = qs && qs.questions.filter((q) => q.id && !action.questionIds.includes(q.id));
+            return augmentQuestions([...currentQuestions, ...newQuestions]);
+        },
+        deregisterQuestions: (qs, action: PayloadAction<string[]>) => {
+            const filteredQuestions = qs && qs.questions.filter((q) => q.id && !action.payload.includes(q.id));
             return filteredQuestions && filteredQuestions.length ? augmentQuestions(filteredQuestions) : null;
+        },
+        setCurrentAttempt: (qs, action: PayloadAction<{questionId: string; attempt: Immutable<ChoiceDTO | ValidatedChoice<ChoiceDTO>>}>) => {
+            return updateQuestion(action.payload.questionId, produce(q => {
+                if (isValidatedChoice(action.payload.attempt)) {
+                    q.currentAttempt = action.payload.attempt.choice as ChoiceDTO; // FIXME remove these casts somehow
+                    q.canSubmit = action.payload.attempt.frontEndValidation;
+                } else {
+                    q.currentAttempt = action.payload.attempt as ChoiceDTO;
+                    q.canSubmit = true;
+                }
+                delete q.validationResponse;
+            }))(qs);
+        },
+        lockQuestion: (qs, action: PayloadAction<{id: string, time: number}>) => {
+            return updateQuestion(action.payload.id, produce(q => {
+                q.locked = action.payload.time;
+            }))(qs);
+        },
+        unlockQuestion: (qs, action: PayloadAction<string>) => {
+            return updateQuestion(action.payload, produce(q => {
+                delete q.locked;
+            }))(qs);
+        },
+        markQuestionAsSubmitted: (qs, action: PayloadAction<string>) => {
+            return updateQuestion(action.payload, produce(q => {
+                q.canSubmit = false;
+            }))(qs);
         }
-        // Delegate processing the question matching action.questionId to the question reducer
-        case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
-        case ACTION_TYPE.QUESTION_ATTEMPT_REQUEST:
-        case ACTION_TYPE.QUESTION_UNLOCK:
-        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_FAILURE:
-        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS: {
-            return qs && augmentQuestions(qs.questions.map((q) => q.id === action.questionId ? question(q, action) : q));
-        }
-        // If we receive user preferences, then check for the "hide question attempts" preference. If the preference is
-        // there then we clear all attempt info from stored questions that have a best attempt, since the current attempt
-        // could have been filled with the best attempt (see the case for `ACTION_TYPE.QUESTION_REGISTRATION` above)
-        // This reducer case mainly occurs on page refresh/load, where the question attempt data is returned *before
-        // the user preferences*, which means the `hidePreviousQuestionAttempt` middleware doesn't work as intended.
-        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-            if (qs && action.userPreferences.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS) {
-                return {
-                    ...qs,
-                    questions: qs.questions.map(q => q.bestAttempt ? {
-                        ...q,
-                        bestAttempt: BEST_ATTEMPT_HIDDEN,
-                        currentAttempt: undefined,
-                        validationResponse: undefined
-                    } : q)
-                };
+    },
+    extraReducers: builder => {
+        builder.addMatcher(
+            isaacApi.endpoints.attemptQuestion.matchPending,
+            (qs, action) => {
+                return updateQuestion(action.meta.arg.originalArgs.id, produce(q => {
+                    q.canSubmit = false;
+                }))(qs);
             }
-            return qs;
-        default: {
-            return qs;
-        }
+        ).addMatcher(
+            isaacApi.endpoints.attemptQuestion.matchFulfilled,
+            (qs, action) => {
+                return updateQuestion(action.payload.questionId, produce(q => {
+                    if (!q.bestAttempt || !q.bestAttempt.correct) {
+                        q.bestAttempt = action.payload;
+                    }
+                    q.validationResponse = action.payload;
+                }))(qs);
+            }
+        ).addMatcher(
+            isaacApi.endpoints.attemptQuestion.matchRejected,
+            (qs, action) => {
+                return updateQuestion(action.meta.arg.originalArgs.id, produce(q => {
+                    q.canSubmit = true;
+                }))(qs);
+            }
+        ).addMatcher(
+            // If we receive user preferences, then check for the "hide question attempts" preference. If the preference is
+            // there then we clear all attempt info from stored questions that have a best attempt, since the current attempt
+            // could have been filled with the best attempt (see the case for `ACTION_TYPE.QUESTION_REGISTRATION` above)
+            // This reducer case mainly occurs on page refresh/load, where the question attempt data is returned *before
+            // the user preferences*, which means the `hidePreviousQuestionAttempt` middleware doesn't work as intended.
+            isaacApi.endpoints.getUserPreferences.matchFulfilled,
+            (qs, action) => {
+                if (action.payload.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS) {
+                    qs?.questions.forEach(q => {
+                        if (q.bestAttempt) {
+                            q.bestAttempt = BEST_ATTEMPT_HIDDEN;
+                            delete q.currentAttempt;
+                            delete q.validationResponse;
+                        }
+                    });
+                }
+            }
+        )
     }
-};
+});
 
-// TODO Move this into questions to make it consistent?
-type GraphSpecState = string[] | null;
-export const graphSketcherSpec = (p: GraphSpecState = null, action: Action) => {
-    switch(action.type) {
-        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST:
-            return null;
-        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS:
-            return { ...action.specResponse.results };
-        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE:
-        default:
-            return p;
-    }
-}
+export const {registerQuestions, deregisterQuestions, setCurrentAttempt, lockQuestion, unlockQuestion} = questionsSlice.actions;

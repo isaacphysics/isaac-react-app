@@ -1,12 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-    AppState,
     extractDataFromQueryResponse,
-    fetchConcepts,
     isaacApi,
-    setAssignBoardPath,
-    useAppDispatch,
-    useAppSelector
+    setAssignBoardPath
 } from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -47,6 +43,7 @@ import {History} from "history";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -232,18 +229,11 @@ interface CSFilterProps extends FilterProps {
     setConcepts : React.Dispatch<React.SetStateAction<Item<string>[]>>;
 }
 const CSFilter = ({selections, setSelections, stages, setStages, difficulties, setDifficulties, examBoards, setExamBoards, concepts, setConcepts} : CSFilterProps) => {
-    const dispatch = useAppDispatch();
-
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
-    const conceptDTOs = useAppSelector((state: AppState) => selections[2]?.length > 0 ? state?.concepts?.results : undefined);
+    const selectedTopics = selections[2];
+    const {data: conceptDTOs} = isaacApi.endpoints.listConcepts.useQuery(selectedTopics ? {tagIds: toCSV(selectedTopics)} : skipToken);
     const [conceptChoices, setConceptChoices] = useState<GroupBase<Item<string>>[]>([]);
 
-    const selectedTopics = selections[2];
-    useEffect(() => {
-        if (selectedTopics) {
-            dispatch(fetchConcepts(undefined, toCSV(selectedTopics)));
-        }
-    }, [dispatch, selectedTopics]);
     useEffect(function updateConceptChoices() {
         const newChoices = selectedTopics?.map(itemiseAndGroupConceptsByTag(conceptDTOs ?? [])) ?? [];
         setConceptChoices(newChoices);

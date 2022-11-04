@@ -1,4 +1,4 @@
-import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
+import {Action, PotentialUser, UserSchoolLookup} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {isaacApi} from "../index";
@@ -35,16 +35,6 @@ export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null,
             return action.userAuthSettings;
         default:
             return userAuthSettings;
-    }
-};
-
-type UserPreferencesState = UserPreferencesDTO | null;
-export const userPreferences = (userPreferences: UserPreferencesState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS:
-            return {...action.userPreferences};
-        default:
-            return userPreferences;
     }
 };
 

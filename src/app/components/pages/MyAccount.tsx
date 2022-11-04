@@ -21,7 +21,7 @@ import {
     AdminUserGetState,
     AppState,
     ErrorState,
-    getChosenUserAuthSettings,
+    getChosenUserAuthSettings, isaacApi,
     resetPassword,
     updateCurrentUser
 } from "../../state";
@@ -67,7 +67,6 @@ const stateToProps = (state: AppState, props: any) => {
     return {
         errorMessage: state?.error ?? null,
         userAuthSettings: state?.userAuthSettings ?? null,
-        userPreferences: state?.userPreferences ?? null,
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
@@ -88,7 +87,6 @@ interface AccountPageProps {
     errorMessage: ErrorState;
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     getChosenUserAuthSettings: (userid: number) => void;
-    userPreferences: UserPreferencesDTO | null;
     updateCurrentUser: (
         updatedUser: ValidationUser,
         updatedUserPreferences: UserPreferencesDTO,
@@ -105,12 +103,14 @@ interface AccountPageProps {
     adminUserToEdit?: AdminUserGetState;
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
     // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
     }, [adminUserToEdit]);
+
+    const {data: userPreferences} = isaacApi.endpoints.getUserPreferences.useQuery();
 
     useEffect(() => {
         if (userOfInterest) {

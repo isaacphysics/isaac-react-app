@@ -1,12 +1,10 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {withRouter} from "react-router-dom";
-import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
+import {isaacApi} from "../../state";
 import {Col, Container, Row} from "reactstrap";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, isCS, isPhy, siteSpecific, useNavigation} from "../../services";
-import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
+import {isCS, isPhy, siteSpecific, useNavigation} from "../../services";
+import {GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -21,6 +19,7 @@ import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDepreca
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ReportButton} from "../elements/ReportButton";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -28,15 +27,15 @@ interface ConceptPageProps {
     location: {search: string};
 }
 export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride}: ConceptPageProps) => {
-    const dispatch = useAppDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
-    useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
-    const doc = useAppSelector((state: AppState) => state?.doc || null);
-    const navigation = useNavigation(doc);
+    const conceptQuery = isaacApi.endpoints.getConcept.useQuery(conceptId);
+    const navigation = useNavigation(conceptQuery.data);
 
-    return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-        return <div className={doc.subjectId || ""}>
+    return <ShowLoadingQuery
+        query={conceptQuery}
+        defaultErrorTitle={"Error fetching concept page"}
+        thenRender={doc => {
+            return <div className={doc.subjectId || ""}>
             <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container>
                     <TitleAndBreadcrumb

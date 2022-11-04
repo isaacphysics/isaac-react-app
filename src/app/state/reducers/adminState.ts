@@ -1,4 +1,4 @@
-import {RegisteredUserDTO, TestCaseDTO, UserSummaryForAdminUsersDTO} from "../../../IsaacApiTypes";
+import {RegisteredUserDTO, UserSummaryForAdminUsersDTO} from "../../../IsaacApiTypes";
 import {Action, AdminStatsResponse, ContentErrorsResponse, TemplateEmail} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../../services";
 
@@ -75,18 +75,5 @@ export const contentVersion = (contentVersion: ContentVersionState = null, actio
             return {...contentVersion, updateState: ContentVersionUpdatingStatus.FAILURE};
         default:
             return contentVersion;
-    }
-};
-
-// For string match tool
-type TestQuestionsState = TestCaseDTO[] | null;
-export const testQuestions = (testQuestions: TestQuestionsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.TEST_QUESTION_RESPONSE_SUCCESS: {
-            return action.testCaseResponses;
-        }
-        default: {
-            return testQuestions;
-        }
     }
 };

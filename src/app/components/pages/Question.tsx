@@ -1,10 +1,8 @@
-import React, {useEffect} from "react";
+import React from "react";
 import * as RS from "reactstrap";
 import {Col, Container, Row} from "reactstrap";
 import {match, RouteComponentProps, withRouter} from "react-router-dom";
-import {fetchDoc, goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {goToSupersededByQuestion, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {
     determineAudienceViews,
     DOCUMENT_TYPE,
@@ -25,7 +23,7 @@ import {NavigationLinks} from "../elements/NavigationLinks";
 import {RelatedContent} from "../elements/RelatedContent";
 import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
-import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
+import {GameboardContext} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
 import {FastTrackProgress} from "../elements/FastTrackProgress";
 import queryString from "query-string";
@@ -33,6 +31,7 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {ReportButton} from "../elements/ReportButton";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -60,16 +59,14 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
     const gameboardId = query.board instanceof Array ? query.board[0] : query.board;
 
     const dispatch = useAppDispatch();
-    useEffect(() => {
-        dispatch(fetchDoc(DOCUMENT_TYPE.QUESTION, questionId));
-    }, [dispatch, questionId]);
+    const questionQuery = isaacApi.endpoints.getQuestion.useQuery(questionId);
 
-    return <ShowLoading until={doc} thenRender={supertypedDoc => {
-        const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-
-        const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
-
-        return <div className={`pattern-01 ${doc.subjectId || ""}`}>
+    return <ShowLoadingQuery
+        query={questionQuery}
+        defaultErrorTitle={"Error fetching question page"}
+        thenRender={doc => {
+            const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+            return <div className={`pattern-01 ${doc.subjectId || ""}`}>
             <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container>
                     {/*High contrast option*/}
@@ -126,6 +123,6 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     </Row>
                 </Container>
             </GameboardContext.Provider>
-        </div>}
-    } />;
+        </div>;
+    }} />;
 });

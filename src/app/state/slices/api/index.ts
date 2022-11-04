@@ -1,4 +1,5 @@
 import {
+    ACTION_TYPE,
     API_PATH,
     API_REQUEST_FAILURE_MESSAGE,
     FEATURED_NEWS_TAG,
@@ -6,21 +7,23 @@ import {
     isPhy,
     MEMBERSHIP_STATUS,
     NO_CONTENT,
-    NOT_FOUND,
-    QUESTION_CATEGORY
+    NOT_FOUND, QUESTION_ATTEMPT_THROTTLED_MESSAGE,
+    QUESTION_CATEGORY, TAG_ID, tags
 } from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {
+    AnsweredQuestionsByDate,
     AssignmentDTO,
-    AssignmentFeedbackDTO,
+    AssignmentFeedbackDTO, ChoiceDTO, ContentDTO, ContentSummaryDTO,
     GameboardDTO,
-    GameboardListDTO,
+    GameboardListDTO, GraphChoiceDTO,
     IsaacConceptPageDTO,
-    IsaacPodDTO,
-    IsaacWildcard,
-    QuizAssignmentDTO,
+    IsaacPodDTO, IsaacQuestionPageDTO,
+    IsaacTopicSummaryPageDTO,
+    IsaacWildcard, QuestionValidationResponseDTO,
+    QuizAssignmentDTO, SeguePageDTO, TestCaseDTO,
     TOTPSharedSecretDTO,
     UserSummaryWithGroupMembershipDTO,
 } from "../../../../IsaacApiTypes";
@@ -28,10 +31,11 @@ import {
     anonymisationFunctions,
     anonymiseIfNeededWith,
     anonymiseListIfNeededWith,
-    errorSlice,
-    logAction,
+    errorSlice, lockQuestion,
+    logAction, showErrorToast,
     showRTKQueryErrorToastIfNeeded,
-    showSuccessToast
+    showSuccessToast,
+    showToast, unlockQuestion
 } from "../../index";
 import {Dispatch} from "redux";
 import {
@@ -40,14 +44,16 @@ import {
     AppGroupMembership,
     AppGroupTokenDTO,
     BoardOrder,
-    Boards,
+    Boards, Choice, Concepts, DocumentSubject,
     EnhancedAssignment,
     GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
-    NumberOfBoards
+    NumberOfBoards, QuestionSearchQuery, QuestionSearchResponse, UserPreferencesDTO
 } from "../../../../IsaacAppTypes";
 import {SerializedError} from "@reduxjs/toolkit";
 import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
+import {response} from "msw";
+import {Immutable} from "immer";
 
 // This is used by default as the `baseQuery` of our API slice
 const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
@@ -124,25 +130,61 @@ export const extractDataFromQueryResponse = <T>(response: { data?: T } | { error
     return undefined;
 }
 
-export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError | undefined): {status?: number | string, message: string} => {
+export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError | undefined, defaultMessage?: string): {status?: number | string, message: string} => {
     if (e?.hasOwnProperty("data")) {
         // @ts-ignore
-        return {status: e.status, message: e?.data?.errorMessage ?? API_REQUEST_FAILURE_MESSAGE}
+        return {status: e.status, message: e?.data?.errorMessage ?? defaultMessage ?? API_REQUEST_FAILURE_MESSAGE}
     }
     if (e?.hasOwnProperty("message")) {
         const se = e as SerializedError;
-        return {status: se.code, message: se?.message ?? API_REQUEST_FAILURE_MESSAGE}
+        return {status: se.code, message: se?.message ?? defaultMessage ?? API_REQUEST_FAILURE_MESSAGE}
     }
-    return {message: API_REQUEST_FAILURE_MESSAGE}
+    return {message: defaultMessage ?? API_REQUEST_FAILURE_MESSAGE}
 }
+
+const API_TAGS = [
+    "GlossaryTerms",
+    "Gameboard",
+    "AllSetTests",
+    "GroupTests",
+    "AllGameboards",
+    "AllMyAssignments",
+    "SetAssignment",
+    "AllSetAssignments",
+    "GroupAssignments",
+    "AssignmentProgress",
+    "Groups",
+    "GroupMemberships",
+    "MyGroupMemberships",
+    "QuestionSearch",
+    "UserPreferences"
+];
+
+// FIXME used for rate limiting question attempts, should be replaced with a response from the server warning that the
+//  user is close to the attempt limit
+interface Attempt {
+    attempts: number;
+    timestamp: number;
+}
+const attempts: {[questionId: string]: Attempt} = {};
+
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "AllMyAssignments", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships"],
+    tagTypes: API_TAGS,
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     keepUnusedDataFor: 0,
     endpoints: (build) => ({
+
+        // === User ===
+
+        getUserPreferences: build.query<UserPreferencesDTO, void>({
+            query: () => ({
+                url: "/users/user_preferences"
+            }),
+            providesTags: ["UserPreferences"]
+        }),
 
         // === Content ===
 
@@ -169,11 +211,162 @@ const isaacApi = createApi({
             keepUnusedDataFor: 60
         }),
 
-        getPageFragment: build.query<IsaacConceptPageDTO, string>({
+        getPage: build.query<SeguePageDTO & DocumentSubject, string>({
+            query: (pageId) => ({
+                url: `/pages/${pageId}`
+            }),
+            transformResponse: tags.augmentDocWithSubject
+        }),
+
+        getPageFragment: build.query<ContentDTO, string>({
             query: (fragmentId) => ({
                 url: `/pages/fragments/${fragmentId}`
             }),
             keepUnusedDataFor: 60
+        }),
+
+        getTopicSummary: build.query<IsaacTopicSummaryPageDTO, TAG_ID>({
+            query: (topicTag) => ({
+                url: `/pages/topics/${topicTag}`
+            })
+        }),
+
+        // --- Questions ---
+
+        getQuestion: build.query<IsaacQuestionPageDTO & DocumentSubject, string>({
+            query: (id) => ({
+                url: `/pages/questions/${id}`
+            }),
+            transformResponse: tags.augmentDocWithSubject
+        }),
+
+        getAnsweredQuestionsByDate: build.query<AnsweredQuestionsByDate, {userId: number | string, fromDate: number, toDate: number, perDay: boolean}>({
+            query: ({userId, ...params}) => ({
+                url: `/pages/questions/${userId}`,
+                params
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to get answered question activity data"
+            })
+        }),
+
+        searchQuestions: build.query<ContentSummaryDTO[], QuestionSearchQuery>({
+            query: (query) => ({
+                url: `/pages/questions`,
+                params: query
+            }),
+            providesTags: ["QuestionSearch"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to search for questions"
+            }),
+            transformResponse: (questions: QuestionSearchResponse) =>
+                questions.results.map(q => ({
+                    ...q,
+                    url: q.url && q.url.replace("/isaac-api/api/pages","")
+                }))
+        }),
+
+        attemptQuestion: build.mutation<QuestionValidationResponseDTO, {id: string, answer: Immutable<ChoiceDTO>, gameboardId?: string}>({
+            query: ({id, answer}) => ({
+                method: "POST",
+                url: `/questions/${id}/answer`,
+                body: answer
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                onQuerySuccess: ({id, gameboardId}, response, {dispatch, getState}) => {
+                    const state = getState();
+                    const isAnonymous = !state?.user?.loggedIn;
+                    const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
+
+                    if (gameboardId) {
+                        dispatch(isaacApi.util.invalidateTags([{type: "Gameboard", id: gameboardId}]));
+                    }
+
+                    // This mirrors the soft limit checking on the server
+                    let lastAttempt = attempts[id];
+                    if (lastAttempt && lastAttempt.timestamp + timePeriod > Date.now()) {
+                        lastAttempt.attempts++;
+                        lastAttempt.timestamp = Date.now();
+                    } else {
+                        lastAttempt = {
+                            attempts: 1,
+                            timestamp: Date.now()
+                        };
+                        attempts[id] = lastAttempt;
+                    }
+                    const softLimit = isAnonymous ? 3 : 10;
+                    if (lastAttempt.attempts >= softLimit && !response.correct) {
+                        dispatch(showToast({
+                            color: "warning", title: "Approaching attempts limit", timeout: 10000,
+                            body: "You have entered several guesses for this question; soon it will be temporarily locked."
+                        }));
+                    }
+                },
+                onQueryError: ({id}, error, {dispatch, getState}) => {
+                    const state = getState();
+                    const isAnonymous = !state?.user?.loggedIn;
+                    const timePeriod = isAnonymous ? 5 * 60 * 1000 : 15 * 60 * 1000;
+                    if (error.status === 429) {
+                        dispatch(lockQuestion({id, time: Date.now() + timePeriod}));
+                        dispatch(showErrorToast(
+                            "Too many attempts",
+                            getRTKQueryErrorMessage(error, QUESTION_ATTEMPT_THROTTLED_MESSAGE).message,
+                            10000
+                        ));
+                        setTimeout( () => {
+                            dispatch(unlockQuestion(id));
+                        }, timePeriod);
+                    } else {
+                        dispatch(showErrorToast(
+                            "Question attempt failed",
+                            "Your answer could not be checked. Please try again."
+                        ));
+                    }
+                }
+            })
+        }),
+
+        testFreeTextQuestion: build.mutation<TestCaseDTO[], {userDefinedChoices: Choice[], testCases: TestCaseDTO[]}>({
+            query: (choicesAndCases) => ({
+                method: "POST",
+                url: "/questions/test?type=isaacFreeTextQuestion",
+                body: choicesAndCases
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to test free text question"
+            })
+        }),
+
+        generateGraphQuestionSpec: build.mutation<string[], GraphChoiceDTO>({
+            query: (graphChoice) => ({
+                method: "POST",
+                url: "/questions/generateSpecification",
+                body: graphChoice
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "There was a problem generating a graph specification"
+            }),
+            transformResponse: (response: {results: string[], totalResults: number}) => response.results
+        }),
+
+        // --- Concepts ---
+
+        listConcepts: build.query<ContentSummaryDTO[], {conceptIds?: string, tagIds?: string} | void>({
+            query: (searchParams) => ({
+                url: "/pages/concepts",
+                params: { limit: 999 , ids: searchParams?.conceptIds, tags: searchParams?.tagIds }
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading Concepts Failed"
+            }),
+            transformResponse: (response: Concepts) => response.results ?? []
+        }),
+
+        getConcept: build.query<IsaacConceptPageDTO & DocumentSubject, string>({
+            query: (id) => ({
+                url: `/pages/concepts/${id}`
+            }),
+            transformResponse: tags.augmentDocWithSubject
         }),
 
         // === Gameboards ===

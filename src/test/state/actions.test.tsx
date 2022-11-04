@@ -5,7 +5,6 @@ import thunk from "redux-thunk";
 import {
     fetchSearch,
     middleware,
-    registerQuestions,
     requestConstantsUnits,
     requestCurrentUser,
     requestEmailVerification,
@@ -57,8 +56,8 @@ describe("requestCurrentUser action", () => {
         const expectedAsyncActions = [
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST},
             {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS, userAuthSettings},
-            {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
-            {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences}
+            // {type: ACTION_TYPE.USER_PREFERENCES_REQUEST},
+            // {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_SUCCESS, userPreferences}
         ];
         const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
 
@@ -109,16 +108,6 @@ describe("requestCurrentUser action", () => {
         ];
         expect(store.getActions()).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
-    });
-});
-
-describe("registerQuestion action", () => {
-    it("dispatches a question registration action", () => {
-        const {manVsHorse} = questionDTOs;
-        const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, questions: [manVsHorse]}];
-        const store = mockStore();
-        store.dispatch(registerQuestions([manVsHorse]) as any);
-        expect(store.getActions()).toEqual(expectedActions);
     });
 });
 

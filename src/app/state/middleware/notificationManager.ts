@@ -10,7 +10,7 @@ import {
     withinLast50Minutes
 } from "../../services";
 import {Action} from "../../../IsaacAppTypes";
-import {logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
+import {isaacApi, logAction, needToUpdateUserContextDetails, openActiveModal, routerPageChange} from "../index";
 import {requiredAccountInformationModal} from "../../components/elements/modals/RequiredAccountInformationModal";
 import {loginOrSignUpModal} from "../../components/elements/modals/LoginOrSignUpModal";
 import {userContextReconfimationModal} from "../../components/elements/modals/UserContextReconfirmationModal";
@@ -44,14 +44,14 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
         }
     }
 
-    if (action.type === ACTION_TYPE.QUESTION_ATTEMPT_REQUEST) {
+    if (isaacApi.endpoints.attemptQuestion.matchPending(action)) {
         const lastQuestionId = persistence.session.load(KEY.FIRST_ANON_QUESTION);
-
+        const questionId = action.meta.arg.originalArgs.id;
         if (lastQuestionId === null) {
-            persistence.session.save(KEY.FIRST_ANON_QUESTION, action.questionId);
+            persistence.session.save(KEY.FIRST_ANON_QUESTION, questionId);
         } else if (
                 state && !isLoggedIn(state.user) &&
-                lastQuestionId !== action.questionId &&
+                lastQuestionId !== questionId &&
                 !withinLast2Hours(persistence.load(KEY.LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME))
             ) {
                 dispatch(logAction({

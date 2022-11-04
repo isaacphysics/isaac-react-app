@@ -3,7 +3,7 @@ import {AppQuestionDTO, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAp
 import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP} from './';
 import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
-import {Immutable} from "immer";
+import {castDraft, Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
 const IsaacReorderQuestion = lazy(() => import("../components/content/IsaacReorderQuestion"));
@@ -66,7 +66,7 @@ export const HUMAN_QUESTION_TAGS = new Map([
     ["chemistry_16", "Mastering Essential Pre-University Physical Chemistry"]
 ]);
 
-export function selectQuestionPart(questions?: AppQuestionDTO[], questionPartId?: string) {
+export function selectQuestionPart(questions?: Immutable<AppQuestionDTO[]>, questionPartId?: string) {
     return questions?.filter(question => question.id == questionPartId)[0];
 }
 
@@ -158,7 +158,7 @@ export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: strin
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     return {
         currentAttempt: questionPart?.currentAttempt as (Immutable<T> | undefined),
-        dispatchSetCurrentAttempt: (attempt: Immutable<T | ValidatedChoice<T>>) => dispatch(setCurrentAttempt(questionId, attempt)),
+        dispatchSetCurrentAttempt: (attempt: Immutable<T | ValidatedChoice<T>>) => dispatch(setCurrentAttempt({questionId, attempt})), // FIXME figure out how to remove this castDraft
         questionPart: questionPart
     };
 }

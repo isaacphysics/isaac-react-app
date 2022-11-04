@@ -2,15 +2,14 @@ import {ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {
     ALL_TOPICS_CRUMB,
     DOCUMENT_TYPE,
-    documentTypePathPrefix,
+    documentTypePathPrefix, isFound,
     isIntendedAudience,
     isPhy,
     LinkInfo,
     NOT_FOUND,
     UseUserContextReturnType
 } from "./";
-import {NOT_FOUND_TYPE, PotentialUser} from "../../IsaacAppTypes";
-import {CurrentTopicState} from "../state";
+import {PotentialUser} from "../../IsaacAppTypes";
 
 const filterForConcepts = (contents: ContentSummaryDTO[]) => {
     return contents.filter(content => content.type === DOCUMENT_TYPE.CONCEPT);
@@ -31,24 +30,24 @@ export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], u
     return [relatedConcepts, relatedQuestions];
 };
 
-export const getRelatedDocs = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
-    if (doc && doc != NOT_FOUND && doc.relatedContent) {
+export const getRelatedDocs = (doc: ContentDTO | undefined, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+    if (isFound(doc) && doc.relatedContent) {
         return filterAndSeparateRelatedContent(doc.relatedContent, userContext, user);
     }
     return [[], []];
 };
 
-export const getRelatedConcepts = (doc: ContentDTO | NOT_FOUND_TYPE | null, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+export const getRelatedConcepts = (doc: ContentDTO | undefined, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
     return getRelatedDocs(doc, userContext, user)[0];
 };
 
-const isValidIdForTopic = (contentId: string, currentTopic: CurrentTopicState) => {
-    if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
+const isValidIdForTopic = (contentId: string, currentTopic: ContentDTO | undefined) => {
+    if (isFound(currentTopic) && currentTopic.relatedContent) {
         return !!currentTopic.relatedContent.filter((content) => content.id === contentId);
     }
 };
 
-export const determineTopicHistory = (currentTopic: CurrentTopicState, currentDocId: string) => {
+export const determineTopicHistory = (currentTopic: ContentDTO | undefined, currentDocId: string) => {
     const result: LinkInfo[] = [];
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.id && currentTopic.title && currentTopic.relatedContent) {
         result.push(ALL_TOPICS_CRUMB);
@@ -63,7 +62,7 @@ export const makeAttemptAtTopicHistory = () => {
     return [ALL_TOPICS_CRUMB]
 };
 
-export const determineNextTopicContentLink = (currentTopic: CurrentTopicState | undefined, contentId: string, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
+export const determineNextTopicContentLink = (currentTopic: ContentDTO | undefined, contentId: string, userContext: UseUserContextReturnType, user: PotentialUser | null) => {
     if (currentTopic && currentTopic != NOT_FOUND && currentTopic.relatedContent) {
         if (isValidIdForTopic(contentId, currentTopic)) {
             const [relatedConcepts, relatedQuestions] =

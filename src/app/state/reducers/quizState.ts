@@ -9,6 +9,9 @@ import {
     QuizSummaryDTO
 } from "../../../IsaacApiTypes";
 import produce, {Immutable} from "immer";
+import {isaacApi} from "../slices/api";
+import {AnyAction} from "redux";
+import {questionsSlice} from "./questionState";
 
 type QuizState = {quizzes: QuizSummaryDTO[]; total: number} | null;
 export const quizzes = (quizzes: QuizState = null, action: Action) => {
@@ -132,7 +135,24 @@ const updateQuizAttemptQuestion = (questionId: string, questionAttempt: Immutabl
 })
 
 type QuizAttemptState = {attempt: QuizAttemptDTO} | {error: string} | null;
-export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Action): QuizAttemptState => {
+export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: AnyAction): QuizAttemptState => {
+    // The following two reducer cases update the current quiz attempt when the user answers a question, to keep
+    // the `bestAttempt`s in sync.
+    if (isaacApi.endpoints.attemptQuestion.matchFulfilled(action)) {
+        const questionAttempt = action.payload.answer;
+        if (questionAttempt && possibleAttempt && "attempt" in possibleAttempt) {
+            return updateQuizAttemptQuestion(action.meta.arg.originalArgs.id, questionAttempt)(possibleAttempt);
+        }
+        return possibleAttempt;
+    }
+    if (questionsSlice.actions.setCurrentAttempt.match(action)) {
+        if (possibleAttempt && "attempt" in possibleAttempt) {
+            const questionAttempt = "choice" in action.payload.attempt ? action.payload.attempt.choice : action.payload.attempt;
+            return updateQuizAttemptQuestion(action.payload.questionId, questionAttempt)(possibleAttempt);
+        }
+        return possibleAttempt;
+    }
+
     switch (action.type) {
         case ACTION_TYPE.QUIZ_LOAD_ATTEMPT_RESPONSE_SUCCESS:
             return {attempt: action.attempt};
@@ -156,20 +176,6 @@ export const quizAttempt = (possibleAttempt: QuizAttemptState = null, action: Ac
                 return possibleAttempt;
             }
             return null;
-        // The next two reducer cases update the current quiz attempt when the user answers a question, to keep
-        // the `bestAttempt`s in sync.
-        case ACTION_TYPE.QUESTION_SET_CURRENT_ATTEMPT:
-            if (possibleAttempt && 'attempt' in possibleAttempt) {
-                const questionAttempt = 'choice' in action.attempt ? action.attempt.choice : action.attempt;
-                return updateQuizAttemptQuestion(action.questionId, questionAttempt)(possibleAttempt);
-            }
-            return possibleAttempt;
-        case ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS:
-            const questionAttempt = action.response.answer;
-            if (questionAttempt && possibleAttempt && 'attempt' in possibleAttempt) {
-                return updateQuizAttemptQuestion(action.questionId, questionAttempt)(possibleAttempt);
-            }
-            return possibleAttempt;
         default:
             return possibleAttempt;
     }

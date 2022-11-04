@@ -1,6 +1,6 @@
 import React, {Suspense, useContext, useEffect} from "react";
 import {
-    attemptQuestion,
+    isaacApi,
     deregisterQuestions,
     registerQuestions,
     saveGameboard,
@@ -43,7 +43,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const validationResponse = questionPart?.validationResponse;
     const validationResponseTags = validationResponse?.explanation?.tags;
     const correct = validationResponse?.correct || false;
-    const locked = questionPart?.locked;
+    const locked = questionPart?.locked && new Date(questionPart.locked);
     const canSubmit = questionPart?.canSubmit && !locked || false;
     const sigFigsError = isPhy && validationResponseTags?.includes("sig_figs");
     const tooManySigFigsError = sigFigsError && validationResponseTags?.includes("sig_figs_too_many");
@@ -51,6 +51,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
     const invalidFormatError = validationResponseTags?.includes("unrecognised_format");
     const invalidFormatErrorStdForm = validationResponseTags?.includes("invalid_std_form");
     const fastTrackInfo = useFastTrackInformation(doc, location, canSubmit, correct);
+
+    const [attemptQuestion] = isaacApi.endpoints.attemptQuestion.useMutation();
 
     const {confidenceState, setConfidenceState, validationPending, setValidationPending, confidenceDisabled, recordConfidence, showQuestionFeedback} = useConfidenceQuestionsValues(
         currentGameboard?.tags?.includes("CONFIDENCE_RESEARCH_BOARD"),
@@ -80,8 +82,8 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     // Register Question Part in Redux
     useEffect(() => {
-        dispatch(registerQuestions([doc], accordion.clientId));
-        return () => dispatch(deregisterQuestions([doc.id as string]));
+        dispatch(registerQuestions({questions: [doc], accordionClientId: accordion.clientId}));
+        return () => {dispatch(deregisterQuestions([doc.id as string]));};
     }, [dispatch, doc.id]);
 
     // Select QuestionComponent from the question part's document type (or default)
@@ -101,9 +103,9 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
     return <ConfidenceContext.Provider value={{recordConfidence}}>
         <RS.Form onSubmit={function submitCurrentAttempt(event) {
-            if (event) {event.preventDefault();}
+            event?.preventDefault();
             if (questionPart?.currentAttempt) {
-                dispatch(attemptQuestion(doc.id as string, questionPart?.currentAttempt, currentGameboard?.id));
+                attemptQuestion({id: doc.id as string, answer: questionPart?.currentAttempt, gameboardId: currentGameboard?.id});
                 if (isLoggedIn(currentUser) && currentGameboard?.id && !currentGameboard.savedToCurrentUser) {
                     dispatch(saveGameboard({
                         boardId: currentGameboard.id,

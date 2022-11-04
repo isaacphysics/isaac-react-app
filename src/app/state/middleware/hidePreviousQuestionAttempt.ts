@@ -1,19 +1,20 @@
-import {Dispatch, Middleware, MiddlewareAPI} from "redux";
+import {AnyAction, Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {BEST_ATTEMPT_HIDDEN} from "../../../IsaacApiTypes";
-import {Action} from "../../../IsaacAppTypes";
-import {ACTION_TYPE} from "../../services";
+import {questionsSlice} from "../reducers/questionState";
 
-export const hidePreviousQuestionAttemptMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: Action) => {
-    if (action.type === ACTION_TYPE.QUESTION_REGISTRATION) {
+export const hidePreviousQuestionAttemptMiddleware: Middleware = (middlewareApi: MiddlewareAPI) => (dispatch: Dispatch) => async (action: AnyAction) => {
+    if (questionsSlice.actions.registerQuestions.match(action)) {
         const state = middlewareApi.getState();
         if (state.userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS) {
             return dispatch({
-                type: ACTION_TYPE.QUESTION_REGISTRATION,
-                questions: action.questions.map(q => ({
-                    ...q,
-                    bestAttempt: BEST_ATTEMPT_HIDDEN
-                })),
-                accordionClientId: action.accordionClientId
+                type: action.type,
+                payload: {
+                    questions: action.payload.questions.map(q => ({
+                        ...q,
+                        bestAttempt: BEST_ATTEMPT_HIDDEN
+                    })),
+                    accordionClientId: action.payload.accordionClientId
+                }
             });
         }
     }

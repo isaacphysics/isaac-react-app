@@ -1,9 +1,8 @@
 import React, {lazy, Suspense, useCallback, useEffect, useMemo, useState} from "react";
 import {
     AppState,
-    clearQuestionSearch,
     closeActiveModal,
-    searchQuestions,
+    isaacApi,
     useAppDispatch,
     useAppSelector
 } from "../../../state";
@@ -32,7 +31,7 @@ import {
     useUserContext
 } from "../../../services";
 import {ContentSummary} from "../../../../IsaacAppTypes";
-import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
+import {AudienceContext, ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
 
@@ -55,6 +54,10 @@ interface QuestionSearchModalProps {
 export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelectedQuestions, originalQuestionOrder, setOriginalQuestionOrder, eventLog}: QuestionSearchModalProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
+
+    // Local state storing questions returned from search
+    const [questions, setQuestions] = useState<ContentSummaryDTO[]>([]);
+    const [searchQuestions] = isaacApi.endpoints.searchQuestions.useLazyQuery();
 
     const [searchTopics, setSearchTopics] = useState<string[]>([]);
     const [searchQuestionName, setSearchQuestionName] = useState("");
@@ -80,7 +83,6 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(originalSelectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...originalQuestionOrder]);
 
-    const questions = useAppSelector((state: AppState) => state && state.questionSearchResult);
     const user = useAppSelector((state: AppState) => state && state.user);
 
     const searchDebounce = useCallback(
@@ -88,14 +90,14 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             const isBookSearch = book.length > 0; // Tasty.
             if ([searchString, topics, book, stages, difficulties, examBoards].every(v => v.length === 0) && !fasttrack) {
                 // Nothing to search for
-                dispatch(clearQuestionSearch);
+                setQuestions([]);
                 return;
             }
 
             const tags = (isBookSearch ? book : [...([topics].map((tags) => tags.join(" ")))].filter((query) => query != "")).join(" ")
             const examBoardString = examBoards.join(",");
 
-            dispatch(searchQuestions({
+            searchQuestions({
                 searchString: searchString,
                 tags,
                 stages: stages.join(",") || undefined,
@@ -104,7 +106,11 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                 fasttrack,
                 startIndex,
                 limit: 300
-            }));
+            }).then((result) => {
+                if (result.isSuccess) {
+                    setQuestions(result.data);
+                }
+            });
 
             logEvent(eventLog,"SEARCH_QUESTIONS", {searchString, topics, examBoards, book, stages, difficulties, fasttrack, startIndex});
         }, 250),

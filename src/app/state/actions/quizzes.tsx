@@ -5,8 +5,8 @@ import {
     AppDispatch,
     AppState,
     closeActiveModal,
-    extractMessage,
-    openActiveModal,
+    extractMessage, isaacApi,
+    openActiveModal, questionsSlice,
     selectors,
     showAxiosErrorToastIfNeeded
 } from "../index";
@@ -86,7 +86,7 @@ export const clearStudentQuizAttempt = () => (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.QUIZ_LOAD_STUDENT_ATTEMPT_FEEDBACK_RESPONSE_SUCCESS, studentAttempt: {}});
 };
 
-export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: string) => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
+export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: string) => async (dispatch: AppDispatch, getState: () => AppState) => {
     // Get current answer
     const state = getState();
     const questions = selectors.questions.getQuestions(state);
@@ -96,7 +96,7 @@ export const submitQuizQuestionIfDirty = (quizAttemptId: number, questionId: str
             const attempt = question.currentAttempt;
             if (attempt && question.canSubmit) {
                 // This clears the canSubmit flag so we need to dispatch it, even though we're crossing reducers.
-                dispatch({type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST, questionId, attempt});
+                dispatch(questionsSlice.actions.markQuestionAsSubmitted(questionId));
                 await api.quizzes.answer(quizAttemptId, questionId, attempt);
                 // Response is empty, so dispatch nothing
             }

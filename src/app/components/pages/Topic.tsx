@@ -1,13 +1,13 @@
 import React, {useEffect} from "react"
 import {Link, withRouter} from "react-router-dom";
-import {AppState, fetchTopicSummary, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {AppState, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {
     ALL_TOPICS_CRUMB,
     atLeastOne,
     examBoardLabelMap,
-    getRelatedDocs,
+    getRelatedDocs, isFound,
     NOT_FOUND,
     stageLabelMap,
     TAG_ID,
@@ -20,12 +20,10 @@ import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
-    const dispatch = useAppDispatch();
-    const topicPage = useAppSelector((state: AppState) => state ? state.currentTopic : null);
+    const {data} = isaacApi.endpoints.getTopicSummary.useQuery(topicName);
+    const topicPage = isFound(data) ? data : undefined;
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-
-    useEffect(() => {dispatch(fetchTopicSummary(topicName))}, [dispatch, topicName]);
 
     const [relatedConcepts, relatedQuestions] = getRelatedDocs(topicPage, userContext, user);
     const [relatedConceptsForSpecificViewingContext, relatedQuestionsForSpecificViewingContext] =

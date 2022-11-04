@@ -5,15 +5,6 @@ import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
 
 export const selectors = {
 
-    topic: {
-        currentTopic: (state: AppState) => {
-            if (!state) return null;
-            if (!state.currentTopic) return null;
-            if (state.currentTopic === NOT_FOUND) return null;
-            return state.currentTopic;
-        }
-    },
-
     boards: {
         boards: (state: AppState) => state?.boards ?? null
     },
@@ -29,8 +20,7 @@ export const selectors = {
         },
         anyQuestionPreviouslyAttempted: (state: AppState) => {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
-        },
-        graphSketcherSpec: (state: AppState) => state?.graphSketcherSpec,
+        }
     },
 
     segue: {
@@ -49,8 +39,6 @@ export const selectors = {
         progress: (state: AppState) => state?.myProgress,
         snapshot: (state: AppState) => state?.myProgress?.userSnapshot,
         achievementsRecord: (state: AppState) => state?.myProgress?.userSnapshot?.achievementsRecord,
-        answeredQuestionsByDate: (state: AppState) => state?.myAnsweredQuestionsByDate,
-        preferences: (state: AppState) => state?.userPreferences
     },
 
     mainContentId: {
@@ -59,7 +47,6 @@ export const selectors = {
 
     teacher: {
         userProgress: (state: AppState) => state?.userProgress && anonymiseIfNeededWith(anonymisationFunctions.userProgress)(state.userProgress),
-        userAnsweredQuestionsByDate: (state: AppState) => state?.userAnsweredQuestionsByDate
     },
 
     admin: {

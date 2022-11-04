@@ -1,31 +1,40 @@
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {Action, Concepts, NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
-import {ACTION_TYPE, NOT_FOUND, tags} from "../../services";
-import {routerPageChange} from "../index";
+import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
+import {NOT_FOUND, tags} from "../../services";
+import {isaacApi, routerPageChange} from "../index";
+import {createSlice, isAnyOf} from "@reduxjs/toolkit";
 
 type DocState = ContentDTO | NOT_FOUND_TYPE | null;
-export const doc = (doc: DocState = null, action: Action) => {
-    if (routerPageChange.match(action)) {
-        return null;
+export const docSlice = createSlice({
+    name: "doc",
+    initialState: null as DocState,
+    reducers: {},
+    extraReducers: builder => {
+        builder
+            .addMatcher(
+                isAnyOf(
+                    isaacApi.endpoints.getConcept.matchFulfilled,
+                    isaacApi.endpoints.getQuestion.matchFulfilled,
+                    isaacApi.endpoints.getPage.matchFulfilled,
+                    routerPageChange.match
+                ),
+                () => null
+            )
+            .addMatcher(
+                isAnyOf(
+                    isaacApi.endpoints.getConcept.matchFulfilled,
+                    isaacApi.endpoints.getQuestion.matchFulfilled,
+                    isaacApi.endpoints.getPage.matchFulfilled
+                ),
+                (_, action) => ({...tags.augmentDocWithSubject(action.payload)})
+            )
+            .addMatcher(
+                isAnyOf(
+                    isaacApi.endpoints.getConcept.matchRejected,
+                    isaacApi.endpoints.getQuestion.matchRejected,
+                    isaacApi.endpoints.getPage.matchRejected
+                ),
+                () => NOT_FOUND
+            )
     }
-    switch (action.type) {
-        case ACTION_TYPE.DOCUMENT_REQUEST:
-            return null;
-        case ACTION_TYPE.DOCUMENT_RESPONSE_SUCCESS:
-            return {...tags.augmentDocWithSubject(action.doc)};
-        case ACTION_TYPE.DOCUMENT_RESPONSE_FAILURE:
-            return NOT_FOUND;
-        default:
-            return doc;
-    }
-};
-
-export type ConceptsState = Concepts | null;
-export const concepts = (concepts: ConceptsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.CONCEPTS_RESPONSE_SUCCESS:
-            return action.concepts;
-        default:
-            return concepts;
-    }
-};
+});
