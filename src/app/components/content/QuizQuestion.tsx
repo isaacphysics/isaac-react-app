@@ -23,7 +23,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         };
     }, [dispatch, doc.id, quizAttempt]);
 
-    const validationResponse = doc?.bestAttempt;
+    const validationResponse = doc?.bestAttempt ?? undefined;
     const validated = validationResponse?.correct !== undefined || (!validationResponse && isDefined(quizAttempt?.completedDate));
     const correct = validationResponse?.correct;
     const sigFigsError = (validationResponse?.explanation?.tags || []).includes("sig_figs");
@@ -39,7 +39,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             <Suspense fallback={<Loading/>}>
-                <QuestionComponent questionId={doc.id as string} doc={doc} readonly={validated} {...{validationResponse}} />
+                <QuestionComponent questionId={doc.id as string} doc={doc} readonly={validated} validationResponse={validationResponse} />
             </Suspense>
 
             {/* CS Hints */}
