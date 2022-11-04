@@ -610,7 +610,7 @@ export const ClozeDropRegionContext = React.createContext<{
     register: (id: string, index: number) => void,
     questionPartId: string, readonly: boolean,
     inlineDropValueMap: {[p: string]: ClozeItemDTO},
-    dropZoneValidationMap: {[p: string]: boolean | undefined},
+    dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean
 } | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});

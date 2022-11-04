@@ -57,8 +57,11 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
 
     const item = dropRegionContext ? dropRegionContext.inlineDropValueMap[droppableId] : undefined;
 
-    // Only show if this drop zone is correct or not if it contains an item
-    const isCorrect = item && dropRegionContext ? dropRegionContext.dropZoneValidationMap[droppableId] : undefined;
+    // Only show if this drop zone is correct or not if it contains an item, and the validation entry in the map
+    // applies to this particular item
+    const isCorrect = item && dropRegionContext && dropRegionContext.dropZoneValidationMap[droppableId]?.itemId === item.id
+        ? dropRegionContext.dropZoneValidationMap[droppableId]?.correct
+        : undefined;
 
     const droppableTarget = rootElement?.querySelector(`#${id}`);
 
