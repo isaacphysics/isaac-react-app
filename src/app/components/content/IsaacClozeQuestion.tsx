@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
-    ClozeValidationResponseDTO,
+    ItemValidationResponseDTO,
     ContentDTO,
     IsaacClozeQuestionDTO,
     ItemChoiceDTO,
@@ -135,7 +135,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
     }, [active]);
 };
 
-const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ClozeValidationResponseDTO>) => {
+const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ItemValidationResponseDTO>) => {
 
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
