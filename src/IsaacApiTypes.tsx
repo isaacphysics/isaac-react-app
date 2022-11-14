@@ -304,7 +304,7 @@ export interface QuestionValidationResponseDTO {
     dateAttempted?: Date;
 }
 
-export interface ClozeValidationResponseDTO extends QuestionValidationResponseDTO {
+export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO {
     itemsCorrect?: boolean[];
 }
 

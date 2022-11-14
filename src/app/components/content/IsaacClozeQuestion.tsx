@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Badge, Label} from "reactstrap";
 import {
-    ClozeValidationResponseDTO,
+    ItemValidationResponseDTO,
     ContentDTO,
     IsaacClozeQuestionDTO,
     ItemChoiceDTO,
@@ -135,7 +135,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
     }, [active]);
 };
 
-const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ClozeValidationResponseDTO>) => {
+const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacClozeQuestionDTO, ItemValidationResponseDTO>) => {
 
     const { currentAttempt: rawCurrentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ItemChoiceDTO>(questionId);
     const currentAttempt = useMemo(() => rawCurrentAttempt ? {...rawCurrentAttempt, items: replaceNullItems(rawCurrentAttempt.items)} : undefined, [rawCurrentAttempt]);
@@ -149,14 +149,19 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ClozeItemDTO> | undefined)[]>(() => currentAttempt?.items || []);
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
-    const inlineDropValueMap = useMemo(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
+    const inlineDropValueMap = useMemo<{[p: string]: ClozeItemDTO}>(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
     // Compute map used to highlight each inline drop-zone with whether it is correct or not
     const itemsCorrect = validationResponse?.itemsCorrect;
-    const dropZoneValidationMap = useMemo<{[p: string]: boolean | undefined}>(() => isDefined(itemsCorrect)
-        ? Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: itemsCorrect.at(i)}), {})
-        : {}
-    , [itemsCorrect]);
+    const [dropZoneValidationMap, setDropZoneValidationMap] = useState<{[p: string]: {correct?: boolean, itemId?: string} | undefined}>({});
+    useEffect(() => {
+        if (isDefined(itemsCorrect)) {
+            // Tag each drop-zone validation with the id of the item currently in that zone. This means that we can
+            // conditionally show the validation based on whether it still applies to whatever item is in that
+            // drop-zone.
+            setDropZoneValidationMap(Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: {correct: itemsCorrect.at(i), itemId: inlineDropValueMap[dropId]?.id}}), {}));
+        }
+    }, [itemsCorrect, inlineDropValueMap]);
 
     // Manual management of which draggable item gets focus at the end of the drag. The new focus id is set in onDragEnd,
     // causing shouldGetFocus to be updated. shouldGetFocus is passed via the ClozeDropRegionContext to all draggable
