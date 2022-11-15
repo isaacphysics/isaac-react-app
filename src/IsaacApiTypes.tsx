@@ -304,6 +304,10 @@ export interface QuestionValidationResponseDTO {
     dateAttempted?: Date;
 }
 
+export interface ItemValidationResponseDTO extends QuestionValidationResponseDTO {
+    itemsCorrect?: boolean[];
+}
+
 export interface UserGroupDTO {
     id?: number;
     groupName?: string;
@@ -449,6 +453,7 @@ export interface ParsonsChoiceDTO extends ItemChoiceDTO {
 }
 
 export interface ItemDTO extends ContentDTO {
+    altText?: string;
 }
 
 export interface ParsonsItemDTO extends ItemDTO {

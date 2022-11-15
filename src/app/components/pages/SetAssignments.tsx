@@ -55,6 +55,7 @@ import {
     isStaff,
     Item,
     itemise,
+    nthHourOf,
     selectOnChange,
     siteSpecific,
     sortIcon,
@@ -73,6 +74,7 @@ import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
 
 type BoardProps = {
     user: RegisteredUserDTO;
+    allowScheduling: boolean;
     groups: UserGroupDTO[];
     board: GameboardDTO;
     assignees: BoardAssignee[];
@@ -80,7 +82,7 @@ type BoardProps = {
     boards?: Boards;
 }
 
-const AssignGroup = ({groups, board}: BoardProps) => {
+const AssignGroup = ({groups, board, allowScheduling}: BoardProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
@@ -101,13 +103,13 @@ const AssignGroup = ({groups, board}: BoardProps) => {
 
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getMonth() + 1;
-    const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() >= dueDate.valueOf() : false;
+    const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
         const utcDate = e.target.valueAsDate as Date;
         const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
         // Sets the scheduled date to 7AM in the timezone of the browser.
-        setScheduledStartDate(scheduledDate)
+        setScheduledStartDate(scheduledDate);
     }
 
     return <Container className="py-2">
@@ -119,15 +121,14 @@ const AssignGroup = ({groups, board}: BoardProps) => {
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
-        {/* TODO remove staff role requirement */}
-        {isStaff(user) && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+        {allowScheduling && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                        onChange={setScheduledStartDateAtSevenAM} />
         </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after start date.</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -172,7 +173,7 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
     </button>;
 
 const Board = (props: BoardProps) => {
-    const {user, board, assignees, boardView} = props;
+    const {user, allowScheduling, board, assignees, boardView} = props;
     const dispatch = useAppDispatch();
     const {hash} = useLocation();
     const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
@@ -215,8 +216,7 @@ const Board = (props: BoardProps) => {
 
     const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
-    // TODO remove is staff role requirement
-    const startedAssignees = useMemo(() => isStaff(user) ? assignees.filter(hasStarted) : assignees, [assignees]);
+    const startedAssignees = useMemo(() => allowScheduling ? assignees.filter(hasStarted) : assignees, [assignees]);
     const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
 
     return <>
@@ -244,8 +244,7 @@ const Board = (props: BoardProps) => {
                         )}</Container>
                         : <p>No groups.</p>}
                 </div>
-                {/* TODO remove staff role requirement */}
-                {isStaff(user) && <div className="py-2">
+                {allowScheduling && <div className="py-2">
                     <Label>Pending assignments: <span className="icon-help mx-1" id={`pending-assignments-help-${board.id}`}/></Label>
                     <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board.id}`}>
                         Assignments that are scheduled to begin at a future date. Once the start date passes, students
@@ -371,6 +370,7 @@ export const AddGameboardButtons = ({className, redirectBackTo}: {className: str
 export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+    const userPreferences = useAppSelector(selectors.user.preferences);
     const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
     const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
@@ -398,6 +398,9 @@ export const SetAssignments = () => {
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
+
+    // Whether to let the user schedule assignments for the future
+    const allowScheduling = isStaff(user) || (userPreferences?.BETA_FEATURE?.SCHEDULE_ASSIGNMENTS ?? false);
 
     const pageHelp = <span>
         Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
@@ -467,6 +470,7 @@ export const SetAssignments = () => {
                                                 board={board}
                                                 boardView={boardView}
                                                 assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                allowScheduling={allowScheduling}
                                             />
                                         </Col>)}
                                 </Row>
@@ -555,6 +559,7 @@ export const SetAssignments = () => {
                                                         boardView={boardView}
                                                         boards={boards}
                                                         assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                        allowScheduling={allowScheduling}
                                                     />)
                                             }
                                             </tbody>

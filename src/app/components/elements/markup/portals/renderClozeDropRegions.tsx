@@ -11,7 +11,7 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
     const dropRegionContext = useContext(ClozeDropRegionContext);
     if (!dropRegionContext) return [html, () => []];
 
-    const dropIds: { id: string; index: number }[] = [];
+    const dropIds: { id: string; index: number; width: string; height: string; }[] = [];
     const safeQuestionId = dropRegionContext.questionPartId.replaceAll("_", "-");
     const htmlDom = document.createElement("html");
     htmlDom.innerHTML = html;
@@ -21,16 +21,27 @@ export const useClozeDropRegionsInHtml: PortalInHtmlHook = (html) => {
     if (dropZones.length === 0) return [html, () => []];
     for (let i = 0; i < dropZones.length; i++) {
         const index = parseInt(dropZones[i].dataset.index ?? "x");
+        const width = dropZones[i].dataset.width ?? "100";
+        const height = dropZones[i].dataset.height ?? "27";
         if (isNaN(index)) {
             console.error("Drop zone div element has invalid index data attribute!", dropZones[i]);
             continue;
         }
         dropZones[i].setAttribute("id", `${dropZones[i].id}-${safeQuestionId}`);
-        dropIds.push({id: dropZones[i].id, index});
+        dropIds.push({id: dropZones[i].id, index, width, height});
     }
 
     return [
         htmlDom.innerHTML,
-        (ref?: HTMLElement) => ref ? dropIds.map(({id, index}) => <InlineDropRegion key={id} rootElement={ref} id={id} index={index}/>) : []
+        (ref?: HTMLElement) => ref ? dropIds.map(({id, index, width, height}) =>
+            <InlineDropRegion
+                key={id}
+                rootElement={ref}
+                id={id}
+                index={index}
+                emptyWidth={width}
+                emptyHeight={height}
+            />
+        ) : []
     ];
 }
