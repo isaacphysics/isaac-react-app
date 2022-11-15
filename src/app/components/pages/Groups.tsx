@@ -1,5 +1,4 @@
-import React, {MutableRefObject, useEffect, useRef, useState} from "react";
-import {connect} from "react-redux";
+import React, {MutableRefObject, useEffect, useMemo, useRef, useState} from "react";
 import {
     Button,
     ButtonDropdown,
@@ -18,82 +17,44 @@ import {
     NavItem,
     NavLink,
     Row,
-    TabContent,
-    TabPane,
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap"
 import {Link} from "react-router-dom";
 import {
-    AppState,
-    createGroup,
-    deleteGroup,
-    deleteMember,
-    getGroupInfo,
-    loadGroups,
     resetMemberPassword,
-    selectGroup,
-    selectors,
-    showAdditionalManagerSelfRemovalModal,
-    showGroupEmailModal,
-    showGroupInvitationModal,
+    isaacApi,
     showGroupManagersModal,
-    updateGroup,
-    useAppSelector
+    showGroupInvitationModal,
+    showGroupEmailModal,
+    showAdditionalManagerSelfRemovalModal,
+    showErrorToast,
+    useAppDispatch,
+    mutationSucceeded
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
-import {RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isStaff, siteSpecific} from "../../services";
-
-const stateFromProps = (state: AppState) => (state && {
-    groups: selectors.groups.groups(state),
-    group: selectors.groups.current(state),
-    user: state.user as RegisteredUserDTO
-});
-
-const dispatchFromProps = {loadGroups, selectGroup, createGroup, deleteGroup, updateGroup, getGroupInfo, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal, showAdditionalManagerSelfRemovalModal};
-
-interface GroupsPageProps {
-    groups: {active: AppGroup[] | null; archived: AppGroup[] | null};
-    group: AppGroup | null;
-    user: RegisteredUserDTO;
-    loadGroups: (getArchived: boolean) => void;
-    selectGroup: (group: UserGroupDTO | null) => void;
-    createGroup: (groupName: string) => Promise<AppGroup>;
-    deleteGroup: (group: AppGroup) => void;
-    updateGroup: (newGroup: AppGroup, message?: string) => void;
-    getGroupInfo: (group: AppGroup) => void;
-    resetMemberPassword: (member: AppGroupMembership) => void;
-    deleteMember: (member: AppGroupMembership) => void;
-    showGroupInvitationModal: (firstTime: boolean) => void;
-    showGroupManagersModal: () => void;
-    showGroupEmailModal: (users?: number[]) => void;
-    showAdditionalManagerSelfRemovalModal: (groupToModify: AppGroup, user: RegisteredUserDTO, showArchived: boolean) => void;
-}
+import {ifKeyIsEnter, isCS, isDefined, isStaff, siteSpecific} from "../../services";
+import {RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 enum SortOrder {
-    "Alphabetical" = "Alphabetical",
-    "Date Created" = "Date Created"
+    Alphabetical = "Alphabetical",
+    DateCreated = "Date Created"
 }
 
 interface GroupCreatorProps {
-    createNewGroup: (groupName: string) => void;
+    createNewGroup: (newGroupName: string) => Promise<boolean>;
 }
-
-type GroupEditorProps = GroupsPageProps & GroupCreatorProps & {
-    groupNameRef?: MutableRefObject<HTMLInputElement | null>;
-};
-
 let tooltip = 0;
 const Tooltip = ({children, tipText, ...props}: any) => {
     const [tooltipId] = useState("forTooltip-" + tooltip++);
-    return <React.Fragment>
+    return <>
         <span id={tooltipId} {...props}>{children}</span>
         <UncontrolledTooltip target={`#${tooltipId}`}>{tipText}</UncontrolledTooltip>
-    </React.Fragment>;
+    </>;
 };
 
 const canSendPasswordResetRequest = function(user: AppGroupMembership, passwordRequestSent: boolean) {
@@ -113,21 +74,22 @@ const passwordResetInformation = function(member: AppGroupMembership, passwordRe
 };
 
 interface MemberInfoProps {
+    group: AppGroup;
     member: AppGroupMembership;
-    resetMemberPassword: (member: AppGroupMembership) => void;
-    deleteMember: (member: AppGroupMembership) => void;
 }
-const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps) => {
+const MemberInfo = ({group, member}: MemberInfoProps) => {
+    const dispatch = useAppDispatch();
     const [passwordRequestSent, setPasswordRequestSent] = useState(false);
+    const [deleteMember] = isaacApi.endpoints.deleteGroupMember.useMutation();
 
     function resetPassword() {
         setPasswordRequestSent(true);
-        resetMemberPassword(member);
+        dispatch(resetMemberPassword(member));
     }
 
     function confirmDeleteMember() {
-        if (confirm("Are you sure you want to remove this user from the group?")) {
-            deleteMember(member);
+        if (confirm(`Are you sure you want to remove this user from the group '${group.groupName}'?`)) {
+            deleteMember({groupId: group.id as number, userId: member.id as number});
         }
     }
 
@@ -147,7 +109,10 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
             </div>
             <div>
                 {member.emailVerificationStatus == "DELIVERY_FAILED" &&
-                    <Tooltip tipText={<React.Fragment>This user&apos;s account email address is invalid or not accepting email.<br />They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.</React.Fragment>} className="icon-email-status failed" />
+                    <Tooltip tipText={<>
+                        This user&apos;s account email address is invalid or not accepting email.<br />
+                        They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.
+                    </>} className="icon-email-status failed" />
                 }
                 {member.emailVerificationStatus == "NOT_VERIFIED" &&
                     <Tooltip tipText="This user has not yet verified their email." className="icon-email-status unverified" />
@@ -171,43 +136,54 @@ const MemberInfo = ({member, resetMemberPassword, deleteMember}: MemberInfoProps
     </div>;
 };
 
-const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupNameRef, resetMemberPassword, deleteMember, showGroupInvitationModal, showGroupManagersModal, showGroupEmailModal, showArchived, showAdditionalManagerSelfRemovalModal}: GroupEditorProps & {showArchived: boolean}) => {
+interface GroupEditorProps {
+    user: RegisteredUserDTO;
+    group?: AppGroup;
+    groupNameInputRef?: MutableRefObject<HTMLInputElement | null>;
+}
+const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCreatorProps & GroupEditorProps) => {
+    const dispatch = useAppDispatch();
+
+    const [updateGroup] = isaacApi.endpoints.updateGroup.useMutation();
+
     const [isExpanded, setExpanded] = useState(false);
-
-    const initialGroupName = group ? group.groupName : "";
-    const [newGroupName, setNewGroupName] = useState(initialGroupName);
-
-    const user = useAppSelector((state: AppState) => state && state.user || null);
-    const isUserGroupOwner = user?.loggedIn && user.id === group?.ownerId;
+    const [newGroupName, setNewGroupName] = useState(group ? group.groupName : "");
+    const isUserGroupOwner = user.id === group?.ownerId;
 
     useEffect(() => {
         setExpanded(false);
-        setNewGroupName(initialGroupName);
-    }, [group]);
+        setNewGroupName(group?.groupName ?? "");
+    }, [group?.id]);
 
     function saveUpdatedGroup(event: React.FormEvent) {
-        if (event) {
-            event.preventDefault();
+        event?.preventDefault();
+        if (!newGroupName || newGroupName.length === 0) {
+            dispatch(showErrorToast(`Cannot ${group ? "rename" : "create"} group`, "The group name must be specified."));
+            return;
         }
         if (group) {
-            const newGroup = {...group, groupName: newGroupName};
-            updateGroup(newGroup);
+            const updatedGroup = {...group, groupName: newGroupName};
+            updateGroup({updatedGroup});
         } else {
-            if (newGroupName) {
-                createNewGroup(newGroupName);
-            }
+            createNewGroup(newGroupName).then(success => {
+                if (success) {
+                    setNewGroupName("");
+                }
+            });
         }
     }
 
     function toggleArchived() {
         if (group) {
-            const newGroup = {...group, archived: !group.archived};
-            updateGroup(newGroup, "Group " + group.groupName + (newGroup.archived ? " archived" : " unarchived"));
-            selectGroup(null);
+            const updatedGroup = {...group, archived: !group.archived};
+            updateGroup({
+                updatedGroup,
+                message: "Group " + group.groupName + (updatedGroup.archived ? " archived" : " unarchived")
+            });
         }
     }
 
-    function groupUserIds(group: AppGroup | null) {
+    function groupUserIds(group?: AppGroup) {
         let groupUserIdList: number[] = [];
         group && group.members && group.members.map((member: AppGroupMembership) =>
             member.groupMembershipInformation.userId && member.authorisedFullAccess &&
@@ -226,7 +202,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
             <Row className="mt-2">
                 <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
-                    <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => showGroupManagersModal()}>
+                    <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                         Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
@@ -234,7 +210,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                     <Button
                         size="sm" className={isCS ? "text-white" : "" + " d-none d-sm-inline"}
                         color={siteSpecific("primary", "secondary")}
-                        onClick={() => showGroupInvitationModal(false)}
+                        onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                     >
                         Invite users
                     </Button>
@@ -243,7 +219,7 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                             <Button
                                 size="sm" className={isCS ? "text-white" : ""}
                                 color={siteSpecific("primary", "secondary")}
-                                onClick={() => showGroupEmailModal(usersInGroup)}
+                                onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
                             >
                                 Email users
                             </Button>
@@ -253,13 +229,13 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
             <Form inline onSubmit={saveUpdatedGroup} className="pt-3">
                 <InputGroup className="w-100">
                     <Input
-                        innerRef={groupNameRef} length={50} placeholder="Group name" value={newGroupName}
-                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={!isUserGroupOwner && group !== null}
+                        innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
+                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !isUserGroupOwner}
                     />
-                    {(isUserGroupOwner || group === null) && <InputGroupAddon addonType="append">
+                    {(isUserGroupOwner || !isDefined(group)) && <InputGroupAddon addonType="append">
                         <Button
                             color={siteSpecific("secondary", "primary")}
-                            className="p-0 border-dark" disabled={newGroupName == "" || initialGroupName == newGroupName}
+                            className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                             onClick={saveUpdatedGroup}
                         >
                             {group ? "Update" : "Create"}
@@ -298,7 +274,8 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
                                     {(!bigGroup || isExpanded) && group.members.map((member: AppGroupMembership) => (
                                         <MemberInfo
                                             key={member.groupMembershipInformation.userId}
-                                            {...{member, resetMemberPassword, deleteMember}}
+                                            member={member}
+                                            group={group}
                                         />
                                     ))}
                                 </div>
@@ -311,14 +288,17 @@ const GroupEditor = ({group, selectGroup, updateGroup, createNewGroup, groupName
     </Card>;
 };
 
-const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorProps & {className: string}) => {
+const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorProps & {className: string}) => {
     const [newGroupName, setNewGroupName] = useState("");
 
     function saveUpdatedGroup() {
-        createNewGroup(newGroupName);
-        setNewGroupName("");
+        createNewGroup(newGroupName).then(success => {
+            if (success) {
+                setNewGroupName("");
+            }
+        });
     }
-    return <Row {...props}>
+    return <Row className={className}>
         <Col size={12} className="mt-2">
             <h6>Create New Group</h6>
         </Col>
@@ -334,82 +314,90 @@ const MobileGroupCreatorComponent = ({createNewGroup, ...props}: GroupCreatorPro
     </Row>;
 };
 
-const GroupsPageComponent = (props: GroupsPageProps) => {
-    const {group, groups, user, loadGroups, getGroupInfo, selectGroup, createGroup, deleteGroup, showGroupInvitationModal, showAdditionalManagerSelfRemovalModal} = props;
-
+export const Groups = ({user}: {user: RegisteredUserDTO}) => {
+    const dispatch = useAppDispatch();
     const [showArchived, setShowArchived] = useState(false);
+    const groupQuery = isaacApi.endpoints.getGroups.useQuery(showArchived);
+    const { data: groups } = groupQuery;
 
+    const [createGroup] = isaacApi.endpoints.createGroup.useMutation();
+    const [deleteGroup] = isaacApi.endpoints.deleteGroup.useMutation();
+
+    const [selectedGroupId, setSelectedGroupId] = useState<number>();
+    const selectedGroup = groups?.find(g => g.id === selectedGroupId);
+
+    // Clear the selected group when switching between tabs
+    const switchTab = (archived: boolean) => {
+        setShowArchived(archived);
+        setSelectedGroupId(undefined);
+    }
     const tabs = [
         {
             name: "Active",
-            data: groups && groups.active,
             active: () => !showArchived,
-            activate: () => setShowArchived(false)
+            activate: () => switchTab(false)
         },
         {
             name: "Archived",
-            data: groups && groups.archived,
             active: () => showArchived,
-            activate: () => setShowArchived(true)
+            activate: () => switchTab(true)
         }
     ];
-    const activeTab = tabs.find(tab => tab.active());
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
-    let data = activeTab && activeTab.data;
-    if (data) {
+    const sortedGroups = useMemo(() => {
+        if (!groups) return [];
         switch(sortOrder) {
             case SortOrder.Alphabetical:
-                data.sort((a, b) => {
+                return groups.slice().sort((a, b) => {
                     if (a.groupName && b.groupName) return (a.groupName.localeCompare(b.groupName, undefined, { numeric: true, sensitivity: 'base' }));
                     return 1;
                 });
-                break;
-            case SortOrder["Date Created"]:
-                data = sortBy(data, g => g.created).reverse();
-                break;
+            case SortOrder.DateCreated:
+                return sortBy(groups, g => g.created).reverse();
         }
-    }
+    }, [groups, sortOrder]);
 
-    const createNewGroup = async (newGroupName: string) => {
+    const createNewGroup: (newGroupName: string) => Promise<boolean> = async (newGroupName: string) => {
         setShowArchived(false);
-        const group = await createGroup(newGroupName);
-        selectGroup(group);
-        showGroupInvitationModal(true);
+        return createGroup(newGroupName).then(async (result) => {
+            if (mutationSucceeded(result)) {
+                const group = result.data;
+                if (!group.id) return false;
+                dispatch(showGroupInvitationModal({group, user, firstTime: true}));
+                setSelectedGroupId(group.id);
+                return true;
+            }
+            return false;
+        });
     };
 
     const confirmDeleteGroup = (groupToDelete: AppGroup) => {
         if (user.id === groupToDelete.ownerId) {
             if (confirm("Are you sure you want to permanently delete the group '" + groupToDelete.groupName + "' and remove all associated assignments?\n\nTHIS ACTION CANNOT BE UNDONE!")) {
-                deleteGroup(groupToDelete);
-                if (group && group.id == groupToDelete.id) {
-                    selectGroup(null);
-                }
+                deleteGroup(groupToDelete.id as number).then(result => {
+                    if (mutationSucceeded(result)) {
+                        setSelectedGroupId(undefined);
+                    }
+                });
             }
         } else {
             if (confirm("You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '" + groupToDelete.groupName + "'?")) {
-                showAdditionalManagerSelfRemovalModal(groupToDelete, user, showArchived);
+                dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
             }
         }
     };
 
+    // Get member data for selected group
+    const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
     useEffect(() => {
-        loadGroups(showArchived);
-        // Clear the selected group when switching between tabs
-        selectGroup(null);
-    }, [showArchived]);
-
-    const groupId = group && group.id;
-
-    useEffect(() => {
-        if (group) {
-            getGroupInfo(group);
+        if (selectedGroup?.id) {
+            getGroupMembers(selectedGroup.id);
         }
-    }, [groupId]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
+    }, [selectedGroup?.id]); // This can't just be group, because group changes when the members change, causing an infinite reload loop
 
-
-    const groupNameRef = useRef<HTMLInputElement>(null);
+    const groupNameInputRef = useRef<HTMLInputElement>(null);
 
     const pageHelp = <span>
         Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.
@@ -419,10 +407,10 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
-        <Row className="mb-5">
-            <Col md={4}>
-                <ShowLoading until={activeTab}>
-                    {activeTab && <Card>
+        <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
+            <Row className="mb-5">
+                <Col md={4}>
+                    <Card>
                         <CardBody className="mt-2">
                             <Nav tabs className="d-flex flex-wrap">
                                 {tabs.map((tab, index) => {
@@ -437,71 +425,63 @@ const GroupsPageComponent = (props: GroupsPageProps) => {
                                     </NavItem>;
                                 })}
                             </Nav>
-                            <TabContent activeTab="thisOne">
-                                <TabPane tabId="thisOne">
-                                    <ShowLoading until={data}>
-                                        <Row className="align-items-center pt-4 pb-3 d-none d-md-flex">
-                                            <Col>
-                                                <strong>Groups:</strong>
-                                            </Col>
-                                            <Col className="text-right">
-                                                <UncontrolledButtonDropdown size="sm">
-                                                    <DropdownToggle color="tertiary" caret>
-                                                        {sortOrder}
-                                                    </DropdownToggle>
-                                                    <DropdownMenu>
-                                                        {Object.values(SortOrder).map(item =>
-                                                            <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
-                                                        )}
-                                                    </DropdownMenu>
-                                                </UncontrolledButtonDropdown>
-                                            </Col>
-                                        </Row>
-                                        <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
-                                        {group && <Row className="d-none d-md-block mb-3">
-                                            <Col>
-                                                <Button block color="primary" outline onClick={() => {
-                                                    selectGroup(null);
-                                                    if (groupNameRef.current) {
-                                                        groupNameRef.current.focus();
-                                                    }
-                                                }}>Create new group</Button>
-                                            </Col>
-                                        </Row>}
-                                        <Row className="mt-3 mt-md-0">
-                                            <Col>
-                                                {data && data.map((g: AppGroup) =>
-                                                    <div key={g.id} className="group-item p-2">
-                                                        <div className="d-flex justify-content-between align-items-center">
-                                                            <Button color="link text-left" className="flex-fill" onClick={() => selectGroup(g)}>
-                                                                {g.groupName}
-                                                            </Button>
-                                                            <button
-                                                                onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
-                                                                aria-label="Delete group" className="close ml-1"
-                                                            >
-                                                                ×
-                                                            </button>
-                                                        </div>
-                                                        {group && group.id == g.id && <div className="d-md-none py-2">
-                                                            <GroupEditor {...props} createNewGroup={createNewGroup} showArchived={showArchived}/>
-                                                        </div>}
-                                                    </div>
-                                                )}
-                                            </Col>
-                                        </Row>
-                                    </ShowLoading>
-                                </TabPane>
-                            </TabContent>
+                            <Row className="align-items-center pt-4 pb-3 d-none d-md-flex">
+                                <Col>
+                                    <strong>Groups:</strong>
+                                </Col>
+                                <Col className="text-right">
+                                    <UncontrolledButtonDropdown size="sm">
+                                        <DropdownToggle color="tertiary" caret>
+                                            {sortOrder}
+                                        </DropdownToggle>
+                                        <DropdownMenu>
+                                            {Object.values(SortOrder).map(item =>
+                                                <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
+                                            )}
+                                        </DropdownMenu>
+                                    </UncontrolledButtonDropdown>
+                                </Col>
+                            </Row>
+                            <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
+                            <Row className="d-none d-md-block mb-3">
+                                <Col>
+                                    <Button block color="primary" outline onClick={() => {
+                                        setSelectedGroupId(undefined);
+                                        if (groupNameInputRef.current) {
+                                            groupNameInputRef.current.focus();
+                                        }
+                                    }}>Create new group</Button>
+                                </Col>
+                            </Row>
+                            <Row className="mt-3 mt-md-0">
+                                <Col>
+                                    {sortedGroups && sortedGroups.map((g: AppGroup) =>
+                                        <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <Button color="link text-left" data-testid={"select-group"} className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
+                                                    {g.groupName}
+                                                </Button>
+                                                <button
+                                                    onClick={(e) => {e.stopPropagation(); confirmDeleteGroup(g);}}
+                                                    aria-label="Delete group" className="close ml-1" title={"Delete group"}
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-md-none py-2">
+                                                <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
+                                            </div>}
+                                        </div>
+                                    )}
+                                </Col>
+                            </Row>
                         </CardBody>
-                    </Card>}
-                </ShowLoading>
-            </Col>
-            <Col md={8} className="d-none d-md-block">
-                <GroupEditor {...props} createNewGroup={createNewGroup} groupNameRef={groupNameRef} showArchived={showArchived} />
-            </Col>
-        </Row>
+                    </Card>
+                </Col>
+                <Col md={8} className="d-none d-md-block" data-testid={"group-editor"}>
+                    <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
+                </Col>
+            </Row>
+        </ShowLoadingQuery>
     </Container>;
 };
-
-export const Groups = connect(stateFromProps, dispatchFromProps)(GroupsPageComponent); // Cannot remove connect here yet because we depend on an dispatched action's result

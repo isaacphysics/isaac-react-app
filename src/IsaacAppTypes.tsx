@@ -11,7 +11,7 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
-    QuestionDTO,
+    QuestionDTO, QuestionValidationResponseDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
@@ -30,7 +30,6 @@ import {
     TAG_ID,
     TAG_LEVEL
 } from "./app/services";
-import {DropResult} from "react-beautiful-dnd";
 import {Immutable} from "immer";
 
 export type Action =
@@ -264,45 +263,9 @@ export type Action =
     | {type: ACTION_TYPE.ACTIVE_MODAL_OPEN; activeModal: ActiveModal}
     | {type: ACTION_TYPE.ACTIVE_MODAL_CLOSE}
 
-    | {type: ACTION_TYPE.GROUPS_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_RESPONSE_SUCCESS; groups: ApiTypes.UserGroupDTO[]; archivedGroupsOnly: boolean}
-
-    | {type: ACTION_TYPE.GROUPS_SELECT; group: ApiTypes.UserGroupDTO | null}
-
-    | {type: ACTION_TYPE.GROUPS_CREATE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_CREATE_RESPONSE_SUCCESS; newGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_DELETE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_SUCCESS; deletedGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_DELETE_RESPONSE_FAILURE; deletedGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_SUCCESS; updatedGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_UPDATE_RESPONSE_FAILURE; updatedGroup: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_REQUEST; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; members: ApiTypes.UserSummaryWithGroupMembershipDTO[]}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
-
-    | {type: ACTION_TYPE.GROUPS_TOKEN_REQUEST; group: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; token: string}
-    | {type: ACTION_TYPE.GROUPS_TOKEN_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO}
-
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_REQUEST; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_SUCCESS; member: AppGroupMembership}
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_REQUEST; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_SUCCESS; member: AppGroupMembership}
-    | {type: ACTION_TYPE.GROUPS_MEMBERS_DELETE_RESPONSE_FAILURE; member: AppGroupMembership}
-
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_REQUEST; group: ApiTypes.UserGroupDTO; managerEmail: string}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; managerEmail: string; newGroup: ApiTypes.UserGroupDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_ADD_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; managerEmail: string}
-
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_REQUEST; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_SUCCESS; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
-    | {type: ACTION_TYPE.GROUPS_MANAGER_DELETE_RESPONSE_FAILURE; group: ApiTypes.UserGroupDTO; manager: ApiTypes.UserSummaryWithEmailAddressDTO}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: AugmentedEvent[]; total: number}
@@ -443,10 +406,11 @@ export type NOT_FOUND_TYPE = 404;
 
 export type ConfidenceType = "quick_question" | "question";
 
-export interface IsaacQuestionProps<T extends QuestionDTO> {
+export interface IsaacQuestionProps<T extends QuestionDTO, R extends QuestionValidationResponseDTO = QuestionValidationResponseDTO> {
     doc: T;
     questionId: string;
     readonly?: boolean;
+    validationResponse?: Immutable<R>;
 }
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
@@ -470,7 +434,9 @@ export interface ShortcutResponse extends ContentSummaryDTO {
     hash?: string;
 }
 
-export interface UserBetaFeaturePreferences {}
+export interface UserBetaFeaturePreferences {
+    SCHEDULE_ASSIGNMENTS?: boolean;
+}
 
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;
@@ -642,7 +608,13 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
-export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string, updateAttemptCallback: (dropResult: DropResult) => void, readonly: boolean, inlineDropValueMap: {[p: string]: ClozeItemDTO}, borderMap: {[p: string]: boolean}} | undefined>(undefined);
+export const ClozeDropRegionContext = React.createContext<{
+    register: (id: string, index: number) => void,
+    questionPartId: string, readonly: boolean,
+    inlineDropValueMap: {[p: string]: ClozeItemDTO},
+    dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
+    shouldGetFocus: (id: string) => boolean
+} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});

@@ -19,7 +19,7 @@ import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 // Magic starts here
 interface ChildrenMap {
@@ -216,7 +216,6 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
-                visible={modalVisible}
                 editorMode='logic'
                 logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 questionDoc={doc}
@@ -228,7 +227,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                            placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
                         <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>
-                        <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                        <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             A AND (B XOR NOT C)<br />

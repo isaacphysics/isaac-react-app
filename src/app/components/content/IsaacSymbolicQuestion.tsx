@@ -7,8 +7,8 @@ import {
     ifKeyIsEnter,
     isDefined,
     jsonHelper,
-    parsePseudoSymbolicAvailableSymbols,
     sanitiseInequalityState,
+    parsePseudoSymbolicAvailableSymbols,
     useCurrentQuestionAttempt
 } from "../../services";
 import {Inequality, makeInequality} from "inequality";
@@ -17,7 +17,7 @@ import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 
-const InequalityModal = lazy(() => import("../elements/modals/InequalityModal"));
+const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
 // Magic starts here
 interface ChildrenMap {
@@ -208,8 +208,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 onEditorStateChange={updateState}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
-                visible={modalVisible}
-                editorMode='maths'
+                editorMode="maths"
                 questionDoc={doc}
             />}
             {!readonly && <div className="eqn-editor-input">
@@ -219,7 +218,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                               placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
                         <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>
-                        <RS.UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                        <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
                             a*x^2 + b x + c<br />

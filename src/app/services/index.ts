@@ -1,7 +1,6 @@
 // No internal app dependencies
 export * from "./localStorage";
 export * from "./siteConstants";
-export * from "./clozeQuestionKeyboardSensor";
 export * from "./demoTools";
 export * from "./device";
 export * from "./dates";
@@ -21,6 +20,7 @@ export * from "./credentialPadding";
 export * from "./history";
 
 // Dependencies in /services
+export * from "./clozeQuestionKeyboardCoordinateGetter";
 export * from "./easterEggs/phyLogoAsciiArt";
 export * from "./easterEggs/csLogoAsciiArt";
 export * from "./user";

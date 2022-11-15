@@ -2,6 +2,7 @@ import {isPhy, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 
+// Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
@@ -18,13 +19,12 @@ export const renderRemarkableMarkdown = (markdown: string) => MARKDOWN_RENDERER.
 
 // This is used to match and render cloze question drop zones into span elements
 export const renderClozeDropZones = (markdown: string) => {
-    // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
     let index = 0;
     return markdown.replace(dropZoneRegex, (_match, params, widthMatch, heightMatch) => {
         const dropId = `drop-region-${index}`;
-        const minWidth = widthMatch ? widthMatch.slice("w-".length) + "px" : "100px";
-        const minHeight = heightMatch ? heightMatch.slice("h-".length) + "px" : "auto";
-        return `<span data-index="${index++}" id="${dropId}" class="d-inline-block" style="min-width: ${minWidth}; min-height: ${minHeight}"></span>`;
+        const width = widthMatch ? widthMatch.slice("w-".length) : "100";
+        const height = heightMatch ? heightMatch.slice("h-".length) : "27";
+        return `<span data-index="${index++}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
     });
 }
 

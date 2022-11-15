@@ -29,6 +29,7 @@ export * from "./slices/api";
 export * from "./slices/gameboards";
 export * from "./reducers/userState";
 export * from "./actions/popups";
+export * from "./actions/groups";
 export * from "./actions/quizzes";
 export * from "./middleware/notificationManager";
 export * from "./middleware/userConsistencyChecker";

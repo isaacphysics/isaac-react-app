@@ -122,7 +122,7 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
 export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
     return <RS.ListGroup className="link-list list-group-links list-gameboard">
         {gameboard?.wildCard && showWildcard(gameboard) &&
-        <Wildcard wildcard={gameboard.wildCard} />
+            <Wildcard wildcard={gameboard.wildCard} />
         }
         {gameboard?.contents && gameboard.contents.map(q =>
             <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
@@ -174,11 +174,12 @@ export const Gameboard = withRouter(({ location }) => {
         </h3>
     </Container>;
 
-    return gameboardId ?
-        <RS.Container className="mb-5">
+    return !gameboardId
+        ? <Redirect to={siteSpecific("/gameboards/new", "/gameboards#example-gameboard")} />
+        : <RS.Container className="mb-5">
             <ShowLoadingQuery
                 query={gameboardQuery}
-                defaultErrorTitle={"Error fetching gameboard"}
+                defaultErrorTitle={`Error fetching gameboard with id: ${gameboardId}`}
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     if (showFilter) {
@@ -214,7 +215,5 @@ export const Gameboard = withRouter(({ location }) => {
                     </>
                 }}
             />
-        </RS.Container>
-        :
-        <Redirect to={siteSpecific("/gameboards/new", "/gameboards#example-gameboard")} />
+        </RS.Container>;
 });

@@ -205,9 +205,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setDisplaySettings(newDisplaySettings: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) {
         setMyUserPreferences(oldPref => ({
-            ...myUserPreferences,
+            ...oldPref,
             DISPLAY_SETTING: typeof newDisplaySettings === "function"
-                ? newDisplaySettings(oldPref.DISPLAY_SETTING)
+                ? newDisplaySettings(oldPref?.DISPLAY_SETTING)
                 : newDisplaySettings
         }));
     }
@@ -353,7 +353,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             </TabPane>}
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-                                <UserBetaFeatures displaySettings={myUserPreferences.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings} />
+                                <UserBetaFeatures displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings} />
                             </TabPane>}
                         </TabContent>
 

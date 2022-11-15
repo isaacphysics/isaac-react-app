@@ -90,9 +90,7 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-type IsaacNumericQuestionProps = IsaacQuestionProps<IsaacNumericQuestionDTO> & {validationResponse?: QuantityValidationResponseDTO};
-
-const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
+const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
 
@@ -150,7 +148,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                 />
                                 {!readonly && <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
-                                    <UncontrolledTooltip placement="bottom" autohide={false} target={helpTooltipId}>
+                                    <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
                                         3.7<br />
                                         -3x10^14<br />

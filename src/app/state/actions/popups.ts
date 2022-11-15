@@ -30,13 +30,13 @@ export const showToast = (toast: Toast) => (dispatch: AppDispatch) => {
     return toastId;
 };
 
-export const showErrorToast = (error: string, body: string) => showToast({
+export const showErrorToast = (error: string, body?: string) => showToast({
     color: "danger",
     title: error,
     timeout: 5000,
     body
 });
-export const showSuccessToast = (title: string, body: string) => showToast({
+export const showSuccessToast = (title: string, body?: string) => showToast({
     color: "success",
     timeout: 5000,
     title,
