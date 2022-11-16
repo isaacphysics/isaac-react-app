@@ -1,13 +1,12 @@
 import React from "react"
 import {Link, withRouter} from "react-router-dom";
 import {isaacApi, selectors, useAppSelector} from "../../state";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {
     ALL_TOPICS_CRUMB,
     atLeastOne,
     examBoardLabelMap,
-    getRelatedDocs, isFound,
+    getRelatedDocs,
     NOT_FOUND,
     stageLabelMap,
     TAG_ID,

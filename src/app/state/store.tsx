@@ -18,8 +18,9 @@ export const middleware: Middleware[] = [
     isaacApi.middleware
 ];
 const defaultMiddlewareOptions = {
-    serializableCheck: process.env.NODE_ENV !== 'test'
-}
+    serializableCheck: !['production', 'test'].includes(process.env.NODE_ENV),
+    immutableCheck: !['production', 'test'].includes(process.env.NODE_ENV)
+};
 
 export const store = configureStore({
     reducer: rootReducer,
