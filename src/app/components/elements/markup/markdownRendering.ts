@@ -1,9 +1,6 @@
-import {isPhy, MARKDOWN_RENDERER} from "../../../services";
+import {dropZoneRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
-
-// Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
-export const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
 
 MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpenToken[], idx: number/* options, env */) {
     const href = utils.escapeHtml(tokens[idx].href || "");
@@ -19,12 +16,30 @@ export const renderRemarkableMarkdown = (markdown: string) => MARKDOWN_RENDERER.
 
 // This is used to match and render cloze question drop zones into span elements
 export const renderClozeDropZones = (markdown: string) => {
-    let index = 0;
-    return markdown.replace(dropZoneRegex, (_match, params, widthMatch, heightMatch) => {
-        const dropId = `drop-region-${index}`;
+    // First calculate a reference count for reserved indexes
+    const reservedIndices: Map<number, number> = new Map();
+    const dropZoneMatches = Array.from(markdown.matchAll(dropZoneRegex));
+    for (const match of dropZoneMatches) {
+        if (match.groups) {
+            const index = parseInt(match.groups.index);
+            if (!isNaN(index)) reservedIndices.set(index, 1 + (reservedIndices.get(index) ?? 0));
+        }
+    }
+
+    let nonReservedIndex = 0;
+    return markdown.replace(dropZoneRegex, (_match, params, indexMatch, widthMatch, heightMatch) => {
         const width = widthMatch ? widthMatch.slice("w-".length) : "100";
         const height = heightMatch ? heightMatch.slice("h-".length) : "27";
-        return `<span data-index="${index++}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
+        const manualIndex: number | undefined = indexMatch ? parseInt(indexMatch.slice("i-".length)) : undefined;
+        let usingManualIndex = isDefined(manualIndex) && !isNaN(manualIndex) && (manualIndex < dropZoneMatches.length);
+        if (usingManualIndex && reservedIndices.get(manualIndex as number) as number > 1) {
+            usingManualIndex = false;
+            reservedIndices.set(manualIndex as number, reservedIndices.get(manualIndex as number) as number - 1);
+        }
+        const index = usingManualIndex ? manualIndex : nonReservedIndex++;
+        while (reservedIndices.has(nonReservedIndex)) nonReservedIndex++;
+        const dropId = `drop-region-${index}`;
+        return `<span data-index="${index}" id="${dropId}" data-width="${width}" data-height="${height}" class="d-inline-block"></span>`;
     });
 }
 
