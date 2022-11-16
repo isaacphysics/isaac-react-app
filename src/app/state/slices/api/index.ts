@@ -252,6 +252,8 @@ const isaacApi = createApi({
             })
         }),
 
+        // This is a mutation, since the component that uses this has to manage the returned question list itself,
+        // and there would be duplication of quite a lot of data otherwise.
         searchQuestions: build.mutation<ContentSummaryDTO[], QuestionSearchQuery>({
             query: (query) => ({
                 url: `/pages/questions`,

@@ -29,7 +29,7 @@ interface ConceptPageProps {
 export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride}: ConceptPageProps) => {
     const conceptId = conceptIdOverride || params.conceptId;
     const conceptQuery = isaacApi.endpoints.getConcept.useQuery(conceptId);
-    const navigation = useNavigation(conceptQuery.data);
+    const navigation = useNavigation(conceptQuery.currentData);
 
     return <ShowLoadingQuery
         query={conceptQuery}
