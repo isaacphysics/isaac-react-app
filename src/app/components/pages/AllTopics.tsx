@@ -145,11 +145,12 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
                     Object.assign(
                         {
                             All: <>
-                                <Row>
-                                    <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-4">
-                                        <PageFragment fragmentId={`${stage}_all_topics`} ifNotFound={RenderNothing} />
-                                    </Col>
-                                </Row>
+                                {/* FIXME both gcse_all_topics and a_level_all_topics always return 404, so why do we try to fetch them? */}
+                                {/*<Row>*/}
+                                {/*    <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-4">*/}
+                                {/*        <PageFragment fragmentId={`${stage}_all_topics`} ifNotFound={RenderNothing} />*/}
+                                {/*    </Col>*/}
+                                {/*</Row>*/}
                                 <Row>
                                     <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
                                         {topicColumn(firstColTags)}
