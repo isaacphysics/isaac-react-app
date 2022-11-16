@@ -231,7 +231,7 @@ interface CSFilterProps extends FilterProps {
 const CSFilter = ({selections, setSelections, stages, setStages, difficulties, setDifficulties, examBoards, setExamBoards, concepts, setConcepts} : CSFilterProps) => {
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const selectedTopics = selections[2];
-    const {data: conceptDTOs} = isaacApi.endpoints.listConcepts.useQuery(selectedTopics ? {tagIds: toCSV(selectedTopics)} : skipToken);
+    const {currentData: conceptDTOs} = isaacApi.endpoints.listConcepts.useQuery(selectedTopics ? {tagIds: toCSV(selectedTopics)} : skipToken);
     const [conceptChoices, setConceptChoices] = useState<GroupBase<Item<string>>[]>([]);
 
     useEffect(function updateConceptChoices() {

@@ -7,7 +7,7 @@ export const hidePreviousQuestionAttemptMiddleware: Middleware = (middlewareApi:
         const state = middlewareApi.getState();
         if (state.userPreferences?.DISPLAY_SETTING?.HIDE_QUESTION_ATTEMPTS) {
             return dispatch({
-                type: action.type,
+                ...action,
                 payload: {
                     questions: action.payload.questions.map(q => ({
                         ...q,

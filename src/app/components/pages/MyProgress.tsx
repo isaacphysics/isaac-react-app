@@ -70,14 +70,14 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
     const achievements = useAppSelector(selectors.user.achievementsRecord);
-    const {data: myAnsweredQuestionsByDate} = isaacApi.endpoints.getAnsweredQuestionsByDate.useQuery(viewingOwnData && user.loggedIn
+    const {currentData: myAnsweredQuestionsByDate} = isaacApi.endpoints.getAnsweredQuestionsByDate.useQuery(viewingOwnData && user.loggedIn
         ? {
             userId: user.id as number,
             fromDate: 0,
             toDate: Date.now(),
             perDay: false
         } : skipToken);
-    const {data: userAnsweredQuestionsByDate} = isaacApi.endpoints.getAnsweredQuestionsByDate.useQuery(isTeacher(user) && userIdOfInterest
+    const {currentData: userAnsweredQuestionsByDate} = isaacApi.endpoints.getAnsweredQuestionsByDate.useQuery(isTeacher(user) && userIdOfInterest
         ? {
             userId: userIdOfInterest,
             fromDate: 0,
