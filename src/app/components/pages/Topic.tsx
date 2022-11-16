@@ -18,10 +18,11 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {TopicSummaryLinks} from "../elements/list-groups/TopicSummaryLinks";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params: {topicName: TAG_ID}}}) => {
-    const {data} = isaacApi.endpoints.getTopicSummary.useQuery(topicName);
-    const topicPage = isFound(data) ? data : undefined;
+    const topicQuery = isaacApi.endpoints.getTopicSummary.useQuery(topicName);
+    const topicPage = topicQuery.currentData;
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
 
@@ -32,8 +33,10 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
     const searchQuery = `?topic=${topicName}`;
     const linkedRelevantGameboards = topicPage && topicPage != NOT_FOUND && topicPage.linkedGameboards && topicPage.linkedGameboards;
 
-    return <ShowLoading until={topicPage} thenRender={topicPage =>
-        <Container id="topic-page">
+    return <ShowLoadingQuery
+        query={topicQuery}
+        defaultErrorTitle={"Error loading topic page"}
+        thenRender={topicPage => <Container id="topic-page">
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
             <CanonicalHrefElement />
             <Row>
@@ -92,6 +95,6 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                     </Row>
                 </Col>
             </Row>
-        </Container>
-    } />;
+        </Container>}
+    />;
 });

@@ -41,8 +41,8 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | undefined | nul
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = isFound(doc) ? doc.id as string : "";
 
-    const {data: currentGameboard} = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
-    const {data: currentTopic} = isaacApi.endpoints.getTopicSummary.useQuery(topic ? topic as TAG_ID : skipToken);
+    const {currentData: currentGameboard} = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
+    const {currentData: currentTopic} = isaacApi.endpoints.getTopicSummary.useQuery(topic ? topic as TAG_ID : skipToken);
 
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
