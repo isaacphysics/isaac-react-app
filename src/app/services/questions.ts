@@ -3,7 +3,7 @@ import {AppQuestionDTO, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAp
 import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP} from './';
 import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
-import {castDraft, Immutable} from "immer";
+import {Immutable} from "immer";
 const IsaacMultiChoiceQuestion = lazy(() => import("../components/content/IsaacMultiChoiceQuestion"));
 const IsaacItemQuestion = lazy(() => import("../components/content/IsaacItemQuestion"));
 const IsaacReorderQuestion = lazy(() => import("../components/content/IsaacReorderQuestion"));
@@ -158,7 +158,7 @@ export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: strin
     const questionPart = selectQuestionPart(pageQuestions, questionId);
     return {
         currentAttempt: questionPart?.currentAttempt as (Immutable<T> | undefined),
-        dispatchSetCurrentAttempt: (attempt: Immutable<T | ValidatedChoice<T>>) => dispatch(setCurrentAttempt({questionId, attempt})), // FIXME figure out how to remove this castDraft
+        dispatchSetCurrentAttempt: (attempt: Immutable<T | ValidatedChoice<T>>) => dispatch(setCurrentAttempt({questionId, attempt})),
         questionPart: questionPart
     };
 }

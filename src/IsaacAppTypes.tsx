@@ -16,13 +16,11 @@ import {
     QuizFeedbackMode,
     RegisteredUserDTO,
     ResultsWrapper,
-    TestCaseDTO,
     UserContext,
     UserSummaryForAdminUsersDTO
 } from "./IsaacApiTypes";
 import {
     ACTION_TYPE,
-    DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
     PROGRAMMING_LANGUAGE,

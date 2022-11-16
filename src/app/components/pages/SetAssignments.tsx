@@ -370,7 +370,7 @@ export const AddGameboardButtons = ({className, redirectBackTo}: {className: str
 export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
-    const userPreferences = useAppSelector(selectors.user.preferences);
+    const { data: userPreferences } = isaacApi.endpoints.getUserPreferences.useQuery();
     const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
     const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>

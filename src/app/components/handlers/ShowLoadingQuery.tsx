@@ -26,7 +26,7 @@ export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError |
 };
 
 interface ShowLoadingQueryInfo<T> {
-    data?: T | NOT_FOUND_TYPE;
+    currentData?: T | NOT_FOUND_TYPE;
     isLoading: boolean;
     isError: boolean;
     error?: FetchBaseQueryError | SerializedError;
@@ -34,7 +34,7 @@ interface ShowLoadingQueryInfo<T> {
 // The Error and loading data of the first query take precedence over the second one
 export function combineQueries<T, R, S>(firstQuery: ShowLoadingQueryInfo<T>, secondQuery: ShowLoadingQueryInfo<R>, combineResult: (firstQueryResult: NonNullable<T>, secondQueryResult: NonNullable<R>) => NonNullable<S>): ShowLoadingQueryInfo<S> {
     return {
-        data: isFound<T>(firstQuery.data) && isFound<R>(secondQuery.data) ? combineResult(firstQuery.data, secondQuery.data) : undefined,
+        currentData: isFound<T>(firstQuery.currentData) && isFound<R>(secondQuery.currentData) ? combineResult(firstQuery.currentData, secondQuery.currentData) : undefined,
         isLoading: firstQuery.isLoading || secondQuery.isLoading,
         isError: firstQuery.isError || secondQuery.isError,
         error: firstQuery.error ?? secondQuery.error,
@@ -71,15 +71,16 @@ type ShowLoadingQueryProps<T> = ShowLoadingQueryErrorProps<T> & ({
 //  - `placeholder` (React element to show while loading)
 //  - `query` (the object returned by a RTKQ useQuery hook)
 export function ShowLoadingQuery<T>({query, thenRender, children, placeholder, ifError, ifNotFound, defaultErrorTitle}: ShowLoadingQueryProps<T>) {
-    const {data, isLoading, isError, error} = query;
+    const {currentData, isLoading, isError, error} = query;
     const renderError = () => ifError ? <>{ifError(error)}</> : <DefaultQueryError error={error} title={defaultErrorTitle}/>;
     if (isError && error) {
         return "status" in error && typeof error.status === "number" && [NOT_FOUND, NO_CONTENT].includes(error.status) && ifNotFound ? <>{ifNotFound}</> : renderError();
     }
     if (isLoading) {
+        // TODO CP only render this after 250ms have passed or something, for better UX.
         return placeholder ? <>{placeholder}</> : loadingPlaceholder;
     }
-    return isDefined(data)
-        ? (isFound<T>(data) ? <>{thenRender ? thenRender(data) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
+    return isDefined(currentData)
+        ? (isFound<T>(currentData) ? <>{thenRender ? thenRender(currentData) : children}</> : (ifNotFound ? <>{ifNotFound}</> : renderError()))
         : renderError();
 }

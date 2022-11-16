@@ -34,8 +34,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
     return <ShowLoadingQuery
         query={conceptQuery}
         defaultErrorTitle={"Error fetching concept page"}
-        thenRender={doc => {
-            return <div className={doc.subjectId || ""}>
+        thenRender={doc => <div className={doc.subjectId || ""}>
             <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container>
                     <TitleAndBreadcrumb
@@ -88,6 +87,6 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     </Row>
                 </Container>
             </GameboardContext.Provider>
-        </div>
-    }}/>;
+        </div>}
+    />;
 });

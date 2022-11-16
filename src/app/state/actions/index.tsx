@@ -1276,26 +1276,5 @@ export const fetchFasttrackConcepts = (gameboardId: string, concept: string, upp
         dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_SUCCESS, concepts: {gameboardId, concept, items: concepts.data}});
     } catch (e) {
         dispatch({type: ACTION_TYPE.FASTTRACK_CONCEPTS_RESPONSE_FAILURE});
-    }};
-
-// SERVICE ACTIONS (w/o dispatch)
-
-export const changePage = (path: string) => {
-    history.push(path);
-};
-
-export const registerPageChange = (path: string) => {
-    store.dispatch(routerPageChange(path));
-};
-
-export const handleServerError = () => {
-    store.dispatch(errorSlice.actions.apiServerError());
-};
-
-export const handleApiGoneAway = () => {
-    store.dispatch(errorSlice.actions.apiGoneAway());
-};
-
-export const setAssignBoardPath = (path: string) => {
-    persistence.save(KEY.ASSIGN_BOARD_PATH, path);
+    }
 };

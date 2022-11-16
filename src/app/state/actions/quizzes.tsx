@@ -5,8 +5,9 @@ import {
     AppDispatch,
     AppState,
     closeActiveModal,
-    extractMessage, isaacApi,
-    openActiveModal, questionsSlice,
+    extractMessage,
+    openActiveModal,
+    questionsSlice,
     selectors,
     showAxiosErrorToastIfNeeded
 } from "../index";

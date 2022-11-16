@@ -25,32 +25,30 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
     return <ShowLoadingQuery
         query={pageQuery}
         defaultErrorTitle={"Error loading page"}
-        thenRender={doc => {
-            return <div className={doc.subjectId || ""}>
-                <Container>
-                    <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-                    <MetaDescription description={doc.summary} />
-                    <div className="no-print d-flex align-items-center">
-                        <EditContentButton doc={doc} />
-                        <div className="question-actions question-actions-leftmost mt-3">
-                            <ShareLink linkUrl={`/pages/${doc.id}`}/>
-                        </div>
-                        <div className="question-actions mt-3 not-mobile">
-                            <PrintButton/>
-                        </div>
+        thenRender={doc => <div className={doc.subjectId || ""}>
+            <Container>
+                <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
+                <MetaDescription description={doc.summary} />
+                <div className="no-print d-flex align-items-center">
+                    <EditContentButton doc={doc} />
+                    <div className="question-actions question-actions-leftmost mt-3">
+                        <ShareLink linkUrl={`/pages/${doc.id}`}/>
                     </div>
+                    <div className="question-actions mt-3 not-mobile">
+                        <PrintButton/>
+                    </div>
+                </div>
 
-                    <Row className="generic-content-container">
-                        <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
-                            <WithFigureNumbering doc={doc}>
-                                <IsaacContent doc={doc} />
-                            </WithFigureNumbering>
-                        </Col>
-                    </Row>
+                <Row className="generic-content-container">
+                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
+                    </Col>
+                </Row>
 
-                    {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-                </Container>
-            </div>
-        }}
+                {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+            </Container>
+        </div>}
     />;
 });

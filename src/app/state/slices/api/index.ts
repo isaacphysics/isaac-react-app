@@ -6,8 +6,11 @@ import {
     isPhy,
     MEMBERSHIP_STATUS,
     NO_CONTENT,
-    NOT_FOUND, QUESTION_ATTEMPT_THROTTLED_MESSAGE,
-    QUESTION_CATEGORY, TAG_ID, tags
+    NOT_FOUND,
+    QUESTION_ATTEMPT_THROTTLED_MESSAGE,
+    QUESTION_CATEGORY,
+    TAG_ID,
+    tags
 } from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
@@ -212,7 +215,9 @@ const isaacApi = createApi({
             query: (pageId) => ({
                 url: `/pages/${pageId}`
             }),
-            transformResponse: tags.augmentDocWithSubject
+            // For magic javascript reasons `tags.augmentDocWithSubject` cannot replace the lambda below. It has
+            // something to do with `this` being messed with...
+            transformResponse: (doc: SeguePageDTO) => tags.augmentDocWithSubject(doc)
         }),
 
         getPageFragment: build.query<ContentDTO, string>({
@@ -234,7 +239,7 @@ const isaacApi = createApi({
             query: (id) => ({
                 url: `/pages/questions/${id}`
             }),
-            transformResponse: tags.augmentDocWithSubject
+            transformResponse: (doc: IsaacQuestionPageDTO) => tags.augmentDocWithSubject(doc)
         }),
 
         getAnsweredQuestionsByDate: build.query<AnsweredQuestionsByDate, {userId: number | string, fromDate: number, toDate: number, perDay: boolean}>({
@@ -362,7 +367,7 @@ const isaacApi = createApi({
             query: (id) => ({
                 url: `/pages/concepts/${id}`
             }),
-            transformResponse: tags.augmentDocWithSubject
+            transformResponse: (doc: IsaacConceptPageDTO) => tags.augmentDocWithSubject(doc)
         }),
 
         // === Gameboards ===

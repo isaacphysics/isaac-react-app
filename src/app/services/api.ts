@@ -4,8 +4,7 @@ import {
     EventStageFilter,
     EventTypeFilter,
     securePadCredentials,
-    securePadPasswordReset,
-    TAG_ID
+    securePadPasswordReset
 } from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {
@@ -13,19 +12,14 @@ import {
     EmailTemplateDTO,
     EventBookingDTO,
     ResultsWrapper,
-    TestCaseDTO,
     UserContext
 } from "../../IsaacApiTypes";
 import * as AppTypes from "../../IsaacAppTypes";
 import {
     AdditionalInformation,
     ATTENDANCE,
-    Choice,
-    Concepts,
     CredentialsAuthDTO,
     EmailUserRoles,
-    QuestionSearchQuery,
-    QuestionSearchResponse,
     UserPreferencesDTO,
     ValidationUser
 } from "../../IsaacAppTypes";
