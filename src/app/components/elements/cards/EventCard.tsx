@@ -15,6 +15,7 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
 
     return <RS.Card className={classnames("card-neat", {'disabled text-muted': hasExpired || isCancelled, 'm-4': pod, 'mb-4': !pod})}>
         {eventThumbnail && <div className={'event-card-image text-center'}>
+            <RS.CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
             {
                 isPhy && (hasExpired ? <div className={"event-card-image-banner disabled"}>This event has expired</div> :
                     ((isVirtualEvent || isTeacherEvent || isStudentEvent) &&
@@ -25,7 +26,6 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                             {isVirtualEvent && " (Virtual)"}
                         </div>))
             }
-            <RS.CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
         </div>}
         <RS.CardBody className="d-flex flex-column">
             {title && <RS.CardTitle tag="h3">
