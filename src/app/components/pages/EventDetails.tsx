@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table} from "reactstrap";
+import {Button, Card, CardBody, CardImg, Col, Container, Form, Input, Row, Table, Alert} from "reactstrap";
 import dayjs from "dayjs";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -41,6 +41,8 @@ import {
     userSatisfiesStudentOnlyRestrictionForEvent,
     validateBookingSubmission,
     zeroOrLess,
+    isAdminOrEventManager,
+    isEventLeader,
     isPhy
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
@@ -212,8 +214,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         <td>When:</td>
                                         <td>
                                             {formatEventDetailsDate(event)}
-                                            {event.hasExpired &&
-                                            <div className="alert-danger text-center">This event is in the past.</div>}
+                                            {event.hasExpired && <div className="alert-danger text-center">This event is in the past.</div>}
                                         </td>
                                     </tr>
                                     {event.location && event.location.address && event.location.address.addressLine1 && !isVirtual && <tr>
@@ -250,7 +251,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                                 }
                                             </td>
                                         </tr>}
-                                    {event.bookingDeadline &&
+                                    {(!event.isCancelled || isEventLeader(user) || isAdminOrEventManager(user)) && event.bookingDeadline &&
                                         <tr>
                                             <td>Booking Deadline:</td>
                                             <td>
@@ -263,6 +264,10 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                         </tr>}
                                 </tbody>
                             </Table>
+
+                            {event.isCancelled && <Alert color={"danger"}>
+                                This event has been cancelled.
+                            </Alert>}
 
                             {/* Event body copy */}
                             <div className="mb-3">

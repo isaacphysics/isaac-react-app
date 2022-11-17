@@ -268,7 +268,7 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
-    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
+    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: AugmentedEvent[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.EVENTS_CLEAR}
 
@@ -657,6 +657,7 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     isRecurring?: boolean;
     isWaitingListOnly?: boolean;
     isNotClosed?: boolean;
+    isCancelled?: boolean;
     field?: "physics" | "maths";
     userBookingStatus?: ApiTypes.BookingStatus;
 }
