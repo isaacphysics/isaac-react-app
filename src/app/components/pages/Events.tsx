@@ -20,7 +20,7 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     isCS,
-    isTeacher,
+    isTeacherOrAbove,
     stageExistsForSite
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
@@ -84,7 +84,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                         }}>
                             {Object.entries(EventStatusFilter)
                                 .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
-                                .filter(([statusLabel, statusValue]) => (user && user.loggedIn && isTeacher(user)) || statusValue !== EventStatusFilter["My event reservations"])
+                                .filter(([statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
                                 .map(([statusLabel, statusValue]) =>
                                     <option key={statusValue} value={statusValue}>{statusLabel}</option>
                                 )

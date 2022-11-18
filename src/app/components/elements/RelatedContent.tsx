@@ -12,7 +12,7 @@ import {
     isCS,
     isIntendedAudience,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     siteSpecific,
     sortByNumberStringValue,
     sortByStringValue,
@@ -149,7 +149,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isCS && isTeacher(useAppSelector(selectors.user.orNull));
+    const showConceptGameboardButton = isCS && isTeacherOrAbove(useAppSelector(selectors.user.orNull));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent

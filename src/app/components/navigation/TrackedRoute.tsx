@@ -4,7 +4,7 @@ import ReactGA, {FieldsObject} from "react-ga";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
-import {GOOGLE_ANALYTICS_ACCOUNT_ID, isTeacher, KEY, persistence, siteSpecific} from "../../services";
+import {GOOGLE_ANALYTICS_ACCOUNT_ID, isTeacherOrAbove, KEY, persistence, siteSpecific} from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
 
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
@@ -41,14 +41,14 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
             const {ifUser, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
-                const userNeedsToBeTeacher = rest.ifUser && rest.ifUser.name === isTeacher.name; // TODO we should try to find a more robust way than this
+                const userNeedsToBeTeacher = rest.ifUser && rest.ifUser.name === isTeacherOrAbove.name; // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
                     {user && ifUser(user) ?
                         <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
-                        user && !user.loggedIn && !isTeacher(user) && userNeedsToBeTeacher ?
+                        user && !user.loggedIn && !isTeacherOrAbove(user) && userNeedsToBeTeacher ?
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
-                            user && !isTeacher(user) && userNeedsToBeTeacher ?
+                            user && !isTeacherOrAbove(user) && userNeedsToBeTeacher ?
                                 siteSpecific(
                                     // Physics
                                     <Redirect to="/pages/contact_us_teacher"/>,

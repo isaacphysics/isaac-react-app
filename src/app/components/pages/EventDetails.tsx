@@ -30,7 +30,7 @@ import {
     isDefined,
     isLoggedIn,
     isStaff,
-    isTeacher,
+    isTeacherOrAbove,
     KEY,
     NOT_FOUND,
     SITE_SUBJECT_TITLE,
@@ -155,7 +155,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             iconAnchor: [12, 41]
         });
 
-        const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacher(user);
+        const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacherOrAbove(user);
 
         return <Container className="events mb-5">
             <TitleAndBreadcrumb
@@ -233,7 +233,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
                                             {zeroOrLess(event.placesAvailable) && <div>
                                                 <strong className="text-danger">FULL</strong>
-                                                {event.isAStudentEvent && isTeacher(user) && <span> - for student bookings</span>}
+                                                {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
                                             </div>}
                                             {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}
                                             {event.userBookingStatus === 'RESERVED' && <span> - <span className="text-success">

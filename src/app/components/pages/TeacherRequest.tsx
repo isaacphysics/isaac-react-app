@@ -25,7 +25,7 @@ import {
 import {
     api,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     schoolNameWithPostcode,
     SITE_SUBJECT_TITLE,
     validateEmail,
@@ -104,7 +104,7 @@ export const TeacherRequest = () => {
                         <IsaacContent doc={warningFragment} />
                     </Alert>}
                     <Card>
-                        {isTeacher(user) &&
+                        {isTeacherOrAbove(user) &&
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3">
@@ -117,7 +117,7 @@ export const TeacherRequest = () => {
                                 </Col>
                             </Row>
                         }
-                        {!isTeacher(user) && (messageSent && !errorMessage ?
+                        {!isTeacherOrAbove(user) && (messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">

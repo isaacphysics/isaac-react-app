@@ -9,7 +9,7 @@ import {
     isCS,
     isDefined,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     siteSpecific,
     STAGE,
     TEACHER_REQUEST_ROUTE
@@ -107,7 +107,7 @@ interface UserContextAccountInputProps {
 export function UserContextAccountInput({
     user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
 }: UserContextAccountInputProps) {
-    const teacher = isTeacher({...user, loggedIn: true});
+    const teacher = isTeacherOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
     return <div>

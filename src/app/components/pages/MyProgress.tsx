@@ -14,7 +14,7 @@ import {
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     safePercentage,
     siteSpecific
 } from "../../services";
@@ -81,7 +81,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
         if (viewingOwnData && user.loggedIn) {
             dispatch(getMyProgress());
             dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
-        } else if (isTeacher(user)) {
+        } else if (isTeacherOrAbove(user)) {
             dispatch(getUserProgress(userIdOfInterest));
             dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
@@ -89,12 +89,12 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 
-    if (!viewingOwnData && !isTeacher(user)) {
+    if (!viewingOwnData && !isTeacherOrAbove(user)) {
         return <Unauthorised />
     }
 
-    const progress = (!viewingOwnData && isTeacher(user)) ? userProgress : myProgress;
-    const answeredQuestionsByDate = (!viewingOwnData && isTeacher(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+    const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;
+    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
@@ -208,7 +208,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             </Col>}
                         </Row>
                     </div>,
-                    ...(isPhy && viewingOwnData && isTeacher(user) && {"Teacher Activity": <div>
+                    ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
                         <TeacherAchievement
                             verb="created"
                             count={achievements && achievements.TEACHER_GROUPS_CREATED}

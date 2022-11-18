@@ -1,4 +1,4 @@
-import {apiHelper, atLeastOne, isStudent, isTeacher, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
+import {apiHelper, atLeastOne, isStudent, isTeacherOrAbove, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
 import {IsaacEventPageDTO} from "../../IsaacApiTypes";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
@@ -162,7 +162,7 @@ export const userSatisfiesStudentOnlyRestrictionForEvent = (user: PotentialUser 
 }
 
 export const userIsTeacherAtAStudentEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
-    return event.isAStudentEvent && isTeacher(user);
+    return event.isAStudentEvent && isTeacherOrAbove(user);
 }
 
 export const userCanMakeEventBooking = (user: PotentialUser | null, event: AugmentedEvent) => {
@@ -189,5 +189,5 @@ export const userCanReserveEventSpaces = (user: PotentialUser | null, event: Aug
         event.isNotClosed &&
         event.isWithinBookingDeadline &&
         !event.isWaitingListOnly &&
-        isTeacher(user);
+        isTeacherOrAbove(user);
 }

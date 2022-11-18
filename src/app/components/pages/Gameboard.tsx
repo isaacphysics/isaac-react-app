@@ -21,7 +21,7 @@ import {
     isDefined,
     isFound,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     NOT_FOUND,
     showWildcard,
     siteSpecific,
@@ -188,7 +188,7 @@ export const Gameboard = withRouter(({ location }) => {
                     return <>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-                        {user && isTeacher(user)
+                        {user && isTeacherOrAbove(user)
                             ? <RS.Row className="col-8 offset-2">
                                 <RS.Col className="mt-4">
                                     <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">

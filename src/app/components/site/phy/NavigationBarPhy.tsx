@@ -7,7 +7,7 @@ import {
 } from "../../navigation/NavigationBar";
 import React from "react";
 import {selectors, useAppSelector} from "../../../state";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services";
+import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacherOrAbove} from "../../../services";
 
 export const NavigationBarPhy = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -22,7 +22,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
         </NavigationSection>
 
-        {isTeacher(user) && <NavigationSection title="Teach">
+        {isTeacherOrAbove(user) && <NavigationSection title="Teach">
             <LinkItem to="/teacher_features">Teacher Features</LinkItem>
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>

@@ -7,7 +7,7 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isTeacher} from "../../../services";
+import {isTeacherOrAbove} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
@@ -23,8 +23,8 @@ const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 let key = 0;
 export const RoutesPhy = [
     // Assignments
-    <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTeacher} component={AssignmentProgress} />,
-    <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTeacher} component={SingleAssignmentProgress} />,
+    <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTeacherOrAbove} component={AssignmentProgress} />,
+    <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTeacherOrAbove} component={SingleAssignmentProgress} />,
 
     // Books
     <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
@@ -87,6 +87,6 @@ export const RoutesPhy = [
 
 
     // Teacher Pages
-    <StaticPageRoute key={key++} exact ifUser={isTeacher} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
-    <StaticPageRoute key={key++} exact ifUser={isTeacher} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
+    <StaticPageRoute key={key++} exact ifUser={isTeacherOrAbove} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
+    <StaticPageRoute key={key++} exact ifUser={isTeacherOrAbove} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
 ];

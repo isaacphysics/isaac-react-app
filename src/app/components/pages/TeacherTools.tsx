@@ -3,7 +3,7 @@ import {getMyProgress, selectors, useAppDispatch, useAppSelector} from "../../st
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {isTeacher} from "../../services";
+import {isTeacherOrAbove} from "../../services";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
@@ -19,7 +19,7 @@ export const TeacherTools = () => {
         }
     }, [dispatch, user]);
 
-    const pageTitle = user && isTeacher(user) ? "Teacher tools" : "How we help teachers";
+    const pageTitle = user && isTeacherOrAbove(user) ? "Teacher tools" : "How we help teachers";
 
     const teacherUpgradeLink = <div className="text-center">
         <RS.Button size="lg" tag={Link} to="/pages/teacher_accounts" color="primary" outline>
@@ -44,17 +44,17 @@ export const TeacherTools = () => {
             </RS.Col>
         </RS.Row>
 
-        {!(user && isTeacher(user)) && <RS.Row>
+        {!(user && isTeacherOrAbove(user)) && <RS.Row>
             <RS.Col md={{size: 8, offset: 2}} className="pt-4 pb-5 mb-5">
                 <PageFragment fragmentId="for_teachers_logged_out" />
                 {(user && user.loggedIn) ?
-                    !isTeacher(user) && teacherUpgradeLink :
+                    !isTeacherOrAbove(user) && teacherUpgradeLink :
                     registrationButton
                 }
             </RS.Col>
         </RS.Row>}
 
-        {isTeacher(user) && <RS.Row>
+        {isTeacherOrAbove(user) && <RS.Row>
             <RS.Col>
                 <h2 className="h-secondary h-m">Pick up where you left off</h2>
                 <div>

@@ -5,7 +5,7 @@ import {
     isDefined,
     isLoggedIn,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     SITE_SUBJECT_TITLE,
     siteSpecific,
     validateUserContexts,
@@ -67,7 +67,7 @@ const UserContextReconfimationModalBody = () => {
                 {text}
                 <span className={"sr-only"}> (opens in new tab) </span>
             </a>;
-        })[isTeacher(user) ? "teacher" : "student"]
+        })[isTeacherOrAbove(user) ? "teacher" : "student"]
     , [user]);
 
     // Form submission
