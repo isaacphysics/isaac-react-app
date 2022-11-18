@@ -15,7 +15,15 @@ import {
     Row
 } from "reactstrap";
 import {PotentialUser} from "../../../IsaacAppTypes";
-import {isCS, isPhy, isStudent, SITE_SUBJECT_TITLE, SOCIAL_LINKS, validateEmail, WEBMASTER_EMAIL} from "../../services";
+import {
+    isCS,
+    isPhy,
+    isTeacherOrAbove,
+    SITE_SUBJECT_TITLE,
+    SOCIAL_LINKS,
+    validateEmail,
+    WEBMASTER_EMAIL
+} from "../../services";
 import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
@@ -27,7 +35,7 @@ const determineUrlQueryPresets = (user?: PotentialUser | null) => {
     let presetMessage = "";
     let presetPlaceholder = "";
 
-    if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && isStudent(user)) {
+    if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
         presetSubject = "Teacher Account Request";
         presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset == 'accountDeletion' && user?.loggedIn) {
