@@ -789,9 +789,9 @@ export enum TAG_ID {
     simultaneous = "simultaneous",
     matrices = "matrices",
     // Statistics
-    hypothesis = "hypothesis",
+    hypothesisTests = "hypothesis_tests",
     dataAnalysis = "data_analysis",
-    randomVars = "random_vars",
+    randomVariables = "random_variables",
     probability = "probability",
     // Functions
     generalFunctions = "general_functions",
