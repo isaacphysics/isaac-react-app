@@ -233,6 +233,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                             {atLeastOne(event.placesAvailable) && <div>{event.placesAvailable} spaces</div>}
                                             {zeroOrLess(event.placesAvailable) && <div>
                                                 <strong className="text-danger">FULL</strong>
+                                                {/* TUTOR TODO should tutors be allowed to book on events that are full? I'm guessing not? */}
                                                 {event.isAStudentEvent && isTeacherOrAbove(user) && <span> - for student bookings</span>}
                                             </div>}
                                             {event.userBookingStatus === "CONFIRMED" && <span> - <span className="text-success">You are booked on this event!</span></span>}

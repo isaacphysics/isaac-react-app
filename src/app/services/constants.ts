@@ -3,8 +3,8 @@ import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
-import {isCS, siteSpecific} from "./";
+import {BookingStatus, Difficulty, ExamBoard, Stage, UserRole} from "../../IsaacApiTypes";
+import {siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -900,14 +900,15 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "My markbook", to: "/my_markbook"}
 );
 
-export enum UserFacingRole {
-    ADMIN = "Admin",
-    EVENT_MANAGER = "Event Manager",
-    CONTENT_EDITOR = "Content Editor",
-    EVENT_LEADER = "Event Leader",
-    TEACHER = "Teacher",
-    STUDENT = "Student"
-}
+export const UserFacingRole: {[role in UserRole]: string} = {
+    ADMIN: "Admin",
+    EVENT_MANAGER: "Event Manager",
+    CONTENT_EDITOR: "Content Editor",
+    EVENT_LEADER: "Event Leader",
+    TEACHER: "Teacher",
+    TUTOR: "Tutor",
+    STUDENT: "Student"
+};
 
 export enum SortOrder {
     ASC = "ASC",

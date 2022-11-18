@@ -36,7 +36,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isDefined, isStaff, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isCS, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
@@ -76,8 +76,9 @@ const passwordResetInformation = function(member: AppGroupMembership, passwordRe
 interface MemberInfoProps {
     group: AppGroup;
     member: AppGroupMembership;
+    user: RegisteredUserDTO;
 }
-const MemberInfo = ({group, member}: MemberInfoProps) => {
+const MemberInfo = ({group, member, user}: MemberInfoProps) => {
     const dispatch = useAppDispatch();
     const [passwordRequestSent, setPasswordRequestSent] = useState(false);
     const [deleteMember] = isaacApi.endpoints.deleteGroupMember.useMutation();
@@ -123,12 +124,17 @@ const MemberInfo = ({group, member}: MemberInfoProps) => {
             </div>
         </div>
         <div className="d-flex justify-content-between">
-            <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
-                <Button color="link" size="sm" onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
-                    {!passwordRequestSent? 'Reset Password': 'Reset email sent'}
-                </Button>
-            </Tooltip>
-            {"  "}
+            {/* TUTOR tutors should not be able to reset group members passwords */}
+            {isTeacherOrAbove(user) && <>
+                <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)}
+                          className="text-right d-none d-sm-block">
+                    <Button color="link" size="sm" onClick={resetPassword}
+                            disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                        {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
+                    </Button>
+                </Tooltip>
+                {"  "}
+            </>}
             <button className="ml-2 close" onClick={confirmDeleteMember} aria-label="Remove member">
                 ×
             </button>
@@ -202,11 +208,14 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
             <Row className="mt-2">
                 <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
-                    <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                        Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
-                    </Button>
-                    <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
-                    <span className="d-inline-block d-md-none">&nbsp;</span>
+                    {/* TUTOR only teachers should be able add group managers */}
+                    {isTeacherOrAbove(user) && <>
+                        <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                            Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                        </Button>
+                        <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
+                        <span className="d-inline-block d-md-none">&nbsp;</span>
+                    </>}
                     <Button
                         size="sm" className={isCS ? "text-white" : "" + " d-none d-sm-inline"}
                         color={siteSpecific("primary", "secondary")}
@@ -276,6 +285,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                                             key={member.groupMembershipInformation.userId}
                                             member={member}
                                             group={group}
+                                            user={user}
                                         />
                                     ))}
                                 </div>

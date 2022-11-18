@@ -82,6 +82,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                             query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                         }}>
+                            {/* TUTOR TODO special event filtering for tutors? Depends if they should be considered students w.r.t. events or not */}
                             {Object.entries(EventStatusFilter)
                                 .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
                                 .filter(([statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])

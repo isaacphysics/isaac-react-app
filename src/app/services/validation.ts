@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isCS, isStudent, STAGE} from "./";
+import {EXAM_BOARD, isCS, isLoggedIn, isStudent, STAGE} from "./";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -96,6 +96,7 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
         && validateUserContexts(userContexts);
 }
 
+// TUTOR TODO consider tutor role in here if necessary
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {
     if (!validateUserSchool(Object.assign({password: null}, user))) {
         return Object.assign({}, FAILURE_TOAST, {title: "School information required", body: "You must enter a school in order to book on to this event."});

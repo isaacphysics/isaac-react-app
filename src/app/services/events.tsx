@@ -157,6 +157,7 @@ export const stageExistsForSite = (stage: string) => {
     return stagesForSite.has(stage as STAGE);
 }
 
+// TUTOR TODO are tutors considered students or teachers for events?
 export const userSatisfiesStudentOnlyRestrictionForEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
     return event.isStudentOnly ? isStudent(user) : true;
 }
@@ -184,6 +185,7 @@ export const userCanBeAddedToEventWaitingList = (user: PotentialUser | null, eve
         userSatisfiesStudentOnlyRestrictionForEvent(user, event)
 }
 
+// TUTOR tutors cannot reserve event spaces for members of their groups
 export const userCanReserveEventSpaces = (user: PotentialUser | null, event: AugmentedEvent) => {
     return event.allowGroupReservations &&
         event.isNotClosed &&

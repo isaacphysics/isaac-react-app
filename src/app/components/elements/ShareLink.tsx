@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isCS, isMobile, isTeacherOrAbove, siteSpecific, useOutsideCallback} from "../../services";
+import {isCS, isMobile, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
@@ -39,7 +39,8 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * 9);
-    const showDuplicateAndEdit = gameboardId && isTeacherOrAbove(user);
+    // TUTOR tutors should be able to duplicate and edit gameboards
+    const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
     return <div ref={shareLinkDivRef} className="share-link-icon">
         <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
         <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>

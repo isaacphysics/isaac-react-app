@@ -10,9 +10,9 @@ import {
     isLoggedIn,
     isMobile,
     isPhy,
-    isStudent,
+    isTeacherOrAbove,
     SITE_SUBJECT_TITLE,
-    TEACHER_REQUEST_ROUTE,
+    TEACHER_REQUEST_ROUTE, UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -28,7 +28,6 @@ const RequiredAccountInfoBody = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
-    const student = isStudent({...user, loggedIn: true});
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -69,8 +68,9 @@ const RequiredAccountInfoBody = () => {
             <div className="text-right text-muted required-before">
                 Required
             </div>
-            {student && <div className="text-left mb-4">
-                Account type: <b>Student</b> <span>
+            {!isTeacherOrAbove(user) && <div className="text-left mb-4">
+                Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
+                    {/* TUTOR TODO should we ask if users want to upgrade to a tutor account instead? */}
                     <small>(Are you a teacher? {" "}
                         <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
                             Upgrade your account

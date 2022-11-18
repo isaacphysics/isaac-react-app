@@ -63,6 +63,7 @@ export const AddUsersToBooking = () => {
                             onChange={e => setQueryParams(Object.assign({}, queryParams, {role: nullIfDefault(e.target.value, "NO_ROLE")}))}
                         >
                             <option value="NO_ROLE">Any Role</option>
+                            <option value="TUTOR">Tutor</option>
                             <option value="TEACHER">Teacher</option>
                             <option value="CONTENT_EDITOR">Content editor</option>
                             <option value="ADMIN">Admin</option>

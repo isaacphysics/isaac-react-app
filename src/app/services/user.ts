@@ -10,8 +10,12 @@ export function isStudent(user?: {role?: UserRole, loggedIn?: boolean} | null): 
     return isDefined(user) && (user.role === "STUDENT") && (user.loggedIn ?? true);
 }
 
-export function isTeacherOrAbove(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isTutorOrAbove(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role !== "STUDENT") && (user.loggedIn ?? true);
+}
+
+export function isTeacherOrAbove(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+    return isDefined(user) && (user.role !== "STUDENT") && (user.role !== "TUTOR") && (user.loggedIn ?? true);
 }
 
 export function isAdmin(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
@@ -40,6 +44,7 @@ export function isAdminOrEventManager(user?: {role?: UserRole, loggedIn?: boolea
 
 export const roleRequirements: Record<UserRole, (u: {role?: UserRole, loggedIn?: boolean} | null) => boolean> = {
     "STUDENT": isStudent,
+    "TUTOR": isTutorOrAbove,
     "TEACHER": isTeacherOrAbove,
     "EVENT_LEADER": isEventLeaderOrStaff,
     "CONTENT_EDITOR": isStaff,

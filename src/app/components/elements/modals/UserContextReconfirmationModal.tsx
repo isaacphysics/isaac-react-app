@@ -17,6 +17,8 @@ import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
 
+// TUTOR TODO should tutors be considered the same as teachers here? There is quite a lot of exam
+//        board/qualification specific language.
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
         intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,

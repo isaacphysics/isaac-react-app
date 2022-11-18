@@ -107,6 +107,8 @@ interface UserContextAccountInputProps {
 export function UserContextAccountInput({
     user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
 }: UserContextAccountInputProps) {
+    // TUTOR TODO should tutors be considered the same as teachers here? There is quite a lot of exam
+    //        board/qualification specific language.
     const teacher = isTeacherOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 

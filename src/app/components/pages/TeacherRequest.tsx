@@ -38,6 +38,7 @@ import {IsaacContent} from "../content/IsaacContent";
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
+// TUTOR TODO we need a tutor request page
 export const TeacherRequest = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);

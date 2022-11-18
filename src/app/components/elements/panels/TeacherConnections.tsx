@@ -124,6 +124,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                 <RS.Row>
                     <RS.Col lg={7}>
                         <h3>
+                            {/* TUTOR TODO this can probably stay the same, considering that it is student facing? */}
                             <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
                             <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
                                 These are the students who have shared their Isaac data with you.

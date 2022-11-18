@@ -54,6 +54,14 @@ const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in Nav
         Help: helpLinks,
         Admin: null
     },
+    TUTOR: { // TUTOR TODO work out which routes tutor should be able to see!!!
+        "My Isaac": myIsaacLinks,
+        Teach: teacherLinks,
+        Learn: learnLinks,
+        Events: teacherEventLinks,
+        Help: helpLinks,
+        Admin: null
+    },
     TEACHER: {
         "My Isaac": myIsaacLinks,
         Teach: teacherLinks,

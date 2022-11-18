@@ -7,7 +7,13 @@ import {
     useAssignmentsCount
 } from "../../navigation/NavigationBar";
 import {useAppSelector, selectors} from "../../../state";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacherOrAbove} from "../../../services";
+import {
+    isAdmin,
+    isAdminOrEventManager,
+    isEventLeader,
+    isStaff,
+    isTeacherOrAbove
+} from "../../../services";
 
 export const NavigationBarCS = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -22,6 +28,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
+        {/* TUTOR TODO make a version of this navbar menu for tutors */}
         {isTeacherOrAbove(user) && <NavigationSection title="Teachers">
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>

@@ -711,7 +711,7 @@ export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export const USER_ROLES = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
+export const USER_ROLES = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
 export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";

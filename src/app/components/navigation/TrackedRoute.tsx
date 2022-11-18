@@ -41,6 +41,7 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
             const {ifUser, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
+                // TUTOR TODO should we redirect them to tutor request page instead? Or maybe only if the route is "tutor or above"?
                 const userNeedsToBeTeacher = rest.ifUser && rest.ifUser.name === isTeacherOrAbove.name; // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
                     {user && ifUser(user) ?
