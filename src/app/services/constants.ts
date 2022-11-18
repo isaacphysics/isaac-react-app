@@ -900,15 +900,6 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "My markbook", to: "/my_markbook"}
 );
 
-export enum UserRole {
-    ADMIN = "ADMIN",
-    EVENT_MANAGER = "EVENT_MANAGER",
-    CONTENT_EDITOR = "CONTENT_EDITOR",
-    EVENT_LEADER = "EVENT_LEADER",
-    TEACHER = "TEACHER",
-    STUDENT = "STUDENT"
-}
-
 export enum UserFacingRole {
     ADMIN = "Admin",
     EVENT_MANAGER = "Event Manager",

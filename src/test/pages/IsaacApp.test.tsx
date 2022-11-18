@@ -3,7 +3,7 @@ import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
-import {Role, ROLES} from "../../IsaacApiTypes";
+import {UserRole, USER_ROLES} from "../../IsaacApiTypes";
 import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "../utils";
 import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS, SITE_SUBJECT} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
@@ -37,7 +37,7 @@ const helpLinks = siteSpecific(
     ["/support/teacher", "/support/student", "/contact"],
 );
 
-const navigationBarLinksPerRole: {[p in (Role | "ANONYMOUS")]: {[menu in NavBarMenus]: string[] | null}} = {
+const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in NavBarMenus]: string[] | null}} = {
     ANONYMOUS: {
         "My Isaac": myIsaacLinks,
         Teach: null,
@@ -106,8 +106,8 @@ describe("IsaacApp", () => {
     });
 
     // For each role (including a not-logged-in user), test whether the user sees the correct links in the navbar menu
-    ["ANONYMOUS"].concat(ROLES).forEach((r) => {
-        const role = r as Role | "ANONYMOUS";
+    ["ANONYMOUS"].concat(USER_ROLES).forEach((r) => {
+        const role = r as UserRole | "ANONYMOUS";
         it (`should give a user with the role ${role} access to the correct navigation menu items`, async () => {
             renderTestEnvironment({role});
             for (const [menu, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {

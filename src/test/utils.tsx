@@ -1,4 +1,4 @@
-import {Role} from "../IsaacApiTypes";
+import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {rest, RestHandler} from "msw";
@@ -19,7 +19,7 @@ export const augmentErrorMessage = (message?: string) => (e: Error) => {
 }
 
 interface RenderTestEnvironmentOptions {
-    role?: Role | "ANONYMOUS";
+    role?: UserRole | "ANONYMOUS";
     modifyUser?: (u: typeof mockUser) => typeof mockUser;
     PageComponent?: React.FC<any>;
     initalRouteEntries?: string[];

@@ -42,7 +42,7 @@ import {
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
-    Role,
+    UserRole,
     TestCaseDTO,
     UserContext,
     UserSummaryDTO,
@@ -1043,7 +1043,7 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
     }
 };
 
-export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+export const adminModifyUserRoles = (role: UserRole, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
     try {
         await api.admin.modifyUserRoles.post(role, userIds);
