@@ -7,7 +7,8 @@ import {
     MEMBERSHIP_STATUS,
     NO_CONTENT,
     NOT_FOUND,
-    QUESTION_CATEGORY
+    QUESTION_CATEGORY,
+    TAG_ID
 } from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
@@ -682,6 +683,20 @@ const isaacApi = createApi({
                 errorTitle: "Failed to get 2FA secret"
             })
         }),
+
+
+        // === Users ===
+
+        requestTutorUpgrade: build.mutation<boolean, {firstName: string; lastName: string; emailAddress: string; subjects: TAG_ID[]; reason: string}>({
+            query: () => ({
+                url: "/users/tutor_request",
+                method: "POST",
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to request Tutor account upgrade"
+            })
+        }),
+
     })
 });
 

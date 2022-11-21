@@ -24,7 +24,7 @@ export const TutorFeatures = () => {
                 <p className="subtitle">Isaac Physics provides you with a huge range of resources to support your tutoring of Physics, Maths and Chemistry.</p>
             </Col>
             {isDisabled && <Col md={6} className="text-center text-md-right">
-                <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/pages/contact_us_teacher" : "/register"}>
+                <Button tag={Link} size="lg" color="secondary" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"}>
                     {isLoggedIn(user) ? "Upgrade my Account" : "Get a Tutor Account"}
                 </Button>
             </Col>}
@@ -51,7 +51,7 @@ export const TutorFeatures = () => {
                 title: "3. Assignment Progress",
                 disabled: isDisabled,
                 verticalContent: true,
-                subtitle: "View your students’ progress through their assignments."}}
+                subtitle: "View your tutees’ progress through their assignments."}}
                        imageClassName="teacher-features"
             />
         </Row>

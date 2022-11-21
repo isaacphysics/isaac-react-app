@@ -85,6 +85,7 @@ import {GameboardFilter} from "../pages/GameboardFilter";
 import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentSchedule} from "../pages/AssignmentSchedule";
 import {ExternalRedirect} from "../handlers/ExternalRedirect";
+import {TutorRequest} from "../pages/TutorRequest";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -238,6 +239,7 @@ export const IsaacApp = () => {
                         {/* Static pages */}
                         <TrackedRoute exact path="/contact" component={Contact}/>
                         <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
+                        <TrackedRoute exact path="/tutor_account_request" ifUser={isLoggedIn} component={TutorRequest}/>
                         <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />
                         <StaticPageRoute exact path="/terms" pageId="terms_of_use" />
                         <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />
