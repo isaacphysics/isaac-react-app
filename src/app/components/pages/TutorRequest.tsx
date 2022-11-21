@@ -22,7 +22,6 @@ import {
     Row
 } from "reactstrap";
 import {
-    getFilteredStageOptions,
     isPhy,
     isTutorOrAbove,
     selectOnChange,
