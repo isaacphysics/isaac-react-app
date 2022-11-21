@@ -39,7 +39,13 @@ import {
     EnhancedAssignmentWithProgress
 } from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardItem, GameboardItemState, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../IsaacApiTypes";
+import {
+    GameboardItem,
+    GameboardItemState,
+    QuizAssignmentDTO,
+    QuizUserFeedbackDTO,
+    RegisteredUserDTO
+} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
     API_PATH,
@@ -47,7 +53,7 @@ import {
     getAssignmentCSVDownloadLink,
     getQuizAssignmentCSVDownloadLink,
     isDefined,
-    isFound,
+    isFound, isTeacherOrAbove,
     MARKBOOK_TYPE_TAB,
     siteSpecific,
     useAssignmentProgressAccessibilitySettings
@@ -475,7 +481,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
     </div> : null;
 };
 
-const GroupDetails = ({group}: {group: AppGroup}) => {
+const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
@@ -483,22 +489,27 @@ const GroupDetails = ({group}: {group: AppGroup}) => {
     const assignments = groupBoardAssignments ?? [];
     const quizAssignments = groupQuizAssignments ?? [];
 
+    const assignmentTabComponents = assignments.length > 0
+        ? assignments.map(assignment => <AssignmentDetails key={assignment.gameboardId} assignment={assignment}/>)
+        : <div className="p-4 text-center">There are no assignments for this group.</div>;
+    const quizTabComponents = quizAssignments.length > 0
+        ? quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} quizAssignment={quizAssignment} />)
+        : <div className="p-4 text-center">There are no tests assigned to this group.</div>;
+
     const assignmentTabs = {
-        [`Assignments (${assignments.length || 0})`]:
-            assignments.length > 0
-                ? assignments.map(assignment => <AssignmentDetails key={assignment.gameboardId} assignment={assignment}/>)
-                : <div className="p-4 text-center">There are no assignments for this group.</div>,
-        [`Tests (${quizAssignments.length || 0})`]:
-            quizAssignments.length > 0
-                ? quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} quizAssignment={quizAssignment} />)
-                : <div className="p-4 text-center">There are no tests assigned to this group.</div>
+        [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
+        [`Tests (${quizAssignments.length || 0})`]: quizTabComponents
     }
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
-            {assignmentTabs}
-        </Tabs>
+        {/* TUTOR only show assignments tab to tutor users */}
+        {isTeacherOrAbove(user)
+            ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+                {assignmentTabs}
+            </Tabs>
+            : assignmentTabComponents
+        }
     </div>;
 };
 
@@ -510,7 +521,7 @@ function getGroupQuizProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/quiz/group/" + groupId + "/download";
 }
 
-export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
+export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const [isExpanded, setExpanded] = useState(false);
 
@@ -534,11 +545,11 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>
-        {isExpanded && <GroupDetails group={group} />}
+        {isExpanded && <GroupDetails group={group} user={user} />}
     </>;
 };
 
-export function AssignmentProgress() {
+export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     const dispatch = useAppDispatch();
     const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
     const pageSettings = useAssignmentProgressAccessibilitySettings();
@@ -546,7 +557,10 @@ export function AssignmentProgress() {
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
     useEffect(() => {
-        dispatch(loadQuizAssignments());
+        // TUTOR don't attempt to load tests for tutors
+        if (isTeacherOrAbove(user)) {
+            dispatch(loadQuizAssignments());
+        }
     }, [dispatch]);
 
     const pageHelp = <span>
@@ -586,7 +600,7 @@ export function AssignmentProgress() {
                     : sortBy(groups, g => g.created).reverse();
                 return <div className="assignment-progress-container mb-5">
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
+                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user}/>)}
                     </AssignmentProgressPageSettingsContext.Provider>
                     {sortedGroups.length === 0 && <Container className="py-5">
                         <h3 className="text-center">
