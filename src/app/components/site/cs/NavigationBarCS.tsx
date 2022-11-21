@@ -12,7 +12,7 @@ import {
     isAdminOrEventManager,
     isEventLeader,
     isStaff,
-    isTeacherOrAbove
+    isTeacherOrAbove, isTutorOrAbove
 } from "../../../services";
 
 export const NavigationBarCS = () => {
@@ -28,13 +28,14 @@ export const NavigationBarCS = () => {
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
-        {/* TUTOR TODO make a version of this navbar menu for tutors */}
-        {isTeacherOrAbove(user) && <NavigationSection title="Teachers">
+        {isTutorOrAbove(user) && <NavigationSection title="Teachers">
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
-            <LinkItem to="/assignment_progress">Markbook</LinkItem>
-            <LinkItem to="/set_tests">Manage tests</LinkItem>
-            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
+            <LinkItem to="/my_markbook">Markbook</LinkItem>
+            {isTeacherOrAbove(user) && <>
+                <LinkItem to="/set_tests">Manage tests</LinkItem>
+                <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
+            </>}
         </NavigationSection>}
 
         <NavigationSection title="Learn">
@@ -47,6 +48,7 @@ export const NavigationBarCS = () => {
         </NavigationSection>
 
         <NavigationSection title="Events">
+            {/* TUTOR TODO I guess tutors don't need to see this page? */}
             {isTeacherOrAbove(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>

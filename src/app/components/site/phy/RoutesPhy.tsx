@@ -9,6 +9,7 @@ import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
 import {isTeacherOrAbove, isTutorOrAbove} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
+import {TutorFeatures} from "../../pages/TutorFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
@@ -66,6 +67,7 @@ export const RoutesPhy = [
     <StaticPageRoute key={key++} exact path="/gcse" pageId="gcse" />,
     <StaticPageRoute key={key++} exact path="/alevel" pageId="alevel" />,
     <TrackedRoute key={key++} exact path="/teacher_features" component={TeacherFeatures}/>,
+    <TrackedRoute key={key++} exact path="/tutor_features" component={TutorFeatures}/>,
     <TrackedRoute key={key++} exact path="/sketcher" component={GraphSketcherPage} />,
 
     // Legacy Routes
