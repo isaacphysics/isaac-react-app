@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isCS, isLoggedIn, isStudent, STAGE} from "./";
+import {EXAM_BOARD, isCS, isStudent, STAGE} from "./";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
