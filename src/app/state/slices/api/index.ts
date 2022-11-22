@@ -7,8 +7,7 @@ import {
     MEMBERSHIP_STATUS,
     NO_CONTENT,
     NOT_FOUND,
-    QUESTION_CATEGORY,
-    TAG_ID
+    QUESTION_CATEGORY
 } from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
