@@ -1,7 +1,14 @@
-import {useEffect, useMemo} from "react";
-import {deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
-import {API_PATH, isDefined, isQuestion} from "./";
-import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
+import {useEffect, useMemo, useState} from "react";
+import {deregisterQuestions, loadQuizzes, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
+import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, useQueryParams} from "./";
+import {
+    ContentDTO,
+    IsaacQuizSectionDTO,
+    QuestionDTO,
+    QuizAssignmentDTO,
+    QuizAttemptDTO,
+    QuizSummaryDTO, RegisteredUserDTO
+} from "../../IsaacApiTypes";
 import {partition} from "lodash";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
@@ -39,6 +46,37 @@ export function useQuizSections(attempt?: QuizAttemptDTO) {
         });
         return sections;
     }, [attempt?.quiz]);
+}
+
+export function useFilteredQuizzes(user: RegisteredUserDTO) {
+    const quizzes = useAppSelector(selectors.quizzes.available);
+    const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
+    const {filter}: {filter?: string} = useQueryParams();
+    const startIndex = 0;
+    const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
+
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(loadQuizzes(startIndex));
+    }, [dispatch, startIndex]);
+
+    useEffect(() => {
+        if (isDefined(titleFilter) && isDefined(quizzes)) {
+            const results = quizzes
+                .filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()))
+                .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles ? !quiz.hiddenFromRoles?.includes("TEACHER") : true));
+
+            if (isDefined(results) && results.length > 0) {
+                setFilteredQuizzes(results);
+            } else {
+                setFilteredQuizzes([]);
+            }
+            return; // Ugly but works...
+        }
+        setFilteredQuizzes(quizzes);
+    }, [titleFilter, quizzes]);
+
+    return {titleFilter, setTitleFilter, filteredQuizzes};
 }
 
 export function useCurrentQuizAttempt(studentId?: number) {

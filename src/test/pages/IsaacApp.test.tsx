@@ -13,8 +13,8 @@ const myIsaacLinks = siteSpecific(
     ["/assignments", "/my_gameboards", "/progress", "/tests", "/student_rewards"]
 );
 const tutorLinks = siteSpecific(
-    ["/tutor_features", "/groups", "/set_assignments", "/assignment_progress"],
-    ["/groups", "/set_assignments", "/assignment_progress"]
+    ["/tutor_features", "/groups", "/set_assignments", "/assignment_progress", "/view_tests"],
+    ["/groups", "/set_assignments", "/assignment_progress", "/view_tests"]
 );
 const teacherLinks = siteSpecific(
     ["/teacher_features", "/groups", "/set_assignments", "/assignment_progress", "/set_tests", "/set_tests#manage"],
@@ -58,7 +58,7 @@ const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in Nav
         Help: helpLinks,
         Admin: null
     },
-    TUTOR: { // TUTOR tutor should see these links
+    TUTOR: {
         "My Isaac": myIsaacLinks,
         Teach: tutorLinks,
         Learn: learnLinks,

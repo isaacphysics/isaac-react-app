@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
     loadQuizAssignments,
-    loadQuizzes,
     markQuizAsCancelled,
     selectors,
     showQuizSettingModal,
@@ -18,13 +17,12 @@ import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     below,
-    isDefined,
     isEventLeaderOrStaff,
     MANAGE_QUIZ_TAB,
     NOT_FOUND,
     siteSpecific,
     useDeviceSize,
-    useQueryParams
+    useFilteredQuizzes
 } from "../../../services";
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
@@ -81,20 +79,12 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 }
 
 const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
+    const dispatch = useAppDispatch();
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
-    const quizzes = useAppSelector(selectors.quizzes.available);
-    const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
     const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     const quizAssignments = useAppSelector(selectors.quizzes.assignments);
-
-    const dispatch = useAppDispatch();
-
-    const { filter }: { filter?: string } = useQueryParams();
-
-    const startIndex = 0;
-    const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
 
     // Set active tab using hash anchor
     useEffect(() => {
@@ -107,25 +97,10 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }, [hashAnchor]);
 
     useEffect(() => {
-        dispatch(loadQuizzes(startIndex));
         dispatch(loadQuizAssignments());
-    }, [dispatch, startIndex]);
+    }, [dispatch]);
 
-    useEffect(() => {
-        if (isDefined(titleFilter) && isDefined(quizzes)) {
-            const results = quizzes
-                .filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()))
-                .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles ? !quiz.hiddenFromRoles?.includes("TEACHER") : true));
-
-            if (isDefined(results) && results.length > 0) {
-                setFilteredQuizzes(results);
-            } else {
-                setFilteredQuizzes([]);
-            }
-            return; // Ugly but works...
-        }
-        setFilteredQuizzes(quizzes);
-    }, [titleFilter, quizzes]);
+    const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
 
     function activeTabChanged(tabIndex: number) {
         setPageTitle(siteSpecific((tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"))
