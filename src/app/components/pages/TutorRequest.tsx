@@ -55,7 +55,7 @@ export const TutorRequest = () => {
     const subject = "Tutor Account Request";
     const message = "Hello,\n\n" +
         "Please could you convert my Isaac account into a tutor account.\n\n" +
-        "I would like to teach subjects: " + subjects.join(", ") + "\n\n" +
+        (subjects.length > 0 ? ("I would like to teach subjects: " + subjects.join(", ") + "\n\n") : "") +
         (reason ? "I would like to upgrade because: " + reason + "\n\n" : "") +
         "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
