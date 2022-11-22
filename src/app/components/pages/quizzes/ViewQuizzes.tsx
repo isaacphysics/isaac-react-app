@@ -4,7 +4,7 @@ import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {useFilteredQuizzes} from "../../../services";
+import {siteSpecific, useFilteredQuizzes} from "../../../services";
 
 export const ViewQuizzes = ({user}: {user: RegisteredUserDTO}) => {
 
@@ -15,7 +15,7 @@ export const ViewQuizzes = ({user}: {user: RegisteredUserDTO}) => {
     </span>;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={"Preview Tests"} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Preview Tests", "Preview tests")} help={pageHelp} />
         <div className="my-4 mb-5">
             <ShowLoading until={filteredQuizzes}>
                 {filteredQuizzes && <>

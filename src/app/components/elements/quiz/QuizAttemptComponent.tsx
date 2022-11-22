@@ -168,7 +168,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 
 export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
 export const teacherQuizzesCrumbs = [{title: "Set tests", to: `/set_tests`}];
-export const tutorQuizzesCrumbs = [{title: "Preview tests", to: `/view_tests`}];
+export const tutorQuizzesCrumbs = [{title: siteSpecific("Preview Tests", "Preview tests"), to: `/view_tests`}];
 const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {
