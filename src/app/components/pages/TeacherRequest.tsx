@@ -57,7 +57,12 @@ export const TeacherRequest = () => {
 
     const urn = user?.loggedIn && user.schoolId || "";
     const subject = "Teacher Account Request";
-    const message = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
+    const message = "Hello,\n\n" +
+        "Please could you convert my Isaac account into a teacher account.\n\n" +
+        "My school is: " + school + "\n" +
+        "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\n" +
+        "Any other information: " + otherInformation + "\n\n" +
+        "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
 
     function isEmailDomainAllowed(email: string) {
@@ -134,7 +139,7 @@ export const TeacherRequest = () => {
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
                                 dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
-                                setMessageSent(true)
+                                setMessageSent(true);
                             }}>
                                 <CardBody>
                                     <p>

@@ -684,19 +684,6 @@ const isaacApi = createApi({
             })
         }),
 
-
-        // === Users ===
-
-        requestTutorUpgrade: build.mutation<boolean, {firstName: string; lastName: string; emailAddress: string; subjects: TAG_ID[]; reason: string}>({
-            query: () => ({
-                url: "/users/tutor_request",
-                method: "POST",
-            }),
-            onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to request Tutor account upgrade"
-            })
-        }),
-
     })
 });
 

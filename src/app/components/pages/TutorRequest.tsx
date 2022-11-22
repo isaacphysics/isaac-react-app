@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {
     AppState,
-    isaacApi, mutationSucceeded,
+    isaacApi,
     requestEmailVerification,
     selectors,
+    submitMessage,
     useAppDispatch,
     useAppSelector
 } from "../../state";
@@ -26,7 +27,6 @@ import {
     isTutorOrAbove,
     selectOnChange,
     SITE_SUBJECT_TITLE,
-    TAG_ID,
     tags,
     validateEmail,
     WEBMASTER_EMAIL
@@ -36,7 +36,7 @@ import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
 import Select from "react-select";
 
-const warningFragmentId = "teacher_registration_warning_message"; // TUTOR TODO??
+const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
 export const TutorRequest = () => {
     const dispatch = useAppDispatch();
@@ -47,14 +47,18 @@ export const TutorRequest = () => {
     const [firstName, setFirstName] = useState(user?.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user?.loggedIn && user.familyName || "");
     const [emailAddress, setEmailAddress] = useState(user?.loggedIn && user.email || "");
-    const [subjects, setSubjects] = useState<TAG_ID[]>([]);
+    const [subjects, setSubjects] = useState<string[]>([]);
     const [reason, setReason] = useState<string>("");
     const [messageSent, setMessageSent] = useState(false);
     const [emailVerified, setEmailVerified] = useState(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
 
+    const subject = "Tutor Account Request";
+    const message = "Hello,\n\n" +
+        "Please could you convert my Isaac account into a tutor account.\n\n" +
+        "I would like to teach subjects: " + subjects.join(", ") + "\n\n" +
+        (reason ? "I would like to upgrade because: " + reason + "\n\n" : "") +
+        "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
-
-    const [requestTutorUpgrade] = isaacApi.endpoints.requestTutorUpgrade.useMutation();
 
     useEffect(() => {
         setFirstName(user?.loggedIn && user.givenName || "");
@@ -100,9 +104,8 @@ export const TutorRequest = () => {
                             :
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
-                                requestTutorUpgrade({firstName, lastName, emailAddress, subjects, reason}).then(result => {
-                                    setMessageSent(mutationSucceeded(result));
-                                });
+                                dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
+                                setMessageSent(true);
                             }}>
                                 <CardBody>
                                     <p>
@@ -142,14 +145,14 @@ export const TutorRequest = () => {
                                         </Col>
                                         {isPhy && <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="subject-input" className="form-required">Subjects</Label>
+                                                <Label htmlFor="subject-input">Subjects</Label>
                                                 <Select
                                                     inputId="subject-input"
                                                     placeholder="All"
                                                     isClearable
                                                     isMulti
                                                     onChange={selectOnChange(setSubjects, true)}
-                                                    options={tags.allSubjectTags.map(tag => ({value: tag.id, label: tag.title}))}
+                                                    options={tags.allSubjectTags.map(tag => ({value: tag.title, label: tag.title}))}
                                                 />
                                             </FormGroup>
                                         </Col>}
