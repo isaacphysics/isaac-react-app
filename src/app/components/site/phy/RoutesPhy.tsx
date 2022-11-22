@@ -24,7 +24,6 @@ const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 let key = 0;
 export const RoutesPhy = [
     // Assignments
-    // TUTOR tutors should be able to see assignment progress for their students
     <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
 

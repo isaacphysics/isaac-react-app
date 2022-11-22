@@ -496,17 +496,15 @@ const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO})
         ? quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} quizAssignment={quizAssignment} />)
         : <div className="p-4 text-center">There are no tests assigned to this group.</div>;
 
-    const assignmentTabs = {
-        [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
-        [`Tests (${quizAssignments.length || 0})`]: quizTabComponents
-    }
-
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
-        {/* TUTOR only show assignments tab to tutor users */}
+        {/* Only full teachers can see the tests tab */}
         {isTeacherOrAbove(user)
             ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
-                {assignmentTabs}
+                {{
+                    [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
+                    [`Tests (${quizAssignments.length || 0})`]: quizTabComponents
+                }}
             </Tabs>
             : assignmentTabComponents
         }
@@ -557,7 +555,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
     useEffect(() => {
-        // TUTOR don't attempt to load tests for tutors
+        // Don't attempt to load tests for tutors, they cannot manage them
         if (isTeacherOrAbove(user)) {
             dispatch(loadQuizAssignments());
         }

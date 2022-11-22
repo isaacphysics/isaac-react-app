@@ -149,7 +149,6 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    // TUTOR tutors are able to make gameboards, so this button is useful to them
     const showConceptGameboardButton = isCS && isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)

@@ -89,7 +89,8 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 
-    // TUTOR tutors should not be able to see other users progress
+    // Only teachers and above can see other users progress. The API checks if the other user has shared data with the
+    // current user or not.
     if (!viewingOwnData && !isTeacherOrAbove(user)) {
         return <Unauthorised />
     }
@@ -209,7 +210,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             </Col>}
                         </Row>
                     </div>,
-                    // TUTOR TODO do tutors need these? I'm guessing not?
                     ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
                         <TeacherAchievement
                             verb="created"

@@ -142,7 +142,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
     const showQuiz = (quiz: QuizSummaryDTO) => {
         switch (user.role) {
             case "STUDENT":
-            // TUTOR tutors should see tests the same as students would
+            // Tutors should see the same tests as students can
             case "TUTOR":
                 return (quiz.hiddenFromRoles && !quiz.hiddenFromRoles?.includes("STUDENT")) || quiz.visibleToStudents
             case "TEACHER":

@@ -124,7 +124,6 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
             </div>
         </div>
         <div className="d-flex justify-content-between">
-            {/* TUTOR tutors should not be able to reset group members passwords */}
             {isTeacherOrAbove(user) && <>
                 <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)}
                           className="text-right d-none d-sm-block">
@@ -208,7 +207,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
             <Row className="mt-2">
                 <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
-                    {/* TUTOR only teachers should be able add group managers */}
+                    {/* Only teachers and above can add group managers */}
                     {isTeacherOrAbove(user) && <>
                         <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                             Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers

@@ -6,7 +6,7 @@ import {isLoggedIn, isTutorOrAbove} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCard} from "../content/IsaacCard";
 
-// TUTOR TODO a version of the "teacher features" page to showcase tutor accounts. Might need revisiting
+// A version of the "teacher features" page to showcase tutor account features
 export const TutorFeatures = () => {
 
     const user = useAppSelector(selectors.user.orNull);
@@ -82,14 +82,6 @@ export const TutorFeatures = () => {
                 subtitle: isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}}
                        imageClassName="teacher-features"
             />
-            {/* TUTOR TODO advertise events here for tutors too? (in a less school-oriented way) */}
-            {/*<IsaacCard doc={{ clickUrl: "/events?types=student",*/}
-            {/*    image: {src: "/assets/phy/teacher_features_sprite.svg#calendar"},*/}
-            {/*    title: "Events",*/}
-            {/*    verticalContent: true,*/}
-            {/*    subtitle: "Browse free events for your KS4 and KS5 students."}}*/}
-            {/*           imageClassName="teacher-features"*/}
-            {/*/>*/}
         </Row>
     </Container>
 };

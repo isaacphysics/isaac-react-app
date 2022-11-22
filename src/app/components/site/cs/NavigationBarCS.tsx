@@ -48,7 +48,6 @@ export const NavigationBarCS = () => {
         </NavigationSection>
 
         <NavigationSection title="Events">
-            {/* TUTOR TODO I guess tutors don't need to see this page? */}
             {isTeacherOrAbove(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>

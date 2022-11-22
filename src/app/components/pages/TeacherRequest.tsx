@@ -38,7 +38,7 @@ import {IsaacContent} from "../content/IsaacContent";
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
-// TUTOR TODO add a pointer towards tutor account request (maybe in the noSchool feedback?)
+// TUTOR TODO should we add a pointer towards tutor account request (maybe in the noSchool feedback?)
 export const TeacherRequest = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);

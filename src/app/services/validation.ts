@@ -96,7 +96,7 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
         && validateUserContexts(userContexts);
 }
 
-// TUTOR TODO consider tutor role in here if necessary
+// TUTOR TODO there needs to be consideration for tutors here since isStudent is explicitly used to check if user is a teacher
 export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {
     if (!validateUserSchool(Object.assign({password: null}, user))) {
         return Object.assign({}, FAILURE_TOAST, {title: "School information required", body: "You must enter a school in order to book on to this event."});

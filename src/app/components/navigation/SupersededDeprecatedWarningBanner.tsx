@@ -23,7 +23,8 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
 
     const contentType = doc.type === "isaacQuestionPage" ? "question" : "page";
 
-    // TUTOR tutors should be able to see superseded/deprecated messages because they are setting assignments etc.
+    // Tutors and teachers should see superseded/deprecated messages because they have to setting assignments etc. and
+    // want up to date content.
     const teacherMessage = isTutorOrAbove(user) && <React.Fragment>
         <span id="superseded-help" className="icon-help" />
         <RS.UncontrolledTooltip placement="bottom" target="superseded-help">

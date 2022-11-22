@@ -21,7 +21,6 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
 
     // Assignments
-    // TUTOR tutors can see assignment progress for gameboards they set
     <TrackedRoute key={key++} exact path="/my_markbook" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
     <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,

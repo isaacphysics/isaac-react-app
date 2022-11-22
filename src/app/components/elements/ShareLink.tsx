@@ -39,7 +39,6 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * 9);
-    // TUTOR tutors should be able to duplicate and edit gameboards
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
     return <div ref={shareLinkDivRef} className="share-link-icon">
         <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />

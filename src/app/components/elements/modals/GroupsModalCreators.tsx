@@ -88,7 +88,7 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
         <Row key={0}>
-            {/* TUTOR only teachers should be able add group managers */}
+            {/* Only teachers are allowed to add additional managers to a group. */}
             {isTeacherOrAbove(user) && <Col>
                 <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());

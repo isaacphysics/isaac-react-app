@@ -188,7 +188,6 @@ export const Gameboard = withRouter(({ location }) => {
                     return <>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-                        {/* TUTOR tutors can make gameboards */}
                         {user && isTutorOrAbove(user)
                             ? <RS.Row className="col-8 offset-2">
                                 <RS.Col className="mt-4">

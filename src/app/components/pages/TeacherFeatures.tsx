@@ -6,7 +6,6 @@ import {isLoggedIn, isTeacherOrAbove} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCard} from "../content/IsaacCard";
 
-// TUTOR TODO we should probably have a version of this page to showcase tutor accounts
 export const TeacherFeatures = () => {
 
     const user = useAppSelector(selectors.user.orNull);

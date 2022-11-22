@@ -187,7 +187,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />
                         <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />
                         <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacherOrAbove} component={QuizTeacherFeedback} />
-                        {/* TUTOR tutors can preview tests iff the test is student only */}
+                        {/* Tutors can preview tests iff the test is student only */}
                         <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTutorOrAbove} component={QuizPreview} />
                         <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />
                         <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
@@ -213,7 +213,7 @@ export const IsaacApp = () => {
                         <Redirect from="/quizzes" to="/tests" />
 
                         {/* Teacher pages */}
-                        {/* TUTOR tutors can set and manage assignments, but not tests/quizzes */}
+                        {/* Tutors can set and manage assignments, but not tests/quizzes */}
                         <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
                         <TrackedRoute exact path="/set_assignments" ifUser={isTutorOrAbove} component={SetAssignments} />
                         <TrackedRoute exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}

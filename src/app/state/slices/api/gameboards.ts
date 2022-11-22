@@ -224,7 +224,6 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                 }
             }
             if (redirectOnSuccess) {
-                // TUTOR tutors can set gameboards, so we should redirect them here
                 if (isTutorOrAbove(user)) {
                     const assignBoardPath = persistence.load(KEY.ASSIGN_BOARD_PATH) ?? "/set_assignments";
                     history.push(`${assignBoardPath}#${boardId}`);
