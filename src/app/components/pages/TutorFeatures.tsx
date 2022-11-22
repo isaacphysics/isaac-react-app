@@ -55,13 +55,19 @@ export const TutorFeatures = () => {
                        imageClassName="teacher-features"
             />
         </Row>
-        {/* TUTOR TODO tutor support section? */}
         <Row className="my-4">
             <Col>
-                <h3 className="h-title text-right">Tutor Resources</h3>
+                <h3 className="h-title text-right">Tutor Support and Resources</h3>
             </Col>
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">
+            <IsaacCard doc={{ clickUrl: "/support/teacher/general",
+                image: {src: "/assets/phy/teacher_features_sprite.svg#teacher-forum"},
+                title: "Teacher FAQ",
+                verticalContent: true,
+                subtitle: "Answers to your questions and how-to guides."}}
+                       imageClassName="teacher-features"
+            />
             <IsaacCard doc={{ clickUrl: "/pages/order_books",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#skills-book-cover"},
                 title: "Isaac Physics Books",

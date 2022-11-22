@@ -49,7 +49,7 @@ export const searchList = [
     },  {
         id: "teacher_support",
         title: "Teacher support",
-        terms: ["teacher", "teacher support", "teaching", "teachers", "help", "support"],
+        terms: ["teacher", "teacher support", "teaching", "teachers", "help", "support", "tutor", "tutor support", "tutors", "tutoring"],
         summary: `View teacher FAQs for using Isaac ${SITE_SUBJECT_TITLE}.`,
         url: "/support/teacher/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
