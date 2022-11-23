@@ -106,10 +106,14 @@ const AssignGroup = ({groups, board, allowScheduling}: BoardProps) => {
     const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
-        const utcDate = e.target.valueAsDate as Date;
-        const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
-        // Sets the scheduled date to 7AM in the timezone of the browser.
-        setScheduledStartDate(scheduledDate);
+        const utcDate = e.target.valueAsDate;
+        if (utcDate) {
+            const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
+            // Sets the scheduled date to 7AM in the timezone of the browser.
+            setScheduledStartDate(scheduledDate);
+        } else {
+            setScheduledStartDate(null as unknown as Date); {/* DANGER here with force-casting Date|null to Date */}
+        }
     }
 
     return <Container className="py-2">
