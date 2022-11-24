@@ -78,8 +78,8 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
         </span>;
     } else if (event.isMultiDay) {
         return <>
-            <DateString>{event.date}</DateString><br/>
-            <DateString>{event.endDate}</DateString>
+            From <DateString>{event.date}</DateString><br/>
+            to <DateString>{event.endDate}</DateString>
         </>;
     } else {
         return <>
