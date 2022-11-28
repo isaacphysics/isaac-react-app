@@ -17,10 +17,11 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {useCurrentQuestionAttempt} from "../../services";
+import {isDefined, useCurrentQuestionAttempt} from "../../services";
 import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
+import classNames from "classnames";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -163,10 +164,17 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
-                                <DropdownToggle disabled={readonly || !noDisplayUnit} className={`${noDisplayUnit ? "" : "border-dark display-unit"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
+                                <DropdownToggle
+                                    disabled={readonly || !noDisplayUnit}
+                                    className={classNames("feedback-zone px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": isDefined(validationResponse) && noDisplayUnit})}
+                                    color={noDisplayUnit ? undefined : "white"}
+                                >
                                     <Markup encoding={"latex"}>
                                         {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
                                     </Markup>
+                                    {isDefined(validationResponse) && noDisplayUnit && <div className={"feedback-box"}>
+                                        <span className={classNames("feedback", currentAttemptUnitsWrong ? "incorrect" : "correct")}>{currentAttemptUnitsWrong ? "✘" : "✔"}</span>
+                                    </div>}
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     {selectedUnits.map((unit) =>
