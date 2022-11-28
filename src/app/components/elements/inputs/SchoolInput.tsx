@@ -17,19 +17,15 @@ interface SchoolInputProps {
 }
 const NOT_APPLICABLE = "N/A";
 
-
-const getSchoolPromise = (schoolSearchText: string): Promise<any> =>
-    new Promise(resolve => {
-        resolve(api.schools.search(schoolSearchText).then(({data}) => {
-            let temp: any = [];
-            data && data.length > 0 && data.map((item) => (temp.push({value: item, label: schoolNameWithPostcode(item)})));
-            return temp;
-        }).catch((response) => {
-            console.error("Error searching for schools. ", response);
-        }));
+const schoolSearch = (schoolSearchText: string, setAsyncSelectOptionsCallback: (options: {value: string | School, label: string | undefined}[]) => void) => {
+    api.schools.search(schoolSearchText).then(({data}) => {
+        setAsyncSelectOptionsCallback(data && data.length > 0 ? data.map((item) => ({value: item, label: schoolNameWithPostcode(item)})) : []);
+    }).catch((response) => {
+        console.error("Error searching for schools. ", response);
     });
-// Must define this throttle function _outside_ the component to ensure it doesn't get overwritten each rerender!
-const throttledSchoolSearch = throttle(getSchoolPromise, 450);
+};
+// Must define this debounced function _outside_ the component to ensure it doesn't get overwritten each rerender!
+const throttledSchoolSearch = throttle(schoolSearch, 450, {trailing: true, leading: true});
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -63,7 +59,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     }
 
     // Called when school input box option selected
-    function handleSetSchool(newValue: any) {
+    function handleSetSchool(newValue: {value: string | School} | null) {
         if (newValue == null) {
             setSelectedSchoolObject(undefined);
             userToUpdate.schoolOther = undefined;
@@ -74,7 +70,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }
 
-    const schoolValue = (
+    const schoolValue: {value: string | School, label: string | undefined} | undefined = (
         (selectedSchoolObject && selectedSchoolObject.urn ?
             {value: selectedSchoolObject.urn, label: schoolNameWithPostcode(selectedSchoolObject)} :
             (userToUpdate.schoolOther ?
