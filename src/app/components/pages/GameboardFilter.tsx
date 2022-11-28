@@ -119,27 +119,31 @@ function processQueryString(query: string): QueryStringResponse {
 }
 
 function generatePhyBoardName(selections: Item<TAG_ID>[][]) {
-    let boardName = "Physics, Maths & Chemistry";
+    if (selections.length === 1) {
+        const numberOfSubjects = selections[0].length;
+        if (numberOfSubjects === 0 || numberOfSubjects === tags.allSubjectTags.length) {
+            return "Physics, Maths & Chemistry";
+        }
+        // Generates a name for a set of subjects, for example ["Physics", "Maths"] ---> "Physics & Maths"
+        return selections[0].reduce((acc, t, i) => acc + t.label + (numberOfSubjects !== i + 1 ? ((numberOfSubjects - (i + 2)) > 0 ? ", " : " & ") : ""), "");
+    }
     let selectionIndex = selections.length;
     while(selectionIndex-- > 0) {
         if (selections[selectionIndex].length === 1) {
-            boardName = selections[selectionIndex][0].label;
-            break;
+            return selections[selectionIndex][0].label;
         }
     }
-    return boardName;
+    return "Physics, Maths & Chemistry";
 }
 
 function generateCSBoardName(selections: Item<TAG_ID>[][]) {
-    let boardName = "Computer Science";
     let selectionIndex = selections.length;
     while(selectionIndex-- > 0) {
         if (selections[selectionIndex].length > 0 && selections[selectionIndex].length <= 2) {
-            boardName = selections[selectionIndex].map(s => s.label).join(" & ");
-            break;
+            return selections[selectionIndex].map(s => s.label).join(" & ");
         }
     }
-    return boardName;
+    return "Computer Science";
 }
 
 // Shared props that both PHY and CS question filters use
