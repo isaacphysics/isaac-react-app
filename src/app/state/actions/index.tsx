@@ -531,6 +531,8 @@ export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAu
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST});
         const result = await api.authorisations.getTokenOwner(authenticationToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
+        // TUTOR TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+        //        their data
         const usersToGrantAccess = result.data;
 
         // TODO can use state (second thunk param) to highlight teachers who have already been granted access
