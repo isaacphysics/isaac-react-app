@@ -17,7 +17,7 @@ import {AssignmentProgressLegend, ProgressDetails} from "./AssignmentProgress";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {combineQueries, ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import {AssignmentDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 
 const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWithProgress}) => {
     const dispatch = useAppDispatch();
@@ -40,7 +40,7 @@ const SingleProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWith
     </div>;
 };
 
-export const SingleAssignmentProgress = () => {
+export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
     const params = useParams<{ assignmentId?: string }>();
     const assignmentId = parseInt(params.assignmentId || ""); // DANGER: This will produce a NaN if params.assignmentId is undefined
     const assignmentQuery = isaacApi.endpoints.getSingleSetAssignment.useQuery(assignmentId || skipToken);
@@ -49,7 +49,7 @@ export const SingleAssignmentProgress = () => {
 
     const augmentAssignmentWithProgress = (assignment: AssignmentDTO, assignmentProgress: AppAssignmentProgress[]): EnhancedAssignmentWithProgress => ({...assignment, progress: assignmentProgress} as EnhancedAssignmentWithProgress);
 
-    const pageSettings = useAssignmentProgressAccessibilitySettings();
+    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     return <>
         <Container>

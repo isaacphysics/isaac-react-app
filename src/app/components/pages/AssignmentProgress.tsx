@@ -277,7 +277,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                             const fullAccess = studentProgress.user.authorisedFullAccess;
                             return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    {fullAccess ?
+                                    {fullAccess && pageSettings.isTeacher ?
                                         <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
                                             {studentProgress.user.givenName}
                                             <span
@@ -481,7 +481,7 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
     </div> : null;
 };
 
-const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
+const GroupDetails = ({group}: {group: AppGroup}) => {
     const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
@@ -499,7 +499,7 @@ const GroupDetails = ({group, user}: {group: AppGroup, user: RegisteredUserDTO})
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
         {/* Only full teachers can see the tests tab */}
-        {isTeacherOrAbove(user)
+        {pageSettings.isTeacher
             ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                 {{
                     [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
@@ -519,7 +519,7 @@ function getGroupQuizProgressCSVDownloadLink(groupId: number) {
     return API_PATH + "/quiz/group/" + groupId + "/download";
 }
 
-export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: RegisteredUserDTO}) => {
+export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
     const dispatch = useAppDispatch();
     const [isExpanded, setExpanded] = useState(false);
 
@@ -543,14 +543,14 @@ export const GroupAssignmentProgress = ({group, user}: {group: AppGroup, user: R
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>
-        {isExpanded && <GroupDetails group={group} user={user} />}
+        {isExpanded && <GroupDetails group={group} />}
     </>;
 };
 
 export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     const dispatch = useAppDispatch();
     const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
-    const pageSettings = useAssignmentProgressAccessibilitySettings();
+    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
@@ -598,7 +598,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                     : sortBy(groups, g => g.created).reverse();
                 return <div className="assignment-progress-container mb-5">
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} user={user}/>)}
+                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group}/>)}
                     </AssignmentProgressPageSettingsContext.Provider>
                     {sortedGroups.length === 0 && <Container className="py-5">
                         <h3 className="text-center">
