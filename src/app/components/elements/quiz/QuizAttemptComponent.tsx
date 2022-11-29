@@ -166,9 +166,8 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     ;
 }
 
-export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: "Set tests", to: `/set_tests`}];
-export const tutorQuizzesCrumbs = [{title: siteSpecific("Preview Tests", "Preview tests"), to: `/view_tests`}];
+export const myQuizzesCrumbs = [{title: siteSpecific("My Tests", "My tests"), to: `/tests`}];
+export const teacherQuizzesCrumbs = [{title: siteSpecific("Set Tests", "Set tests"), to: `/set_tests`}];
 const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {
@@ -180,7 +179,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, use
     if (preview) {
         quizTitle += " Preview";
     }
-    const crumbs = preview ? (isTeacherOrAbove(user) ? teacherQuizzesCrumbs : tutorQuizzesCrumbs) : myQuizzesCrumbs;
+    const crumbs = preview && isTeacherOrAbove(user) ? teacherQuizzesCrumbs : myQuizzesCrumbs;
     if (page === null) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
                                    intermediateCrumbs={crumbs}/>;

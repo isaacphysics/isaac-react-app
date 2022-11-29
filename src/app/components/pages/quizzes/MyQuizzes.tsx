@@ -19,6 +19,7 @@ import {
     extractTeacherName,
     isAttempt,
     isFound,
+    isTutorOrAbove,
     partitionCompleteAndIncompleteQuizzes,
     siteSpecific
 } from "../../../services";
@@ -183,6 +184,11 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
                                         <span className="mb-2 mb-sm-0">{quiz.title}</span>
                                         {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                         <Spacer />
+                                        {isTutorOrAbove(user) && <div className="d-none d-md-flex align-items-center mr-4">
+                                            <Link to={{pathname: `/test/preview/${quiz.id}`}}>
+                                                <span>Preview</span>
+                                            </Link>
+                                        </div>}
                                         <RS.Button tag={Link} to={{pathname: `/test/attempt/${quiz.id}`}}>
                                             {siteSpecific("Take Test", "Take test")}
                                         </RS.Button>

@@ -86,7 +86,6 @@ import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentSchedule} from "../pages/AssignmentSchedule";
 import {ExternalRedirect} from "../handlers/ExternalRedirect";
 import {TutorRequest} from "../pages/TutorRequest";
-import {ViewQuizzes} from "../pages/quizzes/ViewQuizzes";
 import {TeacherOrTutorRequest} from "../pages/TeacherOrTutorRequest";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
@@ -220,7 +219,6 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}
                         <TrackedRoute exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />
                         <Redirect from="/set_quizzes" to="/set_tests" />
-                        <TrackedRoute exact path="/view_tests" ifUser={isTutorOrAbove} component={ViewQuizzes} />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
