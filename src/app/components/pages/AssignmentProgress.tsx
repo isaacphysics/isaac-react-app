@@ -529,6 +529,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }, [dispatch]);
 
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const {assignmentCount} = useGroupAssignmentSummary(group.id);
 
     return <>
@@ -537,7 +538,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Assignments CSV)</a></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>
+            {pageSettings.isTeacher && <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
