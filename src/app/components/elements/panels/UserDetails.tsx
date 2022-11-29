@@ -4,7 +4,6 @@ import {
     isCS,
     PROGRAMMING_LANGUAGE,
     programmingLanguagesMap,
-    TEACHER_REQUEST_ROUTE,
     UserFacingRole,
     validateEmail,
     validateName
@@ -59,9 +58,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row className="mb-3">
             <Col>
                 Account type: <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate?.role == "STUDENT" && <span>
-                    {/* TUTOR TODO should we ask if users want to upgrade to a tutor account instead? */}
-                    <small>(Are you a teacher? {" "}
-                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
+                    <small>(Are you a teacher or tutor? {" "}
+                        <Link to="/request_account_upgrade" target="_blank">
                             Upgrade your account
                         </Link>{".)"}</small>
                 </span>}

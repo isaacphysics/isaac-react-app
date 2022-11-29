@@ -4,7 +4,14 @@ import ReactGA, {FieldsObject} from "react-ga";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
-import {GOOGLE_ANALYTICS_ACCOUNT_ID, isTeacherOrAbove, KEY, persistence, siteSpecific} from "../../services";
+import {
+    GOOGLE_ANALYTICS_ACCOUNT_ID,
+    isTeacherOrAbove,
+    isTutorOrAbove,
+    KEY,
+    persistence,
+    siteSpecific
+} from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
 
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
@@ -41,21 +48,15 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
             const {ifUser, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
-                // TUTOR TODO should we redirect them to tutor request page instead? Or maybe only if the route is "tutor or above"?
-                const userNeedsToBeTeacher = rest.ifUser && rest.ifUser.name === isTeacherOrAbove.name; // TODO we should try to find a more robust way than this
+                const userNeedsToBeTutorOrTeacher = rest.ifUser && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(rest.ifUser.name); // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
                     {user && ifUser(user) ?
                         <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
-                        user && !user.loggedIn && !isTeacherOrAbove(user) && userNeedsToBeTeacher ?
+                        user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
-                            user && !isTeacherOrAbove(user) && userNeedsToBeTeacher ?
-                                siteSpecific(
-                                    // Physics
-                                    <Redirect to="/pages/contact_us_teacher"/>,
-                                    // Computer science
-                                    <Redirect to="/pages/teacher_accounts"/>
-                                )
+                            user && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
+                                <Redirect to="/request_account_upgrade"/>
                                 :
                                 user && user.loggedIn && !ifUser(user) ?
                                     <Unauthorised/>

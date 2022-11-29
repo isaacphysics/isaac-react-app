@@ -10,9 +10,9 @@ import {
     isLoggedIn,
     isMobile,
     isPhy,
-    isTeacherOrAbove,
+    isTutorOrAbove,
     SITE_SUBJECT_TITLE,
-    TEACHER_REQUEST_ROUTE, UserFacingRole,
+    UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -68,11 +68,10 @@ const RequiredAccountInfoBody = () => {
             <div className="text-right text-muted required-before">
                 Required
             </div>
-            {!isTeacherOrAbove(user) && <div className="text-left mb-4">
+            {!isTutorOrAbove(user) && <div className="text-left mb-4">
                 Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
-                    {/* TUTOR TODO should we ask if users want to upgrade to a tutor account instead? */}
-                    <small>(Are you a teacher? {" "}
-                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
+                    <small>(Are you a teacher or tutor? {" "}
+                        <Link to="/request_account_upgrade" target="_blank">
                             Upgrade your account
                         </Link>{".)"}
                     </small>
