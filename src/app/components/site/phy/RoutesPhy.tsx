@@ -87,9 +87,7 @@ export const RoutesPhy = [
     // TODO: if chemistry is a separate site ever, should move to Chemistry routes.
     <Redirect key={key++} exact from="/book16" to="/books/chemistry_16" />,
 
-
     // Teacher Pages
-    // TUTOR TODO should tutors have access to the syllabi? It could help them structure lessons for their students.
-    <StaticPageRoute key={key++} exact ifUser={isTeacherOrAbove} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
-    <StaticPageRoute key={key++} exact ifUser={isTeacherOrAbove} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
+    <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
+    <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
 ];
