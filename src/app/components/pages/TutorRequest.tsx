@@ -80,7 +80,7 @@ export const TutorRequest = () => {
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3">
-                                        You already have a teacher account
+                                        You already have a tutor or teacher account
                                     </span>
                                     {isPhy && <p className="mt-3">
                                         Go to the <Link to="/tutor_features">Tutor features page</Link> to start using your

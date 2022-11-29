@@ -6,6 +6,7 @@ import {
     isLoggedIn,
     isPhy,
     isTeacherOrAbove,
+    isTutorOrAbove,
     SITE_SUBJECT_TITLE,
     siteSpecific,
     validateUserContexts,
@@ -17,12 +18,15 @@ import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
 
-// TUTOR TODO should tutors be considered the same as teachers here? There is quite a lot of exam
-//        board/qualification specific language.
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
         intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
         connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
+        privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+    },
+    tutor: {
+        intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year.</span>,
+        connections: <span>If you have recently changed which students you tutor, might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
         privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
     },
     student: {
@@ -69,7 +73,7 @@ const UserContextReconfimationModalBody = () => {
                 {text}
                 <span className={"sr-only"}> (opens in new tab) </span>
             </a>;
-        })[isTeacherOrAbove(user) ? "teacher" : "student"]
+        })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"]
     , [user]);
 
     // Form submission

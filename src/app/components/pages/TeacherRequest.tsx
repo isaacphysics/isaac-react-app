@@ -38,7 +38,6 @@ import {IsaacContent} from "../content/IsaacContent";
 const warningFragmentId = "teacher_registration_warning_message";
 const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
 
-// TUTOR TODO should we add a pointer towards tutor account request (maybe in the noSchool feedback?)
 export const TeacherRequest = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
@@ -94,10 +93,14 @@ export const TeacherRequest = () => {
         isEmailDomainAllowed(emailAddress);
     }, [user]);
 
+    // Direct private tutors and parents towards the tutor account request page
     const noSchool = <p>
-        {"If you don't have an associated school please fill out our "}
-        <Link to="/contact?preset=teacherRequest">Contact us</Link>
-        {" form."}
+        If you don't have an associated school please fill out our
+        {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
+        form. If you are a private tutor or parent, you can
+        {" "}<Link to="/tutor_account_request">
+            request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+        </Link>.
     </p>;
 
 
@@ -220,6 +223,10 @@ export const TeacherRequest = () => {
                                         <Col>
                                             <small className="text-danger text-left">You have not provided your school —
                                                 please add your school on your <Link to="/account">My Account</Link> page.
+                                                If you are a private tutor or parent, you can{" "}
+                                                <Link to="/tutor_account_request">
+                                                    request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+                                                </Link>.
                                             </small>
                                         </Col>
                                     </Row>

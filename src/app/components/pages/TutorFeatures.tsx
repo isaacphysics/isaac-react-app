@@ -35,7 +35,7 @@ export const TutorFeatures = () => {
                 title: "1. Create a Group",
                 disabled: isDisabled,
                 verticalContent: true,
-                subtitle: "Create and manage class groups, and share them with colleagues."}}
+                subtitle: "Create and manage student groups."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/set_assignments",

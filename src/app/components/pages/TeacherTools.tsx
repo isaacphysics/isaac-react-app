@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
 
-// TUTOR TODO do we need a version of this for CS tutors?
+// TODO do we need a version of this for CS tutors?
 export const TeacherTools = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
