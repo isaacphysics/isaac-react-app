@@ -1,4 +1,4 @@
-import {apiHelper, atLeastOne, isStudent, isTeacherOrAbove, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
+import {apiHelper, atLeastOne, isTeacherOrAbove, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
 import {IsaacEventPageDTO} from "../../IsaacApiTypes";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
