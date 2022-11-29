@@ -757,8 +757,8 @@ export const fetchGlossaryTerms = () => async (dispatch: Dispatch<Action>) => {
 };
 
 // Questions
-export const registerQuestions = (questions: QuestionDTO[], accordionClientId?: string) => (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, questions, accordionClientId});
+export const registerQuestions = (questions: QuestionDTO[], accordionClientId?: string, isQuiz?: boolean) => (dispatch: Dispatch<Action>) => {
+    dispatch({type: ACTION_TYPE.QUESTION_REGISTRATION, questions, accordionClientId, isQuiz});
 };
 
 export const deregisterQuestions = (questionIds: string[]) => (dispatch: Dispatch<Action>) => {
