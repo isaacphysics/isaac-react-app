@@ -2,6 +2,7 @@ import React, {ChangeEvent} from "react";
 import {
     allRequiredInformationIsPresent,
     isCS,
+    isTutor,
     PROGRAMMING_LANGUAGE,
     programmingLanguagesMap,
     UserFacingRole,
@@ -126,7 +127,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isCS}/>
+                                 required={isCS && !isTutor(userToUpdate)}/>
                 </FormGroup>
             </Col>
             <Col md={6}>

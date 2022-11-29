@@ -6,6 +6,7 @@ import {
     isLoggedIn,
     isPhy,
     isTeacherOrAbove,
+    isTutor,
     isTutorOrAbove,
     SITE_SUBJECT_TITLE,
     siteSpecific,
@@ -108,7 +109,7 @@ const UserContextReconfimationModalBody = () => {
                 <SchoolInput
                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                     submissionAttempted={submissionAttempted} idPrefix="modal"
-                    required={isCS}
+                    required={isCS && !isTutor(user)}
                 />
             </Col>
         </Row>

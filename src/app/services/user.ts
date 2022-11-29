@@ -10,6 +10,10 @@ export function isStudent(user?: {role?: UserRole, loggedIn?: boolean} | null): 
     return isDefined(user) && (user.role === "STUDENT") && (user.loggedIn ?? true);
 }
 
+export function isTutor(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+    return isDefined(user) && (user.role === "TUTOR") && (user.loggedIn ?? true);
+}
+
 export function isTutorOrAbove(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role !== "STUDENT") && (user.loggedIn ?? true);
 }

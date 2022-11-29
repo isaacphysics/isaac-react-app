@@ -10,6 +10,7 @@ import {
     isLoggedIn,
     isMobile,
     isPhy,
+    isTutor,
     isTutorOrAbove,
     SITE_SUBJECT_TITLE,
     UserFacingRole,
@@ -99,7 +100,7 @@ const RequiredAccountInfoBody = () => {
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required
+                        required={!("role" in userToUpdate && isTutor(userToUpdate))}
                     />
                 </RS.Col>}
             </RS.Row>

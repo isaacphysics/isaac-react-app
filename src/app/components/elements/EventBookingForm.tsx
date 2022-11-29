@@ -4,7 +4,7 @@ import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {examBoardLabelMap, isCS, stageLabelMap, studentOnlyEventMessage} from "../../services";
+import {examBoardLabelMap, isCS, isTutor, stageLabelMap, studentOnlyEventMessage} from "../../services";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
@@ -91,7 +91,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     </RS.Row>
                 </div>
                 {editingSelf && <div>
-                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput={true} submissionAttempted required />
+                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput={true} submissionAttempted required={!isTutor(targetUser)} />
                 </div>}
                 {editingSelf && <div className="text-center alert-warning p-1">
                     If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.
@@ -126,7 +126,6 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             {event.isAStudentEvent && <option value="11">Year 11</option>}
                             {event.isAStudentEvent && <option value="12">Year 12</option>}
                             {event.isAStudentEvent && <option value="13">Year 13</option>}
-                            {/* We don't consider tutors w.r.t. events for now */}
                             {!event.isStudentOnly && <option value="TEACHER">N/A - Teacher</option>}
                             {!event.isStudentOnly && <option value="OTHER">N/A - Other</option>}
                         </RS.Input>
