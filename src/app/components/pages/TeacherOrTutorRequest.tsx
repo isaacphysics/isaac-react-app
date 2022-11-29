@@ -42,7 +42,7 @@ export const TeacherOrTutorRequest = ({user}: {user: RegisteredUserDTO}) => {
                            </p>
                            <ul>
                                <li>A "teacher" must be directly associated with a school</li>
-                               <li>A "tutor" does not have to be associated with a school (private tutors and parents come under this
+                               <li>A "tutor" does not have to be associated with a school (private tutors and parents fall under this
                                    category)</li>
                            </ul>
                            <Row className={"my-4"}>
