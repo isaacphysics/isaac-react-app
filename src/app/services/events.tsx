@@ -158,7 +158,7 @@ export const stageExistsForSite = (stage: string) => {
 }
 
 export const userSatisfiesStudentOnlyRestrictionForEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
-    return event.isStudentOnly ? isStudent(user) : true;
+    return event.isStudentOnly ? !isTeacherOrAbove(user) : true;
 }
 
 export const userIsTeacherAtAStudentEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
