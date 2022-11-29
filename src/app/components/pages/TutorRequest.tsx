@@ -93,7 +93,7 @@ export const TutorRequest = () => {
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
-                                        Thank you for submitting a teacher account request.
+                                        Thank you for submitting a tutor account request.
                                     </p>
                                     <p>
                                         We will be in touch shortly. Please note that account verification is a manual
