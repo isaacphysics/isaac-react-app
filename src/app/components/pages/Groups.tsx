@@ -39,6 +39,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter, isCS, isDefined, isOwnerOrGroupManager, isStaff, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import * as RS from "reactstrap";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -249,13 +250,13 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 </Col>
             </Row>
             {group && <React.Fragment>
-                <Row>
+                {isUserGroupOwner && <Row>
                     <Col>
-                        {isUserGroupOwner && <Button block color="tertiary" onClick={toggleArchived}>
+                        <Button block color="tertiary" onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
-                        </Button>}
+                        </Button>
                     </Col>
-                </Row>
+                </Row>}
                 <Row className="mt-4">
                     <Col>
                         <ShowLoading until={group.members}>

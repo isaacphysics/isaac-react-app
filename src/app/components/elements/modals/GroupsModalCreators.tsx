@@ -10,7 +10,7 @@ import {
 } from "../../../state";
 import {sortBy} from "lodash";
 import {history} from "../../../services";
-import {Jumbotron, Row, Col, Form, Input, Table} from "reactstrap";
+import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
@@ -121,6 +121,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     const group = groups?.find(g => g.id === groupId);
     const [addGroupManager] = isaacApi.endpoints.addGroupManager.useMutation();
     const [deleteGroupManager] = isaacApi.endpoints.deleteGroupManager.useMutation();
+    const [updateGroup] = isaacApi.endpoints.updateGroup.useMutation();
 
     const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
 
@@ -136,6 +137,16 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                     // Successful addition, clear new manager email field
                     setNewManagerEmail("");
                 }
+            });
+        }
+    }
+
+    function setAdditionalManagerPrivileges(additionalManagerPrivileges: boolean) {
+        if (group) {
+            const updatedGroup = {...group, additionalManagerPrivileges};
+            updateGroup({
+                updatedGroup,
+                message: "Additional managers of group " + group.groupName + (updatedGroup.additionalManagerPrivileges ? " given additional privileges" : " no longer have additional privileges")
             });
         }
     }
@@ -161,6 +172,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         <p>
             Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
             It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
+            Additional teachers cannot modify or delete each others assignments by default, but this can be enabled.
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
@@ -189,7 +201,12 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                 {additionalManagers && additionalManagers.map(manager =>
                     <tr key={manager.email} data-testid={"group-manager"}>
                         <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
-                        {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete">
+                        {userIsOwner && <td className={"text-center"}>
+                            <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => {} /* TODO */}>
+                                Make owner
+                            </Button>
+                        </td>}
+                        {(userIsOwner || user?.id === manager.id) && <td className={"text-center"}>
                             <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
                                 removeManager(manager) : removeSelf(manager)}>
                             Remove
@@ -198,6 +215,27 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                 )}
             </tbody>
         </Table>
+
+        {userIsOwner && <Alert className={"px-2 py-2 mb-2"} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
+            <CustomInput
+                id="additional-manager-privileges-check"
+                checked={group.additionalManagerPrivileges}
+                className={"mb-2"}
+                type="checkbox"
+                label={"Give additional managers extra privileges"}
+                onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
+            />
+            {group.additionalManagerPrivileges
+                ? <>
+                    <span className={"font-weight-bold"}>Caution</span>: All other group managers are allowed delete
+                    and modify any assignments set to this group, by any other manager including you (the owner). Un-tick the above
+                    box if you would like to remove these additional privileges.
+                </>
+                : <>Enabling this allows other group managers to delete and modify <b>all assignments</b> set to this group
+                    (by any other manager, including the owner).
+                </>
+            }
+        </Alert>}
 
         {userIsOwner && <>
             <h4>Add additional managers</h4>
