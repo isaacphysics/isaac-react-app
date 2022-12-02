@@ -144,11 +144,11 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         <Label className="w-100">
                             Value <br />
                             <InputGroup className={"feedback-zone nq-feedback"}>
-                                <Input type="text" value={currentAttemptValue || ""}
+                                <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                        onChange={updateValue} readOnly={readonly}
                                 />
                                 {currentAttemptValueWrong && <div className={"feedback-box"}>
-                                    <span className={"feedback incorrect"}>✘</span>
+                                    <span className={"feedback incorrect"}><b>!</b></span>
                                 </div>}
                                 {!readonly && <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>

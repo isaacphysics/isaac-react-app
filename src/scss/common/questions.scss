@@ -379,8 +379,12 @@ button {
     }
   }
   &.nq-feedback {
+    input {
+      background-image: none !important;
+    }
     .feedback-box {
-      right: 70px;
+      z-index: 3;
+      right: 75px;
     }
   }
 }
