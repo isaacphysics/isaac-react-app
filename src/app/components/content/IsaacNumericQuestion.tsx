@@ -143,10 +143,13 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     <div className="numeric-value w-100 w-sm-50 w-md-100 w-lg-50">
                         <Label className="w-100">
                             Value <br />
-                            <InputGroup>
-                                <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
+                            <InputGroup className={"feedback-zone nq-feedback"}>
+                                <Input type="text" value={currentAttemptValue || ""}
                                        onChange={updateValue} readOnly={readonly}
                                 />
+                                {currentAttemptValueWrong && <div className={"feedback-box"}>
+                                    <span className={"feedback incorrect"}>✘</span>
+                                </div>}
                                 {!readonly && <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
                                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
@@ -166,14 +169,14 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle
                                     disabled={readonly || !noDisplayUnit}
-                                    className={classNames("feedback-zone px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": isDefined(validationResponse) && noDisplayUnit})}
+                                    className={classNames("feedback-zone px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong})}
                                     color={noDisplayUnit ? undefined : "white"}
                                 >
                                     <Markup encoding={"latex"}>
                                         {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
                                     </Markup>
-                                    {isDefined(validationResponse) && noDisplayUnit && <div className={"feedback-box"}>
-                                        <span className={classNames("feedback", currentAttemptUnitsWrong ? "incorrect" : "correct")}>{currentAttemptUnitsWrong ? "✘" : "✔"}</span>
+                                    {currentAttemptUnitsWrong && noDisplayUnit && <div className={"feedback-box"}>
+                                        <span className={"feedback incorrect"}>✘</span>
                                     </div>}
                                 </DropdownToggle>
                                 <DropdownMenu right>

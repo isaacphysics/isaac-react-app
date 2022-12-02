@@ -350,6 +350,7 @@ button {
 }
 
 .feedback-zone {
+  position: relative;
   &.feedback-showing {
     padding-right: 34px !important;
   }
@@ -375,6 +376,11 @@ button {
       &.incorrect {
         color: red;
       }
+    }
+  }
+  &.nq-feedback {
+    .feedback-box {
+      right: 70px;
     }
   }
 }
