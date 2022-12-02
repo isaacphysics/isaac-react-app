@@ -39,7 +39,6 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter, isCS, isDefined, isOwnerOrGroupManager, isStaff, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
-import * as RS from "reactstrap";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",

@@ -145,8 +145,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         if (group) {
             const updatedGroup = {...group, additionalManagerPrivileges};
             updateGroup({
-                updatedGroup,
-                message: "Additional managers of group " + group.groupName + (updatedGroup.additionalManagerPrivileges ? " given additional privileges" : " no longer have additional privileges")
+                updatedGroup
             });
         }
     }
