@@ -17,7 +17,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {isDefined, useCurrentQuestionAttempt} from "../../services";
+import {useCurrentQuestionAttempt} from "../../services";
 import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
@@ -169,7 +169,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
                                 <DropdownToggle
                                     disabled={readonly || !noDisplayUnit}
-                                    className={classNames("feedback-zone px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong})}
+                                    className={classNames("feedback-zone px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit})}
                                     color={noDisplayUnit ? undefined : "white"}
                                 >
                                     <Markup encoding={"latex"}>
