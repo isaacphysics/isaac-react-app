@@ -121,6 +121,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     const group = groups?.find(g => g.id === groupId);
     const [addGroupManager] = isaacApi.endpoints.addGroupManager.useMutation();
     const [deleteGroupManager] = isaacApi.endpoints.deleteGroupManager.useMutation();
+    const [promoteGroupManager] = isaacApi.endpoints.promoteGroupManager.useMutation();
     const [updateGroup] = isaacApi.endpoints.updateGroup.useMutation();
 
     const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
@@ -141,6 +142,14 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         }
     }
 
+    function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
+        if (group?.id) {
+            if (confirm("Are you sure you want to promote this manager to group owner?\nThey will inherit the ability to add additional managers to, archive and delete this group.")) {
+                promoteGroupManager({groupId: group.id, managerUserId: manager.id as number});
+            }
+        }
+    }
+
     function setAdditionalManagerPrivileges(additionalManagerPrivileges: boolean) {
         if (group) {
             const updatedGroup = {...group, additionalManagerPrivileges};
@@ -153,7 +162,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     function removeManager(manager: UserSummaryWithEmailAddressDTO) {
         if (group?.id) {
             if (confirm("Are you sure you want to remove this teacher from the group?\nThey may still have access to student data until students revoke the connection from their My account pages.")) {
-                deleteGroupManager({groupId: group.id, managerUserId: manager.id as number})
+                deleteGroupManager({groupId: group.id, managerUserId: manager.id as number});
             }
         }
     }
@@ -201,7 +210,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                     <tr key={manager.email} data-testid={"group-manager"}>
                         <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
                         {userIsOwner && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => {} /* TODO */}>
+                            <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => promoteManager(manager)}>
                                 Make owner
                             </Button>
                         </td>}
