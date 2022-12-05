@@ -36,7 +36,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isDefined, isOwnerOrGroupManager, isStaff, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isCS, isDefined, isStaff, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
@@ -148,7 +148,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     const [isExpanded, setExpanded] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group ? group.groupName : "");
-    const isUserGroupOwner = group ? isOwnerOrGroupManager(user, group) : false;
+    const isUserGroupOwner = group ? user.id === group.ownerId : false;
 
     useEffect(() => {
         setExpanded(false);
@@ -203,7 +203,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
                     <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                        Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                        {isUserGroupOwner ? "Add / remove" : "View"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                     </Button>
                     <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                     <span className="d-inline-block d-md-none">&nbsp;</span>
@@ -232,7 +232,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                         innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
                         onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !isUserGroupOwner}
                     />
-                    {(isUserGroupOwner || !isDefined(group)) && <InputGroupAddon addonType="append">
+                    {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                         <Button
                             color={siteSpecific("secondary", "primary")}
                             className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
@@ -249,7 +249,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 </Col>
             </Row>
             {group && <React.Fragment>
-                {isUserGroupOwner && <Row>
+                {(isUserGroupOwner || group.additionalManagerPrivileges) && <Row>
                     <Col>
                         <Button block color="tertiary" onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
@@ -318,13 +318,13 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = isaacApi.endpoints.getGroups.useQuery(showArchived);
-    const { data: groups } = groupQuery;
+    const { currentData: groups, isLoading, isFetching } = groupQuery;
 
     const [createGroup] = isaacApi.endpoints.createGroup.useMutation();
     const [deleteGroup] = isaacApi.endpoints.deleteGroup.useMutation();
 
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = groups?.find(g => g.id === selectedGroupId);
+    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     // Clear the selected group when switching between tabs
     const switchTab = (archived: boolean) => {

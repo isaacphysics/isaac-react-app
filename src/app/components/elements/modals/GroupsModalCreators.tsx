@@ -7,6 +7,7 @@ import {
     isaacApi,
     store,
     useAppDispatch,
+    mutationSucceeded,
 } from "../../../state";
 import {sortBy} from "lodash";
 import {history} from "../../../services";
@@ -145,7 +146,11 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
         if (group?.id) {
             if (confirm("Are you sure you want to promote this manager to group owner?\nThey will inherit the ability to add additional managers to, archive and delete this group.")) {
-                promoteGroupManager({groupId: group.id, managerUserId: manager.id as number});
+                promoteGroupManager({groupId: group.id, managerUserId: manager.id as number}).then(response => {
+                    if (mutationSucceeded(response)) {
+                        dispatch(closeActiveModal());
+                    }
+                });
             }
         }
     }
@@ -180,7 +185,9 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         <p>
             Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
             It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
-            Additional teachers cannot modify or delete each others assignments by default, but this can be enabled.
+            <br/>
+            Additional teachers cannot modify or delete each others assignments by default, or archive and rename the group, but
+            these features can be enabled.
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
@@ -208,7 +215,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             <tbody>
                 {additionalManagers && additionalManagers.map(manager =>
                     <tr key={manager.email} data-testid={"group-manager"}>
-                        <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
+                        <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</td>
                         {userIsOwner && <td className={"text-center"}>
                             <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => promoteManager(manager)}>
                                 Make owner
