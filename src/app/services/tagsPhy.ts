@@ -148,16 +148,16 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // --- Biology Topics ---
 
         // Cell biology
-        {id: TAG_ID.cellsViruses, title: "Cells & Viruses", parent: TAG_ID.cellBiology},
-        {id: TAG_ID.membraneTransport, title: "Membrane Transport", parent: TAG_ID.cellBiology, comingSoonDate: "soon"},
+        {id: TAG_ID.cellStructure, title: `Cell Structure`, parent: TAG_ID.cellBiology},
         {id: TAG_ID.mitosis, title: "Mitosis", parent: TAG_ID.cellBiology},
-        {id: TAG_ID.meiosis, title: "Meiosis", parent: TAG_ID.cellBiology, comingSoonDate: "soon"},
-        {id: TAG_ID.reproduction, title: `Repro${softHyphen}duction`, parent: TAG_ID.cellBiology, comingSoonDate: "soon"},
-        {id: TAG_ID.tissues, title: "Tissues", parent: TAG_ID.cellBiology, comingSoonDate: "soon"},
+        {id: TAG_ID.meiosis, title: "Meiosis", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.viruses, title: "Viruses", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.membraneTransport, title: "Membrane Transport", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.tissues, title: "Tissues", parent: TAG_ID.cellBiology},
         // Biochemistry
         {id: TAG_ID.proteins, title: "Proteins", parent: TAG_ID.biochemistry},
-        {id: TAG_ID.carbohydrates, title: `Carbo${softHyphen}hydrates`, parent: TAG_ID.biochemistry, comingSoonDate: "soon"},
-        {id: TAG_ID.lipids, title: "Lipids", parent: TAG_ID.biochemistry, comingSoonDate: "soon"},
+        {id: TAG_ID.carbohydrates, title: `Carbo${softHyphen}hydrates`, parent: TAG_ID.biochemistry},
+        {id: TAG_ID.lipids, title: "Lipids", parent: TAG_ID.biochemistry},
         // Genetics
         {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics},
         {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},

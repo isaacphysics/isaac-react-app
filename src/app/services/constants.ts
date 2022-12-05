@@ -844,11 +844,11 @@ export enum TAG_ID {
     // Biology Topics ---
 
     // Cell biology
-    cellsViruses = "cells_viruses",
-    membraneTransport = "membrane_transport",
+    cellStructure = "cell_structure",
     mitosis = "mitosis",
     meiosis = "meiosis",
-    reproduction = "reproduction",
+    viruses = "viruses",
+    membraneTransport = "membrane_transport",
     tissues = "tissues",
     // Biochemistry
     proteins = "proteins",
