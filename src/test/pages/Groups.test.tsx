@@ -395,7 +395,7 @@ describe("Groups", () => {
         await testAddAdditionalManagerInModal(newGroupManagerHandler, mockNewManager);
     });
 
-    it(`only allows additional group managers to remove themselves as group managers`, async () => {
+    it("only allows additional group managers to remove themselves as group managers", async () => {
         const mockOwner = buildMockTeacher(2);
         const mockOtherManager = buildMockTeacher(3);
         const mockGroup = {
