@@ -49,7 +49,7 @@ fi
 API_NAME=$SITE-api-$ENV-$API_VERSION
 APP_NAME=$SITE-app-$ENV-$APP_VERSION
 PG_CONTAINER_NAME=$SITE-pg-$ENV
-ES_CONTAINER_NAME=$SITE-elastic-live
+ES_CONTAINER_NAME=$SITE-elasticsearch-live
 
 # The content repo is named differently for both sites in a non-standard way:
 if [ "$SITE" == "cs" ]; then

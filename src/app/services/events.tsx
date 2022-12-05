@@ -44,7 +44,8 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
         }
     }
 
-    augmentedEvent.isNotClosed = event.eventStatus !== "CLOSED";
+    augmentedEvent.isNotClosed = !["CLOSED", "CANCELLED"].includes(event.eventStatus as string);
+    augmentedEvent.isCancelled = event.eventStatus === "CANCELLED";
     augmentedEvent.isWaitingListOnly = event.eventStatus === "WAITING_LIST_ONLY";
 
     // we have to fix the event image url.
@@ -55,7 +56,6 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
             augmentedEvent.eventThumbnail = {};
         }
         augmentedEvent.eventThumbnail.src = 'http://placehold.it/500x276';
-        augmentedEvent.eventThumbnail.altText = 'placeholder image.';
     }
 
     return augmentedEvent;
@@ -78,8 +78,8 @@ export const formatEventCardDate = (event: AugmentedEvent, podView?: boolean) =>
         </span>;
     } else if (event.isMultiDay) {
         return <>
-            <DateString>{event.date}</DateString><br/>
-            <DateString>{event.endDate}</DateString>
+            From <DateString>{event.date}</DateString><br/>
+            to <DateString>{event.endDate}</DateString>
         </>;
     } else {
         return <>

@@ -1,7 +1,6 @@
 // No internal app dependencies
 export * from "./localStorage";
 export * from "./siteConstants";
-export * from "./clozeQuestionKeyboardSensor";
 export * from "./demoTools";
 export * from "./device";
 export * from "./dates";
@@ -12,7 +11,6 @@ export * from "./progress";
 export * from "./select";
 export * from "./svg";
 export * from "./sorting";
-export * from "./katex-a11y";
 
 // No internal /services dependencies
 export * from "./constants";
@@ -21,6 +19,8 @@ export * from "./credentialPadding";
 export * from "./history";
 
 // Dependencies in /services
+export * from "./katex-a11y";
+export * from "./clozeQuestionKeyboardCoordinateGetter";
 export * from "./easterEggs/phyLogoAsciiArt";
 export * from "./easterEggs/csLogoAsciiArt";
 export * from "./user";

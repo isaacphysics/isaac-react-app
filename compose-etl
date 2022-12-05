@@ -41,7 +41,7 @@ if [ -z $API_VERSION ]; then
 fi
 
 ETL_NAME=$SITE-etl-$API_VERSION
-ES_CONTAINER=$SITE-elastic-live
+ES_CONTAINER=$SITE-elasticsearch-live
 
 # The content repo is named differently for both sites in a non-standard way:
 if [ "$SITE" == "cs" ]; then

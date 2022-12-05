@@ -110,8 +110,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Statistics
         {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistics},
         {id: TAG_ID.probability, title: `Probabi${softHyphen}lity`, parent: TAG_ID.statistics},
-        {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics},
-        {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics},
+        {id: TAG_ID.randomVariables, title: "Random Variables", parent: TAG_ID.statistics},
+        {id: TAG_ID.hypothesisTests, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics},
 
         // --- Chemistry Topics ---
 

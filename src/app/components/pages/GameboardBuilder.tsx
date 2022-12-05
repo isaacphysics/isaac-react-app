@@ -1,8 +1,9 @@
-import React, {lazy, useEffect, useRef, useState} from 'react';
+import React, {lazy, useCallback, useEffect, useRef, useState} from 'react';
 import {
     closeActiveModal,
     isaacApi,
     logAction,
+    mutationSucceeded,
     openActiveModal,
     useAppDispatch,
 } from "../../state";
@@ -63,7 +64,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
 
-    const cloneGameboard = (gameboard: GameboardDTO) => {
+    const cloneGameboard = useCallback((gameboard: GameboardDTO) => {
         setGameboardTitle(gameboard.title ? `${gameboard.title} (Copy)` : "");
         setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
         setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
@@ -73,7 +74,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         } else {
             logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: gameboard.id});
         }
-    };
+    }, [setGameboardTitle, setQuestionOrder, setSelectedQuestions, setWildcardId, baseGameboardId, concepts, eventLog, user]);
 
     const initialise = () => {
         setGameboardTitle("");
@@ -109,15 +110,21 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
             if (userContext.examBoard !== EXAM_BOARD.ALL) {
                 params.examBoards = userContext.examBoard;
             }
-            generateTemporaryGameboard(params);
+            generateTemporaryGameboard(params).then((gameboardResponse) => {
+                if (mutationSucceeded(gameboardResponse)) {
+                    cloneGameboard(gameboardResponse.data);
+                } else {
+                    console.error("Failed to create gameboard from concepts.");
+                }
+            });
         }
-    }, [dispatch, concepts, baseGameboardId]);
+    }, [dispatch, concepts, baseGameboardId, cloneGameboard, generateTemporaryGameboard, userContext.examBoard, userContext.stage]);
     useEffect(() => {
         return history.block(() => {
             logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
             dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
         });
-    });
+    }, []);
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to

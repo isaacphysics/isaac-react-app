@@ -512,7 +512,7 @@ export const examBoardBooleanNotationMap: {[examBoard in ExamBoard]: BOOLEAN_NOT
     [EXAM_BOARD.WJEC]: BOOLEAN_NOTATION.ENG,
     [EXAM_BOARD.OCR]: BOOLEAN_NOTATION.MATH,
     [EXAM_BOARD.EDEXCEL]: BOOLEAN_NOTATION.MATH,
-    [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.MATH,
+    [EXAM_BOARD.CIE]: BOOLEAN_NOTATION.ENG,
     [EXAM_BOARD.ALL]: BOOLEAN_NOTATION.MATH,
 };
 
@@ -797,9 +797,9 @@ export enum TAG_ID {
     simultaneous = "simultaneous",
     matrices = "matrices",
     // Statistics
-    hypothesis = "hypothesis",
+    hypothesisTests = "hypothesis_tests",
     dataAnalysis = "data_analysis",
-    randomVars = "random_vars",
+    randomVariables = "random_variables",
     probability = "probability",
     // Functions
     generalFunctions = "general_functions",
@@ -1089,3 +1089,8 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 export const FEATURED_NEWS_TAG = "featured";
 
 export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+
+export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
+export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
+// Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
+export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;

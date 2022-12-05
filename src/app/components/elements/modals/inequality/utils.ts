@@ -464,7 +464,8 @@ export function generateMenuItems({editorMode, logicSyntax, parsedAvailableSymbo
                 if (items.letters) {
                     customMenuItems.letters.push(...items.letters);
                 }
-            } else if (DIFFERENTIAL_REGEX.test(availableSymbol)) {
+            } else if (DIFFERENTIAL_REGEX.test(availableSymbol) && !/^(?:Delta|delta|d)$/.test(availableSymbol)) {
+                // The second clause makes sure we don't capture Delta, delta, and d as differentials but fall through to make them regular letters.
                 const items = generateMathsDifferentialAndLetters(availableSymbol);
                 if (items.differential) {
                     customMenuItems.mathsDerivatives.push(items.differential);
