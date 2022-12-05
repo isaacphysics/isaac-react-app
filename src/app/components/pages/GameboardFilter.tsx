@@ -137,15 +137,13 @@ function generatePhyBoardName(selections: Item<TAG_ID>[][]) {
 }
 
 function generateCSBoardName(selections: Item<TAG_ID>[][]) {
-    let boardName = "Computer Science";
     let selectionIndex = selections.length;
     while(selectionIndex-- > 0) {
         if (selections[selectionIndex].length > 0 && selections[selectionIndex].length <= 2) {
-            boardName = selections[selectionIndex].map(s => s.label).join(" & ");
-            break;
+            return selections[selectionIndex].map(s => s.label).join(" & ");
         }
     }
-    return boardName;
+    return "Computer Science";
 }
 
 // Shared props that both PHY and CS question filters use
