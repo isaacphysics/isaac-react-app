@@ -210,7 +210,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     {/* Only teachers and above can add group managers */}
                     {isTeacherOrAbove(user) && <>
                         <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                            Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                            {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                         </Button>
                         <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
                         <span className="d-inline-block d-md-none">&nbsp;</span>

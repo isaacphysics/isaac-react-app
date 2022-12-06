@@ -100,8 +100,8 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
 
 describe("Groups", () => {
 
-    it('displays all active groups on load, and all archived groups when Archived tab is clicked', async () => {
-        renderTestEnvironment();
+    (["TUTOR", "TEACHER"] as const).forEach(role => it(`displays all active groups on load if the user is a ${role.toLowerCase()}, and all archived groups when Archived tab is clicked`, async () => {
+        renderTestEnvironment({role});
         await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
         // switchGroupsTab checks that the mock active groups we expect to be there are in fact there
         await switchGroupsTab("active", mockActiveGroups);
@@ -117,7 +117,7 @@ describe("Groups", () => {
             // Expect all active mock groups to be displayed
             expect(difference(archivedGroupNames, mockArchivedGroups.map(g => g.groupName))).toHaveLength(0);
         });
-    });
+    }));
 
     it('allows you to create a new group', async () => {
         const mockToken = "E990S1";
@@ -133,6 +133,7 @@ describe("Groups", () => {
         const newGroupHandler = buildNewGroupHandler(mockNewGroup);
         const authTokenHandler = buildAuthTokenHandler(mockNewGroup, mockToken);
         renderTestEnvironment({
+            role: "TUTOR",
             extraEndpoints: [
                 rest.post(API_PATH + "/groups", newGroupHandler),
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, authTokenHandler),
@@ -339,7 +340,7 @@ describe("Groups", () => {
             });
         });
 
-        it(`allows owners of a group to add new group managers to an existing ${activeOrArchived} group`, async () => {
+        it(`allows teacher owners of a group to add new group managers to an existing ${activeOrArchived} group`, async () => {
             const mockGroup = {
                 ...mockGroups[0],
                 ownerId: mockUser.id,
@@ -348,6 +349,7 @@ describe("Groups", () => {
             const mockNewManager = buildMockTeacher(2);
             const existingGroupManagerHandler = buildNewManagerHandler(mockGroup, mockNewManager);
             renderTestEnvironment({
+                role: "TEACHER",
                 extraEndpoints: [
                     rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
                     rest.post(API_PATH + `/groups/${mockGroup.id}/manager`, existingGroupManagerHandler)
@@ -362,9 +364,33 @@ describe("Groups", () => {
             await userEvent.click(addManagersButton);
             await testAddAdditionalManagerInModal(existingGroupManagerHandler, mockNewManager);
         });
+
+        it(`does not allow tutor owners of a group to add new group managers to an existing ${activeOrArchived} group`, async () => {
+            const mockGroup = {
+                ...mockGroups[0],
+                ownerId: mockUser.id,
+                ownerSummary: buildMockUserSummary(mockUser, false),
+            };
+            renderTestEnvironment({
+                role: "TUTOR",
+                extraEndpoints: [
+                    rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup]))
+                ]
+            });
+            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+            const groups = await switchGroupsTab(activeOrArchived, [mockGroup]);
+            const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
+            await userEvent.click(selectGroupButton);
+            const groupEditor = await screen.findByTestId("group-editor");
+            // Neither variant of the button should show
+            const addManagersButton = within(groupEditor).queryByRole("button", {name: "Add / remove group managers"});
+            const viewManagersButton = within(groupEditor).queryByRole("button", {name: "View all group managers"});
+            expect(addManagersButton).toBeNull();
+            expect(viewManagersButton).toBeNull();
+        });
     });
 
-    it("allows you to add new group managers in the modal after creating a new group", async () => {
+    it("allows teachers to add new group managers in the modal after creating a new group", async () => {
         const mockNewGroup = {
             id: 42,
             groupName: "new group",
@@ -377,6 +403,7 @@ describe("Groups", () => {
         const mockNewManager = buildMockTeacher(2);
         const newGroupManagerHandler = buildNewManagerHandler(mockNewGroup, mockNewManager);
         renderTestEnvironment({
+            role: "TEACHER",
             extraEndpoints: [
                 rest.post(API_PATH + "/groups", buildNewGroupHandler(mockNewGroup)),
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M")),
@@ -393,6 +420,34 @@ describe("Groups", () => {
         const addGroupManagersButton = await within(firstModal).findByRole("button", {name: "Add group managers"});
         await userEvent.click(addGroupManagersButton);
         await testAddAdditionalManagerInModal(newGroupManagerHandler, mockNewManager);
+    });
+
+    it("does not allow tutors to add new group managers in the modal after creating a new group", async () => {
+        const mockNewGroup = {
+            id: 42,
+            groupName: "new group",
+            ownerId: mockUser.id,
+            created: Date.now(),
+            lastUpdated: Date.now(),
+            ownerSummary: buildMockUserSummary(mockUser, false),
+            archived: false
+        };
+        renderTestEnvironment({
+            role: "TUTOR",
+            extraEndpoints: [
+                rest.post(API_PATH + "/groups", buildNewGroupHandler(mockNewGroup)),
+                rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M"))
+            ]
+        });
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
+        await userEvent.type(newGroupInput, mockNewGroup.groupName);
+        const createButton = await screen.findByRole("button", {name: "Create"});
+        await userEvent.click(createButton);
+        const firstModal = await screen.findByTestId("active-modal");
+        // Expect the "add group managers" button NOT to be shown on the modal
+        expect(firstModal).toHaveModalTitle("Group Created");
+        expect(within(firstModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
     });
 
     it("only allows additional group managers to remove themselves as group managers", async () => {
@@ -414,6 +469,7 @@ describe("Groups", () => {
             );
         });
         renderTestEnvironment({
+            role: "TEACHER",
             extraEndpoints: [
                 rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
                 rest.delete(API_PATH + "/groups/:groupId/manager/:userId", removeSelfAsManagerHandler)
@@ -426,7 +482,8 @@ describe("Groups", () => {
         const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
         await userEvent.click(selectGroupButton);
         const groupEditor = await screen.findByTestId("group-editor");
-        const addManagersButton = within(groupEditor).getByRole("button", {name: "Add / remove group managers"});
+        // Text on button should have changed to "View all" rather than "Add / remove"
+        const addManagersButton = within(groupEditor).getByRole("button", {name: "View all group managers"});
         await userEvent.click(addManagersButton);
 
         // Find group manager modal, should have title "Shared group" instead of "Share your group"
