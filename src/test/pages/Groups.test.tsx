@@ -6,55 +6,21 @@ import {
     buildMockTeacher,
     mockUser,
     buildMockUserSummary,
-    mockGroups, buildMockStudent, buildMockUserSummaryWithGroupMembership
+    mockGroups,
+    buildMockStudent,
+    buildMockUserSummaryWithGroupMembership
 } from "../../mocks/data";
 import {API_PATH, isDefined, siteSpecific} from "../../app/services";
 import {difference, isEqual} from "lodash";
 import userEvent from "@testing-library/user-event";
 import {ResponseResolver, rest} from "msw";
-import {UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
-
-// --- Extra mock data and MSW handlers ---
-
-const buildNewGroupHandler = (newGroup: any) => jest.fn((req, res, ctx) => {
-    return res(
-        ctx.status(200),
-        ctx.json(newGroup)
-    );
-});
-const buildAuthTokenHandler = (newGroup: any, token: string) => jest.fn((req, res, ctx) => {
-    return res(
-        ctx.status(200),
-        ctx.json({
-            token,
-            ownerUserId: newGroup.ownerId,
-            groupId: newGroup.id
-        })
-    );
-});
-const buildNewManagerHandler = (groupToAddManagerTo: any, newManager: any) => jest.fn((req, res, ctx) => {
-    return res(
-        ctx.status(200),
-        ctx.json({
-            ...groupToAddManagerTo,
-            additionalManagers: [buildMockUserSummary(newManager, true)]
-        })
-    );
-});
-const buildGroupHandler = (groups?: any[]) => jest.fn((req, res, ctx) => {
-    const archived = req.url.searchParams.get("archived_groups_only") === "true";
-    const filteredGroups = (groups ?? mockGroups).filter(g => g.archived === archived);
-    return res(
-        ctx.status(200),
-        ctx.json(filteredGroups)
-    );
-});
-const buildGroupMembershipsHandler = (members?: UserSummaryWithGroupMembershipDTO[]) => jest.fn((req, res, ctx) => {
-    return res(
-        ctx.status(200),
-        ctx.json(members)
-    );
-});
+import {
+    buildAuthTokenHandler,
+    buildGroupHandler,
+    buildGroupMembershipsHandler,
+    buildNewGroupHandler,
+    buildNewManagerHandler
+} from "../../mocks/handlers";
 
 // --- Helper functions ---
 

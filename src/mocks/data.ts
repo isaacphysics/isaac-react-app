@@ -3427,6 +3427,18 @@ export const mockQuizAssignments = [
             quizAssignmentId: 9,
             startDate: DAYS_AGO(3),
             completedDate: DAYS_AGO(2)
+        },
+        quizSummary: {
+            id: "test-quiz-assignment-1",
+            title: "Test Quiz Assignment 1",
+            type: "isaacQuiz",
+            tags: [],
+            url: "/isaac-api/api/quiz/test-quiz-assignment-1",
+            visibleToStudents: false,
+            hiddenFromRoles: [
+                "TEACHER",
+                "STUDENT"
+            ]
         }
     },
     {
