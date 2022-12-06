@@ -1,7 +1,7 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
-import {GroupMembershipStatus, UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
+import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
 
 export const mockUser = {
     givenName: "Test",
