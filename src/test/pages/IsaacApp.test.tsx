@@ -13,12 +13,12 @@ const myIsaacLinks = siteSpecific(
     ["/assignments", "/my_gameboards", "/progress", "/tests", "/student_rewards"]
 );
 const tutorLinks = siteSpecific(
-    ["/tutor_features", "/groups", "/set_assignments", "/assignment_progress", "/view_tests"],
-    ["/groups", "/set_assignments", "/assignment_progress", "/view_tests"]
+    ["/tutor_features", "/groups", "/set_assignments", "/assignment_progress"],
+    ["/groups", "/set_assignments", "/my_markbook"]
 );
 const teacherLinks = siteSpecific(
     ["/teacher_features", "/groups", "/set_assignments", "/assignment_progress", "/set_tests", "/set_tests#manage"],
-    ["/groups", "/set_assignments", "/assignment_progress", "/set_tests", "/teaching_order"]
+    ["/groups", "/set_assignments", "/my_markbook", "/set_tests", "/teaching_order"]
 );
 const learnLinks = siteSpecific(
     ["/11_14", "/gcse", "/alevel", "/gameboards/new", "/concepts"],
