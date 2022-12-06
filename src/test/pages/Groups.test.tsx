@@ -6,12 +6,13 @@ import {
     buildMockTeacher,
     mockUser,
     buildMockUserSummary,
-    mockGroups
+    mockGroups, buildMockStudent, buildMockUserSummaryWithGroupMembership
 } from "../../mocks/data";
 import {API_PATH, isDefined, siteSpecific} from "../../app/services";
 import {difference, isEqual} from "lodash";
 import userEvent from "@testing-library/user-event";
 import {ResponseResolver, rest} from "msw";
+import {UserSummaryWithGroupMembershipDTO} from "../../IsaacApiTypes";
 
 // --- Extra mock data and MSW handlers ---
 
@@ -46,6 +47,12 @@ const buildGroupHandler = (groups?: any[]) => jest.fn((req, res, ctx) => {
     return res(
         ctx.status(200),
         ctx.json(filteredGroups)
+    );
+});
+const buildGroupMembershipsHandler = (members?: UserSummaryWithGroupMembershipDTO[]) => jest.fn((req, res, ctx) => {
+    return res(
+        ctx.status(200),
+        ctx.json(members)
     );
 });
 
@@ -388,6 +395,82 @@ describe("Groups", () => {
             expect(addManagersButton).toBeNull();
             expect(viewManagersButton).toBeNull();
         });
+    });
+
+    it(`allows teacher owners of a group to request password resets for group members that have allowed full access`, async () => {
+        const mockGroup = {
+            ...mockGroups[0],
+            ownerId: mockUser.id,
+            ownerSummary: buildMockUserSummary(mockUser, false),
+        };
+        let passwordResetSuccessfullySent = false;
+        renderTestEnvironment({
+            role: "TEACHER",
+            extraEndpoints: [
+                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                // Group members consist of one student who has authorised full access, and one student that hasn't
+                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, buildGroupMembershipsHandler([
+                    buildMockUserSummaryWithGroupMembership(buildMockStudent(10), mockGroup.id, true),
+                    buildMockUserSummaryWithGroupMembership(buildMockStudent(11), mockGroup.id, false)
+                ])),
+                rest.post(API_PATH + `/users/10/resetpassword`, (req, res, ctx) => {
+                    passwordResetSuccessfullySent = true;
+                    return res(ctx.status(200));
+                })
+            ]
+        });
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        const groups = await switchGroupsTab("active", [mockGroup]);
+        const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
+        await userEvent.click(selectGroupButton);
+        const groupEditor = await screen.findByTestId("group-editor");
+        // Expect that both members are shown
+        const memberInfos = await within(groupEditor).findAllByTestId("member-info");
+        expect(memberInfos).toHaveLength(2);
+        const resetPasswordButton1 = within(memberInfos[0]).getByRole("button", {name: "Reset Password"});
+        // First button should work, because student has authorised full access
+        expect(resetPasswordButton1).not.toBeDisabled();
+        // CAUTION - We can't use `userEvent.click` here because of the tooltip on this button. It crashes tests after
+        // this because the document gets removed from underneath it before it can fade out, so we need to test this button
+        // in a way that doesn't show the popup in the first place.
+        resetPasswordButton1.click();
+        waitFor(() => {
+            expect(passwordResetSuccessfullySent).toBeTruthy();
+        });
+        // Second button should be disabled
+        const resetPasswordButton2 = within(memberInfos[1]).getByRole("button", {name: "Reset Password"});
+        expect(resetPasswordButton2).toBeDisabled();
+    });
+
+    it(`doesn't allow tutor owners of a group to request a password reset for any group member`, async () => {
+        const mockGroup = {
+            ...mockGroups[0],
+            ownerId: mockUser.id,
+            ownerSummary: buildMockUserSummary(mockUser, false),
+        };
+        renderTestEnvironment({
+            role: "TUTOR",
+            extraEndpoints: [
+                rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
+                // Group members consist of one student who has authorised full access, and one student that hasn't
+                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, buildGroupMembershipsHandler([
+                    buildMockUserSummaryWithGroupMembership(buildMockStudent(10), mockGroup.id, true),
+                    buildMockUserSummaryWithGroupMembership(buildMockStudent(11), mockGroup.id, false)
+                ]))
+            ]
+        });
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        const groups = await switchGroupsTab("active", [mockGroup]);
+        const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
+        await userEvent.click(selectGroupButton);
+        const groupEditor = await screen.findByTestId("group-editor");
+        // Expect that both members are shown
+        const memberInfos = await within(groupEditor).findAllByTestId("member-info");
+        expect(memberInfos).toHaveLength(2);
+        const resetPasswordButton1 = within(memberInfos[0]).queryByRole("button", {name: "Reset Password"});
+        const resetPasswordButton2 = within(memberInfos[1]).queryByRole("button", {name: "Reset Password"});
+        expect(resetPasswordButton1).toBeNull();
+        expect(resetPasswordButton2).toBeNull();
     });
 
     it("allows teachers to add new group managers in the modal after creating a new group", async () => {

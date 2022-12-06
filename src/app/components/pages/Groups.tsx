@@ -94,7 +94,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
         }
     }
 
-    return <div className="p-2 member-info-item d-flex justify-content-between">
+    return <div className="p-2 member-info-item d-flex justify-content-between" data-testid={"member-info"}>
         <div className="pt-1 d-flex flex-fill">
             <div>
                 <span className="icon-group-table-person mt-2" />
