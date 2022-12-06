@@ -77,6 +77,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     }, [setGameboardTitle, setQuestionOrder, setSelectedQuestions, setWildcardId, baseGameboardId, concepts, eventLog, user]);
 
     const initialise = () => {
+        setGameboardURL(undefined);
         setGameboardTitle("");
         setGameboardTags([]);
         setQuestionOrder([]);
@@ -189,7 +190,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Input id="gameboard-builder-url"
                                type="text"
                                placeholder="Optional"
-                               value={gameboardURL}
+                               value={gameboardURL ?? ""}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    setGameboardURL(e.target.value);
                                }}
