@@ -16,7 +16,7 @@ export const pushSearchToHistory = function(history: History, searchQuery: strin
     });
 };
 
-export function calculateConceptTypes(physics: boolean, maths: boolean, chemistry: boolean) {
+export function calculateConceptTypes(physics: boolean, maths: boolean, chemistry: boolean, biology: boolean) {
     const typesArray = [];
     if (physics) {
         typesArray.push(TAG_ID.physics);
@@ -27,12 +27,15 @@ export function calculateConceptTypes(physics: boolean, maths: boolean, chemistr
     if (chemistry) {
         typesArray.push(TAG_ID.chemistry);
     }
+    if (biology) {
+        typesArray.push(TAG_ID.biology);
+    }
     return typesArray.join(",");
 }
-export const pushConceptsToHistory = function(history: History, searchText: string, physics: boolean, maths: boolean, chemistry: boolean) {
+export const pushConceptsToHistory = function(history: History, searchText: string, physics: boolean, maths: boolean, chemistry: boolean, biology: boolean) {
     history.push({
         pathname: "/concepts",
-        search: `?query=${encodeURIComponent(searchText)}&types=${calculateConceptTypes(physics, maths, chemistry)}`,
+        search: `?query=${encodeURIComponent(searchText)}&types=${calculateConceptTypes(physics, maths, chemistry, biology)}`,
     });
 };
 
