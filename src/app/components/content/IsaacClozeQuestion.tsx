@@ -94,7 +94,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
         const baseline = 0;
 
         const y = (isTouchEvent(event)
-            ? (event.touches[0] || event.changedTouches[0]).pageY
+            ? (event.touches[0] || event.changedTouches[0]).clientY
             : event.clientY) - baseline;
 
         const referenceHeight = window.innerHeight;
