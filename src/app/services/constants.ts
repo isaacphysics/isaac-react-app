@@ -597,6 +597,7 @@ export enum SUBJECTS {
     PHYSICS = 'physics',
     MATHS = 'maths',
     CHEMISTRY = 'chemistry',
+    BIOLOGY = 'biology',
     CS = 'computer_science'
 }
 
@@ -730,6 +731,13 @@ export enum TAG_ID {
     functions = "functions",
     calculus = "calculus",
     number = "number",
+    // Biology Fields
+    biochemistry = "biochemistry",
+    cellBiology = "cell_biology",
+    ecology = "ecology",
+    evolution = "evolution",
+    genetics = "genetics",
+    physiology = "physiology",
 
     // Physics Topics ---
 
@@ -789,9 +797,9 @@ export enum TAG_ID {
     simultaneous = "simultaneous",
     matrices = "matrices",
     // Statistics
-    hypothesis = "hypothesis",
+    hypothesisTests = "hypothesis_tests",
     dataAnalysis = "data_analysis",
-    randomVars = "random_vars",
+    randomVariables = "random_variables",
     probability = "probability",
     // Functions
     generalFunctions = "general_functions",
@@ -832,6 +840,30 @@ export enum TAG_ID {
     organicReactions = "organic_reactions",
     isomerism = "isomerism",
     aromaticReactions = "aromatic_reactions",
+
+    // Biology Topics ---
+
+    // Cell biology
+    cellStructure = "cell_structure",
+    mitosis = "mitosis",
+    meiosis = "meiosis",
+    viruses = "viruses",
+    membraneTransport = "membrane_transport",
+    tissues = "tissues",
+    // Biochemistry
+    proteins = "proteins",
+    carbohydrates = "carbohydrates",
+    lipids = "lipids",
+    // Genetics
+    dnaReplication = "dna_replication",
+    transcription = "transcription",
+    translation = "translation",
+    // Physiology
+
+    // Ecology
+
+    // Evolution
+
 }
 
 export enum TAG_LEVEL {
@@ -1057,3 +1089,8 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 export const FEATURED_NEWS_TAG = "featured";
 
 export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+
+export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
+export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
+// Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
+export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;

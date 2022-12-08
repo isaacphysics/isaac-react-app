@@ -12,7 +12,6 @@
     @include respond-above(sm) {
       justify-content: flex-end;
     }
-    flex-grow: 1;
   }
 
   .search-item-icon {
@@ -21,11 +20,11 @@
   }
 
   .search-filters label {
-    @include respond-above(sm) {
+    @include respond-above(xs) {
       margin-left: 0.5rem;
     }
-    @include respond-below(sm) {
-      margin-top: 0.5rem;;
+    @include respond-below(xs) {
+      margin-right: 0.5rem;
     }
   }
 }

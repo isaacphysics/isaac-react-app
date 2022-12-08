@@ -11,7 +11,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physics, title: "Physics"},
         {id: TAG_ID.maths, title: "Maths"},
         {id: TAG_ID.chemistry, title: "Chemistry"},
-        {id: TAG_ID.biology, title: "Biology", hidden: true},
+        {id: TAG_ID.biology, title: "Biology", comingSoonDate: "soon"},
 
         // --- Fields ---
 
@@ -35,6 +35,13 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.functions, title: "Functions", parent: TAG_ID.maths},
         {id: TAG_ID.calculus, title: "Calculus", parent: TAG_ID.maths},
         {id: TAG_ID.statistics, title: "Statistics", parent: TAG_ID.maths},
+        // Biology Fields
+        {id: TAG_ID.cellBiology, title: "Cell Biology", parent: TAG_ID.biology, hidden: true},
+        {id: TAG_ID.biochemistry, title: `Bio${softHyphen}chemistry`, parent: TAG_ID.biology, hidden: true},
+        {id: TAG_ID.genetics, title: "Genetics", parent: TAG_ID.biology, hidden: true},
+        {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology, comingSoonDate: "soon", hidden: true},
+        {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology, comingSoonDate: "soon", hidden: true},
+        {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology, comingSoonDate: "soon", hidden: true},
 
         // --- Physics Topics ---
 
@@ -103,8 +110,8 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // Statistics
         {id: TAG_ID.dataAnalysis, title: "Data Analysis", parent: TAG_ID.statistics},
         {id: TAG_ID.probability, title: `Probabi${softHyphen}lity`, parent: TAG_ID.statistics},
-        {id: TAG_ID.randomVars, title: "Random Variables", parent: TAG_ID.statistics},
-        {id: TAG_ID.hypothesis, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics},
+        {id: TAG_ID.randomVariables, title: "Random Variables", parent: TAG_ID.statistics},
+        {id: TAG_ID.hypothesisTests, title: `Hypo${softHyphen}thesis Tests`, parent: TAG_ID.statistics},
 
         // --- Chemistry Topics ---
 
@@ -137,6 +144,30 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.organicReactions, title: "Organic Reactions", parent: TAG_ID.organic},
         {id: TAG_ID.aromaticity, title: `Aroma${softHyphen}ticity`, parent: TAG_ID.organic},
         {id: TAG_ID.aromaticReactions, title: "Reactions (aromatics)", parent: TAG_ID.organic},
+
+        // --- Biology Topics ---
+
+        // Cell biology
+        {id: TAG_ID.cellStructure, title: `Cell Structure`, parent: TAG_ID.cellBiology, hidden: true},
+        {id: TAG_ID.mitosis, title: "Mitosis", parent: TAG_ID.cellBiology, hidden: true},
+        {id: TAG_ID.meiosis, title: "Meiosis", parent: TAG_ID.cellBiology, hidden: true},
+        {id: TAG_ID.viruses, title: "Viruses", parent: TAG_ID.cellBiology, hidden: true},
+        {id: TAG_ID.membraneTransport, title: "Membrane Transport", parent: TAG_ID.cellBiology, hidden: true},
+        {id: TAG_ID.tissues, title: "Tissues", parent: TAG_ID.cellBiology, hidden: true},
+        // Biochemistry
+        {id: TAG_ID.proteins, title: "Proteins", parent: TAG_ID.biochemistry, hidden: true},
+        {id: TAG_ID.carbohydrates, title: `Carbo${softHyphen}hydrates`, parent: TAG_ID.biochemistry, hidden: true},
+        {id: TAG_ID.lipids, title: "Lipids", parent: TAG_ID.biochemistry, hidden: true},
+        // Genetics
+        {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics, hidden: true},
+        {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics, hidden: true},
+        {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics, hidden: true},
+        // Physiology
+
+        // Ecology
+
+        // Evolution
+
     ];
     public getTagHierarchy() {return PhysicsTagService.tagHierarchy;}
     public getBaseTags() {return PhysicsTagService.baseTags;}

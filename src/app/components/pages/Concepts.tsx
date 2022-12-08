@@ -11,7 +11,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 
-
+// This component is Isaac Physics only (currently)
 export const Concepts = withRouter((props: RouteComponentProps) => {
     const {location, history} = props;
     const dispatch = useAppDispatch();
@@ -25,25 +25,27 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
     const queryParsed = searchParsed.query || "";
     const query = queryParsed instanceof Array ? queryParsed[0] : queryParsed;
 
-    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry));
+    const filterParsed = (searchParsed.types || (TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology));
     const filters = (Array.isArray(filterParsed) ? filterParsed[0] || "" : filterParsed || "").split(",");
 
     const physics = filters.includes(TAG_ID.physics);
     const maths = filters.includes(TAG_ID.maths);
     const chemistry = filters.includes(TAG_ID.chemistry);
+    const biology = filters.includes(TAG_ID.biology);
 
     let [searchText, setSearchText] = useState(query);
     let [conceptFilterPhysics, setConceptFilterPhysics] = useState(physics);
     let [conceptFilterMaths, setConceptFilterMaths] = useState(maths);
     let [conceptFilterChemistry, setConceptFilterChemistry] = useState(chemistry);
+    let [conceptFilterBiology, setConceptFilterBiology] = useState(biology);
     let [shortcutResponse, setShortcutResponse] = useState<ShortcutResponse[]>();
 
     function doSearch(e?: FormEvent<HTMLFormElement>) {
         if (e) {
             e.preventDefault();
         }
-        if (searchText != query || conceptFilterPhysics != physics || conceptFilterMaths != maths || conceptFilterChemistry != chemistry) {
-            pushConceptsToHistory(history, searchText || "", conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry);
+        if (searchText != query || conceptFilterPhysics != physics || conceptFilterMaths != maths || conceptFilterChemistry != chemistry || conceptFilterBiology != biology) {
+            pushConceptsToHistory(history, searchText || "", conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry, conceptFilterBiology);
         }
         if (searchText) {
             setShortcutResponse(shortcuts(searchText));
@@ -60,7 +62,7 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
         };
     }, [searchText]);
 
-    useEffect(() => {doSearch();}, [conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry]);
+    useEffect(() => {doSearch();}, [conceptFilterPhysics, conceptFilterMaths, conceptFilterChemistry, conceptFilterBiology]);
 
     const searchResults = concepts
         ?.filter(c =>
@@ -97,12 +99,12 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                 <Col className="py-4">
                     <RS.Card>
                         <RS.CardHeader className="search-header">
-                            <Col md={5} xs={12}>
+                            <Col lg={4} md={3} xs={12}>
                                 <h3>
                                     <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {query != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </Col>
-                            <Col md={7} xs={12}>
+                            <Col lg={8} md={9} xs={12}>
                                 <Form id="concept-filter" inline className="search-filters">
                                     <Label for="concept-filter" className="d-none d-sm-inline-block">Filter:</Label>
                                     <Label>
@@ -116,6 +118,10 @@ export const Concepts = withRouter((props: RouteComponentProps) => {
                                     <Label>
                                         <CustomInput id="concept-search-chem" type="checkbox" defaultChecked={conceptFilterChemistry} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterChemistry(e.target.checked)} />
                                         <span className="sr-only">Show </span>Chemistry<span className="sr-only"> concept</span>
+                                    </Label>
+                                    <Label>
+                                        <CustomInput id="concept-search-bio" type="checkbox" defaultChecked={conceptFilterBiology} onChange={(e: ChangeEvent<HTMLInputElement>) => setConceptFilterBiology(e.target.checked)} />
+                                        <span className="sr-only">Show </span>Biology<span className="sr-only"> concept</span>
                                     </Label>
                                 </Form>
                             </Col>

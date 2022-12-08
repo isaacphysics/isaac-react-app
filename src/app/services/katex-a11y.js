@@ -17,6 +17,7 @@
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import katex from "katex";
+import {dropZoneRegex} from "./";
 
 const stringMap = {
     "(": "left bracket",
@@ -569,7 +570,6 @@ const handleObject = (tree, a11yStrings, atomType) => {
                     modifier = "";
             }
             buildRegion(a11yStrings, function(regionStrings) {
-                const dropZoneRegex = /\[drop-zone(?<params>\|(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
                 if (tree.body.map(a => a.hasOwnProperty("text") ? a.text : "").join("").search(dropZoneRegex) !== -1) {
                     regionStrings.push("clickable drop zone");
                 } else {

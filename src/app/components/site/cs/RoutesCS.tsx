@@ -21,7 +21,7 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
 
     // Assignments
-    <TrackedRoute key={key++} exact path="/my_markbook" component={AssignmentProgress} />,
+    <TrackedRoute key={key++} exact path="/my_markbook" ifUser={isTeacher} component={AssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
     <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTeacher} component={SingleAssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,

@@ -72,7 +72,7 @@ export function useCurrentQuizAttempt(studentId?: number) {
     const dispatch = useAppDispatch();
     useEffect( () => {
         // All register questions does is store the questions in redux WITH SOME EXTRA CALCULATED STRUCTURE
-        dispatch(registerQuestions(questions));
+        dispatch(registerQuestions(questions, undefined, true));
         return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 

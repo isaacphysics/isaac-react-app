@@ -119,27 +119,31 @@ function processQueryString(query: string): QueryStringResponse {
 }
 
 function generatePhyBoardName(selections: Item<TAG_ID>[][]) {
-    let boardName = "Physics, Maths & Chemistry";
+    if (selections.length === 1) {
+        const numberOfSubjects = selections[0].length;
+        if (numberOfSubjects === 0 || numberOfSubjects === 4) {
+            return "All Subjects";
+        }
+        // Generates a name for a set of subjects, for example ["Physics", "Maths", "Biology"] ---> "Physics, Maths and Biology"
+        return selections[0].reduce((acc, t, i) => acc + t.label + (numberOfSubjects !== i + 1 ? ((numberOfSubjects - (i + 2)) > 0 ? ", " : " and ") : ""), "");
+    }
     let selectionIndex = selections.length;
     while(selectionIndex-- > 0) {
         if (selections[selectionIndex].length === 1) {
-            boardName = selections[selectionIndex][0].label;
-            break;
+            return selections[selectionIndex][0].label;
         }
     }
-    return boardName;
+    return "All Subjects";
 }
 
 function generateCSBoardName(selections: Item<TAG_ID>[][]) {
-    let boardName = "Computer Science";
     let selectionIndex = selections.length;
     while(selectionIndex-- > 0) {
         if (selections[selectionIndex].length > 0 && selections[selectionIndex].length <= 2) {
-            boardName = selections[selectionIndex].map(s => s.label).join(" & ");
-            break;
+            return selections[selectionIndex].map(s => s.label).join(" & ");
         }
     }
-    return boardName;
+    return "Computer Science";
 }
 
 // Shared props that both PHY and CS question filters use
@@ -452,7 +456,10 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
-                    params[tier.id] = siteSpecific("physics,maths,chemistry", TAG_ID.computerScience);
+                    params[tier.id] = siteSpecific(
+                        TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology,
+                        TAG_ID.computerScience
+                    );
                 }
                 return;
             }
