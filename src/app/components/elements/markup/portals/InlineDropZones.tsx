@@ -9,9 +9,9 @@ import {useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {useSortable} from "@dnd-kit/sortable";
 import classNames from "classnames";
-import {CLOZE_DROP_ZONE_ID_PREFIX} from "../../../../services";
+import {CLOZE_DROP_ZONE_ID_PREFIX, isDefined} from "../../../../services";
 
-export function Item({item, id, type, overrideOver}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean}) {
+export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable<ItemDTO>, id: string, type: "drop-zone" | "item-section", overrideOver?: boolean, isCorrect?: boolean}) {
     const {attributes, listeners, setNodeRef, isDragging, isOver, transform, transition} = useSortable({
         id,
         attributes: {
@@ -35,13 +35,16 @@ export function Item({item, id, type, overrideOver}: {item: Immutable<ItemDTO>, 
         }
     }, [dropRegionContext?.shouldGetFocus]);
 
-    return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-2 cloze-item")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
+    return <Badge id={id} className={classNames(type === "item-section" && "m-2", "p-2 cloze-item feedback-zone", isDefined(isCorrect) && "feedback-showing")} style={style} innerRef={setNodeRef} {...listeners} {...attributes}>
         <span className={"sr-only"}>{item.altText ?? item.value ?? "cloze item without a description"}</span>
         <span aria-hidden={true}>
             <IsaacContentValueOrChildren value={item.value} encoding={item.encoding || "html"}>
                 {item.children as ContentDTO[]}
             </IsaacContentValueOrChildren>
         </span>
+        {isDefined(isCorrect) && <div className={"feedback-box"}>
+            <span className={classNames("feedback", isCorrect ? "correct" : "incorrect")}>{isCorrect ? "✔" : "✘"}</span>
+        </div>}
     </Badge>;
 }
 
@@ -77,11 +80,11 @@ function InlineDropRegion({id, index, emptyWidth, emptyHeight, rootElement}: {id
         return ReactDOM.createPortal(
             <span
                 style={{minHeight: height, minWidth: width}}
-                className={classNames("d-inline-block cloze-drop-zone", !item && `rounded bg-grey border ${isOver ? "border-dark" : "border-light"}`, isCorrect === false && "incorrect")}
+                className={classNames("d-inline-block cloze-drop-zone", !item && `rounded bg-grey border ${isOver ? "border-dark" : "border-light"}`)}
                 ref={setNodeRef}
             >
                 {item
-                    ? <Item item={item} id={item.replacementId as string} type={"drop-zone"} overrideOver={isOver}/>
+                    ? <Item item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
                     : <>&nbsp;<span className={"sr-only"}>drop zone</span></>
                 }
             </span>,
