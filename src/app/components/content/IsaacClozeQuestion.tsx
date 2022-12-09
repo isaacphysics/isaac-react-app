@@ -186,7 +186,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         return () => {
             root?.removeEventListener("scroll", resetScrollLeft);
         };
-    });
+    }, []);
 
     useEffect(function updateStateOnCurrentAttemptChange() {
         if (currentAttempt?.items) {
