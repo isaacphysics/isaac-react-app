@@ -485,9 +485,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     useEffect(() => {
         if (gameboardIdAnchor && (!isFound(gameboard) || gameboardIdAnchor !== gameboard.id)) {
-            const newBoardPromise = loadGameboard(gameboardIdAnchor, true)
+            const newBoardPromise = loadGameboard(gameboardIdAnchor, true);
             newBoardPromise.then(extractDataFromQueryResponse).then(setGameboard);
-            newBoardPromise.unsubscribe();
         } else {
             setBoardStack([]);
             loadNewGameboard(stages, difficulties, concepts, examBoards, selections, customBoardTitle ?? defaultBoardTitle, history);
@@ -508,9 +507,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (boardStack.length > 0) {
             const oldBoardId = boardStack.pop() as string;
             setBoardStack(boardStack);
-            const newBoardPromise = loadGameboard(oldBoardId, true)
+            const newBoardPromise = loadGameboard(oldBoardId, true);
             newBoardPromise.then(extractDataFromQueryResponse).then(setGameboard);
-            newBoardPromise.unsubscribe();
         }
     }
 
