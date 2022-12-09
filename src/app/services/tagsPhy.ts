@@ -11,7 +11,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.physics, title: "Physics"},
         {id: TAG_ID.maths, title: "Maths"},
         {id: TAG_ID.chemistry, title: "Chemistry"},
-        {id: TAG_ID.biology, title: "Biology", comingSoonDate: "soon"},
+        {id: TAG_ID.biology, title: "Biology"},
 
         // --- Fields ---
 
@@ -36,12 +36,12 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.calculus, title: "Calculus", parent: TAG_ID.maths},
         {id: TAG_ID.statistics, title: "Statistics", parent: TAG_ID.maths},
         // Biology Fields
-        {id: TAG_ID.cellBiology, title: "Cell Biology", parent: TAG_ID.biology, hidden: true},
-        {id: TAG_ID.biochemistry, title: `Bio${softHyphen}chemistry`, parent: TAG_ID.biology, hidden: true},
-        {id: TAG_ID.genetics, title: "Genetics", parent: TAG_ID.biology, hidden: true},
-        {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology, comingSoonDate: "soon", hidden: true},
-        {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology, comingSoonDate: "soon", hidden: true},
-        {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology, comingSoonDate: "soon", hidden: true},
+        {id: TAG_ID.cellBiology, title: "Cell Biology", parent: TAG_ID.biology},
+        {id: TAG_ID.biochemistry, title: `Bio${softHyphen}chemistry`, parent: TAG_ID.biology},
+        {id: TAG_ID.genetics, title: "Genetics", parent: TAG_ID.biology},
+        {id: TAG_ID.physiology, title: "Physiology", parent: TAG_ID.biology, comingSoonDate: "soon"},
+        {id: TAG_ID.ecology, title: "Ecology", parent: TAG_ID.biology, comingSoonDate: "soon"},
+        {id: TAG_ID.evolution, title: "Evolution", parent: TAG_ID.biology, comingSoonDate: "soon"},
 
         // --- Physics Topics ---
 
@@ -148,20 +148,20 @@ export class PhysicsTagService extends AbstractBaseTagService {
         // --- Biology Topics ---
 
         // Cell biology
-        {id: TAG_ID.cellStructure, title: `Cell Structure`, parent: TAG_ID.cellBiology, hidden: true},
-        {id: TAG_ID.mitosis, title: "Mitosis", parent: TAG_ID.cellBiology, hidden: true},
-        {id: TAG_ID.meiosis, title: "Meiosis", parent: TAG_ID.cellBiology, hidden: true},
-        {id: TAG_ID.viruses, title: "Viruses", parent: TAG_ID.cellBiology, hidden: true},
-        {id: TAG_ID.membraneTransport, title: "Membrane Transport", parent: TAG_ID.cellBiology, hidden: true},
-        {id: TAG_ID.tissues, title: "Tissues", parent: TAG_ID.cellBiology, hidden: true},
+        {id: TAG_ID.cellStructure, title: `Cell Structure`, parent: TAG_ID.cellBiology},
+        {id: TAG_ID.mitosis, title: "Mitosis", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.meiosis, title: "Meiosis", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.viruses, title: "Viruses", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.membraneTransport, title: "Membrane Transport", parent: TAG_ID.cellBiology},
+        {id: TAG_ID.tissues, title: "Tissues", parent: TAG_ID.cellBiology},
         // Biochemistry
-        {id: TAG_ID.proteins, title: "Proteins", parent: TAG_ID.biochemistry, hidden: true},
-        {id: TAG_ID.carbohydrates, title: `Carbo${softHyphen}hydrates`, parent: TAG_ID.biochemistry, hidden: true},
-        {id: TAG_ID.lipids, title: "Lipids", parent: TAG_ID.biochemistry, hidden: true},
+        {id: TAG_ID.proteins, title: "Proteins", parent: TAG_ID.biochemistry},
+        {id: TAG_ID.carbohydrates, title: `Carbo${softHyphen}hydrates`, parent: TAG_ID.biochemistry},
+        {id: TAG_ID.lipids, title: "Lipids", parent: TAG_ID.biochemistry},
         // Genetics
-        {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics, hidden: true},
-        {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics, hidden: true},
-        {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics, hidden: true},
+        {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics},
+        {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},
+        {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics},
         // Physiology
 
         // Ecology
