@@ -1,6 +1,6 @@
 import {useEffect, useMemo} from "react";
 import {deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
-import {API_PATH, isDefined, isQuestion} from "./";
+import {API_PATH, isDefined, isQuestion, tags} from "./";
 import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
 import {partition} from "lodash";
 
@@ -65,6 +65,8 @@ export function useCurrentQuizAttempt(studentId?: number) {
     const [attempt, error] = studentId
         ? [studentAttempt, studentError]
         : [currentUserAttempt, currentUserError];
+    // Augment quiz object with subject id
+    const attemptWithQuizSubject = {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
@@ -76,7 +78,7 @@ export function useCurrentQuizAttempt(studentId?: number) {
         return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 
-    return {attempt, error, studentUser, questions, sections};
+    return {attempt: attemptWithQuizSubject, error, studentUser, questions, sections};
 }
 
 export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {
