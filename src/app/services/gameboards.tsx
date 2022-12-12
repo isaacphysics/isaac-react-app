@@ -1,9 +1,10 @@
 import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
-import React, {useCallback, useEffect, useState} from "react";
-import countBy from "lodash/countBy"
-import intersection from "lodash/intersection"
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import countBy from "lodash/countBy";
+import sortBy from "lodash/sortBy";
+import intersection from "lodash/intersection";
 import {determineAudienceViews, isCS, isFound, isPhy} from "./";
-import {BoardOrder, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
+import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
 export enum BoardCompletions {
@@ -179,6 +180,13 @@ export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
     "-completion": "Completion Descending"
 };
 
+const BOARD_SORT_FUNCTIONS = {
+    [BoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
+    [BoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
+    [BoardOrder.title]: (b: GameboardDTO) => b.title,
+    [BoardOrder.completion]: (b: GameboardDTO) => b.percentageCompleted,
+};
+
 const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: BoardLimit) =>
     limit === BoardLimit.All
         ? BoardLimit.All
@@ -210,14 +218,19 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
 
     // Refetches the boards when the order changes - should fetch the same
     // number as is currently on screen
-    useEffect(() => loadInitial(numberOfBoards), [boardOrder]);
+    useEffect(() => {
+        // Only refetch if we cannot reorder the boards in the frontend (we need all the boards to reorder them)
+        if (boardLimit != BoardLimit.All) {
+            loadInitial(numberOfBoards);
+        }
+    }, [boardOrder]);
 
     // Change board limit when view changes between table and cards
     useEffect(() => {
         if (boardView == BoardViews.table) {
-            setBoardLimit(BoardLimit.All)
+            setBoardLimit(BoardLimit.All);
         } else if (boardView == BoardViews.card) {
-            setBoardLimit(BoardLimit.six)
+            setBoardLimit(BoardLimit.six);
         }
     }, [boardView]);
 
@@ -248,11 +261,26 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
         setNumberOfBoards(0);
     }, [boards]);
 
+    // If we have all the users boards already, order them client-side
+    const orderedBoards = useMemo<Boards | null>(() => {
+        if (boards == null || boardLimit != BoardLimit.All) {
+            return boards;
+        }
+        const boardOrderNegative = boardOrder.at(0) == "-";
+        const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "completion" | "title";
+        const orderedBoards = sortBy(boards?.boards, BOARD_SORT_FUNCTIONS[boardOrderKind]);
+        if (["visited", "created", "-completion", "-title"].includes(boardOrder)) orderedBoards.reverse();
+        return {
+            totalResults: boards?.totalResults ?? 0,
+            boards: orderedBoards
+        };
+    }, [boards, boardLimit, boardOrder, boardView]);
+
     return {
-        boards, loading, viewMore,
+        boards: orderedBoards, loading, viewMore,
         boardOrder, setBoardOrder,
         boardView, setBoardView,
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
-    }
+    };
 }
