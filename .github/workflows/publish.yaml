@@ -28,6 +28,7 @@ jobs:
       - name: Build and push cs Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
+          file: Dockerfile-react
           context: .
           push: true
           build-args: |
@@ -36,6 +37,7 @@ jobs:
       - name: Build and push cs-renderer Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
+          file: Dockerfile-react
           context: .
           push: true
           build-args: |
@@ -44,6 +46,7 @@ jobs:
       - name: Build and push phy Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
+          file: Dockerfile-react
           context: .
           push: true
           build-args: |
@@ -52,6 +55,7 @@ jobs:
       - name: Build and push phy-renderer Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
+          file: Dockerfile-react
           context: .
           push: true
           build-args: |
