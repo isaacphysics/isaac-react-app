@@ -2,7 +2,7 @@ FROM node:19.2.0-buster AS builder
 
 ARG BUILD_TARGET="build-phy"
 
-MKDIR /build
+RUN mkdir /build
 WORKDIR /build
 
 COPY package.json /build
