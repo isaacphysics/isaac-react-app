@@ -1,0 +1,17 @@
+FROM node:19.2.0-buster AS builder
+
+ARG BUILD_TARGET="build-phy"
+
+MKDIR /build
+WORKDIR /build
+
+COPY package.json /build
+RUN npm install
+
+COPY . /build
+RUN npm run $BUILD_TARGET
+
+FROM nginx:stable
+
+COPY --from=builder ./$BUILD_TARGET /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
