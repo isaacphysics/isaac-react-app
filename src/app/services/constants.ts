@@ -1044,6 +1044,7 @@ export const specificDoughnutColours: { [key: string]: string } = siteSpecific(
         "Physics": "#944cbe",
         "Maths": "#007fa9",
         "Chemistry": "#e22e25",
+        "Biology": "#005210",
         [difficultyLabelMap.practice_1]: "#509e2e",
         [difficultyLabelMap.practice_2]: "#3b6e25",
         [difficultyLabelMap.practice_3]: "#27421a",
@@ -1059,8 +1060,8 @@ export const doughnutColours = siteSpecific(
         "#944cbe",
         "#007fa9",
         "#e22e25",
+        "#005210",
         "#991846",
-        "#448525",
         "#fea100"
     ],
     [
