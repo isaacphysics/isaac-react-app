@@ -16,7 +16,7 @@ module.exports = env => {
         },
 
         output: {
-            path: resolve(`build-physics`),
+            path: resolve(`build-phy`),
         },
 
         plugins: [

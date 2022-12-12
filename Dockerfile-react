@@ -1,6 +1,7 @@
-FROM node:19.2.0-buster AS builder
-
 ARG BUILD_TARGET="build-phy"
+
+FROM node:19.2.0-buster AS builder
+ARG BUILD_TARGET
 
 RUN mkdir /build
 WORKDIR /build
@@ -12,6 +13,7 @@ COPY . /build
 RUN npm run $BUILD_TARGET
 
 FROM nginx:stable
+ARG BUILD_TARGET
 
-COPY --from=builder ./$BUILD_TARGET /usr/share/nginx/html
+COPY --from=builder /build/$BUILD_TARGET/ /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
