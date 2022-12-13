@@ -49,14 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "isaac-react-app.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "isaac-react-app.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "isaac-react-app.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
