@@ -35,13 +35,10 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
-            {isTeacherOrAbove(user)
-                ? <>
-                    <LinkItem to="/set_tests">Set Tests</LinkItem>
-                    <LinkItem to="/set_tests#manage">Manage Tests</LinkItem>
-                </>
-                : <LinkItem to="/view_tests">Preview Tests</LinkItem>
-            }
+            {isTeacherOrAbove(user) && <>
+                <LinkItem to="/set_tests">Set Tests</LinkItem>
+                <LinkItem to="/set_tests#manage">Manage Tests</LinkItem>
+            </>}
         </NavigationSection>}
 
         <NavigationSection title="Learn">
