@@ -3,6 +3,7 @@ name: Publish Docker Image
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
 
 env:
   REGISTRY: ghcr.io
@@ -31,6 +32,8 @@ jobs:
           tags: |
             # set latest tag for default branch
             type=raw,value=latest,enable={{is_default_branch}}
+            # tag event
+            type=ref,event=tag
       - name: Docker meta cs-renderer
         id: meta-cs-renderer
         uses: docker/metadata-action@v4
@@ -39,6 +42,8 @@ jobs:
           tags: |
             # set latest tag for default branch
             type=raw,value=latest,enable={{is_default_branch}}
+            # tag event
+            type=ref,event=tag
       - name: Docker meta phy
         id: meta-phy
         uses: docker/metadata-action@v4
@@ -47,6 +52,8 @@ jobs:
           tags: |
             # set latest tag for default branch
             type=raw,value=latest,enable={{is_default_branch}}
+            # tag event
+            type=ref,event=tag
       - name: Docker meta phy-renderer
         id: meta-phy-renderer
         uses: docker/metadata-action@v4
@@ -55,6 +62,8 @@ jobs:
           tags: |
             # set latest tag for default branch
             type=raw,value=latest,enable={{is_default_branch}}
+            # tag event
+            type=ref,event=tag
       - name: Build and push cs Docker image
         uses: docker/build-push-action@v3
         with:
