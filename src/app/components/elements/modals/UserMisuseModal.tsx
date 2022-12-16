@@ -4,6 +4,7 @@ import {Button, Col, CustomInput, Row, Table} from "reactstrap";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {RenderNothing} from "../RenderNothing";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
+import classNames from "classnames";
 
 const UserMisuseModalBody = ({userId}: {userId?: number}) => {
     const {data: misuseStats} = isaacApi.endpoints.getMisuseStatistics.useQuery(userId ?? skipToken);
@@ -12,15 +13,19 @@ const UserMisuseModalBody = ({userId}: {userId?: number}) => {
 
     const eventRows = misuseStats?.filter(m => m.currentCounter || !onlyShowRecorded).map(m => <tr>
         <td>{m.eventType.replace("MisuseHandler", "")}</td>
-        <td className={m.isMisused ? "text-danger" : ""}>{m.isMisused ? "Yes" : "No"}</td>
+        <td className={m.isMisused ? "text-danger font-weight-bold" : ""}>{m.isMisused ? "Yes" : "No"}</td>
         <td>{m.lastEventTimestamp ? new Date(m.lastEventTimestamp).toUTCString() : "-"}</td>
-        <td className={m.currentCounter >= m.maximumEventCountThreshold ? "text-danger" : ""}>{m.currentCounter}{m.currentCounter > 0 && <Button className={"float-right"} size={"sm"} onClick={() => {
-            if (userId) {
-                resetMisuseMonitor({eventType: m.eventType, userId});
-            }
-        }}>Reset</Button>}
+        <td className={classNames({"font-weight-bold": m.currentCounter >= m.softEventCountThreshold && !m.isMisused, "text-danger font-weight-bold": m.isMisused})}>
+            {m.currentCounter}
+            {m.currentCounter > 0 && <Button className={"float-right"} size={"sm"} onClick={() => {
+                if (userId) {
+                    resetMisuseMonitor({eventType: m.eventType, userId});
+                }
+            }}>
+                Reset
+            </Button>}
         </td>
-        <td>{m.maximumEventCountThreshold}</td>
+        <td>{m.hardEventCountThreshold}</td>
     </tr>);
 
     return userId

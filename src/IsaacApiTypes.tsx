@@ -708,7 +708,8 @@ export interface MisuseStatisticDTO {
     isMisused: boolean;
     lastEventTimestamp?: number;
     currentCounter: number;
-    maximumEventCountThreshold: number;
+    softEventCountThreshold: number;
+    hardEventCountThreshold: number;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
