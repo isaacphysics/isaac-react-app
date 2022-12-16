@@ -19,7 +19,7 @@ import {
     GameboardListDTO,
     IsaacConceptPageDTO,
     IsaacPodDTO,
-    IsaacWildcard,
+    IsaacWildcard, MisuseStatisticDTO,
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
     UserSummaryWithGroupMembershipDTO,
@@ -680,6 +680,40 @@ const isaacApi = createApi({
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to get 2FA secret"
+            })
+        }),
+
+        // === Admin endpoints ===
+
+        getMisuseStatistics: build.query<MisuseStatisticDTO[], number>({
+            query: (userId) => ({
+                url: `/admin/misuse_stats/${userId}`,
+                method: "GET",
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to get misuse statistics for user"
+            })
+        }),
+
+        resetMisuseMonitor: build.mutation<void, {eventType: string, userId: number}>({
+            query: ({eventType, userId}) => ({
+                url: `/admin/reset_misuse_monitor/${eventType}/${userId}`,
+                method: "POST",
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to reset misuse monitor for user",
+                onQuerySuccess: ({eventType, userId}, _, {dispatch}) => {
+                    dispatch(isaacApi.util.updateQueryData(
+                        "getMisuseStatistics",
+                        userId,
+                        (misuseStats) =>
+                            misuseStats.map(m => m.eventType === eventType
+                                ? {...m, currentCounter: 0, isMisused: false, lastEventTimestamp: undefined}
+                                : m
+                            )
+                    ));
+                    dispatch(showSuccessToast("Reset successfully", `${eventType.replace("MisuseHandler", "")} misuse event count reset for user`));
+                },
             })
         }),
     })
