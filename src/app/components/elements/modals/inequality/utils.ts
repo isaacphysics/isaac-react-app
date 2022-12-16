@@ -79,6 +79,7 @@ export function generateMathsBasicFunctionsItems(): MenuItemProps[] {
         {type: "Fraction", properties: {}, menu: { label: "\\frac{a}{b}", texLabel: true, className: 'fraction' }},
         {type: "Brackets", properties: { type: "round" }, menu: { label: "\\small{(x)}", texLabel: true, className: 'brackets' }},
         {type: "AbsoluteValue", properties: {}, menu: { label: '\\small{|x|}', texLabel: true, className: 'abs' }},
+        {type: "UnaryOperation", properties: { operation: "!", type: "postfix" }, menu: { label: '\\small{x!}', texLabel: true, className: 'factorial' }},
         {type: "Radix", properties: {}, menu: { label: '\\small{\\sqrt{x}}', texLabel: true, className: 'radix sqrt' }},
         {type: "Relation", properties: { relation: '=' }, menu: { label: '=', texLabel: true, className: 'relation equal' }},
         {type: "Relation", properties: { relation: '<' }, menu: { label: '<', texLabel: true, className: 'relation less' }},
