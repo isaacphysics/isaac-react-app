@@ -16,14 +16,15 @@ export const WarningBanner = () => {
         Cookies.set(WARNING_COOKIE, "1", {expires: 30 /* days*/});
     }
 
-    const inDateRange = new Date(1608076800000) <= new Date() && new Date() <= new Date(1609718400000);
+    const inDateRange = new Date("2022-12-19") <= new Date() && new Date() <= new Date("2023-01-02");
 
     return inDateRange ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="warning" className="mb-0">
             <RS.Container>
                 <RS.Row style={{alignItems: "center", textAlign: "center"}}>
                     <RS.Col xs={12} md={12}>
-                        <span>{"From 21st Dec to 3rd Jan the Isaac team will be taking a festive break; you can too! "}
+                        <span>
+                            {"From 23rd Dec to 2nd Jan the Isaac team will be taking a festive break; you can too! "}
                             <a href={"/pages/isaac_festive_update"}>Find out more <span className="sr-only">about streak freezes and support over the festive period </span>here</a>.
                         </span>
                     </RS.Col>
