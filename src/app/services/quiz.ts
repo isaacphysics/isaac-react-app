@@ -66,7 +66,7 @@ export function useCurrentQuizAttempt(studentId?: number) {
         ? [studentAttempt, studentError]
         : [currentUserAttempt, currentUserError];
     // Augment quiz object with subject id
-    const attemptWithQuizSubject = {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
+    const attemptWithQuizSubject = {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)};
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
