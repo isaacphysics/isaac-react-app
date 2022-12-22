@@ -26,8 +26,8 @@ $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 $primary: $a11y_green;
 $secondary: $a11y_green;
 $theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary
+    "primary": $primary, // Primary is always green.
+    "secondary": $secondary // Secondary gets overridden by the subject colour when a parent includes a subject class.
 );
 
 // Grid Customisation
