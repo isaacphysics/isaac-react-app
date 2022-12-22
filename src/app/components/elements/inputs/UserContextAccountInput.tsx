@@ -20,6 +20,7 @@ import {UserContext} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
+import {Immutable} from "immer";
 
 interface UserContextRowProps {
     userContext: UserContext;
@@ -96,7 +97,7 @@ function UserContextRow({
 }
 
 interface UserContextAccountInputProps {
-    user: ValidationUser;
+    user: Immutable<ValidationUser>;
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;

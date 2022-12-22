@@ -8,6 +8,7 @@ import {
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
 import {EXAM_BOARD, isCS, isStudent, STAGE} from "./";
+import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
 export function zeroOrLess(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber <= 0}
@@ -64,14 +65,14 @@ export function validateUserContexts(userContexts?: UserContext[]): boolean {
     );
 }
 
-export const validateUserSchool = (user?: ValidationUser | null) => {
+export const validateUserSchool = (user?: Immutable<ValidationUser> | null) => {
     return !!user && (
         (!!user.schoolId) ||
         (!!user.schoolOther && user.schoolOther.length > 0)
     );
 };
 
-export const validateUserGender = (user?: ValidationUser | null) => {
+export const validateUserGender = (user?: Immutable<ValidationUser> | null) => {
     return user && user.gender && user.gender !== "UNKNOWN";
 };
 
@@ -88,7 +89,7 @@ const withinLastNMinutes = (nMinutes: number, dateOfAction: string | null) => {
 export const withinLast50Minutes = withinLastNMinutes.bind(null, 50);
 export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
-export function allRequiredInformationIsPresent(user?: ValidationUser | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
+export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences
         && (!isCS || (validateUserSchool(user) && validateUserGender(user)
         && validateName(user.givenName) && validateName(user.familyName)))
@@ -96,7 +97,7 @@ export function allRequiredInformationIsPresent(user?: ValidationUser | null, us
         && validateUserContexts(userContexts);
 }
 
-export function validateBookingSubmission(event: AugmentedEvent, user: UserSummaryWithEmailAddressDTO, additionalInformation: AdditionalInformation) {
+export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {
     if (!validateUserSchool(Object.assign({password: null}, user))) {
         return Object.assign({}, FAILURE_TOAST, {title: "School information required", body: "You must enter a school in order to book on to this event."});
     }

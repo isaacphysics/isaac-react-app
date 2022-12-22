@@ -5,10 +5,11 @@ import {SchoolInput} from "./inputs/SchoolInput";
 import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
 import {examBoardLabelMap, isCS, stageLabelMap, studentOnlyEventMessage} from "../../services";
+import {Immutable} from "immer";
 
 interface EventBookingFormProps {
     event: AugmentedEvent;
-    targetUser: UserSummaryWithEmailAddressDTO;
+    targetUser: Immutable<UserSummaryWithEmailAddressDTO>;
     additionalInformation: AdditionalInformation;
     updateAdditionalInformation: (update: AdditionalInformation) => void;
 }
@@ -91,7 +92,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     </RS.Row>
                 </div>
                 {editingSelf && <div>
-                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput={true} submissionAttempted required />
+                    <SchoolInput userToUpdate={Object.assign({password: null}, targetUser)} disableInput submissionAttempted required />
                 </div>}
                 {editingSelf && <div className="text-center alert-warning p-1">
                     If this information is incorrect, please update it from your <a href="/account" target="_blank">account page</a>.

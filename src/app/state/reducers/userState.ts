@@ -2,8 +2,9 @@ import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../..
 import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
 import {isaacApi} from "../index";
+import {Immutable} from "immer";
 
-type UserState = PotentialUser | null;
+type UserState = Immutable<PotentialUser> | null;
 export const user = (user: UserState = null, action: Action): UserState => {
     switch (action.type) {
         case ACTION_TYPE.USER_LOG_IN_REQUEST:

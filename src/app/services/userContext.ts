@@ -29,6 +29,7 @@ import {AppState, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
+import {Immutable} from "immer";
 
 export interface UseUserContextReturnType {
     examBoard: EXAM_BOARD;
@@ -175,7 +176,7 @@ const _EXAM_BOARD_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "All Exam Boards", value: EXAM_BOARD.ALL},
 ];
 interface ExamBoardFilterOptions {
-    byUser?: PotentialUser | null;
+    byUser?: Immutable<PotentialUser> | null;
     byStages?: STAGE[];
     byUserContexts?: UserContext[];
     includeNullOptions?: boolean;
@@ -224,7 +225,7 @@ const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "All Stages", value: STAGE.ALL},
 ];
 interface StageFilterOptions {
-    byUser?: PotentialUser | null;
+    byUser?: Immutable<PotentialUser> | null;
     byUserContexts?: UserContext[];
     includeNullOptions?: boolean;
     hideFurtherA?: true;
@@ -348,7 +349,7 @@ export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['aud
     }) ?? [];
 }
 
-export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: PotentialUser | null): boolean {
+export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null): boolean {
     // If no audience is specified, we default to true
     if (!intendedAudience) {
         return true;
@@ -451,7 +452,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     return stagesToView.map(stage => stageLabelMap[stage]).join(" & ");
 }
 
-export function makeIntendedAudienceComparator(user: PotentialUser | null, userContext: UseUserContextReturnType) {
+export function makeIntendedAudienceComparator(user: Immutable<PotentialUser> | null, userContext: UseUserContextReturnType) {
     // Make "relevant" sections appear first
     return function intendedAudienceComparator(sectionA: {audience?: ContentBaseDTO['audience']}, sectionB: {audience?: ContentBaseDTO['audience']}) {
         const isAudienceA = isIntendedAudience(sectionA.audience, userContext, user);

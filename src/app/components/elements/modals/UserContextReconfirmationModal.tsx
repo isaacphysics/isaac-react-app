@@ -13,9 +13,10 @@ import {
 } from "../../../services";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
+import {Immutable} from "immer";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
@@ -35,7 +36,7 @@ const UserContextReconfimationModalBody = () => {
     const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
 
-    const [userToUpdate, setUserToUpdate] = useState({...user, password: null});
+    const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>({...user, password: null});
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
