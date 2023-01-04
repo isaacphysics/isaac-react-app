@@ -1,9 +1,9 @@
-import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {Difficulty, GameboardDTO, RegisteredUserDTO, Stage} from "../../IsaacApiTypes";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import countBy from "lodash/countBy";
 import sortBy from "lodash/sortBy";
 import intersection from "lodash/intersection";
-import {determineAudienceViews, isCS, isFound, isPhy} from "./";
+import {determineAudienceViews, difficultiesOrdered, isCS, isFound, isPhy, stagesOrdered} from "./";
 import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
@@ -140,6 +140,36 @@ export function allPropertiesFromAGameboard<T extends keyof ViewingContext>(
             return aggregator;
         }, new Set<NonNullable<ViewingContext[T]>>()))
         .sort(orderedPropertyValues ? comparatorFromOrderedValues(orderedPropertyValues) : () => 0);
+}
+
+// A function that returns ordered (stage, difficulties) tuples for a gameboard
+export function determineGameboardStagesAndDifficulties(gameboard: GameboardDTO | undefined): [Stage, Difficulty[]][] {
+    // Collect stage difficulties
+    const stageDifficultiesMap: {[stage in Stage]?: Difficulty[]} = {};
+    if (gameboard) {
+        gameboard.contents?.forEach(gameboardItem => {
+            determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext).forEach(v => {
+                if (v.stage && v.difficulty) {
+                    if (!stageDifficultiesMap[v.stage]) {
+                        stageDifficultiesMap[v.stage] = [];
+                    }
+                    stageDifficultiesMap[v.stage]?.push(v.difficulty);
+                }
+            });
+        });
+    }
+
+    // Create ordered list of stage difficulties
+    const orderedStageDifficulties: [Stage, Difficulty[]][] = [];
+    stagesOrdered.forEach(stage => {
+        if (stageDifficultiesMap[stage]) {
+            const orderedAndDeduplicatedDifficulties =
+                Array.from(new Set(stageDifficultiesMap[stage])).sort(comparatorFromOrderedValues(difficultiesOrdered));
+            orderedStageDifficulties.push([stage, orderedAndDeduplicatedDifficulties]);
+        }
+    });
+
+    return orderedStageDifficulties;
 }
 
 export enum BoardViews {
