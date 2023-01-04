@@ -37,16 +37,16 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
-    above,
     allPropertiesFromAGameboard,
-    below,
     BOARD_ORDER_NAMES,
     BoardCreators,
     BoardLimit,
     BoardSubjects,
     BoardViews,
+    determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
     difficultiesOrdered,
+    difficultyShortLabelMap,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
     isAdminOrEventManager,
@@ -285,6 +285,7 @@ const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProp
     const boardSubjects = useMemo(() => determineGameboardSubjects(board), [board]);
     const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
     const boardDifficulties = useMemo(() => allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered), [board]);
+    const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(board);
 
     return <>
         {boardView == BoardViews.table ?
@@ -324,16 +325,36 @@ const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProp
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                        <CardSubtitle>Stages: <strong className="d-inline-flex">{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
-                        <CardSubtitle>
-                            {`Difficult${boardDifficulties.length !== 1 ? "ies" : "y"}: `}
-                            <strong>
-                                {boardDifficulties.length > 0 ?
-                                    <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
-                                    : "N/A"
-                                }
-                            </strong>
-                        </CardSubtitle>
+                        <table className="w-100">
+                            <thead>
+                                <tr>
+                                    <th className="w-50 font-weight-light">
+                                        {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
+                                    </th>
+                                    <th className="w-50 font-weight-light pl-1">
+                                        {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>{stageLabelMap[stage]}:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
+                                    </td>
+                                </tr>)}
+                                {boardStagesAndDifficulties.length === 0 && <tr>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>N/A:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>-</strong>
+                                    </td>
+                                </tr>}
+                            </tbody>
+                        </table>
                     </aside>
                     <Row className="mt-1">
                         <Col className={"pr-0"}>
