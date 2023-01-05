@@ -50,26 +50,3 @@ export function DifficultyIcons({difficulty} : {difficulty : Difficulty}) {
         </svg>
     </div>;
 }
-
-export function AggregateDifficultyIcons({difficulties, stacked=false} : {difficulties: Difficulty[], stacked?: boolean}) {
-    const activeDifficulties = new Set<string>();
-    difficulties.forEach(difficulty => activeDifficulties.add(difficultyShortLabelMap[difficulty]));
-
-    return <div className={classnames({"d-inline-flex": !stacked})}>
-        {difficultyCategories.map((difficultyCategory, i) => <div key={difficultyCategory} className={classnames({"ml-1": !stacked && i > 0})}>
-            <svg
-                width={`${difficultyCategoryLevels.length * (difficultyIconWidth + 2 * difficultyIconXPadding) - difficultyIconXPadding}px`}
-                height={`${miniHexagon.quarterHeight * 4 + 2 * yPadding}px`}
-            >
-                <title>{difficulties.map(d => difficultyLabelMap[d]).join(", ")}</title>
-                {difficultyCategoryLevels.map(difficultyCategoryLevel => {
-                    const active = activeDifficulties.has(`${difficultyCategory}${difficultyCategoryLevel}`);
-                    return <SingleDifficultyIconShape
-                        key={difficultyCategoryLevel}
-                        {...{difficultyCategory, difficultyCategoryLevel, active, difficultyIconWidth, difficultyIconXPadding, yPadding}}
-                    />;
-                })}
-            </svg>
-        </div>)}
-    </div>;
-}

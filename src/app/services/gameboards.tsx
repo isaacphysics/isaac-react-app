@@ -126,22 +126,6 @@ export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
     }
 }
 
-export function allPropertiesFromAGameboard<T extends keyof ViewingContext>(
-    gameboard: GameboardDTO | undefined, property: T, orderedPropertyValues?: ViewingContext[T][]
-): NonNullable<ViewingContext[T]>[] {
-    if (!gameboard) {return [];}
-    return Array.from((gameboard?.contents || [])
-        .reduce((aggregator, gameboardItem) => {
-            determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext).forEach(v => {
-                if (v[property]) {
-                    aggregator.add(v[property]!); // need "!" to tell TS that it's not undefined even though we check that
-                }
-            });
-            return aggregator;
-        }, new Set<NonNullable<ViewingContext[T]>>()))
-        .sort(orderedPropertyValues ? comparatorFromOrderedValues(orderedPropertyValues) : () => 0);
-}
-
 // A function that returns ordered (stage, difficulties) tuples for a gameboard
 export function determineGameboardStagesAndDifficulties(gameboard: GameboardDTO | undefined): [Stage, Difficulty[]][] {
     // Collect stage difficulties
