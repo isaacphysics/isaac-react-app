@@ -1,6 +1,6 @@
 import {renderTestEnvironment} from "../utils";
 import {screen, waitFor} from "@testing-library/react";
-import {history, siteSpecific} from "../../app/services";
+import {history} from "../../app/services";
 
 const tutorOnlyRoutes = ["/set_assignments", "/groups"];
 describe("Visiting a tutor-only page", () => {
