@@ -37,16 +37,14 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
-    above,
-    allPropertiesFromAGameboard,
-    below,
     BOARD_ORDER_NAMES,
     BoardCreators,
     BoardLimit,
     BoardSubjects,
     BoardViews,
+    determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
-    difficultiesOrdered,
+    difficultyShortLabelMap,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
     isAdminOrEventManager,
@@ -60,14 +58,11 @@ import {
     siteSpecific,
     sortIcon,
     stageLabelMap,
-    stagesOrdered,
-    useDeviceSize,
     useGameboards
 } from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
-import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 import Select from "react-select";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
@@ -260,7 +255,6 @@ type BoardProps = {
 };
 const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProps) => {
     const dispatch = useAppDispatch();
-    const deviceSize = useDeviceSize();
 
     const assignmentLink = `/assignment/${board.id}`;
     const hasAssignedGroups = assignees && assignees.length > 0;
@@ -283,8 +277,7 @@ const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProp
     const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = useMemo(() => determineGameboardSubjects(board), [board]);
-    const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
-    const boardDifficulties = useMemo(() => allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered), [board]);
+    const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(board), [board]);
 
     return <>
         {boardView == BoardViews.table ?
@@ -297,8 +290,21 @@ const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProp
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
-                <td className="text-center align-middle">
-                    {boardDifficulties.length > 0 && <AggregateDifficultyIcons difficulties={boardDifficulties} stacked />}
+                <td className="text-center align-middle p-0" colSpan={2}>
+                    {boardStagesAndDifficulties.length > 0 && <table className="w-100">
+                        <tbody>
+                        {boardStagesAndDifficulties.map(([stage,difficulties]) => {
+                            return <tr key={stage}>
+                                <td className="text-center align-middle border-top-0 p-1 w-50">
+                                    {stageLabelMap[stage]}
+                                </td>
+                                <td className="text-center align-middle border-top-0 p-1 w-50">
+                                    {difficulties.map(d => difficultyShortLabelMap[d]).join(", ")}
+                                </td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </table>}
                 </td>
                 <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
                 <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
@@ -324,16 +330,36 @@ const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProp
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                        <CardSubtitle>Stages: <strong className="d-inline-flex">{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
-                        <CardSubtitle>
-                            {`Difficult${boardDifficulties.length !== 1 ? "ies" : "y"}: `}
-                            <strong>
-                                {boardDifficulties.length > 0 ?
-                                    <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
-                                    : "N/A"
-                                }
-                            </strong>
-                        </CardSubtitle>
+                        <table className="w-100">
+                            <thead>
+                                <tr>
+                                    <th className="w-50 font-weight-light">
+                                        {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
+                                    </th>
+                                    <th className="w-50 font-weight-light pl-1">
+                                        {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>{stageLabelMap[stage]}:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
+                                    </td>
+                                </tr>)}
+                                {boardStagesAndDifficulties.length === 0 && <tr>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>N/A:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>-</strong>
+                                    </td>
+                                </tr>}
+                            </tbody>
+                        </table>
                     </aside>
                     <Row className="mt-1">
                         <Col className={"pr-0"}>
@@ -579,6 +605,7 @@ export const SetAssignments = () => {
                                                         name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                     </button>
                                                 </th>
+                                                <th className="text-center align-middle">Stages</th>
                                                 <th className="text-center align-middle">Difficulties</th>
                                                 <th className="text-center align-middle">Creator</th>
                                                 <th className="text-center align-middle pointer-cursor">
