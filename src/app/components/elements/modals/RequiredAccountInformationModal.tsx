@@ -2,7 +2,7 @@ import {AppState, closeActiveModal, selectors, updateCurrentUser, useAppDispatch
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {UserEmailPreference} from "../panels/UserEmailPreferences";
-import {BooleanNotation, DisplaySettings, UserEmailPreferences} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
     isCS,
@@ -23,6 +23,7 @@ import {SchoolInput} from "../inputs/SchoolInput";
 import {GenderInput} from "../inputs/GenderInput";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {Link} from "react-router-dom";
+import {Immutable} from "immer";
 
 const RequiredAccountInfoBody = () => {
     // Redux state
@@ -34,7 +35,7 @@ const RequiredAccountInfoBody = () => {
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     const initialUserValue = {...user, password: null};
-    const [userToUpdate, setUserToUpdate] = useState(initialUserValue);
+    const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>(initialUserValue);
 
     const initialEmailPreferencesValue = {...userPreferences?.EMAIL_PREFERENCE};
     const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);

@@ -19,6 +19,7 @@ import {closeActiveModal, openActiveModal, showQuizSettingModal, useAppDispatch}
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {EditContentButton} from "../EditContentButton";
+import {Markup} from "../markup";
 
 type PageLinkCreator = (page?: number) => string;
 
@@ -133,6 +134,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
     const rubric = attempt.quiz?.rubric;
+    const attribution = attempt.quiz?.attribution;
     const renderRubric = (rubric?.children || []).length > 0;
     const dispatch = useAppDispatch();
 
@@ -156,9 +158,16 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
                         </Button>
                     </Col>}
                 </Row>
+
                 <WithFigureNumbering doc={section}>
                     <IsaacContent doc={section}/>
                 </WithFigureNumbering>
+
+                {attribution && <p className="text-muted">
+                    <Markup trusted-markup-encoding={"markdown"}>
+                        {attribution}
+                    </Markup>
+                </p>}
             </Col>
         </Row>
     :

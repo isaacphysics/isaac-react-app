@@ -38,7 +38,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
-    return <Container className="mb-5">
+    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />

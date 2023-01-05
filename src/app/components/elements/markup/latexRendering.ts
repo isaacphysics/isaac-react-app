@@ -5,6 +5,7 @@ import he from "he";
 import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isCS, useUserContext} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
+import {Immutable} from "immer";
 
 type MathJaxMacro = string|[string, number];
 
@@ -219,7 +220,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: PotentialUser | null, booleanNotation : BOOLEAN_NOTATION | undefined, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: Immutable<PotentialUser> | null, booleanNotation : BOOLEAN_NOTATION | undefined, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";

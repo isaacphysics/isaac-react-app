@@ -1,13 +1,14 @@
 import {useEffect, useMemo, useState} from "react";
 import {deregisterQuestions, loadQuizzes, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
-import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, useQueryParams} from "./";
+import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, tags, useQueryParams} from "./";
 import {
     ContentDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
     QuizAssignmentDTO,
     QuizAttemptDTO,
-    QuizSummaryDTO, RegisteredUserDTO
+    QuizSummaryDTO,
+    RegisteredUserDTO
 } from "../../IsaacApiTypes";
 import {partition} from "lodash";
 
@@ -103,6 +104,8 @@ export function useCurrentQuizAttempt(studentId?: number) {
     const [attempt, error] = studentId
         ? [studentAttempt, studentError]
         : [currentUserAttempt, currentUserError];
+    // Augment quiz object with subject id
+    const attemptWithQuizSubject = {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)};
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
@@ -110,11 +113,11 @@ export function useCurrentQuizAttempt(studentId?: number) {
     const dispatch = useAppDispatch();
     useEffect( () => {
         // All register questions does is store the questions in redux WITH SOME EXTRA CALCULATED STRUCTURE
-        dispatch(registerQuestions(questions));
+        dispatch(registerQuestions(questions, undefined, true));
         return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 
-    return {attempt, error, studentUser, questions, sections};
+    return {attempt: attemptWithQuizSubject, error, studentUser, questions, sections};
 }
 
 export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {

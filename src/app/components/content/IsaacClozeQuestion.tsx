@@ -94,7 +94,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
         const baseline = 0;
 
         const y = (isTouchEvent(event)
-            ? (event.touches[0] || event.changedTouches[0]).pageY
+            ? (event.touches[0] || event.changedTouches[0]).clientY
             : event.clientY) - baseline;
 
         const referenceHeight = window.innerHeight;
@@ -174,6 +174,19 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         }
         return false;
     }, [focusId, setFocusId]);
+
+    // Force #root scrollLeft to be 0 - fixes issue with cloze drag and drop scolling the screen sideways if
+    // dragging from item section to a drop-zone off screen.
+    // This is an issue with how dnd-kit manages scroll contexts when `overflow: hidden`, can be fixed by setting
+    // `overflow: clip` but only very modern browsers support that.
+    useEffect(() => {
+        const root = document.querySelector<HTMLDivElement>("#root");
+        const resetScrollLeft = () => {if (root) {root.scrollLeft = 0;}};
+        root?.addEventListener("scroll", resetScrollLeft);
+        return () => {
+            root?.removeEventListener("scroll", resetScrollLeft);
+        };
+    }, []);
 
     useEffect(function updateStateOnCurrentAttemptChange() {
         if (currentAttempt?.items) {

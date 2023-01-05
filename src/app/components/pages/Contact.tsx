@@ -28,8 +28,9 @@ import queryString from "query-string";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {MetaDescription} from "../elements/MetaDescription";
+import {Immutable} from "immer";
 
-const determineUrlQueryPresets = (user?: PotentialUser | null) => {
+const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
     const urlQuery = queryString.parse(location.search);
     let presetSubject = "";
     let presetMessage = "";

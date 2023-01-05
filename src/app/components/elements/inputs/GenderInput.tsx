@@ -4,10 +4,11 @@ import * as RS from "reactstrap";
 import {Input} from "reactstrap";
 import {validateUserGender} from "../../../services";
 import classNames from "classnames";
+import {Immutable} from "immer";
 
 interface GenderInputProps {
-    userToUpdate: ValidationUser;
-    setUserToUpdate: (user: any) => void;
+    userToUpdate: Immutable<ValidationUser>;
+    setUserToUpdate: (user: Immutable<ValidationUser>) => void;
     submissionAttempted: boolean;
     idPrefix?: string;
     required: boolean;

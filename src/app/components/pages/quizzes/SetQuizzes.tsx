@@ -18,6 +18,7 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     below,
     isEventLeaderOrStaff,
+    isPhy,
     MANAGE_QUIZ_TAB,
     NOT_FOUND,
     siteSpecific,
@@ -120,7 +121,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     </>;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:

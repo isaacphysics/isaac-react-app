@@ -201,7 +201,7 @@ export const Gameboard = withRouter(({ location }) => {
                                     </RS.Button>
                                 </RS.Col>
                             </RS.Row>
-                            : gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
+                            : gameboard && !gameboard.savedToCurrentUser && <RS.Row>
                                 <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                                     <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`}
                                                onClick={() => setAssignBoardPath("/set_assignments")}

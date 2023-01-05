@@ -1,52 +1,53 @@
 import {isDefined} from "./";
 import {LoggedInUser, PotentialUser, School} from "../../IsaacAppTypes";
 import {UserRole} from "../../IsaacApiTypes";
+import {Immutable} from "immer";
 
-export function isLoggedIn(user?: PotentialUser | null): user is LoggedInUser {
+export function isLoggedIn(user?: Immutable<PotentialUser> | null): user is Immutable<LoggedInUser> {
     return user ? user.loggedIn : false;
 }
 
-export function isStudent(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isStudent(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role === "STUDENT") && (user.loggedIn ?? true);
 }
 
-export function isTutor(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isTutor(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role === "TUTOR") && (user.loggedIn ?? true);
 }
 
-export function isTutorOrAbove(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isTutorOrAbove(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role !== "STUDENT") && (user.loggedIn ?? true);
 }
 
-export function isTeacherOrAbove(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isTeacherOrAbove(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role !== "STUDENT") && (user.role !== "TUTOR") && (user.loggedIn ?? true);
 }
 
-export function isAdmin(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isAdmin(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role === "ADMIN") && (user.loggedIn ?? true);
 }
 
-export function isEventManager(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isEventManager(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role === "EVENT_MANAGER") && (user.loggedIn ?? true);
 }
 
-export function isStaff(user?: {role?: UserRole, loggedIn?: boolean} | null) {
+export function isStaff(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role === "ADMIN" || user.role === "EVENT_MANAGER" || user.role === "CONTENT_EDITOR") && (user.loggedIn ?? true);
 }
 
-export function isEventLeader(user?: {role?: UserRole, loggedIn?: boolean} | null) {
+export function isEventLeader(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isDefined(user) && (user.role === "EVENT_LEADER") && (user.loggedIn ?? true);
 }
 
-export function isEventLeaderOrStaff(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isEventLeaderOrStaff(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isEventLeader(user) || isStaff(user);
 }
 
-export function isAdminOrEventManager(user?: {role?: UserRole, loggedIn?: boolean} | null): boolean {
+export function isAdminOrEventManager(user?: {readonly role?: UserRole, readonly loggedIn?: boolean} | null): boolean {
     return isAdmin(user) || isEventManager(user);
 }
 
-export const roleRequirements: Record<UserRole, (u: {role?: UserRole, loggedIn?: boolean} | null) => boolean> = {
+export const roleRequirements: Record<UserRole, (u: {readonly role?: UserRole, readonly loggedIn?: boolean} | null) => boolean> = {
     "STUDENT": isStudent,
     "TUTOR": isTutorOrAbove,
     "TEACHER": isTeacherOrAbove,
@@ -56,7 +57,7 @@ export const roleRequirements: Record<UserRole, (u: {role?: UserRole, loggedIn?:
     "ADMIN": isAdmin
 };
 
-export function extractTeacherName(teacher: {givenName?: string; familyName?: string} | null | undefined): string | null {
+export function extractTeacherName(teacher: {readonly givenName?: string; readonly familyName?: string} | null | undefined): string | null {
     if (null == teacher) {
         return null;
     }

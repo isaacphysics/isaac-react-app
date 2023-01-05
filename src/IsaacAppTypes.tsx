@@ -38,10 +38,10 @@ export type Action =
     | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
 
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
-    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
@@ -64,7 +64,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS}
@@ -107,7 +107,7 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: UserSummaryForAdminUsersDTO[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_GET_REQUEST}
-    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: RegisteredUserDTO}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: Immutable<RegisteredUserDTO>}
     | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS}
@@ -201,7 +201,7 @@ export type Action =
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string, isQuiz?: boolean}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO>}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}

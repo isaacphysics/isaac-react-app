@@ -597,6 +597,7 @@ export enum SUBJECTS {
     PHYSICS = 'physics',
     MATHS = 'maths',
     CHEMISTRY = 'chemistry',
+    BIOLOGY = 'biology',
     CS = 'computer_science'
 }
 
@@ -730,6 +731,13 @@ export enum TAG_ID {
     functions = "functions",
     calculus = "calculus",
     number = "number",
+    // Biology Fields
+    biochemistry = "biochemistry",
+    cellBiology = "cell_biology",
+    ecology = "ecology",
+    evolution = "evolution",
+    genetics = "genetics",
+    physiology = "physiology",
 
     // Physics Topics ---
 
@@ -832,6 +840,30 @@ export enum TAG_ID {
     organicReactions = "organic_reactions",
     isomerism = "isomerism",
     aromaticReactions = "aromatic_reactions",
+
+    // Biology Topics ---
+
+    // Cell biology
+    cellStructure = "cell_structure",
+    mitosis = "mitosis",
+    meiosis = "meiosis",
+    viruses = "viruses",
+    membraneTransport = "membrane_transport",
+    tissues = "tissues",
+    // Biochemistry
+    proteins = "proteins",
+    carbohydrates = "carbohydrates",
+    lipids = "lipids",
+    // Genetics
+    dnaReplication = "dna_replication",
+    transcription = "transcription",
+    translation = "translation",
+    // Physiology
+
+    // Ecology
+
+    // Evolution
+
 }
 
 export enum TAG_LEVEL {
@@ -1004,6 +1036,7 @@ export const specificDoughnutColours: { [key: string]: string } = siteSpecific(
         "Physics": "#944cbe",
         "Maths": "#007fa9",
         "Chemistry": "#e22e25",
+        "Biology": "#005210",
         [difficultyLabelMap.practice_1]: "#509e2e",
         [difficultyLabelMap.practice_2]: "#3b6e25",
         [difficultyLabelMap.practice_3]: "#27421a",
@@ -1019,8 +1052,8 @@ export const doughnutColours = siteSpecific(
         "#944cbe",
         "#007fa9",
         "#e22e25",
+        "#005210",
         "#991846",
-        "#448525",
         "#fea100"
     ],
     [
