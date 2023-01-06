@@ -10,9 +10,10 @@ import {
     isLoggedIn,
     isMobile,
     isPhy,
-    isStudent,
+    isTutor,
+    isTutorOrAbove,
     SITE_SUBJECT_TITLE,
-    TEACHER_REQUEST_ROUTE,
+    UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -29,7 +30,6 @@ const RequiredAccountInfoBody = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
-    const student = isStudent({...user, loggedIn: true});
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -70,10 +70,10 @@ const RequiredAccountInfoBody = () => {
             <div className="text-right text-muted required-before">
                 Required
             </div>
-            {student && <div className="text-left mb-4">
-                Account type: <b>Student</b> <span>
-                    <small>(Are you a teacher? {" "}
-                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
+            {!isTutorOrAbove(user) && <div className="text-left mb-4">
+                Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
+                    <small>(Are you a teacher or tutor? {" "}
+                        <Link to="/request_account_upgrade" target="_blank">
                             Upgrade your account
                         </Link>{".)"}
                     </small>
@@ -101,7 +101,7 @@ const RequiredAccountInfoBody = () => {
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required
+                        required={!("role" in userToUpdate && isTutor(userToUpdate))}
                     />
                 </RS.Col>}
             </RS.Row>

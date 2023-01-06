@@ -9,7 +9,7 @@ import {
     QuizAttemptProps,
     QuizPagination
 } from "../../elements/quiz/QuizAttemptComponent";
-import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Container} from "reactstrap";
@@ -28,7 +28,7 @@ const pageHelp = <span>
     Preview the questions on this test.
 </span>;
 
-export const QuizPreview = () => {
+export const QuizPreview = ({user}: {user: RegisteredUserDTO}) => {
     const {quiz, error} = useAppSelector(selectors.quizzes.preview);
     const {page, quizId} = useParams<{quizId: string; page?: string;}>();
 
@@ -55,7 +55,7 @@ export const QuizPreview = () => {
         `/test/preview/${quizId}` + (isDefined(page) ? `/page/${page}` : "")
     , [quizId]);
 
-    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
+    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
     return <Container className="mb-5">
         <ShowLoading until={attempt || error}>

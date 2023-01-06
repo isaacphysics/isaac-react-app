@@ -188,7 +188,7 @@ export const api = {
             }
         },
         modifyUserRoles: {
-            post: (role: ApiTypes.Role, userIds: number[]) => {
+            post: (role: ApiTypes.UserRole, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
             }
         },

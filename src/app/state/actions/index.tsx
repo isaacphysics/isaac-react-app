@@ -42,7 +42,7 @@ import {
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
-    Role,
+    UserRole,
     TestCaseDTO,
     UserContext,
     UserSummaryDTO,
@@ -531,6 +531,8 @@ export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAu
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST});
         const result = await api.authorisations.getTokenOwner(authenticationToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
+        // TUTOR TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+        //        their data
         const usersToGrantAccess = result.data;
 
         // TODO can use state (second thunk param) to highlight teachers who have already been granted access
@@ -1043,7 +1045,7 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
     }
 };
 
-export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+export const adminModifyUserRoles = (role: UserRole, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
     try {
         await api.admin.modifyUserRoles.post(role, userIds);

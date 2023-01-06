@@ -2,9 +2,9 @@ import React, {ChangeEvent} from "react";
 import {
     allRequiredInformationIsPresent,
     isCS,
+    isTutor,
     PROGRAMMING_LANGUAGE,
     programmingLanguagesMap,
-    TEACHER_REQUEST_ROUTE,
     UserFacingRole,
     validateEmail,
     validateName
@@ -59,8 +59,8 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row className="mb-3">
             <Col>
                 Account type: <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate?.role == "STUDENT" && <span>
-                    <small>(Are you a teacher? {" "}
-                        <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
+                    <small>(Are you a teacher or tutor? {" "}
+                        <Link to="/request_account_upgrade" target="_blank">
                             Upgrade your account
                         </Link>{".)"}</small>
                 </span>}
@@ -127,7 +127,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isCS}/>
+                                 required={isCS && !isTutor(userToUpdate)}/>
                 </FormGroup>
             </Col>
             <Col md={6}>

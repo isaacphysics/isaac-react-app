@@ -15,7 +15,7 @@ import {
     QuizAttemptProps,
     QuizPagination
 } from "../../elements/quiz/QuizAttemptComponent";
-import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Container} from "reactstrap";
@@ -48,7 +48,7 @@ const pageHelp = <span>
     See the feedback for this test attempt.
 </span>;
 
-export const QuizAttemptFeedback = () => {
+export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAttemptId, page, studentId, quizAssignmentId} = useParams<{quizAttemptId?: string; page?: string; studentId?: string; quizAssignmentId?: string;}>();
     const numericStudentId = studentId ? parseInt(studentId, 10) : undefined;
     const {attempt, studentUser, questions, sections, error} = useCurrentQuizAttempt(numericStudentId);
@@ -82,7 +82,7 @@ export const QuizAttemptFeedback = () => {
     }, [quizAttemptId, quizAssignmentId, studentId]);
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
-        questions, sections, pageLink, pageHelp, studentUser};
+        questions, sections, pageLink, pageHelp, studentUser, user};
 
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>

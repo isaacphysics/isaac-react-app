@@ -2,11 +2,11 @@ import {
     IsaacQuizDTO,
     IsaacQuizSectionDTO,
     QuestionDTO,
-    QuizAttemptDTO,
+    QuizAttemptDTO, RegisteredUserDTO,
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
-import {below, extractTeacherName, isDefined, siteSpecific, useDeviceSize} from "../../../services";
+import {below, extractTeacherName, isDefined, isTeacherOrAbove, siteSpecific, useDeviceSize} from "../../../services";
 import {Spacer} from "../Spacer";
 import {formatDate} from "../DateString";
 import {Link} from "react-router-dom";
@@ -25,6 +25,7 @@ type PageLinkCreator = (page?: number) => string;
 
 export interface QuizAttemptProps {
     attempt: QuizAttemptDTO;
+    user: RegisteredUserDTO;
     page: number | null;
     questions: QuestionDTO[];
     sections: { [id: string]: IsaacQuizSectionDTO };
@@ -91,7 +92,7 @@ function QuizContents({attempt, sections, questions, pageLink}: QuizAttemptProps
     }
 }
 
-function QuizHeader({attempt, preview}: QuizAttemptProps) {
+function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
     const dispatch = useAppDispatch();
     const assignment = attempt.quizAssignment;
     if (preview) {
@@ -100,7 +101,7 @@ function QuizHeader({attempt, preview}: QuizAttemptProps) {
             <div className="d-flex">
                 <span>You are previewing this test.</span>
                 <Spacer />
-                <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>
+                {isTeacherOrAbove(user) && <Button onClick={() => dispatch(showQuizSettingModal(attempt.quiz as IsaacQuizDTO))}>Set Test</Button>}
             </div>
         </>;
     } else if (isDefined(assignment)) {
@@ -174,9 +175,9 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     ;
 }
 
-export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: "Set tests", to: `/set_tests`}];
-const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser}: QuizAttemptProps) => {
+export const myQuizzesCrumbs = [{title: siteSpecific("My Tests", "My tests"), to: `/tests`}];
+export const teacherQuizzesCrumbs = [{title: siteSpecific("Set Tests", "Set tests"), to: `/set_tests`}];
+const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {
         quizTitle += " Feedback";
@@ -187,7 +188,7 @@ const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser}: Qu
     if (preview) {
         quizTitle += " Preview";
     }
-    const crumbs = preview ? teacherQuizzesCrumbs : myQuizzesCrumbs;
+    const crumbs = preview && isTeacherOrAbove(user) ? teacherQuizzesCrumbs : myQuizzesCrumbs;
     if (page === null) {
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}
                                    intermediateCrumbs={crumbs}/>;

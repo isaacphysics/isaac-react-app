@@ -682,6 +682,7 @@ const isaacApi = createApi({
                 errorTitle: "Failed to get 2FA secret"
             })
         }),
+
     })
 });
 

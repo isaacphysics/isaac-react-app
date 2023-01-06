@@ -23,7 +23,7 @@ import {
     stagesOrdered,
     useQueryParams,
 } from "./";
-import {AudienceContext, ContentBaseDTO, ContentDTO, Role, Stage, UserContext} from "../../IsaacApiTypes";
+import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
 import {AppState, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
@@ -379,7 +379,7 @@ export function isIntendedAudience(intendedAudience: ContentBaseDTO['audience'],
         if (audienceClause.role) {
             const satisfiesRoleCriteria = audienceClause.role.some(role =>
                 (role === "logged_in" && isLoggedIn(user)) ||
-                (Object.keys(roleRequirements).includes(role.toUpperCase()) && roleRequirements[role.toUpperCase() as Role](user))
+                (Object.keys(roleRequirements).includes(role.toUpperCase()) && roleRequirements[role.toUpperCase() as UserRole](user))
             );
             if (!satisfiesRoleCriteria) {
                 return false;
