@@ -63,7 +63,7 @@ const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in Nav
         Teach: tutorLinks,
         Learn: learnLinks,
         Events: loggedInEventLinks,
-        Help: helpLinks,
+        Help: helpLinks.filter(l => l != "/support/teacher"),
         Admin: null
     },
     TEACHER: {
