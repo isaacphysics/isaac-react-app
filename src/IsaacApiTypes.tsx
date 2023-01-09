@@ -704,12 +704,12 @@ export interface TOTPSharedSecretDTO {
 }
 
 export interface MisuseStatisticDTO {
+    agentIdentifier: string;
     eventType: string;
     isMisused: boolean;
+    isOverSoftThreshold: boolean;
     lastEventTimestamp?: number;
     currentCounter: number;
-    softEventCountThreshold: number;
-    hardEventCountThreshold: number;
 }
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";

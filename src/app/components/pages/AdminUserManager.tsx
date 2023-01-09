@@ -10,7 +10,6 @@ import {
     AppState,
     getUserIdSchoolLookup,
     mergeUsers,
-    openActiveModal,
     resetPassword,
     selectors,
     useAppDispatch,
@@ -21,7 +20,6 @@ import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB, isAdmin, isDefined} from "../../services";
 import {Link} from "react-router-dom";
-import {userMisuseModal} from "../elements/modals/UserMisuseModal";
 
 export const AdminUserManager = () => {
     const dispatch = useAppDispatch();
@@ -324,9 +322,6 @@ export const AdminUserManager = () => {
                                                     <RS.Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
                                                         Reset password
                                                     </RS.Button>
-                                                    {isAdmin(currentUser) && <RS.Button color="secondary btn-sm m-1" onClick={() => dispatch(openActiveModal(userMisuseModal(user)))}>
-                                                        Misuse stats
-                                                    </RS.Button>}
                                                 </td>
                                                 <td>{user.familyName}, {user.givenName}</td>
                                                 <td>{user.email}</td>
