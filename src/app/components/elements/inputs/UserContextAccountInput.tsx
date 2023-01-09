@@ -187,7 +187,7 @@ export function UserContextAccountInput({
 
                     {!tutorOrAbove && <><br/>
                         <small>
-                            If you are a teacher or tutor, <Link to={"/request_account_upgrade"} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
+                            If you are a teacher or tutor, <Link to={"/pages/contact_us_teacher"} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
                         </small>
                     </>}
                 </RS.FormGroup>

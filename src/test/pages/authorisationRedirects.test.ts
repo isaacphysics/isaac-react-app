@@ -24,7 +24,7 @@ describe("Visiting a tutor-only page", () => {
         for (const route of tutorOnlyRoutes) {
             history.replace(route);
             await waitFor(() => {
-                expect(history.location.pathname).toEqual("/request_account_upgrade");
+                expect(history.location.pathname).toEqual("/pages/contact_us_teacher");
             });
         }
     });

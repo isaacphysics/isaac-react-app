@@ -56,7 +56,7 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
                             user && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
-                                <Redirect to="/request_account_upgrade"/>
+                                <Redirect to="/pages/contact_us_teacher"/>
                                 :
                                 user && user.loggedIn && !ifUser(user) ?
                                     <Unauthorised/>
