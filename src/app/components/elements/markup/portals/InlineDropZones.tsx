@@ -23,7 +23,8 @@ export function Item({item, id, type, overrideOver, isCorrect}: {item: Immutable
     const style: React.CSSProperties = {
         transform: CSS.Translate.toString(transform),
         transition,
-        opacity: (overrideOver || isOver) || isDragging ? "0.2" : "1"
+        opacity: (overrideOver || isOver) || isDragging ? "0.2" : "1",
+        touchAction: "none"
     };
 
     // This is to manage focus properly for accessibility reasons

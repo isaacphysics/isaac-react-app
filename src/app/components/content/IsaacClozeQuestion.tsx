@@ -354,10 +354,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             }
         }),
         useSensor(TouchSensor, {
-            // Press delay of 250ms, with tolerance of 5px of movement
+            // Require a touch drag to have moved by 10 pixels before activating
             activationConstraint: {
-                delay: 250,
-                tolerance: 5,
+                distance: 10
             }
         }),
         useSensor(KeyboardSensor, {
