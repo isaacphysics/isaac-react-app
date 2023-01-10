@@ -354,9 +354,9 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             }
         }),
         useSensor(TouchSensor, {
-            // Press delay of 10ms, with tolerance of 5px of movement
+            // Require the touch action to move by 10 pixels before activating, with tolerance of 5px of movement
             activationConstraint: {
-                delay: 10,
+                distance: 10,
                 tolerance: 5,
             },
         }),
