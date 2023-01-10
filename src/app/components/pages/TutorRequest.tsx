@@ -160,10 +160,10 @@ export const TutorRequest = () => {
                                     <Row>
                                         <Col size={12}>
                                             <FormGroup>
-                                                <Label htmlFor="other-info-input">
+                                                <Label htmlFor="other-info-input" className="form-required">
                                                     Please tell us why you would like to apply for a tutor account
                                                 </Label>
-                                                <Input id="other-info-input" type="textarea" name="other-info"
+                                                <Input id="other-info-input" type="textarea" name="other-info" required
                                                     onChange={e => setReason(e.target.value)}/>
                                             </FormGroup>
                                         </Col>

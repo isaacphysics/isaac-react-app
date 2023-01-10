@@ -1,6 +1,6 @@
 import {renderTestEnvironment} from "../utils";
 import {screen, waitFor} from "@testing-library/react";
-import {history} from "../../app/services";
+import {history, TEACHER_REQUEST_ROUTE} from "../../app/services";
 
 const tutorOnlyRoutes = ["/set_assignments", "/groups"];
 describe("Visiting a tutor-only page", () => {
@@ -24,7 +24,7 @@ describe("Visiting a tutor-only page", () => {
         for (const route of tutorOnlyRoutes) {
             history.replace(route);
             await waitFor(() => {
-                expect(history.location.pathname).toEqual("/request_account_upgrade");
+                expect(history.location.pathname).toEqual(TEACHER_REQUEST_ROUTE);
             });
         }
     });
