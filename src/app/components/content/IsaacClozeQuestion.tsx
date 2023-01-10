@@ -354,11 +354,11 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             }
         }),
         useSensor(TouchSensor, {
-            // Press delay of 250ms, with tolerance of 5px of movement
+            // Press delay of 10ms, with tolerance of 5px of movement
             activationConstraint: {
-                delay: 250,
+                delay: 10,
                 tolerance: 5,
-            }
+            },
         }),
         useSensor(KeyboardSensor, {
             coordinateGetter: customKeyboardCoordinates,
