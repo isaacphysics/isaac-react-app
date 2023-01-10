@@ -25,7 +25,12 @@ export const WarningBanner = () => {
                 <RS.Row style={{alignItems: "center", textAlign: "center"}}>
                     <RS.Col xs={12} md={12}>
                         <span>
-                            {`On 13 Jan, there is a slightly increased chance that Isaac ${SITE_SUBJECT_TITLE} will be unavailable for a period due to maintenance work.`}
+                            {`Isaac ${SITE_SUBJECT_TITLE} may be unavailable on 13 January due to maintenance work. `}
+                            <a href="/pages/2023-jan-datacentre-maintenance">
+                                {"Find out more "}
+                                <span className="sr-only">{"about the planned maintenance "}</span>
+                                {"here"}
+                            </a>.
                         </span>
                     </RS.Col>
                 </RS.Row>
