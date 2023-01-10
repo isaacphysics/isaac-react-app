@@ -11,7 +11,7 @@ import {
     isPhy,
     isTutorOrAbove,
     siteSpecific,
-    STAGE
+    STAGE, TEACHER_REQUEST_ROUTE
 } from "../../../services";
 import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
@@ -187,7 +187,7 @@ export function UserContextAccountInput({
 
                     {!tutorOrAbove && <><br/>
                         <small>
-                            If you are a teacher or tutor, <Link to={"/pages/contact_us_teacher"} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
+                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
                         </small>
                     </>}
                 </RS.FormGroup>

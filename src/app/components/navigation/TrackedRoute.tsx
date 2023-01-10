@@ -9,7 +9,7 @@ import {
     isTeacherOrAbove,
     isTutorOrAbove,
     KEY,
-    persistence
+    persistence, TEACHER_REQUEST_ROUTE
 } from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
 import {Immutable} from "immer";
@@ -56,7 +56,7 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
                             user && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
-                                <Redirect to="/pages/contact_us_teacher"/>
+                                <Redirect to={TEACHER_REQUEST_ROUTE}/>
                                 :
                                 user && user.loggedIn && !ifUser(user) ?
                                     <Unauthorised/>
