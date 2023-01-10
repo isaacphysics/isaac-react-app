@@ -351,14 +351,18 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             // Require the mouse to move by 10 pixels before activating
             activationConstraint: {
                 distance: 10,
-            }
+            },
         }),
         useSensor(TouchSensor, {
-            // Require the touch action to move by 10 pixels before activating, with tolerance of 5px of movement
+            // Press delay of 10ms, with tolerance of 5px of movement
             activationConstraint: {
-                distance: 10,
+                delay: 10,
                 tolerance: 5,
             },
+            onActivation: ({event}) => {
+                event.preventDefault();
+                event.stopPropagation();
+            }
         }),
         useSensor(KeyboardSensor, {
             coordinateGetter: customKeyboardCoordinates,
