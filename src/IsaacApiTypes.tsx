@@ -703,6 +703,15 @@ export interface TOTPSharedSecretDTO {
     created: Date;
 }
 
+export interface MisuseStatisticDTO {
+    agentIdentifier: string;
+    eventType: string;
+    isMisused: boolean;
+    isOverSoftThreshold: boolean;
+    lastEventTimestamp?: number;
+    currentCounter: number;
+}
+
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
