@@ -23,22 +23,22 @@ import {
     Row
 } from "reactstrap";
 import {
-    api,
     isPhy,
-    isTeacherOrAbove,
-    schoolNameWithPostcode,
+    isTutorOrAbove,
+    selectOnChange,
     SITE_SUBJECT_TITLE,
+    tags,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
+import Select from "react-select";
 
-const warningFragmentId = "teacher_registration_warning_message";
-const nonSchoolDomains = ["@gmail", "@yahoo", "@hotmail", "@sharklasers", "@guerrillamail"];
+const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
-export const TeacherRequest = () => {
+export const TutorRequest = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const errorMessage = useAppSelector((state: AppState) => (state && state.error) || null);
@@ -47,65 +47,28 @@ export const TeacherRequest = () => {
     const [firstName, setFirstName] = useState(user?.loggedIn && user.givenName || "");
     const [lastName, setLastName] = useState(user?.loggedIn && user.familyName || "");
     const [emailAddress, setEmailAddress] = useState(user?.loggedIn && user.email || "");
-    const [school, setSchool] = useState<string>();
-    const [otherInformation, setOtherInformation] = useState("");
-    const [verificationDetails, setVerificationDetails] = useState<string>();
+    const [subjects, setSubjects] = useState<string[]>([]);
+    const [reason, setReason] = useState<string>("");
     const [messageSent, setMessageSent] = useState(false);
     const [emailVerified, setEmailVerified] = useState(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
-    const [allowedDomain, setAllowedDomain] = useState<boolean>();
 
-    const urn = user?.loggedIn && user.schoolId || "";
-    const subject = "Teacher Account Request";
+    const subject = "Tutor Account Request";
     const message = "Hello,\n\n" +
-        "Please could you convert my Isaac account into a teacher account.\n\n" +
-        "My school is: " + school + "\n" +
-        "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\n" +
-        "Any other information: " + otherInformation + "\n\n" +
+        "Please could you convert my Isaac account into a tutor account.\n\n" +
+        (subjects.length > 0 ? ("I would like to teach subjects: " + subjects.join(", ") + "\n\n") : "") +
+        (reason ? "I would like to upgrade because: " + reason + "\n\n" : "") +
         "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
-
-    function isEmailDomainAllowed(email: string) {
-        for (let domain in nonSchoolDomains) {
-            if (email.includes(nonSchoolDomains[domain])) {
-                setAllowedDomain(false)
-            }
-        }
-    }
-
-    function fetchSchool(urn: string) {
-        if (urn !== "") {
-            api.schools.getByUrn(urn).then(({data}) => {
-                setSchool(schoolNameWithPostcode(data[0]));
-            });
-        } else if (user?.loggedIn && user.schoolOther) {
-            setSchool(user.schoolOther);
-        } else {
-            setSchool(undefined);
-        }
-    }
 
     useEffect(() => {
         setFirstName(user?.loggedIn && user.givenName || "");
         setLastName(user?.loggedIn && user.familyName || "");
         setEmailAddress(user?.loggedIn && user.email || "");
         setEmailVerified(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
-        fetchSchool(urn);
-        isEmailDomainAllowed(emailAddress);
     }, [user]);
 
-    // Direct private tutors and parents towards the tutor account request page
-    const noSchool = <p>
-        If you don't have an associated school please fill out our
-        {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
-        form. If you are a private tutor or parent, you can
-        {" "}<Link to="/tutor_account_request">
-            request an Isaac {SITE_SUBJECT_TITLE} Tutor account
-        </Link>.
-    </p>;
-
-
     return <Container id="contact-page" className="pb-5">
-        <TitleAndBreadcrumb currentPageTitle="Teacher Account request" />
+        <TitleAndBreadcrumb currentPageTitle="Tutor Account request" />
         <div className="pt-4">
             <Row>
                 <Col size={9}>
@@ -113,24 +76,24 @@ export const TeacherRequest = () => {
                         <IsaacContent doc={warningFragment} />
                     </Alert>}
                     <Card>
-                        {isTeacherOrAbove(user) &&
+                        {isTutorOrAbove(user) &&
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3">
-                                        You already have a teacher account
+                                        You already have a tutor or teacher account
                                     </span>
-                                    <p className="mt-3">
-                                        Go to the <Link to="/teachers">Teacher tools page</Link> to start using your
+                                    {isPhy && <p className="mt-3">
+                                        Go to the <Link to="/tutor_features">Tutor features page</Link> to start using your
                                         new account features.
-                                    </p>
+                                    </p>}
                                 </Col>
                             </Row>
                         }
-                        {!isTeacherOrAbove(user) && (messageSent && !errorMessage ?
+                        {!isTutorOrAbove(user) && (messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
-                                        Thank you for submitting a teacher account request.
+                                        Thank you for submitting a tutor account request.
                                     </p>
                                     <p>
                                         We will be in touch shortly. Please note that account verification is a manual
@@ -146,12 +109,10 @@ export const TeacherRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a teacher account on Isaac ${SITE_SUBJECT_TITLE}, please fill in this form. `}
-                                        {"You must use the email address that was assigned to you by your school, and the "}
-                                        {"name of your school should be shown in the 'School' field. If any of the "}
+                                        {`To request a tutor account on Isaac ${SITE_SUBJECT_TITLE}, please fill in this form. `}
+                                        {"You must have verified your account email address. If any of the "}
                                         {"information is incorrect or missing, you can amend it on your "}
                                         <Link to="/account">My account</Link>{" page."}
-                                        {isPhy && noSchool}
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
@@ -172,38 +133,38 @@ export const TeacherRequest = () => {
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col size={12} md={6}>
+                                        <Col size={12} md={isPhy ? 6 : undefined}>
                                             <FormGroup>
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
-                                                <Input disabled invalid={!isValidEmail || !emailVerified || allowedDomain == false} id="email-input"
+                                                <Input disabled invalid={!isValidEmail || !emailVerified} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user?.loggedIn ? user.email : ""}
                                                     onChange={e => setEmailAddress(e.target.value)}
                                                     aria-describedby="emailValidationMessage" required/>
                                             </FormGroup>
                                         </Col>
-                                        <Col size={12} md={6}>
+                                        {isPhy && <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="school-input" className="form-required">School</Label>
-                                                <Input disabled id="school-input" type="text" name="school"
-                                                    defaultValue={school} invalid={typeof school == "undefined"}
-                                                    onChange={e => setSchool(e.target.value)} required/>
+                                                <Label htmlFor="subject-input">Subjects</Label>
+                                                <Select
+                                                    inputId="subject-input"
+                                                    placeholder="All"
+                                                    isClearable
+                                                    isMulti
+                                                    onChange={selectOnChange(setSubjects, true)}
+                                                    options={tags.allSubjectTags.map(tag => ({value: tag.title, label: tag.title}))}
+                                                />
                                             </FormGroup>
-                                        </Col>
+                                        </Col>}
                                     </Row>
                                     <Row>
-                                        <Col size={12} md={6}>
+                                        <Col size={12}>
                                             <FormGroup>
-                                                <Label htmlFor="user-verification-input" className="form-required">URL of a page on your school website which shows your name and email address, or your school phone number</Label>
-                                                <Input id="user-verification-input" type="text" name="user-verification"
-                                                    onChange={e => setVerificationDetails(e.target.value)} required/>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col size={12} md={6}>
-                                            <FormGroup>
-                                                <Label htmlFor="other-info-input">Any other information</Label>
-                                                <Input id="other-info-input" type="textarea" name="other-info"
-                                                    onChange={e => setOtherInformation(e.target.value)}/>
+                                                <Label htmlFor="other-info-input" className="form-required">
+                                                    Please tell us why you would like to apply for a tutor account
+                                                </Label>
+                                                <Input id="other-info-input" type="textarea" name="other-info" required
+                                                    onChange={e => setReason(e.target.value)}/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
@@ -213,29 +174,7 @@ export const TeacherRequest = () => {
                                             <small className="text-danger text-left">Your email address is not verified —
                                                 please click on the link in the verification email to confirm your
                                                 email address. You can <Button color="link primary-font-link" onClick={() => dispatch(requestEmailVerification())}>request a
-                                                    new verification email</Button> if necessary.
-                                            </small>
-                                        </Col>
-                                    </Row>
-                                    }
-                                    {typeof school == "undefined" &&
-                                    <Row>
-                                        <Col>
-                                            <small className="text-danger text-left">You have not provided your school —
-                                                please add your school on your <Link to="/account">My Account</Link> page.
-                                                If you are a private tutor or parent, you can{" "}
-                                                <Link to="/tutor_account_request">
-                                                    request an Isaac {SITE_SUBJECT_TITLE} Tutor account
-                                                </Link>.
-                                            </small>
-                                        </Col>
-                                    </Row>
-                                    }
-                                    {allowedDomain == false &&
-                                    <Row>
-                                        <Col>
-                                            <small className="text-danger text-left">You have not used your school
-                                            email address — please change your email address on your <Link to="/account">My Account</Link> page.
+                                                new verification email</Button> if necessary.
                                             </small>
                                         </Col>
                                     </Row>
@@ -252,7 +191,7 @@ export const TeacherRequest = () => {
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-right">
-                                            <Input type="submit" value="Submit" disabled={!emailVerified || typeof school == "undefined" || allowedDomain == false} className="btn btn-block btn-secondary border-0" />
+                                            <Input type="submit" value="Submit" disabled={!emailVerified} className="btn btn-block btn-secondary border-0" />
                                         </Col>
                                     </Row>
                                 </CardFooter>

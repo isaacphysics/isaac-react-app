@@ -12,6 +12,11 @@ const studentUser: PotentialUser = {
     loggedIn: true
 }
 
+const tutorUser: PotentialUser = {
+    role: "TUTOR",
+    loggedIn: true
+}
+
 const teacherUser: PotentialUser = {
     role: "TEACHER",
     loggedIn: true
@@ -28,13 +33,16 @@ beforeEach(() => {
         placesAvailable: 10,
         allowGroupReservations: true
     }
-})
+});
 
-describe("Students can make event bookings when conditions are met", () => {
+["Student", "Tutor"].forEach(role => describe(`${role}s can make event bookings when conditions are met`, () => {
+
+    const user = role === "Student" ? studentUser : tutorUser;
+
     it("Returns true for an open, pre-deadline, student event with spaces available and logged-in " +
-        "student user with no prior booking or reservation", () => {
+        `${role.toLowerCase()} user with no prior booking or reservation`, () => {
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(true)
@@ -45,7 +53,7 @@ describe("Students can make event bookings when conditions are met", () => {
         event.isNotClosed = false
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(false);
@@ -56,7 +64,7 @@ describe("Students can make event bookings when conditions are met", () => {
         event.isWithinBookingDeadline = false
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(false)
@@ -67,53 +75,53 @@ describe("Students can make event bookings when conditions are met", () => {
         event.placesAvailable = 0
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(false)
     })
 
-    it("Returns false for an event already booked for the student",
+    it("Returns false for an event already booked for the user",
         () => {
         // Arrange
         event.userBookingStatus = 'CONFIRMED'
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(false);
     })
 
-    it("Returns true for a student only event", () => {
+    it("Returns true for a \"student only\" event", () => {
         // Arrange
         event.isStudentOnly = true
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(true)
     })
 
-    it("Returns true for an event already reserved for the student", () => {
+    it("Returns true for an event already reserved for the user", () => {
         // Arrange
         event.userBookingStatus = 'RESERVED'
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(true);
     })
 
-    it("Returns true for an event already reserved for the student, even if the event is full", () => {
+    it("Returns true for an event already reserved for the user, even if the event is full", () => {
         // Arrange
         event.userBookingStatus = 'RESERVED'
         event.placesAvailable = 0
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(true);
@@ -124,12 +132,12 @@ describe("Students can make event bookings when conditions are met", () => {
         event.isWaitingListOnly = true
 
         // Act
-        const canBook = userCanMakeEventBooking(studentUser, event)
+        const canBook = userCanMakeEventBooking(user, event)
 
         // Assert
         expect(canBook).toEqual(false)
     })
-})
+}));
 
 describe("Teachers can make event bookings when conditions are met", () => {
     it("Returns true for an open, pre-deadline, student event with spaces available and logged-in " +

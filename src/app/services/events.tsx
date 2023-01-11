@@ -1,9 +1,10 @@
-import {apiHelper, atLeastOne, isStudent, isTeacher, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
+import {apiHelper, atLeastOne, isTeacherOrAbove, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
 import {IsaacEventPageDTO} from "../../IsaacApiTypes";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
 import React from "react";
 import {Link} from "react-router-dom";
+import {Immutable} from "immer";
 
 export const studentOnlyEventMessage = (eventId?: string) => <React.Fragment>
     {"This event is aimed at students. If you are not a student but still wish to attend, please "}
@@ -157,15 +158,15 @@ export const stageExistsForSite = (stage: string) => {
     return stagesForSite.has(stage as STAGE);
 }
 
-export const userSatisfiesStudentOnlyRestrictionForEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
-    return event.isStudentOnly ? isStudent(user) : true;
+export const userSatisfiesStudentOnlyRestrictionForEvent = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
+    return event.isStudentOnly ? !isTeacherOrAbove(user) : true;
 }
 
-export const userIsTeacherAtAStudentEvent = (user: PotentialUser | null, event: AugmentedEvent) => {
-    return event.isAStudentEvent && isTeacher(user);
+export const userIsTeacherAtAStudentEvent = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
+    return event.isAStudentEvent && isTeacherOrAbove(user);
 }
 
-export const userCanMakeEventBooking = (user: PotentialUser | null, event: AugmentedEvent) => {
+export const userCanMakeEventBooking = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return event.isNotClosed &&
         event.isWithinBookingDeadline &&
         !event.isWaitingListOnly &&
@@ -175,7 +176,7 @@ export const userCanMakeEventBooking = (user: PotentialUser | null, event: Augme
             event.userBookingStatus === "RESERVED");
 }
 
-export const userCanBeAddedToEventWaitingList = (user: PotentialUser | null, event: AugmentedEvent) => {
+export const userCanBeAddedToEventWaitingList = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return !userCanMakeEventBooking(user, event) &&
         event.isNotClosed &&
         !event.hasExpired &&
@@ -184,10 +185,11 @@ export const userCanBeAddedToEventWaitingList = (user: PotentialUser | null, eve
         userSatisfiesStudentOnlyRestrictionForEvent(user, event)
 }
 
-export const userCanReserveEventSpaces = (user: PotentialUser | null, event: AugmentedEvent) => {
+// Tutors cannot reserve event spaces for members of their groups
+export const userCanReserveEventSpaces = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return event.allowGroupReservations &&
         event.isNotClosed &&
         event.isWithinBookingDeadline &&
         !event.isWaitingListOnly &&
-        isTeacher(user);
+        isTeacherOrAbove(user);
 }

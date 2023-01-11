@@ -37,9 +37,9 @@ import {
     isEventLeader,
     isLoggedIn,
     isStaff,
-    isTeacher,
+    isTeacherOrAbove,
     KEY,
-    showNotification
+    showNotification, isTutorOrAbove
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -85,6 +85,8 @@ import {GameboardFilter} from "../pages/GameboardFilter";
 import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentSchedule} from "../pages/AssignmentSchedule";
 import {ExternalRedirect} from "../handlers/ExternalRedirect";
+import {TutorRequest} from "../pages/TutorRequest";
+import {TeacherOrTutorRequest} from "../pages/TeacherOrTutorRequest";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -168,7 +170,7 @@ export const IsaacApp = () => {
 
                         <TrackedRoute exact path="/gameboards" component={Gameboard} />
                         <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />
-                        <TrackedRoute exact path="/gameboard_builder" ifUser={isTeacher} component={GameboardBuilder} />
+                        <TrackedRoute exact path="/gameboard_builder" ifUser={isTutorOrAbove} component={GameboardBuilder} />
                         <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                         <TrackedRoute exact path="/add_gameboard/:gameboardId/:gameboardTitle?" ifUser={isLoggedIn} component={AddGameboard} />
                         <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />
@@ -182,11 +184,12 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
                         <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
                         <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
-                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacher} component={QuizAttemptFeedback} />
-                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacher} component={QuizAttemptFeedback} />
-                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacher} component={QuizTeacherFeedback} />
-                        <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTeacher} component={QuizPreview} />
-                        <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTeacher} component={QuizPreview} />
+                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />
+                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />
+                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacherOrAbove} component={QuizTeacherFeedback} />
+                        {/* Tutors can preview tests iff the test is student only */}
+                        <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTutorOrAbove} component={QuizPreview} />
+                        <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />
                         <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
                         <TrackedRoute exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
                         {/* The order of these redirects matters to prevent substring replacement */}
@@ -210,10 +213,11 @@ export const IsaacApp = () => {
                         <Redirect from="/quizzes" to="/tests" />
 
                         {/* Teacher pages */}
-                        <TrackedRoute exact path="/groups" ifUser={isTeacher} component={Groups} />
-                        <TrackedRoute exact path="/set_assignments" ifUser={isTeacher} component={SetAssignments} />
-                        <TrackedRoute exact path="/assignment_schedule" ifUser={isTeacher} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}
-                        <TrackedRoute exact path="/set_tests" ifUser={isTeacher} component={SetQuizzes} />
+                        {/* Tutors can set and manage assignments, but not tests/quizzes */}
+                        <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
+                        <TrackedRoute exact path="/set_assignments" ifUser={isTutorOrAbove} component={SetAssignments} />
+                        <TrackedRoute exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}
+                        <TrackedRoute exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />
                         <Redirect from="/set_quizzes" to="/set_tests" />
 
                         {/* Admin */}
@@ -235,7 +239,9 @@ export const IsaacApp = () => {
 
                         {/* Static pages */}
                         <TrackedRoute exact path="/contact" component={Contact}/>
+                        {/*<TrackedRoute exact path="/request_account_upgrade" ifUser={isLoggedIn} component={TeacherOrTutorRequest}/>*/}
                         <TrackedRoute exact path="/teacher_account_request" ifUser={isLoggedIn} component={TeacherRequest}/>
+                        <TrackedRoute exact path="/tutor_account_request" ifUser={isLoggedIn} component={TutorRequest}/>
                         <StaticPageRoute exact path="/privacy" pageId="privacy_policy" />
                         <StaticPageRoute exact path="/terms" pageId="terms_of_use" />
                         <StaticPageRoute exact path="/cookies" pageId="cookie_policy" />

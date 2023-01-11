@@ -4,7 +4,7 @@ import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {isDefined, useCurrentQuizAttempt} from "../../../services";
 import {myQuizzesCrumbs, QuizAttemptComponent, QuizAttemptProps} from "../../elements/quiz/QuizAttemptComponent";
-import {QuizAttemptDTO} from "../../../../IsaacApiTypes";
+import {QuizAttemptDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {QuizAttemptFooter} from "../../elements/quiz/QuizAttemptFooter";
 import {useSectionViewLogging} from "../../elements/quiz/useSectionViewLogging";
@@ -14,7 +14,7 @@ const pageHelp = <span>
     Answer the questions on each section of the test, then mark the test as complete when you are finished.
 </span>;
 
-export const QuizDoAssignment = () => {
+export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const {page, quizAssignmentId} = useParams<{quizAssignmentId: string; page?: string;}>();
     const {attempt, questions, sections, error} = useCurrentQuizAttempt();
@@ -33,9 +33,9 @@ export const QuizDoAssignment = () => {
         `/test/assignment/${quizAssignmentId}` + (isDefined(page) ? `/page/${page}` : "")
     , [quizAssignmentId]);
 
-    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp};
+    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
-    return <Container className="mb-5">
+    return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>
             {attempt && <>
                 <QuizAttemptComponent {...subProps} />

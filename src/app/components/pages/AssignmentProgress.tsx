@@ -39,7 +39,13 @@ import {
     EnhancedAssignmentWithProgress
 } from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardItem, GameboardItemState, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../IsaacApiTypes";
+import {
+    GameboardItem,
+    GameboardItemState,
+    QuizAssignmentDTO,
+    QuizUserFeedbackDTO,
+    RegisteredUserDTO
+} from "../../../IsaacApiTypes";
 import {Link} from "react-router-dom";
 import {
     API_PATH,
@@ -47,7 +53,7 @@ import {
     getAssignmentCSVDownloadLink,
     getQuizAssignmentCSVDownloadLink,
     isDefined,
-    isFound,
+    isFound, isTeacherOrAbove,
     MARKBOOK_TYPE_TAB,
     siteSpecific,
     useAssignmentProgressAccessibilitySettings
@@ -271,7 +277,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
                             const fullAccess = studentProgress.user.authorisedFullAccess;
                             return <tr key={studentProgress.user.id} className={`${markClasses(studentProgress, assignmentTotalQuestionParts)}${fullAccess ? "" : " not-authorised"}`} title={`${studentProgress.user.givenName + " " + studentProgress.user.familyName}`}>
                                 <th className="student-name">
-                                    {fullAccess ?
+                                    {fullAccess && pageSettings.isTeacher ?
                                         <Link to={`/progress/${studentProgress.user.id}`} target="_blank">
                                             {studentProgress.user.givenName}
                                             <span
@@ -483,22 +489,25 @@ const GroupDetails = ({group}: {group: AppGroup}) => {
     const assignments = groupBoardAssignments ?? [];
     const quizAssignments = groupQuizAssignments ?? [];
 
-    const assignmentTabs = {
-        [`Assignments (${assignments.length || 0})`]:
-            assignments.length > 0
-                ? assignments.map(assignment => <AssignmentDetails key={assignment.gameboardId} assignment={assignment}/>)
-                : <div className="p-4 text-center">There are no assignments for this group.</div>,
-        [`Tests (${quizAssignments.length || 0})`]:
-            quizAssignments.length > 0
-                ? quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} quizAssignment={quizAssignment} />)
-                : <div className="p-4 text-center">There are no tests assigned to this group.</div>
-    }
+    const assignmentTabComponents = assignments.length > 0
+        ? assignments.map(assignment => <AssignmentDetails key={assignment.gameboardId} assignment={assignment}/>)
+        : <div className="p-4 text-center">There are no assignments for this group.</div>;
+    const quizTabComponents = quizAssignments.length > 0
+        ? quizAssignments.map(quizAssignment => <QuizDetails key={quizAssignment.id} quizAssignment={quizAssignment} />)
+        : <div className="p-4 text-center">There are no tests assigned to this group.</div>;
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
-            {assignmentTabs}
-        </Tabs>
+        {/* Only full teachers can see the tests tab */}
+        {pageSettings.isTeacher
+            ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
+                {{
+                    [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
+                    [`Tests (${quizAssignments.length || 0})`]: quizTabComponents
+                }}
+            </Tabs>
+            : assignmentTabComponents
+        }
     </div>;
 };
 
@@ -520,15 +529,16 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
         dispatch(openActiveModal(downloadLinkModal(event.currentTarget.href)));
     }, [dispatch]);
 
+    const pageSettings = useContext(AssignmentProgressPageSettingsContext);
     const {assignmentCount} = useGroupAssignmentSummary(group.id);
 
     return <>
         <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
-            <div className="group-name"><span className="icon-group"/><span>{group.groupName}</span></div>
+            <div className="group-name"><span className="icon-group"/><span data-testid={"group-name"}>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Assignments CSV)</a></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>
+            {pageSettings.isTeacher && <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
@@ -538,15 +548,18 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
     </>;
 };
 
-export function AssignmentProgress() {
+export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     const dispatch = useAppDispatch();
     const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
-    const pageSettings = useAssignmentProgressAccessibilitySettings();
+    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
 
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
 
     useEffect(() => {
-        dispatch(loadQuizAssignments());
+        // Don't attempt to load tests for tutors, they cannot manage them
+        if (isTeacherOrAbove(user)) {
+            dispatch(loadQuizAssignments());
+        }
     }, [dispatch]);
 
     const pageHelp = <span>
@@ -586,7 +599,7 @@ export function AssignmentProgress() {
                     : sortBy(groups, g => g.created).reverse();
                 return <div className="assignment-progress-container mb-5">
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>
-                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group} />)}
+                        {sortedGroups.map(group => <GroupAssignmentProgress key={group.id} group={group}/>)}
                     </AssignmentProgressPageSettingsContext.Provider>
                     {sortedGroups.length === 0 && <Container className="py-5">
                         <h3 className="text-center">

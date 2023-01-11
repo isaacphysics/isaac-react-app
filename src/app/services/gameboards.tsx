@@ -1,9 +1,9 @@
-import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
+import {Difficulty, GameboardDTO, RegisteredUserDTO, Stage} from "../../IsaacApiTypes";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import countBy from "lodash/countBy";
 import sortBy from "lodash/sortBy";
 import intersection from "lodash/intersection";
-import {determineAudienceViews, isCS, isFound, isPhy} from "./";
+import {determineAudienceViews, difficultiesOrdered, isCS, isFound, isPhy, stagesOrdered} from "./";
 import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
@@ -126,20 +126,34 @@ export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
     }
 }
 
-export function allPropertiesFromAGameboard<T extends keyof ViewingContext>(
-    gameboard: GameboardDTO | undefined, property: T, orderedPropertyValues?: ViewingContext[T][]
-): NonNullable<ViewingContext[T]>[] {
-    if (!gameboard) {return [];}
-    return Array.from((gameboard?.contents || [])
-        .reduce((aggregator, gameboardItem) => {
+// A function that returns ordered (stage, difficulties) tuples for a gameboard
+export function determineGameboardStagesAndDifficulties(gameboard: GameboardDTO | undefined): [Stage, Difficulty[]][] {
+    // Collect stage difficulties
+    const stageDifficultiesMap: {[stage in Stage]?: Difficulty[]} = {};
+    if (gameboard) {
+        gameboard.contents?.forEach(gameboardItem => {
             determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext).forEach(v => {
-                if (v[property]) {
-                    aggregator.add(v[property]!); // need "!" to tell TS that it's not undefined even though we check that
+                if (v.stage && v.difficulty) {
+                    if (!stageDifficultiesMap[v.stage]) {
+                        stageDifficultiesMap[v.stage] = [];
+                    }
+                    stageDifficultiesMap[v.stage]?.push(v.difficulty);
                 }
             });
-            return aggregator;
-        }, new Set<NonNullable<ViewingContext[T]>>()))
-        .sort(orderedPropertyValues ? comparatorFromOrderedValues(orderedPropertyValues) : () => 0);
+        });
+    }
+
+    // Create ordered list of stage difficulties
+    const orderedStageDifficulties: [Stage, Difficulty[]][] = [];
+    stagesOrdered.forEach(stage => {
+        if (stageDifficultiesMap[stage]) {
+            const orderedAndDeduplicatedDifficulties =
+                Array.from(new Set(stageDifficultiesMap[stage])).sort(comparatorFromOrderedValues(difficultiesOrdered));
+            orderedStageDifficulties.push([stage, orderedAndDeduplicatedDifficulties]);
+        }
+    });
+
+    return orderedStageDifficulties;
 }
 
 export enum BoardViews {

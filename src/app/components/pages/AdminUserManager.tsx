@@ -15,7 +15,7 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import {EmailVerificationStatus, Role} from "../../../IsaacApiTypes";
+import {EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB, isAdmin, isDefined} from "../../services";
@@ -40,10 +40,10 @@ export const AdminUserManager = () => {
     const [mergeSourceId, setMergeSourceId] = useState<string>("");
     const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup);
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
-    let promotableRoles: Role[] = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
+    let promotableRoles: UserRole[] = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
     const verificationStatuses: EmailVerificationStatus[] = ["NOT_VERIFIED", "DELIVERY_FAILED"];
     if (currentUser && currentUser.role == "ADMIN") {
-        promotableRoles = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
+        promotableRoles = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"];
     }
 
     useEffect(() => {
@@ -90,7 +90,7 @@ export const AdminUserManager = () => {
             }
         }
     };
-    const modifyUserRolesAndUpdateResults = async (role: Role) => {
+    const modifyUserRolesAndUpdateResults = async (role: UserRole) => {
         let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
         if (confirmed) {
             setUserUpdating(true);

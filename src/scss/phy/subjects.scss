@@ -24,6 +24,9 @@
     &.correct {
       background: $color;
       color: white;
+      a {
+        color: white !important;
+      }
     }
   }
 

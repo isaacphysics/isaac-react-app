@@ -5,10 +5,11 @@ import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api, schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import {throttle} from "lodash";
 import classNames from "classnames";
+import {Immutable} from "immer";
 
 interface SchoolInputProps {
-    userToUpdate: ValidationUser;
-    setUserToUpdate?: (user: any) => void;
+    userToUpdate: Immutable<ValidationUser>;
+    setUserToUpdate?: (user: Immutable<ValidationUser>) => void;
     submissionAttempted: boolean;
     className?: string;
     idPrefix?: string;
@@ -47,14 +48,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
-        if (setUserToUpdate) {
-            if (school.urn) {
-                setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
-                setSelectedSchoolObject(school);
-            } else if (school) {
-                setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
-                setSelectedSchoolObject(school);
-            }
+        if (school.urn) {
+            setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
+            setSelectedSchoolObject(school);
+        } else if (school) {
+            setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
+            setSelectedSchoolObject(school);
         }
     }
 
@@ -62,7 +61,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     function handleSetSchool(newValue: {value: string | School} | null) {
         if (newValue == null) {
             setSelectedSchoolObject(undefined);
-            userToUpdate.schoolOther = undefined;
+            setUserToUpdate?.({...userToUpdate, schoolOther: undefined});
         } else if (newValue && newValue.value) {
             setUserSchool(newValue.value);
         } else if (newValue) {
@@ -104,11 +103,9 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
                 invalid={isInvalid}
-                disabled={!setUserToUpdate}
+                disabled={disableInput || !setUserToUpdate}
                 onChange={(e => {
-                    if (setUserToUpdate) {
-                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
-                    }
+                    setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
                 })}
                 label="Not associated with a school"
             />

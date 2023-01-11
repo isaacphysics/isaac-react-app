@@ -3,7 +3,7 @@ import {
     history,
     isAdminOrEventManager,
     isDefined,
-    isTeacher,
+    isTutorOrAbove,
     Item,
     KEY,
     nthHourOf,
@@ -25,6 +25,7 @@ import {
     showToast
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
+import {Immutable} from "immer";
 
 export interface AssignmentSpec {
     boardId: string;
@@ -200,7 +201,7 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
 
 interface SaveGameboardParams {
     boardId: string,
-    user: PotentialUser,
+    user: Immutable<PotentialUser>,
     boardTitle?: string,
     redirectOnSuccess?: boolean
 }
@@ -224,7 +225,7 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                 }
             }
             if (redirectOnSuccess) {
-                if (isTeacher(user)) {
+                if (isTutorOrAbove(user)) {
                     const assignBoardPath = persistence.load(KEY.ASSIGN_BOARD_PATH) ?? "/set_assignments";
                     history.push(`${assignBoardPath}#${boardId}`);
                     setAssignBoardPath("/set_assignments");
