@@ -51,6 +51,8 @@ import {
     API_PATH,
     ASSIGNMENT_PROGRESS_PATH,
     getAssignmentCSVDownloadLink,
+    getAssignmentStartDate,
+    hasAssignmentStarted,
     getQuizAssignmentCSVDownloadLink,
     isDefined,
     isFound, isTeacherOrAbove,
@@ -64,6 +66,7 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {Tabs} from "../elements/Tabs";
 import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import classNames from "classnames";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -343,13 +346,18 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
         window.open(event.currentTarget.href, '_blank');
     }
 
+    const assignmentHasNotStarted = !hasAssignmentStarted(assignment);
+
     return <div className="assignment-progress-gameboard" key={assignment.gameboardId}>
-        <div className="gameboard-header" onClick={() => setIsExpanded(!isExpanded)}>
+        <div className={classNames("gameboard-header", {"text-muted": assignmentHasNotStarted})} onClick={() => setIsExpanded(!isExpanded)}>
             <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
-                <span>{assignment.gameboard?.title}{assignment.dueDate && <span className="gameboard-due-date">(Due:&nbsp;{formatDate(assignment.dueDate)})</span>}</span>
+                <span className={classNames({"text-muted": assignmentHasNotStarted})}>
+                    {assignment.gameboard?.title}
+                    {assignment.dueDate && <span className="gameboard-due-date">({assignmentHasNotStarted ? <>Scheduled:&nbsp;{formatDate(getAssignmentStartDate(assignment))},{" "}</> : ""}Due:&nbsp;{formatDate(assignment.dueDate)})</span>}
+                </span>
             </Button>
             <div className="gameboard-links align-items-center">
-                <Button color="link" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
+                <Button color="link" tag="a" className="mr-md-0">{isExpanded ? "Hide " : "View "} <span className="d-none d-lg-inline">mark sheet</span></Button>
                 <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id as number)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
