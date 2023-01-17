@@ -353,7 +353,13 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
             <Button color="link" className="gameboard-title align-items-center" onClick={() => setIsExpanded(!isExpanded)}>
                 <span className={classNames({"text-muted": assignmentHasNotStarted})}>
                     {assignment.gameboard?.title}
-                    {assignment.dueDate && <span className="gameboard-due-date">({assignmentHasNotStarted ? <>Scheduled:&nbsp;{formatDate(getAssignmentStartDate(assignment))},{" "}</> : ""}Due:&nbsp;{formatDate(assignment.dueDate)})</span>}
+                    {assignmentHasNotStarted && <span className="gameboard-due-date">
+                        (Scheduled:&nbsp;{formatDate(getAssignmentStartDate(assignment))})
+                    </span>}
+                    {assignmentHasNotStarted && assignment.dueDate && " "}
+                    {assignment.dueDate && <span className="gameboard-due-date">
+                        (Due:&nbsp;{formatDate(assignment.dueDate)})
+                    </span>}
                 </span>
             </Button>
             <div className="gameboard-links align-items-center">
