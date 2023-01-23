@@ -76,6 +76,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const confirmedOverThirteen = dobOver13CheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
     const confirmedOverTen = dob10To12CheckboxChecked || isDobOverTen(registrationUser.dateOfBirth) || confirmedOverThirteen;
     const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
+    const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen)
     const consentGivenOrNotRequired = isCS || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
 
     // Form's submission method
@@ -83,7 +84,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         event.preventDefault();
         setAttemptedSignUp(true);
 
-        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && siteSpecific(confirmedOverTen, confirmedOverThirteen) && consentGivenOrNotRequired) {
+        if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOldEnoughForSite && consentGivenOrNotRequired) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
@@ -292,7 +293,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                 </h4>
                             }
                             <h4 role="alert" className="text-danger text-left">
-                                {!siteSpecific(confirmedOverTen, confirmedOverThirteen) && attemptedSignUp ?
+                                {attemptedSignUp && !confirmedOldEnoughForSite ?
                                     `You must be over ${siteSpecific("10", "13")} years old to create an account.` :
                                     errorMessage}
                             </h4>
