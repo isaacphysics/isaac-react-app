@@ -61,7 +61,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
     function handleSetSchool(newValue: {value: string | School} | null) {
         if (newValue == null) {
             setSelectedSchoolObject(undefined);
-            setUserToUpdate?.({...userToUpdate, schoolOther: undefined});
+            setUserToUpdate?.({...userToUpdate, schoolOther: undefined, schoolId: undefined});
         } else if (newValue && newValue.value) {
             setUserSchool(newValue.value);
         } else if (newValue) {
