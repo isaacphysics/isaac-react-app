@@ -21,6 +21,7 @@ import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {
     FIRST_LOGIN_STATE,
     isCS,
+    isDefined,
     isDobOverTen,
     isDobOverThirteen,
     isPhy,
@@ -78,6 +79,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
     const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen)
     const consentGivenOrNotRequired = isCS || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
+    const isOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
+    const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isOldEnoughForSite(registrationUser.dateOfBirth);
 
     // Form's submission method
     const register = (event: React.FormEvent<HTMLFormElement>) => {
@@ -250,10 +253,14 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                     <Col lg={siteSpecific(12, 6)} xs={12}>
                                         <DateInput
                                             id="dob-input" name="date-of-birth"
-                                            invalid={!siteSpecific(confirmedOverTen, confirmedOverThirteen) && attemptedSignUp}
-                                            disabled={(isPhy && dob10To12CheckboxChecked) || dobOver13CheckboxChecked}
+                                            invalid={
+                                                dobTooYoung || (attemptedSignUp && !confirmedOldEnoughForSite)
+                                            }
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                 assignToRegistrationUser({dateOfBirth: event.target.valueAsDate});
+                                                // DOB takes priority over age confirmation
+                                                setDobOver13CheckboxChecked(false);
+                                                setDob10To12CheckboxChecked(false);
                                             }}
                                             labelSuffix=" of birth"
                                         />
@@ -267,6 +274,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             label="I am at least 13 years old"
                                             disabled={(isPhy && dob10To12CheckboxChecked) || registrationUser.dateOfBirth}
                                             onChange={(e) => setDobOver13CheckboxChecked(e?.target.checked)}
+                                            invalid={dobTooYoung}
                                         />
                                         {isPhy && <CustomInput
                                             id="age-10-to-12-confirmation-input" name="age-10-to-12-confirmation" type="checkbox"
@@ -276,6 +284,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             label="I am aged 10 to 12 years old"
                                             disabled={dobOver13CheckboxChecked || registrationUser.dateOfBirth}
                                             onChange={(e) => setDob10To12CheckboxChecked(e?.target.checked)}
+                                            invalid={dobTooYoung}
                                         />}
                                     </Col>
                                 </Row>
