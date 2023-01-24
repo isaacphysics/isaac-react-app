@@ -105,7 +105,6 @@ interface AccountPageProps {
 }
 
 function hashEqual<T>(a: NonNullable<T>, b: NonNullable<T>, options?: any) {
-    console.log("Comparing: ", a, b);
     return hash(a, options) === hash(b, options);
 }
 
