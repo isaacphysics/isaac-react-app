@@ -77,7 +77,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const confirmedOverThirteen = dobOver13CheckboxChecked || isDobOverThirteen(registrationUser.dateOfBirth);
     const confirmedOverTen = dob10To12CheckboxChecked || isDobOverTen(registrationUser.dateOfBirth) || confirmedOverThirteen;
     const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
-    const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen)
+    const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen);
     const consentGivenOrNotRequired = isCS || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
     const isOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
     const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isOldEnoughForSite(registrationUser.dateOfBirth);
