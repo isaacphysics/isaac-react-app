@@ -105,6 +105,7 @@ interface AccountPageProps {
 }
 
 function hashEqual<T>(a: NonNullable<T>, b: NonNullable<T>, options?: any) {
+    console.log("Comparing: ", a, b);
     return hash(a, options) === hash(b, options);
 }
 
@@ -161,6 +162,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     useEffect(function keepUserContextsUpdated() {
         setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
     }, [userToUpdate?.registeredContexts]);
+    const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts, userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
@@ -222,11 +224,10 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
-            const userContextsUpdated = JSON.stringify(userContextsToUpdate) !== JSON.stringify(userToUpdate.registeredContexts);
             updateCurrentUser(
                 userToUpdate,
                 editingOtherUser ? {} : newPreferences,
-                userContextsUpdated ? userContextsToUpdate : undefined,
+                contextsChanged ? userContextsToUpdate : undefined,
                 currentPassword,
                 user,
                 true
@@ -361,7 +362,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     {/* Teacher connections does not have a save */}
                                     <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"
-                                        disabled={(!preferencesChanged && !userChanged) || activeTab === ACCOUNT_TAB.teacherconnections}
+                                        disabled={(!preferencesChanged && !userChanged && !contextsChanged) || activeTab === ACCOUNT_TAB.teacherconnections}
                                     />
                                 </Col>
                             </Row>

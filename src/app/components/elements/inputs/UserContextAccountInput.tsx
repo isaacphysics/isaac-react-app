@@ -45,17 +45,19 @@ function UserContextRow({
             onChange={e => {
                 const stage = e.target.value as STAGE;
                 let examBoard;
-                if (isCS) {
-                    // Set exam board to something sensible
-                    const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
-                    examBoard = getFilteredExamBoardOptions(
-                        {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-                    })[0]?.value || EXAM_BOARD.ALL;
-                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
-
-                    // Set display settings default values
-                    setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
+                if (!isCS) {
+                    setUserContext({...userContext, stage});
+                    return;
                 }
+                // Set exam board to something sensible (for CS)
+                const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
+                examBoard = getFilteredExamBoardOptions(
+                    {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
+                })[0]?.value || EXAM_BOARD.ALL;
+                setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
+
+                // Set display settings default values
+                setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
                 setUserContext({...userContext, stage, examBoard});
             }}
         >
