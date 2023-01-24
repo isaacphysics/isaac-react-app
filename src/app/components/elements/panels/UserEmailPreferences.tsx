@@ -1,20 +1,19 @@
 import {CardBody, FormGroup, Table} from "reactstrap";
-import React, {useEffect} from "react";
+import React from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {AppState, useAppSelector} from "../../../state";
 import {SITE_SUBJECT_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 
 interface UserEmailPreferencesProps {
-    emailPreferences: UserEmailPreferences;
+    emailPreferences: UserEmailPreferences | null | undefined;
     setEmailPreferences: (e: UserEmailPreferences) => void;
     submissionAttempted: boolean;
     idPrefix?: string;
 }
 export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
     const error = useAppSelector((state: AppState) => state && state.error);
-    const defaultEmailPreferences = {ASSIGNMENTS: true};
-    const isaacEmailPreferences = {
+    const isaacEmailPreferenceDescriptions = {
         assignments: siteSpecific(
             "Get notified when your teacher gives your group a new assignment.",
             "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher."
@@ -28,12 +27,6 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
             "Get valuable updates on our free student workshops/teacher CPD events happening near you."
         )
     };
-
-    // initially set email preferences to default value
-    // af599: I get what this useEffect is trying to do, but there must be a better way of doing it.
-    useEffect(() => {
-        setEmailPreferences(Object.assign(defaultEmailPreferences, emailPreferences))
-    }, []);
 
     let errorMessage = null;
     if (error && error.type === "generalError") {
@@ -58,7 +51,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">Assignments</td>
                         <td className="d-none d-sm-table-cell">
-                            {isaacEmailPreferences.assignments}
+                            {isaacEmailPreferenceDescriptions.assignments}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -71,7 +64,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">News</td>
                         <td className="d-none d-sm-table-cell">
-                            {isaacEmailPreferences.news}
+                            {isaacEmailPreferenceDescriptions.news}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput
@@ -84,7 +77,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                     <tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
-                            {isaacEmailPreferences.events}
+                            {isaacEmailPreferenceDescriptions.events}
                         </td>
                         <td className="text-center">
                             <TrueFalseRadioInput

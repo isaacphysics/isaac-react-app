@@ -42,10 +42,8 @@ import {
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
-    isCS,
     isDobOverThirteen,
     isStaff,
-    PROGRAMMING_LANGUAGE,
     SITE_SUBJECT_TITLE,
     validateEmail,
     validateEmailPreferences,
@@ -58,6 +56,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
+import hash from "object-hash";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -105,6 +104,10 @@ interface AccountPageProps {
     adminUserToEdit?: AdminUserGetState;
 }
 
+function hashEqual<T>(a: NonNullable<T>, b: NonNullable<T>, options?: any) {
+    return hash(a, options) === hash(b, options);
+}
+
 const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
     // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
@@ -128,6 +131,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             {...userToEdit, loggedIn: true, password: ""} :
             {...user, password: ""}
     );
+    const userChanged = useMemo(() => !hashEqual(userToUpdate, {...(editingOtherUser ? userToEdit : user), password: ""}), [userToUpdate, userToEdit, user, editingOtherUser]);
 
     // This is necessary for updating the user when the user updates fields from the required account info modal, for example.
     useEffect(function keepUserInSyncWithChangesElsewhere() {
@@ -147,8 +151,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>({});
-    const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO>({});
+    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences | null | undefined>();
+    const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO | null | undefined>({});
+    const preferencesChanged = useMemo(() => !hashEqual({...myUserPreferences, EMAIL_PREFERENCE: emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? undefined}, userPreferences ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
 
     // - User Contexts
     const [userContextsToUpdate, setUserContextsToUpdate] =
@@ -160,19 +165,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
     useEffect(() => {
-        const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentProgrammingLanguage = isCS ? (userPreferences?.PROGRAMMING_LANGUAGE ? userPreferences.PROGRAMMING_LANGUAGE: {}) : undefined;
-        const currentBooleanNotation = isCS ? (userPreferences?.BOOLEAN_NOTATION ? userPreferences.BOOLEAN_NOTATION: {}) : undefined;
-        const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
-        const currentUserPreferences: UserPreferencesDTO = {
-            EMAIL_PREFERENCE: currentEmailPreferences,
-            PROGRAMMING_LANGUAGE: currentProgrammingLanguage,
-            BOOLEAN_NOTATION: currentBooleanNotation,
-            DISPLAY_SETTING: currentDisplaySettings,
-        };
-
-        setEmailPreferences(currentEmailPreferences);
-        setMyUserPreferences(currentUserPreferences);
+        setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
+        setMyUserPreferences(userPreferences);
     }, [userPreferences]);
 
     // Set active tab using hash anchor
@@ -190,13 +184,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const isNewPasswordConfirmed = (newPassword == newPasswordConfirm) && validatePassword(newPasswordConfirm);
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
-        const clearLanguages: { [pl in PROGRAMMING_LANGUAGE]: false } = {
-            PSEUDOCODE: false, JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, ASSEMBLY: false, PLAINTEXT: false, SQL: false, NONE: false,
-        };
-
-        const fullNewProgrammingLanguage = {...clearLanguages, ...newProgrammingLanguage};
-
-        setMyUserPreferences({...myUserPreferences, PROGRAMMING_LANGUAGE: fullNewProgrammingLanguage});
+        setMyUserPreferences({...myUserPreferences, PROGRAMMING_LANGUAGE: newProgrammingLanguage});
     }
 
     function setBooleanNotation(newBooleanNotation: BooleanNotation) {
@@ -217,11 +205,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         event.preventDefault();
         setAttemptedAccountUpdate(true);
 
+        let newPreferences = {...myUserPreferences};
+
         // Only update email preferences on the email preferences tab
         if (activeTab == ACCOUNT_TAB.emailpreferences) {
             if (validateEmailPreferences(emailPreferences)) {
-                myUserPreferences.EMAIL_PREFERENCE ||= {}; // Make sure there is something to Object.assign into
-                Object.assign(myUserPreferences.EMAIL_PREFERENCE, emailPreferences);
+                newPreferences = {...newPreferences, EMAIL_PREFERENCE: {...emailPreferences}};
             } else {
                 return; // early exit
             }
@@ -229,14 +218,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
-            allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
+            allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
             (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
             const userContextsUpdated = JSON.stringify(userContextsToUpdate) !== JSON.stringify(userToUpdate.registeredContexts);
             updateCurrentUser(
                 userToUpdate,
-                editingOtherUser ? {} : myUserPreferences,
+                editingOtherUser ? {} : newPreferences,
                 userContextsUpdated ? userContextsToUpdate : undefined,
                 currentPassword,
                 user,
@@ -244,6 +233,12 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             );
         }
     }
+
+    // Changing tab clears the email preferences - stops the user from modifying them when not explicitly on the
+    // email preferences tab
+    useEffect(() => {
+        setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
+    }, [activeTab]);
 
     return <Container id="account-page" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
@@ -312,9 +307,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                 <UserDetails
                                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                                     userContexts={userContextsToUpdate} setUserContexts={setUserContextsToUpdate}
-                                    programmingLanguage={myUserPreferences.PROGRAMMING_LANGUAGE || {}} setProgrammingLanguage={setProgrammingLanguage}
-                                    booleanNotation={myUserPreferences.BOOLEAN_NOTATION || {}} setBooleanNotation={setBooleanNotation}
-                                    displaySettings={myUserPreferences.DISPLAY_SETTING || {}} setDisplaySettings={setDisplaySettings}
+                                    programmingLanguage={myUserPreferences?.PROGRAMMING_LANGUAGE} setProgrammingLanguage={setProgrammingLanguage}
+                                    booleanNotation={myUserPreferences?.BOOLEAN_NOTATION} setBooleanNotation={setBooleanNotation}
+                                    displaySettings={myUserPreferences?.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings}
                                     submissionAttempted={attemptedAccountUpdate} editingOtherUser={editingOtherUser}
                                     userAuthSettings={userAuthSettings}
                                 />
@@ -366,7 +361,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     {/* Teacher connections does not have a save */}
                                     <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"
-                                        disabled={activeTab === ACCOUNT_TAB.teacherconnections}
+                                        disabled={(!preferencesChanged && !userChanged) || activeTab === ACCOUNT_TAB.teacherconnections}
                                     />
                                 </Col>
                             </Row>

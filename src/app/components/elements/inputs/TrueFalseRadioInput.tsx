@@ -11,8 +11,7 @@ interface TrueFalseRadioProps<T> {
     trueLabel?: string;
     falseLabel?: string;
 }
-export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
-    const {id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"} = props;
+export const TrueFalseRadioInput = ({id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps<any>) => {
     const invalid = submissionAttempted && ![true, false].includes(stateObject[propertyName]);
 
     return <RS.FormGroup>
@@ -22,12 +21,9 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             </RS.Label>
             <RS.CustomInput
                 id={`${id}-t`} type="radio" name={id} color="$secondary" className="d-inline"
-                checked={stateObject[propertyName] === true} invalid={invalid}
+                checked={stateObject?.[propertyName] === true} invalid={invalid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if (e.target.checked) {
-                        stateObject[propertyName] = true;
-                    }
-                    setStateFunction(Object.assign({}, stateObject));
+                    setStateFunction({...stateObject, [propertyName]: e.target.checked});
                 }}
                 aria-describedby={`${id}-feedback`}
             />
@@ -38,12 +34,9 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             </RS.Label>
             <RS.CustomInput
                 id={`${id}-f`} type="radio" name={id} color="$secondary" className="d-inline"
-                checked={stateObject[propertyName] === false} invalid={invalid}
+                checked={stateObject?.[propertyName] === false} invalid={invalid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if (e.target.checked) {
-                        stateObject[propertyName] = false;
-                    }
-                    setStateFunction(Object.assign({}, stateObject));
+                    setStateFunction({...stateObject, [propertyName]: !e.target.checked});
                 }}
                 aria-describedby={`${id}-feedback`}
             />
