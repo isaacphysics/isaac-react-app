@@ -42,7 +42,7 @@ import {
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
-    isCS,
+    isCS, isDefined, isDobOldEnoughForSite,
     isDobOverThirteen,
     isStaff,
     PROGRAMMING_LANGUAGE,
@@ -230,7 +230,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
-            (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
+            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
             const userContextsUpdated = JSON.stringify(userContextsToUpdate) !== JSON.stringify(userToUpdate.registeredContexts);

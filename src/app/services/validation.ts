@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isCS, isStudent, isTutor, STAGE} from "./";
+import {EXAM_BOARD, isCS, isStudent, isTutor, siteSpecific, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -38,6 +38,7 @@ const isDobOverN = (n: number, dateOfBirth?: Date) => {
 
 export const isDobOverThirteen = (dateOfBirth?: Date) => isDobOverN(13, dateOfBirth);
 export const isDobOverTen = (dateOfBirth?: Date) => isDobOverN(10, dateOfBirth);
+export const isDobOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
 
 export const MINIMUM_PASSWORD_LENGTH = 6;
 export const validatePassword = (password: string) => {

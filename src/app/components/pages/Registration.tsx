@@ -21,7 +21,7 @@ import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {
     FIRST_LOGIN_STATE,
     isCS,
-    isDefined,
+    isDefined, isDobOldEnoughForSite,
     isDobOverTen,
     isDobOverThirteen,
     isPhy,
@@ -79,8 +79,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
     const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen);
     const consentGivenOrNotRequired = isCS || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
-    const isOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
-    const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isOldEnoughForSite(registrationUser.dateOfBirth);
+    const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isDobOldEnoughForSite(registrationUser.dateOfBirth);
 
     // Form's submission method
     const register = (event: React.FormEvent<HTMLFormElement>) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import * as RS from "reactstrap";
 import {ValidationUser} from "../../../../IsaacAppTypes";
-import {isDefined, isDobOverTen, isDobOverThirteen, siteSpecific} from "../../../services";
+import {isDefined, isDobOldEnoughForSite, isDobOverTen, isDobOverThirteen, siteSpecific} from "../../../services";
 import {DateInput} from "./DateInput";
 
 interface DobInputProps {
@@ -11,12 +11,10 @@ interface DobInputProps {
     editingOtherUser?: boolean;
 }
 export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, editingOtherUser}: DobInputProps) => {
-    const isOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
-
     return <RS.FormGroup>
         <RS.Label htmlFor="dob-input">Date of birth</RS.Label>
         <DateInput
-            invalid={isDefined(userToUpdate.dateOfBirth) && !isOldEnoughForSite(userToUpdate.dateOfBirth)}
+            invalid={isDefined(userToUpdate.dateOfBirth) && !isDobOldEnoughForSite(userToUpdate.dateOfBirth)}
             id="dob-input"
             name="date-of-birth"
             defaultValue={userToUpdate.dateOfBirth as unknown as string}
