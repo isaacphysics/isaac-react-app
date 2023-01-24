@@ -201,6 +201,13 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         }));
     }
 
+    const accountInfoChanged = contextsChanged || userChanged || preferencesChanged;
+    useEffect(() => {
+        if (accountInfoChanged) {
+            return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
+        }
+    }, [accountInfoChanged]);
+
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -361,7 +368,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                                     {/* Teacher connections does not have a save */}
                                     <Input
                                         type="submit" value="Save" className="btn btn-block btn-secondary border-0"
-                                        disabled={(!preferencesChanged && !userChanged && !contextsChanged) || activeTab === ACCOUNT_TAB.teacherconnections}
+                                        disabled={!accountInfoChanged || activeTab === ACCOUNT_TAB.teacherconnections}
                                     />
                                 </Col>
                             </Row>
