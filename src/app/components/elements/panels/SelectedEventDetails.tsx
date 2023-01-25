@@ -31,7 +31,7 @@ export const SelectedEventDetails = ({eventId}: {eventId: string}) => {
                 }
 
                 <strong>Event status: </strong>
-                {selectedEvent.eventStatus}
+                <span className={selectedEvent.isCancelled ? "text-danger font-weight-bold" : ""}>{selectedEvent.eventStatus}</span>
                 <br />
 
                 <strong>Event start: </strong>
