@@ -187,8 +187,16 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
             It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
             <br/>
-            Additional teachers cannot modify or delete each others assignments by default, or archive and rename the group, but
-            these features can be enabled.
+            {group.additionalManagerPrivileges
+                ? <>Additional managers have been allowed by the group owner to:
+                    <ul>
+                        <li>Modify and delete all assignments to the group</li>
+                        <li>Archive the group</li>
+                        <li>Rename the group</li>
+                    </ul>
+                </>
+                : "Additional managers cannot modify or delete each others assignments by default, or archive and rename the group, but these features can be enabled by the group owner."
+            }
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
