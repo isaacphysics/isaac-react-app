@@ -446,11 +446,15 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                 root: null,
                 rootMargin: '0px',
                 threshold: 1.0,
-            }
+            };
             headerScrollerObserver.current = new IntersectionObserver(headerScrollerCallback, options);
             headerScrollerObserver.current.observe(headerScrollerSentinel.current);
             headerScrollerFlag.current = true;
-            return () => headerScrollerObserver?.current?.disconnect();
+            return () => {
+                headerScrollerObserver?.current?.disconnect();
+                headerScrollerObserver.current = undefined;
+                headerScrollerFlag.current = false;
+            };
         }
     }, [assignmentsSetByMe, gameboards]);
 
