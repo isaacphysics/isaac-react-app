@@ -29,6 +29,7 @@ import {
     selectOnChange,
     siteSpecific,
     STAGE,
+    TAG_ID,
     useUserContext
 } from "../../services";
 import Select from "react-select";
@@ -76,6 +77,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     }, [setGameboardTitle, setQuestionOrder, setSelectedQuestions, setWildcardId, baseGameboardId, concepts, eventLog, user]);
 
     const initialise = () => {
+        setGameboardURL(undefined);
         setGameboardTitle("");
         setGameboardTags([]);
         setQuestionOrder([]);
@@ -188,7 +190,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Input id="gameboard-builder-url"
                                type="text"
                                placeholder="Optional"
-                               value={gameboardURL}
+                               value={gameboardURL ?? ""}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    setGameboardURL(e.target.value);
                                }}
@@ -304,14 +306,14 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             if (isCS) {
                                 subjects.push("computer_science");
                             } else {
-                                const definedSubjects = ["physics", "maths", "chemistry"];
+                                const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
                                 selectedQuestions?.forEach((item) => {
                                     const tags = intersection(definedSubjects, item.tags || []);
                                     tags.forEach((tag: string) => subjects.push(tag));
                                 });
                                 // If none of the questions have a subject tag, default to physics
                                 if (subjects.length === 0) {
-                                    subjects.push("physics");
+                                    subjects.push(TAG_ID.physics);
                                 }
                                 subjects = Array.from(new Set(subjects));
                             }

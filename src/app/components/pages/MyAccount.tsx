@@ -42,7 +42,7 @@ import {
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
-    isCS,
+    isCS, isDefined, isDobOldEnoughForSite,
     isDobOverThirteen,
     isStaff,
     PROGRAMMING_LANGUAGE,
@@ -205,9 +205,9 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setDisplaySettings(newDisplaySettings: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) {
         setMyUserPreferences(oldPref => ({
-            ...myUserPreferences,
+            ...oldPref,
             DISPLAY_SETTING: typeof newDisplaySettings === "function"
-                ? newDisplaySettings(oldPref.DISPLAY_SETTING)
+                ? newDisplaySettings(oldPref?.DISPLAY_SETTING)
                 : newDisplaySettings
         }));
     }
@@ -230,7 +230,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...myUserPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
-            (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
+            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
             const userContextsUpdated = JSON.stringify(userContextsToUpdate) !== JSON.stringify(userToUpdate.registeredContexts);
@@ -353,7 +353,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                             </TabPane>}
 
                             {!editingOtherUser && <TabPane tabId={ACCOUNT_TAB.betafeatures}>
-                                <UserBetaFeatures displaySettings={myUserPreferences.DISPLAY_SETTING} setDisplaySettings={setDisplaySettings} />
+                                <UserBetaFeatures displaySettings={myUserPreferences?.DISPLAY_SETTING ?? {}} setDisplaySettings={setDisplaySettings} />
                             </TabPane>}
                         </TabContent>
 

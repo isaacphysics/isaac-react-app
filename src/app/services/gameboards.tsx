@@ -1,9 +1,10 @@
-import {GameboardDTO, RegisteredUserDTO} from "../../IsaacApiTypes";
-import React, {useCallback, useEffect, useState} from "react";
-import countBy from "lodash/countBy"
-import intersection from "lodash/intersection"
-import {determineAudienceViews, isCS, isFound, isPhy} from "./";
-import {BoardOrder, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
+import {Difficulty, GameboardDTO, RegisteredUserDTO, Stage} from "../../IsaacApiTypes";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import countBy from "lodash/countBy";
+import sortBy from "lodash/sortBy";
+import intersection from "lodash/intersection";
+import {determineAudienceViews, difficultiesOrdered, isCS, isFound, isPhy, stagesOrdered} from "./";
+import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
 export enum BoardCompletions {
@@ -95,7 +96,7 @@ export const determineGameboardSubjects = (board: GameboardDTO) => {
     if (isCS) {
         return ["compsci"];
     }
-    const subjects = ["physics", "maths", "chemistry"];
+    const subjects = ["physics", "maths", "chemistry", "biology"];
     let allSubjects: string[] = [];
     board.contents?.map((item) => {
         let tags = intersection(subjects, item.tags || []);
@@ -125,20 +126,34 @@ export function comparatorFromOrderedValues<T>(orderedPropertyValues: T[]) {
     }
 }
 
-export function allPropertiesFromAGameboard<T extends keyof ViewingContext>(
-    gameboard: GameboardDTO | undefined, property: T, orderedPropertyValues?: ViewingContext[T][]
-): NonNullable<ViewingContext[T]>[] {
-    if (!gameboard) {return [];}
-    return Array.from((gameboard?.contents || [])
-        .reduce((aggregator, gameboardItem) => {
+// A function that returns ordered (stage, difficulties) tuples for a gameboard
+export function determineGameboardStagesAndDifficulties(gameboard: GameboardDTO | undefined): [Stage, Difficulty[]][] {
+    // Collect stage difficulties
+    const stageDifficultiesMap: {[stage in Stage]?: Difficulty[]} = {};
+    if (gameboard) {
+        gameboard.contents?.forEach(gameboardItem => {
             determineAudienceViews(gameboardItem.audience, gameboardItem.creationContext).forEach(v => {
-                if (v[property]) {
-                    aggregator.add(v[property]!); // need "!" to tell TS that it's not undefined even though we check that
+                if (v.stage && v.difficulty) {
+                    if (!stageDifficultiesMap[v.stage]) {
+                        stageDifficultiesMap[v.stage] = [];
+                    }
+                    stageDifficultiesMap[v.stage]?.push(v.difficulty);
                 }
             });
-            return aggregator;
-        }, new Set<NonNullable<ViewingContext[T]>>()))
-        .sort(orderedPropertyValues ? comparatorFromOrderedValues(orderedPropertyValues) : () => 0);
+        });
+    }
+
+    // Create ordered list of stage difficulties
+    const orderedStageDifficulties: [Stage, Difficulty[]][] = [];
+    stagesOrdered.forEach(stage => {
+        if (stageDifficultiesMap[stage]) {
+            const orderedAndDeduplicatedDifficulties =
+                Array.from(new Set(stageDifficultiesMap[stage])).sort(comparatorFromOrderedValues(difficultiesOrdered));
+            orderedStageDifficulties.push([stage, orderedAndDeduplicatedDifficulties]);
+        }
+    });
+
+    return orderedStageDifficulties;
 }
 
 export enum BoardViews {
@@ -157,7 +172,8 @@ export enum BoardSubjects {
     "all" = "All",
     "physics" = "Physics",
     "maths" = "Maths",
-    "chemistry" = "Chemistry"
+    "chemistry" = "Chemistry",
+    "biology" = "Biology"
 }
 
 export enum BoardLimit {
@@ -176,6 +192,13 @@ export const BOARD_ORDER_NAMES: {[key in BoardOrder]: string} = {
     "-title": "Title Descending",
     "completion": "Completion Ascending",
     "-completion": "Completion Descending"
+};
+
+const BOARD_SORT_FUNCTIONS = {
+    [BoardOrder.visited]: (b: GameboardDTO) => b.lastVisited?.valueOf(),
+    [BoardOrder.created]: (b: GameboardDTO) => b.creationDate?.valueOf(),
+    [BoardOrder.title]: (b: GameboardDTO) => b.title,
+    [BoardOrder.completion]: (b: GameboardDTO) => b.percentageCompleted,
 };
 
 const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: BoardLimit) =>
@@ -209,14 +232,19 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
 
     // Refetches the boards when the order changes - should fetch the same
     // number as is currently on screen
-    useEffect(() => loadInitial(numberOfBoards), [boardOrder]);
+    useEffect(() => {
+        // Only refetch if we cannot reorder the boards in the frontend (we need all the boards to reorder them)
+        if (boardLimit != BoardLimit.All) {
+            loadInitial(numberOfBoards);
+        }
+    }, [boardOrder]);
 
     // Change board limit when view changes between table and cards
     useEffect(() => {
         if (boardView == BoardViews.table) {
-            setBoardLimit(BoardLimit.All)
+            setBoardLimit(BoardLimit.All);
         } else if (boardView == BoardViews.card) {
-            setBoardLimit(BoardLimit.six)
+            setBoardLimit(BoardLimit.six);
         }
     }, [boardView]);
 
@@ -247,11 +275,26 @@ export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit)
         setNumberOfBoards(0);
     }, [boards]);
 
+    // If we have all the users boards already, order them client-side
+    const orderedBoards = useMemo<Boards | null>(() => {
+        if (boards == null || boardLimit != BoardLimit.All) {
+            return boards;
+        }
+        const boardOrderNegative = boardOrder.at(0) == "-";
+        const boardOrderKind = (boardOrderNegative ? boardOrder.slice(1) : boardOrder) as "created" | "visited" | "completion" | "title";
+        const orderedBoards = sortBy(boards?.boards, BOARD_SORT_FUNCTIONS[boardOrderKind]);
+        if (["visited", "created", "-completion", "-title"].includes(boardOrder)) orderedBoards.reverse();
+        return {
+            totalResults: boards?.totalResults ?? 0,
+            boards: orderedBoards
+        };
+    }, [boards, boardLimit, boardOrder, boardView]);
+
     return {
-        boards, loading, viewMore,
+        boards: orderedBoards, loading, viewMore,
         boardOrder, setBoardOrder,
         boardView, setBoardView,
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
-    }
+    };
 }

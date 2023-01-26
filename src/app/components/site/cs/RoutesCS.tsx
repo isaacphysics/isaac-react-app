@@ -8,7 +8,7 @@ import {Students} from "../../pages/Students";
 import {TeacherTools} from "../../pages/TeacherTools";
 import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
-import {isEventLeaderOrStaff, isTeacher, STAGE} from "../../../services";
+import {isEventLeaderOrStaff, isTutorOrAbove, STAGE} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
@@ -21,9 +21,9 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
 
     // Assignments
-    <TrackedRoute key={key++} exact path="/my_markbook" component={AssignmentProgress} />,
+    <TrackedRoute key={key++} exact path="/my_markbook" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
-    <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTeacher} component={SingleAssignmentProgress} />,
+    <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
 
     // Topics

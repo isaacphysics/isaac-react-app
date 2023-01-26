@@ -27,6 +27,12 @@ import {jest} from "@jest/globals";
 
 const mockStore = configureMockStore([thunk, ...middleware]);
 const axiosMock = new MockAdapter(endpoint);
+const middlewareRegistrationActions = [{type: 'isaacApi/config/middlewareRegistered', payload: 'some unique string'}];
+
+function expectActionsToStartWithMiddlewareRegistration(actualActions: Action[]): Action[] {
+    expect(actualActions.slice(0, middlewareRegistrationActions.length).map(a => a.type)).toEqual(['isaacApi/config/middlewareRegistered']);
+    return actualActions.slice(middlewareRegistrationActions.length);
+}
 
 describe("middleware",  () => {
     it("returns any value that the action returns", async () => {
@@ -63,14 +69,16 @@ describe("requestCurrentUser action", () => {
         const expectedFinalActions = [{type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, user: dameShirley}];
 
         const actualActions = store.getActions();
-        expect(actualActions.length)
+
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions.length)
             .toEqual(expectedFirstActions.length + expectedAsyncActions.length + expectedFinalActions.length);
-        expect(actualActions.slice(0, expectedFirstActions.length)).toEqual(expectedFirstActions);
+        expect(actualIsaacActions.slice(0, expectedFirstActions.length)).toEqual(expectedFirstActions);
         expectedAsyncActions.forEach(expectedAsyncAction => {
-            expect(actualActions.slice(expectedFirstActions.length, -expectedFinalActions.length))
+            expect(actualIsaacActions.slice(expectedFirstActions.length, -expectedFinalActions.length))
                 .toContainEqual(expectedAsyncAction);
         });
-        expect(actualActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
+        expect(actualIsaacActions.slice(-expectedFinalActions.length)).toEqual(expectedFinalActions);
         expect(axiosMock.history.get.length).toBe(3);
     });
 
@@ -83,7 +91,9 @@ describe("requestCurrentUser action", () => {
             {type: ACTION_TYPE.CURRENT_USER_REQUEST},
             {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 
@@ -95,7 +105,9 @@ describe("requestCurrentUser action", () => {
             {type: ACTION_TYPE.CURRENT_USER_REQUEST},
             {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 
@@ -107,7 +119,9 @@ describe("requestCurrentUser action", () => {
             {type: ACTION_TYPE.CURRENT_USER_REQUEST},
             {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 });
@@ -118,7 +132,9 @@ describe("registerQuestion action", () => {
         const expectedActions = [{type: ACTION_TYPE.QUESTION_REGISTRATION, questions: [manVsHorse]}];
         const store = mockStore();
         store.dispatch(registerQuestions([manVsHorse]) as any);
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
     });
 });
 
@@ -135,14 +151,16 @@ describe("requestConstantsUnits action", () => {
             {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
             {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 
     it("doesn't dispatch CONSTANTS_UNITS_REQUEST if already in the store", async () => {
         const store = mockStore({constants: {units: unitsList}});
         await store.dispatch(requestConstantsUnits() as any);
-        expect(store.getActions().length).toBe(0);
+        expect(store.getActions().length).toEqual(0);
         expect(axiosMock.history.get.length).toBe(0);
     });
 
@@ -154,7 +172,9 @@ describe("requestConstantsUnits action", () => {
             {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
             {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 
@@ -166,7 +186,9 @@ describe("requestConstantsUnits action", () => {
             {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
             {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 });
@@ -184,7 +206,9 @@ describe("fetchSearch action", () => {
             {type: ACTION_TYPE.SEARCH_REQUEST, query: "foo", types: "bar"},
             {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS, searchResults: searchResultsList}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(1);
     });
 
@@ -194,7 +218,9 @@ describe("fetchSearch action", () => {
         const expectedActions = [
             {type: ACTION_TYPE.SEARCH_REQUEST, query: "", types: "types"}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
         expect(axiosMock.history.get.length).toBe(0);
     });
 });
@@ -224,22 +250,30 @@ describe("toasts actions", () => {
         const expectedActions: Action[] = [
             {type: ACTION_TYPE.TOASTS_SHOW, toast: someTimedToast}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        let actualActions = store.getActions();
+        let actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
 
         jest.runOnlyPendingTimers();
         expectedActions.push(
             {type: ACTION_TYPE.TOASTS_HIDE, toastId: toastId}
         );
-        expect(store.getActions()).toEqual(expectedActions);
+        actualActions = store.getActions();
+        actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
 
         jest.runOnlyPendingTimers();
         expectedActions.push(
             {type: ACTION_TYPE.TOASTS_REMOVE, toastId}
         );
-        expect(store.getActions()).toEqual(expectedActions);
+        actualActions = store.getActions();
+        actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
 
         jest.runOnlyPendingTimers();
-        expect(store.getActions()).toEqual(expectedActions);
+        actualActions = store.getActions();
+        actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
     });
 
     it("does not register any actions related to the toast if a timeout is not set", async () => {
@@ -248,10 +282,14 @@ describe("toasts actions", () => {
         const expectedActions: Action[] = [
             {type: ACTION_TYPE.TOASTS_SHOW, toast: someUnTimedToast}
         ];
-        expect(store.getActions()).toEqual(expectedActions);
+        let actualActions = store.getActions();
+        let actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
 
         jest.runOnlyPendingTimers();
-        expect(store.getActions()).toEqual(expectedActions);
+        actualActions = store.getActions();
+        actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toEqual(expectedActions);
     });
 });
 
@@ -269,7 +307,9 @@ describe("requestEmailVerification action", () => {
             {type: ACTION_TYPE.TOASTS_SHOW},
             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
         ];
-        expect(store.getActions()).toMatchObject(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toMatchObject(expectedActions);
         expect(axiosMock.history.get.length).toBe(0);
     });
 
@@ -282,7 +322,9 @@ describe("requestEmailVerification action", () => {
             {type: ACTION_TYPE.TOASTS_SHOW},
             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_SUCCESS}
         ];
-        expect(store.getActions()).toMatchObject(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toMatchObject(expectedActions);
         expect(axiosMock.history.post.length).toBe(1);
     });
 
@@ -295,7 +337,9 @@ describe("requestEmailVerification action", () => {
             {type: ACTION_TYPE.TOASTS_SHOW},
             {type: ACTION_TYPE.USER_REQUEST_EMAIL_VERIFICATION_RESPONSE_FAILURE}
         ];
-        expect(store.getActions()).toMatchObject(expectedActions);
+        const actualActions = store.getActions();
+        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
+        expect(actualIsaacActions).toMatchObject(expectedActions);
         expect(axiosMock.history.post.length).toBe(1);
     });
 

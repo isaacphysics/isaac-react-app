@@ -21,6 +21,7 @@ import {useCurrentQuestionAttempt} from "../../services";
 import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
+import classNames from "classnames";
 
 function selectUnits(doc: IsaacNumericQuestionDTO, questionId: string, units?: string[], userId?: number): (string|undefined)[] {
     const seedValue = userId + "|" + questionId;
@@ -90,9 +91,7 @@ function wrapUnitForSelect(unit?: string): string {
     }
 }
 
-type IsaacNumericQuestionProps = IsaacQuestionProps<IsaacNumericQuestionDTO> & {validationResponse?: QuantityValidationResponseDTO};
-
-const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacNumericQuestionProps) => {
+const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: IsaacQuestionProps<IsaacNumericQuestionDTO, QuantityValidationResponseDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<QuantityDTO>(questionId);
 
@@ -144,10 +143,13 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     <div className="numeric-value w-100 w-sm-50 w-md-100 w-lg-50">
                         <Label className="w-100">
                             Value <br />
-                            <InputGroup>
-                                <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong || undefined}
+                            <InputGroup className={"feedback-zone nq-feedback"}>
+                                <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                        onChange={updateValue} readOnly={readonly}
                                 />
+                                {currentAttemptValueWrong && <div className={"feedback-box"}>
+                                    <span className={"feedback incorrect"}><b>!</b></span>
+                                </div>}
                                 {!readonly && <InputGroupAddon addonType="append">
                                     <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
                                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
@@ -165,10 +167,17 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                         <Label className="w-100 ml-sm-2 ml-md-0 ml-lg-5">
                             Unit{noDisplayUnit && "s"} <br/>
                             <Dropdown disabled={readonly} isOpen={isOpen && noDisplayUnit} toggle={() => {setIsOpen(!isOpen);}}>
-                                <DropdownToggle disabled={readonly || !noDisplayUnit} className={`${noDisplayUnit ? "" : "border-dark display-unit"} px-2 py-1`} color={noDisplayUnit ? (currentAttemptUnitsWrong ? "danger" : undefined) : "white"}>
+                                <DropdownToggle
+                                    disabled={readonly || !noDisplayUnit}
+                                    className={classNames("feedback-zone px-2 py-1", {"border-dark display-unit": !noDisplayUnit, "feedback-showing": currentAttemptUnitsWrong && noDisplayUnit})}
+                                    color={noDisplayUnit ? undefined : "white"}
+                                >
                                     <Markup encoding={"latex"}>
                                         {wrapUnitForSelect(noDisplayUnit ? currentAttemptUnits : doc.displayUnit)}
                                     </Markup>
+                                    {currentAttemptUnitsWrong && noDisplayUnit && <div className={"feedback-box"}>
+                                        <span className={"feedback incorrect"}>✘</span>
+                                    </div>}
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     {selectedUnits.map((unit) =>

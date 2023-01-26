@@ -95,8 +95,8 @@ export const api = {
         handlePasswordReset: (params: {token: string; password: string}) => {
             return endpoint.post(`/users/resetpassword/${params.token}`, securePadPasswordReset({password: params.password}));
         },
-        updateCurrent: (registeredUser: ValidationUser, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
-            :  AxiosPromise<ApiTypes.RegisteredUserDTO> =>
+        updateCurrent: (registeredUser: Immutable<ValidationUser>, userPreferences: UserPreferencesDTO, passwordCurrent: string | null, registeredUserContexts?: UserContext[])
+            :  AxiosPromise<Immutable<ApiTypes.RegisteredUserDTO>> =>
         {
             return endpoint.post(`/users`, {registeredUser, userPreferences, passwordCurrent, registeredUserContexts});
         },
@@ -188,7 +188,7 @@ export const api = {
             }
         },
         modifyUserRoles: {
-            post: (role: ApiTypes.Role, userIds: number[]) => {
+            post: (role: ApiTypes.UserRole, userIds: number[]) => {
                 return endpoint.post(`/admin/users/change_role/${role}`, userIds);
             }
         },

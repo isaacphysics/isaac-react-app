@@ -11,7 +11,7 @@ import {
     GameboardDTO,
     GameboardItem,
     ItemDTO,
-    QuestionDTO,
+    QuestionDTO, QuestionValidationResponseDTO,
     QuizAttemptDTO,
     QuizFeedbackMode,
     RegisteredUserDTO,
@@ -30,7 +30,6 @@ import {
     TAG_ID,
     TAG_LEVEL
 } from "./app/services";
-import {DropResult} from "react-beautiful-dnd";
 import {Immutable} from "immer";
 
 export type Action =
@@ -39,10 +38,10 @@ export type Action =
     | {type: ACTION_TYPE.USER_SNAPSHOT_PARTIAL_UPDATE; userSnapshot: UserSnapshot}
 
     | {type: ACTION_TYPE.CURRENT_USER_REQUEST}
-    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_REQUEST}
-    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.USER_DETAILS_UPDATE_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_REQUEST}
     | {type: ACTION_TYPE.USER_AUTH_SETTINGS_RESPONSE_SUCCESS; userAuthSettings: ApiTypes.UserAuthenticationSettingsDTO}
@@ -65,7 +64,7 @@ export type Action =
     | {type: ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE; errorMessage: string}
 
     | {type: ACTION_TYPE.USER_LOG_IN_REQUEST; provider: ApiTypes.AuthenticationProvider}
-    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: ApiTypes.RegisteredUserDTO}
+    | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS; user: Immutable<ApiTypes.RegisteredUserDTO>}
     | {type: ACTION_TYPE.USER_LOG_IN_RESPONSE_FAILURE; errorMessage: string}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_REQUEST}
     | {type: ACTION_TYPE.USER_INCOMING_PASSWORD_RESET_SUCCESS}
@@ -108,7 +107,7 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS; users: UserSummaryForAdminUsersDTO[]}
     | {type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_GET_REQUEST}
-    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: RegisteredUserDTO}
+    | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS; getUsers: Immutable<RegisteredUserDTO>}
     | {type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST}
     | {type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS}
@@ -202,7 +201,7 @@ export type Action =
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_SUCCESS; terms: ApiTypes.GlossaryTermDTO[]}
     | {type: ACTION_TYPE.GLOSSARY_TERMS_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string}
+    | {type: ACTION_TYPE.QUESTION_REGISTRATION; questions: ApiTypes.QuestionDTO[]; accordionClientId?: string, isQuiz?: boolean}
     | {type: ACTION_TYPE.QUESTION_DEREGISTRATION; questionIds: string[]}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_REQUEST; questionId: string; attempt: Immutable<ApiTypes.ChoiceDTO>}
     | {type: ACTION_TYPE.QUESTION_ATTEMPT_RESPONSE_SUCCESS; questionId: string; response: ApiTypes.QuestionValidationResponseDTO}
@@ -269,7 +268,7 @@ export type Action =
     | {type: ACTION_TYPE.GROUPS_MEMBERS_RESET_PASSWORD_RESPONSE_FAILURE; member: AppGroupMembership}
 
     | {type: ACTION_TYPE.EVENTS_REQUEST}
-    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: ApiTypes.IsaacEventPageDTO[]; total: number}
+    | {type: ACTION_TYPE.EVENTS_RESPONSE_SUCCESS; augmentedEvents: AugmentedEvent[]; total: number}
     | {type: ACTION_TYPE.EVENTS_RESPONSE_FAILURE}
     | {type: ACTION_TYPE.EVENTS_CLEAR}
 
@@ -407,10 +406,11 @@ export type NOT_FOUND_TYPE = 404;
 
 export type ConfidenceType = "quick_question" | "question";
 
-export interface IsaacQuestionProps<T extends QuestionDTO> {
+export interface IsaacQuestionProps<T extends QuestionDTO, R extends QuestionValidationResponseDTO = QuestionValidationResponseDTO> {
     doc: T;
     questionId: string;
     readonly?: boolean;
+    validationResponse?: Immutable<R>;
 }
 
 export interface AppQuestionDTO extends ApiTypes.QuestionDTO {
@@ -434,7 +434,9 @@ export interface ShortcutResponse extends ContentSummaryDTO {
     hash?: string;
 }
 
-export interface UserBetaFeaturePreferences {}
+export interface UserBetaFeaturePreferences {
+    SCHEDULE_ASSIGNMENTS?: boolean;
+}
 
 export interface UserEmailPreferences {
     NEWS_AND_UPDATES?: boolean;
@@ -606,11 +608,17 @@ export const AccordionSectionContext = React.createContext<{id: string | undefin
     {id: undefined, clientId: "unknown", open: /* null is a meaningful default state for IsaacVideo */ null}
 );
 export const QuestionContext = React.createContext<string | undefined>(undefined);
-export const ClozeDropRegionContext = React.createContext<{register: (id: string, index: number) => void, questionPartId: string, updateAttemptCallback: (dropResult: DropResult) => void, readonly: boolean, inlineDropValueMap: {[p: string]: ClozeItemDTO}, borderMap: {[p: string]: boolean}} | undefined>(undefined);
+export const ClozeDropRegionContext = React.createContext<{
+    register: (id: string, index: number) => void,
+    questionPartId: string, readonly: boolean,
+    inlineDropValueMap: {[p: string]: ClozeItemDTO},
+    dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
+    shouldGetFocus: (id: string) => boolean
+} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
-export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
+export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
@@ -649,6 +657,7 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     isRecurring?: boolean;
     isWaitingListOnly?: boolean;
     isNotClosed?: boolean;
+    isCancelled?: boolean;
     field?: "physics" | "maths";
     userBookingStatus?: ApiTypes.BookingStatus;
 }
@@ -877,6 +886,7 @@ export interface PageSettings {
     setColourBlind: (newValue: boolean) => void;
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
+    isTeacher: boolean;
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;

@@ -25,7 +25,7 @@ import {
 import {
     api,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     schoolNameWithPostcode,
     SITE_SUBJECT_TITLE,
     validateEmail,
@@ -56,7 +56,12 @@ export const TeacherRequest = () => {
 
     const urn = user?.loggedIn && user.schoolId || "";
     const subject = "Teacher Account Request";
-    const message = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: " + school + "\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\nAny other information: " + otherInformation + "\n\nThanks, \n\n" + firstName + " " + lastName;
+    const message = "Hello,\n\n" +
+        "Please could you convert my Isaac account into a teacher account.\n\n" +
+        "My school is: " + school + "\n" +
+        "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\n" +
+        "Any other information: " + otherInformation + "\n\n" +
+        "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
 
     function isEmailDomainAllowed(email: string) {
@@ -88,10 +93,14 @@ export const TeacherRequest = () => {
         isEmailDomainAllowed(emailAddress);
     }, [user]);
 
+    // Direct private tutors and parents towards the tutor account request page
     const noSchool = <p>
-        {"If you don't have an associated school please fill out our "}
-        <Link to="/contact?preset=teacherRequest">Contact us</Link>
-        {" form."}
+        If you don't have an associated school please fill out our
+        {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
+        form. If you are a private tutor or parent, you can
+        {" "}<Link to="/tutor_account_request">
+            request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+        </Link>.
     </p>;
 
 
@@ -104,7 +113,7 @@ export const TeacherRequest = () => {
                         <IsaacContent doc={warningFragment} />
                     </Alert>}
                     <Card>
-                        {isTeacher(user) &&
+                        {isTeacherOrAbove(user) &&
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3">
@@ -117,7 +126,7 @@ export const TeacherRequest = () => {
                                 </Col>
                             </Row>
                         }
-                        {!isTeacher(user) && (messageSent && !errorMessage ?
+                        {!isTeacherOrAbove(user) && (messageSent && !errorMessage ?
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
@@ -133,7 +142,7 @@ export const TeacherRequest = () => {
                             <Form name="contact" onSubmit={e => {
                                 e.preventDefault();
                                 dispatch(submitMessage({firstName, lastName, emailAddress, subject, message}));
-                                setMessageSent(true)
+                                setMessageSent(true);
                             }}>
                                 <CardBody>
                                     <p>
@@ -214,6 +223,10 @@ export const TeacherRequest = () => {
                                         <Col>
                                             <small className="text-danger text-left">You have not provided your school —
                                                 please add your school on your <Link to="/account">My Account</Link> page.
+                                                If you are a private tutor or parent, you can{" "}
+                                                <Link to="/tutor_account_request">
+                                                    request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+                                                </Link>.
                                             </small>
                                         </Col>
                                     </Row>

@@ -91,10 +91,14 @@ svg {
 
 }
 
+/* Places to look for browser-specific media queries:
+ - https://www.browserstack.com/guide/create-browser-specific-css
+ - https://browserstrangeness.bitbucket.io/css_hacks.html#safari
+*/
 .hexagon-coming-soon {
   width: 100%;
   pointer-events: none;
-  position: absolute;
+  position: fixed;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -121,25 +125,5 @@ svg {
 
   &.biology {
     border-color: $phy_biology;
-  }
-}
-
-/* Taken from https://www.browserstack.com/guide/create-browser-specific-css */
-
-/* Safari 11+ */
-@media not all and (min-resolution:.001dpcm) {
-  @supports (-webkit-appearance:none) and (stroke-color:transparent) {
-    .hexagon-coming-soon {
-      visibility: hidden !important;
-    }
-  }
-}
-
-/* Safari 10.1 */
-@media not all and (min-resolution:.001dpcm) {
-  @supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
-    .hexagon-coming-soon {
-      visibility: hidden !important;
-    }
   }
 }

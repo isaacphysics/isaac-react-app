@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useMemo, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
 import {
     Alert,
     Button,
@@ -37,16 +37,14 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
-    above,
-    allPropertiesFromAGameboard,
-    below,
     BOARD_ORDER_NAMES,
     BoardCreators,
     BoardLimit,
     BoardSubjects,
     BoardViews,
+    determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
-    difficultiesOrdered,
+    difficultyShortLabelMap,
     formatBoardOwner,
     generateGameboardSubjectHexagons,
     isAdminOrEventManager,
@@ -55,32 +53,26 @@ import {
     isStaff,
     Item,
     itemise,
+    nthHourOf,
     selectOnChange,
     siteSpecific,
     sortIcon,
     stageLabelMap,
-    stagesOrdered,
-    useDeviceSize,
     useGameboards
 } from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
-import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
+import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
 import Select from "react-select";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
 
-type BoardProps = {
-    user: RegisteredUserDTO;
+interface AssignGroupProps {
     groups: UserGroupDTO[];
-    board: GameboardDTO;
-    assignees: BoardAssignee[];
-    boardView: BoardViews;
-    boards?: Boards;
+    allowScheduling: boolean;
+    board: GameboardDTO | undefined;
 }
-
-const AssignGroup = ({groups, board}: BoardProps) => {
+const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
     const [selectedGroups, setSelectedGroups] = useState<Item<number>[]>([]);
     const [dueDate, setDueDate] = useState<Date>();
     const [scheduledStartDate, setScheduledStartDate] = useState<Date>();
@@ -88,8 +80,10 @@ const AssignGroup = ({groups, board}: BoardProps) => {
     const user = useAppSelector(selectors.user.orNull);
     const dispatch = useAppDispatch();
 
+    if (!board) return <Loading/>;
+
     function assign() {
-        dispatch(assignGameboard({boardId: board.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
+        dispatch(assignGameboard({boardId: board?.id as string, groups: selectedGroups, dueDate, scheduledStartDate, notes: assignmentNotes})).then(success => {
             if (success) {
                 setSelectedGroups([]);
                 setDueDate(undefined);
@@ -101,13 +95,17 @@ const AssignGroup = ({groups, board}: BoardProps) => {
 
     const yearRange = range(currentYear, currentYear + 5);
     const currentMonth = (new Date()).getMonth() + 1;
-    const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() >= dueDate.valueOf() : false;
+    const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
-        const utcDate = e.target.valueAsDate as Date;
-        const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
-        // Sets the scheduled date to 7AM in the timezone of the browser.
-        setScheduledStartDate(scheduledDate)
+        const utcDate = e.target.valueAsDate;
+        if (utcDate) {
+            const scheduledDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate(), 7);
+            // Sets the scheduled date to 7AM in the timezone of the browser.
+            setScheduledStartDate(scheduledDate);
+        } else {
+            setScheduledStartDate(null as unknown as Date); {/* DANGER here with force-casting Date|null to Date */}
+        }
     }
 
     return <Container className="py-2">
@@ -119,15 +117,14 @@ const AssignGroup = ({groups, board}: BoardProps) => {
                     options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
             />
         </Label>
-        {/* TODO remove staff role requirement */}
-        {isStaff(user) && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
+        {allowScheduling && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
             <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                        onChange={setScheduledStartDateAtSevenAM} />
         </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
             <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
-            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after start date.</small>}
+            {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
         {isStaff(user) && <Label className="w-100 pb-2">Notes (optional):
             <Input type="textarea"
@@ -171,14 +168,93 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
             </span>
     </button>;
 
-const Board = (props: BoardProps) => {
-    const {user, board, assignees, boardView} = props;
-    const dispatch = useAppDispatch();
-    const {hash} = useLocation();
-    const hashAnchor = hash.includes("#") ? hash.slice(1) : "";
-    const deviceSize = useDeviceSize();
+type SetAssignmentsModalProps = {
+    user: RegisteredUserDTO;
+    isOpen: boolean;
+    toggle: () => void;
+    allowScheduling: boolean;
+    groups: UserGroupDTO[];
+    board: GameboardDTO | undefined;
+    assignees: BoardAssignee[];
+    boards?: Boards;
+};
+const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
+    const {isOpen, toggle, allowScheduling, board, assignees} = props;
 
     const [ unassignBoard ] = isaacApi.endpoints.unassignGameboard.useMutation();
+
+    const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
+
+    const startedAssignees = useMemo(() => allowScheduling ? assignees.filter(hasStarted) : assignees, [assignees]);
+    const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
+
+    function confirmUnassignBoard(groupId: number, groupName?: string) {
+        if (board?.id && confirm(`Are you sure you want to unassign this gameboard from ${groupName ? `group ${groupName}` : "this group"}?`)) {
+            unassignBoard({boardId: board?.id, groupId});
+        }
+    }
+
+    return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
+        <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
+            <button role={"button"} className={"close text-nowrap"} onClick={toggle}>
+                Close
+            </button>
+        }>
+            {board?.title}
+        </ModalHeader>
+        <ModalBody>
+            <p className="px-1">Manage assignment of groups to the selected gameboard</p>
+            <hr className="text-center" />
+            <AssignGroup {...props} />
+            <hr className="text-center" />
+            <div className="py-2 border-bottom">
+                <Label>Board currently assigned to:</Label>
+                {startedAssignees.length > 0
+                    ? <Container className="mb-4">{startedAssignees.map(assignee =>
+                        <Row data-testid={"current-assignment"} key={assignee.groupId} className="px-1">
+                            <span className="flex-grow-1">{assignee.groupName}</span>
+                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                        </Row>
+                    )}</Container>
+                    : <p>No groups.</p>}
+            </div>
+            {allowScheduling && <div className="py-2">
+                <Label>Pending assignments: <span className="icon-help mx-1" id={`pending-assignments-help-${board?.id}`}/></Label>
+                <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board?.id}`}>
+                    Assignments that are scheduled to begin at a future date. Once the start date passes, students
+                    will be able to see the assignment, and will receive a notification email.
+                </UncontrolledTooltip>
+                {scheduledAssignees.length > 0
+                    ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
+                        <Row data-testid={"pending-assignment"} key={assignee.groupId} className="px-1">
+                            <span className="flex-grow-1">{assignee.groupName}</span>
+                            {assignee.startDate && <>
+                                    <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"
+                                        ? new Date(assignee.startDate)
+                                        : assignee.startDate).toDateString()}
+                                    </span>
+                            </>}
+                            <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
+                        </Row>
+                    )}</Container>
+                    : <p>No groups.</p>}
+            </div>}
+        </ModalBody>
+        <ModalFooter>
+            <Button block color="tertiary" onClick={toggle}>Close</Button>
+        </ModalFooter>
+    </Modal>;
+}
+
+type BoardProps = {
+    user: RegisteredUserDTO;
+    board: GameboardDTO;
+    assignees: BoardAssignee[];
+    boardView: BoardViews;
+    toggleAssignModal: () => void;
+};
+const Board = ({user, board, assignees, boardView, toggleAssignModal}: BoardProps) => {
+    const dispatch = useAppDispatch();
 
     const assignmentLink = `/assignment/${board.id}`;
     const hasAssignedGroups = assignees && assignees.length > 0;
@@ -198,79 +274,12 @@ const Board = (props: BoardProps) => {
         }
     }
 
-    function confirmUnassignBoard(groupId: number, groupName?: string) {
-        if (board.id && confirm(`Are you sure you want to unassign this gameboard from ${groupName ? `group ${groupName}` : "this group"}?`)) {
-            unassignBoard({boardId: board.id, groupId});
-        }
-    }
-
-    const [modal, setModal] = useState(board.id === hashAnchor);
-    const toggleAssignModal = useCallback(() => setModal(s => !s), [setModal]);
-
     const hexagonId = `board-hex-${board.id}`;
 
     const boardSubjects = useMemo(() => determineGameboardSubjects(board), [board]);
-    const boardStages = useMemo(() => allPropertiesFromAGameboard(board, "stage", stagesOrdered), [board]);
-    const boardDifficulties = useMemo(() => allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered), [board]);
-
-    const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
-
-    // TODO remove is staff role requirement
-    const startedAssignees = useMemo(() => isStaff(user) ? assignees.filter(hasStarted) : assignees, [assignees]);
-    const scheduledAssignees = useMemo(() => assignees.filter(a => !hasStarted(a)), [assignees]);
+    const boardStagesAndDifficulties = useMemo(() => determineGameboardStagesAndDifficulties(board), [board]);
 
     return <>
-        <Modal isOpen={modal} data-testid={"set-assignment-modal"} toggle={toggleAssignModal}>
-            <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
-                <button role={"button"} className={"close text-nowrap"} onClick={toggleAssignModal}>
-                    Close
-                </button>
-            }>
-                {board.title}
-            </ModalHeader>
-            <ModalBody>
-                <p className="px-1">Manage assignment of groups to the selected gameboard</p>
-                <hr className="text-center" />
-                <AssignGroup {...props} />
-                <hr className="text-center" />
-                <div className="py-2 border-bottom">
-                    <Label>Board currently assigned to:</Label>
-                    {startedAssignees.length > 0
-                        ? <Container className="mb-4">{startedAssignees.map(assignee =>
-                            <Row data-testid={"current-assignment"} key={assignee.groupId} className="px-1">
-                                <span className="flex-grow-1">{assignee.groupName}</span>
-                                <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                            </Row>
-                        )}</Container>
-                        : <p>No groups.</p>}
-                </div>
-                {/* TODO remove staff role requirement */}
-                {isStaff(user) && <div className="py-2">
-                    <Label>Pending assignments: <span className="icon-help mx-1" id={`pending-assignments-help-${board.id}`}/></Label>
-                    <UncontrolledTooltip placement="left" autohide={false} target={`pending-assignments-help-${board.id}`}>
-                        Assignments that are scheduled to begin at a future date. Once the start date passes, students
-                        will be able to see the assignment, and will receive a notification email.
-                    </UncontrolledTooltip>
-                    {scheduledAssignees.length > 0
-                        ? <Container className="mb-4">{scheduledAssignees.map(assignee =>
-                            <Row data-testid={"pending-assignment"} key={assignee.groupId} className="px-1">
-                                <span className="flex-grow-1">{assignee.groupName}</span>
-                                {assignee.startDate && <>
-                                    <span id={`start-date-${assignee.groupId}`} className="ml-auto mr-2">🕑 {(typeof assignee.startDate === "number"
-                                        ? new Date(assignee.startDate)
-                                        : assignee.startDate).toDateString()}
-                                    </span>
-                                </>}
-                                <button className="close" aria-label="Unassign group" onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>×</button>
-                            </Row>
-                        )}</Container>
-                        : <p>No groups.</p>}
-                </div>}
-            </ModalBody>
-            <ModalFooter>
-                <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
-            </ModalFooter>
-        </Modal>
         {boardView == BoardViews.table ?
             // Table view
             <tr className="board-card" data-testid={"assignment-gameboard-table-row"}>
@@ -281,8 +290,21 @@ const Board = (props: BoardProps) => {
                     </div>
                 </td>
                 <td className="align-middle"><a href={assignmentLink}>{board.title}</a></td>
-                <td className="text-center align-middle">
-                    {boardDifficulties.length > 0 && <AggregateDifficultyIcons difficulties={boardDifficulties} stacked />}
+                <td className="text-center align-middle p-0" colSpan={2}>
+                    {boardStagesAndDifficulties.length > 0 && <table className="w-100">
+                        <tbody>
+                        {boardStagesAndDifficulties.map(([stage,difficulties]) => {
+                            return <tr key={stage}>
+                                <td className="text-center align-middle border-top-0 p-1 w-50">
+                                    {stageLabelMap[stage]}
+                                </td>
+                                <td className="text-center align-middle border-top-0 p-1 w-50">
+                                    {difficulties.map(d => difficultyShortLabelMap[d]).join(", ")}
+                                </td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </table>}
                 </td>
                 <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
                 <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
@@ -308,16 +330,36 @@ const Board = (props: BoardProps) => {
                     <aside>
                         <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                         <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                        <CardSubtitle>Stages: <strong className="d-inline-flex">{boardStages.length > 0 ? boardStages.map(s => stageLabelMap[s]).join(', ') : "N/A"}</strong></CardSubtitle>
-                        <CardSubtitle>
-                            {`Difficult${boardDifficulties.length !== 1 ? "ies" : "y"}: `}
-                            <strong>
-                                {boardDifficulties.length > 0 ?
-                                    <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
-                                    : "N/A"
-                                }
-                            </strong>
-                        </CardSubtitle>
+                        <table className="w-100">
+                            <thead>
+                                <tr>
+                                    <th className="w-50 font-weight-light">
+                                        {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
+                                    </th>
+                                    <th className="w-50 font-weight-light pl-1">
+                                        {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>{stageLabelMap[stage]}:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
+                                    </td>
+                                </tr>)}
+                                {boardStagesAndDifficulties.length === 0 && <tr>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>N/A:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>-</strong>
+                                    </td>
+                                </tr>}
+                            </tbody>
+                        </table>
                     </aside>
                     <Row className="mt-1">
                         <Col className={"pr-0"}>
@@ -371,6 +413,7 @@ export const AddGameboardButtons = ({className, redirectBackTo}: {className: str
 export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
+    const userPreferences = useAppSelector(selectors.user.preferences);
     const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
     const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
@@ -399,6 +442,36 @@ export const SetAssignments = () => {
         setBoardView(e.target.value as BoardViews);
     }, [setBoardView]);
 
+    // Whether to let the user schedule assignments for the future
+    const allowScheduling = isStaff(user) || (userPreferences?.BETA_FEATURE?.SCHEDULE_ASSIGNMENTS ?? false);
+
+    // Logic for set assignments modal.
+    // hashAnchor acts as a buffer for a modal that needs to be opened. If it is set, the next time we get boards from
+    // the API, a modal will be open with the gameboard specified by hashAnchor, **and then hashAnchor will be cleared**.
+    const {hash} = useLocation();
+    const [hashAnchor, setHashAnchor] = useState<string | undefined>();
+    useEffect(() => {
+        setHashAnchor(hash.includes("#") ? hash.slice(1) : undefined);
+    }, [hash]);
+
+    const [modalBoard, setModalBoard] = useState<GameboardDTO>();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const openAssignModal = (board: GameboardDTO) => {
+        setModalBoard(board);
+        setIsModalOpen(true);
+    };
+
+    useEffect(() => {
+        if (boards && hashAnchor) {
+            setHashAnchor(undefined);
+            const board = boards.boards.find(b => b.id === hashAnchor);
+            if (board) {
+                openAssignModal(board);
+            }
+        }
+    }, [boards, hashAnchor]);
+
+    // Page help
     const pageHelp = <span>
         Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
         <br/>
@@ -406,6 +479,16 @@ export const SetAssignments = () => {
     </span>;
 
     return <Container>
+
+        <SetAssignmentsModal
+            isOpen={isModalOpen}
+            toggle={() => setIsModalOpen(false)}
+            allowScheduling={allowScheduling} user={user}
+            groups={groups ?? []}
+            board={modalBoard}
+            assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
+        />
+
         <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} modalId="set_assignments_help"/>
         <h4 className="mt-4 mb-3">
             Add a gameboard from ...
@@ -430,8 +513,8 @@ export const SetAssignments = () => {
                     <Col sm={6} lg={3} xl={2}>
                         <Label className="w-100">
                             Display in <Input type="select" value={boardView} onChange={switchView}>
-                            {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
-                        </Input>
+                                {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
+                            </Input>
                         </Label>
                     </Col>
                     <div className="d-lg-none w-100"/>
@@ -440,15 +523,15 @@ export const SetAssignments = () => {
                         <Col xs={6} lg={{size: 2, offset: 3}} xl={{size: 2, offset: 4}}>
                             <Label className="w-100">
                                 Show <Input type="select" value={boardLimit} onChange={e => setBoardLimit(e.target.value as BoardLimit)}>
-                                {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
-                            </Input>
+                                    {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
+                                </Input>
                             </Label>
                         </Col>
                         <Col xs={6} lg={4}>
                             <Label className="w-100">
                                 Sort by <Input type="select" value={boardOrder} onChange={e => setBoardOrder(e.target.value as BoardOrder)}>
-                                {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
-                            </Input>
+                                    {Object.values(BoardOrder).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}
+                                </Input>
                             </Label>
                         </Col>
                     </>}
@@ -463,10 +546,10 @@ export const SetAssignments = () => {
                                         <Col key={board.id}>
                                             <Board
                                                 user={user}
-                                                groups={groups ?? []}
                                                 board={board}
                                                 boardView={boardView}
                                                 assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                toggleAssignModal={() => openAssignModal(board)}
                                             />
                                         </Col>)}
                                 </Row>
@@ -522,6 +605,7 @@ export const SetAssignments = () => {
                                                         name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                                                     </button>
                                                 </th>
+                                                <th className="text-center align-middle">Stages</th>
                                                 <th className="text-center align-middle">Difficulties</th>
                                                 <th className="text-center align-middle">Creator</th>
                                                 <th className="text-center align-middle pointer-cursor">
@@ -549,12 +633,11 @@ export const SetAssignments = () => {
                                                 .map(board =>
                                                     <Board
                                                         key={board.id}
-                                                        groups={groups ?? []}
                                                         user={user}
                                                         board={board}
                                                         boardView={boardView}
-                                                        boards={boards}
                                                         assignees={(isDefined(board?.id) && groupsByGameboard[board.id]) || []}
+                                                        toggleAssignModal={() => openAssignModal(board)}
                                                     />)
                                             }
                                             </tbody>

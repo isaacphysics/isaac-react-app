@@ -3,9 +3,10 @@ import {
     history,
     isAdminOrEventManager,
     isDefined,
-    isTeacher,
+    isTutorOrAbove,
     Item,
     KEY,
+    nthHourOf,
     persistence,
     TODAY,
     toTuple
@@ -24,6 +25,7 @@ import {
     showToast
 } from "../../index";
 import {PotentialUser} from "../../../../IsaacAppTypes";
+import {Immutable} from "immer";
 
 export interface AssignmentSpec {
     boardId: string;
@@ -57,16 +59,16 @@ export const assignGameboard = createAsyncThunk(
         }
 
         if (scheduledStartDate !== undefined) {
-            // Unlike with the due date, we want to preserve the hour assigned at the UI level, unless we want to move that logic here.
-            if (scheduledStartDate.valueOf() <= (new Date()).valueOf()) {
+            // Start date can be today, in which case the assignment will be immediately set (if it is past 7am)
+            if (nthHourOf(0, scheduledStartDate).valueOf() < nthHourOf(0, new Date()).valueOf()) {
                 appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
                 return rejectWithValue(null);
             }
         }
 
         if (dueDate !== undefined && scheduledStartDate !== undefined) {
-            if ((dueDate.valueOf() - scheduledStartDate.valueOf()) <= 0) {
-                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be strictly after scheduled start date.", timeout: 5000}));
+            if (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) {
+                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be on or after scheduled start date.", timeout: 5000}));
                 return rejectWithValue(null);
             }
         }
@@ -199,7 +201,7 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
 
 interface SaveGameboardParams {
     boardId: string,
-    user: PotentialUser,
+    user: Immutable<PotentialUser>,
     boardTitle?: string,
     redirectOnSuccess?: boolean
 }
@@ -223,7 +225,7 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                 }
             }
             if (redirectOnSuccess) {
-                if (isTeacher(user)) {
+                if (isTutorOrAbove(user)) {
                     const assignBoardPath = persistence.load(KEY.ASSIGN_BOARD_PATH) ?? "/set_assignments";
                     history.push(`${assignBoardPath}#${boardId}`);
                     setAssignBoardPath("/set_assignments");

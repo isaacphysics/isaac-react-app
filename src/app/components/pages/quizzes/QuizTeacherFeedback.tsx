@@ -11,7 +11,7 @@ import {
 import {useParams} from "react-router-dom";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
-import {QuizFeedbackMode} from "../../../../IsaacApiTypes";
+import {QuizFeedbackMode, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressLegend} from '../AssignmentProgress';
 import {
     extractTeacherName,
@@ -51,9 +51,9 @@ const feedbackNames: Record<QuizFeedbackMode, string> = {
     DETAILED_FEEDBACK: "Detailed feedback on each question",
 };
 
-export const QuizTeacherFeedback = () => {
+export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const {quizAssignmentId} = useParams<{quizAssignmentId: string}>();
-    const pageSettings = useAssignmentProgressAccessibilitySettings();
+    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
     const assignmentState = useAppSelector(selectors.quizzes.assignment);
 
     const dispatch = useAppDispatch();

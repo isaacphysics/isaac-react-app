@@ -16,7 +16,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
             `Create a booking for ${selectedUser.givenName} ${selectedUser.familyName}`,
 
         body: function UserBookingModalBody() {
-            const dispatch =useAppDispatch();
+            const dispatch = useAppDispatch();
 
             const [additionalInformation, setAdditionalInformation] = useState<AdditionalInformation>({});
 

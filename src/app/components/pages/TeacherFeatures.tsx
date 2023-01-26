@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useAppSelector, selectors} from "../../state";
-import {isLoggedIn, isStudent} from "../../services";
+import {isLoggedIn, isTeacherOrAbove} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCard} from "../content/IsaacCard";
 
@@ -10,7 +10,7 @@ export const TeacherFeatures = () => {
 
     const user = useAppSelector(selectors.user.orNull);
 
-    const isDisabled = (isStudent(user) || !isLoggedIn(user));
+    const isDisabled = !isLoggedIn(user) || !isTeacherOrAbove(user);
 
     return<Container>
         <Row className="mb-4">

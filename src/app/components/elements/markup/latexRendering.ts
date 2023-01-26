@@ -2,10 +2,10 @@ import {useContext} from "react";
 import {selectors, useAppSelector} from "../../../state";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {renderA11yString, BOOLEAN_NOTATION, isCS, useUserContext} from "../../../services";
+import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isCS, useUserContext} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
-import {dropZoneRegex} from "./markdownRendering";
+import {Immutable} from "immer";
 
 type MathJaxMacro = string|[string, number];
 
@@ -220,7 +220,7 @@ const ENDREF = "==ENDREF==";
 const REF_REGEXP = new RegExp(REF + "(.*?)" + ENDREF, "g");
 const SR_REF_REGEXP = new RegExp("start text, " + REF_REGEXP.source + ", end text,", "g");
 
-export function katexify(html: string, user: PotentialUser | null, booleanNotation : BOOLEAN_NOTATION | undefined, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
+export function katexify(html: string, user: Immutable<PotentialUser> | null, booleanNotation : BOOLEAN_NOTATION | undefined, showScreenReaderHoverText: boolean, figureNumbers: FigureNumbersById) {
     start.lastIndex = 0;
     let match: RegExpExecArray | null;
     let output = "";
@@ -288,9 +288,8 @@ export function katexify(html: string, user: PotentialUser | null, booleanNotati
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
                         `<span class="katex"><span class="sr-only">${screenReaderText}</span>`);
                 } else {
-                    const katexMathML = katex.renderToString(latexMunged, {...katexOptions, output: "mathml"})
-                        .replace(`class="katex"`, `class="katex-mathml"`)
-                        .replace(dropZoneRegex, "drop zone");
+                    const katexMathML = katex.renderToString(latexMunged.replace(dropZoneRegex, "clickable drop zone"), {...katexOptions, output: "mathml"})
+                        .replace(`class="katex"`, `class="katex-mathml"`);
                     katexRenderResult = katexRenderResult.replace('<span class="katex">',
                         `<span class="katex">${katexMathML}`);
                 }

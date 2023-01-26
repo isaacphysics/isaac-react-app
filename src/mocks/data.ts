@@ -1,6 +1,7 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
+import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
 
 export const mockUser = {
     givenName: "Test",
@@ -24,6 +25,30 @@ export const mockUser = {
     emailVerificationStatus: "VERIFIED",
     id: 1 as const
 };
+
+export const buildMockStudent = <T extends number>(id: T extends (typeof mockUser.id) ? `Student ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T) => {
+    if (id === mockUser.id) throw Error("A mock student cannot have the same ID as the mockUser");
+    return {
+        givenName: "Test",
+        familyName: `Student ${id}`,
+        email: `test-student-${id}@test.com`,
+        dateOfBirth: 888888888888,
+        gender: id % 2 === 0 ? "MALE" : "FEMALE",
+        registrationDate: DAYS_AGO(50),
+        role: "STUDENT",
+        schoolOther: "N/A",
+        registeredContexts: [{
+            stage: "all",
+            examBoard: "all"
+        }],
+        registeredContextsLastConfirmed: DAYS_AGO(3),
+        firstLogin: false,
+        lastUpdated: DAYS_AGO(1),
+        lastSeen: DAYS_AGO(1),
+        emailVerificationStatus: "VERIFIED",
+        id: id,
+    }
+}
 
 export const buildMockTeacher = <T extends number>(id: T extends (typeof mockUser.id) ? `Teacher ID cannot be the same as the mockUser: ${typeof mockUser.id}` : T) => {
     if (id === mockUser.id) throw Error("A mock teacher cannot have the same ID as the mockUser");
@@ -60,7 +85,20 @@ export const buildMockUserSummary = (user: any, authorisedFullAccess: boolean) =
         registeredContexts: user.registeredContexts,
         id: user.id
     }, email ? {email} : {});
-}
+};
+
+export const buildMockUserSummaryWithGroupMembership = (user: any, groupId: number, authorisedFullAccess: boolean): UserSummaryWithGroupMembershipDTO => {
+    const summary = buildMockUserSummary(user, authorisedFullAccess);
+    return Object.assign(summary, {
+        groupMembershipInformation: {
+            userId: user.id,
+            groupId,
+            status: "ACTIVE" as const,
+            updated: 888888888888 as unknown as Date,
+            created: 888888888888 as unknown as Date
+        }
+    });
+};
 
 export const mockGameboards = {
     results: [
@@ -3389,6 +3427,18 @@ export const mockQuizAssignments = [
             quizAssignmentId: 9,
             startDate: DAYS_AGO(3),
             completedDate: DAYS_AGO(2)
+        },
+        quizSummary: {
+            id: "test-quiz-assignment-1",
+            title: "Test Quiz Assignment 1",
+            type: "isaacQuiz",
+            tags: [],
+            url: "/isaac-api/api/quiz/test-quiz-assignment-1",
+            visibleToStudents: false,
+            hiddenFromRoles: [
+                "TEACHER",
+                "STUDENT"
+            ]
         }
     },
     {

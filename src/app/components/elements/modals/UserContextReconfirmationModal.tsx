@@ -5,7 +5,9 @@ import {
     isDefined,
     isLoggedIn,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
+    isTutor,
+    isTutorOrAbove,
     SITE_SUBJECT_TITLE,
     siteSpecific,
     validateUserContexts,
@@ -13,14 +15,20 @@ import {
 } from "../../../services";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {SchoolInput} from "../inputs/SchoolInput";
-import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {closeActiveModal, logAction, selectors, updateCurrentUser} from "../../../state";
+import {Immutable} from "immer";
 
 const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode, buildPrivacyPolicyLink: (text: string) => React.ReactNode) => ({
     teacher: {
         intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the qualification and school details associated with your account at the beginning of each academic year.</span>,
         connections: <span>If you have changed school or have a different class group, you might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
+        privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
+    },
+    tutor: {
+        intro: <span>So that Isaac {SITE_SUBJECT_TITLE} can continue to show you relevant content, we ask that you review the details associated with your account at the beginning of each academic year.</span>,
+        connections: <span>If you have recently changed which students you tutor, might also want to {buildConnectionsLink("review your student and group connections")}.</span>,
         privacyPolicy: <span>Updating this information helps us continue to show you content that is relevant to you. Full details on how we use your personal information can be found in our {buildPrivacyPolicyLink("privacy policy")}.</span>
     },
     student: {
@@ -35,7 +43,7 @@ const UserContextReconfimationModalBody = () => {
     const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
 
-    const [userToUpdate, setUserToUpdate] = useState({...user, password: null});
+    const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>({...user, password: null});
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -67,7 +75,7 @@ const UserContextReconfimationModalBody = () => {
                 {text}
                 <span className={"sr-only"}> (opens in new tab) </span>
             </a>;
-        })[isTeacher(user) ? "teacher" : "student"]
+        })[isTutorOrAbove(user) ? (isTeacherOrAbove(user) ? "teacher" : "tutor") : "student"]
     , [user]);
 
     // Form submission
@@ -102,7 +110,7 @@ const UserContextReconfimationModalBody = () => {
                 <SchoolInput
                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                     submissionAttempted={submissionAttempted} idPrefix="modal"
-                    required={isCS}
+                    required={isCS && !isTutor(user)}
                 />
             </Col>
         </Row>

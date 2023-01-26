@@ -21,7 +21,7 @@ import {
     isDefined,
     isFound,
     isPhy,
-    isTeacher,
+    isTutorOrAbove,
     NOT_FOUND,
     showWildcard,
     siteSpecific,
@@ -188,7 +188,7 @@ export const Gameboard = withRouter(({ location }) => {
                     return <>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
-                        {user && isTeacher(user)
+                        {user && isTutorOrAbove(user)
                             ? <RS.Row className="col-8 offset-2">
                                 <RS.Col className="mt-4">
                                     <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
@@ -201,7 +201,7 @@ export const Gameboard = withRouter(({ location }) => {
                                     </RS.Button>
                                 </RS.Col>
                             </RS.Row>
-                            : gameboard && gameboard !== NOT_FOUND && !gameboard.savedToCurrentUser && <RS.Row>
+                            : gameboard && !gameboard.savedToCurrentUser && <RS.Row>
                                 <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                                     <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`}
                                                onClick={() => setAssignBoardPath("/set_assignments")}

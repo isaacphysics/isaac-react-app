@@ -12,10 +12,10 @@ import {configureStore} from "@reduxjs/toolkit";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 
 export const middleware: Middleware[] = [
+    isaacApi.middleware,
     hidePreviousQuestionAttemptMiddleware,
     userConsistencyCheckerMiddleware,
-    notificationCheckerMiddleware,
-    isaacApi.middleware
+    notificationCheckerMiddleware
 ];
 const defaultMiddlewareOptions = {
     serializableCheck: process.env.NODE_ENV !== 'test'

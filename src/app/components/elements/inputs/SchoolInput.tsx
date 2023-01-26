@@ -5,10 +5,11 @@ import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api, schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import {throttle} from "lodash";
 import classNames from "classnames";
+import {Immutable} from "immer";
 
 interface SchoolInputProps {
-    userToUpdate: ValidationUser;
-    setUserToUpdate?: (user: any) => void;
+    userToUpdate: Immutable<ValidationUser>;
+    setUserToUpdate?: (user: Immutable<ValidationUser>) => void;
     submissionAttempted: boolean;
     className?: string;
     idPrefix?: string;
@@ -17,19 +18,15 @@ interface SchoolInputProps {
 }
 const NOT_APPLICABLE = "N/A";
 
-
-const getSchoolPromise = (schoolSearchText: string): Promise<any> =>
-    new Promise(resolve => {
-        resolve(api.schools.search(schoolSearchText).then(({data}) => {
-            let temp: any = [];
-            data && data.length > 0 && data.map((item) => (temp.push({value: item, label: schoolNameWithPostcode(item)})));
-            return temp;
-        }).catch((response) => {
-            console.error("Error searching for schools. ", response);
-        }));
+const schoolSearch = (schoolSearchText: string, setAsyncSelectOptionsCallback: (options: {value: string | School, label: string | undefined}[]) => void) => {
+    api.schools.search(schoolSearchText).then(({data}) => {
+        setAsyncSelectOptionsCallback(data && data.length > 0 ? data.map((item) => ({value: item, label: schoolNameWithPostcode(item)})) : []);
+    }).catch((response) => {
+        console.error("Error searching for schools. ", response);
     });
-// Must define this throttle function _outside_ the component to ensure it doesn't get overwritten each rerender!
-const throttledSchoolSearch = throttle(getSchoolPromise, 450);
+};
+// Must define this debounced function _outside_ the component to ensure it doesn't get overwritten each rerender!
+const throttledSchoolSearch = throttle(schoolSearch, 450, {trailing: true, leading: true});
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
     let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
@@ -51,22 +48,20 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
-        if (setUserToUpdate) {
-            if (school.urn) {
-                setUserToUpdate(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
-                setSelectedSchoolObject(school);
-            } else if (school) {
-                setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
-                setSelectedSchoolObject(school);
-            }
+        if (school.urn) {
+            setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
+            setSelectedSchoolObject(school);
+        } else if (school) {
+            setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
+            setSelectedSchoolObject(school);
         }
     }
 
     // Called when school input box option selected
-    function handleSetSchool(newValue: any) {
+    function handleSetSchool(newValue: {value: string | School} | null) {
         if (newValue == null) {
             setSelectedSchoolObject(undefined);
-            userToUpdate.schoolOther = undefined;
+            setUserToUpdate?.({...userToUpdate, schoolOther: undefined, schoolId: undefined});
         } else if (newValue && newValue.value) {
             setUserSchool(newValue.value);
         } else if (newValue) {
@@ -74,7 +69,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
         }
     }
 
-    const schoolValue = (
+    const schoolValue: {value: string | School, label: string | undefined} | undefined = (
         (selectedSchoolObject && selectedSchoolObject.urn ?
             {value: selectedSchoolObject.urn, label: schoolNameWithPostcode(selectedSchoolObject)} :
             (userToUpdate.schoolOther ?
@@ -108,11 +103,9 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 type="checkbox" id={`${idPrefix}-not-associated-with-school`}
                 checked={userToUpdate.schoolOther === NOT_APPLICABLE}
                 invalid={isInvalid}
-                disabled={!setUserToUpdate}
+                disabled={disableInput || !setUserToUpdate}
                 onChange={(e => {
-                    if (setUserToUpdate) {
-                        setUserToUpdate(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
-                    }
+                    setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
                 })}
                 label="Not associated with a school"
             />

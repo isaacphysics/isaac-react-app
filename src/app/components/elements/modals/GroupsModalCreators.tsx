@@ -10,7 +10,7 @@ import {
     mutationSucceeded,
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history} from "../../../services";
+import {history, isTeacherOrAbove} from "../../../services";
 import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
@@ -89,14 +89,15 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
         <Row key={0}>
-            <Col>
+            {/* Only teachers are allowed to add additional managers to a group. */}
+            {isTeacherOrAbove(user) && <Col>
                 <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
                 }}>
                     {firstTime ? "Add group managers" : "Edit group managers"}
                 </Button>
-            </Col>
+            </Col>}
             <Col>
                 <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());

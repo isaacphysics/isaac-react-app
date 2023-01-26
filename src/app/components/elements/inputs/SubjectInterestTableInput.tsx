@@ -8,6 +8,7 @@ interface SubjectInterestTableInputProps<T> {
     setStateFunction: (stateObject: T) => void;
 }
 
+// FIXME if this ever gets used again, we should add a Biology section
 export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<SubjectInterests>) => {
     const {stateObject, setStateFunction} = props;
 

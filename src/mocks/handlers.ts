@@ -1,5 +1,6 @@
 import {rest} from "msw";
 import {
+    buildMockUserSummary,
     mockAssignmentsGroup2,
     mockAssignmentsGroup6, mockFragment,
     mockGameboards,
@@ -14,6 +15,7 @@ import {
 } from "./data";
 import {API_PATH} from "../app/services";
 import produce from "immer";
+import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
 
 export const handlers = [
     rest.get(API_PATH + "/gameboards/user_gameboards", (req, res, ctx) => {
@@ -183,3 +185,45 @@ export const handlers = [
         );
     })
 ];
+
+// --- Extra handler builder functions ---
+
+export const buildNewGroupHandler = (newGroup: any) => jest.fn((req, res, ctx) => {
+    return res(
+        ctx.status(200),
+        ctx.json(newGroup)
+    );
+});
+export const buildAuthTokenHandler = (newGroup: any, token: string) => jest.fn((req, res, ctx) => {
+    return res(
+        ctx.status(200),
+        ctx.json({
+            token,
+            ownerUserId: newGroup.ownerId,
+            groupId: newGroup.id
+        })
+    );
+});
+export const buildNewManagerHandler = (groupToAddManagerTo: any, newManager: any) => jest.fn((req, res, ctx) => {
+    return res(
+        ctx.status(200),
+        ctx.json({
+            ...groupToAddManagerTo,
+            additionalManagers: [buildMockUserSummary(newManager, true)]
+        })
+    );
+});
+export const buildGroupHandler = (groups?: any[]) => jest.fn((req, res, ctx) => {
+    const archived = req.url.searchParams.get("archived_groups_only") === "true";
+    const filteredGroups = (groups ?? mockGroups).filter(g => g.archived === archived);
+    return res(
+        ctx.status(200),
+        ctx.json(filteredGroups)
+    );
+});
+export const buildGroupMembershipsHandler = (members?: UserSummaryWithGroupMembershipDTO[]) => jest.fn((req, res, ctx) => {
+    return res(
+        ctx.status(200),
+        ctx.json(members)
+    );
+});

@@ -5,6 +5,7 @@ import {Loading} from "./IsaacSpinner";
 import {Redirect} from "react-router";
 import {TrackedRoute} from "../navigation/TrackedRoute";
 import {PotentialUser} from "../../../IsaacAppTypes";
+import {Immutable} from "immer";
 
 interface ExternalRedirectBaseProps {
     from: string;
@@ -13,11 +14,11 @@ type ExternalRedirectProps<Params extends { [K in keyof Params]: string }> = Ext
     to: (routeParams: Params) => `https://${string}` | undefined | null;
     ifUser?: never;
 } | {
-    to: (routeParams: Params, user: RegisteredUserDTO) => `https://${string}` | undefined | null;
-    ifUser: (user: PotentialUser) => boolean;
+    to: (routeParams: Params, user: Immutable<RegisteredUserDTO>) => `https://${string}` | undefined | null;
+    ifUser: (user: Immutable<PotentialUser>) => boolean;
 });
 export function ExternalRedirect<Params extends { [K in keyof Params]: string } = {}>({from, to, ifUser}: ExternalRedirectProps<Params>) {
-    const ExternalRedirectInner = ({user}: {user: RegisteredUserDTO}) => {
+    const ExternalRedirectInner = ({user}: {user: Immutable<RegisteredUserDTO>}) => {
         const params = useParams<Params>();
         const redirectURL = ifUser ? to(params, user) : to(params);
         if (redirectURL) {

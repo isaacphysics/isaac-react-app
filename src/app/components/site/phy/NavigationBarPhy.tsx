@@ -7,7 +7,16 @@ import {
 } from "../../navigation/NavigationBar";
 import React from "react";
 import {selectors, useAppSelector} from "../../../state";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isLoggedIn, isStaff, isTeacher} from "../../../services";
+import {
+    isAdmin,
+    isAdminOrEventManager,
+    isEventLeader,
+    isLoggedIn,
+    isStaff,
+    isTeacherOrAbove,
+    isTutor,
+    isTutorOrAbove
+} from "../../../services";
 
 export const NavigationBarPhy = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -22,13 +31,15 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
         </NavigationSection>
 
-        {isTeacher(user) && <NavigationSection title="Teach">
-            <LinkItem to="/teacher_features">Teacher Features</LinkItem>
+        {isTutorOrAbove(user) && <NavigationSection title="Teach">
+            {isTeacherOrAbove(user) ? <LinkItem to="/teacher_features">Teacher Features</LinkItem> : <LinkItem to="/tutor_features">Tutor Features</LinkItem>}
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
             <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
-            <LinkItem to="/set_tests">Set Tests</LinkItem>
-            <LinkItem to="/set_tests#manage">Manage Tests</LinkItem>
+            {isTeacherOrAbove(user) && <>
+                <LinkItem to="/set_tests">Set Tests</LinkItem>
+                <LinkItem to="/set_tests#manage">Manage Tests</LinkItem>
+            </>}
         </NavigationSection>}
 
         <NavigationSection title="Learn">
@@ -50,7 +61,9 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/pages/how_to_videos">How-to Videos</LinkItem>
             <LinkItem to="/solving_problems">Problem Solving Guide</LinkItem>
             <LinkItem to="/support/student">Student FAQ</LinkItem>
-            <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>
+            {isTutor(user)
+                ? <LinkItem to="/support/tutor" disabled>Tutor FAQ (coming soon)</LinkItem>
+                : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
             <LinkItem to="/contact">Contact Us</LinkItem>
         </NavigationSection>
 

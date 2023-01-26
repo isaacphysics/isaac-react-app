@@ -21,15 +21,13 @@ import {BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {GameboardDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
-    above,
-    allPropertiesFromAGameboard,
-    below,
     BOARD_ORDER_NAMES,
     BoardCompletions,
     boardCompletionSelection,
     BoardCreators,
     BoardLimit,
     BoardViews,
+    determineGameboardStagesAndDifficulties,
     determineGameboardSubjects,
     difficultiesOrdered,
     difficultyShortLabelMap,
@@ -40,15 +38,12 @@ import {
     siteSpecific,
     sortIcon,
     stageLabelMap,
-    stagesOrdered,
-    useDeviceSize,
     useGameboards
 } from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
-import {AggregateDifficultyIcons} from "../elements/svg/DifficultyIcons";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -64,7 +59,6 @@ type BoardTableProps = MyBoardsPageProps & {
 
 const Board = (props: BoardTableProps) => {
     const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
-    const deviceSize = useDeviceSize();
 
     const boardLink = `/gameboards#${board.id}`;
 
@@ -85,8 +79,7 @@ const Board = (props: BoardTableProps) => {
     }
 
     const boardSubjects = determineGameboardSubjects(board);
-    const boardStages = allPropertiesFromAGameboard(board, "stage", stagesOrdered);
-    const boardDifficulties = allPropertiesFromAGameboard(board, "difficulty", difficultiesOrdered);
+    const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(board);
 
     return boardView == BoardViews.table ?
         <tr className="board-card" data-testid={"my-gameboard-table-row"}>
@@ -101,9 +94,21 @@ const Board = (props: BoardTableProps) => {
                 </div>
             </td>
             <td className="align-middle"><a href={boardLink}>{board.title}</a></td>
-            <td className="text-center align-middle">{boardStages.map(s => stageLabelMap[s]).join(', ')}</td>
-            <td className="text-center align-middle">
-                {boardDifficulties.length > 0 && <AggregateDifficultyIcons stacked difficulties={boardDifficulties} />}
+            <td className="text-center align-middle p-0" colSpan={2}>
+                {boardStagesAndDifficulties.length > 0 && <table className="w-100">
+                    <tbody>
+                        {boardStagesAndDifficulties.map(([stage,difficulties]) => {
+                            return <tr key={stage}>
+                                <td className="text-center align-middle border-top-0 p-1 w-50">
+                                    {stageLabelMap[stage]}
+                                </td>
+                                <td className="text-center align-middle border-top-0 p-1 w-50">
+                                    {difficulties.map(d => difficultyShortLabelMap[d]).join(", ")}
+                                </td>
+                            </tr>
+                        })}
+                    </tbody>
+                </table>}
             </td>
             <td className="text-center align-middle">{formatBoardOwner(user, board)}</td>
             <td className="text-center align-middle">{formatDate(board.creationDate)}</td>
@@ -136,18 +141,36 @@ const Board = (props: BoardTableProps) => {
                 <aside>
                     <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
                     <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                    <CardSubtitle>
-                        {`Stage${boardStages.length !== 1 ? "s" : ""}: `}<strong>{boardStages.map(s => stageLabelMap[s]).join(', ') || "N/A"}</strong>
-                    </CardSubtitle>
-                    <CardSubtitle>
-                        {`Difficult${boardDifficulties.length !== 1 ? "ies" : "y"}: `}
-                        <strong>
-                            {boardDifficulties.length > 0 ?
-                                <AggregateDifficultyIcons stacked={above["lg"](deviceSize) || below["xs"](deviceSize)} difficulties={boardDifficulties} />
-                                : "N/A"
-                            }
-                        </strong>
-                    </CardSubtitle>
+                    <table className="w-100">
+                        <thead>
+                        <tr>
+                            <th className="w-50 font-weight-light">
+                                {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
+                            </th>
+                            <th className="w-50 font-weight-light pl-1">
+                                {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                <td className="w-50 align-baseline text-lg-right">
+                                    <strong>{stageLabelMap[stage]}:</strong>
+                                </td>
+                                <td className="w-50 pl-1">
+                                    <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
+                                </td>
+                            </tr>)}
+                            {boardStagesAndDifficulties.length === 0 && <tr>
+                                <td className="w-50 align-baseline text-lg-right">
+                                    <strong>N/A:</strong>
+                                </td>
+                                <td className="w-50 pl-1">
+                                    <strong>-</strong>
+                                </td>
+                            </tr>}
+                        </tbody>
+                    </table>
                 </aside>
 
                 <Row className="mt-1 mb-2">

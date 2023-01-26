@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import * as RS from 'reactstrap';
 import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
+import {SITE_SUBJECT_TITLE} from "../../services";
 
 const WARNING_COOKIE = "warningBannerDismissed";
 
@@ -16,15 +17,20 @@ export const WarningBanner = () => {
         Cookies.set(WARNING_COOKIE, "1", {expires: 30 /* days*/});
     }
 
-    const inDateRange = new Date(1608076800000) <= new Date() && new Date() <= new Date(1609718400000);
+    const inDateRange = new Date("2022-01-09") <= new Date() && new Date() <= new Date("2023-01-14");
 
     return inDateRange ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="warning" className="mb-0">
             <RS.Container>
                 <RS.Row style={{alignItems: "center", textAlign: "center"}}>
                     <RS.Col xs={12} md={12}>
-                        <span>{"From 21st Dec to 3rd Jan the Isaac team will be taking a festive break; you can too! "}
-                            <a href={"/pages/isaac_festive_update"}>Find out more <span className="sr-only">about streak freezes and support over the festive period </span>here</a>.
+                        <span>
+                            {`Isaac ${SITE_SUBJECT_TITLE} may be unavailable on 13 January due to maintenance work. `}
+                            <a href="/pages/2023-jan-datacentre-maintenance">
+                                {"Find out more "}
+                                <span className="sr-only">{"about the planned maintenance "}</span>
+                                {"here"}
+                            </a>.
                         </span>
                     </RS.Col>
                 </RS.Row>

@@ -188,12 +188,21 @@ button.btn.btn-link.login-b,
   }
 }
 
-.share-link-icon {
-
-  margin-right: 5px;
-  margin-left: 10px;
+.hex-icon {
   width: 50px;
   height: 58px;
+  background-repeat: no-repeat;
+  z-index: 1;
+  float: right;
+  position: relative;
+  margin-right: 5px;
+  margin-left: 5px;
+  background-color: transparent;
+}
+
+.share-link-icon {
+
+  @extend .hex-icon;
 
   button {
     background-image: url(/assets/share.svg);
@@ -212,7 +221,7 @@ button.btn.btn-link.login-b,
     position: absolute;
     padding: 4px 32px 4px 8px;
     border: 1px solid gray;
-    transform: translate(calc(25px - 100%), -64px);
+    transform: translate(calc(25px - 100%), -65px);
     background: #fff;
     height: 58px;
     width: 70%;
@@ -235,18 +244,6 @@ button.btn.btn-link.login-b,
       height: 118px;
     }
   }
-}
-
-.hex-icon {
-  width: 50px;
-  height: 58px;
-  background-repeat: no-repeat;
-  z-index: 1;
-  float: right;
-  position: relative;
-  margin-right: 10px;
-  margin-left: 5px;
-  background-color: transparent;
 }
 
 .print-icon {

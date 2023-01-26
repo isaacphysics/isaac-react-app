@@ -1,7 +1,15 @@
-import {useEffect, useMemo} from "react";
-import {deregisterQuestions, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
-import {API_PATH, isDefined, isQuestion} from "./";
-import {ContentDTO, IsaacQuizSectionDTO, QuestionDTO, QuizAssignmentDTO, QuizAttemptDTO} from "../../IsaacApiTypes";
+import {useEffect, useMemo, useState} from "react";
+import {deregisterQuestions, loadQuizzes, registerQuestions, selectors, useAppDispatch, useAppSelector} from "../state";
+import {API_PATH, isDefined, isEventLeaderOrStaff, isQuestion, tags, useQueryParams} from "./";
+import {
+    ContentDTO,
+    IsaacQuizSectionDTO,
+    QuestionDTO,
+    QuizAssignmentDTO,
+    QuizAttemptDTO,
+    QuizSummaryDTO,
+    RegisteredUserDTO
+} from "../../IsaacApiTypes";
 import {partition} from "lodash";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
@@ -41,6 +49,37 @@ export function useQuizSections(attempt?: QuizAttemptDTO) {
     }, [attempt?.quiz]);
 }
 
+export function useFilteredQuizzes(user: RegisteredUserDTO) {
+    const quizzes = useAppSelector(selectors.quizzes.available);
+    const [filteredQuizzes, setFilteredQuizzes] = useState<Array<QuizSummaryDTO> | undefined>();
+    const {filter}: {filter?: string} = useQueryParams();
+    const startIndex = 0;
+    const [titleFilter, setTitleFilter] = useState<string|undefined>(filter?.replace(/[^a-zA-Z0-9 ]+/g, ''));
+
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(loadQuizzes(startIndex));
+    }, [dispatch, startIndex]);
+
+    useEffect(() => {
+        if (isDefined(titleFilter) && isDefined(quizzes)) {
+            const results = quizzes
+                .filter(quiz => quiz.title?.toLowerCase().match(titleFilter.toLowerCase()) || quiz.id?.toLowerCase().match(titleFilter.toLowerCase()))
+                .filter(quiz => isEventLeaderOrStaff(user) || (quiz.hiddenFromRoles ? !quiz.hiddenFromRoles?.includes("TEACHER") : true));
+
+            if (isDefined(results) && results.length > 0) {
+                setFilteredQuizzes(results);
+            } else {
+                setFilteredQuizzes([]);
+            }
+            return; // Ugly but works...
+        }
+        setFilteredQuizzes(quizzes);
+    }, [titleFilter, quizzes]);
+
+    return {titleFilter, setTitleFilter, filteredQuizzes};
+}
+
 export function useCurrentQuizAttempt(studentId?: number) {
     const currentUserAttemptState = useAppSelector(selectors.quizzes.currentQuizAttempt);
     const [currentUserAttempt, currentUserError] = useMemo(() => {
@@ -65,6 +104,8 @@ export function useCurrentQuizAttempt(studentId?: number) {
     const [attempt, error] = studentId
         ? [studentAttempt, studentError]
         : [currentUserAttempt, currentUserError];
+    // Augment quiz object with subject id
+    const attemptWithQuizSubject = {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)};
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
@@ -72,11 +113,11 @@ export function useCurrentQuizAttempt(studentId?: number) {
     const dispatch = useAppDispatch();
     useEffect( () => {
         // All register questions does is store the questions in redux WITH SOME EXTRA CALCULATED STRUCTURE
-        dispatch(registerQuestions(questions));
+        dispatch(registerQuestions(questions, undefined, true));
         return () => dispatch(deregisterQuestions(questions.map(q => q.id as string)));
     }, [dispatch, questions]);
 
-    return {attempt, error, studentUser, questions, sections};
+    return {attempt: attemptWithQuizSubject, error, studentUser, questions, sections};
 }
 
 export function getQuizAssignmentCSVDownloadLink(assignmentId: number) {

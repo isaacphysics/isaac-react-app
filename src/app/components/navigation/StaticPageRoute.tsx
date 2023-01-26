@@ -3,10 +3,11 @@ import {Generic} from "../pages/Generic";
 import React from "react";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {RouteProps} from "react-router";
+import {Immutable} from "immer";
 
 export interface StaticPageRouteProps {
     pageId?: string;
-    ifUser?: (user: PotentialUser) => boolean;
+    ifUser?: (user: Immutable<PotentialUser>) => boolean;
 }
 
 /**
