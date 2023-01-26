@@ -286,11 +286,12 @@ interface InequalityModalProps {
     close: () => void;
     onEditorStateChange?: (state: any) => void;
     initialEditorSymbols: any;
+    editorSeed?: any;
     editorMode: EditorMode;
     logicSyntax?: LogicSyntax;
     questionDoc?: ContentDTO;
 }
-const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEditorStateChange, questionDoc, initialEditorSymbols}: InequalityModalProps) => {
+const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEditorStateChange, questionDoc, initialEditorSymbols, editorSeed}: InequalityModalProps) => {
     const parsedAvailableSymbols = useMemo(() => Array.from(new Set(parsePseudoSymbolicAvailableSymbols(availableSymbols))).filter(s => s.trim() !== ""), [availableSymbols]);
 
     const inequalityModalRef = useRef<HTMLDivElement>(null);
@@ -423,6 +424,12 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         if (ev.code === "Escape") close();
     }, []);
 
+    // --- Resetting to seed value ---
+    const resetToInitialState = () => {
+        // loadTestCase should probably be renamed to resetSymbolsTo or something (in the inequality package)
+        sketch.current?.loadTestCase(editorSeed);
+    };
+
     // --- Rendering ---
 
     const [menuItems, defaultMenu] = useMemo<[MenuItems, boolean]>(() => {
@@ -480,7 +487,12 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             Help
         </div>
 
-        <div id="inequality-trash" className="inequality-ui trash button">Trash</div>
+        {isDefined(editorSeed) && <div id="inequality-reset" className="inequality-ui reset button"
+             role="button" tabIndex={-1} onClick={resetToInitialState} onKeyUp={resetToInitialState}
+        >
+            Reset
+        </div>}
+        <div id="inequality-trash" className={classNames("inequality-ui trash button", {"trash-with-reset": isDefined(editorSeed)})}>Trash</div>
 
         {showQuestionReminder && (questionDoc?.value || (questionDoc?.children && questionDoc?.children?.length > 0)) && <div className="question-reminder">
             <IsaacContentValueOrChildren value={questionDoc.value} encoding={questionDoc.encoding}>

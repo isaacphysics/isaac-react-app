@@ -1,4 +1,4 @@
-import React, {lazy, useEffect, useRef, useState} from "react";
+import React, {lazy, useEffect, useMemo, useRef, useState} from "react";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {ChemicalFormulaDTO, IsaacSymbolicChemistryQuestionDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
@@ -13,7 +13,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<ChemicalFormulaDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
+    const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
+    const initialEditorSymbols = useRef(editorSeed ?? []);
 
     let currentAttemptValue: any | undefined;
     if (currentAttempt && currentAttempt.value) {
@@ -57,6 +58,7 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
+                editorSeed={editorSeed}
                 editorMode="chemistry"
                 questionDoc={doc}
             />}

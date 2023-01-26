@@ -134,7 +134,7 @@
             }
 
             &.trash {
-                bottom: 45%;
+                bottom: max(105px, 45%);
                 right: 5px;
                 background-color: transparent;
                 background-image: url('/assets/inequality-trash.svg');
@@ -147,6 +147,20 @@
                 &:hover, &.active {
                     opacity: 1.0;
                 }
+            }
+
+            &.trash-with-reset {
+                bottom: max(105px, 40%) !important;
+            }
+
+            &.reset {
+                bottom: calc(max(105px, 40%) + 80px);
+                right: 5px;
+                background-color: transparent;
+                background-image: url('/assets/inequality-reset.svg');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position-y: center;
             }
         }
 
