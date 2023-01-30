@@ -55,7 +55,7 @@ def validate_args(args):
     return args
 
 
-def ask_to_run_command(command, print_output=False):
+def ask_to_run_command(command, print_output=False, allowed_return_codes=(0,)):
     if not EXEC:
         return input(f"{command}\n")
 
@@ -71,7 +71,7 @@ def ask_to_run_command(command, print_output=False):
         return
     if response in ["y", "yes"]:
         try:
-            output = subprocess.check_output(command, shell=True, text=True)
+            output = subprocess.check_output(command, shell=True, universal_newlines=True)
             if print_output:
                 print(output)
             return output
