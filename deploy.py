@@ -77,9 +77,15 @@ def ask_to_run_command(command, print_output=False):
             return output
         except subprocess.CalledProcessError as e:
             print(e)
-            print("! Aborting release process due to error, please clean up after yourself !")
-            sys.exit(1)
-
+            print("! There was an unexpected error, please clean up after yourself !")
+            response = input(f"Continue, or Abort?: [c/a] ")
+            while response.lower() not in ["c", "continue", "a", "abort"]:
+                response = input("Please respond with one of:\n - Continue (or c)\n - Abort (or a)\n")
+            if response in ["a", "abort"]:
+                sys.exit(1)
+            if response in ["c", "continue"]:
+                print("Continuing...")
+                return
 
 def build_docker_image_for_version(ctx):
     print("\n# BUILD THE APP AND API")
