@@ -33,7 +33,7 @@ def parse_command_line_arguments():
     parser.add_argument('site', choices=[Site.CS, Site.PHY, Site.BOTH])
     parser.add_argument('env', choices=['test', 'staging', 'dev', 'live', 'etl'])
     parser.add_argument('app', help="The app version target for this deployment. Examples master or v1.2.3")
-    parser.add_argument('--api', help="The api version target for this deployment")
+    parser.add_argument('api', help="The api version target for this deployment")
     parser.add_argument('--exec', help="Whether the script should execute the commands itself after prompting the user", action='store_true')
     return parser.parse_args()
 
