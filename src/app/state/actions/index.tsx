@@ -249,6 +249,7 @@ export const updateCurrentUser = (
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
+            persistence.session.remove(KEY.FIRST_LOGIN);
             if (redirect) {
                 history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
             }

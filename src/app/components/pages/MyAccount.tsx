@@ -42,6 +42,9 @@ import {
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
+    isCS,
+    isDefined,
+    isDobOldEnoughForSite,
     isDobOverThirteen,
     isStaff,
     SITE_SUBJECT_TITLE,
@@ -227,7 +230,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
-            (isDobOverThirteen(userToUpdate.dateOfBirth) || userToUpdate.dateOfBirth === undefined) &&
+            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
             updateCurrentUser(
