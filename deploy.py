@@ -33,7 +33,7 @@ def parse_command_line_arguments():
     parser.add_argument('site', choices=[Site.CS, Site.PHY, Site.BOTH])
     parser.add_argument('env', choices=['test', 'staging', 'dev', 'live', 'etl'])
     parser.add_argument('app', help="The app version target for this deployment. Examples master or v1.2.3")
-    parser.add_argument('--api', help="The api version target for this deployment")
+    parser.add_argument('api', help="The api version target for this deployment")
     parser.add_argument('--exec', help="Whether the script should execute the commands itself after prompting the user", action='store_true')
     return parser.parse_args()
 
@@ -71,15 +71,21 @@ def ask_to_run_command(command, print_output=False):
         return
     if response in ["y", "yes"]:
         try:
-            output = subprocess.check_output(command, shell=True, text=True)
+            output = subprocess.check_output(command, shell=True, universal_newlines=True)
             if print_output:
                 print(output)
             return output
         except subprocess.CalledProcessError as e:
             print(e)
-            print("! Aborting release process due to error, please clean up after yourself !")
-            sys.exit(1)
-
+            print("! There was an unexpected error, please clean up after yourself !")
+            response = input(f"Continue, or Abort?: [c/a] ")
+            while response.lower() not in ["c", "continue", "a", "abort"]:
+                response = input("Please respond with one of:\n - Continue (or c)\n - Abort (or a)\n")
+            if response in ["a", "abort"]:
+                sys.exit(1)
+            if response in ["c", "continue"]:
+                print("Continuing...")
+                return
 
 def build_docker_image_for_version(ctx):
     print("\n# BUILD THE APP AND API")
@@ -100,8 +106,6 @@ def update_config(ctx):
     print("# If necessary, update config:")
     ask_to_run_command(f"sudo nano /local/data/isaac-config/{ctx['site']}/segue-config.{ctx['env']}.properties")
     print("# Remember to also update isaac-3 so that it remains in-sync! \n")
-    print("# Return to app directory:")
-    ask_to_run_command(f"cd /local/src/isaac-react-app")
 
 
 def run_db_migrations(ctx):
@@ -112,8 +116,6 @@ def run_db_migrations(ctx):
     ask_to_run_command(f"cd /local/src/isaac-api && git diff --names-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations | xargs cat", print_output=True)
     print("# If there are any DB migrations, run them (in a transaction with a BEGIN; ROLLBACK; or COMMIT;):")
     ask_to_run_command(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
-    print("# Return to app directory:")
-    ask_to_run_command(f"cd /local/src/isaac-react-app")
 
 
 def write_changelog():
@@ -220,8 +222,6 @@ if __name__ == '__main__':
     EXEC = context['exec']
 
     print("\n# ! THIS SCRIPT IS STILL EXPERIMENTAL SO CHECK EACH COMMAND BEFORE EXECUTING IT !\n")
-    print("# Go to isaac-react-app on the live machine:")
-    ask_to_run_command("cd /local/src/isaac-react-app")
     check_repos_are_up_to_date()
 
     build_docker_image_for_version(context)
