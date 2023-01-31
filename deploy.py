@@ -55,7 +55,7 @@ def validate_args(args):
     return args
 
 
-def ask_to_run_command(command, print_output=False, allowed_return_codes=(0,)):
+def ask_to_run_command(command, print_output=False):
     if not EXEC:
         return input(f"{command}\n")
 
