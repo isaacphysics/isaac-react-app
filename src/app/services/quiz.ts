@@ -104,8 +104,10 @@ export function useCurrentQuizAttempt(studentId?: number) {
     const [attempt, error] = studentId
         ? [studentAttempt, studentError]
         : [currentUserAttempt, currentUserError];
-    // Augment quiz object with subject id
-    const attemptWithQuizSubject = {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)};
+    // Augment quiz object with subject id, propagating undefined-ness
+    const attemptWithQuizSubject = attempt
+        ? {...attempt, quiz: attempt?.quiz && tags.augmentDocWithSubject(attempt.quiz)}
+        : undefined;
 
     const questions = useQuizQuestions(attempt);
     const sections = useQuizSections(attempt);
