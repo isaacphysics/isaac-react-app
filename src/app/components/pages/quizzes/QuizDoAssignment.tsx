@@ -33,6 +33,7 @@ export const QuizDoAssignment = ({user}: {user: RegisteredUserDTO}) => {
         `/test/assignment/${quizAssignmentId}` + (isDefined(page) ? `/page/${page}` : "")
     , [quizAssignmentId]);
 
+    // Importantly, these are only used if attempt is defined
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user};
 
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
