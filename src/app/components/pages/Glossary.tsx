@@ -249,9 +249,9 @@ export const Glossary = () => {
                         {alphabetList}
                     </div>
                 </div>
-                {Object.entries(glossaryTerms).map(([letter, terms]) => <Row key={letter} className="pb-5">
+                {Object.entries(glossaryTerms).map(([letter, terms]) => <div key={letter} className="row pb-5" ref={(el: HTMLDivElement) => alphabetHeaderRefs.current.set(letter, el)}>
                     <Col md={{size: 1, offset: 1}}>
-                        <h2 style={{position: 'sticky', top: '1em'}} ref={(el: HTMLHeadingElement) => alphabetHeaderRefs.current.set(letter, el)}>
+                        <h2 style={{position: 'sticky', top: `calc(0px - ${ALPHABET_HEADER_OFFSET}px)`}}>
                             {letter}
                         </h2>
                     </Col>
@@ -265,7 +265,7 @@ export const Glossary = () => {
                             />
                         )}
                     </Col>
-                </Row>)}
+                </div>)}
             </Col>}
         </Container>
     </div>;
