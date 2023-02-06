@@ -1,5 +1,5 @@
-import React, {lazy} from "react";
-import {AppQuestionDTO, IsaacQuestionProps, ValidatedChoice} from "../../IsaacAppTypes";
+import React, {lazy, useContext} from "react";
+import {AppQuestionDTO, IsaacQuestionProps, MultiPartQuestionContext, ValidatedChoice} from "../../IsaacAppTypes";
 import {DOCUMENT_TYPE, REVERSE_GREEK_LETTERS_MAP} from './';
 import {ChoiceDTO, ContentDTO, ContentSummaryDTO} from "../../IsaacApiTypes";
 import {selectors, setCurrentAttempt, useAppDispatch, useAppSelector} from "../state";
@@ -17,6 +17,7 @@ const IsaacSymbolicQuestion = lazy(() => import("../components/content/IsaacSymb
 const IsaacSymbolicChemistryQuestion = lazy(() => import("../components/content/IsaacSymbolicChemistryQuestion"));
 const IsaacGraphSketcherQuestion = lazy(() => import("../components/content/IsaacGraphSketcherQuestion"));
 const IsaacClozeQuestion = lazy(() => import("../components/content/IsaacClozeQuestion"));
+const IsaacMultiPartQuestion = lazy(() => import("../components/content/IsaacMultiPartQuestion"));
 
 export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacMultiChoiceQuestion": "Multiple choice",
@@ -31,10 +32,11 @@ export const HUMAN_QUESTION_TYPES: {[key: string]: string} = {
     "isaacSymbolicLogicQuestion": "Boolean logic",
     "isaacGraphSketcherQuestion": "Graph Sketcher",
     "isaacClozeQuestion": "Cloze drag and drop",
+    "isaacMultiPartQuestion": "Multi-part",
     "default": "Multiple choice"
 };
 
-export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, questionId, readonly}: IsaacQuestionProps<any>) => JSX.Element>} = {
+export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, questionId, readonly}: IsaacQuestionProps<any, any>) => JSX.Element>} = {
     "isaacMultiChoiceQuestion": IsaacMultiChoiceQuestion,
     "isaacItemQuestion": IsaacItemQuestion,
     "isaacReorderQuestion": IsaacReorderQuestion,
@@ -48,6 +50,7 @@ export const QUESTION_TYPES: {[key: string]: React.LazyExoticComponent<({doc, qu
     "isaacSymbolicLogicQuestion": IsaacSymbolicLogicQuestion,
     "isaacGraphSketcherQuestion": IsaacGraphSketcherQuestion,
     "isaacClozeQuestion": IsaacClozeQuestion,
+    "isaacMultiPartQuestion": IsaacMultiPartQuestion,
     "default": IsaacMultiChoiceQuestion
 };
 
@@ -149,16 +152,28 @@ export const parsePseudoSymbolicAvailableSymbols = (availableSymbols?: string[])
 };
 
 /**
- * Essentially a useState for the current question attempt - used in all question components.
+ * Essentially a useState for the current question attempt - used in all question components. Will check for a
+ * MultiPartQuestion context, and if so, dispatch any question attempts through that instead.
+ *
  * @param questionId  id of the question to return the current attempt of
  */
 export function useCurrentQuestionAttempt<T extends ChoiceDTO>(questionId: string) {
     const dispatch = useAppDispatch();
+    const multiPartQuestionContext = useContext(MultiPartQuestionContext);
     const pageQuestions = useAppSelector(selectors.questions.getQuestions);
-    const questionPart = selectQuestionPart(pageQuestions, questionId);
-    return {
-        currentAttempt: questionPart?.currentAttempt as (Immutable<T> | undefined),
-        dispatchSetCurrentAttempt: (attempt: Immutable<T | ValidatedChoice<T>>) => dispatch(setCurrentAttempt(questionId, attempt)),
-        questionPart: questionPart
-    };
+
+    if (multiPartQuestionContext) {
+        return {
+            currentAttempt: multiPartQuestionContext.singlePartCurrentAttempt(questionId) as (Immutable<T> | undefined),
+            dispatchSetCurrentAttempt: (attempt: Immutable<T | ValidatedChoice<T>>) => multiPartQuestionContext.dispatchSinglePartCurrentAttempt(questionId, {...attempt, id: questionId}),
+            questionPart: multiPartQuestionContext.getQuestionDoc(questionId),
+        };
+    } else {
+        const questionPart = selectQuestionPart(pageQuestions, questionId);
+        return {
+            currentAttempt: questionPart?.currentAttempt as (Immutable<T> | undefined),
+            dispatchSetCurrentAttempt: (attempt: Immutable<T | ValidatedChoice<T>>) => dispatch(setCurrentAttempt(questionId, attempt)),
+            questionPart,
+        };
+    }
 }

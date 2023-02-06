@@ -1,4 +1,10 @@
-import {dropZoneRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
+import {
+    dropZoneRegex,
+    inlineQuestionRegex,
+    isDefined,
+    isPhy,
+    MARKDOWN_RENDERER
+} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 
@@ -80,3 +86,12 @@ export const regexProcessMarkdown = (markdown: string) => {
     );
     return markdown;
 }
+
+export const renderInlineQuestions = (markdown: string) => {
+    return markdown.replace(inlineQuestionRegex, (_match, idMatch, params, marksMatch, widthMatch, heightMatch) => {
+        const marks = marksMatch ? marksMatch.slice("m-".length) : "1";
+        const width = widthMatch ? widthMatch.slice("w-".length) : "100%";
+        const height = heightMatch ? heightMatch.slice("h-".length) : "100%";
+        return `<div data-marks="${marks}" data-id="${idMatch}" style="width: ${width}; height: ${height}" class="inline-question" class="d-inline-block"></div>`;
+    });
+};

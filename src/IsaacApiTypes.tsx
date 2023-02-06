@@ -204,6 +204,18 @@ export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
     availableSymbols?: string[];
 }
 
+export interface IsaacMultiPartQuestionDTO extends QuestionDTO {
+    parts?: QuestionDTO[];
+}
+
+export interface MultiPartChoiceDTO extends ChoiceDTO {
+    choices?: ChoiceDTO[];
+}
+
+export interface MultiPartValidationResponseDTO extends QuestionValidationResponseDTO {
+    validationResponses: QuestionValidationResponseDTO[];
+}
+
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
     linkedGameboards?: GameboardDTO[];
 }

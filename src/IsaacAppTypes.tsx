@@ -616,6 +616,14 @@ export const ClozeDropRegionContext = React.createContext<{
     dropZoneValidationMap: {[p: string]: {correct?: boolean, itemId?: string} | undefined},
     shouldGetFocus: (id: string) => boolean
 } | undefined>(undefined);
+export const MultiPartQuestionContext = React.createContext<{
+    questionPartId: string,
+    singlePartCurrentAttempt: (id: string) => Immutable<ChoiceDTO> | undefined,
+    dispatchSinglePartCurrentAttempt: (id: string, attempt: Immutable<ChoiceDTO | ValidatedChoice<ChoiceDTO>>) => void,
+    getQuestionValidation: (id: string) => Immutable<QuestionValidationResponseDTO> | undefined,
+    getQuestionDoc: (id: string) => Immutable<QuestionDTO> | undefined,
+    readonly: boolean | undefined
+} | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});

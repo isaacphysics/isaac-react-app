@@ -1146,3 +1146,5 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
+export const inlineQuestionRegex = /\[inline-question-(?<id>[A-Za-z0-9-_]+)(?<params>\|(?<marks>m-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
