@@ -146,7 +146,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
 
     function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
         if (group?.id) {
-            if (confirm("Are you sure you want to promote this manager to group owner?\nThey will inherit the ability to add additional managers to, archive and delete this group.")) {
+            if (confirm("Are you sure you want to promote this manager to group owner?\nThey will inherit the ability to add additional managers to, archive and delete this group.\nYou will be demoted to an additional group manager.")) {
                 promoteGroupManager({groupId: group.id, managerUserId: manager.id as number}).then(response => {
                     if (mutationSucceeded(response)) {
                         dispatch(closeActiveModal());
