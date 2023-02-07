@@ -316,6 +316,7 @@ export interface UserGroupDTO {
     lastUpdated?: Date;
     token?: string;
     archived?: boolean;
+    additionalManagerPrivileges?: boolean;
     ownerSummary?: UserSummaryWithEmailAddressDTO;
     additionalManagers?: UserSummaryWithEmailAddressDTO[];
     _id?: number;
