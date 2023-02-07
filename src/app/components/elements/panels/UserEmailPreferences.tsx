@@ -1,9 +1,21 @@
 import {CardBody, FormGroup, Table} from "reactstrap";
-import React from "react";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {AppState, useAppSelector} from "../../../state";
 import {SITE_SUBJECT_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
+
+// Extended useState hook for email preferences, enforcing a default of {ASSIGNMENTS: true}
+export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
+    const [emailPreferences, _setEmailPreferences] = useState<Nullable<UserEmailPreferences>>({ASSIGNMENTS: true, ...initialEmailPreferences});
+    const setEmailPreferences = (newEmailPreferences: Nullable<UserEmailPreferences> | ((ep: Nullable<UserEmailPreferences>) => Nullable<UserEmailPreferences>)) => {
+        if (typeof newEmailPreferences === "function") {
+            return _setEmailPreferences((old) => ({ASSIGNMENTS: true, ...(newEmailPreferences(old))}));
+        }
+        return _setEmailPreferences({ASSIGNMENTS: true, ...newEmailPreferences});
+    }
+    return [emailPreferences, setEmailPreferences];
+};
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences | null | undefined;

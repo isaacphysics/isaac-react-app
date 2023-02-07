@@ -30,22 +30,19 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
-    UserEmailPreferences,
     UserPreferencesDTO,
     ValidationUser,
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
-import {UserEmailPreference} from "../elements/panels/UserEmailPreferences";
+import {useEmailPreferenceState, UserEmailPreference} from "../elements/panels/UserEmailPreferences";
 import {
     ACCOUNT_TAB,
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
-    isCS,
     isDefined,
     isDobOldEnoughForSite,
-    isDobOverThirteen,
     isStaff,
     SITE_SUBJECT_TITLE,
     validateEmail,
@@ -147,6 +144,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     // Inputs which trigger re-render
     const [attemptedAccountUpdate, setAttemptedAccountUpdate] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     // - Passwords
     const [newPassword, setNewPassword] = useState("");
@@ -154,7 +152,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     const [currentPassword, setCurrentPassword] = useState("");
 
     // - User preferences
-    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences | null | undefined>();
+    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState();
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO | null | undefined>({});
     const preferencesChanged = useMemo(() => !hashEqual({...myUserPreferences, EMAIL_PREFERENCE: emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? undefined}, userPreferences ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
 
@@ -164,7 +162,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
     useEffect(function keepUserContextsUpdated() {
         setUserContextsToUpdate(userToUpdate.registeredContexts?.length ? [...userToUpdate.registeredContexts] : [{}]);
     }, [userToUpdate?.registeredContexts]);
-    const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts, userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
+    const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
     const pageTitle = editingOtherUser ? "Edit user" : "My account";
 
@@ -204,17 +202,18 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         }));
     }
 
-    const accountInfoChanged = contextsChanged || userChanged || preferencesChanged;
+    const accountInfoChanged = contextsChanged || userChanged || (preferencesChanged && activeTab === ACCOUNT_TAB.emailpreferences);
     useEffect(() => {
-        if (accountInfoChanged) {
+        if (accountInfoChanged && !saving) {
             return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
         }
-    }, [accountInfoChanged]);
+    }, [accountInfoChanged, saving]);
 
     // Form's submission method
     function updateAccount(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setAttemptedAccountUpdate(true);
+        setSaving(true);
 
         let newPreferences = {...myUserPreferences};
 
@@ -241,6 +240,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                 user,
                 true
             );
+        } else {
+            setSaving(false);
         }
     }
 

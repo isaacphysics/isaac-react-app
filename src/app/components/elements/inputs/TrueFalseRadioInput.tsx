@@ -1,18 +1,18 @@
 import React from "react";
 import * as RS from "reactstrap";
 
-interface TrueFalseRadioProps<T> {
+interface TrueFalseRadioProps {
     id: string;
-    stateObject: T;
+    stateObject: Nullable<Record<string, Nullable<boolean>>>;
     propertyName: string;
-    setStateFunction: (stateObject: T) => void;
+    setStateFunction: (stateObject: Record<string, Nullable<boolean>>) => void;
     submissionAttempted: boolean;
     error?: string;
     trueLabel?: string;
     falseLabel?: string;
 }
-export const TrueFalseRadioInput = ({id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps<any>) => {
-    const invalid = submissionAttempted && ![true, false].includes(stateObject[propertyName]);
+export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps) {
+    const invalid = submissionAttempted && (typeof stateObject?.[propertyName] !== "boolean");
 
     return <RS.FormGroup>
         <div className="d-flex flex-nowrap">
@@ -45,4 +45,4 @@ export const TrueFalseRadioInput = ({id, stateObject, propertyName, setStateFunc
             required
         </div>}
     </RS.FormGroup>
-};
+}
