@@ -152,7 +152,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                             setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
                         }}
                     >
-                        <option value={undefined}></option>
+                        <option/>
                         <option value={PROGRAMMING_LANGUAGE.PSEUDOCODE}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PSEUDOCODE]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
                         <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
