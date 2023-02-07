@@ -23,7 +23,9 @@ import {
     ErrorState,
     getChosenUserAuthSettings,
     resetPassword,
-    updateCurrentUser
+    showErrorToast,
+    updateCurrentUser,
+    useAppDispatch
 } from "../../state";
 import {
     BooleanNotation,
@@ -109,6 +111,7 @@ function hashEqual<T>(a: NonNullable<T>, b: NonNullable<T>, options?: any) {
 }
 
 const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+    const dispatch = useAppDispatch();
     // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
@@ -240,9 +243,11 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
                 user,
                 true
             );
-        } else {
-            setSaving(false);
+            return;
+        } else if (activeTab == ACCOUNT_TAB.emailpreferences) {
+            dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
         }
+        setSaving(false);
     }
 
     // Changing tab clears the email preferences - stops the user from modifying them when not explicitly on the
