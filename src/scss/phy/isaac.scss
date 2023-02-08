@@ -84,7 +84,7 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/animations";
 
 // Atoms
-@import "../common/fonts";
+@import "fonts";
 @import "typography";
 @import "../common/headings";
 @import "../common/modals";

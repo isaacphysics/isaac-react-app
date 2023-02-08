@@ -82,12 +82,12 @@ $input-btn-padding-x-lg: 3rem;
 $border-radius-lg: 0.25rem;
 
 // fonts
-$primary-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-$secondary-font: 'exo_2regular', sans-serif;
-$secondary-font-bold: 'exo_2bold', sans-serif;
-$secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
-$secondary-font-medium: 'exo_2medium', sans-serif;
-$tertiary-font: 'arconrounded-regular', sans-serif;
+$primary-font: "poppins-regular", sans-serif;
+$secondary-font: 'poppins-regular', sans-serif;
+$secondary-font-bold: 'poppins-bold', sans-serif;
+$secondary-font-semi-bold: 'poppins-semibold', sans-serif;
+$secondary-font-medium: $secondary-font;
+$tertiary-font: 'poppins-light', sans-serif;
 
 // ISAAC
 // Node module imports
@@ -106,8 +106,8 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/animations";
 
 // Atoms
-@import "../common/fonts";
 @import "../common/typography";
+@import "fonts";
 @import "../common/headings";
 @import "../common/modals";
 @import "questions";

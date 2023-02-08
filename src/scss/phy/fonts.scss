@@ -1,0 +1,432 @@
+@font-face {
+  font-family: 'desyrel';
+  src: url('/assets/shared-fonts/desyrel-webfont.woff') format('woff'),
+  url('/assets/shared-fonts/desyrel-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+// NOMENSA fonts.scss
+// REMEMBER TO REPLACE "./assets/fonts" with "/assets/fonts"
+@font-face {
+  font-family: 'exo_2black_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-blackitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-blackitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.svg#exo_2black_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2bold_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-bolditalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-bolditalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.svg#exo_2bold_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2extra_bold_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-extrabolditalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-extrabolditalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.svg#exo_2extra_bold_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2semi_bold_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-semibolditalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-semibolditalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.svg#exo_2semi_bold_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2medium_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-mediumitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-mediumitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.svg#exo_2medium_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2extra_light_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-extralightitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-extralightitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.svg#exo_2extra_light_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-italic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-italic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-italic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-italic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-italic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-italic-webfont.svg#exo_2italic') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2light_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-lightitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-lightitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.svg#exo_2light_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2thin_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-thinitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-thinitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.svg#exo_2thin_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2black';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-black-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-black-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-black-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-black-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-black-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-black-webfont.svg#exo_2black') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-bold-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-bold-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-bold-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-bold-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-bold-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-bold-webfont.svg#exo_2bold') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2extra_bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-extrabold-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-extrabold-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.svg#exo_2extra_bold')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2black_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-blackitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-blackitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-blackitalic-webfont.svg#exo_2black_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2bold_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-bolditalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-bolditalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-bolditalic-webfont.svg#exo_2bold_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2extra_bold_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-extrabolditalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-extrabolditalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-extrabolditalic-webfont.svg#exo_2extra_bold_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2semi_bold_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-semibolditalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-semibolditalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-semibolditalic-webfont.svg#exo_2semi_bold_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2medium_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-mediumitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-mediumitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-mediumitalic-webfont.svg#exo_2medium_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2extra_light_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-extralightitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-extralightitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-extralightitalic-webfont.svg#exo_2extra_light_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-italic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-italic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-italic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-italic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-italic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-italic-webfont.svg#exo_2italic') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2light_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-lightitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-lightitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-lightitalic-webfont.svg#exo_2light_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2thin_italic';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-thinitalic-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-thinitalic-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-thinitalic-webfont.svg#exo_2thin_italic')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2black';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-black-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-black-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-black-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-black-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-black-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-black-webfont.svg#exo_2black') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-bold-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-bold-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-bold-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-bold-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-bold-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-bold-webfont.svg#exo_2bold') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2extra_bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-extrabold-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-extrabold-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-extrabold-webfont.svg#exo_2extra_bold')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2medium';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-medium-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-medium-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-medium-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-medium-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-medium-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-medium-webfont.svg#exo_2medium') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2semi_bold';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-semibold-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-semibold-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-semibold-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-semibold-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-semibold-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-semibold-webfont.svg#exo_2semi_bold') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2extra_light';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-extralight-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-extralight-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-extralight-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-extralight-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-extralight-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-extralight-webfont.svg#exo_2extra_light')
+  format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2light';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-light-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-light-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-light-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-light-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-light-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-light-webfont.svg#exo_2light') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2regular';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-regular-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-regular-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-regular-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-regular-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-regular-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-regular-webfont.svg#exo_2regular') format('svg');
+}
+
+@font-face {
+  font-family: 'exo_2thin';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/assets/phy/fonts/exo2-thin-webfont.eot');
+  src: url('/assets/phy/fonts/exo2-thin-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/exo2-thin-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/exo2-thin-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/exo2-thin-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/exo2-thin-webfont.svg#exo_2thin') format('svg');
+}
+
+@font-face {
+  font-family: 'arconrounded-regular';
+  font-weight: normal;
+  font-style: normal;
+  src: url('/assets/phy/fonts/arcon-rounded-regular-webfont.eot');
+  src: url('/assets/phy/fonts/arcon-rounded-regular-webfont.eot?#iefix')
+  format('embedded-opentype'),
+  url('/assets/phy/fonts/arcon-rounded-regular-webfont.woff2') format('woff2'),
+  url('/assets/phy/fonts/arcon-rounded-regular-webfont.woff') format('woff'),
+  url('/assets/phy/fonts/arcon-rounded-regular-webfont.ttf') format('truetype'),
+  url('/assets/phy/fonts/arcon-rounded-regular-webfont.svg#arconrounded-regular')
+  format('svg');
+}
