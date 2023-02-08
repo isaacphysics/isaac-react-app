@@ -78,7 +78,6 @@ const stateToProps = (state: AppState, props: any) => {
 };
 
 const dispatchToProps = {
-    updateCurrentUser,
     resetPassword,
     adminUserGetRequest,
     getChosenUserAuthSettings,
@@ -90,14 +89,6 @@ interface AccountPageProps {
     userAuthSettings: UserAuthenticationSettingsDTO | null;
     getChosenUserAuthSettings: (userid: number) => void;
     userPreferences: UserPreferencesDTO | null;
-    updateCurrentUser: (
-        updatedUser: ValidationUser,
-        updatedUserPreferences: UserPreferencesDTO,
-        userContexts: UserContext[] | undefined,
-        passwordCurrent: string | null,
-        currentUser: PotentialUser,
-        redirect: boolean
-    ) => void;
     firstLogin: boolean;
     hashAnchor: string | null;
     authToken: string | null;
@@ -110,7 +101,7 @@ function hashEqual<T>(a: NonNullable<T>, b: NonNullable<T>, options?: any) {
     return hash(a, options) === hash(b, options);
 }
 
-const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
     const dispatch = useAppDispatch();
     // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
@@ -235,14 +226,14 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
-            updateCurrentUser(
+            dispatch(updateCurrentUser(
                 userToUpdate,
                 editingOtherUser ? {} : newPreferences,
                 contextsChanged ? userContextsToUpdate : undefined,
                 currentPassword,
                 user,
                 true
-            );
+            )).then(() => setSaving(false)).catch(() => setSaving(false));
             return;
         } else if (activeTab == ACCOUNT_TAB.emailpreferences) {
             dispatch(showErrorToast("Account update failed", "Please make sure that all required fields in the \"Profile\" tab have been filled in."));
