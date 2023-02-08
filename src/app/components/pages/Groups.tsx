@@ -94,6 +94,8 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
         }
     }
 
+    const userHasAdditionalGroupPrivileges = (isDefined(user.id) && isDefined(group.ownerId) && user.id === group.ownerId ? true : group.additionalManagerPrivileges) ?? false;
+
     return <div className="p-2 member-info-item d-flex justify-content-between" data-testid={"member-info"}>
         <div className="pt-1 d-flex flex-fill">
             <div>
@@ -134,9 +136,9 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                 </Tooltip>
                 {"  "}
             </>}
-            <button className="ml-2 close" onClick={confirmDeleteMember} aria-label="Remove member">
+            {userHasAdditionalGroupPrivileges && <button className="ml-2 close" onClick={confirmDeleteMember} aria-label="Remove member">
                 ×
-            </button>
+            </button>}
         </div>
     </div>;
 };
