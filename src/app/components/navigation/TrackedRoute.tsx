@@ -1,11 +1,13 @@
 import React, {useEffect} from "react";
 import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
+import ReactGA4 from "react-ga4";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
 import {
     GOOGLE_ANALYTICS_ACCOUNT_ID,
+    GOOGLE_ANALYTICS_4_MEASUREMENT_ID,
     isTeacherOrAbove,
     isTutorOrAbove,
     KEY,
@@ -15,11 +17,15 @@ import {Unauthorised} from "../pages/Unauthorised";
 import {Immutable} from "immer";
 
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
+ReactGA4.initialize(GOOGLE_ANALYTICS_4_MEASUREMENT_ID);
 ReactGA.set({ anonymizeIp: true });
+ReactGA4.set({ anonymizeIp: true });
 
 const trackPage = (page: string, options?: FieldsObject) => {
     ReactGA.set({ page, ...options });
+    ReactGA4.set({ page, ...options });
     ReactGA.pageview(page);
+    ReactGA4.send({ hitType: "pageview", page });
 };
 
 interface UserFilterProps {

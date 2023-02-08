@@ -86,7 +86,7 @@ import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentSchedule} from "../pages/AssignmentSchedule";
 import {ExternalRedirect} from "../handlers/ExternalRedirect";
 import {TutorRequest} from "../pages/TutorRequest";
-import {TeacherOrTutorRequest} from "../pages/TeacherOrTutorRequest";
+import ReactGA4 from "react-ga4";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
