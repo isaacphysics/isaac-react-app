@@ -1,5 +1,27 @@
-// NOMENSA variables.scss
-//Custom Colours
+// Ada brand and visual identity colours
+$cs-black: #000000;
+$cs-white: #ffffff;
+$cs-turquoise-blue: #0AFFE7;
+$cs-pink: #FF4DC9;
+$cs-raspberry: #870D5A;
+$cs-yellow: #FFE672;
+
+//Greys
+$cs-jet: #333333;
+$cs-silver: #C2C2C2;
+$cs-light-gray: #D6D6D6;
+$cs-cultured: #F5F5F5;
+
+// Theme
+$primary: $cs-pink;
+$secondary: $cs-turquoise-blue;
+$theme-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "raspberry": $cs-raspberry,
+);
+
+// TODO ADA remove
 $cs-mustard: #ffb53f;
 $cs-hot-pink: #ff3369;
 $cs-reddish: #d7335f; // Used as an active colour on secondary buttons
@@ -9,14 +31,6 @@ $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 $purple: #9148bc;
 $cyan: #0f8294;
 $green: #208838;
-
-// Theme
-$primary: $cs-mustard;
-$secondary: $cs-hot-pink;
-$theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary
-);
 
 // Stage colours
 $gcse-colour: #C40E50;
