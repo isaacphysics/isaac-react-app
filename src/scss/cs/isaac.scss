@@ -106,8 +106,8 @@ $tertiary-font: 'poppins-light', sans-serif;
 @import "../common/animations";
 
 // Atoms
-@import "../common/typography";
 @import "fonts";
+@import "typography";
 @import "../common/headings";
 @import "../common/modals";
 @import "questions";

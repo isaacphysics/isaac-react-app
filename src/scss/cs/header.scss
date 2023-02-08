@@ -1,12 +1,7 @@
 @import "../common/header";
 
 header {
-  z-index: 20;
-  background-image: url('/assets/Line.svg');
-  @include respond-above(sm) {
-    background-image: url('/assets/Line-alt.svg');
-    background-size: 100% 60%;
-  }
+  background-color: $cs-black;
 }
 
 div.header-progress {

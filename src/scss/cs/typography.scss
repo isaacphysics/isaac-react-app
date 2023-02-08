@@ -1,0 +1,12 @@
+@import "../common/typography";
+
+header a, div.isaac-nav-link {
+  color: $cs-white;
+  display: inline-block;
+  text-decoration: underline;
+
+  &:hover {
+    color: $cs-white;
+    text-decoration: none;
+  }
+}
