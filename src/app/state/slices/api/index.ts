@@ -452,9 +452,7 @@ const isaacApi = createApi({
             invalidatesTags: (_, error, {updatedGroup}) => !isDefined(error) ? [{type: "GroupAssignments", id: updatedGroup.id}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: ({updatedGroup, message}, _, {dispatch}) => {
-                    if (message) {
-                        dispatch(showSuccessToast("Group saved successfully", message));
-                    }
+                    dispatch(showSuccessToast("Group saved successfully", message));
                     [true, false].forEach(archivedGroupsOnly => {
                         dispatch(isaacApi.util.updateQueryData(
                             "getGroups",
@@ -623,19 +621,6 @@ const isaacApi = createApi({
                 },
                 errorTitle: "Group manager removal failed"
             }),
-        }),
-
-        promoteGroupManager: build.mutation<void, {groupId: number, managerUserId: number}>({
-            query: ({groupId, managerUserId}) => ({
-                url: `/groups/${groupId}/manager/promote/${managerUserId}`,
-                method: "POST"
-            }),
-            invalidatesTags: ["AllSetTests", "AllSetAssignments", "GroupAssignments", "GroupTests", "Groups"],
-            onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Group manager promoted to owner",
-                successMessage: "You have been demoted to an additional manager of this group",
-                errorTitle: "Group manager promotion failed"
-            })
         }),
 
         // --- Tokens ---

@@ -598,7 +598,6 @@ export interface AdminStatsResponse {
 export interface ValidAssignmentWithListingDate extends AssignmentDTO {
     gameboardId: string;
     groupId: number;
-    additionalManagerPrivileges: boolean;
     id: number;
     listingDate: Date;
 }

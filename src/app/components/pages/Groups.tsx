@@ -153,7 +153,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     const [isExpanded, setExpanded] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group ? group.groupName : "");
-    const isUserGroupOwner = group ? user.id === group.ownerId : false;
+    const isUserGroupOwner = user.id === group?.ownerId;
 
     useEffect(() => {
         setExpanded(false);
@@ -238,9 +238,9 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 <InputGroup className="w-100">
                     <Input
                         innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
-                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
+                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !isUserGroupOwner}
                     />
-                    {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
+                    {(isUserGroupOwner || !isDefined(group)) && <InputGroupAddon addonType="append">
                         <Button
                             color={siteSpecific("secondary", "primary")}
                             className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
@@ -257,13 +257,13 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 </Col>
             </Row>
             {group && <React.Fragment>
-                {(isUserGroupOwner || group.additionalManagerPrivileges) && <Row>
+                <Row>
                     <Col>
-                        <Button block color="tertiary" onClick={toggleArchived}>
+                        {isUserGroupOwner && <Button block color="tertiary" onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
-                        </Button>
+                        </Button>}
                     </Col>
-                </Row>}
+                </Row>
                 <Row className="mt-4">
                     <Col>
                         <ShowLoading until={group.members}>
@@ -327,13 +327,13 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = isaacApi.endpoints.getGroups.useQuery(showArchived);
-    const { currentData: groups, isLoading, isFetching } = groupQuery;
+    const { data: groups } = groupQuery;
 
     const [createGroup] = isaacApi.endpoints.createGroup.useMutation();
     const [deleteGroup] = isaacApi.endpoints.deleteGroup.useMutation();
 
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
+    const selectedGroup = groups?.find(g => g.id === selectedGroupId);
 
     // Clear the selected group when switching between tabs
     const switchTab = (archived: boolean) => {

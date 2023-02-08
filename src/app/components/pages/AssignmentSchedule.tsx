@@ -57,8 +57,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? "this gameboard"} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
             unassignGameboard({boardId: assignment.gameboardId, groupId: assignment.groupId});
         }
-    };
-    const assignmentOwnedByMe = assignment.ownerUserId === user.id;
+    }
     const assignmentStartDate = getAssignmentStartDate(assignment);
     const gameboardTitle = assignment.gameboard?.title ?? "No gameboard title";
     const gameboardLink = assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined;
@@ -69,17 +68,16 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Copy
                 </Button>
-                {(assignmentOwnedByMe || assignment.additionalManagerPrivileges) && <Button color="link" size="sm" onClick={deleteAssignment}>
+                <Button color="link" size="sm" onClick={deleteAssignment}>
                     Delete
-                </Button>}
+                </Button>
             </div>
         </CardHeader>
         <CardBody>
             <div>Assigned to: <strong>{assignment.groupName}</strong></div>
             {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
             {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
-            {assignment.gameboard && <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>}
-            {assignment.gameboard && <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
+            {assignment.gameboard && <div>By: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
             {assignment.listingDate <= TODAY() && <div>
                 <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
                     View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
@@ -380,7 +378,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         if (!assignmentsSetByMe) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
             assignmentsSetByMe
-                .map((a) => ({...a, listingDate: new Date(viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0).valueOf()), additionalManagerPrivileges: (a?.groupId && groupsById[a.groupId]?.additionalManagerPrivileges) ?? false} as ValidAssignmentWithListingDate))
+                .map((a) => ({...a, listingDate: new Date(viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0).valueOf())} as ValidAssignmentWithListingDate))
                 // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
                 .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (a.listingDate.valueOf() >= earliestShowDate.valueOf()) && (viewBy === "startDate" || isDefined(a.dueDate)))
             , a => a.listingDate.valueOf()
@@ -446,15 +444,11 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                 root: null,
                 rootMargin: '0px',
                 threshold: 1.0,
-            };
+            }
             headerScrollerObserver.current = new IntersectionObserver(headerScrollerCallback, options);
             headerScrollerObserver.current.observe(headerScrollerSentinel.current);
             headerScrollerFlag.current = true;
-            return () => {
-                headerScrollerObserver?.current?.disconnect();
-                headerScrollerObserver.current = undefined;
-                headerScrollerFlag.current = false;
-            };
+            return () => headerScrollerObserver?.current?.disconnect();
         }
     }, [assignmentsSetByMe, gameboards]);
 
