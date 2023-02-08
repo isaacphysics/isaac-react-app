@@ -531,8 +531,10 @@ describe("Groups", () => {
         const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
         await userEvent.click(selectGroupButton);
         const groupEditor = await screen.findByTestId("group-editor");
+
         // Text on button should have changed to "View all" rather than "Add / remove"
         const addManagersButton = within(groupEditor).getByRole("button", {name: "View all group managers"});
+
         await userEvent.click(addManagersButton);
 
         // Find group manager modal, should have title "Shared group" instead of "Share your group"

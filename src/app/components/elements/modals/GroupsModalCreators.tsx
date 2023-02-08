@@ -7,10 +7,11 @@ import {
     isaacApi,
     store,
     useAppDispatch,
+    mutationSucceeded,
 } from "../../../state";
 import {sortBy} from "lodash";
 import {history, isTeacherOrAbove} from "../../../services";
-import {Jumbotron, Row, Col, Form, Input, Table} from "reactstrap";
+import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
@@ -122,6 +123,8 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     const group = groups?.find(g => g.id === groupId);
     const [addGroupManager] = isaacApi.endpoints.addGroupManager.useMutation();
     const [deleteGroupManager] = isaacApi.endpoints.deleteGroupManager.useMutation();
+    const [promoteGroupManager] = isaacApi.endpoints.promoteGroupManager.useMutation();
+    const [updateGroup] = isaacApi.endpoints.updateGroup.useMutation();
 
     const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
 
@@ -141,10 +144,31 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         }
     }
 
+    function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
+        if (group?.id) {
+            if (confirm("Are you sure you want to promote this manager to group owner?\nThey will inherit the ability to add additional managers to, archive and delete this group.\nYou will be demoted to an additional group manager.")) {
+                promoteGroupManager({groupId: group.id, managerUserId: manager.id as number}).then(response => {
+                    if (mutationSucceeded(response)) {
+                        dispatch(closeActiveModal());
+                    }
+                });
+            }
+        }
+    }
+
+    function setAdditionalManagerPrivileges(additionalManagerPrivileges: boolean) {
+        if (group) {
+            const updatedGroup = {...group, additionalManagerPrivileges};
+            updateGroup({
+                updatedGroup
+            });
+        }
+    }
+
     function removeManager(manager: UserSummaryWithEmailAddressDTO) {
         if (group?.id) {
             if (confirm("Are you sure you want to remove this teacher from the group?\nThey may still have access to student data until students revoke the connection from their My account pages.")) {
-                deleteGroupManager({groupId: group.id, managerUserId: manager.id as number})
+                deleteGroupManager({groupId: group.id, managerUserId: manager.id as number});
             }
         }
     }
@@ -162,6 +186,17 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         <p>
             Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
             It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
+            <br/>
+            {group.additionalManagerPrivileges
+                ? <>Additional managers have been allowed by the group owner to:
+                    <ul>
+                        <li>Modify and delete all assignments to the group</li>
+                        <li>Archive the group</li>
+                        <li>Rename the group</li>
+                    </ul>
+                </>
+                : "Additional managers cannot modify or delete each others assignments by default, or archive and rename the group, but these features can be enabled by the group owner."
+            }
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
@@ -189,8 +224,13 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             <tbody>
                 {additionalManagers && additionalManagers.map(manager =>
                     <tr key={manager.email} data-testid={"group-manager"}>
-                        <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} ({manager.email})</td>
-                        {(userIsOwner || user?.id === manager.id) && <td className="group-table-delete">
+                        <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</td>
+                        {userIsOwner && <td className={"text-center"}>
+                            <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => promoteManager(manager)}>
+                                Make owner
+                            </Button>
+                        </td>}
+                        {(userIsOwner || user?.id === manager.id) && <td className={"text-center"}>
                             <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
                                 removeManager(manager) : removeSelf(manager)}>
                             Remove
@@ -199,6 +239,27 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                 )}
             </tbody>
         </Table>
+
+        {userIsOwner && <Alert className={"px-2 py-2 mb-2"} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
+            <CustomInput
+                id="additional-manager-privileges-check"
+                checked={group.additionalManagerPrivileges}
+                className={"mb-2"}
+                type="checkbox"
+                label={"Give additional managers extra privileges"}
+                onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
+            />
+            {group.additionalManagerPrivileges
+                ? <>
+                    <span className={"font-weight-bold"}>Caution</span>: All other group managers are allowed delete
+                    and modify any assignments set to this group, by any other manager including you (the owner). Un-tick the above
+                    box if you would like to remove these additional privileges.
+                </>
+                : <>Enabling this allows other group managers to delete and modify <b>all assignments</b> set to this group
+                    (by any other manager, including the owner).
+                </>
+            }
+        </Alert>}
 
         {userIsOwner && <>
             <h4>Add additional managers</h4>
