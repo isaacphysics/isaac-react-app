@@ -32,8 +32,7 @@ import {
     DisplaySettings,
     PotentialUser,
     ProgrammingLanguage,
-    UserPreferencesDTO,
-    ValidationUser,
+    UserPreferencesDTO
 } from "../../../IsaacAppTypes";
 import {UserDetails} from "../elements/panels/UserDetails";
 import {UserPassword} from "../elements/panels/UserPassword";
