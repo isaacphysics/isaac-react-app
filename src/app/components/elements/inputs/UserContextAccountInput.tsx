@@ -45,17 +45,19 @@ function UserContextRow({
             onChange={e => {
                 const stage = e.target.value as STAGE;
                 let examBoard;
-                if (isCS) {
-                    // Set exam board to something sensible
-                    const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
-                    examBoard = getFilteredExamBoardOptions(
-                        {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-                    })[0]?.value || EXAM_BOARD.ALL;
-                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
-
-                    // Set display settings default values
-                    setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
+                if (!isCS) {
+                    setUserContext({...userContext, stage});
+                    return;
                 }
+                // Set exam board to something sensible (for CS)
+                const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
+                examBoard = getFilteredExamBoardOptions(
+                    {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
+                })[0]?.value || EXAM_BOARD.ALL;
+                setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
+
+                // Set display settings default values
+                setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
                 setUserContext({...userContext, stage, examBoard});
             }}
         >
@@ -100,7 +102,7 @@ interface UserContextAccountInputProps {
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
-    displaySettings: DisplaySettings;
+    displaySettings: Nullable<DisplaySettings>;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
 }
@@ -173,7 +175,7 @@ export function UserContextAccountInput({
                     {isCS && index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
                         <CustomInput
                             type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
-                            checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
+                            checked={isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true}
                             onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}
                         />{" "}
                         <span>Show other content that is not for my selected qualification(s). <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
