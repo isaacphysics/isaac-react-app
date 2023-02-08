@@ -48,9 +48,9 @@ export const Footer = () => (
                             <div className="d-flex flex-row">
                                 <Link to="/">
                                     <img
-                                        src="/assets/logo-inverse.svg"
+                                        src="/assets/logo.svg"
                                         className="footerLogo"
-                                        alt="Isaac Computer Science homepage"
+                                        alt="Ada Computer Science homepage"
                                     />
                                 </Link>
                             </div>
