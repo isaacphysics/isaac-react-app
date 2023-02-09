@@ -62,7 +62,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/solving_problems">Problem Solving Guide</LinkItem>
             <LinkItem to="/support/student">Student FAQ</LinkItem>
             {isTutor(user)
-                ? <LinkItem to="/support/tutor" disabled>Tutor FAQ (coming soon)</LinkItem>
+                ? <LinkItem to="/support/tutor">Tutor FAQ</LinkItem>
                 : <LinkItem to="/support/teacher">Teacher FAQ</LinkItem>}
             <LinkItem to="/contact">Contact Us</LinkItem>
         </NavigationSection>
