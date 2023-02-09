@@ -44,28 +44,27 @@ const setCurrentUser = (user: RegisteredUserDTO, api: MiddlewareAPI) => {
     }
 };
 
-function clearCurrentUser(redirectHome: boolean) {
+function clearCurrentUser() {
     if (isDefined(timeoutHandle)) {
         clearTimeout(timeoutHandle);
     }
     setUserId(undefined);
-    if (redirectHome) {
-        changePage("/");
-    }
 }
 
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
+    let userLoggedOut = false;
     switch (action.type) {
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
-            clearCurrentUser(true);
+            userLoggedOut = true;
+            clearCurrentUser();
             break;
         case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
             // If the current user request returns an error we assume the user is not logged in.
             // We should therefore, remove any data in local and session storage that might be related to the user.
             // We do not redirect to the homepage as that would happen to anonymous users after following any hard link.
-            clearCurrentUser(false);
+            clearCurrentUser();
             break;
         case ACTION_TYPE.USER_LOG_IN_RESPONSE_SUCCESS:
         case ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS:
@@ -73,5 +72,13 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
             break;
     }
 
-    return next(action);
+    const result = next(action);
+
+    if (userLoggedOut) {
+        // Redirect after action has been processed so that the notificationManager sees a logged-out user when deciding
+        // whether to show the "required fields" modal and recording that in local storage.
+        changePage("/");
+    }
+
+    return result;
 };
