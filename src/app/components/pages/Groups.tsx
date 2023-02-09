@@ -36,7 +36,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
@@ -216,7 +216,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                         <span className="d-inline-block d-md-none">&nbsp;</span>
                     </>}
                     <Button
-                        size="sm" className={isCS ? "text-white" : "" + " d-none d-sm-inline"}
+                        size="sm" className={isAda ? "text-white" : "" + " d-none d-sm-inline"}
                         color={siteSpecific("primary", "secondary")}
                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                     >
@@ -225,7 +225,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     {isStaff(user) && usersInGroup.length > 0 &&
                         <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;
                             <Button
-                                size="sm" className={isCS ? "text-white" : ""}
+                                size="sm" className={isAda ? "text-white" : ""}
                                 color={siteSpecific("primary", "secondary")}
                                 onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
                             >

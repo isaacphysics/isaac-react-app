@@ -5,7 +5,7 @@ import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
 import {UserRole, USER_ROLES} from "../../IsaacApiTypes";
 import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "../utils";
-import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS, SITE_SUBJECT} from "../../app/services";
+import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isAda, SITE_SUBJECT} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
 
 const myIsaacLinks = siteSpecific(
@@ -153,7 +153,7 @@ describe("IsaacApp", () => {
         expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
     });
 
-    isCS && it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
+    isAda && it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
         renderTestEnvironment();
         const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
         const newsCarousel = await screen.findByTestId("carousel-inner");

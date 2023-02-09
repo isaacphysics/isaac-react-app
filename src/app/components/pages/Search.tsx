@@ -8,7 +8,7 @@ import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryLi
 import {
     DOCUMENT_TYPE,
     documentDescription,
-    isCS,
+    isAda,
     isIntendedAudience,
     isPhy,
     parseLocationSearch,
@@ -56,7 +56,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const [queryState, setQueryState] = useState(urlQuery);
 
     let initialFilters = urlFilters;
-    if (isCS && urlFilters.length === 0) {
+    if (isAda && urlFilters.length === 0) {
         initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
     }
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
@@ -138,7 +138,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         options={
                                             [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
                                                 DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]
-                                                .filter(v => isCS || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
+                                                .filter(v => isAda || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
                                                 .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
@@ -146,7 +146,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         onChange={selectOnChange(setFiltersState, false)}
                                         styles={selectStyle}
                                     />
-                                    {isCS && <RS.Label className="mt-2 mb-2 mb-md-0">
+                                    {isAda && <RS.Label className="mt-2 mb-2 mb-md-0">
                                         <UserContextPicker className="text-right" />
                                     </RS.Label>}
                                 </RS.Form>

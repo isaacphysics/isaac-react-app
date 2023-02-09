@@ -23,7 +23,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isCS, SITE_SUBJECT_TITLE} from "../../services";
+import {history, isAda, SITE_TITLE} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -209,7 +209,7 @@ export const LogIn = () => {
     const subHeadingRef = useRef<HTMLHeadingElement>(null);
 
     useEffect( () => {
-        document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;
+        document.title = "Login — " + SITE_TITLE;
         if (!(window as any).followedAtLeastOneSoftLink) {
             return;
         }
@@ -229,7 +229,7 @@ export const LogIn = () => {
     const metaDescriptionCS = "Log in to your account. Access free GCSE and A level Computer Science resources. Use our materials to learn and revise for your exams.";
 
     return <Container id="login-page" className="my-4">
-        {isCS && <MetaDescription description={metaDescriptionCS} />}
+        {isAda && <MetaDescription description={metaDescriptionCS} />}
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>

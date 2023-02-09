@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from "react";
 import {
     allRequiredInformationIsPresent,
-    isCS,
+    isAda,
     isTutor,
     PROGRAMMING_LANGUAGE,
     programmingLanguagesMap, TEACHER_REQUEST_ROUTE,
@@ -119,7 +119,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isCS}/>
+                                 required={isAda}/>
                 </FormGroup>
             </Col>
         </Row>
@@ -127,7 +127,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isCS && !isTutor(userToUpdate)}/>
+                                 required={isAda && !isTutor(userToUpdate)}/>
                 </FormGroup>
             </Col>
             <Col md={6}>
@@ -138,7 +138,7 @@ export const UserDetails = (props: UserDetailsProps) => {
                 />
             </Col>
         </Row>
-        {isCS && <Row>
+        {isAda && <Row>
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="programming-language-select">

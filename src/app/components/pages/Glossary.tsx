@@ -8,7 +8,7 @@ import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {
-    isCS,
+    isAda,
     isDefined,
     Item,
     NOT_FOUND,
@@ -193,7 +193,7 @@ export const Glossary = () => {
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
-            {isCS && <MetaDescription description={metaDescriptionCS} />}
+            {isAda && <MetaDescription description={metaDescriptionCS} />}
 
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">

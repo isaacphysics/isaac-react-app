@@ -12,29 +12,29 @@ module.exports = env => {
 
     let configCS = {
         entry: {
-            'isaac-cs': [resolve('src/index-cs')],
+            'isaac-ada': [resolve('src/index-ada')],
         },
 
         output: {
-            path: resolve(`build-cs`),
+            path: resolve(`build-ada`),
         },
 
         plugins: [
             new HtmlWebpackPlugin({
-                template: 'public/index-cs.html',
+                template: 'public/index-ada.html',
             }),
             new webpack.DefinePlugin({
-                ISAAC_SITE: '"cs"',
+                ISAAC_SITE: '"ada"',
             }),
             new CopyWebpackPlugin({
                 patterns: [{
-                    from: resolve('public/manifest-cs.json'),
-                    to: 'manifest-cs.json',
+                    from: resolve('public/manifest-ada.json'),
+                    to: 'manifest-ada.json',
                 }, {
-                    from: resolve('public/unsupported_browsers/unsupported-cs.html'),
+                    from: resolve('public/unsupported_browsers/unsupported-ada.html'),
                     to: 'unsupported_browser.html',
                 }, {
-                    from: resolve('public/unsupported_browsers/unsupported-cs.js'),
+                    from: resolve('public/unsupported_browsers/unsupported-ada.js'),
                     to: 'unsupported_browser.js',
                 }]
             }),

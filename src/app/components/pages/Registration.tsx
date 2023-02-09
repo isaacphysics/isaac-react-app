@@ -20,7 +20,7 @@ import {
 import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {
     FIRST_LOGIN_STATE,
-    isCS,
+    isAda,
     isDefined, isDobOldEnoughForSite,
     isDobOverTen,
     isDobOverThirteen,
@@ -29,7 +29,7 @@ import {
     loadZxcvbnIfNotPresent,
     passwordDebounce,
     persistence,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE, SITE_TITLE_SHORT,
     siteSpecific,
     validateEmail,
     validateName,
@@ -78,7 +78,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const confirmedOverTen = dob10To12CheckboxChecked || isDobOverTen(registrationUser.dateOfBirth) || confirmedOverThirteen;
     const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
     const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen);
-    const consentGivenOrNotRequired = isCS || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
+    const consentGivenOrNotRequired = isAda || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
     const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isDobOldEnoughForSite(registrationUser.dateOfBirth);
 
     // Form's submission method
@@ -116,7 +116,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     return <Container id="registration-page" className="mb-5">
 
         <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
-        {isCS && <MetaDescription description={metaDescriptionCS} />}
+        {isAda && <MetaDescription description={metaDescriptionCS} />}
 
         <Card>
             <CardBody>
@@ -125,7 +125,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     <small className="text-muted">
                         Sign up to {" "}
                         <Link to="/">
-                            Isaac <span className="d-none d-md-inline">{SITE_SUBJECT_TITLE}</span>
+                            <span className="d-inline d-md-none">{SITE_TITLE_SHORT}</span>
+                            <span className="d-none d-md-inline">{SITE_TITLE}</span>
                         </Link>
                     </small>
                 </CardTitle>

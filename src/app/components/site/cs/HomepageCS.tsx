@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {Link} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services";
+import {SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {NewsCarousel} from "../../elements/NewsCarousel";
 import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
@@ -16,7 +16,7 @@ interface ShowMeButtonsProps {
 }
 
 export const HomepageCS = () => {
-    useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
+    useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
 

@@ -18,7 +18,7 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
-    isCS,
+    isAda,
     isPhy,
     isStaff,
     Item,
@@ -208,7 +208,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
-            {isCS && <RS.Col lg={6} className={`text-wrap my-2`}>
+            {isAda && <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -253,7 +253,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         <th className="w-25">Topic</th>
                         <th className="w-15">Stage</th>
                         <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
-                        {isCS && <th className="w-5">Exam boards</th>}
+                        {isAda && <th className="w-5">Exam boards</th>}
                     </tr>
                 </thead>
                 <tbody>

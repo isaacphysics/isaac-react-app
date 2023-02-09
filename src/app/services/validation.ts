@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isCS, isStudent, isTutor, siteSpecific, STAGE} from "./";
+import {EXAM_BOARD, isAda, isStudent, isTutor, siteSpecific, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -62,7 +62,7 @@ export function validateUserContexts(userContexts?: UserContext[]): boolean {
     if (userContexts.length === 0) {return false;}
     return userContexts.every(uc =>
         Object.values(STAGE).includes(uc.stage as STAGE) && //valid stage
-        (!isCS || Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD)) // valid exam board for cs
+        (!isAda || Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD)) // valid exam board for cs
     );
 }
 
@@ -94,7 +94,7 @@ export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
 export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences
-        && (!isCS || (validateUserSchool(user) && validateUserGender(user)
+        && (!isAda || (validateUserSchool(user) && validateUserGender(user)
         && validateName(user.givenName) && validateName(user.familyName)))
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
         && validateUserContexts(userContexts);

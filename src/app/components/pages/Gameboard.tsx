@@ -17,7 +17,7 @@ import {
     determineAudienceViews,
     filterAudienceViewsByProperties,
     generateQuestionTitle,
-    isCS,
+    isAda,
     isDefined,
     isFound,
     isPhy,
@@ -73,7 +73,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     }
 
     const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
-        .filter((t, i) => !isCS || i !== 0); // CS always has Computer Science at the top level
+        .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">

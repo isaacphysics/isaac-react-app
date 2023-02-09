@@ -6,7 +6,7 @@ import {
     documentTypePathPrefix,
     filterAudienceViewsByProperties,
     generateQuestionTitle,
-    isCS,
+    isAda,
     isIntendedAudience,
     isPhy,
     notRelevantMessage,
@@ -46,7 +46,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     }
     const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
-        .filter((t, i) => !isCS || i !== 0); // CS always has Computer Science at the top level
+        .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
     const questionIcon = siteSpecific(
         item.correct ?
@@ -72,7 +72,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
-            if (isCS) {
+            if (isAda) {
                 typeLabel = "Question";
             }
             break;
@@ -80,7 +80,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
             icon = <img src="/assets/concept.svg" alt="Concept page"/>;
             iconLabel = "Concept page icon";
-            if (isCS) {
+            if (isAda) {
                 typeLabel = "Concept";
             }
             break;

@@ -42,11 +42,11 @@ import {
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
-    isCS, isDefined, isDobOldEnoughForSite,
+    isAda, isDefined, isDobOldEnoughForSite,
     isDobOverThirteen,
     isStaff,
     PROGRAMMING_LANGUAGE,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE,
     validateEmail,
     validateEmailPreferences,
     validatePassword
@@ -161,8 +161,8 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     useEffect(() => {
         const currentEmailPreferences = (userPreferences?.EMAIL_PREFERENCE) ? userPreferences.EMAIL_PREFERENCE : {};
-        const currentProgrammingLanguage = isCS ? (userPreferences?.PROGRAMMING_LANGUAGE ? userPreferences.PROGRAMMING_LANGUAGE: {}) : undefined;
-        const currentBooleanNotation = isCS ? (userPreferences?.BOOLEAN_NOTATION ? userPreferences.BOOLEAN_NOTATION: {}) : undefined;
+        const currentProgrammingLanguage = isAda ? (userPreferences?.PROGRAMMING_LANGUAGE ? userPreferences.PROGRAMMING_LANGUAGE: {}) : undefined;
+        const currentBooleanNotation = isAda ? (userPreferences?.BOOLEAN_NOTATION ? userPreferences.BOOLEAN_NOTATION: {}) : undefined;
         const currentDisplaySettings = (userPreferences?.DISPLAY_SETTING) ? userPreferences.DISPLAY_SETTING: {};
         const currentUserPreferences: UserPreferencesDTO = {
             EMAIL_PREFERENCE: currentEmailPreferences,
@@ -249,7 +249,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
-                {`Update your Isaac ${SITE_SUBJECT_TITLE} account, or `}
+                {`Update your ${SITE_TITLE} account, or `}
                 <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>

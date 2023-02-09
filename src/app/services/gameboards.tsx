@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import countBy from "lodash/countBy";
 import sortBy from "lodash/sortBy";
 import intersection from "lodash/intersection";
-import {determineAudienceViews, difficultiesOrdered, isCS, isFound, isPhy, stagesOrdered} from "./";
+import {determineAudienceViews, difficultiesOrdered, isAda, isFound, isPhy, stagesOrdered} from "./";
 import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
@@ -93,7 +93,7 @@ export const showWildcard = (board: GameboardDTO) => {
 };
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {
-    if (isCS) {
+    if (isAda) {
         return ["compsci"];
     }
     const subjects = ["physics", "maths", "chemistry", "biology"];

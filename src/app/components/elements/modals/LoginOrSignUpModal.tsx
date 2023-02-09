@@ -3,7 +3,7 @@ import {Button, Col, CustomInput, Form, Row} from "reactstrap";
 import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {EmailPasswordInputs, GoogleSignInButton, PasswordResetButton, TFAInput, useLoginLogic} from "../../pages/LogIn";
-import {isCS, KEY, persistence, siteSpecific} from "../../../services";
+import {isAda, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 
 const LoginOrSignUpBody = () => {
@@ -30,7 +30,7 @@ const LoginOrSignUpBody = () => {
     }
 
     return <Row id={"login-page"}>
-        <Col lg={6} className={classNames("content-body", {"pattern-06-inverted": isCS})}>
+        <Col lg={6} className={classNames("content-body", {"pattern-06-inverted": isAda})}>
             {siteSpecific(
                 <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
                 <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />

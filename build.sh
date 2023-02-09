@@ -28,7 +28,7 @@ fi
 
 BUILD_DIR=/tmp/isaacAppsDeploy
 
-echo Building Isaac CS and Physics apps in $BUILD_DIR: $VERSION_TO_DEPLOY
+echo Building Ada CS and Physics apps in $BUILD_DIR: $VERSION_TO_DEPLOY
 
 rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
@@ -57,34 +57,34 @@ else
 fi
 
 set +e
-docker pull "docker.isaacscience.org/isaac-cs-app:${APP_COMMIT_SHA}" >/dev/null 2>&1
+docker pull "docker.isaacscience.org/isaac-ada-app:${APP_COMMIT_SHA}" >/dev/null 2>&1
 PULL_FAILED=$?
 set -e
 
 if [ "${PULL_FAILED}" -ne 0 ] || [ "$FORCE_BUILD" == "1" ]; then
   echo "App image not already available for commit ${APP_COMMIT_SHA}. Building."
   yarn --frozen-lockfile
-  yarn run build-cs
+  yarn run build-ada
   yarn run build-phy
-  yarn run build-cs-renderer
+  yarn run build-ada-renderer
   yarn run build-phy-renderer
-  docker build -t "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-cs-app:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs .
+  docker build -t "docker.isaacscience.org/isaac-ada-app:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-ada-app:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=ada .
   docker build -t "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-phy-app:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=physics .
-  docker build -t "docker.isaacscience.org/isaac-cs-app-renderer:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-cs-app-renderer:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=cs --build-arg RENDERER_PATH=-renderer .
+  docker build -t "docker.isaacscience.org/isaac-ada-app-renderer:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-ada-app-renderer:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=ada --build-arg RENDERER_PATH=-renderer .
   docker build -t "docker.isaacscience.org/isaac-phy-app-renderer:${VERSION_TO_DEPLOY}" -t "docker.isaacscience.org/isaac-phy-app-renderer:${APP_COMMIT_SHA}" --pull --build-arg API_VERSION=$SEGUE_VERSION --build-arg SUBJECT=phy --build-arg RENDERER_PATH=-renderer .
-  docker push "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
+  docker push "docker.isaacscience.org/isaac-ada-app:${VERSION_TO_DEPLOY}"
   docker push "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
-  docker push "docker.isaacscience.org/isaac-cs-app-renderer:${VERSION_TO_DEPLOY}"
+  docker push "docker.isaacscience.org/isaac-ada-app-renderer:${VERSION_TO_DEPLOY}"
   docker push "docker.isaacscience.org/isaac-phy-app-renderer:${VERSION_TO_DEPLOY}"
-  docker push "docker.isaacscience.org/isaac-cs-app:${APP_COMMIT_SHA}"
+  docker push "docker.isaacscience.org/isaac-ada-app:${APP_COMMIT_SHA}"
   docker push "docker.isaacscience.org/isaac-phy-app:${APP_COMMIT_SHA}"
-  docker push "docker.isaacscience.org/isaac-cs-app-renderer:${APP_COMMIT_SHA}"
+  docker push "docker.isaacscience.org/isaac-ada-app-renderer:${APP_COMMIT_SHA}"
   docker push "docker.isaacscience.org/isaac-phy-app-renderer:${APP_COMMIT_SHA}"
 else
   echo "App image already built for commit ${APP_COMMIT_SHA}. Skipping build."
-  docker pull "docker.isaacscience.org/isaac-cs-app:${VERSION_TO_DEPLOY}"
+  docker pull "docker.isaacscience.org/isaac-ada-app:${VERSION_TO_DEPLOY}"
   docker pull "docker.isaacscience.org/isaac-phy-app:${VERSION_TO_DEPLOY}"
-  docker pull "docker.isaacscience.org/isaac-cs-app-renderer:${VERSION_TO_DEPLOY}"
+  docker pull "docker.isaacscience.org/isaac-ada-app-renderer:${VERSION_TO_DEPLOY}"
   docker pull "docker.isaacscience.org/isaac-phy-app-renderer:${VERSION_TO_DEPLOY}"
 fi
 
@@ -125,5 +125,5 @@ rm -rf isaac-api
 echo "Build complete"
 echo "Now run, for example:"
 echo "   ./compose phy dev $VERSION_TO_DEPLOY up -d"
-echo "   ./compose cs dev $VERSION_TO_DEPLOY up -d"
+echo "   ./compose ada dev $VERSION_TO_DEPLOY up -d"
 echo

@@ -20,7 +20,7 @@ import {
     bookingStatusMap,
     examBoardLabelMap,
     isAdmin,
-    isCS,
+    isAda,
     isEventLeader,
     sortOnPredicateAndReverse,
     stageLabelMap,
@@ -119,7 +119,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                             <th className="align-middle">
                                 Stage
                             </th>
-                            {isCS && <th className="align-middle">
+                            {isAda && <th className="align-middle">
                                 Exam board
                             </th>}
                             <th className="align-middle">
@@ -186,7 +186,7 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                                     <td className="align-middle">
                                         {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ")}
                                     </td>
-                                    {isCS && <td className="align-middle">
+                                    {isAda && <td className="align-middle">
                                         {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => examBoardLabelMap[rc.examBoard!]))).join(", ")}
                                     </td>}
                                     <td className="align-middle text-center">{booking.reservedById || "-"}</td>

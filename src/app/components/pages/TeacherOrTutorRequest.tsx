@@ -10,7 +10,7 @@ import {
 import {
     isTeacherOrAbove,
     isTutorOrAbove,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE,
     TEACHER_REQUEST_ROUTE
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -37,7 +37,7 @@ export const TeacherOrTutorRequest = ({user}: {user: RegisteredUserDTO}) => {
                        </Row>}
                        <CardBody>
                            <p>
-                               Upgrading your Isaac {SITE_SUBJECT_TITLE} account gives you access to teaching resources, the ability to
+                               Upgrading your {SITE_TITLE} account gives you access to teaching resources, the ability to
                                assign work to groups of students, and more! To continue, please tell us whether you are a teacher or a tutor:
                            </p>
                            <ul>

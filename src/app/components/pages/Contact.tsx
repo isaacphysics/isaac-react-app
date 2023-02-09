@@ -16,10 +16,10 @@ import {
 } from "reactstrap";
 import {PotentialUser} from "../../../IsaacAppTypes";
 import {
-    isCS,
+    isAda,
     isPhy,
     isTeacherOrAbove,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE,
     SOCIAL_LINKS,
     validateEmail,
     WEBMASTER_EMAIL
@@ -38,10 +38,10 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
 
     if (urlQuery?.preset == "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
         presetSubject = "Teacher Account Request";
-        presetMessage = "Hello,\n\nPlease could you convert my Isaac account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n" + user.givenName + " " + user.familyName;
+        presetMessage = `Hello,\n\nPlease could you convert my ${SITE_TITLE} account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n` + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset == 'accountDeletion' && user?.loggedIn) {
         presetSubject = "Account Deletion Request";
-        presetMessage = `Hello,\n\nPlease could you delete my Isaac ${SITE_SUBJECT_TITLE} account.\n\nThanks, \n\n` + user.givenName + " " + user.familyName;
+        presetMessage = `Hello,\n\nPlease could you delete my ${SITE_TITLE} account.\n\nThanks, \n\n` + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset == 'contentProblem') {
         presetSubject = "Content problem";
         presetPlaceholder = "Please describe the problem here."
@@ -98,7 +98,7 @@ export const Contact = () => {
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />
-        {isCS && <MetaDescription description={metaDescriptionCS}/>}
+        {isAda && <MetaDescription description={metaDescriptionCS}/>}
         <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">

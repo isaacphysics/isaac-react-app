@@ -13,7 +13,7 @@ EXEC = False
 
 class Site(object):
     PHY = 'phy'
-    CS = 'cs'
+    ADA = 'ada'
     BOTH = 'both'
 
 
@@ -30,7 +30,7 @@ def check_repos_are_up_to_date():
 
 def parse_command_line_arguments():
     parser = argparse.ArgumentParser(description='Deploy the site')
-    parser.add_argument('site', choices=[Site.CS, Site.PHY, Site.BOTH])
+    parser.add_argument('site', choices=[Site.ADA, Site.PHY, Site.BOTH])
     parser.add_argument('env', choices=['test', 'staging', 'dev', 'live', 'etl'])
     parser.add_argument('app', help="The app version target for this deployment. Examples master or v1.2.3")
     parser.add_argument('api', help="The api version target for this deployment")
@@ -186,7 +186,7 @@ def deploy_live(ctx):
         ask_to_run_command(f"./compose-live {ctx['site']} {ctx['app']} up -d {ctx['site']}-api-live-{ctx['api']}")
 
         print("# Wait until the api is up:")
-        api_endpoint = f"https://isaac{'computerscience' if ctx['site'] == 'cs' else 'physics'}.org/api/{ctx['api']}/api/info/segue_environment"
+        api_endpoint = f"https://isaac{'computerscience' if ctx['site'] == Site.ADA else 'physics'}.org/api/{ctx['api']}/api/info/segue_environment"
         expected_response = '\'{"segueEnvironment":"PROD"}\''
         ask_to_run_command(f'while [ "$(curl --silent {api_endpoint})" != {expected_response} ]; do echo "Waiting for API..."; sleep 1; done && echo "The API is up!"')
 
@@ -226,7 +226,7 @@ if __name__ == '__main__':
 
     build_docker_image_for_version(context)
 
-    sites = [Site.CS, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
+    sites = [Site.ADA, Site.PHY] if context['site'] == Site.BOTH else [context['site']]
     for site in sites:
         context['site'] = site
         if context['env'] == 'test':

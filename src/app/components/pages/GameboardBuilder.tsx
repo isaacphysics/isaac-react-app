@@ -18,7 +18,7 @@ import {
     EXAM_BOARD,
     getValue,
     history,
-    isCS,
+    isAda,
     isDefined,
     isStaff,
     isValidGameboardId,
@@ -223,7 +223,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 <th className="w-25">Topic</th>
                                 <th className="w-15">Stage</th>
                                 <th className={siteSpecific("w-15", "w-10")}>Difficulty</th>
-                                {isCS && <th className="w-5">Exam boards</th>}
+                                {isAda && <th className="w-5">Exam boards</th>}
                             </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -303,7 +303,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
                             let subjects = [];
 
-                            if (isCS) {
+                            if (isAda) {
                                 subjects.push("computer_science");
                             } else {
                                 const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];

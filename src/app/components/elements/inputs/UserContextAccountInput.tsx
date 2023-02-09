@@ -6,7 +6,7 @@ import {
     examBoardBooleanNotationMap,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
-    isCS,
+    isAda,
     isDefined,
     isPhy,
     isTutorOrAbove,
@@ -45,7 +45,7 @@ function UserContextRow({
             onChange={e => {
                 const stage = e.target.value as STAGE;
                 let examBoard;
-                if (isCS) {
+                if (isAda) {
                     // Set exam board to something sensible
                     const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
                     examBoard = getFilteredExamBoardOptions(
@@ -69,7 +69,7 @@ function UserContextRow({
         </Input>
 
         {/* Exam Board Selector */}
-        {isCS && <Input
+        {isAda && <Input
             className="form-control w-auto d-inline-block pl-1 pr-0 ml-sm-2 mt-1 mt-sm-0" type="select"
             aria-label="Exam Board"
             value={userContext.examBoard || ""}
@@ -167,10 +167,10 @@ export function UserContextAccountInput({
                         >
                             +
                         </button>
-                        {isCS && <span className="ml-1">add stage</span>}
+                        {isAda && <span className="ml-1">add stage</span>}
                     </RS.Label>}
 
-                    {isCS && index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
+                    {isAda && index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
                         <CustomInput
                             type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
                             checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
@@ -187,7 +187,7 @@ export function UserContextAccountInput({
 
                     {!tutorOrAbove && <><br/>
                         <small>
-                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
+                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isAda && "exam board and "}stage.
                         </small>
                     </>}
                 </RS.FormGroup>

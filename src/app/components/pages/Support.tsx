@@ -4,7 +4,7 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, isDefined, isCS, siteSpecific} from "../../services";
+import {history, isDefined, isAda, siteSpecific} from "../../services";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -119,7 +119,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {isCS && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
+                {isAda && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>
