@@ -10,3 +10,20 @@ header a, div.isaac-nav-link {
     text-decoration: none;
   }
 }
+
+p {
+  font-size: 1rem;
+  font-family: $primary-font;
+  line-height: 1.5rem;
+
+  &.p-large {
+    font-size: 1.111em;
+    line-height: 1.667rem;
+  }
+}
+
+i em {
+  font-size: 0.889em;
+  line-height: 1rem;
+  font-family: $secondary-font-italic;
+}

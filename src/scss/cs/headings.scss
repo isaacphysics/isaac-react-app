@@ -1,0 +1,34 @@
+h1 {
+  font-size: 2rem;
+  font-family: $secondary-font-semi-bold;
+  line-height: 3rem;
+
+  &.h-l {
+    font-size: 2.333rem;
+    line-height: 3.5rem;
+  }
+}
+
+h2 {
+  font-size: 1.667rem;
+  font-family: $secondary-font-semi-bold;
+  line-height: 2.5rem;
+}
+
+h3 {
+  font-size: 1.333rem;
+  font-family: $secondary-font-semi-bold;
+  line-height: 2rem;
+}
+
+h4 {
+  font-size: 1rem;
+  font-family: $secondary-font-semi-bold;
+  line-height: 1.3rem;
+}
+
+h5 {
+  font-size: 0.778rem;
+  font-family: $secondary-font-bold;
+  line-height: 1.167rem;
+}

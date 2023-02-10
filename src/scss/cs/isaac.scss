@@ -86,6 +86,7 @@ $primary-font: "poppins-regular", sans-serif;
 $secondary-font: 'poppins-regular', sans-serif;
 $secondary-font-bold: 'poppins-bold', sans-serif;
 $secondary-font-semi-bold: 'poppins-semibold', sans-serif;
+$secondary-font-italic: 'poppins-italic', sans-serif;
 $secondary-font-medium: $secondary-font;
 $tertiary-font: 'poppins-light', sans-serif;
 
@@ -108,7 +109,7 @@ $tertiary-font: 'poppins-light', sans-serif;
 // Atoms
 @import "fonts";
 @import "typography";
-@import "../common/headings";
+@import "headings";
 @import "../common/modals";
 @import "questions";
 @import "../common/forms";
