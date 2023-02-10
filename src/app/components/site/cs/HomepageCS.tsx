@@ -106,18 +106,22 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
+            <section id="benefits-for-teachers-and-students">
+                <Container className={"py-5"}>
+                    <Row>
+                        <Col md={6} className={"px-5"}>
+                            <img className={"w-100"} src={"/assets/cs/decor/benefits-for-teachers-hero.png"} />
+                        </Col>
+                        <Col md={6}>
+                            <WhySignUpTabs/>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
+
             {!user?.loggedIn && <Container>
                 <hr/>
             </Container>}
-
-            {!user?.loggedIn && <section id="why-sign-up" className="row sign-up-tabs">
-                <Container>
-                    <Col className="pb-5 pt-4 pattern-04">
-                        <h2 className="text-center mb-5">Why sign up?</h2>
-                        <WhySignUpTabs/>
-                    </Col>
-                </Container>
-            </section>}
 
             <section id="news">
                 <Container className={classNames("pt-4 pb-5", {"mt-lg-n5 pt-lg-0": user?.loggedIn ?? false})}>

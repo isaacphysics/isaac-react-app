@@ -1,5 +1,6 @@
 @import "../common/button";
 .btn, input.btn {
+  border-radius: 50px;
   //Button Secondary
   &.btn-secondary {
     color: $black;

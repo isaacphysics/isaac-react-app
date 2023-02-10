@@ -11,7 +11,7 @@ header a, div.isaac-nav-link {
   }
 }
 
-p {
+p li ol ul a blockquote {
   font-size: 1rem;
   font-family: $primary-font;
   line-height: 1.5rem;
@@ -27,3 +27,5 @@ i em {
   line-height: 1rem;
   font-family: $secondary-font-italic;
 }
+
+// pre code need thinking about

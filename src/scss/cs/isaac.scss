@@ -116,7 +116,7 @@ $tertiary-font: 'poppins-light', sans-serif;
 @import "../common/elements";
 @import "../common/breadcrumbs";
 @import "../common/media";
-@import "../common/tabs";
+@import "tabs";
 @import "../common/accordions";
 @import "../common/cards";
 @import "../common/list-groups";
@@ -199,11 +199,24 @@ p small {
 // Double class to give this more specifity
 .katex.katex { font-size: 1.1em; }
 
+// FIXME ADA do this in a better way?
+.nomensa-padding {
+    @media (max-width: 767.99px) {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+    @media (min-width: 768px) {
+        padding-left: 100px !important;
+        padding-right: 100px !important;
+    }
+}
+
 
 body {
     color: $black;
-    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    line-height: 1.625;
+    font-size: 1rem;
+    font-family: $primary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    line-height: 1.5rem;
     display: -ms-flexbox;
     -ms-flex-direction: column;
     flex-direction: column;

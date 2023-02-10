@@ -17,14 +17,9 @@
     opacity: 0.6;
   }
 
-  //#homepageButtons {
-  //  @include media-breakpoint-only(sm) {
-  //    padding-top: 100px;
-  //    padding-right: 35px;
-  //    width: calc(100% + 20px);
-  //    background-image: linear-gradient(0, rgba(248,248,248,1) 50%, rgba(0,0,0,0) 100%);
-  //  }
-  //}
+  section#benefits-for-teachers-and-students {
+    background-color: $cs-white;
+  }
 
   section#why-sign-up {
     //h1 {padding-bottom: 2rem;}
