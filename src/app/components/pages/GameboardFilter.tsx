@@ -17,7 +17,7 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
-    isCS,
+    isAda,
     isDefined,
     isFound,
     isItemEqual,
@@ -448,7 +448,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (stages.length) params.stages = toCSV(stages);
         if (difficulties.length) params.difficulties = toCSV(difficulties);
         if (concepts.length) params.concepts = toCSV(concepts);
-        if (isCS && examBoards.length) params.examBoards = toCSV(examBoards);
+        if (isAda && examBoards.length) params.examBoards = toCSV(examBoards);
         if (isPhy) {params.questionCategories = "quick_quiz,learn_and_practice";}
         params.title = boardTitle;
 
@@ -469,7 +469,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then((gameboard) => {
             setGameboard(gameboard);
             // Don't add subject and strands to CS URL
-            if (isCS) {
+            if (isAda) {
                 if (tiers[0]?.id) delete params[tiers[0].id];
                 if (tiers[1]?.id) delete params[tiers[1].id];
             }
@@ -556,7 +556,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 </RS.Col>
             </RS.Row>}
 
-            {isCS && (filterExpanded
+            {isAda && (filterExpanded
                 ?
                 <RS.Row className={"mb-3"}>
                     <RS.Col>

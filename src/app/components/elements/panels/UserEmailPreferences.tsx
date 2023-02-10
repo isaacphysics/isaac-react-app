@@ -3,7 +3,7 @@ import React, {useEffect} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {AppState, useAppSelector} from "../../../state";
-import {SITE_SUBJECT_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
+import {SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 
 interface UserEmailPreferencesProps {
     emailPreferences: UserEmailPreferences;
@@ -43,7 +43,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     }
 
     return <CardBody className="pb-0">
-        <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.
+        <p>Get important information about the {SITE_TITLE} programme delivered to your inbox.
             These settings can be changed at any time.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import * as RS from 'reactstrap';
 import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {SITE_SUBJECT_TITLE} from "../../services";
+import {SITE_TITLE} from "../../services";
 
 const WARNING_COOKIE = "warningBannerDismissed";
 
@@ -25,7 +25,7 @@ export const WarningBanner = () => {
                 <RS.Row style={{alignItems: "center", textAlign: "center"}}>
                     <RS.Col xs={12} md={12}>
                         <span>
-                            {`Isaac ${SITE_SUBJECT_TITLE} may be unavailable on 13 January due to maintenance work. `}
+                            {`${SITE_TITLE} may be unavailable on 13 January due to maintenance work. `}
                             <a href="/pages/2023-jan-datacentre-maintenance">
                                 {"Find out more "}
                                 <span className="sr-only">{"about the planned maintenance "}</span>

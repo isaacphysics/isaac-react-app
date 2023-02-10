@@ -3,6 +3,7 @@ import {Tabs} from "./Tabs";
 import {Button, Card, CardBody, CardText, CardTitle, Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 
+// FIXME ADA needs a complete rewrite by Ada content team
 export const WhySignUpTabs = () => (
     <Tabs tabTitleClass="px-3 py-1" tabContentClass="pt-5">
         {{

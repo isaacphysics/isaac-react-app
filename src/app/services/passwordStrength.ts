@@ -39,6 +39,9 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
     }
     const isaacTerms = ["Isaac Computer Science", "Isaac", "IsaacComputerScience", "isaaccomputerscience.org",
         "Isaac Computer", "Isaac CS", "IsaacCS", "ICS",
+        "Ada Computer Science", "Ada", "AdaComputerScience", "adacomputerscience.org",
+        "Ada Computer", "Ada CS", "AdaCS", "ACS",
+        "Ada Lovelace", "AdaLovelace", "Charles Babbage",  "CharlesBabbage", "Lovelace", "Babbage",
         "ComputerScience", "Computer Science", "Computer", "Science", "CompSci", "Computing",
         "Isaac Physics", "Isaac Chemistry", "Isaac Maths", "IsaacPhysics", "IsaacChemistry", "IsaacMaths",
         "Physics", "Chemistry", "Maths", "Biology", "Phy", "Phys", "Math", "Mathematics", "Physical",

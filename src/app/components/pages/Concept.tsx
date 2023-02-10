@@ -5,7 +5,7 @@ import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, isCS, isPhy, siteSpecific, useNavigation} from "../../services";
+import {DOCUMENT_TYPE, isAda, isPhy, siteSpecific, useNavigation} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -80,7 +80,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                                 </Markup>
                             </p>}
 
-                            {isCS && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                            {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
                             <NavigationLinks navigation={navigation} />
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isCS, isMobile, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
+import {isAda, isMobile, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
@@ -9,7 +9,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const shareLink = useRef<HTMLInputElement>(null);
     const csUrlOrigin = segueEnvironment !== "DEV" ? "https://isaaccs.org" : window.location.origin;
     let shortenedLinkUrl = linkUrl;
-    if (isCS && segueEnvironment !== "DEV") {
+    if (isAda && segueEnvironment !== "DEV") {
         shortenedLinkUrl = shortenedLinkUrl.replace('/questions/', '/q/');
         shortenedLinkUrl = shortenedLinkUrl.replace('/concepts/', '/c/');
         shortenedLinkUrl = shortenedLinkUrl.replace('/pages/', '/p/');

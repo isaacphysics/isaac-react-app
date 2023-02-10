@@ -7,7 +7,7 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     history,
-    isCS,
+    isAda,
     STAGE,
     stageLabelMap,
     useQueryParams,
@@ -28,12 +28,12 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
     const unusual = {
         stage: !filteredStages.map(s => s.value).includes(userContext.stage),
-        examBoard: isCS && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
+        examBoard: isAda && !filteredExamBoardOptions.map(s => s.value).includes(userContext.examBoard),
     };
     const showUnusualContextMessage = unusual.stage || unusual.examBoard;
-    const showHideOtherContentSelector = isCS && segueEnvironment === "DEV";
+    const showHideOtherContentSelector = isAda && segueEnvironment === "DEV";
     const showStageSelector = getFilteredStageOptions({byUser: user}).length > 1 || showUnusualContextMessage;
-    const showExamBoardSelector = isCS && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
+    const showExamBoardSelector = isAda && (getFilteredExamBoardOptions({byUser: user}).length > 1 || showUnusualContextMessage);
 
 
     return <div className="d-flex">
@@ -57,7 +57,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 onChange={e => {
                     const newParams: {[key: string]: unknown} = {...qParams, stage: e.target.value};
                     const stage = e.target.value as STAGE;
-                    if (isCS) {
+                    if (isAda) {
                         // Drive exam board selection so that it is a valid option - by default use All.
                         let examBoard = EXAM_BOARD.ALL;
                         const possibleExamBoards =
@@ -113,7 +113,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         {showUnusualContextMessage && <div className="mt-2 ml-1">
             <span id={`unusual-viewing-context-explanation`} className="icon-help mx-1" />
             <RS.UncontrolledTooltip placement="bottom" target={`unusual-viewing-context-explanation`}>
-                You are seeing {stageLabelMap[userContext.stage]} {isCS ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
+                You are seeing {stageLabelMap[userContext.stage]} {isAda ? examBoardLabelMap[userContext.examBoard] : ""}{" "}
                 content, which is different to your account settings. <br />
                 {unusual.stage && unusual.examBoard && <>
                     {userContext.explanation.stage === userContext.explanation.examBoard ?

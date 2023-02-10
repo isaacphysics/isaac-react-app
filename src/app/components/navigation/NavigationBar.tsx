@@ -14,7 +14,7 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import {filterAssignmentsByStatus, isCS, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
+import {filterAssignmentsByStatus, isAda, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -93,7 +93,7 @@ export const NavigationBar = ({children}: {children: React.ReactNode}) => {
                 Menu
             </NavbarToggler>
 
-            <Collapse isOpen={menuOpen} navbar className={classNames("px-0 mx-0 mx-xl-5", {"px-xl-5": isCS})}>
+            <Collapse isOpen={menuOpen} navbar className={classNames("px-0 mx-0 mx-xl-5", {"px-xl-5": isAda})}>
                 <Nav navbar className="justify-content-between" id="main-menu">
                     {children}
                 </Nav>

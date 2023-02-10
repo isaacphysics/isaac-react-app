@@ -8,7 +8,7 @@ import {
     filterAudienceViewsByProperties,
     findAudienceRecordsMatchingPartial,
     generateQuestionTitle,
-    isCS,
+    isAda,
     siteSpecific,
     stageLabelMap,
     TAG_ID,
@@ -109,7 +109,7 @@ const GameboardBuilderRow = (
                 {difficulty && <DifficultyIcons difficulty={difficulty} />}
             </div>)}
         </td>
-        {isCS && <td className="w-5">
+        {isAda && <td className="w-5">
             {filteredAudienceViews.map((audienceView, i, collection) => <>
                 {findAudienceRecordsMatchingPartial(question.audience, audienceView)
                     .map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => <div key={examBoard}>

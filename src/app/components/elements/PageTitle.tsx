@@ -4,7 +4,7 @@ import {
     AUDIENCE_DISPLAY_FIELDS,
     filterAudienceViewsByProperties,
     isPhy,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE,
     STAGE,
     stageLabelMap,
     useUserContext
@@ -61,7 +61,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
 
     useEffect(() => {dispatch(mainContentIdSlice.actions.set("main-heading"));}, []);
     useEffect(() => {
-        document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
+        document.title = currentPageTitle + " — " + SITE_TITLE;
         const element = headerRef.current;
         if (element && (window as any).followedAtLeastOneSoftLink && !openModal) {
             element.focus();

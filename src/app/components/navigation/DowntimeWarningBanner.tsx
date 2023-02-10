@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import * as RS from 'reactstrap';
 import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {SITE_SUBJECT_TITLE, SOCIAL_LINKS} from "../../services";
+import {SITE_TITLE, SOCIAL_LINKS} from "../../services";
 
 const DOWNTIME_COOKIE = "downtimeBannerDismissed";
 
@@ -24,7 +24,7 @@ export const DowntimeWarningBanner = () => {
             <RS.Container>
                 <RS.Row style={{alignItems: "center"}}>
                     <RS.Col xs={12} md={9}>
-                        <span>Please note Isaac {SITE_SUBJECT_TITLE} will be unavailable for an hour at 5pm BST on Friday 23<sup>rd</sup> July
+                        <span>Please note {SITE_TITLE} will be unavailable for an hour at 5pm BST on Friday 23<sup>rd</sup> July
                             for essential maintenance. You will need to log in again once the maintenance is complete.
                             <br />
                             <a href={SOCIAL_LINKS.twitter.href} target="_blank" rel="noopener noreferrer">Check our Twitter feed</a> for any updates on the day.

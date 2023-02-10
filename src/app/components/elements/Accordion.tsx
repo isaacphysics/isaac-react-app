@@ -5,7 +5,7 @@ import {
     ALPHABET,
     audienceStyle,
     DOCUMENT_TYPE,
-    isCS,
+    isAda,
     isPhy,
     NOT_FOUND,
     notRelevantMessage,
@@ -41,7 +41,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     // Toggle
     const isFirst = index === 0;
-    const openFirst = isCS || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
+    const openFirst = isAda || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
     const [open, setOpen] = useState(disabled ? false : (startOpen === undefined ? (openFirst && isFirst) : startOpen));
 
     // If start open changes we need to update whether or not the accordion section should be open
@@ -167,7 +167,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 aria-expanded={isOpen ? "true" : "false"}
             >
                 {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
-                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: isCS})}>
+                    "justify-content-center " + classNames({[audienceStyle(audienceString)]: isAda})}>
                     {audienceString}
                 </span>}
                 <div className="accordion-title pl-3">
@@ -179,7 +179,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                                 {trustedTitle}
                             </Markup>
                         </div>}
-                        {isCS && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
+                        {isAda && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                             <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                                 {`This content has ${notRelevantMessage(userContext)}.`}

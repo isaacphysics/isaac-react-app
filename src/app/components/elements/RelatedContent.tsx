@@ -9,7 +9,7 @@ import {
     DOCUMENT_TYPE,
     documentTypePathPrefix,
     filterAudienceViewsByProperties,
-    isCS,
+    isAda,
     isIntendedAudience,
     isPhy,
     isTutorOrAbove,
@@ -149,7 +149,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isCS && isTutorOrAbove(useAppSelector(selectors.user.orNull));
+    const showConceptGameboardButton = isAda && isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent

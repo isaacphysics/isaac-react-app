@@ -1,7 +1,7 @@
 import React, {Suspense, useContext, useEffect} from "react";
 import {submitQuizQuestionIfDirty, useAppDispatch} from "../../state";
 import classnames from "classnames";
-import {isCS, isDefined, isPhy, QUESTION_TYPES} from "../../services";
+import {isAda, isDefined, isPhy, QUESTION_TYPES} from "../../services";
 import {IsaacLinkHints, IsaacTabbedHints} from "./IsaacHints";
 import {IsaacContent} from "./IsaacContent";
 import * as ApiTypes from "../../../IsaacApiTypes";
@@ -35,7 +35,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
         <div className={
             classnames("question-component p-md-5", {"parsons-layout": ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})
         }>
-            {isCS && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
+            {isAda && doc.id && <h3 className={"mb-3"}>Question {questionNumbers[doc.id]}</h3>}
 
             {/* TODO cloze drag and drop zones don't render if previewing a quiz */}
             <Suspense fallback={<Loading/>}>
@@ -43,7 +43,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             </Suspense>
 
             {/* CS Hints */}
-            {isCS && <React.Fragment>
+            {isAda && <React.Fragment>
                 <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />
             </React.Fragment>}
 

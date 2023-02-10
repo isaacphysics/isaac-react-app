@@ -8,7 +8,7 @@ import {
     examBoardBooleanNotationMap,
     examBoardLabelMap,
     history,
-    isCS,
+    isAda,
     isDefined,
     isLoggedIn,
     isPhy,
@@ -149,7 +149,7 @@ export function useUserContext(): UseUserContextReturnType {
                     search: queryString.stringify({
                         ...queryParams,
                         stage,
-                        examBoard: isCS ? examBoard : undefined,
+                        examBoard: isAda ? examBoard : undefined,
                     }, {encode: false})
                 });
             } catch (e) {
@@ -254,7 +254,7 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
             // - physics
             (isPhy && !filter.byUserContexts.map(uc => uc.stage).includes(i.value)) ||
             // - computer science
-            (isCS && !(
+            (isAda && !(
                 // stage already has a null option selected
                 filter.byUserContexts.some(uc => uc.stage === i.value && EXAM_BOARD_NULL_OPTIONS.has(uc.examBoard as EXAM_BOARD)) ||
                 // every exam board has been recorded for the stage
@@ -409,7 +409,7 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
     if (!STAGE_NULL_OPTIONS.has(userContext.stage)) {
         message.push(stageLabelMap[userContext.stage]);
     }
-    if (isCS && !EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
+    if (isAda && !EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
         message.push(examBoardLabelMap[userContext.examBoard]);
     }
     if (message.length === 0) { // should never happen...
@@ -445,7 +445,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     // If common, could find substrings and report ranges i.e, GCSE to University
 
     // CS would like to show All stages instead of GCSE & A Level - that will work until we have more stages
-    if (isCS && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
+    if (isAda && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
         stagesToView = [STAGE.ALL];
     }
 

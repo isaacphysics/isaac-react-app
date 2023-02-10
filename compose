@@ -10,8 +10,8 @@ if [ "$2" == "live" ]; then
 fi
 
 # Need at least four args and the first argument to be the site:
-if [ $# -lt 4 ] || ! { [ $1 = "cs" ] || [ $1 = "phy" ]; } || ! { [ $2 = "dev" ] || [ $2 = "staging" ] || [ $2 = "test" ]; } ; then
-  echo "Usage: compose [cs|phy] [staging|dev|test] [APP_VERSION] [DOCKER_ARGS]..."
+if [ $# -lt 4 ] || ! { [ $1 = "ada" ] || [ $1 = "phy" ]; } || ! { [ $2 = "dev" ] || [ $2 = "staging" ] || [ $2 = "test" ]; } ; then
+  echo "Usage: compose [ada|phy] [staging|dev|test] [APP_VERSION] [DOCKER_ARGS]..."
   exit 1
 fi
 
@@ -52,8 +52,8 @@ PG_CONTAINER_NAME=$SITE-pg-$ENV
 ES_CONTAINER_NAME=$SITE-elasticsearch-live
 
 # The content repo is named differently for both sites in a non-standard way:
-if [ "$SITE" == "cs" ]; then
-  CONTENT_REPO="cs-content"
+if [ "$SITE" == "ada" ]; then
+  CONTENT_REPO="ada-content"
 elif [ "$SITE" == "phy" ]; then
   CONTENT_REPO="rutherford-content"
 fi

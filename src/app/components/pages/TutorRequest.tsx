@@ -26,7 +26,7 @@ import {
     isPhy,
     isTutorOrAbove,
     selectOnChange,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE,
     tags,
     validateEmail,
     WEBMASTER_EMAIL
@@ -109,7 +109,7 @@ export const TutorRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a tutor account on Isaac ${SITE_SUBJECT_TITLE}, please fill in this form. `}
+                                        {`To request a tutor account on ${SITE_TITLE}, please fill in this form. `}
                                         {"You must have verified your account email address. If any of the "}
                                         {"information is incorrect or missing, you can amend it on your "}
                                         <Link to="/account">My account</Link>{" page."}

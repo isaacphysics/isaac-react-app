@@ -4,7 +4,7 @@ import {AdditionalInformation, AugmentedEvent} from "../../../IsaacAppTypes";
 import {SchoolInput} from "./inputs/SchoolInput";
 import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {UserSummaryWithEmailAddressDTO} from "../../../IsaacApiTypes";
-import {examBoardLabelMap, isCS, isTutor, stageLabelMap, studentOnlyEventMessage} from "../../services";
+import {examBoardLabelMap, isAda, isTutor, stageLabelMap, studentOnlyEventMessage} from "../../services";
 import {Immutable} from "immer";
 
 interface EventBookingFormProps {
@@ -57,7 +57,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                                 }
                             </RS.FormFeedback>
                         </RS.Col>
-                        {isCS && <RS.Col md={6} className="d-none d-md-block" />}
+                        {isAda && <RS.Col md={6} className="d-none d-md-block" />}
                         <RS.Col md={6}>
                             <RS.Label htmlFor="account-stages" className="form-required">
                                 Stage
@@ -66,7 +66,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                                 Array.from(new Set(targetUser.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ") || ""
                             } />
                         </RS.Col>
-                        {isCS && <RS.Col md={6}>
+                        {isAda && <RS.Col md={6}>
                             <RS.Label htmlFor="account-examboard" className="form-required">
                                 Exam board
                             </RS.Label>

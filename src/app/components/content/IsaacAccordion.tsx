@@ -4,7 +4,7 @@ import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
 import {
     DOCUMENT_TYPE,
-    isCS,
+    isAda,
     isFound,
     isIntendedAudience,
     makeIntendedAudienceComparator,
@@ -47,7 +47,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
             // For CS we want relevant sections to appear first
             .sort((a, b) => {
-                if (!isCS) {return 0;}
+                if (!isAda) {return 0;}
                 return makeIntendedAudienceComparator(user, userContext)(a, b);
             })
 
@@ -66,7 +66,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // If cs have "show other content" set to false hide non-audience content
             .map(section => {
                 if (
-                    isCS && userContext.showOtherContent === false &&
+                    isAda && userContext.showOtherContent === false &&
                     !isIntendedAudience(section.audience, userContext, user)
                 ) {
                     section.hidden = true;

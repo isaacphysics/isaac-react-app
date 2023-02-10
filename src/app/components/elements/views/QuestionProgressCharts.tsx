@@ -8,7 +8,7 @@ import {
     difficultyLabelMap,
     doughnutColours,
     getFilteredStageOptions,
-    isCS,
+    isAda,
     isPhy,
     Item,
     selectOnChange,
@@ -149,7 +149,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>}
-        {isCS && <RS.Col md={3}/>}
+        {isAda && <RS.Col md={3}/>}
         <RS.Col xl={12/noCharts} md={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <Select
@@ -169,7 +169,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>
-        {isCS && <RS.Col md={3}/>}
+        {isAda && <RS.Col md={3}/>}
         {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <Select

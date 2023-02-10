@@ -1,4 +1,4 @@
-import {SEARCH_RESULT_TYPE, SITE_SUBJECT_TITLE} from "./";
+import {SEARCH_RESULT_TYPE, SITE_TITLE} from "./";
 
 export const searchList = [
     {
@@ -29,7 +29,7 @@ export const searchList = [
         id: "help",
         title: "Student support",
         terms: ["help", "support"],
-        summary: `View student FAQs for using Isaac ${SITE_SUBJECT_TITLE}.`,
+        summary: `View student FAQs for using ${SITE_TITLE}.`,
         url: "/support/student/general",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {
@@ -43,14 +43,14 @@ export const searchList = [
         id: "register",
         title: "Create an account",
         terms: ["register", "signup", "sign up"],
-        summary: `Click here to register for an Isaac ${SITE_SUBJECT_TITLE} account.`,
+        summary: `Click here to register for an ${SITE_TITLE} account.`,
         url: "/register",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     },  {
         id: "teacher_support",
         title: "Teacher support",
         terms: ["teacher", "teacher support", "teaching", "teachers", "help", "support", "tutor", "tutor support", "tutors", "tutoring"],
-        summary: `View teacher FAQs for using Isaac ${SITE_SUBJECT_TITLE}.`,
+        summary: `View teacher FAQs for using ${SITE_TITLE}.`,
         url: "/support/teacher/assignments",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }, {

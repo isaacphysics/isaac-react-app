@@ -3,11 +3,11 @@ import {isaacApi, selectors, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, Col, Container, Row} from "reactstrap";
 import {NewsCarousel} from "../../elements/NewsCarousel";
-import {above, SITE_SUBJECT_TITLE, useDeviceSize} from "../../../services";
+import {above, SITE_TITLE, useDeviceSize} from "../../../services";
 import {WarningBanner} from "../../navigation/WarningBanner";
 
 export const HomepagePhy = () => {
-    useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
+    useEffect( () => {document.title = SITE_TITLE;}, []);
     const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "physics"});
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();

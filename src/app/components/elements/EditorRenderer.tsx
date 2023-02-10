@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Col, Row} from "reactstrap";
-import {EDITOR_ORIGIN, SITE_SUBJECT_TITLE, siteSpecific} from "../../services";
+import {EDITOR_ORIGIN, SITE_TITLE, siteSpecific} from "../../services";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
@@ -65,7 +65,7 @@ function EditorListener() {
             </Col>
         </Row>
         : <div>
-            <em>Waiting for {SITE_SUBJECT_TITLE} content...</em>
+            <em>Waiting for {SITE_TITLE} content...</em>
         </div>;
 }
 

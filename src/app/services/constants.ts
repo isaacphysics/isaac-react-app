@@ -607,98 +607,115 @@ export const fastTrackProgressEnabledBoards = [
 ];
 
 export enum TAG_ID {
-    // CS ----
+    // Ada ----
     // Categories
     computerScience = "computer_science",
 
     // Strands
-    computerNetworks = "computer_networks",
-    computerSystems = "computer_systems",
-    cyberSecurity = "cyber_security",
-    dataAndInformation = "data_and_information",
-    dataStructuresAndAlgorithms = "data_structures_and_algorithms",
-    gcseToALevel = "gcse_to_a_level",
-    impactsOfDigitalTechnology = "impacts_of_digital_tech",
     machineLearningAi = "machine_learning_ai",
-    mathsForCs = "maths_for_cs",
-    programmingFundamentals = "programming_fundamentals",
-    programmingParadigms = "programming_paradigms",
-    softwareEngineering = "software_engineering",
-    theoryOfComputation = "theory_of_computation",
-
-    // Computer networks topics
+    dataStructuresAndAlgorithms = "data_structures_and_algorithms",
+    computerSystems = "computer_systems",
+    creatingMedia = "creating_media",
+    dataAndInformation = "data_and_information",
+    designAndDevelopment = "design_and_development",
+    effectiveUseOfTools = "effective_use_of_tools",
+    impactsOfDigitalTechnology = "impacts_of_digital_tech",
     networking = "networking",
-    networkHardware = "network_hardware",
-    communication = "communication",
-    theInternet = "the_internet",
-    webTechnologies = "web_technologies",
-    // Computer systems topics
+    programming = "programming",
+    cyberSecurity = "cyber_security",
+    modelsOfComputation = "models_of_computation",
+
+    // Artificial intelligence topics
+
+    // Algorithms and data structures topics
+    complexity = "complexity",
+    computationalThinking = "computational_thinking",
+    dataStructures = "data_structures",
+    pathfinding = "pathfinding",
+    searching = "searching",
+    sorting = "sorting",
+
+    // Computing systems topics
     booleanLogic = "boolean_logic",
-    architecture = "architecture",
+    compression = "compression",
     memoryAndStorage = "memory_and_storage",
-    hardware = "hardware",
-    software = "software",
     operatingSystems = "operating_systems",
-    translators = "translators",
     programmingLanguages = "programming_languages",
-    // Cyber security
-    security = "security",
-    socialEngineering = "social_engineering",
-    maliciousCode = "malicious_code",
-    // Data and information topics
     numberRepresentation = "number_representation",
     textRepresentation = "text_representation",
+    architecture = "architecture",
+    translators = "translators",
+
+    // Creating media topics
     imageRepresentation = "image_representation",
     soundRepresentation = "sound_representation",
-    compression = "compression",
-    encryption = "encryption",
+
+    // Data and information topics
+    bigData = "big_data",
     databases = "databases",
     fileOrganisation = "file_organisation",
     sql = "sql",
-    bigData = "big_data",
-    // Data structures and algorithms topics
-    searching = "searching",
-    sorting = "sorting",
-    pathfinding = "pathfinding",
-    complexity = "complexity",
-    dataStructures = "data_structures",
-    // GCSE to A level transition topics
-    gcseBooleanLogic = "gcse_boolean_logic",
-    gcseProgrammingConcepts = "gcse_programming_concepts",
-    gcseNetworking = "gcse_networking",
-    gcseSystems = "gcse_systems",
-    // Impacts of digital technology
-    legislation = "legislation",
+
+    // Design and development topics
+    programDesign = "program_design",
+    softwareEngineeringPrinciples = "software_engineering_principles",
+    softwareProject = "software_project",
+    testing = "testing",
+
+    // Effective use of tools topics
+    hardware = "hardware",
+    software = "software",
+
+    // Impacts of technology topics
     impactsOfTech = "impacts_of_tech",
-    // Maths for CS
-    numberSystems = "number_systems",
-    mathsFunctions = "functions",
-    // Machine learning and ai
-    graphsForAi = "graphs_for_ai",
-    neuralNetworks = "neural_networks",
-    machineLearning = "machine_learning",
-    backpropagationAndRegression = "regression",
-    // Programming fundamentals topics
-    programmingConcepts = "programming_concepts",
-    subroutines = "subroutines",
+    legislation = "legislation",
+
+    // Networks topics
+    communication = "communication",
+    computerNetworks = "computer_networks",
+    theInternet = "the_internet",
+    webTechnologies = "web_technologies",
+
+    // Programming topics
+    eventDrivenProgramming = "event_driven_programming",
     files = "files",
+    functionalProgramming = "functional_programming",
+    objectOrientedProgramming = "object_oriented_programming",
+    proceduralProgramming = "procedural_programming",
+    programmingConcepts = "programming_concepts",
     recursion = "recursion",
     stringHandling = "string_handling",
-    ide = "ide",
-    // Programming paradigms topics
-    objectOrientedProgramming = "object_oriented_programming",
-    functionalProgramming = "functional_programming",
-    eventDrivenProgramming = "event_driven_programming",
-    declarativeProgramming = "declarative_programming",
-    proceduralProgramming = "procedural_programming",
-    // Software engineering
-    softwareEngineeringPrinciples = "software_engineering_principles",
-    programDesign = "program_design",
-    testing = "testing",
-    softwareProject = "software_project",
-    //Theory of computation
-    computationalThinking = "computational_thinking",
-    modelsOfComputation = "models_of_computation",
+    subroutines = "subroutines",
+
+    // Safety and security topics
+    encryption = "encryption",
+    maliciousCode = "malicious_code",
+    security = "security",
+    socialEngineering = "social_engineering",
+
+    // Models of computation topics
+    machinesWithMemory = "machines_with_memory",
+    mathsForCs = "maths_for_cs",
+
+    // Old tags ------
+    // programmingParadigms = "programming_paradigms",
+    // programmingFundamentals = "programming_fundamentals",
+    // theoryOfComputation = "theory_of_computation",
+    // declarativeProgramming = "declarative_programming",
+    // networkHardware = "network_hardware",
+    // ide = "ide",
+    // gcseToALevel = "gcse_to_a_level",
+    // gcseBooleanLogic = "gcse_boolean_logic",
+    // gcseProgrammingConcepts = "gcse_programming_concepts",
+    // gcseNetworking = "gcse_networking",
+    // gcseSystems = "gcse_systems",
+    // numberSystems = "number_systems",
+    // mathsFunctions = "functions",
+    // graphsForAi = "graphs_for_ai",
+    // neuralNetworks = "neural_networks",
+    // machineLearning = "machine_learning",
+    // backpropagationAndRegression = "regression",
+
 
     // PHY ----
 

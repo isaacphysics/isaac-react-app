@@ -4,8 +4,8 @@
 set -e
 
 # Need at least three args and the first argument to be the site:
-if [ $# -lt 3 ] || ! { [ $1 = "cs" ] || [ $1 = "phy" ]; }; then
-  echo "Usage: compose-etl [cs|phy] [APP_VERSION] [DOCKER_ARGS]..."
+if [ $# -lt 3 ] || ! { [ $1 = "ada" ] || [ $1 = "phy" ]; }; then
+  echo "Usage: compose-etl [ada|phy] [APP_VERSION] [DOCKER_ARGS]..."
   echo "Note this is the app version and not the API version!"
   exit 1
 fi
@@ -44,8 +44,8 @@ ETL_NAME=$SITE-etl-$API_VERSION
 ES_CONTAINER=$SITE-elasticsearch-live
 
 # The content repo is named differently for both sites in a non-standard way:
-if [ "$SITE" == "cs" ]; then
-  CONTENT_REPO="cs-content"
+if [ "$SITE" == "ada" ]; then
+  CONTENT_REPO="ada-content"
 elif [ "$SITE" == "phy" ]; then
   CONTENT_REPO="rutherford-content"
 fi

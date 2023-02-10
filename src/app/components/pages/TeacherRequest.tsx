@@ -27,7 +27,7 @@ import {
     isPhy,
     isTeacherOrAbove,
     schoolNameWithPostcode,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
@@ -99,7 +99,7 @@ export const TeacherRequest = () => {
         {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
         form. If you are a private tutor or parent, you can
         {" "}<Link to="/tutor_account_request">
-            request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+            request an {SITE_TITLE} Tutor account
         </Link>.
     </p>;
 
@@ -146,7 +146,7 @@ export const TeacherRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a teacher account on Isaac ${SITE_SUBJECT_TITLE}, please fill in this form. `}
+                                        {`To request a teacher account on ${SITE_TITLE}, please fill in this form. `}
                                         {"You must use the email address that was assigned to you by your school, and the "}
                                         {"name of your school should be shown in the 'School' field. If any of the "}
                                         {"information is incorrect or missing, you can amend it on your "}
@@ -225,7 +225,7 @@ export const TeacherRequest = () => {
                                                 please add your school on your <Link to="/account">My Account</Link> page.
                                                 If you are a private tutor or parent, you can{" "}
                                                 <Link to="/tutor_account_request">
-                                                    request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+                                                    request an {SITE_TITLE} Tutor account
                                                 </Link>.
                                             </small>
                                         </Col>
