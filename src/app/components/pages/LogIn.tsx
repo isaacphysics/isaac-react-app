@@ -85,6 +85,19 @@ export const GoogleSignInButton = () => {
     </Button>
 }
 
+// Button prompting the user to sign in via Raspberry Pi Accounts
+export const RaspberryPiSignInButton = () => {
+    const dispatch = useAppDispatch();
+
+    const logInWithRaspberryPi = () => {
+        dispatch(handleProviderLoginRedirect("RASPBERRYPI"));
+    };
+
+    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
+        <img id={"rasbperrypi-button-logo"} src={"/assets/raspberrypi-logo.svg"} alt={"Raspberry Pi logo"}/> Log in with Raspberry Pi
+    </Button>
+}
+
 // Handles display and logic of the two-factor authentication form (usually shown after the first login step)
 export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {rememberMe: boolean}, ref: React.Ref<HTMLHeadingElement>) {
     const dispatch = useAppDispatch();
@@ -292,6 +305,11 @@ export const LogIn = () => {
                                     <Row className="my-4 justify-content-center">
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
+                                        </Col>
+                                    </Row>
+                                    <Row className="my-4 justify-content-center">
+                                        <Col sm={9}>
+                                            <RaspberryPiSignInButton/>
                                         </Col>
                                     </Row>
                                 </React.Fragment>

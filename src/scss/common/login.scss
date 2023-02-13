@@ -3,6 +3,12 @@
   transform: translate(0, -15%);
 }
 
+#raspberrypi-button-logo {
+  width: 24px;
+  padding-right: 24px;
+  transform: translate(0, -15%);
+}
+
 #login-modal-form {
   max-height: 800px;
   @media (min-height: 800px) {
