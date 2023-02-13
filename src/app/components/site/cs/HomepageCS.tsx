@@ -10,6 +10,7 @@ import {EventsCarousel} from "../../elements/EventsCarousel";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import classNames from "classnames";
 import {WarningBanner} from "../../navigation/WarningBanner";
+import {AdaHero} from "../../elements/svg/AdaHero";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -48,7 +49,7 @@ export const HomepageCS = () => {
         <WarningBanner/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="pt-4 z1">
+                <Container className="py-5 z1">
                     {user?.loggedIn ? <>
                             <Row className="pt-4">
                                 <Col md="12" lg="5" className={"pt-lg-4"}>
@@ -63,46 +64,22 @@ export const HomepageCS = () => {
                                 </Col>
                             </Row>
                         </>
-                        :
-                        <Row>
-                            <Col lg="5" className="order-first pb-3">
-                                <Row>
-                                    <Col>
-                                        <h1>
-                                            Computer science learning
-                                        </h1>
-                                        <p className="mt-4">
-                                            Welcome to Isaac Computer Science, the free online platform for students and
-                                            teachers.
-                                        </p>
-                                        <ul>
-                                            <li>Use it in the <strong>classroom</strong></li>
-                                            <li>Use it for <strong>homework</strong></li>
-                                            <li>Use it for <strong>revision</strong></li>
-                                        </ul>
-
-                                        <p className="mr-lg-n1">
-                                            {"We also offer free "}
-                                            <Link to="/events?types=teacher">teacher CPD events</Link>{" and "}
-                                            <Link to="/events?types=student">student workshops</Link>.<br />
-                                            {"Isaac Computer Science is proud to be part of the Department for Education's "}
-                                            <Link to="/teachcomputing">National Centre for Computing Education</Link>.
-                                        </p>
-                                    </Col>
-                                </Row>
+                        : <Row>
+                            <Col md={6} className={"mt-auto"}>
+                                <h1 className={"h-l"}>
+                                    <span className={"text-pink"}>/</span><br/>
+                                    Computer science learning,<span className={"h-thin"}> it's more than just the machine.</span>
+                                </h1>
+                                <p className={"p-large pt-2"}>
+                                    Welcome to Ada Computer Science, the free online platform for students and teachers.
+                                </p>
+                                <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
                             </Col>
-                            <Col lg="7" className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03">
-                                <iframe
-                                    title="Isaac Computer Science introduction video" width="640" height="345"
-                                    className="mw-100 pt-lg-4"
-                                    src="https://www.youtube-nocookie.com/embed/ci6_Du_NHZA?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
-                                    frameBorder="0" allowFullScreen
-                                />
+                            <Col md={6}>
+                                <AdaHero/>
                             </Col>
-                            <Col className="order-lg-last pb-5 pb-lg-3">
-                                <ShowMeButtons />
-                            </Col>
-                        </Row>}
+                        </Row>
+                    }
                 </Container>
             </section>
 
