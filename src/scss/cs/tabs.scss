@@ -3,12 +3,15 @@
 .nav-tabs {
   justify-content: left;
   padding-bottom: 0.222rem;
+  box-sizing: border-box;
   border-bottom: 3px solid $cs-silver;
   flex-wrap: nowrap !important;
   align-items: stretch;
   .nav-item {
     padding-right: 1.111rem !important;
     .nav-link {
+      position: relative;
+      text-decoration: none;
       vertical-align: bottom;
       height: 100%;
       background: none !important;
@@ -16,18 +19,33 @@
       font-family: $primary-font;
       padding: 0 !important;
       border: none !important;
+
+      ::after {
+        content: ' ';
+        width: 0;
+        transition-property: width;
+        transition-duration: 0.1s;
+        transition-timing-function: ease-out;
+        bottom: -0.222rem;
+        display: block;
+        position: absolute;
+        box-sizing: border-box;
+        margin-bottom: -3px;
+        border-bottom: 3px solid $cs-raspberry;
+      }
+
       &.active {
-        position: relative;
         color: $cs-raspberry;
-        text-decoration: none;
         cursor: default;
         ::after {
-          content: ' ';
           width: 100%;
-          bottom: calc(-2.5px - 0.222rem);
-          display: block;
-          position: absolute;
-          border-bottom: 3px solid $cs-raspberry;
+        }
+      }
+
+      :hover {
+        color: $cs-raspberry;
+        &::after {
+          width: 100%;
         }
       }
     }
