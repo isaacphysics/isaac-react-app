@@ -23,9 +23,11 @@
       ::after {
         content: ' ';
         opacity: 0.5;
-        width: 0;
-        transition-property: width;
+        width: 100%;
+        transform: scaleX(0);
+        transition-property: transform;
         transition-duration: 0.1s;
+        transform-origin: 50% 50%;
         transition-timing-function: ease-out;
         bottom: -0.222rem;
         display: block;
@@ -38,7 +40,7 @@
 
       :hover {
         &::after {
-          width: 100%;
+          transform: scaleX(1);
         }
       }
 
@@ -47,7 +49,7 @@
         cursor: default;
         ::after {
           opacity: 1 !important;
-          width: 100%;
+          transform: scaleX(1);
           border-color: $cs-raspberry;
         }
       }
