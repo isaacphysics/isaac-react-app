@@ -22,6 +22,7 @@
 
       ::after {
         content: ' ';
+        opacity: 0.5;
         width: 0;
         transition-property: width;
         transition-duration: 0.1s;
@@ -31,23 +32,26 @@
         position: absolute;
         box-sizing: border-box;
         margin-bottom: -3px;
-        border-bottom: 3px solid $cs-raspberry;
+        border-bottom: 3px solid;
+        border-color: black;
+      }
+
+      :hover {
+        &::after {
+          width: 100%;
+        }
       }
 
       &.active {
         color: $cs-raspberry;
         cursor: default;
         ::after {
+          opacity: 1 !important;
           width: 100%;
+          border-color: $cs-raspberry;
         }
       }
 
-      :hover {
-        color: $cs-raspberry;
-        &::after {
-          width: 100%;
-        }
-      }
     }
   }
 }
