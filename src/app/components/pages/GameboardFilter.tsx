@@ -291,7 +291,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         {"Find questions that are suitable for this stage of school learning."}
                     </RS.UncontrolledTooltip>
                 </RS.Label>
-                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
+                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions({includeNullOptions: isAda})} />
             </RS.Col>
             <RS.Col md={6}>
                 <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
@@ -445,7 +445,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                               history: History) {
         // Load a gameboard
         const params: {[key: string]: string} = {};
-        if (stages.length) params.stages = toCSV(stages);
+        if (stages.length) params.stages = stages.find(s => s.value === STAGE.ALL) ? "" : toCSV(stages);
         if (difficulties.length) params.difficulties = toCSV(difficulties);
         if (concepts.length) params.concepts = toCSV(concepts);
         if (isAda && examBoards.length) params.examBoards = toCSV(examBoards);
