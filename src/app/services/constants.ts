@@ -42,6 +42,10 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
     "UA-122616705-1",
     "UA-137475074-1"
 );
+export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
+    "G-VE7RLWEL60",
+    "G-H95WP5C8DR"
+);
 
 export const SOCIAL_LINKS = siteSpecific(
     {

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
+import ReactGA4 from "react-ga4";
 import {
     Alert,
     Card,
@@ -92,6 +93,11 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             ReactGA.event({
+                category: 'user',
+                action: 'registration',
+                label: 'Create Account (SEGUE)',
+            });
+            ReactGA4.event({
                 category: 'user',
                 action: 'registration',
                 label: 'Create Account (SEGUE)',
