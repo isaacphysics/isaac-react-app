@@ -86,7 +86,7 @@ export const Glossary = () => {
         const regex = new RegExp(searchText.split(' ').join('|'), 'gi');
         const sortedAndFilteredTerms =
             (searchText === ''
-                ? rawGlossaryTerms
+                ? [...rawGlossaryTerms ?? []]
                 : rawGlossaryTerms?.filter(e => e.value?.match(regex))
             )?.sort((a, b) => (a?.value && b?.value && a.value.localeCompare(b.value)) || 0)
         return groupTerms(sortedAndFilteredTerms);
