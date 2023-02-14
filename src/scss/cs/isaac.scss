@@ -5,8 +5,6 @@ $cs-turquoise-blue: #0AFFE7;
 $cs-pink: #FF4DC9;
 $cs-dark-pink: #870D5A;
 $cs-yellow: #FFE672;
-
-// Greys
 $cs-jet: #333333;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
@@ -39,23 +37,27 @@ $secondary-font-italic: 'poppins-italic', sans-serif;
 $secondary-font-medium: $secondary-font;
 $tertiary-font: 'poppins-light', sans-serif;
 
-// FIXME ADA: remove or replace all remaining colours between here and the imports
-$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
+/*
+*****************************************************************************************
+* FIXME ADA: remove or replace all remaining colours between here and the imports below *
+*  All variables used should be 'cs-*' or derivatives. We can add more if needed.       *
+*****************************************************************************************
+*/
+
+// FIXME ADA: This is a bad name, but it is shared with and redefined by Physics.
+$focus-blue: $cs-pink; // Used as focus indicator colour on inputs
 
 // Colour Overrides
-$purple: #9148bc; // Something to do with links
-$green: #208838; // Used in assignment progress table cells
+// FIXME ADA: I don't think overriding base Bootstrap colour definitions is the right way to go about this.
+//  These are shared with and redefined by Physics.
+$purple: $cs-dark-pink; // Something to do with links
+$green: $cs-turquoise-blue; // Used in assignment progress table cells
 
 // Stage colours
-$gcse-colour: #C40E50; // All used for stage tags in accordions
-$gcse-colour-50: #E186A7;
-$gcse-colour-25: #F0C3D3;
-$all-stages-colour: #9148BC;
-$all-stages-colour-50: #C8A3DD;
-$all-stages-colour-25: #E3D1EE;
-$a-level-colour: #2146AD;
-$a-level-colour-50: #90A2D6;
-$a-level-colour-25: #C7D1EA;
+// FIXME ADA: Provisional.
+$gcse-colour: $cs-pink; // All used for stage tags in accordions
+$all-stages-colour: mix($cs-dark-pink, $cs-pink, 50%);
+$a-level-colour: $cs-dark-pink;
 
 // Highlighting colours
 $highlight-navy: #07174F; // Used for buttons - positive answer
@@ -68,6 +70,7 @@ $highlight-mustard: #E09220; // Used for buttons - negative answer
 $highlight-mustard-50: #EFC88F; // Used for buttons - negative
 
 // Greys
+// FIXME ADA: these can be presumably somehow be replaced with generated shades based on Nomensa greys.
 $gray-103: #f8f8f8; // All used in various places, mainly for borders
 $gray-107: #ececec;
 $gray-110: #e7e7e7;
@@ -80,6 +83,7 @@ $gray-194: #0f0f0f;
 $gray-blue: #636c73;
 
 // Shadows
+// FIXME ADA: these can also presumably be replaced with generated shades based on Nomensa greys.
 $shadow-3: rgba(0, 0, 0, 0.3); // Used by buttons
 $shadow-25: rgba(0, 0, 0, 0.25); // Used by forms
 $shadow-08: rgba(0, 0, 0, 0.08); // Used in various places
