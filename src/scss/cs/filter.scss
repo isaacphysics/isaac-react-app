@@ -25,13 +25,13 @@ svg {
       }
 
       &.active.difficulty.practice {
-        fill: $cs-mustard;
-        stroke: $cs-mustard;
+        fill: $cs-yellow;
+        stroke: $cs-yellow;
       }
 
       &.active.difficulty.challenge {
-        fill: $cs-hot-pink;
-        stroke: $cs-hot-pink;
+        fill: $cs-dark-pink;
+        stroke: $cs-dark-pink;
       }
 
       &:focus {

@@ -36,12 +36,10 @@ $secondary-font-medium: $secondary-font;
 $tertiary-font: 'poppins-light', sans-serif;
 
 // FIXME ADA: remove or replace all remaining colours between here and the imports
-$cs-reddish: #d7335f; // Used as an active colour on secondary buttons
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 // Colour Overrides
 $purple: #9148bc; // Something to do with links
-$cyan: #0f8294; // Unused
 $green: #208838; // Used in assignment progress table cells
 
 // Stage colours
@@ -56,9 +54,6 @@ $a-level-colour-50: #90A2D6;
 $a-level-colour-25: #C7D1EA;
 
 // Highlighting colours
-$highlight-pink: #E72C62; // Unused
-$highlight-pink-50: #F395B0; // Unused
-$highlight-pink-25: #F9CAD8; // Unused
 $highlight-navy: #07174F; // Used for buttons - positive answer
 $highlight-navy-50: #838BA7; // Used for buttons - positive
 $highlight-navy-25: #C1C5D3; // Used for buttons - alert hide
@@ -67,7 +62,6 @@ $highlight-teal-50: #87C0C9; // Used for buttons - neutral
 $highlight-teal-25: #C3E0E4; // Used for buttons - quick question secondary
 $highlight-mustard: #E09220; // Used for buttons - negative answer
 $highlight-mustard-50: #EFC88F; // Used for buttons - negative
-$highlight-mustard-25: #F7E4C7; // Unused
 
 // Greys
 $gray-103: #f8f8f8; // All used in various places, mainly for borders
@@ -76,7 +70,6 @@ $gray-110: #e7e7e7;
 $gray-118: #d2d2d2;
 $gray-120: #c9cad1;
 $gray-136: #a3a3a3;
-$gray-142: #949494; // Unused
 $gray-160: #666;
 $gray-194: #0f0f0f;
 
@@ -87,11 +80,6 @@ $shadow-3: rgba(0, 0, 0, 0.3); // Used by buttons
 $shadow-25: rgba(0, 0, 0, 0.25); // Used by forms
 $shadow-08: rgba(0, 0, 0, 0.08); // Used in various places
 $shadow-black: rgb(0, 0, 0); // Used by buttons
-
-// Button sizing
-$input-btn-padding-y-lg: 0.5rem; // All unused
-$input-btn-padding-x-lg: 3rem;
-$border-radius-lg: 0.25rem;
 
 // ISAAC
 // Node module imports
