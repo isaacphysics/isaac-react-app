@@ -1,0 +1,44 @@
+@import "../common/cards";
+
+.cs-card {
+  position: relative;
+  border-radius: 15px;
+
+  @media (max-width: map-get($breakpoints, md)) {
+    min-width: 100%;
+  }
+
+  ::after {
+    content: " ";
+    position: absolute;
+    top: -28px;
+    left: 24px;
+    z-index: 2;
+    background-repeat: no-repeat;
+  }
+
+  &.backslash-1 {
+    ::after {
+      height: 56px;
+      width: 28px;
+      background-image: url(/assets/cs/decor/backslash-outline-1.svg);
+    }
+  }
+
+  &.backslash-2 {
+    ::after {
+      height: 56px;
+      width: 46px;
+      background-image: url(/assets/cs/decor/backslash-outline-2.svg);
+    }
+  }
+
+  &.backslash-3 {
+    ::after {
+      height: 56px;
+      width: 64px;
+      background-image: url(/assets/cs/decor/backslash-outline-3.svg);
+    }
+  }
+
+}
