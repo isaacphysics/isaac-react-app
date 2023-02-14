@@ -49,7 +49,7 @@ export const HomepageCS = () => {
         <WarningBanner/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="py-5 z1">
+                <Container className="py-lg-6 pt-3 pb-5 z1">
                     {user?.loggedIn ? <>
                             <Row className="pt-4">
                                 <Col md="12" lg="5" className={"pt-lg-4"}>
@@ -75,7 +75,7 @@ export const HomepageCS = () => {
                                 </p>
                                 <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
                             </Col>
-                            <Col md={6}>
+                            <Col md={6} className={"order-first order-md-last"}>
                                 <AdaHero/>
                             </Col>
                         </Row>
@@ -84,7 +84,7 @@ export const HomepageCS = () => {
             </section>
 
             <section id="benefits-for-teachers-and-students">
-                <Container className={"py-5"}>
+                <Container className={"py-6"}>
                     <Row>
                         <Col md={6} className={"px-5"}>
                             <img className={"w-100"} src={"/assets/cs/decor/benefits-for-teachers-hero.png"} />

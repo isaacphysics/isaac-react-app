@@ -19,6 +19,11 @@ $theme-colors: (
     "primary": $primary,
     "secondary": $secondary,
     "raspberry": $cs-raspberry,
+    "pink": $cs-pink,
+);
+$spacer: 1rem !default;
+$spacers: (
+    6: ($spacer * 6.25) // 100px-ish
 );
 
 // TODO ADA remove
