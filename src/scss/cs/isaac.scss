@@ -11,7 +11,7 @@ $cs-light-gray: #D6D6D6;
 $cs-cultured: #F5F5F5;
 
 // Theme
-$theme-colors: (
+$theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
     "primary": $cs-pink,
     "secondary": $cs-turquoise-blue,
     "turquoise-blue": $cs-turquoise-blue,
@@ -22,6 +22,10 @@ $theme-colors: (
     "silver-grey" : $cs-silver,
     "light-grey" : $cs-light-gray,
     "cultured-grey" : $cs-cultured,
+);
+$spacer: 1rem !default;
+$spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
+        6: ($spacer * 6.25) // 100px-ish
 );
 
 // fonts
@@ -373,8 +377,4 @@ body {
     width: 3.5rem;
     height: auto;
     border-width: 4.5rem;
-}
-
-.text-pink {
-    color: $cs-pink !important;
 }
