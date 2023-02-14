@@ -11,6 +11,7 @@ import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import classNames from "classnames";
 import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
+import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -94,6 +95,36 @@ export const HomepageCS = () => {
                             <WhySignUpTabs/>
                         </Col>
                     </Row>
+                </Container>
+            </section>
+
+            <section id="what-resources">
+                <Container className={"py-lg-6 py-5"}>
+                    <IsaacCardDeck doc={{
+                        title: "What resources are you looking for?",
+                        cards: [{
+                            title: "Secondary Education",
+                            subtitle: "Level 1 is normally achieved years 10 and 11 of secondary school. Level 1 " +
+                                "qualifications include and can be equivalent to achieving GCSE. Other examples of " +
+                                "Level 1 qualifications include: Level 1 functional skills or essential skills.",
+                            clickUrl: "/topics/gcse",
+                            imageClassName: "backslash-1"
+                        }, {
+                            title: "Advanced Level",
+                            subtitle: "Advanced level qualifications (known as A levels) are subject-based " +
+                                "qualifications that can lead to university, further study, training, or work. You can " +
+                                "normally study three or more A levels over two years.",
+                            clickUrl: "/topics/a_level",
+                            imageClassName: "backslash-2"
+                        }, {
+                            title: "Events",
+                            subtitle: "We are firmly committed to safeguarding young people across all of the " +
+                                "activities that Isaac Computer Science supports. We believe that no young person or " +
+                                "vulnerable adult should ever experience abuse of any kind.",
+                            clickUrl: "/events",
+                            imageClassName: "backslash-3"
+                        }]
+                    }} className={"mt-5 mt-lg-6"} />
                 </Container>
             </section>
 
