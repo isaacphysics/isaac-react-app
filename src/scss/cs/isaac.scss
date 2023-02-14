@@ -1,44 +1,53 @@
-// Ada brand and visual identity colours
+// Ada brand and visual identity colours (see Brand Book)
 $cs-black: #000000;
 $cs-white: #ffffff;
 $cs-turquoise-blue: #0AFFE7;
 $cs-pink: #FF4DC9;
-$cs-raspberry: #870D5A;
+$cs-dark-pink: #870D5A;
 $cs-yellow: #FFE672;
 
-//Greys
+// Greys
 $cs-jet: #333333;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
 $cs-cultured: #F5F5F5;
 
 // Theme
-$primary: $cs-pink;
-$secondary: $cs-turquoise-blue;
 $theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary,
-    "raspberry": $cs-raspberry,
-    "pink": $cs-pink,
+    "primary": $cs-pink,
+    "secondary": $cs-turquoise-blue,
+    "turquoise-blue": $cs-turquoise-blue,
+    "pink" : $cs-pink,
+    "dark-pink" : $cs-dark-pink,
+    "yellow" : $cs-yellow,
+    "jet-grey" : $cs-jet,
+    "silver-grey" : $cs-silver,
+    "light-grey" : $cs-light-gray,
+    "cultured-grey" : $cs-cultured,
 );
 $spacer: 1rem !default;
 $spacers: (
-    6: ($spacer * 6.25) // 100px-ish
+        6: ($spacer * 6.25) // 100px-ish
 );
 
-// TODO ADA remove
-$cs-mustard: #ffb53f;
-$cs-hot-pink: #ff3369;
-$cs-reddish: #d7335f; // Used as an active colour on secondary buttons
+// fonts
+$primary-font: "poppins-regular", sans-serif;
+$secondary-font: 'poppins-regular', sans-serif;
+$secondary-font-bold: 'poppins-bold', sans-serif;
+$secondary-font-semi-bold: 'poppins-semibold', sans-serif;
+$secondary-font-italic: 'poppins-italic', sans-serif;
+$secondary-font-medium: $secondary-font;
+$tertiary-font: 'poppins-light', sans-serif;
+
+// FIXME ADA: remove or replace all remaining colours between here and the imports
 $focus-blue: #3E59A3; // Used as focus indicator colour on inputs
 
 // Colour Overrides
-$purple: #9148bc;
-$cyan: #0f8294;
-$green: #208838;
+$purple: #9148bc; // Something to do with links
+$green: #208838; // Used in assignment progress table cells
 
 // Stage colours
-$gcse-colour: #C40E50;
+$gcse-colour: #C40E50; // All used for stage tags in accordions
 $gcse-colour-50: #E186A7;
 $gcse-colour-25: #F0C3D3;
 $all-stages-colour: #9148BC;
@@ -49,51 +58,32 @@ $a-level-colour-50: #90A2D6;
 $a-level-colour-25: #C7D1EA;
 
 // Highlighting colours
-$highlight-pink: #E72C62;
-$highlight-pink-50: #F395B0;
-$highlight-pink-25: #F9CAD8;
-$highlight-navy: #07174F;
-$highlight-navy-50: #838BA7;
-$highlight-navy-25: #C1C5D3;
-$highlight-teal: #0F8294;
-$highlight-teal-50: #87C0C9;
-$highlight-teal-25: #C3E0E4;
-$highlight-mustard: #E09220;
-$highlight-mustard-50: #EFC88F;
-$highlight-mustard-25: #F7E4C7;
+$highlight-navy: #07174F; // Used for buttons - positive answer
+$highlight-navy-50: #838BA7; // Used for buttons - positive
+$highlight-navy-25: #C1C5D3; // Used for buttons - alert hide
+$highlight-teal: #0F8294; // Used for buttons - neutral answer
+$highlight-teal-50: #87C0C9; // Used for buttons - neutral
+$highlight-teal-25: #C3E0E4; // Used for buttons - quick question secondary
+$highlight-mustard: #E09220; // Used for buttons - negative answer
+$highlight-mustard-50: #EFC88F; // Used for buttons - negative
 
-//Greys
-$gray-103: #f8f8f8;
+// Greys
+$gray-103: #f8f8f8; // All used in various places, mainly for borders
 $gray-107: #ececec;
 $gray-110: #e7e7e7;
 $gray-118: #d2d2d2;
 $gray-120: #c9cad1;
 $gray-136: #a3a3a3;
-$gray-142: #949494;
 $gray-160: #666;
 $gray-194: #0f0f0f;
 
 $gray-blue: #636c73;
 
 // Shadows
-$shadow-3: rgba(0, 0, 0, 0.3);
-$shadow-25: rgba(0, 0, 0, 0.25);
-$shadow-08: rgba(0, 0, 0, 0.08);
-$shadow-black: rgb(0, 0, 0);
-
-// Button sizing
-$input-btn-padding-y-lg: 0.5rem;
-$input-btn-padding-x-lg: 3rem;
-$border-radius-lg: 0.25rem;
-
-// fonts
-$primary-font: "poppins-regular", sans-serif;
-$secondary-font: 'poppins-regular', sans-serif;
-$secondary-font-bold: 'poppins-bold', sans-serif;
-$secondary-font-semi-bold: 'poppins-semibold', sans-serif;
-$secondary-font-italic: 'poppins-italic', sans-serif;
-$secondary-font-medium: $secondary-font;
-$tertiary-font: 'poppins-light', sans-serif;
+$shadow-3: rgba(0, 0, 0, 0.3); // Used by buttons
+$shadow-25: rgba(0, 0, 0, 0.25); // Used by forms
+$shadow-08: rgba(0, 0, 0, 0.08); // Used in various places
+$shadow-black: rgb(0, 0, 0); // Used by buttons
 
 // ISAAC
 // Node module imports
