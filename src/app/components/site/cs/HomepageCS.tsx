@@ -161,14 +161,6 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
-            <section id="headline-content" className="row bg-primary pattern-05">
-                <Container>
-                    <Col className="py-5 pb-md-0">
-                        <FeaturedContentTabs/>
-                    </Col>
-                </Container>
-            </section>
-
             <section id="events">
                 <Container className="pt-4 pb-5">
                     <div className="eventList pt-5 pattern-03">
