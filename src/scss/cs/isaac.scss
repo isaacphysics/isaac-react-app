@@ -60,14 +60,14 @@ $all-stages-colour: mix($cs-dark-pink, $cs-pink, 50%);
 $a-level-colour: $cs-dark-pink;
 
 // Highlighting colours
-$highlight-navy: #07174F; // Used for buttons - positive answer
-$highlight-navy-50: #838BA7; // Used for buttons - positive
-$highlight-navy-25: #C1C5D3; // Used for buttons - alert hide
-$highlight-teal: #0F8294; // Used for buttons - neutral answer
-$highlight-teal-50: #87C0C9; // Used for buttons - neutral
-$highlight-teal-25: #C3E0E4; // Used for buttons - quick question secondary
-$highlight-mustard: #E09220; // Used for buttons - negative answer
-$highlight-mustard-50: #EFC88F; // Used for buttons - negative
+$highlight-navy: #07174F; // Used for buttons - "is your answer correct" positive QQ answer
+$highlight-navy-50: #838BA7; // Used for buttons - positive quick question answer
+$highlight-navy-25: #C1C5D3; // Used for buttons - "is your answer correct" hide
+$highlight-teal: #0F8294; // Used for buttons - "is your answer correct" neutral QQ answer
+$highlight-teal-50: #87C0C9; // Used for buttons - quick question neutral answer
+$highlight-teal-25: #C3E0E4; // "is your answer correct" background
+$highlight-mustard: #E09220; // Used for buttons - "is your answer correct" negative QQ answer
+$highlight-mustard-50: #EFC88F; // Used for buttons - quick question negative answer
 
 // Greys
 // FIXME ADA: these can be presumably somehow be replaced with generated shades based on Nomensa greys.
