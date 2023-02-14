@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Card, CardBody, CardFooter, CardTitle, Col, Row} from "reactstrap";
 import classNames from "classnames";
-import {apiHelper, isAppLink, isDefined, siteSpecific} from "../../services";
+import {apiHelper, isAppLink, siteSpecific} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCardDTO} from "../../../IsaacApiTypes";
 
