@@ -1,85 +1,32 @@
-// Ada brand and visual identity colours
+// Ada brand and visual identity colours (see Brand Book)
 $cs-black: #000000;
 $cs-white: #ffffff;
 $cs-turquoise-blue: #0AFFE7;
 $cs-pink: #FF4DC9;
-$cs-raspberry: #870D5A;
+$cs-dark-pink: #870D5A;
 $cs-yellow: #FFE672;
-
-//Greys
 $cs-jet: #333333;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
 $cs-cultured: #F5F5F5;
 
 // Theme
-$primary: $cs-pink;
-$secondary: $cs-turquoise-blue;
-$theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary,
-    "raspberry": $cs-raspberry,
+$theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
+    "primary": $cs-pink,
+    "secondary": $cs-turquoise-blue,
+    "turquoise-blue": $cs-turquoise-blue,
+    "pink" : $cs-pink,
+    "dark-pink" : $cs-dark-pink,
+    "yellow" : $cs-yellow,
+    "jet-grey" : $cs-jet,
+    "silver-grey" : $cs-silver,
+    "light-grey" : $cs-light-gray,
+    "cultured-grey" : $cs-cultured,
 );
-
-// TODO ADA remove
-$cs-mustard: #ffb53f;
-$cs-hot-pink: #ff3369;
-$cs-reddish: #d7335f; // Used as an active colour on secondary buttons
-$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
-
-// Colour Overrides
-$purple: #9148bc;
-$cyan: #0f8294;
-$green: #208838;
-
-// Stage colours
-$gcse-colour: #C40E50;
-$gcse-colour-50: #E186A7;
-$gcse-colour-25: #F0C3D3;
-$all-stages-colour: #9148BC;
-$all-stages-colour-50: #C8A3DD;
-$all-stages-colour-25: #E3D1EE;
-$a-level-colour: #2146AD;
-$a-level-colour-50: #90A2D6;
-$a-level-colour-25: #C7D1EA;
-
-// Highlighting colours
-$highlight-pink: #E72C62;
-$highlight-pink-50: #F395B0;
-$highlight-pink-25: #F9CAD8;
-$highlight-navy: #07174F;
-$highlight-navy-50: #838BA7;
-$highlight-navy-25: #C1C5D3;
-$highlight-teal: #0F8294;
-$highlight-teal-50: #87C0C9;
-$highlight-teal-25: #C3E0E4;
-$highlight-mustard: #E09220;
-$highlight-mustard-50: #EFC88F;
-$highlight-mustard-25: #F7E4C7;
-
-//Greys
-$gray-103: #f8f8f8;
-$gray-107: #ececec;
-$gray-110: #e7e7e7;
-$gray-118: #d2d2d2;
-$gray-120: #c9cad1;
-$gray-136: #a3a3a3;
-$gray-142: #949494;
-$gray-160: #666;
-$gray-194: #0f0f0f;
-
-$gray-blue: #636c73;
-
-// Shadows
-$shadow-3: rgba(0, 0, 0, 0.3);
-$shadow-25: rgba(0, 0, 0, 0.25);
-$shadow-08: rgba(0, 0, 0, 0.08);
-$shadow-black: rgb(0, 0, 0);
-
-// Button sizing
-$input-btn-padding-y-lg: 0.5rem;
-$input-btn-padding-x-lg: 3rem;
-$border-radius-lg: 0.25rem;
+$spacer: 1rem !default;
+$spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
+        6: ($spacer * 6.25) // 100px-ish
+);
 
 // fonts
 $primary-font: "poppins-regular", sans-serif;
@@ -89,6 +36,59 @@ $secondary-font-semi-bold: 'poppins-semibold', sans-serif;
 $secondary-font-italic: 'poppins-italic', sans-serif;
 $secondary-font-medium: $secondary-font;
 $tertiary-font: 'poppins-light', sans-serif;
+
+/*
+*****************************************************************************************
+* FIXME ADA: remove or replace all remaining colours between here and the imports below *
+*  All variables used should be 'cs-*' or derivatives. We can add more if needed.       *
+*****************************************************************************************
+*/
+
+// FIXME ADA: This is a bad name, but it is shared with and redefined by Physics.
+$focus-blue: $cs-pink; // Used as focus indicator colour on inputs
+
+// Colour Overrides
+// FIXME ADA: I don't think overriding base Bootstrap colour definitions is the right way to go about this.
+//  These are shared with and redefined by Physics.
+$purple: $cs-dark-pink; // Something to do with links
+$green: $cs-turquoise-blue; // Used in assignment progress table cells
+
+// Stage colours
+// FIXME ADA: Provisional.
+$gcse-colour: $cs-pink; // All used for stage tags in accordions
+$all-stages-colour: mix($cs-dark-pink, $cs-pink, 50%);
+$a-level-colour: $cs-dark-pink;
+
+// Highlighting colours
+// FIXME ADA: Very provisional
+$highlight-dark-pink: $cs-dark-pink; // Used for buttons - "is your answer correct" positive QQ answer
+$highlight-dark-pink-50: mix($cs-dark-pink, $cs-white, 50%); // Used for buttons - positive quick question answer
+$highlight-dark-pink-25: mix($cs-dark-pink, $cs-white, 25%); // Used for buttons - "is your answer correct" hide
+$highlight-turquoise: $cs-turquoise-blue; // Used for buttons - "is your answer correct" neutral QQ answer
+$highlight-turquoise-50: mix($cs-turquoise-blue, $cs-white, 50%); // Used for buttons - quick question neutral answer
+$highlight-turquoise-25: mix($cs-turquoise-blue, $cs-white, 25%); // "is your answer correct" background
+$highlight-yellow: $cs-yellow; // Used for buttons - "is your answer correct" negative QQ answer
+$highlight-yellow-50: mix($cs-yellow, $cs-white, 50%); // Used for buttons - quick question negative answer
+
+// Greys
+// FIXME ADA: these can be presumably somehow be replaced with generated shades based on Nomensa greys.
+$gray-103: #f8f8f8; // All used in various places, mainly for borders
+$gray-107: #ececec;
+$gray-110: #e7e7e7;
+$gray-118: #d2d2d2;
+$gray-120: #c9cad1;
+$gray-136: #a3a3a3;
+$gray-160: #666;
+$gray-194: #0f0f0f;
+
+$gray-blue: #636c73;
+
+// Shadows
+// FIXME ADA: these can also presumably be replaced with generated shades based on Nomensa greys.
+$shadow-3: rgba(0, 0, 0, 0.3); // Used by buttons
+$shadow-25: rgba(0, 0, 0, 0.25); // Used by forms
+$shadow-08: rgba(0, 0, 0, 0.08); // Used in various places
+$shadow-black: rgb(0, 0, 0); // Used by buttons
 
 // ISAAC
 // Node module imports
@@ -118,7 +118,7 @@ $tertiary-font: 'poppins-light', sans-serif;
 @import "../common/media";
 @import "tabs";
 @import "../common/accordions";
-@import "../common/cards";
+@import "cards";
 @import "../common/list-groups";
 @import "inequality-modal";
 @import "../common/carousel";

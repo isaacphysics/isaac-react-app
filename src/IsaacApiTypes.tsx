@@ -14,7 +14,7 @@ export interface IsaacCardDTO extends ContentDTO {
 }
 
 export interface IsaacCardDeckDTO extends ContentDTO {
-    cards?: IsaacCardDTO[];
+    cards?: (IsaacCardDTO & { imageClassName?: string })[];
 }
 
 export interface ChemicalFormulaDTO extends ChoiceDTO {

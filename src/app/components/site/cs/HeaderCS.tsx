@@ -29,7 +29,7 @@ export const HeaderCS = () => {
             <Navbar expand="md">
                 <Container className="px-0">
                     <NavbarBrand href="/" className="header-logo">
-                        <img src="/assets/logo.svg" alt="Ada Computer Science" />
+                        <img src="/assets/logos/ada_logo_3-stack_aqua_white_text.svg" alt="Ada Computer Science" />
                     </NavbarBrand>
                 </Container>
 

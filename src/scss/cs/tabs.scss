@@ -45,12 +45,12 @@
       }
 
       &.active {
-        color: $cs-raspberry;
+        color: $cs-dark-pink;
         cursor: default;
         ::after {
           opacity: 1 !important;
           transform: scaleX(1);
-          border-color: $cs-raspberry;
+          border-color: $cs-dark-pink;
         }
       }
 

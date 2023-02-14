@@ -21,6 +21,15 @@
     background-color: $cs-white;
   }
 
+  section#why-resources {
+    background-color: $cs-cultured;
+  }
+
+  section#call-to-action {
+    background-color: $cs-black;
+    color: $cs-white;
+  }
+
   section#why-sign-up {
     //h1 {padding-bottom: 2rem;}
     //.card {
@@ -106,4 +115,20 @@
       }
     }
   }
+}
+
+.ada-pink {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg at 50% 50%, #FF4DC9FF 0deg, rgba(0, 0, 0, 0) 273.75deg, rgba(0, 0, 0, 0) 360deg);
+  transform: matrix(1, 0, 0, -1, 0, 0);
+}
+
+.ada-blue {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg at 50% 50%, #0AFFE7FF 0deg, rgba(10, 255, 231, 0) 273.75deg, rgba(10, 255, 231, 0) 360deg);
+  transform: rotate(-180deg);
 }
