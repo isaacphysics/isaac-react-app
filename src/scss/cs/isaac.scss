@@ -60,14 +60,15 @@ $all-stages-colour: mix($cs-dark-pink, $cs-pink, 50%);
 $a-level-colour: $cs-dark-pink;
 
 // Highlighting colours
-$highlight-navy: #07174F; // Used for buttons - "is your answer correct" positive QQ answer
-$highlight-navy-50: #838BA7; // Used for buttons - positive quick question answer
-$highlight-navy-25: #C1C5D3; // Used for buttons - "is your answer correct" hide
-$highlight-teal: #0F8294; // Used for buttons - "is your answer correct" neutral QQ answer
-$highlight-teal-50: #87C0C9; // Used for buttons - quick question neutral answer
-$highlight-teal-25: #C3E0E4; // "is your answer correct" background
-$highlight-mustard: #E09220; // Used for buttons - "is your answer correct" negative QQ answer
-$highlight-mustard-50: #EFC88F; // Used for buttons - quick question negative answer
+// FIXME ADA: Very provisional
+$highlight-dark-pink: $cs-dark-pink; // Used for buttons - "is your answer correct" positive QQ answer
+$highlight-dark-pink-50: mix($cs-dark-pink, $cs-white, 50%); // Used for buttons - positive quick question answer
+$highlight-dark-pink-25: mix($cs-dark-pink, $cs-white, 25%); // Used for buttons - "is your answer correct" hide
+$highlight-turquoise: $cs-turquoise-blue; // Used for buttons - "is your answer correct" neutral QQ answer
+$highlight-turquoise-50: mix($cs-turquoise-blue, $cs-white, 50%); // Used for buttons - quick question neutral answer
+$highlight-turquoise-25: mix($cs-turquoise-blue, $cs-white, 25%); // "is your answer correct" background
+$highlight-yellow: $cs-yellow; // Used for buttons - "is your answer correct" negative QQ answer
+$highlight-yellow-50: mix($cs-yellow, $cs-white, 50%); // Used for buttons - quick question negative answer
 
 // Greys
 // FIXME ADA: these can be presumably somehow be replaced with generated shades based on Nomensa greys.

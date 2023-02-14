@@ -6,27 +6,27 @@
     color: $black;
   }
   &.btn-negative {
-    background-color: $highlight-mustard-50;
+    background-color: $highlight-yellow-50;
     color: black;
   }
   &.btn-neutral {
-    background-color: $highlight-teal-50;
+    background-color: $highlight-turquoise-50;
     color: black;
   }
   &.btn-positive {
-    background-color: $highlight-navy-50;
+    background-color: $highlight-dark-pink-50;
     color: black;
   }
   &.btn-negative-answer {
-    background-color: $highlight-mustard;
+    background-color: $highlight-yellow;
     color: white;
   }
   &.btn-neutral-answer {
-    background-color: $highlight-teal;
+    background-color: $highlight-turquoise;
     color: white;
   }
   &.btn-positive-answer {
-    background-color: $highlight-navy;
+    background-color: $highlight-dark-pink;
     color: white;
   }
   &.btn-secondary:not(:disabled):not(.disabled):active {
@@ -36,7 +36,7 @@
     text-decoration: underline;
   }
   &.hide-answer {
-    background-color: $highlight-navy !important;
+    background-color: $highlight-dark-pink !important;
     border: 1px solid transparent !important;
     color: $white !important;
   }
@@ -49,16 +49,16 @@
 }
 
 .alert-hide {
-  background-color: $highlight-navy-25;
+  background-color: $highlight-dark-pink-25;
 }
 
 .quick-question-options {
   background: white;
-  border: 2px solid $highlight-navy;
+  border: 2px solid $highlight-dark-pink;
 }
 
 .quick-question-secondary {
-  background: $highlight-teal-25 !important;
+  background: $highlight-turquoise-25 !important;
   border: none !important;
 }
 
