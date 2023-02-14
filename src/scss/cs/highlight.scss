@@ -1,19 +1,5 @@
 $highlight-text-colour: #FFFFFF;
 
-.hi-pink {
-  background-color: $highlight-pink;
-  color: $highlight-text-colour;
-}
-
-.hi-pink-50 {
-  background-color: $highlight-pink-50;
-  color: $highlight-text-colour;
-}
-
-.hi-pink-25 {
-  background-color: $highlight-pink-25;
-}
-
 .hi-navy {
   background-color: $highlight-navy;
   color: $highlight-text-colour;
@@ -40,18 +26,4 @@ $highlight-text-colour: #FFFFFF;
 
 .hi-teal-25 {
   background-color: $highlight-teal-25;
-}
-
-.hi-mustard {
-  background-color: $highlight-mustard;
-  color: $highlight-text-colour;
-}
-
-.hi-mustard-50 {
-  background-color: $highlight-mustard-50;
-  color: $highlight-text-colour;
-}
-
-.hi-mustard-25 {
-  background-color: $highlight-mustard-25;
 }
