@@ -9,9 +9,6 @@ import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
-import {MainSearch} from "../../elements/MainSearch";
-import {SearchInput} from "../../elements/SearchInput";
-import {Search} from "../../pages/Search";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -164,7 +161,7 @@ export const HomepageCS = () => {
                         <Col md={8}>
                             <h3 className={"text-white d-inline-block"}>Ready to get started?</h3>
                             {/* FIXME ADA add search bar */}
-                            
+
                         </Col>
                     </Row>
                 </Container>
