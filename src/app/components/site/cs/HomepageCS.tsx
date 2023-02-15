@@ -9,6 +9,7 @@ import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
+import {LongSearchButton, SearchButton, SearchInput} from "../../elements/SearchButton";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -158,10 +159,11 @@ export const HomepageCS = () => {
             <section id="search">
                 <Container className={"py-lg-6 py-5"}>
                     <Row className={"justify-content-center"}>
-                        <Col md={8}>
+                        <Col md={2} className={""}>
                             <h3 className={"text-white d-inline-block"}>Ready to get started?</h3>
-                            {/* FIXME ADA add search bar */}
-
+                        </Col>
+                        <Col md={7}>
+                            <SearchInput className={"d-inline-block long-search-bar"} button={<LongSearchButton/>} prompt={"Search your topic here"}/>
                         </Col>
                     </Row>
                 </Container>
