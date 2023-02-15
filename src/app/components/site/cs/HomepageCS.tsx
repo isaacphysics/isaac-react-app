@@ -1,18 +1,17 @@
 import React, {useEffect} from "react";
 import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Button, CardDeck, Col, Container, Row} from "reactstrap";
 import {SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {NewsCarousel} from "../../elements/NewsCarousel";
-import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
-import {EventsCarousel} from "../../elements/EventsCarousel";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
-import classNames from "classnames";
 import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
+import {MainSearch} from "../../elements/MainSearch";
+import {SearchInput} from "../../elements/SearchInput";
+import {Search} from "../../pages/Search";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -159,37 +158,17 @@ export const HomepageCS = () => {
                 </Container>
             </section>}
 
-            <section id="events">
-                <Container className="pt-4 pb-5">
-                    <div className="eventList pt-5 pattern-03">
-                        <h2 className="h-title text-center mb-4">Events</h2>
-                        <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
-                            {"We offer free online events for students and teachers. Visit our "}
-                            <Link to="/events">
-                                Events page
-                            </Link>
-                            {" to see what’s happening, and sign up today!"}
-                        </p>
-                        <EventsCarousel/>
-                        <Link to="/events">
-                            See all Events
-                        </Link>
-                    </div>
+            <section id="search">
+                <Container className={"py-lg-6 py-5"}>
+                    <Row className={"justify-content-center"}>
+                        <Col md={8}>
+                            <h3 className={"text-white d-inline-block"}>Ready to get started?</h3>
+                            {/* FIXME ADA add search bar */}
+                            
+                        </Col>
+                    </Row>
                 </Container>
             </section>
-
-            {!user?.loggedIn && <section className="row">
-                <Container>
-                    <Col className="py-4 px-5 mb-5 d-flex align-items-center flex-column flex-md-row border border-dark">
-                        <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
-                            Sign up to track your progress
-                        </h3>
-                        <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
-                            Sign up
-                        </Button>
-                    </Col>
-                </Container>
-            </section>}
         </div>
     </>;
 };
