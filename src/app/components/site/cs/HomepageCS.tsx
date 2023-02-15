@@ -132,7 +132,7 @@ export const HomepageCS = () => {
                 {/*<img id={"fingerprint-cs-stories"} src={"/assets/cs/decor/fingerprint-cs-stories.svg"}/>*/}
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
-                        <Col xs={12} md={6}>
+                        <Col xs={12} md={6} id={"cs-stories-text"}>
                             <h3 className={"mb-4"}>Computer science stories</h3>
                             <p className={"p-large mb-4"}>
                                 Discover our monthly interview series and learn from passionate educators within the

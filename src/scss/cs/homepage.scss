@@ -40,6 +40,9 @@
       background-position-x: 85%;
       background-size: 160% 200%;
     }
+    #cs-stories-text {
+      background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
+    }
   }
 
   section#call-to-action {
