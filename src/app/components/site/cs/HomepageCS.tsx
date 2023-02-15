@@ -128,6 +128,23 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
+            <section id="computer-science-stories">
+                {/*<img id={"fingerprint-cs-stories"} src={"/assets/cs/decor/fingerprint-cs-stories.svg"}/>*/}
+                <Container className={"py-lg-6 py-5"}>
+                    <Row>
+                        <Col xs={12} md={6}>
+                            <h3 className={"mb-4"}>Computer science stories</h3>
+                            <p className={"p-large mb-4"}>
+                                Discover our monthly interview series and learn from passionate educators within the
+                                Isaac community, and recently-graduated computer scientists who are doing AMAZING
+                                things in a huge range of computing-related fields!
+                            </p>
+                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="secondary">Read some stories</Button>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
+
             {!user?.loggedIn && <Container>
                 <hr/>
             </Container>}
@@ -141,14 +158,6 @@ export const HomepageCS = () => {
                         </div>}
                         <NewsCarousel items={carouselNewsItems} />
                     </div>
-                </Container>
-            </section>
-
-            <section id="headline-content" className="row bg-primary pattern-05">
-                <Container>
-                    <Col className="py-5 pb-md-0">
-                        <FeaturedContentTabs/>
-                    </Col>
                 </Container>
             </section>
 

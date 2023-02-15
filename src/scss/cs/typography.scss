@@ -11,21 +11,21 @@ header a, div.isaac-nav-link {
   }
 }
 
-p li ol ul a blockquote {
+p, li, ol, ul, a, blockquote {
   font-size: 1rem;
   font-family: $primary-font;
   line-height: 1.5rem;
 
   &.p-large {
-    font-size: 1.111em;
+    font-size: 1.111rem;
     line-height: 1.667rem;
   }
 }
 
-i em {
+i, em {
   font-size: 0.889em;
   line-height: 1rem;
   font-family: $secondary-font-italic;
 }
 
-// pre code need thinking about
+// FIXME ADA pre and code fonts and style need thinking about

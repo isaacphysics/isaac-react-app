@@ -25,6 +25,23 @@
     background-color: $cs-cultured;
   }
 
+  section#computer-science-stories {
+    background-color: $cs-white;
+    position: relative;
+    // Hand-tuned background positioning to make this particular SVG look nice on different screen sizes
+    background-image: url(/assets/cs/decor/fingerprint-cs-stories.svg);
+    background-repeat: no-repeat;
+    background-size: 100% 200%;
+    background-position-y: 55%;
+    background-position-x: 100%;
+    @media (max-width: map-get($breakpoints, sm)) {
+      padding-bottom: 50vw;
+      background-position-y: -33vw;
+      background-position-x: 85%;
+      background-size: 160% 200%;
+    }
+  }
+
   section#call-to-action {
     background-color: $cs-black;
     color: $cs-white;
