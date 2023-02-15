@@ -12,6 +12,7 @@ import classNames from "classnames";
 import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
+import {NewsCard} from "../../elements/cards/NewsCard";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -145,21 +146,18 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
-            {!user?.loggedIn && <Container>
-                <hr/>
-            </Container>}
-
-            <section id="news">
-                <Container className={classNames("pt-4 pb-5", {"mt-lg-n5 pt-lg-0": user?.loggedIn ?? false})}>
-                    <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
-                        <h2 className="h-title mb-4">News</h2>
-                        {user?.loggedIn && <div className={"d-block d-lg-none mb-4 mb-lg-0"}>
-                            <FeaturedNewsItem item={featuredNewsItem} />
-                        </div>}
-                        <NewsCarousel items={carouselNewsItems} />
+            {news && news.length > 0 && <section id="news">
+                <Container className={"py-lg-6 py-5"}>
+                    <h3 className={"mb-4 mb-lg-5"}>News</h3>
+                    <CardDeck>
+                        {news.slice(0, 3).map(n => <NewsCard newsItem={n} showTitle />)}
+                    </CardDeck>
+                    <div className={"mt-4 mt-lg-5 w-100 text-center"}>
+                        {/* FIXME ADA link this to a general news page? Also fix link CSS design */}
+                        <a href={"/"}><h3>See more news</h3></a>
                     </div>
                 </Container>
-            </section>
+            </section>}
 
             <section id="events">
                 <Container className="pt-4 pb-5">
