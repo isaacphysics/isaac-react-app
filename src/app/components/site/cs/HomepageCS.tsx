@@ -159,10 +159,10 @@ export const HomepageCS = () => {
             <section id="search">
                 <Container className={"py-lg-6 py-5"}>
                     <Row className={"justify-content-center"}>
-                        <Col md={2} className={""}>
+                        <Col md={2} className={"my-auto"}>
                             <h3 className={"text-white d-inline-block"}>Ready to get started?</h3>
                         </Col>
-                        <Col md={7}>
+                        <Col md={7} className={"my-auto"}>
                             <SearchInput className={"d-inline-block long-search-bar"} button={<LongSearchButton/>} prompt={"Search your topic here"}/>
                         </Col>
                     </Row>
