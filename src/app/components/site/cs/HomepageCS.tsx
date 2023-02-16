@@ -64,8 +64,8 @@ export const HomepageCS = () => {
                                 </Col>
                             </Row>
                         </>
-                        : <Row>
-                            <Col md={6} className={"mt-auto"}>
+                        : <Row className={"justify-content-center"}>
+                            <Col md={6} className={"mt-auto"} style={{maxWidth: 640}}>
                                 <h1 className={"h-l"}>
                                     <span className={"text-pink"}>/</span><br/>
                                     Computer science learning,<span className={"h-thin"}> it's more than just the machine.</span>
@@ -75,7 +75,7 @@ export const HomepageCS = () => {
                                 </p>
                                 <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
                             </Col>
-                            <Col md={6} className={"order-first order-md-last"}>
+                            <Col md={6} className={"order-first order-md-last"} style={{maxWidth: 640}}>
                                 <AdaHero/>
                             </Col>
                         </Row>
