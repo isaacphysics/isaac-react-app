@@ -15,16 +15,17 @@ import {
     isTeacherOrAbove, isTutorOrAbove
 } from "../../../services";
 
+// FIXME ADA remove completely
 export const NavigationBarCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>
-        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
+        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount /*+ quizzesCount*/} message="incomplete assignments" />}</>}>
             <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
-            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
+            {/*<LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>*/}
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
@@ -33,7 +34,7 @@ export const NavigationBarCS = () => {
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
             <LinkItem to="/my_markbook">Markbook</LinkItem>
             {isTeacherOrAbove(user) && <>
-                <LinkItem to="/set_tests">Manage tests</LinkItem>
+                {/*<LinkItem to="/set_tests">Manage tests</LinkItem>*/}
                 <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
             </>}
         </NavigationSection>}

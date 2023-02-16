@@ -37,11 +37,11 @@ export const HeaderCS = () => {
 
                 <NavbarToggler onClick={() => setIsOpen(!isOpen)} />
                 <Collapse isOpen={isOpen} navbar>
-                    <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
+                    <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
                         <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
                         <LinkItem to="/my_gameboards">My gameboards</LinkItem>
                         <LinkItem to="/progress">My progress</LinkItem>
-                        <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
+                        {/*<LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>*/}
                         <LinkItem to="/student_rewards">Student rewards</LinkItem>
                     </NavigationSection>
 
@@ -50,7 +50,7 @@ export const HeaderCS = () => {
                         <LinkItem to="/set_assignments">Set assignments</LinkItem>
                         <LinkItem to="/my_markbook">Markbook</LinkItem>
                         {isTeacherOrAbove(user) && <>
-                            <LinkItem to="/set_tests">Manage tests</LinkItem>
+                            {/*<LinkItem to="/set_tests">Manage tests</LinkItem>*/}
                             <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                         </>}
                     </NavigationSection>}
@@ -92,7 +92,7 @@ export const HeaderCS = () => {
             </Navbar>
         </Container>
 
-        {/* TODO ADA remove old header */}
+        {/* FIXME ADA remove old header */}
         {/*<Container className="container-fluid px-0">*/}
         {/*    <Row>*/}
         {/*        <Col>*/}
