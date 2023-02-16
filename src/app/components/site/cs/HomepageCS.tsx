@@ -9,7 +9,7 @@ import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
-import {LongSearchButton, SearchButton, SearchInput} from "../../elements/SearchButton";
+import {LongSearchButton, SearchInput} from "../../elements/SearchButton";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -66,12 +66,12 @@ export const HomepageCS = () => {
                         </>
                         : <Row className={"justify-content-center"}>
                             <Col md={6} className={"mt-auto"} style={{maxWidth: 640}}>
-                                <h1 className={"h-l"}>
+                                <h1 className={"font-h1-l"}>
                                     <span className={"text-pink"}>/</span><br/>
-                                    Computer science learning,<span className={"h-thin"}> it's more than just the machine.</span>
+                                    The global computer science platform <span className={"font-h1-thin"}>for students and teachers.</span>
                                 </h1>
                                 <p className={"p-large pt-2"}>
-                                    Welcome to Ada Computer Science, the free online platform for students and teachers.
+                                    Developed by the Raspberry Pi Foundation and the University of Cambridge.
                                 </p>
                                 <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
                             </Col>
@@ -99,28 +99,19 @@ export const HomepageCS = () => {
             <section id="what-resources">
                 <Container className={"py-lg-6 py-5"}>
                     <IsaacCardDeck doc={{
-                        title: "What resources are you looking for?",
+                        title: "What are you looking for?",
                         cards: [{
-                            title: "Secondary Education",
-                            subtitle: "Level 1 is normally achieved years 10 and 11 of secondary school. Level 1 " +
-                                "qualifications include and can be equivalent to achieving GCSE. Other examples of " +
-                                "Level 1 qualifications include: Level 1 functional skills or essential skills.",
+                            title: "GCSE computer science",
+                            subtitle: "Our GCSE computer science topics cover the secondary school phase of learning for students aged 14 to 16.",
                             clickUrl: "/topics/gcse",
+                            buttonText: "View GCSE resources",
                             imageClassName: "backslash-1"
                         }, {
-                            title: "Advanced Level",
-                            subtitle: "Advanced level qualifications (known as A levels) are subject-based " +
-                                "qualifications that can lead to university, further study, training, or work. You can " +
-                                "normally study three or more A levels over two years.",
+                            title: "A level computer science",
+                            subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 18.",
                             clickUrl: "/topics/a_level",
+                            buttonText: "View A level resources",
                             imageClassName: "backslash-2"
-                        }, {
-                            title: "Events",
-                            subtitle: "We are firmly committed to safeguarding young people across all of the " +
-                                "activities that Isaac Computer Science supports. We believe that no young person or " +
-                                "vulnerable adult should ever experience abuse of any kind.",
-                            clickUrl: "/events",
-                            imageClassName: "backslash-3"
                         }]
                     }} className={"mt-5 mt-lg-6"} />
                 </Container>
@@ -131,13 +122,13 @@ export const HomepageCS = () => {
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
                         <Col xs={12} md={6} id={"cs-stories-text"}>
-                            <h3 className={"mb-4"}>Computer science stories</h3>
+                            <h3 className={"mb-4"}>Computer Science in context</h3>
                             <p className={"p-large mb-4"}>
-                                Discover our monthly interview series and learn from passionate educators within the
-                                Isaac community, and recently-graduated computer scientists who are doing AMAZING
-                                things in a huge range of computing-related fields!
+                                Ada Lovelace was a true pioneer who is a celebrated figure in the history of computer science.
+                                Inspiring professionals, passionate educators, and young graduates are shaping the field of computer science today.
+                                We share some of their stories.
                             </p>
-                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="secondary">Read some stories</Button>
+                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="secondary">Discover stories</Button>
                         </Col>
                     </Row>
                 </Container>

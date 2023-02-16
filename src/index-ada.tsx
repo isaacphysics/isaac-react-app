@@ -25,9 +25,9 @@ ReactDOM.render(
                     or else they will be removed on pages that do not override them. But only specifying the
                     values here will stop most sites seeing them at all!
                  */}
-                <meta name="description" content="The free online learning platform for GCSE and A level Computer Science students and teachers. Discover our computer science revision and homework questions today." />
-                <meta property="og:title" content="Isaac Computer Science" />
-                <meta property="og:description" content="The free online learning platform for GCSE and A level Computer Science students and teachers. Discover our computer science revision and homework questions today." />
+                <meta name="description" content="Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions." />
+                <meta property="og:title" content="Ada Computer Science" />
+                <meta property="og:description" content="Join Ada Computer Science, the free, online computer science programme for students and teachers. Learn with our computer science resources and questions." />
             </Helmet>
             <IsaacApp />
         </Provider>

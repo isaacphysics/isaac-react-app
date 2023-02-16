@@ -6,8 +6,9 @@ import {Link} from "react-router-dom";
 import {IsaacCardDTO} from "../../../IsaacApiTypes";
 
 interface IsaacCardProps {
-    doc: IsaacCardDTO,
-    imageClassName?: string
+    doc: IsaacCardDTO;
+    imageClassName?: string;
+    buttonText?: string;
 }
 
 const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
@@ -53,7 +54,7 @@ const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
         </Card>;
 };
 
-const AdaCard = ({doc, imageClassName}: IsaacCardProps) => {
+const AdaCard = ({doc, imageClassName, buttonText}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
     return <Card className={classNames("cs-card border-0 py-4 pt-5 my-4 my-lg-0", imageClassName)}>
         <CardTitle className={"px-4 mt-1"}>
@@ -63,7 +64,7 @@ const AdaCard = ({doc, imageClassName}: IsaacCardProps) => {
             <p>{subtitle}</p>
         </CardBody>
         {clickUrl && isAppLink(clickUrl) && <CardFooter className={"bg-white border-top-0 pt-0"}>
-            <Button disabled={disabled} outline color={"dark-pink"} tag={Link} to={clickUrl}>See more</Button>
+            <Button disabled={disabled} outline color={"dark-pink"} tag={Link} to={clickUrl}>{buttonText ?? "See more"}</Button>
         </CardFooter>}
     </Card>;
 };
