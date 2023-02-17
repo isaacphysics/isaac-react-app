@@ -75,7 +75,7 @@ export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
             </CardBody>
         </>}
         {url && !url?.startsWith("http") && isAppLink(url) && <CardFooter className={"bg-white border-top-0 pt-0"}>
-            <Button outline color={"dark-pink"} tag={Link} to={url}>Read more</Button>
+            <Button outline color={"secondary"} tag={Link} to={url}>Read more</Button>
         </CardFooter>}
     </Card>;
 };

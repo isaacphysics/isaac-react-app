@@ -64,7 +64,7 @@ const AdaCard = ({doc, imageClassName, buttonText}: IsaacCardProps) => {
             <p>{subtitle}</p>
         </CardBody>
         {clickUrl && isAppLink(clickUrl) && <CardFooter className={"bg-white border-top-0 pt-0"}>
-            <Button disabled={disabled} outline color={"dark-pink"} tag={Link} to={clickUrl}>{buttonText ?? "See more"}</Button>
+            <Button disabled={disabled} outline color="secondary" tag={Link} to={clickUrl}>{buttonText ?? "See more"}</Button>
         </CardFooter>}
     </Card>;
 };

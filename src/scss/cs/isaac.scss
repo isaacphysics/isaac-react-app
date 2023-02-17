@@ -12,8 +12,12 @@ $cs-cultured: #F5F5F5;
 
 // Theme
 $theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
-    "primary": $cs-pink,
-    "secondary": $cs-turquoise-blue,
+    // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
+    "primary": $cs-dark-pink,
+    "secondary": $cs-dark-pink,
+    "dark-primary": $cs-pink,
+    "dark-secondary": $cs-pink,
+
     "turquoise-blue": $cs-turquoise-blue,
     "pink" : $cs-pink,
     "dark-pink" : $cs-dark-pink,

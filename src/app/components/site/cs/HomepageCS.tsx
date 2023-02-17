@@ -73,7 +73,7 @@ export const HomepageCS = () => {
                                 <p className={"p-large pt-2"}>
                                     Developed by the Raspberry Pi Foundation and the University of Cambridge.
                                 </p>
-                                <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
+                                <Button tag={Link} to="/register" color="dark-primary">Get Started</Button>
                             </Col>
                             <Col md={6} className={"order-first order-md-last"} style={{maxWidth: 640}}>
                                 <AdaHero/>

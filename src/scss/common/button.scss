@@ -122,30 +122,6 @@
     }
   }
 
-  //Button - Secondary Outline
-  &.btn-outline-secondary {
-    background-color: $black;
-    border-color: $white;
-    border-width: 2px;
-    color: $white;
-
-    &:not(:disabled):not(.disabled):active {
-      background-color: $gray-118;
-      border-color: $gray-118;
-    }
-
-    &.focus,
-    &:focus,
-    &:not(:disabled):not(.disabled):active:focus {
-      box-shadow: 0 0 0 0.2rem $shadow-3;
-    }
-
-    &.disabled,
-    &:disabled {
-      border-color: $gray-160;
-      color: $gray-160;
-    }
-  }
   &.btn-xl {
     width: 100%;
     white-space: nowrap;
