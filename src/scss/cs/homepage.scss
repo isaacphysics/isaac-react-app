@@ -5,6 +5,11 @@
     text-shadow: 0 0 4px $gray-103, 0 0 5px $gray-103, 0 0 10px $gray-103, 0 0 10px $gray-103, 0 0 20px $gray-103;
   }
 
+  section#call-to-action {
+    background-color: $cs-black;
+    color: $cs-white;
+  }
+
   img#homepageHeroImg {
     left: 50%;
     transform: translateX(-50%);
@@ -40,97 +45,17 @@
       background-position-x: 85%;
       background-size: 160% 200%;
     }
+    #cs-stories-text {
+      background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
+    }
   }
 
-  section#call-to-action {
-    background-color: $cs-black;
-    color: $cs-white;
+  section#news {
+    background-color: $cs-cultured;
   }
 
-  section#why-sign-up {
-    //h1 {padding-bottom: 2rem;}
-    //.card {
-    //  box-shadow: 0 2px 30px 0 $shadow-25;
-    //}
-    //img {
-    //  //border: 1px solid $gray-107;
-    //  box-shadow: 0 2px 30px 0 $shadow-25;
-    //}
-  }
-
-  section#headline-content {
-    //background-color: $primary;
-    //background-image: url(/assets/pattern01.svg);
-    //background-repeat: repeat-x;
-    //background-size: 100%;
-    //background-blend-mode: soft-light;
-    pre {
-      background-color: rgba(white, 0.1);
-      box-shadow: 0 2px 30px 0 $shadow-08;
-    }
-    // TODO FEATURED_QUESTION_UPDATE remove the .multichoice-question rule on next featured question change
-    .multichoice-question > ul li {
-      margin-left: -1.5rem !important;
-    }
-
-    .question-component {
-      background: white;
-      margin-left: 0.5rem;
-      margin-right: 0.5rem;
-      .validation-response-panel.correct {
-        background: rgba($primary, 0.95);
-        color: black;
-        border-bottom: none;
-      }
-      @include  media-breakpoint-up(md) {
-        img {
-          max-width: 50%;
-          padding: 0;
-        }
-      }
-      .figure-caption {
-        display: none; // TODO FEATURED_QUESTION_UPDATE this might not be appropriate for other questions
-      }
-    }
-
-    .computer-scientist-of-the-month {
-      @include media-breakpoint-up(md) {
-        .profile-image {
-          margin-right: 1.5rem;
-          float: left;
-        }
-        .featured-profile {
-          height: auto;
-          width: auto;
-          float: none;
-        }
-      }
-      @include media-breakpoint-down(sm) {
-        .profile-image {
-          max-width: 100%;
-          height: auto;
-        }
-      }
-      .profile-image {
-        width: auto;
-      }
-      .profile-titles {
-        @extend .mt-4;
-      }
-      .profile-title {
-        @extend .h5;
-      }
-      .profile-subtitle {
-        @extend .font-weight-bold;
-      }
-      .profile-description {
-        font-size: inherit;
-        color: inherit;
-      }
-      .profile-title, .profile-subtitle, .profile-description {
-        @extend .text-left
-      }
-    }
+  section#search {
+    background-color: $cs-dark-pink;
   }
 }
 

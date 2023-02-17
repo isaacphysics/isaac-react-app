@@ -1,17 +1,15 @@
 import React, {useEffect} from "react";
 import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {Link} from "react-router-dom";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Button, CardDeck, Col, Container, Row} from "reactstrap";
 import {SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {NewsCarousel} from "../../elements/NewsCarousel";
-import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
-import {EventsCarousel} from "../../elements/EventsCarousel";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
-import classNames from "classnames";
 import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
+import {NewsCard} from "../../elements/cards/NewsCard";
+import {LongSearchButton, SearchInput} from "../../elements/SearchButton";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -66,18 +64,18 @@ export const HomepageCS = () => {
                                 </Col>
                             </Row>
                         </>
-                        : <Row>
-                            <Col md={6} className={"mt-auto"}>
-                                <h1 className={"h-l"}>
+                        : <Row className={"justify-content-center"}>
+                            <Col md={6} className={"mt-auto"} style={{maxWidth: 640}}>
+                                <h1 className={"font-h1-l"}>
                                     <span className={"text-pink"}>/</span><br/>
-                                    Computer science learning,<span className={"h-thin"}> it's more than just the machine.</span>
+                                    The global computer science platform <span className={"font-h1-thin"}>for students and teachers.</span>
                                 </h1>
                                 <p className={"p-large pt-2"}>
-                                    Welcome to Ada Computer Science, the free online platform for students and teachers.
+                                    Developed by the Raspberry Pi Foundation and the University of Cambridge.
                                 </p>
                                 <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
                             </Col>
-                            <Col md={6} className={"order-first order-md-last"}>
+                            <Col md={6} className={"order-first order-md-last"} style={{maxWidth: 640}}>
                                 <AdaHero/>
                             </Col>
                         </Row>
@@ -101,28 +99,19 @@ export const HomepageCS = () => {
             <section id="what-resources">
                 <Container className={"py-lg-6 py-5"}>
                     <IsaacCardDeck doc={{
-                        title: "What resources are you looking for?",
+                        title: "What are you looking for?",
                         cards: [{
-                            title: "Secondary Education",
-                            subtitle: "Level 1 is normally achieved years 10 and 11 of secondary school. Level 1 " +
-                                "qualifications include and can be equivalent to achieving GCSE. Other examples of " +
-                                "Level 1 qualifications include: Level 1 functional skills or essential skills.",
+                            title: "GCSE computer science",
+                            subtitle: "Our GCSE computer science topics cover the secondary school phase of learning for students aged 14 to 16.",
                             clickUrl: "/topics/gcse",
+                            buttonText: "View GCSE resources",
                             imageClassName: "backslash-1"
                         }, {
-                            title: "Advanced Level",
-                            subtitle: "Advanced level qualifications (known as A levels) are subject-based " +
-                                "qualifications that can lead to university, further study, training, or work. You can " +
-                                "normally study three or more A levels over two years.",
+                            title: "A level computer science",
+                            subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 18.",
                             clickUrl: "/topics/a_level",
+                            buttonText: "View A level resources",
                             imageClassName: "backslash-2"
-                        }, {
-                            title: "Events",
-                            subtitle: "We are firmly committed to safeguarding young people across all of the " +
-                                "activities that Isaac Computer Science supports. We believe that no young person or " +
-                                "vulnerable adult should ever experience abuse of any kind.",
-                            clickUrl: "/events",
-                            imageClassName: "backslash-3"
                         }]
                     }} className={"mt-5 mt-lg-6"} />
                 </Container>
@@ -132,66 +121,44 @@ export const HomepageCS = () => {
                 {/*<img id={"fingerprint-cs-stories"} src={"/assets/cs/decor/fingerprint-cs-stories.svg"}/>*/}
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
-                        <Col xs={12} md={6}>
-                            <h3 className={"mb-4"}>Computer science stories</h3>
+                        <Col xs={12} md={6} id={"cs-stories-text"}>
+                            <h3 className={"mb-4"}>Computer Science in context</h3>
                             <p className={"p-large mb-4"}>
-                                Discover our monthly interview series and learn from passionate educators within the
-                                Isaac community, and recently-graduated computer scientists who are doing AMAZING
-                                things in a huge range of computing-related fields!
+                                Ada Lovelace was a true pioneer who is a celebrated figure in the history of computer science.
+                                Inspiring professionals, passionate educators, and young graduates are shaping the field of computer science today.
+                                We share some of their stories.
                             </p>
-                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="secondary">Read some stories</Button>
+                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="secondary">Discover stories</Button>
                         </Col>
                     </Row>
                 </Container>
             </section>
 
-            {!user?.loggedIn && <Container>
-                <hr/>
-            </Container>}
-
-            <section id="news">
-                <Container className={classNames("pt-4 pb-5", {"mt-lg-n5 pt-lg-0": user?.loggedIn ?? false})}>
-                    <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
-                        <h2 className="h-title mb-4">News</h2>
-                        {user?.loggedIn && <div className={"d-block d-lg-none mb-4 mb-lg-0"}>
-                            <FeaturedNewsItem item={featuredNewsItem} />
-                        </div>}
-                        <NewsCarousel items={carouselNewsItems} />
+            {news && news.length > 0 && <section id="news">
+                <Container className={"py-lg-6 py-5"}>
+                    <h3 className={"mb-4 mb-lg-5"}>News</h3>
+                    <CardDeck>
+                        {news.slice(0, 3).map(n => <NewsCard newsItem={n} showTitle />)}
+                    </CardDeck>
+                    <div className={"mt-4 mt-lg-5 w-100 text-center"}>
+                        {/* FIXME ADA link this to a general news page? Also fix link CSS design */}
+                        <a href={"/"}><h3>See more news</h3></a>
                     </div>
-                </Container>
-            </section>
-
-            <section id="events">
-                <Container className="pt-4 pb-5">
-                    <div className="eventList pt-5 pattern-03">
-                        <h2 className="h-title text-center mb-4">Events</h2>
-                        <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
-                            {"We offer free online events for students and teachers. Visit our "}
-                            <Link to="/events">
-                                Events page
-                            </Link>
-                            {" to see what’s happening, and sign up today!"}
-                        </p>
-                        <EventsCarousel/>
-                        <Link to="/events">
-                            See all Events
-                        </Link>
-                    </div>
-                </Container>
-            </section>
-
-            {!user?.loggedIn && <section className="row">
-                <Container>
-                    <Col className="py-4 px-5 mb-5 d-flex align-items-center flex-column flex-md-row border border-dark">
-                        <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
-                            Sign up to track your progress
-                        </h3>
-                        <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
-                            Sign up
-                        </Button>
-                    </Col>
                 </Container>
             </section>}
+
+            <section id="search">
+                <Container className={"py-lg-6 py-5"}>
+                    <Row className={"justify-content-center"}>
+                        <Col md={2} className={"my-auto"}>
+                            <h3 className={"text-white d-inline-block"}>Ready to get started?</h3>
+                        </Col>
+                        <Col md={7} className={"my-auto"}>
+                            <SearchInput className={"d-inline-block long-search-bar"} button={<LongSearchButton/>} prompt={"Search your topic here"}/>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
         </div>
     </>;
 };
