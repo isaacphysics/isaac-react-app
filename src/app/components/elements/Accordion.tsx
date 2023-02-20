@@ -4,7 +4,7 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
     ALPHABET,
     audienceStyle,
-    DOCUMENT_TYPE,
+    DOCUMENT_TYPE, isAQuestionLikeDoc,
     isCS,
     isPhy,
     NOT_FOUND,
@@ -82,14 +82,14 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         let currentPage = getPage()
         if (currentPage) {
             let eventDetails;
-            if (currentPage.type === "isaacQuestionPage") {
+            if (isAQuestionLikeDoc(currentPage)) {
                 eventDetails = {
                     type: "QUESTION_PART_OPEN",
                     questionPageId: currentPage.id,
                     questionPartIndex: index,
                     questionPartId: id
                 };
-            } else if (currentPage.type === "isaacConceptPage") {
+            } else if (currentPage.type === DOCUMENT_TYPE.CONCEPT) {
                 eventDetails = {
                     type: "CONCEPT_SECTION_OPEN",
                     conceptPageId: currentPage.id,

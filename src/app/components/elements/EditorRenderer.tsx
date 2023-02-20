@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Col, Row} from "reactstrap";
-import {EDITOR_ORIGIN, SITE_SUBJECT_TITLE, siteSpecific} from "../../services";
+import {DOCUMENT_TYPE, EDITOR_ORIGIN, SITE_SUBJECT_TITLE, siteSpecific} from "../../services";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
@@ -13,9 +13,10 @@ function getType(doc: any) {
         return "generic";
     }
     switch (doc.type) {
-        case "isaacQuestionPage":
+        case DOCUMENT_TYPE.QUESTION:
+        case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
             return "question";
-        case "isaacConceptPage":
+        case DOCUMENT_TYPE.CONCEPT:
             return "concept";
         default:
             return "generic";
