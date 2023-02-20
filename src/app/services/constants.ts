@@ -3,7 +3,16 @@ import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {BookingStatus, Difficulty, ExamBoard, Stage, UserRole} from "../../IsaacApiTypes";
+import {
+    BookingStatus,
+    ContentDTO,
+    Difficulty,
+    ExamBoard,
+    IsaacFastTrackQuestionPageDTO,
+    IsaacQuestionPageDTO,
+    Stage,
+    UserRole
+} from "../../IsaacApiTypes";
 import {siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
@@ -887,6 +896,10 @@ export enum DOCUMENT_TYPE {
     GENERIC = "page",
     QUIZ = "isaacQuiz",
 }
+export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO | IsaacFastTrackQuestionPageDTO {
+    return doc.type === DOCUMENT_TYPE.QUESTION || doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+}
+
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
