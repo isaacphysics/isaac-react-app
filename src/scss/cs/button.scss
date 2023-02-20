@@ -1,24 +1,66 @@
 @import "../common/button";
+
+@mixin button-primary($color) {
+  color: $color;
+  &:not(:disabled):not(.disabled):active {
+    // Keep colour the same on active (overrides base Bootstrap behaviour)
+    color: $color;
+  }
+  &.disabled {
+    @include button-disabled($cs-silver, $cs-jet);
+  }
+}
+
+@mixin button-secondary($color, $background-color){
+  border-width: 3px;
+  &:not(:disabled):not(.disabled):active {
+    // Keep colours the same on active (overrides base Bootstrap behaviour)
+    background-color: $background-color;
+    color: $color;
+  }
+  &:hover {
+    // Keep colours the same on hover (overrides base Bootstrap behaviour)
+    background-color: $background-color;
+    color: $color;
+  }
+  &.disabled {
+    @include button-disabled(transparent, $cs-silver);
+  }
+}
+
+@mixin button-disabled($background-color, $color) {
+  // Keep opacity and border when disabled (overrides base Bootstrap behaviour)
+  border: 3px solid $cs-silver;
+  opacity: 1;
+  background-color: $background-color;
+  color: $color;
+}
+
+
 .btn, input.btn {
   border-radius: 50px;
+  border-width: 3px;
 
   // Primary buttons (for dark background)
   &.btn-dark-primary {
-    color: $cs-black;
+    @include button-primary($cs-black);
+  }
+
+  // Secondary buttons (for dark background)
+  // Secondary Button components are expected to use the 'outline' prop!
+  &.btn-outline-dark-secondary {
+    @include button-secondary($cs-pink, transparent);
+  }
+
+  // Primary buttons (light background)
+  &.btn-primary {
+    @include button-primary($cs-white);
   }
 
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
   &.btn-outline-secondary {
-    border-width: 3px;
-    &:hover {
-      box-shadow: 0 2px 10px #9C9C9C;
-    }
-    &.disabled {
-      border: none !important;
-      background-color: $cs-silver;
-      color: $cs-jet;
-    }
+    @include button-secondary($cs-dark-pink, transparent);
   }
 
   // FIXME ADA: decide what to do with the following QQ buttons

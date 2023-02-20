@@ -128,7 +128,7 @@ export const HomepageCS = () => {
                                 Inspiring professionals, passionate educators, and young graduates are shaping the field of computer science today.
                                 We share some of their stories.
                             </p>
-                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="secondary">Discover stories</Button>
+                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="primary">Discover stories</Button>
                         </Col>
                     </Row>
                 </Container>
