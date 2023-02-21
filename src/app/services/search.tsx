@@ -1,9 +1,12 @@
 import {History} from "history";
-import {DOCUMENT_TYPE, isStaff, TAG_ID} from "./";
+import {DOCUMENT_TYPE, isStaff, SEARCH_CHAR_LENGTH_LIMIT, TAG_ID} from "./";
 import {ContentSummaryDTO} from "../../IsaacApiTypes";
 import {PotentialUser} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {Immutable} from "immer";
+import React, {FormEvent, useEffect, useRef, useState} from "react";
+import {useHistory, useLocation} from "react-router-dom";
+import {Form, FormGroup} from "reactstrap";
 
 export const pushSearchToHistory = function(history: History, searchQuery: string, typesFilter: DOCUMENT_TYPE[]) {
     const previousQuery = queryString.parse(history.location.search);
@@ -61,4 +64,54 @@ export function parseLocationSearch(search: string): [Nullable<string>, DOCUMENT
     const filters = possibleFilters.filter(pf => Object.values(DOCUMENT_TYPE).includes(pf as DOCUMENT_TYPE)) as DOCUMENT_TYPE[]
 
     return [query, filters];
+}
+
+interface SearchInputProps {
+    setSearchText: (s: string) => void;
+    searchText: string;
+    inputProps: {
+        innerRef: React.RefObject<HTMLInputElement>;
+        "aria-label": "Search";
+        type: "search";
+        name: "query";
+        maxLength: typeof SEARCH_CHAR_LENGTH_LIMIT;
+        placeholder: "Search";
+    };
+}
+// HOC pattern for making different flavour search bars
+export function withSearch(Component: React.FC<SearchInputProps>) {
+    const SearchComponent = ({className, inline}: {className?: string, inline?: boolean}) => {
+        const [searchText, setSearchText] = useState("");
+        const searchInputRef = useRef<HTMLInputElement>(null);
+
+        const history = useHistory();
+        function doSearch(e: FormEvent<HTMLFormElement>) {
+            e.preventDefault();
+            if (searchText == "") {
+                if (searchInputRef.current) searchInputRef.current.focus();
+            } else {
+                pushSearchToHistory(history, searchText, []);
+            }
+        }
+
+        // Clear this search field on location (i.e. search query) change - user should use the main search bar
+        const location = useLocation();
+        useEffect(() => { if (location.pathname === "/search") { setSearchText(""); }}, [location]);
+
+        return <Form inline={inline} onSubmit={doSearch} className={className}>
+            <FormGroup className='search--main-group'>
+                <Component inputProps={{
+                    maxLength: SEARCH_CHAR_LENGTH_LIMIT,
+                    type: "search",
+                    name: "query",
+                    "aria-label": "Search",
+                    innerRef: searchInputRef,
+                    placeholder: "Search"
+                }} setSearchText={setSearchText} searchText={searchText} />
+                <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />
+            </FormGroup>
+        </Form>;
+    };
+    SearchComponent.displayName = "SearchComponent";
+    return SearchComponent;
 }

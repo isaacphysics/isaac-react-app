@@ -1,0 +1,24 @@
+@import "../common/search";
+
+#header-search-group {
+  height: 48px;
+  min-width: 100%;
+  #header-search {
+    min-width: calc(100% - 18px - 30px);
+    flex: auto !important;
+    height: 100%;
+    border-radius: 24px 0 0 24px;
+    border: none;
+  }
+  // FIXME ADA properly define icon buttons as per the Figma design
+  button {
+    padding-left: 15px;
+    padding-right: 15px;
+    img {
+      width: 18px;
+      height: 18px;
+    }
+    background: $cs-pink;
+    border-radius: 0 24px 24px 0;
+  }
+}

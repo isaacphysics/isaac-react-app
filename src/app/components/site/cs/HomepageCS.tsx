@@ -9,7 +9,7 @@ import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
-import {LongSearchButton, SearchInput} from "../../elements/SearchButton";
+import {AdaHomepageSearch} from "../../elements/SearchInputs";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -154,7 +154,7 @@ export const HomepageCS = () => {
                             <h3 className={"text-white d-inline-block"}>Ready to get started?</h3>
                         </Col>
                         <Col md={7} className={"my-auto"}>
-                            <SearchInput className={"d-inline-block long-search-bar"} button={<LongSearchButton/>} prompt={"Search your topic here"}/>
+                            <AdaHomepageSearch className={"d-inline-block long-search-bar"} />
                         </Col>
                     </Row>
                 </Container>

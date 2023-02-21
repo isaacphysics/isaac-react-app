@@ -15,19 +15,12 @@ import {
     isTeacherOrAbove, isTutorOrAbove
 } from "../../../services";
 
-// FIXME ADA remove completely
 export const NavigationBarCS = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
     return <NavigationBar>
-        <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount /*+ quizzesCount*/} message="incomplete assignments" />}</>}>
-            <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-            <LinkItem to="/my_gameboards">My gameboards</LinkItem>
-            <LinkItem to="/progress">My progress</LinkItem>
-            {/*<LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>*/}
-            <LinkItem to="/student_rewards">Student rewards</LinkItem>
-        </NavigationSection>
+        <NavigationSection topLevelLink to="/" title={"Home"} children={<></>}/>
 
         {isTutorOrAbove(user) && <NavigationSection title="Teachers">
             <LinkItem to="/groups">Manage groups</LinkItem>
@@ -48,18 +41,15 @@ export const NavigationBarCS = () => {
             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
         </NavigationSection>
 
-        <NavigationSection title="Events">
-            {isTeacherOrAbove(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
-            <LinkItem to="/events?types=student">Student events</LinkItem>
-            <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
-            <LinkItem to="/pages/event_types">Event formats</LinkItem>
-            <LinkItem to="/safeguarding">Safeguarding</LinkItem>
+        <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
+            <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
+            <LinkItem to="/my_gameboards">My gameboards</LinkItem>
+            <LinkItem to="/progress">My progress</LinkItem>
+            {/*<LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>*/}
+            <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
-        <NavigationSection title={<React.Fragment>
-            <span className="d-md-none d-lg-inline">Help and support</span>
-            <span className="d-none d-md-inline d-lg-none">Support</span>
-        </React.Fragment>}>
+        <NavigationSection title={"Help"}>
             <LinkItem to="/support/teacher">Teacher support</LinkItem>
             <LinkItem to="/support/student">Student support</LinkItem>
             <LinkItem to="/contact">Contact us</LinkItem>

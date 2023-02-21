@@ -29,7 +29,15 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
 );
 $spacer: 1rem !default;
 $spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
-        6: ($spacer * 6.25) // 100px-ish
+    6: ($spacer * 6.25) // 100px-ish
+);
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    nav: 1256px
 );
 
 // fonts
@@ -143,6 +151,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 
 // Navigation
 @import "header";
+@import "search";
 @import "../common/navigation-bar";
 @import "../common/footer";
 
@@ -154,7 +163,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "../common/assignments";
 @import "../common/my-account";
 @import "../common/topic";
-@import "../common/search";
 @import "../common/my-progress";
 @import "../common/gameboard";
 @import "../common/assignment-progress";

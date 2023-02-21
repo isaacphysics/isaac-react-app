@@ -1,7 +1,6 @@
-import React, {ChangeEvent, FormEvent, useEffect, useRef, useState} from "react";
-import {Button, Form, FormGroup, Input, Label} from "reactstrap";
-import {pushSearchToHistory, SEARCH_CHAR_LENGTH_LIMIT, siteSpecific} from "../../services";
-import {useHistory, useLocation} from "react-router-dom";
+import React, {ChangeEvent} from "react";
+import {Button, Input, InputGroup, InputGroupAddon, Label} from "reactstrap";
+import {siteSpecific, withSearch} from "../../services";
 
 const PhysicsSearchButton = () => (
     <Button color='link' aria-label='search' className='search-button'>
@@ -26,9 +25,9 @@ const AdaSearchButton = () => (
     </Button>
 );
 
-export const SearchButton = siteSpecific(PhysicsSearchButton, AdaSearchButton);
+const SearchButton = siteSpecific(PhysicsSearchButton, AdaSearchButton);
 
-export const LongSearchButton = () => (
+const LongSearchButton = () => (
     <Button color="link" aria-label="search" className="long-search-button">
         <svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'>
             <g fill='none' fillRule='evenodd'>
@@ -39,44 +38,51 @@ export const LongSearchButton = () => (
     </Button>
 );
 
-
-interface SearchInputProps {
-    button: React.ReactNode;
-    className?: string;
-    prompt: string;
-}
-
-export const SearchInput = ({button, className, prompt}: SearchInputProps) => {
-    const [searchText, setSearchText] = useState("");
-    const searchInputRef = useRef<HTMLInputElement>(null);
-
-    const history = useHistory();
-    function doSearch(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        if (searchText == "") {
-            if (searchInputRef.current) searchInputRef.current.focus();
-        } else {
-            pushSearchToHistory(history, searchText, []);
-        }
-    }
-
-    // Clear this search field on location (i.e. search query) change - user should use the main search bar
-    const location = useLocation();
-    useEffect(() => { if (location.pathname === "/search") { setSearchText(""); }}, [location]);
-
+export const MainSearchInput = withSearch(({inputProps, setSearchText, searchText}) => {
     function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
         setSearchText(e.target.value);
     }
+    return <>
+        <Label for='header-search' className='sr-only'>Search</Label>
+        <Input
+            id="header-search" {...inputProps}
+            value={searchText} onChange={setSearchTextAsValue}
+        />
+        <SearchButton/>
+    </>
+});
 
-    return <Form inline onSubmit={doSearch} className={className}>
-        <FormGroup className='search--main-group'>
-            <Label for='header-search' className='sr-only'>{prompt}</Label>
+export const AdaHomepageSearch = withSearch(({inputProps, setSearchText, searchText}) => {
+    function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
+        setSearchText(e.target.value);
+    }
+    return <>
+        <Label for='header-search' className='sr-only'>Search</Label>
+        <Input
+            id="header-search" {...inputProps} placeholder={"Search your topic here"}
+            value={searchText} onChange={setSearchTextAsValue}
+        />
+        <LongSearchButton/>
+    </>
+});
+
+export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchText}) => {
+    function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
+        setSearchText(e.target.value);
+    }
+    return <>
+        <Label for='header-search' className='sr-only'>Search</Label>
+        <InputGroup id={"header-search-group"} className={"flex-"}>
             <Input
-                id="header-search" type="search" name="query" placeholder={prompt} aria-label="Search"
-                value={searchText} onChange={setSearchTextAsValue} innerRef={searchInputRef} maxLength={SEARCH_CHAR_LENGTH_LIMIT}
+                id="header-search" {...inputProps}
+                value={searchText} onChange={setSearchTextAsValue}
             />
-            {button}
-            <input type="hidden" name="types" value="isaacQuestionPage,isaacConceptPage" />
-        </FormGroup>
-    </Form>;
-};
+            <InputGroupAddon addonType={"append"}>
+                {/* FIXME ADA properly define icon buttons as per the Figma design */}
+                <button>
+                    <img src={"/assets/cs/icons/search-jet.svg"}/>
+                </button>
+            </InputGroupAddon>
+        </InputGroup>
+    </>;
+});
