@@ -5,7 +5,8 @@
   border-radius: 15px;
 
   @media (max-width: map-get($breakpoints, md)) {
-    min-width: 100%;
+    min-width: 95%;
+    display: inline-block;
   }
 
   ::after {
