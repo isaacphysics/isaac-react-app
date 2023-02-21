@@ -37,9 +37,9 @@ import {
     isEventLeader,
     isLoggedIn,
     isStaff,
-    isTeacherOrAbove,
     KEY,
-    showNotification, isTutorOrAbove
+    showNotification,
+    isTutorOrAbove
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -60,8 +60,6 @@ import {RedirectToGameboard} from './RedirectToGameboard';
 import {Support} from "../pages/Support";
 import {AddGameboard} from "../handlers/AddGameboard";
 import {AdminEmails} from "../pages/AdminEmails";
-import {Events} from "../pages/Events";
-import {RedirectToEvent} from "./RedirectToEvent";
 import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
@@ -74,13 +72,6 @@ import {notificationModal} from "../elements/modals/NotificationModal";
 import {DowntimeWarningBanner} from "./DowntimeWarningBanner";
 import {ErrorBoundary} from "react-error-boundary";
 import {ChunkOrClientError} from "../pages/ClientError";
-import {SetQuizzes} from "../pages/quizzes/SetQuizzes";
-import {MyQuizzes} from "../pages/quizzes/MyQuizzes";
-import {QuizDoAssignment} from "../pages/quizzes/QuizDoAssignment";
-import {QuizAttemptFeedback} from "../pages/quizzes/QuizAttemptFeedback";
-import {QuizTeacherFeedback} from "../pages/quizzes/QuizTeacherFeedback";
-import {QuizPreview} from "../pages/quizzes/QuizPreview";
-import {QuizDoFreeAttempt} from "../pages/quizzes/QuizDoFreeAttempt";
 import {GameboardFilter} from "../pages/GameboardFilter";
 import {Loading} from "../handlers/IsaacSpinner";
 import {AssignmentSchedule} from "../pages/AssignmentSchedule";
@@ -92,7 +83,6 @@ const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
 const Equality = lazy(() => import('../pages/Equality'));
 const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
-const EventDetails = lazy(() => import('../pages/EventDetails'));
 
 export const IsaacApp = () => {
     // Redux state and dispatch
@@ -175,50 +165,16 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/add_gameboard/:gameboardId/:gameboardTitle?" ifUser={isLoggedIn} component={AddGameboard} />
                         <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />
 
-                        <TrackedRoute exact path='/events' component={Events}/>
-                        <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>
-                        <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />
-
-                        {/* Quiz pages */}
-                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />
-                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />
-                        <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
-                        <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />
-                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />
-                        <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />
-                        <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacherOrAbove} component={QuizTeacherFeedback} />
-                        {/* Tutors can preview tests iff the test is student only */}
-                        <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTutorOrAbove} component={QuizPreview} />
-                        <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />
-                        <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
-                        <TrackedRoute exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />
-                        {/* The order of these redirects matters to prevent substring replacement */}
-                        <Redirect from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />
-                        <Redirect from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />
-                        <Redirect from="/quiz/assignment/:quizAssignmentId"            to="/test/assignment/:quizAssignmentId" />
-                        <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" />
-                        <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId" to="/test/attempt/feedback/:quizAssignmentId/:studentId" />
-                        <Redirect from="/quiz/attempt/:quizAttemptId/feedback/:page"   to="/test/attempt/:quizAttemptId/feedback/:page" />
-                        <Redirect from="/quiz/attempt/:quizAttemptId/feedback"         to="/test/attempt/:quizAttemptId/feedback" />
-                        <Redirect from="/quiz/preview/:quizId/page/:page"              to="/test/preview/:quizId/page/:page" />
-                        <Redirect from="/quiz/preview/:quizId"                         to="/test/preview/:quizId" />
-                        <Redirect from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />
-                        <Redirect from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />
-
                         {/* Student pages */}
                         <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
-                        <TrackedRoute exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />
-                        <Redirect from="/quizzes" to="/tests" />
 
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
                         <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
                         <TrackedRoute exact path="/set_assignments" ifUser={isTutorOrAbove} component={SetAssignments} />
                         <TrackedRoute exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} /> {/* Currently in beta, not yet advertised or listed on navigation menus */}
-                        <TrackedRoute exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />
-                        <Redirect from="/set_quizzes" to="/set_tests" />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />
