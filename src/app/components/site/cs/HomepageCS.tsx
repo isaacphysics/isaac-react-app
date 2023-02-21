@@ -6,7 +6,7 @@ import {SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {WarningBanner} from "../../navigation/WarningBanner";
-import {AdaHero} from "../../elements/svg/AdaHero";
+import {AdaHero2x1, AdaHero1x1} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
@@ -64,19 +64,24 @@ export const HomepageCS = () => {
                                 </Col>
                             </Row>
                         </>
-                        : <Row className={"justify-content-center"}>
-                            <Col md={6} className={"mt-auto"} style={{maxWidth: 640}}>
-                                <h1 className={"font-h1-l"}>
-                                    <span className={"text-pink"}>/</span><br/>
-                                    The global computer science platform <span className={"font-h1-thin"}>for students and teachers.</span>
-                                </h1>
-                                <p className={"p-large pt-2"}>
-                                    Developed by the Raspberry Pi Foundation and the University of Cambridge.
-                                </p>
-                                <Button tag={Link} to="/register" color="dark-primary">Get Started</Button>
+                        : <Row className={"justify-content-center homepage-hero-logged-out"}>
+                            <Col lg={6} className={"my-auto pr-xl-5"}>
+                                <div className={"mw-640"}>
+                                    <h1 className={"font-h1-l"}>
+                                        <span className={"text-pink"}>/</span><br/>
+                                        The global computer science platform <span className={"font-h1-thin"}>for students and teachers.</span>
+                                    </h1>
+                                    <p className={"p-large pt-2"}>
+                                        Developed by the Raspberry Pi Foundation and the University of Cambridge.
+                                    </p>
+                                    <Button tag={Link} to="/register" color="dark-primary">Get Started</Button>
+                                </div>
                             </Col>
-                            <Col md={6} className={"order-first order-md-last"} style={{maxWidth: 640}}>
-                                <AdaHero/>
+                            <Col lg={6} className={"pl-xl-5"}>
+                                <div className={"mw-640"}>
+                                    <AdaHero1x1 className={"d-lg-block d-none"}/>
+                                    <AdaHero2x1 className={"mt-5 mt-lg-0 d-lg-none d-block"}/>
+                                </div>
                             </Col>
                         </Row>
                     }
