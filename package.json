@@ -19,6 +19,7 @@
     "dayjs": "^1.10.7",
     "he": "^1.2.0",
     "highlight.js": "^11.5.1",
+    "highlightjs-vba": "^0.2.1",
     "history": "^4.10.1",
     "html-to-text": "^8.2.0",
     "identity-obj-proxy": "3.0.0",
