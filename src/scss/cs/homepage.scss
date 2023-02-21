@@ -36,15 +36,14 @@
     // Hand-tuned background positioning to make this particular SVG look nice on different screen sizes
     background-image: url(/assets/cs/decor/fingerprint-cs-stories.svg);
     background-repeat: no-repeat;
-    background-size: 100% 200%;
-    background-position-y: 55%;
     background-position-x: 100%;
     @media (max-width: map-get($breakpoints, sm)) {
       padding-bottom: 50vw;
-      background-position-y: -33vw;
-      background-position-x: 85%;
-      background-size: 160% 200%;
+      background-position-y: 100%;
+      background-position-x: 100%;
+      background-size: 100vw;
     }
+    background-size: auto 100%;
     #cs-stories-text {
       background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
     }

@@ -1,13 +1,37 @@
 @import "../common/cards";
 
-.cs-card {
+// number of news cards per line for each breakpoint
+$news-cards-per-line: (
+        xs: 2,
+        xl: 4
+);
+
+@each $name, $breakpoint in $grid-breakpoints {
+  @include media-breakpoint-up($name) {
+    .card-deck .news-card {
+      flex: 0 0 calc(#{100/map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
+    }
+  }
+}
+
+// number of cards per line for each breakpoint
+$cards-per-line: (
+        xs: 1,
+        lg: 2
+);
+@each $name, $breakpoint in $grid-breakpoints {
+  @include media-breakpoint-up($name) {
+    .card-deck .cs-card {
+      flex: 0 0 calc(#{100/map-get($cards-per-line, $name)}% - #{$grid-gutter-width});
+    }
+  }
+}
+
+
+.cs-card, .news-card {
   position: relative;
   border-radius: 15px;
-
-  @media (max-width: map-get($breakpoints, md)) {
-    min-width: 95%;
-    display: inline-block;
-  }
+  display: inline-block;
 
   ::after {
     content: " ";
@@ -43,6 +67,7 @@
   }
 
   .news-card-image {
+    width: 100%;
     border-radius: 15px 15px 0 0;
   }
 

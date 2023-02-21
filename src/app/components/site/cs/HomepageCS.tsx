@@ -142,7 +142,7 @@ export const HomepageCS = () => {
             {news && news.length > 0 && <section id="news">
                 <Container className={"py-lg-6 py-5"}>
                     <h3 className={"mb-4 mb-lg-5"}>News</h3>
-                    <CardDeck>
+                    <CardDeck className={"justify-content-center"}>
                         {news.slice(0, 3).map(n => <NewsCard newsItem={n} showTitle />)}
                     </CardDeck>
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
