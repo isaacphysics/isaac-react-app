@@ -1,4 +1,5 @@
 @import "../common/button";
+@import "typography";
 
 @mixin button-primary($color) {
   color: $color;
@@ -40,6 +41,9 @@
 .btn, input.btn {
   border-radius: 50px;
   border-width: 3px;
+
+  @extend .font-size-1-25;
+  @extend .font-weight-semi-bold;
 
   // Primary buttons (for dark background)
   &.btn-dark-primary {

@@ -8,7 +8,7 @@ export const WhySignUpTabs = () => (
     <Tabs tabContentClass="pt-5">
         {{
             Teachers: <>
-                <h3 className={"mb-4"}>Benefits for Teachers:</h3>
+                <h2 className={"mb-4"}>Benefits for Teachers:</h2>
                 <p>
                     Why use Ada?
                 </p>
@@ -33,7 +33,7 @@ export const WhySignUpTabs = () => (
                 <Button tag={Link} to="/teachers" color="primary">Learn about Teacher accounts</Button>
             </>,
             Students: <>
-                <h3 className={"mb-4"}>Benefits for Students:</h3>
+                <h2 className={"mb-4"}>Benefits for Students:</h2>
                 <p>
                     Why use Ada?
                 </p>

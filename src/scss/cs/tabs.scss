@@ -1,46 +1,47 @@
-//@import "../common/tabs.scss";
+@import "typography";
+
+$nav-bottom-line: 2px;
 
 .nav-tabs {
   justify-content: left;
-  padding-bottom: 0.222rem;
+  padding-bottom: 0.444rem;
   box-sizing: border-box;
-  border-bottom: 3px solid $cs-silver;
+  border-bottom: $nav-bottom-line solid $cs-silver;
   flex-wrap: nowrap !important;
   align-items: stretch;
   .nav-item {
     padding-right: 1.111rem !important;
     .nav-link {
+      @extend .font-size-1-25;
+      @extend .font-weight-regular;
       position: relative;
       text-decoration: none;
       vertical-align: bottom;
       height: 100%;
       background: none !important;
-      font-size: 1.111em;
-      font-family: $primary-font;
       padding: 0 !important;
       border: none !important;
 
       ::after {
         content: ' ';
-        opacity: 0.5;
         width: 100%;
-        transform: scaleX(0);
+        transform: scaleY(0);
         transition-property: transform;
-        transition-duration: 0.1s;
-        transform-origin: 50% 50%;
+        transition-duration: 0.3s;
+        transform-origin: 50% 100%;
         transition-timing-function: ease-out;
-        bottom: -0.222rem;
+        bottom: -0.444rem;
         display: block;
         position: absolute;
         box-sizing: border-box;
-        margin-bottom: -3px;
-        border-bottom: 3px solid;
-        border-color: black;
+        margin-bottom: - $nav-bottom-line;
+        border-bottom: #{$nav-bottom-line * 2} solid;
+        border-color: $cs-silver;
       }
 
       :hover {
         &::after {
-          transform: scaleX(1);
+          transform: scaleY(1);
         }
       }
 
@@ -49,7 +50,7 @@
         cursor: default;
         ::after {
           opacity: 1 !important;
-          transform: scaleX(1);
+          transform: scaleY(1);
           border-color: $cs-dark-pink;
         }
       }

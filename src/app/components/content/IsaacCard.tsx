@@ -58,7 +58,7 @@ const AdaCard = ({doc, imageClassName, buttonText}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
     return <Card className={classNames("cs-card border-0 py-4 pt-5 my-4 my-lg-0", imageClassName)}>
         <CardTitle className={"px-4 mt-1"}>
-            <h4>{title}</h4>
+            <h3>{title}</h3>
         </CardTitle>
         <CardBody className={"px-4"}>
             <p>{subtitle}</p>
