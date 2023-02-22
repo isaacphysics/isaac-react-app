@@ -37,7 +37,8 @@ $grid-breakpoints: (
     md: 768px,
     lg: 992px,
     xl: 1200px,
-    nav: 1256px
+    nav: 1256px,
+    xxl: 1400px
 );
 
 // fonts
@@ -121,7 +122,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Atoms
 @import "fonts";
 @import "typography";
-@import "headings";
 @import "../common/modals";
 @import "questions";
 @import "forms";
@@ -226,9 +226,6 @@ p small {
 
 body {
     color: $black;
-    font-size: 1rem;
-    font-family: $primary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    line-height: 1.5rem;
     display: -ms-flexbox;
     -ms-flex-direction: column;
     flex-direction: column;

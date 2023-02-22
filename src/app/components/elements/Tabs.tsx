@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
-import {isDefined} from "../../services";
+import {isDefined, siteSpecific} from "../../services";
 import classNames from "classnames";
 import {useStatefulElementRef} from "./markup/portals/utils";
 import {useExpandContent} from "./markup/portals/Tables";
@@ -67,7 +67,7 @@ export const Tabs = (props: TabsProps) => {
                             tag="button" type="button" name={tabTitle.replace(" ", "_")}
                             tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
                         >
-                            <Markup encoding={"latex"}>
+                            <Markup encoding={"latex"} className={siteSpecific("", "px-2")}>
                                 {tabTitle}
                             </Markup>
                         </NavLink>

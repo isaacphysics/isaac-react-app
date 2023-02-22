@@ -1,5 +1,94 @@
+@use "sass:list";
 @import "../common/typography";
+@import "../common/_utils";
 
+// List of (font size, line height) pairs to generate font classes
+$sizes: [
+  [5   , 5.5 ],
+  [4.5 , 5   ],
+  [4   , 4.5 ],
+  [3.5 , 4   ],
+  [3   , 3.5 ],
+  [2.5 , 3   ],
+  [2   , 2.5 ],
+  [1.75, 2   ],
+  [1.5 , 2   ],
+  [1.25, 1.5 ],
+  [1   , 1.5 ],
+  [0.75, 1   ],
+  [0.5 , 0.75]
+];
+
+@each $size in $sizes {
+  $selector-size: str-replace(#{list.nth($size, 1)}, ".", "-");
+  .font-size-#{$selector-size} {
+    font-size: #{list.nth($size, 1)}rem;
+    line-height: #{list.nth($size, 2)}rem;
+  }
+  // Also generate responsive font size classes (.font-size-md-1-25 for example)
+  $i: 1;
+  @each $name, $breakpoint in $grid-breakpoints {
+    @if $name != xs {
+      @include media-breakpoint-up($name) {
+        // This is a nasty hack for CSS specificity
+        #{str-repeat(".font-size-#{$name}-#{$selector-size}", $i)} {
+          font-size: #{list.nth($size, 1)}rem;
+          line-height: #{list.nth($size, 2)}rem;
+        }
+      }
+      $i: $i + 1;
+    }
+  }
+}
+
+.font-weight-regular {
+  font-family: $secondary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+}
+
+.font-weight-bold {
+  font-family: $secondary-font-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+}
+
+.font-weight-semi-bold {
+  font-family: $secondary-font-semi-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+}
+
+.font-style-italic {
+  font-family: $secondary-font-italic, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+}
+
+h1 {
+  @extend .font-weight-semi-bold;
+  @extend .font-size-2-5;
+}
+h2 {
+  @extend .font-weight-semi-bold;
+  @extend .font-size-2;
+}
+h3 {
+  @extend .font-weight-semi-bold;
+  @extend .font-size-1-5;
+}
+h4 {
+  @extend .font-weight-semi-bold;
+  @extend .font-size-1-25;
+}
+h5 {
+  @extend .font-weight-semi-bold;
+  @extend .font-size-1;
+}
+body {
+  @extend .font-weight-regular;
+  @extend .font-size-1;
+}
+strong, b {
+  @extend .font-weight-bold;
+}
+i, em {
+  @extend .font-style-italic;
+}
+
+// FIXME ADA what do these do and why are they here?
 div.isaac-nav-link {
   color: $cs-white;
   display: inline-block;
@@ -9,23 +98,6 @@ div.isaac-nav-link {
     color: $cs-white;
     text-decoration: none;
   }
-}
-
-p, li, ol, ul, a, blockquote {
-  font-size: 1rem;
-  font-family: $primary-font;
-  line-height: 1.5rem;
-
-  &.p-large {
-    font-size: 1.111rem;
-    line-height: 1.667rem;
-  }
-}
-
-i, em {
-  font-size: 0.889em;
-  line-height: 1rem;
-  font-family: $secondary-font-italic;
 }
 
 // FIXME ADA pre and code fonts and style need thinking about
