@@ -62,7 +62,7 @@ export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
             <CardImg
                 className={"news-card-image"}
                 top
-                src={image.src && apiHelper.determineImageUrl(image.src)}
+                src={(image.src && apiHelper.determineImageUrl(image.src)) || "/assets/cs/decor/news-placeholder.png"}
                 alt={image.altText || `Illustration for ${title}`}
             />
         </a>}
