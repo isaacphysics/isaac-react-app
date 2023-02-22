@@ -612,7 +612,7 @@ export enum TAG_ID {
     computerScience = "computer_science",
 
     // Strands
-    machineLearningAi = "machine_learning_ai",
+    artificialIntelligence = "artificial_intelligence",
     dataStructuresAndAlgorithms = "data_structures_and_algorithms",
     computerSystems = "computer_systems",
     creatingMedia = "creating_media",
@@ -620,10 +620,10 @@ export enum TAG_ID {
     designAndDevelopment = "design_and_development",
     effectiveUseOfTools = "effective_use_of_tools",
     impactsOfDigitalTechnology = "impacts_of_digital_tech",
-    networking = "networking",
+    computerNetworks = "computer_networks",
     programming = "programming",
     cyberSecurity = "cyber_security",
-    modelsOfComputation = "models_of_computation",
+    theoryOfComputation = "theory_of_computation",
 
     // Artificial intelligence topics
 
@@ -659,7 +659,6 @@ export enum TAG_ID {
     // Design and development topics
     programDesign = "program_design",
     softwareEngineeringPrinciples = "software_engineering_principles",
-    softwareProject = "software_project",
     testing = "testing",
 
     // Effective use of tools topics
@@ -672,7 +671,7 @@ export enum TAG_ID {
 
     // Networks topics
     communication = "communication",
-    computerNetworks = "computer_networks",
+    networking = "networking",
     theInternet = "the_internet",
     webTechnologies = "web_technologies",
 
