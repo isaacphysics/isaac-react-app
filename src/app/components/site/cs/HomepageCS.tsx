@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {useAppSelector, selectors, isaacApi} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, CardDeck, Col, Container, Row} from "reactstrap";
-import {isPhy, SITE_TITLE} from "../../../services";
+import {SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
 import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {WarningBanner} from "../../navigation/WarningBanner";
@@ -152,8 +152,8 @@ export const HomepageCS = () => {
 
             <section id="search">
                 <Container className={"py-lg-6 py-5 text-center"}>
-                    <h3 className={"text-white"}>Ready to get started?</h3>
-                    <AdaHomepageSearch className={"d-inline-block long-search-bar"} />
+                    <h3 className={"text-white mb-4"}>Ready to get started?</h3>
+                    <AdaHomepageSearch className={"d-block"} />
                 </Container>
             </section>
         </div>
