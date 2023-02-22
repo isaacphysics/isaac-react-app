@@ -191,7 +191,7 @@ const AccountPageComponent = ({user, updateCurrentUser, getChosenUserAuthSetting
 
     function setProgrammingLanguage(newProgrammingLanguage: ProgrammingLanguage) {
         const clearLanguages: { [pl in PROGRAMMING_LANGUAGE]: false } = {
-            PSEUDOCODE: false, JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, ASSEMBLY: false, PLAINTEXT: false, SQL: false, NONE: false,
+            PSEUDOCODE: false, JAVASCRIPT: false, PYTHON: false, PHP: false, CSHARP: false, ASSEMBLY: false, PLAINTEXT: false, SQL: false, JAVA: false, VBA: false, NONE: false
         };
 
         const fullNewProgrammingLanguage = {...clearLanguages, ...newProgrammingLanguage};

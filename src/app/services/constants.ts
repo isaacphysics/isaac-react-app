@@ -459,6 +459,8 @@ export enum PROGRAMMING_LANGUAGE {
     ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
+    JAVA = "JAVA",
+    VBA = "VBA",
     NONE = "NONE",
 }
 
@@ -471,6 +473,8 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
+    [PROGRAMMING_LANGUAGE.JAVA]: "Java",
+    [PROGRAMMING_LANGUAGE.VBA]: "Visual Basic",
 };
 
 // EXAM BOARDS
