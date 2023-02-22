@@ -10,7 +10,6 @@ import {AdaHero2x1, AdaHero1x1} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
-import classNames from "classnames";
 
 interface ShowMeButtonsProps {
     className?: string
@@ -49,7 +48,7 @@ export const HomepageCS = () => {
         <WarningBanner/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="py-lg-6 pt-3 pb-5 z1">
+                <Container className="py-lg-6 pt-3 pb-5 z1 px-lg-6 px-4" fluid>
                     {user?.loggedIn ? <>
                             {/* FIXME ADA logged in hero view still needs updating... */}
                             <Row className="pt-4">
@@ -66,23 +65,20 @@ export const HomepageCS = () => {
                             </Row>
                         </>
                         : <Row className={"justify-content-center homepage-hero-logged-out"}>
-                            <Col lg={6} className={"my-auto pr-xl-5"}>
-                                <div className={"mw-640"}>
-                                    <h1>
-                                        <span className={"text-pink"}>/</span><br/>
-                                        The global computer science platform <span className={"font-weight-regular"}>for students and teachers.</span>
-                                    </h1>
-                                    <p className={"font-size-1-25 py-3"}>
-                                        Developed by the Raspberry Pi Foundation and the University of Cambridge.
-                                    </p>
-                                    <Button tag={Link} to="/register" color="dark-primary">Get Started</Button>
-                                </div>
+                            <Col lg={6} xl={5} className={"my-auto mw-640"}>
+                                <h1 className={"font-size-1-75 font-size-md-2 font-size-xxl-3"}>
+                                    <span className={"text-pink"}>/</span><br/>
+                                    The global computer science platform <span className={"font-weight-regular"}>for students and teachers.</span>
+                                </h1>
+                                <p className={"font-size-1 font-size-md-1-25 py-3"}>
+                                    Developed by the Raspberry Pi Foundation and the University of Cambridge.
+                                </p>
+                                <Button tag={Link} to="/register" color="dark-primary">Get Started</Button>
                             </Col>
-                            <Col lg={6} className={"pl-xl-5"}>
-                                <div className={"mw-640"}>
-                                    <AdaHero1x1 className={"d-lg-block d-none"}/>
-                                    <AdaHero2x1 className={"mt-5 mt-lg-0 d-lg-none d-block"}/>
-                                </div>
+                            <Col xl={2} className={"spacer d-none d-xl-block"}/>
+                            <Col lg={6} xl={5} className={"mw-640 mb-1 mb-sm-3 mb-lg-0"}>
+                                <AdaHero1x1 className={"d-lg-block d-none"}/>
+                                <AdaHero2x1 className={"mt-5 mt-lg-0 d-lg-none d-block"}/>
                             </Col>
                         </Row>
                     }

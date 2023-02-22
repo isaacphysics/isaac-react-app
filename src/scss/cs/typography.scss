@@ -20,9 +20,24 @@ $sizes: [
 ];
 
 @each $size in $sizes {
-  .font-size-#{str-replace(#{list.nth($size, 1)}, ".", "-")} {
+  $selector-size: str-replace(#{list.nth($size, 1)}, ".", "-");
+  .font-size-#{$selector-size} {
     font-size: #{list.nth($size, 1)}rem;
     line-height: #{list.nth($size, 2)}rem;
+  }
+  // Also generate responsive font size classes (.font-size-md-1-25 for example)
+  $i: 1;
+  @each $name, $breakpoint in $grid-breakpoints {
+    @if $name != xs {
+      @include media-breakpoint-up($name) {
+        // This is a nasty hack for CSS specificity
+        #{str-repeat(".font-size-#{$name}-#{$selector-size}", $i)} {
+          font-size: #{list.nth($size, 1)}rem;
+          line-height: #{list.nth($size, 2)}rem;
+        }
+      }
+      $i: $i + 1;
+    }
   }
 }
 
