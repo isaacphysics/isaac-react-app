@@ -91,10 +91,11 @@ export const HomepageCS = () => {
             <section id="benefits-for-teachers-and-students">
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
-                        <Col md={6} className={"px-5 my-auto my-lg-0"}>
-                            <img className={"w-100"} src={"/assets/cs/decor/benefits-for-teachers-hero.png"} />
+                        <Col lg={6} className={"px-5 my-auto my-lg-0"}>
+                            <img className={"d-none d-lg-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-3x4.png"} />
+                            <img className={"d-lg-none d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-4x3.png"} />
                         </Col>
-                        <Col md={6} className={"order-first order-md-last pb-5 pb-md-0"}>
+                        <Col lg={6} className={"order-first order-lg-last pb-5 pb-md-0"}>
                             <WhySignUpTabs/>
                         </Col>
                     </Row>
