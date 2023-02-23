@@ -38,7 +38,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink])
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
-    const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * 9);
+    const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
     return <div ref={shareLinkDivRef} className="share-link-icon">
         <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
