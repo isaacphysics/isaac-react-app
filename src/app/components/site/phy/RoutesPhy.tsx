@@ -28,6 +28,7 @@ import {QuizDoFreeAttempt} from "../../pages/quizzes/QuizDoFreeAttempt";
 import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
 import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
+import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
@@ -37,6 +38,7 @@ export const RoutesPhy = [
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
+    <TrackedRoute exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} />, // Currently in beta, not yet advertised or listed on navigation menus
 
     // Teacher test pages
     <TrackedRoute exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />,
