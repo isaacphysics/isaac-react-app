@@ -126,7 +126,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "questions";
 @import "forms";
 @import "../common/elements";
-@import "../common/breadcrumbs";
+@import "breadcrumbs";
 @import "../common/media";
 @import "tabs";
 @import "../common/accordions";

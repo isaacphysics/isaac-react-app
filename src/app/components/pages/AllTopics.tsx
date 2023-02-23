@@ -185,12 +185,12 @@ export const AllTopics = () => {
         <TitleAndBreadcrumb currentPageTitle={"Topics"}/>
         {isAda && <MetaDescription description={"Our free Computer Science topics..." /* FIXME ADA wait for copy here */} />}
         <Row>
-            <Col lg={{size: 8, offset: 2}} className="bg-light-grey pt-md-4">
+            <Col lg={{size: 8, offset: 2}} className="pt-md-4">
                 <PageFragment fragmentId={`a_level_all_topics`} ifNotFound={RenderNothing} />
             </Col>
         </Row>
         <Row>
-            <Col lg={{size: 8, offset: 2}} className="bg-light-grey py-md-4 d-md-flex">
+            <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
                 {topicColumn(firstColTags, STAGE.A_LEVEL)}
                 {topicColumn(secondColTags, STAGE.A_LEVEL)}
             </Col>

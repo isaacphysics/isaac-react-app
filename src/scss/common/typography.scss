@@ -18,12 +18,6 @@ ul {
 
 // NOMENSA typography.scss
 // REPLACE ./assets WITH /assets
-p {
-  &.p-small {
-    font-size: 0.8125em;
-    line-height: 1.69;
-  }
-}
 
 a, div.isaac-nav-link {
   color: $gray-194;
@@ -66,54 +60,6 @@ a, div.isaac-nav-link {
     background-position: center left;
     clear: left;
     text-decoration: none;
-  }
-}
-
-.btn {
-  &.btn-sm {
-    &.a-alt {
-      color: $purple;
-      font-family: $secondary-font-medium;
-      text-decoration: underline;
-    }
-  }
-}
-
-blockquote {
-  &.blockquote {
-    border-left: 0.25rem solid $gray-107;
-    padding: 0.5rem 1rem;
-  }
-}
-
-small {
-  line-height: 1.69;
-  border-top: 1px solid $black;
-}
-
-hr {
-  display: block;
-  border-bottom: 1px solid $black;
-  position: relative;
-
-  &::before {
-    @include pseudo-element;
-    border-bottom: 5px solid $black;
-    bottom: -3px;
-    left: 0;
-    max-width: 158px;
-    right: 0;
-    width: 32%;
-
-    @include respond-above(sm) {
-      max-width: 380px;
-    }
-  }
-
-  &.text-center {
-    &::before {
-      margin: auto;
-    }
   }
 }
 
