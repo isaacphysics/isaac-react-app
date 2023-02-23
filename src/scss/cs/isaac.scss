@@ -83,6 +83,12 @@ $highlight-turquoise-25: mix($cs-turquoise-blue, $cs-white, 25%); // "is your an
 $highlight-yellow: $cs-yellow; // Used for buttons - "is your answer correct" negative QQ answer
 $highlight-yellow-50: mix($cs-yellow, $cs-white, 50%); // Used for buttons - quick question negative answer
 
+// Button colours
+$light-hover-dark-pink: #7A0C51;
+$light-active-dark-pink: #6C0A48;
+$dark-hover-pink: #E545B5;
+$dark-active-pink: #CC3EA1;
+
 // Greys
 // FIXME ADA: these can be presumably somehow be replaced with generated shades based on Nomensa greys.
 $gray-103: #f8f8f8; // All used in various places, mainly for borders
