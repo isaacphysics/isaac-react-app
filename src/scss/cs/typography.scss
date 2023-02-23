@@ -87,6 +87,12 @@ strong, b {
 i, em {
   @extend .font-style-italic;
 }
+p, small {
+  @extend .font-weight-regular;
+}
+small {
+  @extend .font-size-0-5;
+}
 code {
   line-height: inherit;
   font-size: 0.94rem;
