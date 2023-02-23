@@ -16,9 +16,12 @@ div.header-progress {
 .navbar {
   .navbar-toggler {
     padding: 0.25rem;
-    &:focus {
+    &:focus-visible {
       border-color: $cs-turquoise-blue;
       border-radius: 0;
+    }
+    &:focus:not(:focus-visible) {
+      border: none !important;
     }
     .navbar-toggler-icon {
       background-image: url('/assets/cs/icons/hamburger.svg');
@@ -49,10 +52,13 @@ div.header-progress {
     font-size: 1.25rem;
     line-height: 1;
     background: none;
-    &:focus {
+    &:focus-visible {
       box-sizing: content-box;
       border: 0.2rem solid $cs-turquoise-blue;
       border-radius: 0;
+    }
+    &:focus:not(:focus-visible) {
+      border: none !important;
     }
     .search-toggler-icon {
       display: inline-block;
