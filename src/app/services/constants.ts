@@ -50,6 +50,7 @@ export const SOCIAL_LINKS = siteSpecific(
         facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
     },
     {
+        // FIXME ADA: update these - also we don't have an instagram logo
         youtube: {name: "YouTube", href: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"},
         twitter: {name: "Twitter", href: "https://twitter.com/isaaccompsci"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience"},
