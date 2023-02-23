@@ -1,5 +1,4 @@
 @import "../common/button";
-@import "typography";
 
 @mixin button-primary($color) {
   color: $color;
