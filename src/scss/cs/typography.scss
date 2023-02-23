@@ -88,7 +88,8 @@ i, em {
   @extend .font-style-italic;
 }
 code {
-  @extend .font-size-1;
+  line-height: inherit;
+  font-size: 0.94rem;
   font-family: "azaret-mono-regular", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   color: $cs-dark-pink;
 }
