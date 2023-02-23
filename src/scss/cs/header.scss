@@ -74,13 +74,13 @@ header {
     color: $cs-white;
     position: relative;
     text-underline-offset: 6px;
-    &:hover, &:focus {
+    &:hover, &:active, &.open {
       outline: none !important;
       box-shadow: none !important;
       color: $cs-white;
       text-decoration: underline 3px $cs-turquoise-blue !important;
     }
-    &:active{
+    &:focus-visible {
       &::after {
         content: ' ';
         position: absolute;
@@ -90,7 +90,6 @@ header {
         height: 100%;
         border: $cs-turquoise-blue solid 2px;
       }
-      text-decoration: none !important;
     }
 
     .cs-caret {
