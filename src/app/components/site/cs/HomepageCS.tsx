@@ -4,7 +4,6 @@ import {Link} from "react-router-dom";
 import {Button, CardDeck, Col, Container, Row} from "reactstrap";
 import {SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
 import {WarningBanner} from "../../navigation/WarningBanner";
 import {AdaHero2x1, AdaHero1x1} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
@@ -97,7 +96,7 @@ export const HomepageCS = () => {
                 <Container className={"py-lg-6 py-5"}>
                     <h2 className={"mb-4 mb-lg-5"}>News</h2>
                     <CardDeck className={"justify-content-center"}>
-                        {news.slice(0, 3).map(n => <NewsCard newsItem={n} showTitle />)}
+                        {news.slice(0, 4).map(n => <NewsCard newsItem={n} showTitle />)}
                     </CardDeck>
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
                         {/* FIXME ADA link this to a general news page? Also fix link CSS design */}

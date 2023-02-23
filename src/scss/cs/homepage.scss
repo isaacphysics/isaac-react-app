@@ -84,6 +84,12 @@
 
   section#news {
     background-color: $cs-cultured;
+
+    @include media-breakpoint-only(lg) {
+      .card-deck .news-card:nth-child(4) {
+        display: none !important;
+      }
+    }
   }
 
   section#search {
