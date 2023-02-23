@@ -43,6 +43,14 @@ export const HeaderCS = () => {
                     <Nav navbar className={"w-100"}>
                         <NavigationSection topLevelLink to="/" title={"Home"}/>
 
+                        <NavigationSection title="Learn">
+                            <LinkItem to="/topics">Topics</LinkItem>
+                            <LinkItem to="/gameboards/new">Question Finder</LinkItem>
+                            <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
+                            <LinkItem to="/glossary">Glossary</LinkItem>
+                            <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
+                        </NavigationSection>
+
                         {isTutorOrAbove(user) && <NavigationSection title="Teachers">
                             <LinkItem to="/groups">Manage groups</LinkItem>
                             <LinkItem to="/set_assignments">Set assignments</LinkItem>
@@ -52,15 +60,6 @@ export const HeaderCS = () => {
                                 <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             </>}
                         </NavigationSection>}
-
-                        <NavigationSection title="Learn">
-                            <LinkItem to="/topics/gcse">GCSE topics</LinkItem>
-                            <LinkItem to="/topics/a_level">A level topics</LinkItem>
-                            <LinkItem to="/gameboards/new">Question Finder</LinkItem>
-                            <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
-                            <LinkItem to="/glossary">Glossary</LinkItem>
-                            <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
-                        </NavigationSection>
 
                         <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
                             <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
