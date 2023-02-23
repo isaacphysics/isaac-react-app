@@ -1,0 +1,52 @@
+@import "../common/footer";
+
+
+footer {
+  .container-fluid {
+    width: 90%
+  }
+}
+
+.footer-logo {
+  width: 4rem;
+  height: auto;
+}
+
+.footer-links {
+  color: $cs-white;
+  padding-top: 0;
+  a {
+    color: $cs-white;
+    text-decoration: underline;
+  }
+}
+
+.footer-bottom {
+  background-color: $cs-black;
+  color: $cs-white;
+  .footer-bottom-info {
+    p {
+      color: $cs-white;
+    }
+  }
+}
+
+.footer-rule {
+  border-top: 2px solid $cs-jet;
+}
+
+.social-logo {
+  height: 3rem;
+  width: auto;
+  margin-top: 0 !important;
+}
+
+.org-logo {
+  height: 1.75rem;
+  width: auto;
+}
+
+.footer-link {
+  padding-top: 0 !important;
+}
+

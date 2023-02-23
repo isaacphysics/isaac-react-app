@@ -11,7 +11,6 @@ import {
     useAppSelector
 } from "../../state";
 import {Route, Router, Switch} from "react-router-dom";
-import {Footer} from "./Footer";
 import {Question} from "../pages/Question";
 import {Concept} from "../pages/Concept";
 import {Contact} from "../pages/Contact";
@@ -225,7 +224,7 @@ export const IsaacApp = () => {
                 </Suspense>
             </ErrorBoundary>
         </main>
-        <Footer />
+        <SiteSpecific.Footer />
         <ConsistencyErrorModal consistencyError={consistencyError} />
     </Router>;
 };
