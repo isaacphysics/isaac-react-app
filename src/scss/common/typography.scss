@@ -3,31 +3,6 @@ small {
   border: 0 !important;
 }
 
-pre {
-  background: white;
-  padding: 1rem;
-  font-weight: 400;
-  border: solid 1px #00000021;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.875rem;
-
-  code {
-    box-shadow: none;
-    background: unset;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-code {
-  display: inline-block;
-  color: unset;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.08);
-  background: #fff;
-  margin: 0 -0.05rem;
-  padding: 0 0.05rem;
-}
-
 .text-muted {
   a {
     color: $text-muted !important;

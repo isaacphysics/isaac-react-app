@@ -1,5 +1,4 @@
 @import "../common/button";
-@import "typography";
 
 @mixin button-primary($color) {
   color: $color;
@@ -39,7 +38,7 @@
 
 
 .btn, input.btn {
-  border-radius: 50px;
+  border-radius: 50px !important;
   border-width: 3px;
 
   @extend .font-size-1-25;
@@ -121,4 +120,79 @@
 
 .quick-question-muted {
   border-color: grey !important;
+}
+
+.btn-icon {
+  @extend .btn;
+  background-color: $cs-dark-pink;
+  @include button-secondary($cs-dark-pink, $cs-dark-pink);
+  padding: 0 !important;
+  min-width: unset !important;
+  width: 48px !important;
+  height: 48px !important;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.share-link-icon {
+  position: relative;
+  button {
+    @extend .btn-icon;
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+    position: relative;
+    z-index: 2;
+    background-position: 48% 50%;
+    background-image: url("/assets/cs/icons/share.svg");
+  }
+  .share-link {
+    z-index: 1;
+    top: 3px;
+    font-family: $secondary-font !important;
+    display: none;
+    position: absolute;
+    border: 1px solid gray;
+    transform: translate(calc(30px - 100%));
+    height: 42px;
+    width: 70%;
+
+    input {
+      z-index: 1;
+      padding-right: 40px;
+      padding-left: 10px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      user-select: all;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      -ms-user-select: all;
+      width: 100%;
+      height: 100%;
+    }
+
+    &.double-height {
+      height: auto;
+      padding-bottom: 10px;
+      background: #fff;
+      text-align: center;
+      input {
+        height: 42px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
+
+.print-icon {
+  @extend .btn-icon;
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+  background-image: url("/assets/cs/icons/print.svg");
+}
+
+.report-icon {
+  @extend .btn-icon;
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+  background-image: url("/assets/cs/icons/flag.svg");
 }

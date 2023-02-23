@@ -11,6 +11,7 @@ $news-cards-per-line: (
   @include media-breakpoint-up($name) {
     .card-deck .news-card {
       flex: 0 0 calc(#{100/map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
+      width: 100%;
     }
   }
 }

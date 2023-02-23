@@ -21,14 +21,13 @@
   }
   .long-search-button {
     z-index: 2 !important;
+    border-radius: 0 ($border-radius * 10) ($border-radius * 10) 0 !important;
     &:hover {
       background-color: $cs-black !important;
     }
     &:focus {
-      border-radius: 0 ($border-radius * 10) ($border-radius * 10) 0 !important;
     }
     &:active {
-      border-radius: 0 ($border-radius * 10) ($border-radius * 10) 0 !important;
       box-shadow: 0 2px 10px #9C9C9C;
     }
     background-color: black;
