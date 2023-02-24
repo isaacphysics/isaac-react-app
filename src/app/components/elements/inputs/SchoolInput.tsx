@@ -48,20 +48,22 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     // Set schoolId or schoolOther
     function setUserSchool(school: any) {
+        const {schoolId, schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
         if (school.urn) {
-            setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolId: school.urn, schoolOther: undefined}));
+            setUserToUpdate?.({...userWithoutSchoolInfo, schoolId: school.urn});
             setSelectedSchoolObject(school);
         } else if (school) {
-            setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolOther: school, schoolId: undefined}));
+            setUserToUpdate?.({...userWithoutSchoolInfo, schoolOther: school});
             setSelectedSchoolObject(school);
         }
     }
 
     // Called when school input box option selected
     function handleSetSchool(newValue: {value: string | School} | null) {
+        const {schoolId, schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
         if (newValue == null) {
             setSelectedSchoolObject(undefined);
-            setUserToUpdate?.({...userToUpdate, schoolOther: undefined, schoolId: undefined});
+            setUserToUpdate?.(userWithoutSchoolInfo);
         } else if (newValue && newValue.value) {
             setUserSchool(newValue.value);
         } else if (newValue) {
@@ -105,7 +107,12 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 invalid={isInvalid}
                 disabled={disableInput || !setUserToUpdate}
                 onChange={(e => {
-                    setUserToUpdate?.(Object.assign({}, userToUpdate, {schoolOther: e.target.checked ? NOT_APPLICABLE : undefined, schoolId: e.target.checked && undefined}));
+                    const {schoolId, schoolOther, ...userWithoutSchoolInfo} = userToUpdate;
+                    if (e.target.checked) {
+                        setUserToUpdate?.({...userWithoutSchoolInfo, schoolOther: NOT_APPLICABLE});
+                    } else {
+                        setUserToUpdate?.(userWithoutSchoolInfo);
+                    }
                 })}
                 label="Not associated with a school"
             />

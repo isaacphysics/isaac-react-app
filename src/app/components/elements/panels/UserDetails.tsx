@@ -24,11 +24,11 @@ interface UserDetailsProps {
     setUserToUpdate: (user: any) => void;
     userContexts: UserContext[];
     setUserContexts: (uc: UserContext[]) => void;
-    programmingLanguage: ProgrammingLanguage;
+    programmingLanguage: Nullable<ProgrammingLanguage>;
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
-    booleanNotation: BooleanNotation;
+    booleanNotation: Nullable<BooleanNotation>;
     setBooleanNotation: (bn: BooleanNotation) => void;
-    displaySettings: DisplaySettings;
+    displaySettings: Nullable<DisplaySettings>;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
@@ -146,12 +146,13 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
-                        value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] ? key : val, "")}
+                        value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage?.[key as keyof ProgrammingLanguage] ? key : val, PROGRAMMING_LANGUAGE.NONE)}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                            setProgrammingLanguage({[event.target.value]: true})
+                            let newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, v]) => ({...acc, [k]: false}), {});
+                            setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
                         }}
                     >
-                        <option value=""></option>
+                        <option />
                         <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
                         <option value={PROGRAMMING_LANGUAGE.JAVA}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVA]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PSEUDOCODE}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PSEUDOCODE]}</option>

@@ -1,8 +1,8 @@
 import {AppState, closeActiveModal, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../../state";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
-import {UserEmailPreference} from "../panels/UserEmailPreferences";
-import {BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser} from "../../../../IsaacAppTypes";
+import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailPreferences";
+import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
     isAda,
@@ -38,7 +38,7 @@ const RequiredAccountInfoBody = () => {
     const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>(initialUserValue);
 
     const initialEmailPreferencesValue = {...userPreferences?.EMAIL_PREFERENCE};
-    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
+    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(initialEmailPreferencesValue);
 
     const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);

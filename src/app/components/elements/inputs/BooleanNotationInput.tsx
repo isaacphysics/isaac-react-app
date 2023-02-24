@@ -4,7 +4,7 @@ import {BooleanNotation} from "../../../../IsaacAppTypes";
 import React, {ChangeEvent} from "react";
 
 interface BooleanNotationInputProps {
-    booleanNotation: BooleanNotation;
+    booleanNotation: Nullable<BooleanNotation>;
     setBooleanNotation: (bn: BooleanNotation) => void;
     isRequired?: boolean;
 }
@@ -19,7 +19,7 @@ export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isReq
             value={
                 // This chooses the last string in this list that (when used as a key)
                 // is mapped to true in the current value of booleanNotation
-                Object.keys(BOOLEAN_NOTATION).reduce((val: string, key) => booleanNotation[key as keyof BooleanNotation] ? key : val, BOOLEAN_NOTATION.MATH)
+                Object.keys(BOOLEAN_NOTATION).reduce((val: string, key) => booleanNotation?.[key as keyof BooleanNotation] ? key : val, BOOLEAN_NOTATION.MATH)
             }
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     // Makes a new object, with all the boolean notation flags being false apart
