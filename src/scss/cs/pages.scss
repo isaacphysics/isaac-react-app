@@ -1,5 +1,10 @@
 @import "../common/pages";
 
+.title-help {
+  color: $cs-dark-pink;
+  text-decoration: underline;
+}
+
 // All topics page
 #topics-bg {
   background-image: url("/assets/cs/decor/dots-circle-bg.svg");
