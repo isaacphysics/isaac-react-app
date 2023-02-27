@@ -162,7 +162,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "footer";
 
 // Pages
-@import "../common/pages";
+@import "pages";
 @import "homepage";
 @import "../common/login";
 @import "../common/registration";
