@@ -6,8 +6,8 @@ svg {
   @each $shape in $shapes {
     .#{$shape} {
       &:not(.active) {
-        fill: white;
-        stroke: $gray-160;
+        fill: $cs-silver;
+        stroke: none;
       }
 
       &.mini:not(.active) {
@@ -26,12 +26,14 @@ svg {
 
       &.active.difficulty.practice {
         fill: $cs-yellow;
-        stroke: $cs-yellow;
+        stroke: $cs-black;
+        stroke-width: 1px;
       }
 
       &.active.difficulty.challenge {
-        fill: $cs-dark-pink;
-        stroke: $cs-dark-pink;
+        fill: $cs-turquoise-blue;
+        stroke: $cs-black;
+        stroke-width: 1px;
       }
 
       &:focus {
@@ -41,5 +43,12 @@ svg {
       }
     }
   }
-
 }
+
+.difficulty-icon-title {
+  color: $cs-black;
+  &.active {
+    color: $cs-black;
+  }
+}
+
