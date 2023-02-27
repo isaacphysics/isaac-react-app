@@ -116,7 +116,6 @@
       display: flex;
       font-size: 1.25rem;
       text-decoration: none;
-      padding-right: 38px;
       position: relative;
 
       > span:first-of-type {
@@ -128,18 +127,6 @@
         min-width: 3rem;
       }
 
-      &:after {
-        @include pseudo-element;
-        background-image: url('/assets/chevron_right.svg');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position-y: center;
-        height: 100%;
-        right: 10px;
-        top: 0;
-        bottom: 0;
-        width: 9px;
-      }
     }
 
     &:last-of-type {

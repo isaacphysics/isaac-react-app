@@ -1,5 +1,6 @@
 @import "../common/pages";
 
+// All topics page
 #topics-bg {
   background-image: url("/assets/cs/decor/dots-circle-bg.svg");
   background-repeat: no-repeat;
@@ -13,4 +14,10 @@
     background-position: -13% 200px;
     background-size: 400%;
   }
+}
+
+// Gameboard filter page
+#gameboard-section {
+  background: $cs-white;
+  #gameboard-title-section {}
 }

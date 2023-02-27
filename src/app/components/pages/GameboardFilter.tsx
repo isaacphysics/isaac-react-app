@@ -8,7 +8,6 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
 import {
@@ -35,7 +34,7 @@ import {
     useUserContext
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
-import {GameboardViewer} from './Gameboard';
+import {GameboardViewer, GameboardViewerInner} from './Gameboard';
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
@@ -47,6 +46,8 @@ import {History} from "history";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
+import classNames from "classnames";
+import {Col, Row, Input, Button, Alert, Container, Card, Label, UncontrolledTooltip} from "reactstrap";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -170,52 +171,52 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
         }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
     }
 
-    return <RS.Row className="mb-sm-4">
-        <RS.Col xs={12}>
+    return <Row className="mb-sm-4">
+        <Col xs={12}>
             <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
-        </RS.Col>
-        <RS.Col lg={4}>
+        </Col>
+        <Col lg={4}>
             <div>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                     I am interested in stage...
                     <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                    <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                    <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
                         {"Find questions that are suitable for this stage of school learning."} <br />
                         {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
-                    </RS.UncontrolledTooltip>
-                </RS.Label>
+                    </UncontrolledTooltip>
+                </Label>
                 <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
             </div>
             {/*<div>*/}
-            {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
+            {/*    <Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
             {/*        I would like some questions from Isaac to...*/}
-            {/*    </RS.Label>*/}
+            {/*    </Label>*/}
             {/*    <Select id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
             {/*</div>*/}
             <div>
-                <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
+                <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
                     I would like questions for...
                     <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                    <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                    <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                         Practice questions let you directly apply one idea -<br />
                         P1 covers revision of a previous stage or topics near the beginning of a course,<br />
                         P3 covers later topics.<br />
                         Challenge questions are solved by combining multiple concepts and creativity.<br />
                         C1 can be attempted near the beginning of your course,<br />
                         C3 require more creativity and could be attempted later in a course.
-                    </RS.UncontrolledTooltip>
-                </RS.Label>
+                    </UncontrolledTooltip>
+                </Label>
                 <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
                 {/*<Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
             </div>
-        </RS.Col>
-        <RS.Col lg={8}>
-            <RS.Label className={`mt-4 mt-lg-0`}>
+        </Col>
+        <Col lg={8}>
+            <Label className={`mt-4 mt-lg-0`}>
                 Topics:
-            </RS.Label>
+            </Label>
             <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
-        </RS.Col>
-    </RS.Row>;
+        </Col>
+    </Row>;
 }
 
 // Takes a list of "raw" concepts, and returns a map which takes a tag Item, and gives a GroupedOptionsType<Item<string>> containing itemised concepts which relate to that tag
@@ -282,52 +283,52 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
     return <>
         {/* CS-specific metadata: */}
         <MetaDescription description={metaDescriptionCS} />
-        <RS.Row>
-            <RS.Col md={6}>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+        <Row>
+            <Col md={6}>
+                <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
                     I am interested in stage...
                     <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                    <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                    <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
                         {"Find questions that are suitable for this stage of school learning."}
-                    </RS.UncontrolledTooltip>
-                </RS.Label>
+                    </UncontrolledTooltip>
+                </Label>
                 <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions({includeNullOptions: isAda})} />
-            </RS.Col>
-            <RS.Col md={6}>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
+            </Col>
+            <Col md={6}>
+                <Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
                     and exam board...
-                </RS.Label>
+                </Label>
                 <Select
                     inputId="exam-boards" isClearable placeholder="Any"
                     value={examBoards}
                     options={getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})}
                     onChange={selectOnChange(setExamBoards, false)}
                 />
-            </RS.Col>
-        </RS.Row>
-        <RS.Row className="mt-lg-3 mb-sm-3">
-            <RS.Col md={6}>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
+            </Col>
+        </Row>
+        <Row className="mt-lg-3 mb-sm-3">
+            <Col md={6}>
+                <Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
                     with difficulty levels...
                     <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                    <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                    <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
                         Practice questions require you to directly apply a single concept:<br/>
                         P1 questions cover a single foundation concept.<br/>
                         P2 questions cover a single progression concept.<br/>
                         Challenge questions require you to apply multiple concepts:<br/>
                         C1 questions cover more than one foundation concept.<br/>
                         C2 questions cover more than one concept which must be selected and combined with skill.
-                    </RS.UncontrolledTooltip>
-                </RS.Label>
+                    </UncontrolledTooltip>
+                </Label>
                 <Select
                     id="difficulty-selector" isClearable isMulti
                     options={DIFFICULTY_ICON_ITEM_OPTIONS}
                     value={difficulties}
                     onChange={selectOnChange(setDifficulties, false)}
                 />
-            </RS.Col>
-            <RS.Col md={6}>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</RS.Label>
+            </Col>
+            <Col md={6}>
+                <Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</Label>
                 <Select
                     inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
                     options={topicChoices} onChange={(v, {action}) => {
@@ -337,11 +338,11 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         return selectOnChange(setTierSelection, false)(v);
                     }}
                 />
-            </RS.Col>
-        </RS.Row>
-        <RS.Row>
-            <RS.Col md={12}>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</RS.Label>
+            </Col>
+        </Row>
+        <Row>
+            <Col md={12}>
+                <Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</Label>
                 {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
                     <Select
                         inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
@@ -349,8 +350,8 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         value={concepts} options={conceptChoices} onChange={selectOnChange(setConcepts, false)}
                     /> :
                     <IsaacSpinner/>}
-            </RS.Col>
-        </RS.Row>
+            </Col>
+        </Row>
     </>
 }
 
@@ -524,51 +525,51 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         }
     }
 
-    return <RS.Container id="gameboard-generator" className="mb-5">
+    return <Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
         <CanonicalHrefElement />
 
-        <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
+        <Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
-            {isPhy && <RS.Row>
-                <RS.Col sm={8} lg={9}>
+            {isPhy && <Row>
+                <Col sm={8} lg={9}>
                     <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
-                        <RS.Row>
-                            <RS.Col lg={6} className="mt-3 mt-lg-0">
-                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
+                        <Row>
+                            <Col lg={6} className="mt-3 mt-lg-0">
+                                <Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
                                     <span>Topics:</span>
                                     <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
-                                </RS.Label>
-                            </RS.Col>
-                        </RS.Row>
+                                </Label>
+                            </Col>
+                        </Row>
                     </button>
-                </RS.Col>
-                <RS.Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
+                </Col>
+                <Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
                     {filterExpanded ?
-                        <RS.Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
+                        <Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
                             Scroll to questions...
-                        </RS.Button>
+                        </Button>
                         :
-                        <RS.Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
+                        <Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
                             Edit question filters
-                        </RS.Button>
+                        </Button>
                     }
-                </RS.Col>
-            </RS.Row>}
+                </Col>
+            </Row>}
 
             {isAda && (filterExpanded
                 ?
-                <RS.Row className={"mb-3"}>
-                    <RS.Col>
+                <Row className={"mb-3"}>
+                    <Col>
                         <span>Specify your search criteria and we will generate a random selection of up to 10 questions for your chosen filter(s). Shuffle the questions to get a new random selection.</span>
-                    </RS.Col>
-                </RS.Row>
+                    </Col>
+                </Row>
                 :
-                <RS.Col xs={12} className={`text-center mt-3 mb-4 m-sm-0`}>
-                    <RS.Button size="sm" color="primary" outline onClick={() => setFilterExpanded(true)}>
+                <Col xs={12} className={`text-center mt-3 mb-4 m-sm-0`}>
+                    <Button size="sm" color="primary" outline onClick={() => setFilterExpanded(true)}>
                         Edit question filters ✎
-                    </RS.Button>
-                </RS.Col>)}
+                    </Button>
+                </Col>)}
 
             {/* Filter */}
             {filterExpanded && siteSpecific(
@@ -577,83 +578,92 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
             )}
 
             {/* Buttons */}
-            <RS.Row className={filterExpanded ? "mt-4" : ""}>
-                <RS.Col>
-                    {boardStack.length > 0 && <RS.Button size="sm" color="primary" outline onClick={previousBoard}>
+            <Row className={filterExpanded ? "mt-4" : ""}>
+                <Col>
+                    {boardStack.length > 0 && <Button size="sm" color="primary" outline onClick={previousBoard}>
                         <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
-                    </RS.Button>}
-                </RS.Col>
-                <RS.Col className="text-right">
-                    <RS.Button size="sm" color="primary" outline onClick={refresh}>
+                    </Button>}
+                </Col>
+                <Col className="text-right">
+                    <Button size="sm" color="primary" outline onClick={refresh}>
                         <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
-                    </RS.Button>
-                </RS.Col>
-            </RS.Row>
-            <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
+                    </Button>
+                </Col>
+            </Row>
+            <Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
                 {siteSpecific("Go to Questions...", "Scroll to Questions...")}
-            </RS.Button>
-            <RS.Button
+            </Button>
+            <Button
                 color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
                 className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
             />
-        </RS.Card>
+        </Card>
 
-        {isFound(gameboard) && <div ref={gameboardRef} className="row mt-4 mb-3">
-            {siteSpecific(
-                // PHY
-                <RS.Col xs={12} lg={"auto"} >
-                    <h3>{defaultBoardTitle}</h3>
-                </RS.Col>,
-                // CS
-                <>
-                    <RS.Col xs={12} lg={"auto"} >
-                        {isEditingTitle
-                            ? <RS.Input defaultValue={customBoardTitle ?? gameboard?.title}
-                                        onChange={e => setPendingCustomBoardTitle(e.target.value)}
-                                        className={"mb-2 mb-lg-0"} />
-                            : <h3>{customBoardTitle ?? gameboard?.title}</h3>
-                        }
-                    </RS.Col>
-                    <RS.Col xs={12} sm={isEditingTitle ? 7 : 4} lg={isEditingTitle ? 4 : 2} className={"pt-0 pt-lg-1 pb-1 pb-md-0"} >
-                        {isEditingTitle ? <>
-                                <RS.Button size={"sm"} color="secondary" onClick={() => {
-                                    setIsEditingTitle(false);
-                                    // Only save the title if the input element changed it
-                                    if (pendingCustomBoardTitle) {
-                                        setCustomBoardTitle(pendingCustomBoardTitle);
-                                    }
-                                }}>
-                                    Save title
-                                </RS.Button>
-                                <RS.Button size={"sm"} color="secondary" className={"ml-2"} onClick={() => setIsEditingTitle(false)}>
-                                    Cancel
-                                </RS.Button>
-                            </> :
-                            <RS.Button size={"sm"} color="secondary" onClick={() => {
-                                setIsEditingTitle(true);
-                                setPendingCustomBoardTitle(undefined);
-                            }}>
-                                Edit title
-                            </RS.Button>}
-                    </RS.Col>
-                </>
-            )}
-            <RS.Col xs={8} lg={"auto"} className="ml-auto text-right">
-                <RS.Button tag={Link} color="secondary"
-                           to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}
-                           onClick={() => setAssignBoardPath("/set_assignments")}
-                >
-                    Save to My&nbsp;Gameboards
-                </RS.Button>
-            </RS.Col>
-        </div>}
+        <div id={"gameboard-section"}>
+            {isFound(gameboard) && <div className={classNames({"p-4": isAda, "mt-4 mb-3": isPhy})}>
+                <Row id={"gameboard-title-section"} innerRef={gameboardRef}>
+                    {siteSpecific(
+                        // PHY
+                        <Col xs={12} lg={"auto"} >
+                            <h3>{defaultBoardTitle}</h3>
+                        </Col>,
+                        // CS
+                        <>
+                            <Col xs={12} lg={"auto"} >
+                                {isEditingTitle
+                                    ? <Input defaultValue={customBoardTitle ?? gameboard?.title}
+                                                onChange={e => setPendingCustomBoardTitle(e.target.value)}
+                                                className={"mb-2 mb-lg-0"} />
+                                    : <h3>{customBoardTitle ?? gameboard?.title}</h3>
+                                }
+                            </Col>
+                            <Col xs={12} sm={isEditingTitle ? 7 : 4} lg={isEditingTitle ? 4 : 2}>
+                                {isEditingTitle ? <>
+                                        <Button className={"mb-n2"} size={"sm"} color="link" onClick={() => {
+                                            setIsEditingTitle(false);
+                                            // Only save the title if the input element changed it
+                                            if (pendingCustomBoardTitle) {
+                                                setCustomBoardTitle(pendingCustomBoardTitle);
+                                            }
+                                        }}>
+                                            Save title
+                                        </Button>
+                                        <Button size={"sm"} color="link" className={"ml-2 mb-n2"} onClick={() => setIsEditingTitle(false)}>
+                                            Cancel
+                                        </Button>
+                                    </> :
+                                    <Button className={"mb-n2"} size={"sm"} color="link" onClick={() => {
+                                        setIsEditingTitle(true);
+                                        setPendingCustomBoardTitle(undefined);
+                                    }}>
+                                        Edit title
+                                    </Button>}
+                            </Col>
+                        </>
+                    )}
+                    <Col xs={8} lg={"auto"} className="ml-auto text-right">
+                        <Button size={siteSpecific("md", "sm")} tag={Link} color="secondary"
+                                   to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}
+                                   onClick={() => setAssignBoardPath("/set_assignments")}
+                        >
+                            {siteSpecific(<>Save to My&nbsp;Gameboards</>, "Save to my quizzes")}
+                        </Button>
+                    </Col>
+                </Row>
+                {isAda && <hr/>}
+            </div>}
 
-        <div className="pb-4">
-            <ShowLoading
-                until={gameboard}
-                thenRender={gameboard  => (<GameboardViewer gameboard={gameboard} />)}
-                ifNotFound={<RS.Alert color="warning">No questions found matching the criteria.</RS.Alert>}
-            />
+            <div className={classNames({"pb-4": isPhy})}>
+                <ShowLoading
+                    until={gameboard}
+                    thenRender={gameboard  => siteSpecific(
+                        <GameboardViewer gameboard={gameboard} />,
+                        <GameboardViewerInner gameboard={gameboard}/>
+                    )}
+                    ifNotFound={<Alert color="warning">No questions found matching the criteria.</Alert>}
+                />
+            </div>
         </div>
-    </RS.Container>;
+
+    </Container>;
 });

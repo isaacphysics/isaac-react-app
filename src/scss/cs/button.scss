@@ -66,6 +66,33 @@
     @include button-secondary($cs-dark-pink, transparent);
   }
 
+  // FIXME ADA need to make all other buttons use these different hover and active colours
+  &.btn-link {
+    margin: 0;
+    padding: 0;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: $cs-dark-pink;
+    overflow: hidden;  // To stop margin collapse from hiding the focus outline
+    text-decoration: underline;
+    &:hover {
+      color: $light-hover-dark-pink;
+      text-decoration: none;
+    }
+    &:active {
+      color: $light-active-dark-pink;
+      text-decoration: none;
+    }
+    &:focus-visible {
+      outline: 2px solid $cs-turquoise-blue !important;
+      border-radius: 0 !important;
+    }
+    &.disabled {
+      color: $cs-silver;
+    }
+  }
+
   // FIXME ADA: decide what to do with the following QQ buttons
   &.btn-negative {
     background-color: $highlight-yellow-50;

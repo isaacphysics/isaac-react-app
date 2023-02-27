@@ -8,6 +8,7 @@ $cs-yellow: #FFE672;
 $cs-jet: #333333;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
+$cs-list-outline-gray: #EBEBEB;
 $cs-cultured: #F5F5F5;
 
 // Theme
@@ -137,7 +138,7 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "tabs";
 @import "../common/accordions";
 @import "cards";
-@import "../common/list-groups";
+@import "list-groups";
 @import "inequality-modal";
 @import "../common/carousel";
 @import "../common/icons";
