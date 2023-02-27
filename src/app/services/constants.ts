@@ -576,8 +576,8 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_3: "Challenge\u00A0(C3)",
 }
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
-    practice_1: `Practice (P1) \u2B22\u2B21${siteSpecific("\u2B21", "")}`,
-    practice_2: `Practice (P2) \u2B22\u2B22${siteSpecific("\u2B21", "")}`,
+    practice_1: `Practice (P1) ${siteSpecific("\u2B22\u2B21\u2B21", "\u25CF\u25CB")}`,
+    practice_2: `Practice (P2) ${siteSpecific("\u2B22\u2B22\u2B21", "\u25CF\u25CF")}`,
     practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
     challenge_1: `Challenge (C1) \u25A0\u25A1${siteSpecific("\u25A1", "")}`,
     challenge_2: `Challenge (C2) \u25A0\u25A0${siteSpecific("\u25A1", "")}`,
