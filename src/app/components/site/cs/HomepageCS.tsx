@@ -100,7 +100,7 @@ export const HomepageCS = () => {
                     </CardDeck>
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
                         {/* FIXME ADA link this to a general news page? Also fix link CSS design */}
-                        <a href={"/"}><h4>See more news</h4></a>
+                        <Button href={"/"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
                 </Container>
             </section>}

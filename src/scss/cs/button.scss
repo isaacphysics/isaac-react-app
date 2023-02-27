@@ -72,6 +72,7 @@
     padding: 0;
     background: none !important;
     border: none !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
     color: $cs-dark-pink;
     overflow: hidden;  // To stop margin collapse from hiding the focus outline

@@ -25,12 +25,10 @@
     &:hover {
       background-color: $cs-black !important;
     }
-    &:focus {
-    }
     &:active {
       box-shadow: 0 2px 10px #9C9C9C;
     }
-    background-color: black;
+    background-color: black !important;
     width: 100px;
     left: -30px;
     //height: 40px;
