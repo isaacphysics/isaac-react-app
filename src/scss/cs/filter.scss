@@ -1,5 +1,28 @@
 @import "../common/filter";
 
+#filter-panel {
+  max-width: 892px !important;
+  position: relative;
+  border-radius: 0;
+  border: none;
+  .card-footer {
+    border-radius: 0 !important;
+    background: $cs-dark-pink;
+  }
+  &:before {
+    position: absolute;
+    z-index: -1;
+    content: " ";
+    width: calc(100% + 400px);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-size: 100% 100%;
+    background-image: url("/assets/cs/decor/dots-circle-bg.svg");
+    height: 100%;
+  }
+}
+
 $shapes: hex, square, octagon, diamond;
 
 svg {

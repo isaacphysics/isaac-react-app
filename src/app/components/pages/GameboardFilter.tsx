@@ -47,7 +47,19 @@ import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
-import {Col, Row, Input, Button, Alert, Container, Card, Label, UncontrolledTooltip} from "reactstrap";
+import {
+    Col,
+    Row,
+    Input,
+    Button,
+    Alert,
+    Container,
+    Card,
+    Label,
+    UncontrolledTooltip,
+    CardFooter,
+    CardBody
+} from "reactstrap";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -155,13 +167,16 @@ interface FilterProps {
     setStages : React.Dispatch<React.SetStateAction<Item<string>[]>>;
     difficulties : Item<string>[];
     setDifficulties : React.Dispatch<React.SetStateAction<Item<string>[]>>;
+    scrollToQuestions: () => void;
+    previousBoard?: () => void;
+    refresh: () => void;
 }
 
 interface PhysicsFilterProps extends FilterProps {
     tiers: Tier[];
     choices: Item<TAG_ID>[][];
 }
-const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setStages, difficulties, setDifficulties} : PhysicsFilterProps) => {
+const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setStages, difficulties, setDifficulties, refresh, scrollToQuestions, previousBoard} : PhysicsFilterProps) => {
 
     function setTierSelection(tierIndex: number) {
         return ((values: Item<TAG_ID>[]) => {
@@ -171,52 +186,104 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
         }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
     }
 
-    return <Row className="mb-sm-4">
-        <Col xs={12}>
-            <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
-        </Col>
-        <Col lg={4}>
-            <div>
-                <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                    I am interested in stage...
-                    <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                    <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                        {"Find questions that are suitable for this stage of school learning."} <br />
-                        {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
-                    </UncontrolledTooltip>
+    const deviceSize = useDeviceSize();
+    const [filterExpanded, setFilterExpanded] = useState(deviceSize != "xs");
+
+    return <Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
+        <Row>
+            <Col sm={8} lg={9}>
+                <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
+                    <Row>
+                        <Col lg={6} className="mt-3 mt-lg-0">
+                            <Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
+                                <span>Topics:</span>
+                                <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
+                            </Label>
+                        </Col>
+                    </Row>
+                </button>
+            </Col>
+            <Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
+                {filterExpanded ?
+                    <Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
+                        Scroll to questions...
+                    </Button>
+                    :
+                    <Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
+                        Edit question filters
+                    </Button>
+                }
+            </Col>
+        </Row>
+
+        <Row className="mb-sm-4">
+            <Col xs={12}>
+                <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
+            </Col>
+            <Col lg={4}>
+                <div>
+                    <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                        I am interested in stage...
+                        <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                        <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                            {"Find questions that are suitable for this stage of school learning."} <br />
+                            {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
+                        </UncontrolledTooltip>
+                    </Label>
+                    <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
+                </div>
+                {/*<div>*/}
+                {/*    <Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
+                {/*        I would like some questions from Isaac to...*/}
+                {/*    </Label>*/}
+                {/*    <Select id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
+                {/*</div>*/}
+                <div>
+                    <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
+                        I would like questions for...
+                        <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                        <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                            Practice questions let you directly apply one idea -<br />
+                            P1 covers revision of a previous stage or topics near the beginning of a course,<br />
+                            P3 covers later topics.<br />
+                            Challenge questions are solved by combining multiple concepts and creativity.<br />
+                            C1 can be attempted near the beginning of your course,<br />
+                            C3 require more creativity and could be attempted later in a course.
+                        </UncontrolledTooltip>
+                    </Label>
+                    <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
+                    {/*<Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
+                </div>
+            </Col>
+            <Col lg={8}>
+                <Label className={`mt-4 mt-lg-0`}>
+                    Topics:
                 </Label>
-                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
-            </div>
-            {/*<div>*/}
-            {/*    <Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
-            {/*        I would like some questions from Isaac to...*/}
-            {/*    </Label>*/}
-            {/*    <Select id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
-            {/*</div>*/}
-            <div>
-                <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                    I would like questions for...
-                    <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                    <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
-                        Practice questions let you directly apply one idea -<br />
-                        P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                        P3 covers later topics.<br />
-                        Challenge questions are solved by combining multiple concepts and creativity.<br />
-                        C1 can be attempted near the beginning of your course,<br />
-                        C3 require more creativity and could be attempted later in a course.
-                    </UncontrolledTooltip>
-                </Label>
-                <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                {/*<Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
-            </div>
-        </Col>
-        <Col lg={8}>
-            <Label className={`mt-4 mt-lg-0`}>
-                Topics:
-            </Label>
-            <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
-        </Col>
-    </Row>;
+                <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
+            </Col>
+        </Row>
+
+        {/* Buttons */}
+        <Row className={filterExpanded ? "mt-4" : ""}>
+            <Col>
+                {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
+                    <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                </Button>}
+            </Col>
+            <Col className="text-right">
+                <Button size="sm" color="primary" outline onClick={refresh}>
+                    <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                </Button>
+            </Col>
+        </Row>
+        <Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
+            Go to Questions...
+        </Button>
+        <Button
+            color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
+            className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
+        />
+    </Card>;
 }
 
 // Takes a list of "raw" concepts, and returns a map which takes a tag Item, and gives a GroupedOptionsType<Item<string>> containing itemised concepts which relate to that tag
@@ -236,7 +303,7 @@ interface CSFilterProps extends FilterProps {
     concepts : Item<string>[];
     setConcepts : React.Dispatch<React.SetStateAction<Item<string>[]>>;
 }
-const CSFilter = ({selections, setSelections, stages, setStages, difficulties, setDifficulties, examBoards, setExamBoards, concepts, setConcepts} : CSFilterProps) => {
+const CSFilter = ({selections, setSelections, stages, setStages, difficulties, setDifficulties, examBoards, setExamBoards, concepts, setConcepts, previousBoard, scrollToQuestions, refresh} : CSFilterProps) => {
     const dispatch = useAppDispatch();
 
     const topicChoices = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
@@ -278,86 +345,106 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         setSelections([[itemiseTag(tags.getById(TAG_ID.computerScience))], Array.from(strands).map(itemiseTag), topics])
     }
 
-    const metaDescriptionCS = "Search for the perfect free GCSE or A level Computer Science questions to study. For revision. For homework. For classroom learning.";
+    return <Card id="filter-panel" className="mx-auto mt-4 mb-5">
+        <CardBody className={"px-2 py-3 p-sm-4 pb-5"}>
+            <Row className={"mb-3"}>
+                <Col>
+                    <span>Specify your search criteria and we will generate a random selection of up to 10 questions for your chosen filter(s). Shuffle the questions to get a new random selection.</span>
+                </Col>
+            </Row>
 
-    return <>
-        {/* CS-specific metadata: */}
-        <MetaDescription description={metaDescriptionCS} />
-        <Row>
-            <Col md={6}>
-                <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                    I am interested in stage...
-                    <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                    <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                        {"Find questions that are suitable for this stage of school learning."}
-                    </UncontrolledTooltip>
-                </Label>
-                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions({includeNullOptions: isAda})} />
-            </Col>
-            <Col md={6}>
-                <Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
-                    and exam board...
-                </Label>
-                <Select
-                    inputId="exam-boards" isClearable placeholder="Any"
-                    value={examBoards}
-                    options={getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})}
-                    onChange={selectOnChange(setExamBoards, false)}
-                />
-            </Col>
-        </Row>
-        <Row className="mt-lg-3 mb-sm-3">
-            <Col md={6}>
-                <Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
-                    with difficulty levels...
-                    <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                    <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
-                        Practice questions require you to directly apply a single concept:<br/>
-                        P1 questions cover a single foundation concept.<br/>
-                        P2 questions cover a single progression concept.<br/>
-                        Challenge questions require you to apply multiple concepts:<br/>
-                        C1 questions cover more than one foundation concept.<br/>
-                        C2 questions cover more than one concept which must be selected and combined with skill.
-                    </UncontrolledTooltip>
-                </Label>
-                <Select
-                    id="difficulty-selector" isClearable isMulti
-                    options={DIFFICULTY_ICON_ITEM_OPTIONS}
-                    value={difficulties}
-                    onChange={selectOnChange(setDifficulties, false)}
-                />
-            </Col>
-            <Col md={6}>
-                <Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</Label>
-                <Select
-                    inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
-                    options={topicChoices} onChange={(v, {action}) => {
+            <Row>
+                <Col md={6}>
+                    <Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
+                        I am interested in stage...
+                        <span id={`stage-help-tooltip`} className="icon-help ml-1" />
+                        <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
+                            {"Find questions that are suitable for this stage of school learning."}
+                        </UncontrolledTooltip>
+                    </Label>
+                    <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions({includeNullOptions: isAda})} />
+                </Col>
+                <Col md={6}>
+                    <Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
+                        and exam board...
+                    </Label>
+                    <Select
+                        inputId="exam-boards" isClearable placeholder="Any"
+                        value={examBoards}
+                        options={getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})}
+                        onChange={selectOnChange(setExamBoards, false)}
+                    />
+                </Col>
+            </Row>
+            <Row className="mt-lg-3 mb-sm-3">
+                <Col md={6}>
+                    <Label className={`mt-2 mt-lg-0`} htmlFor="difficulty-selector">
+                        with difficulty levels...
+                        <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
+                        <UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
+                            Practice questions require you to directly apply a single concept:<br/>
+                            P1 questions cover a single foundation concept.<br/>
+                            P2 questions cover a single progression concept.<br/>
+                            Challenge questions require you to apply multiple concepts:<br/>
+                            C1 questions cover more than one foundation concept.<br/>
+                            C2 questions cover more than one concept which must be selected and combined with skill.
+                        </UncontrolledTooltip>
+                    </Label>
+                    <Select
+                        id="difficulty-selector" isClearable isMulti
+                        options={DIFFICULTY_ICON_ITEM_OPTIONS}
+                        value={difficulties}
+                        onChange={selectOnChange(setDifficulties, false)}
+                    />
+                </Col>
+                <Col md={6}>
+                    <Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</Label>
+                    <Select
+                        inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
+                        options={topicChoices} onChange={(v, {action}) => {
                         if ((Array.isArray(v) && v.length === 0) || v === null) {
                             setConcepts([]);
                         }
                         return selectOnChange(setTierSelection, false)(v);
                     }}
-                />
-            </Col>
-        </Row>
-        <Row>
-            <Col md={12}>
-                <Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</Label>
-                {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
-                    <Select
-                        inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
-                        placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
-                        value={concepts} options={conceptChoices} onChange={selectOnChange(setConcepts, false)}
-                    /> :
-                    <IsaacSpinner/>}
-            </Col>
-        </Row>
-    </>
+                    />
+                </Col>
+            </Row>
+            <Row>
+                <Col md={12}>
+                    <Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</Label>
+                    {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
+                        <Select
+                            inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
+                            placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
+                            value={concepts} options={conceptChoices} onChange={selectOnChange(setConcepts, false)}
+                        /> :
+                        <IsaacSpinner/>}
+                </Col>
+            </Row>
+
+            {/* Buttons */}
+            <Row className={"mt-4"}>
+                <Col>
+                    {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
+                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                    </Button>}
+                </Col>
+                <Col className="text-right">
+                    <Button size="sm" color="primary" outline onClick={refresh}>
+                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                    </Button>
+                </Col>
+            </Row>
+        </CardBody>
+
+        <CardFooter tag={Button} color="secondary" className="w-100" onClick={scrollToQuestions}>
+            Scroll straight to questions
+        </CardFooter>
+    </Card>;
 }
 
 export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
-    const deviceSize = useDeviceSize();
-
     const userContext = useUserContext();
     const {querySelections, queryStages, queryDifficulties, queryConcepts, queryExamBoards} = processQueryString(location.search);
 
@@ -377,7 +464,6 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         }
     }, [gameboard, gameboardIdAnchor]);
 
-    const [filterExpanded, setFilterExpanded] = useState(siteSpecific(deviceSize != "xs", true));
     const gameboardRef = useRef<HTMLDivElement>(null);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
@@ -424,16 +510,6 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     const [concepts, setConcepts] = useState<Item<string>[]>(queryConcepts);
 
     const [boardStack, setBoardStack] = useState<string[]>([]);
-
-    // Shared props that both PHY and CS filters use
-    const filterProps : FilterProps = {
-        difficulties: difficulties,
-        setDifficulties: setDifficulties,
-        selections: selections,
-        setSelections: setSelections,
-        stages: stages,
-        setStages: setStages,
-    }
 
     // Title changing states and logic
     const [customBoardTitle, setCustomBoardTitle] = useState<string>();
@@ -525,83 +601,35 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         }
     }
 
+    // Shared props that both PHY and CS filters use
+    const filterProps : FilterProps = {
+        difficulties,
+        setDifficulties,
+        selections,
+        setSelections,
+        stages,
+        setStages,
+        previousBoard: boardStack.length > 0 ? previousBoard : undefined,
+        scrollToQuestions,
+        refresh
+    }
+
+    const metaDescriptionCS = "Search for the perfect free GCSE or A level Computer Science questions to study. For revision. For homework. For classroom learning.";
+
     return <Container id="gameboard-generator" className="mb-5">
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
+        {isAda && <MetaDescription description={metaDescriptionCS} />}
         <CanonicalHrefElement />
 
-        <Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
-            {/* Filter Summary */}
-            {isPhy && <Row>
-                <Col sm={8} lg={9}>
-                    <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
-                        <Row>
-                            <Col lg={6} className="mt-3 mt-lg-0">
-                                <Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
-                                    <span>Topics:</span>
-                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
-                                </Label>
-                            </Col>
-                        </Row>
-                    </button>
-                </Col>
-                <Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
-                    {filterExpanded ?
-                        <Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
-                            Scroll to questions...
-                        </Button>
-                        :
-                        <Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
-                            Edit question filters
-                        </Button>
-                    }
-                </Col>
-            </Row>}
-
-            {isAda && (filterExpanded
-                ?
-                <Row className={"mb-3"}>
-                    <Col>
-                        <span>Specify your search criteria and we will generate a random selection of up to 10 questions for your chosen filter(s). Shuffle the questions to get a new random selection.</span>
-                    </Col>
-                </Row>
-                :
-                <Col xs={12} className={`text-center mt-3 mb-4 m-sm-0`}>
-                    <Button size="sm" color="primary" outline onClick={() => setFilterExpanded(true)}>
-                        Edit question filters ✎
-                    </Button>
-                </Col>)}
-
-            {/* Filter */}
-            {filterExpanded && siteSpecific(
-                <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
-                <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
-            )}
-
-            {/* Buttons */}
-            <Row className={filterExpanded ? "mt-4" : ""}>
-                <Col>
-                    {boardStack.length > 0 && <Button size="sm" color="primary" outline onClick={previousBoard}>
-                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
-                    </Button>}
-                </Col>
-                <Col className="text-right">
-                    <Button size="sm" color="primary" outline onClick={refresh}>
-                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
-                    </Button>
-                </Col>
-            </Row>
-            <Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
-                {siteSpecific("Go to Questions...", "Scroll to Questions...")}
-            </Button>
-            <Button
-                color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
-                className={filterExpanded ? "open" : ""} aria-label={filterExpanded ? "Collapse Filter" : "Expand Filter"}
-            />
-        </Card>
+        {/* The site-specific question filtering UI */}
+        {siteSpecific(
+            <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
+            <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
+        )}
 
         <div id={"gameboard-section"}>
             {isFound(gameboard) && <div className={classNames({"p-4": isAda, "mt-4 mb-3": isPhy})}>
-                <Row id={"gameboard-title-section"} innerRef={gameboardRef}>
+                <div id={"gameboard-title-section"} className={"row"} ref={gameboardRef}>
                     {siteSpecific(
                         // PHY
                         <Col xs={12} lg={"auto"} >
@@ -649,7 +677,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                             {siteSpecific(<>Save to My&nbsp;Gameboards</>, "Save to my quizzes")}
                         </Button>
                     </Col>
-                </Row>
+                </div>
                 {isAda && <hr/>}
             </div>}
 
