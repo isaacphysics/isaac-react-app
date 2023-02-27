@@ -61,10 +61,9 @@ export const TutorFeatures = () => {
             </Col>
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">
-            <IsaacCard doc={{
+            <IsaacCard doc={{ clickUrl: "/support/tutor/general",
                 image: {src: "/assets/phy/teacher_features_sprite.svg#teacher-forum"},
-                title: "Tutor FAQ (coming soon)",
-                disabled: true,
+                title: "Tutor FAQ",
                 verticalContent: true,
                 subtitle: "Answers to your questions and how-to guides."}}
                        imageClassName="teacher-features"

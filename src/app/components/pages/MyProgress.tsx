@@ -236,14 +236,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             iconClassName="gameboard-badge"/>
 
                         <TeacherAchievement
-                            verb="set"
-                            count={achievements && achievements.TEACHER_BOOK_PAGES_SET}
-                            item="book page assignment"
-                            createMoreText="Set assignments"
-                            createMoreLink="/set_assignments"
-                            iconClassName="book-page-badge"/>
-
-                        <TeacherAchievement
                             verb="visited"
                             count={achievements && achievements.TEACHER_CPD_EVENTS_ATTENDED}
                             item="CPD event"

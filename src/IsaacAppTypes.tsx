@@ -438,7 +438,7 @@ export interface UserBetaFeaturePreferences {
     SCHEDULE_ASSIGNMENTS?: boolean;
 }
 
-export interface UserEmailPreferences {
+export type UserEmailPreferences = {
     NEWS_AND_UPDATES?: boolean;
     ASSIGNMENTS?: boolean;
     EVENTS?: boolean;

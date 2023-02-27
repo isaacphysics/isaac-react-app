@@ -127,6 +127,7 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/solve_physics_problems" to="/books/solve_physics_problems" />,
     <Redirect key={key++} exact from="/answers" to="/support/student/questions#answers" />,
     <Redirect key={key++} exact from="/teachers" to="/support/teacher/general" />,
+    <Redirect key={key++} exact from="/tutors" to="/support/tutor/general" />,
     <Redirect key={key++} exact from="/pages/isaac_embedded_schools" to="/support/teacher/partner#embedded_schools" />,
 
     // Isaac Chemistry redirect
