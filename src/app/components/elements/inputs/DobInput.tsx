@@ -21,6 +21,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setUserToUpdate(Object.assign({}, userToUpdate, {dateOfBirth: event.target.valueAsDate}))
             }}
+            disableDefaults
             aria-describedby="age-validation-message"
             labelSuffix=" of birth"
         />

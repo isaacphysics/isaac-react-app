@@ -229,7 +229,6 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         setDueDate, setScheduledStartDate, setAssignmentNotes]);
 
     const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getMonth() + 1;
 
     const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false;
 
@@ -277,11 +276,11 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 </Card>}
             </Label>
             <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
             </Label>
             <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
                 {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
             </Label>
