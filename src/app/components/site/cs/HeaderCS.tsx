@@ -45,7 +45,7 @@ export const HeaderCS = () => {
 
                         <NavigationSection title="Learn">
                             <LinkItem to="/topics">Topics</LinkItem>
-                            <LinkItem to="/gameboards/new">Question Finder</LinkItem>
+                            <LinkItem to="/quizzes/new">Question Finder</LinkItem>
                             <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
                             <LinkItem to="/glossary">Glossary</LinkItem>
                             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>

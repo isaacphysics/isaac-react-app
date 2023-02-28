@@ -13,9 +13,13 @@ import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {Glossary} from "../../pages/Glossary";
+import {GameboardFilter} from "../../pages/GameboardFilter";
 
 let key = 0;
 export const RoutesCS = [
+    // Quizzes
+    <TrackedRoute exact path="/quizzes/new" component={GameboardFilter} />,
+
     // Student and teacher
     <TrackedRoute key={key++} exact path="/students" component={Students} />,
     <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,

@@ -29,12 +29,16 @@ import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
 import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
+import {GameboardFilter} from "../../pages/GameboardFilter";
 
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
 let key = 0;
 export const RoutesPhy = [
+    // Gameboards
+    <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />,
+
     // Assignments
     <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
