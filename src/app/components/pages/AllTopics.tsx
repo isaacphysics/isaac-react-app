@@ -18,6 +18,7 @@ import {PageFragment} from "../elements/PageFragment";
 import {Redirect} from "react-router";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
+import classNames from "classnames";
 
 export function AllTopicsWithoutAStage() {
     const history = useHistory();
@@ -50,18 +51,15 @@ export function AllTopicsWithoutAStage() {
 }
 
 const renderTopic = (topic: Tag) => {
-    const TextTag = topic.comingSoonDate ? "span" : "strong";
     if (!topic.hidden) {
         return <>
-            {topic.comingSoonDate ? <span><TextTag>{topic.title}</TextTag></span>
+            {topic.comingSoonDate ? <span className={"font-weight-semi-bold"}>{topic.title}</span>
                 :
                 <Link
                     to={topic.comingSoonDate ? "/coming_soon" : `/topics/${topic.id}`}
-                    className={topic.comingSoonDate ? "text-muted" : ""}
+                    className={classNames("font-weight-semi-bold", {"text-muted": topic.comingSoonDate})}
                 >
-                    <TextTag>
-                        {topic.title}
-                    </TextTag>
+                    {topic.title}
                 </Link>
             }
             {" "}
