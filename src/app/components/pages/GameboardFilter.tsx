@@ -359,7 +359,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         I am interested in stage...
                         <span id={`stage-help-tooltip`} className="icon-help ml-1" />
                         <UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                            {"Find questions that are suitable for this stage of school learning."}
+                            Find questions that are suitable for this stage of learning.
                         </UncontrolledTooltip>
                     </Label>
                     <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions({includeNullOptions: isAda})} />
@@ -395,6 +395,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                         options={DIFFICULTY_ICON_ITEM_OPTIONS}
                         value={difficulties}
                         onChange={selectOnChange(setDifficulties, false)}
+                        placeholder={"All difficulties"}
                     />
                 </Col>
                 <Col md={6}>
