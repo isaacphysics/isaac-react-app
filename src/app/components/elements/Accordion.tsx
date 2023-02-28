@@ -4,7 +4,7 @@ import {RouteComponentProps, withRouter} from "react-router-dom";
 import {
     ALPHABET,
     audienceStyle,
-    DOCUMENT_TYPE,
+    DOCUMENT_TYPE, isAQuestionLikeDoc,
     isCS,
     isPhy,
     NOT_FOUND,
@@ -27,12 +27,13 @@ interface AccordionsProps extends RouteComponentProps {
     children?: React.ReactNode;
     startOpen?: boolean;
     deEmphasised?: boolean;
+    disabled?: string | boolean;
     audienceString?: string;
 }
 
 let nextClientId = 0;
 
-export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, audienceString, location: {hash}}: AccordionsProps) => {
+export const Accordion = withRouter(({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, location: {hash}}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const userContext = useUserContext();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -41,7 +42,7 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
     // Toggle
     const isFirst = index === 0;
     const openFirst = isCS || Boolean(page && page !== NOT_FOUND && page.type === DOCUMENT_TYPE.QUESTION);
-    const [open, setOpen] = useState(startOpen === undefined ? (openFirst && isFirst) : startOpen);
+    const [open, setOpen] = useState(disabled ? false : (startOpen === undefined ? (openFirst && isFirst) : startOpen));
 
     // If start open changes we need to update whether or not the accordion section should be open
     useEffect(() => {if (startOpen !== undefined) {setOpen(startOpen);}}, [setOpen, startOpen]);
@@ -81,14 +82,14 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
         let currentPage = getPage()
         if (currentPage) {
             let eventDetails;
-            if (currentPage.type === "isaacQuestionPage") {
+            if (isAQuestionLikeDoc(currentPage)) {
                 eventDetails = {
                     type: "QUESTION_PART_OPEN",
                     questionPageId: currentPage.id,
                     questionPartIndex: index,
                     questionPartId: id
                 };
-            } else if (currentPage.type === "isaacConceptPage") {
+            } else if (currentPage.type === DOCUMENT_TYPE.CONCEPT) {
                 eventDetails = {
                     type: "CONCEPT_SECTION_OPEN",
                     conceptPageId: currentPage.id,
@@ -138,21 +139,32 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
 
     const isConceptPage = page && page != NOT_FOUND && page.type === DOCUMENT_TYPE.CONCEPT;
 
+    const isOpen = open && !disabled;
+
     return <div className="accordion">
         <div className="accordion-header">
             <RS.Button
                 id={anchorId || ""} block color="link"
-                className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised, "active": open})}
+                tabIndex={disabled ? -1 : 0}
+                onFocus={(e) => {
+                    if (disabled) {
+                        e.target.blur();
+                    }
+                }}
+                className={"d-flex align-items-stretch " + classNames({"de-emphasised": deEmphasised || disabled, "active": isOpen})}
                 onClick={(event: any) => {
+                    if (disabled) {
+                        return;
+                    }
                     pauseAllVideos();
-                    const nextState = !open;
+                    const nextState = !isOpen;
                     setOpen(nextState);
                     if (nextState) {
                         logAccordionOpen();
                         scrollVerticallyIntoView(event.target);
                     }
                 }}
-                aria-expanded={open ? "true" : "false"}
+                aria-expanded={isOpen ? "true" : "false"}
             >
                 {isConceptPage && audienceString && <span className={"stage-label badge-secondary d-flex align-items-center " +
                     "justify-content-center " + classNames({[audienceStyle(audienceString)]: isCS})}>
@@ -167,10 +179,17 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                                 {trustedTitle}
                             </Markup>
                         </div>}
-                        {isCS  && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
+                        {isCS && deEmphasised && <div className="ml-auto mr-3 d-flex align-items-center">
                             <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
                             <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                                 {`This content has ${notRelevantMessage(userContext)}.`}
+                            </RS.UncontrolledTooltip>
+                        </div>}
+                        {typeof disabled === "string" && disabled.length > 0 && <div className={"p-3"}>
+                            <span id={`disabled-tooltip-${componentId}`} className="icon-help" />
+                            <RS.UncontrolledTooltip placement="right" target={`disabled-tooltip-${componentId}`}
+                                                    modifiers={{preventOverflow: {boundariesElement: "viewport"}}}>
+                                {disabled}
                             </RS.UncontrolledTooltip>
                         </div>}
                     </RS.Row>
@@ -181,8 +200,8 @@ export const Accordion = withRouter(({id, trustedTitle, index, children, startOp
                 </span>}
             </RS.Button>
         </div>
-        <RS.Collapse isOpen={open} className="mt-1">
-            <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open}}>
+        <RS.Collapse isOpen={isOpen} className="mt-1">
+            <AccordionSectionContext.Provider value={{id, clientId: clientId.current, open: isOpen}}>
                 <RS.Card>
                     <RS.CardBody>
                         {children}

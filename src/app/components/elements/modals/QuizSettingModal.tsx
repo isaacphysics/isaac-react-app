@@ -56,8 +56,6 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: i
 
     const yearRange = range(currentYear, currentYear + 5);
     const now = new Date();
-    const currentMonth = now.getMonth() + 1;
-    const currentDay = now.getDate();
 
     function addValidated(what: ControlName) {
         setValidated(validated => {
@@ -95,8 +93,8 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: i
             {groupInvalid && <RS.FormFeedback className="d-block" valid={false}>You must select a group</RS.FormFeedback>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">Set an optional due date:<br/>
-            <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange} defaultYear={currentYear}
-                       defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+            <DateInput invalid={dueDateInvalid || undefined} value={dueDate ?? undefined} yearRange={yearRange}
+                       onChange={(e) => setDueDate(e.target.valueAsDate)}/>
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after today.</small>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">What level of feedback should students get:<br/>

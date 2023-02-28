@@ -12,7 +12,7 @@ import {
     isCS,
     isIntendedAudience,
     isPhy,
-    isTeacher,
+    isTutorOrAbove,
     siteSpecific,
     sortByNumberStringValue,
     sortByStringValue,
@@ -40,6 +40,7 @@ function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentD
             eventDetails.relatedConceptId = contentSummary.id;
             break;
         case DOCUMENT_TYPE.QUESTION:
+        case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
             eventDetails.type = "VIEW_RELATED_QUESTION";
             eventDetails.relatedQuestionId = contentSummary.id;
             break;
@@ -53,6 +54,7 @@ function getEventDetails(contentSummary: ContentSummaryDTO, parentPage: ContentD
             eventDetails.conceptId = parentPage.id;
             break;
         case DOCUMENT_TYPE.QUESTION:
+        case DOCUMENT_TYPE.FAST_TRACK_QUESTION:
             eventDetails.questionId = parentPage.id;
             break;
         case DOCUMENT_TYPE.GENERIC:
@@ -149,7 +151,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isCS && isTeacher(useAppSelector(selectors.user.orNull));
+    const showConceptGameboardButton = isCS && isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent
@@ -158,9 +160,9 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         .sort(sortByNumberStringValue("level")); // TODO should this reference to level still be here?
 
     const concepts = sortedContent
-        .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.CONCEPT);
+        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.CONCEPT);
     const questions = sortedContent
-        .filter(contentSummary => contentSummary.type == DOCUMENT_TYPE.QUESTION);
+        .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.QUESTION || contentSummary.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION);
 
     const makeListGroupItem: RenderItemFunction = (contentSummary: ContentSummaryDTO) => {
         const audienceViews = filterAudienceViewsByProperties(determineAudienceViews(contentSummary.audience), AUDIENCE_DISPLAY_FIELDS);

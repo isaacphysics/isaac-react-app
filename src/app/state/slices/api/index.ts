@@ -20,6 +20,7 @@ import {
     IsaacConceptPageDTO,
     IsaacPodDTO,
     IsaacWildcard,
+    MisuseStatisticDTO,
     QuizAssignmentDTO,
     TOTPSharedSecretDTO,
     UserSummaryWithGroupMembershipDTO,
@@ -138,7 +139,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "AllMyAssignments", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships"],
+    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "AllMyAssignments", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships", "MisuseStatistics"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     keepUnusedDataFor: 0,
@@ -451,7 +452,9 @@ const isaacApi = createApi({
             invalidatesTags: (_, error, {updatedGroup}) => !isDefined(error) ? [{type: "GroupAssignments", id: updatedGroup.id}] : [],
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: ({updatedGroup, message}, _, {dispatch}) => {
-                    dispatch(showSuccessToast("Group saved successfully", message));
+                    if (message) {
+                        dispatch(showSuccessToast("Group saved successfully", message));
+                    }
                     [true, false].forEach(archivedGroupsOnly => {
                         dispatch(isaacApi.util.updateQueryData(
                             "getGroups",
@@ -622,6 +625,19 @@ const isaacApi = createApi({
             }),
         }),
 
+        promoteGroupManager: build.mutation<void, {groupId: number, managerUserId: number}>({
+            query: ({groupId, managerUserId}) => ({
+                url: `/groups/${groupId}/manager/promote/${managerUserId}`,
+                method: "POST"
+            }),
+            invalidatesTags: ["AllSetTests", "AllSetAssignments", "GroupAssignments", "GroupTests", "Groups"],
+            onQueryStarted: onQueryLifecycleEvents({
+                successTitle: "Group manager promoted to owner",
+                successMessage: "You have been demoted to an additional manager of this group",
+                errorTitle: "Group manager promotion failed"
+            })
+        }),
+
         // --- Tokens ---
 
         getGroupToken: build.query<AppGroupTokenDTO, number>({
@@ -680,6 +696,37 @@ const isaacApi = createApi({
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to get 2FA secret"
+            })
+        }),
+
+        // === Admin endpoints ===
+
+        getMisuseStatistics: build.query<{[eventLabel: string]: MisuseStatisticDTO[]}, number>({
+            query: (n) => ({
+                url: `/admin/misuse_stats?limit=${n}`,
+                method: "GET",
+            }),
+            providesTags: ["MisuseStatistics"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to get misuse statistics for user"
+            })
+        }),
+
+        resetMisuseMonitor: build.mutation<void, {eventLabel: string, agentIdentifier: string}>({
+            query: ({eventLabel, agentIdentifier}) => ({
+                url: `/admin/reset_misuse_monitor`,
+                method: "POST",
+                body: {
+                    eventLabel,
+                    agentIdentifier
+                }
+            }),
+            invalidatesTags: ["MisuseStatistics"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to reset misuse monitor for user",
+                onQuerySuccess: ({eventLabel}, _, {dispatch}) => {
+                    dispatch(showSuccessToast("Reset successfully", `${eventLabel.replace("MisuseHandler", "")} misuse event count reset for user`));
+                },
             })
         }),
     })

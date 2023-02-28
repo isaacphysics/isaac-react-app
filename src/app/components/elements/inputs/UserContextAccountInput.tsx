@@ -9,10 +9,9 @@ import {
     isCS,
     isDefined,
     isPhy,
-    isTeacher,
+    isTutorOrAbove,
     siteSpecific,
-    STAGE,
-    TEACHER_REQUEST_ROUTE
+    STAGE, TEACHER_REQUEST_ROUTE
 } from "../../../services";
 import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
@@ -46,17 +45,19 @@ function UserContextRow({
             onChange={e => {
                 const stage = e.target.value as STAGE;
                 let examBoard;
-                if (isCS) {
-                    // Set exam board to something sensible
-                    const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
-                    examBoard = getFilteredExamBoardOptions(
-                        {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
-                    })[0]?.value || EXAM_BOARD.ALL;
-                    setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
-
-                    // Set display settings default values
-                    setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
+                if (!isCS) {
+                    setUserContext({...userContext, stage});
+                    return;
                 }
+                // Set exam board to something sensible (for CS)
+                const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
+                examBoard = getFilteredExamBoardOptions(
+                    {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
+                })[0]?.value || EXAM_BOARD.ALL;
+                setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
+
+                // Set display settings default values
+                setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: true}));
                 setUserContext({...userContext, stage, examBoard});
             }}
         >
@@ -101,20 +102,20 @@ interface UserContextAccountInputProps {
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
-    displaySettings: DisplaySettings;
+    displaySettings: Nullable<DisplaySettings>;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
 }
 export function UserContextAccountInput({
     user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
 }: UserContextAccountInputProps) {
-    const teacher = isTeacher({...user, loggedIn: true});
+    const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">
             {siteSpecific(
-                <span>{teacher ? "I am teaching..." : "I am interested in..."}</span>,
+                <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
                 <span>Show me content for:</span>
             )}
         </RS.Label>
@@ -132,7 +133,7 @@ export function UserContextAccountInput({
             <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
                 <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
-                    {teacher ?
+                    {tutorOrAbove ?
                         <>Add a stage and examination board for each qualification you are teaching.<br />On content pages, this will allow you to quickly switch between your personalised views of the content, depending on which class you are currently teaching.</> :
                         <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
                     }
@@ -141,7 +142,7 @@ export function UserContextAccountInput({
         )}
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
             {userContexts.map((userContext, index) => {
-                const showPlusOption = teacher &&
+                const showPlusOption = tutorOrAbove &&
                     index === userContexts.length - 1 &&
                     // at least one exam board for the potential stage
                     getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length > 0;
@@ -153,7 +154,7 @@ export function UserContextAccountInput({
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
                     />
 
-                    {teacher && userContexts.length > 1 && <button
+                    {tutorOrAbove && userContexts.length > 1 && <button
                         type="button" className="mx-2 close float-none align-middle" aria-label="clear stage row"
                         onClick={() => setUserContexts(userContexts.filter((uc, i) => i !== index))}
                     >
@@ -174,21 +175,21 @@ export function UserContextAccountInput({
                     {isCS && index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
                         <CustomInput
                             type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
-                            checked={isDefined(displaySettings.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings.HIDE_NON_AUDIENCE_CONTENT : true}
+                            checked={isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true}
                             onChange={e => setDisplaySettings(oldDs => ({...oldDs, HIDE_NON_AUDIENCE_CONTENT: !e.target.checked}))}
                         />{" "}
                         <span>Show other content that is not for my selected qualification(s). <span id={`show-other-content-${componentId}`} className="icon-help ml-1" /></span>
                         <RS.UncontrolledTooltip placement="bottom" target={`show-other-content-${componentId}`}>
-                            {teacher ?
+                            {tutorOrAbove ?
                                 "If you select this box, additional content that is not intended for your chosen stage and examination board will be shown (e.g. you will also see A level content in your GCSE view)." :
                                 "If you select this box, additional content that is not intended for your chosen stage and examination board will be shown (e.g. you will also see A level content if you are studying GCSE)."
                             }
                         </RS.UncontrolledTooltip>
                     </RS.Label>}
 
-                    {!teacher && <><br/>
+                    {!tutorOrAbove && <><br/>
                         <small>
-                            If you are a teacher, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
+                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
                         </small>
                     </>}
                 </RS.FormGroup>

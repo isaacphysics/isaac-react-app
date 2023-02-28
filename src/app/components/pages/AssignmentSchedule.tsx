@@ -57,7 +57,8 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
         if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? "this gameboard"} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
             unassignGameboard({boardId: assignment.gameboardId, groupId: assignment.groupId});
         }
-    }
+    };
+    const assignmentOwnedByMe = assignment.ownerUserId === user.id;
     const assignmentStartDate = getAssignmentStartDate(assignment);
     const gameboardTitle = assignment.gameboard?.title ?? "No gameboard title";
     const gameboardLink = assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined;
@@ -68,16 +69,17 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Copy
                 </Button>
-                <Button color="link" size="sm" onClick={deleteAssignment}>
+                {(assignmentOwnedByMe || assignment.additionalManagerPrivileges) && <Button color="link" size="sm" onClick={deleteAssignment}>
                     Delete
-                </Button>
+                </Button>}
             </div>
         </CardHeader>
         <CardBody>
             <div>Assigned to: <strong>{assignment.groupName}</strong></div>
             {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
             {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
-            {assignment.gameboard && <div>By: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
+            {assignment.gameboard && <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>}
+            {assignment.gameboard && <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
             {assignment.listingDate <= TODAY() && <div>
                 <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
                     View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
@@ -227,7 +229,6 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         setDueDate, setScheduledStartDate, setAssignmentNotes]);
 
     const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getMonth() + 1;
 
     const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false;
 
@@ -275,11 +276,11 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 </Card>}
             </Label>
             <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
             </Label>
             <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
                 {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
             </Label>
@@ -378,7 +379,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         if (!assignmentsSetByMe) return [];
         const sortedAssignments: ValidAssignmentWithListingDate[] = sortBy(
             assignmentsSetByMe
-                .map((a) => ({...a, listingDate: new Date(viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0).valueOf())} as ValidAssignmentWithListingDate))
+                .map((a) => ({...a, listingDate: new Date(viewBy === "startDate" ? getAssignmentStartDate(a) : (a.dueDate ?? 0).valueOf()), additionalManagerPrivileges: (a?.groupId && groupsById[a.groupId]?.additionalManagerPrivileges) ?? false} as ValidAssignmentWithListingDate))
                 // IMPORTANT - filter ensures that id, gameboard id, and group id exist so the cast to ValidAssignmentWithListingDate was/will be valid
                 .filter(a => a.id && a.gameboardId && a.groupId && groupFilter[a.groupId] && (a.listingDate.valueOf() >= earliestShowDate.valueOf()) && (viewBy === "startDate" || isDefined(a.dueDate)))
             , a => a.listingDate.valueOf()
@@ -444,11 +445,15 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                 root: null,
                 rootMargin: '0px',
                 threshold: 1.0,
-            }
+            };
             headerScrollerObserver.current = new IntersectionObserver(headerScrollerCallback, options);
             headerScrollerObserver.current.observe(headerScrollerSentinel.current);
             headerScrollerFlag.current = true;
-            return () => headerScrollerObserver?.current?.disconnect();
+            return () => {
+                headerScrollerObserver?.current?.disconnect();
+                headerScrollerObserver.current = undefined;
+                headerScrollerFlag.current = false;
+            };
         }
     }, [assignmentsSetByMe, gameboards]);
 

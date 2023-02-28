@@ -20,11 +20,12 @@ export const notificationCheckerMiddleware: Middleware = (middlewareApi: Middlew
     const state = middlewareApi.getState();
     if([ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS, routerPageChange.type].includes(action.type)) {
         // Get user object either from the action or state
-        const user = action.type === ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS
-            ? action.user
-            : (state && isLoggedIn(state.user)
-                ? state.user
-                : undefined);
+        let user = undefined;
+        if (action.type === ACTION_TYPE.CURRENT_USER_RESPONSE_SUCCESS) {
+            user = action.user;
+        } else if (isLoggedIn(state?.user)) {
+            user = state.user;
+        }
 
         if (isDefined(user)) {
             // Required account info modal - takes precedence over stage/exam board re-confirmation modal, and is only

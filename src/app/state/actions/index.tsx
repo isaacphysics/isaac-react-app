@@ -42,7 +42,7 @@ import {
     IsaacQuestionPageDTO,
     QuestionDTO,
     RegisteredUserDTO,
-    Role,
+    UserRole,
     TestCaseDTO,
     UserContext,
     UserSummaryDTO,
@@ -56,6 +56,7 @@ import {
 } from "../../components/elements/modals/TeacherConnectionModalCreators";
 import {AxiosError} from "axios";
 import ReactGA from "react-ga";
+import ReactGA4 from "react-ga4";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
 import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
@@ -95,6 +96,9 @@ export function showAxiosErrorToastIfNeeded(error: string, e: any) {
             }
         } else {
             ReactGA.exception({
+                description: `load_fail: ${error}`
+            });
+            ReactGA4.gtag("event", "exception", {
                 description: `load_fail: ${error}`
             });
             return showToast({
@@ -249,6 +253,7 @@ export const updateCurrentUser = (
 
         const isFirstLogin = isFirstLoginInPersistence() || false;
         if (isFirstLogin) {
+            persistence.session.remove(KEY.FIRST_LOGIN);
             if (redirect) {
                 history.push(persistence.pop(KEY.AFTER_AUTH_PATH) || '/account', {firstLogin: isFirstLogin});
             }
@@ -415,6 +420,11 @@ export const handleProviderCallback = (provider: AuthenticationProvider, paramet
                 action: 'registration',
                 label: `Create Account (${provider})`,
             });
+            ReactGA4.event({
+                category: 'user',
+                action: 'registration',
+                label: `Create Account (${provider})`,
+            });
         }
         const nextPage = persistence.load(KEY.AFTER_AUTH_PATH);
         persistence.remove(KEY.AFTER_AUTH_PATH);
@@ -531,6 +541,8 @@ export const authenticateWithTokenAfterPrompt = (userId: number, userSubmittedAu
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_REQUEST});
         const result = await api.authorisations.getTokenOwner(authenticationToken);
         dispatch({type: ACTION_TYPE.AUTHORISATIONS_TOKEN_OWNER_RESPONSE_SUCCESS});
+        // TUTOR TODO use whether the token owner is a tutor or not to display to the student a warning about sharing
+        //        their data
         const usersToGrantAccess = result.data;
 
         // TODO can use state (second thunk param) to highlight teachers who have already been granted access
@@ -1043,7 +1055,7 @@ export const adminUserDelete = (userid: number | undefined) => async (dispatch: 
     }
 };
 
-export const adminModifyUserRoles = (role: Role, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
+export const adminModifyUserRoles = (role: UserRole, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
     try {
         await api.admin.modifyUserRoles.post(role, userIds);

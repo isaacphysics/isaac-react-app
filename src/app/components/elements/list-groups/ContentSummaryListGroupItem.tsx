@@ -66,6 +66,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             iconLabel = "Shortcut icon";
             break;
         case (DOCUMENT_TYPE.QUESTION):
+        case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
             title = generateQuestionTitle(item);
             itemClasses += item.correct ? "bg-success" : "text-info";
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;

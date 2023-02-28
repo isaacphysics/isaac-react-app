@@ -36,7 +36,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isDefined, isStaff, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isCS, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
@@ -76,8 +76,9 @@ const passwordResetInformation = function(member: AppGroupMembership, passwordRe
 interface MemberInfoProps {
     group: AppGroup;
     member: AppGroupMembership;
+    user: RegisteredUserDTO;
 }
-const MemberInfo = ({group, member}: MemberInfoProps) => {
+const MemberInfo = ({group, member, user}: MemberInfoProps) => {
     const dispatch = useAppDispatch();
     const [passwordRequestSent, setPasswordRequestSent] = useState(false);
     const [deleteMember] = isaacApi.endpoints.deleteGroupMember.useMutation();
@@ -93,7 +94,9 @@ const MemberInfo = ({group, member}: MemberInfoProps) => {
         }
     }
 
-    return <div className="p-2 member-info-item d-flex justify-content-between">
+    const userHasAdditionalGroupPrivileges = (isDefined(user.id) && isDefined(group.ownerId) && user.id === group.ownerId ? true : group.additionalManagerPrivileges) ?? false;
+
+    return <div className="p-2 member-info-item d-flex justify-content-between" data-testid={"member-info"}>
         <div className="pt-1 d-flex flex-fill">
             <div>
                 <span className="icon-group-table-person mt-2" />
@@ -123,15 +126,19 @@ const MemberInfo = ({group, member}: MemberInfoProps) => {
             </div>
         </div>
         <div className="d-flex justify-content-between">
-            <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)} className="text-right d-none d-sm-block">
-                <Button color="link" size="sm" onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
-                    {!passwordRequestSent? 'Reset Password': 'Reset email sent'}
-                </Button>
-            </Tooltip>
-            {"  "}
-            <button className="ml-2 close" onClick={confirmDeleteMember} aria-label="Remove member">
+            {isTeacherOrAbove(user) && <>
+                <Tooltip tipText={passwordResetInformation(member, passwordRequestSent)}
+                          className="text-right d-none d-sm-block">
+                    <Button color="link" size="sm" onClick={resetPassword}
+                            disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
+                        {!passwordRequestSent ? 'Reset Password' : 'Reset email sent'}
+                    </Button>
+                </Tooltip>
+                {"  "}
+            </>}
+            {userHasAdditionalGroupPrivileges && <button className="ml-2 close" onClick={confirmDeleteMember} aria-label="Remove member">
                 ×
-            </button>
+            </button>}
         </div>
     </div>;
 };
@@ -148,7 +155,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     const [isExpanded, setExpanded] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group ? group.groupName : "");
-    const isUserGroupOwner = user.id === group?.ownerId;
+    const isUserGroupOwner = group ? user.id === group.ownerId : false;
 
     useEffect(() => {
         setExpanded(false);
@@ -202,11 +209,14 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
             <Row className="mt-2">
                 <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
                 {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
-                    <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                        Add / remove<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
-                    </Button>
-                    <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
-                    <span className="d-inline-block d-md-none">&nbsp;</span>
+                    {/* Only teachers and above can add group managers */}
+                    {isTeacherOrAbove(user) && <>
+                        <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                            {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                        </Button>
+                        <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
+                        <span className="d-inline-block d-md-none">&nbsp;</span>
+                    </>}
                     <Button
                         size="sm" className={isCS ? "text-white" : "" + " d-none d-sm-inline"}
                         color={siteSpecific("primary", "secondary")}
@@ -230,9 +240,9 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 <InputGroup className="w-100">
                     <Input
                         innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
-                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !isUserGroupOwner}
+                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
                     />
-                    {(isUserGroupOwner || !isDefined(group)) && <InputGroupAddon addonType="append">
+                    {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                         <Button
                             color={siteSpecific("secondary", "primary")}
                             className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
@@ -249,13 +259,13 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 </Col>
             </Row>
             {group && <React.Fragment>
-                <Row>
+                {(isUserGroupOwner || group.additionalManagerPrivileges) && <Row>
                     <Col>
-                        {isUserGroupOwner && <Button block color="tertiary" onClick={toggleArchived}>
+                        <Button block color="tertiary" onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
-                        </Button>}
+                        </Button>
                     </Col>
-                </Row>
+                </Row>}
                 <Row className="mt-4">
                     <Col>
                         <ShowLoading until={group.members}>
@@ -276,6 +286,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                                             key={member.groupMembershipInformation.userId}
                                             member={member}
                                             group={group}
+                                            user={user}
                                         />
                                     ))}
                                 </div>
@@ -318,13 +329,13 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const [showArchived, setShowArchived] = useState(false);
     const groupQuery = isaacApi.endpoints.getGroups.useQuery(showArchived);
-    const { data: groups } = groupQuery;
+    const { currentData: groups, isLoading, isFetching } = groupQuery;
 
     const [createGroup] = isaacApi.endpoints.createGroup.useMutation();
     const [deleteGroup] = isaacApi.endpoints.deleteGroup.useMutation();
 
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
-    const selectedGroup = groups?.find(g => g.id === selectedGroupId);
+    const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
 
     // Clear the selected group when switching between tabs
     const switchTab = (archived: boolean) => {

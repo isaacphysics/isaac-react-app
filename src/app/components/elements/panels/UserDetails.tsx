@@ -2,9 +2,9 @@ import React, {ChangeEvent} from "react";
 import {
     allRequiredInformationIsPresent,
     isCS,
+    isTutor,
     PROGRAMMING_LANGUAGE,
-    programmingLanguagesMap,
-    TEACHER_REQUEST_ROUTE,
+    programmingLanguagesMap, TEACHER_REQUEST_ROUTE,
     UserFacingRole,
     validateEmail,
     validateName
@@ -24,11 +24,11 @@ interface UserDetailsProps {
     setUserToUpdate: (user: any) => void;
     userContexts: UserContext[];
     setUserContexts: (uc: UserContext[]) => void;
-    programmingLanguage: ProgrammingLanguage;
+    programmingLanguage: Nullable<ProgrammingLanguage>;
     setProgrammingLanguage: (pl: ProgrammingLanguage) => void;
-    booleanNotation: BooleanNotation;
+    booleanNotation: Nullable<BooleanNotation>;
     setBooleanNotation: (bn: BooleanNotation) => void;
-    displaySettings: DisplaySettings;
+    displaySettings: Nullable<DisplaySettings>;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
     submissionAttempted: boolean;
     editingOtherUser: boolean;
@@ -59,7 +59,7 @@ export const UserDetails = (props: UserDetailsProps) => {
         <Row className="mb-3">
             <Col>
                 Account type: <b>{userToUpdate?.role && UserFacingRole[userToUpdate.role]}</b> {userToUpdate?.role == "STUDENT" && <span>
-                    <small>(Are you a teacher? {" "}
+                    <small>(Are you a teacher or tutor? {" "}
                         <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
                             Upgrade your account
                         </Link>{".)"}</small>
@@ -127,7 +127,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isCS}/>
+                                 required={isCS && !isTutor(userToUpdate)}/>
                 </FormGroup>
             </Col>
             <Col md={6}>
@@ -146,12 +146,13 @@ export const UserDetails = (props: UserDetailsProps) => {
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
-                        value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage[key as keyof ProgrammingLanguage] ? key : val, "")}
+                        value={Object.values(PROGRAMMING_LANGUAGE).reduce((val: string | undefined, key) => programmingLanguage?.[key as keyof ProgrammingLanguage] ? key : val, PROGRAMMING_LANGUAGE.NONE)}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                            setProgrammingLanguage({[event.target.value]: true})
+                            let newProgrammingLanguage = Object.entries(programmingLanguage ?? {}).reduce((acc, [k, v]) => ({...acc, [k]: false}), {});
+                            setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
                         }}
                     >
-                        <option value=""></option>
+                        <option/>
                         <option value={PROGRAMMING_LANGUAGE.PSEUDOCODE}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PSEUDOCODE]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
                         <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>

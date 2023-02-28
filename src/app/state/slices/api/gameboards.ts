@@ -3,7 +3,7 @@ import {
     history,
     isAdminOrEventManager,
     isDefined,
-    isTeacher,
+    isTutorOrAbove,
     Item,
     KEY,
     nthHourOf,
@@ -225,7 +225,7 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                 }
             }
             if (redirectOnSuccess) {
-                if (isTeacher(user)) {
+                if (isTutorOrAbove(user)) {
                     const assignBoardPath = persistence.load(KEY.ASSIGN_BOARD_PATH) ?? "/set_assignments";
                     history.push(`${assignBoardPath}#${boardId}`);
                     setAssignBoardPath("/set_assignments");

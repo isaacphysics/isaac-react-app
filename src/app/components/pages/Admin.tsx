@@ -16,6 +16,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import {MisuseStats} from "../elements/MisuseStats";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -129,8 +130,13 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                         }
                     </React.Fragment>}
 
-                    <h3 className={"mt-2"}>Demonstration Mode</h3>
+                    <h3 className={"mt-3"}>Demonstration Mode</h3>
                     <AnonymiseUsersCheckbox/>
+
+                    {isAdmin(user) && <>
+                        <h3 className={"mt-3"}>Misuse statistics</h3>
+                        <MisuseStats/>
+                    </>}
                 </RS.CardBody>
             </RS.Card>
 

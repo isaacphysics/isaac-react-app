@@ -1,4 +1,4 @@
-import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {selectors, useAppSelector} from "../../state";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
@@ -51,7 +51,8 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<LogicFormulaDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
+    const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
+    const initialEditorSymbols = useRef(editorSeed ?? []);
     const {preferredBooleanNotation} = useUserContext();
     const [textInput, setTextInput] = useState('');
     const user = useAppSelector(selectors.user.orNull);
@@ -216,6 +217,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 }}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
+                editorSeed={editorSeed}
                 editorMode='logic'
                 logicSyntax={preferredBooleanNotation === "ENG" ? 'binary' : 'logic'}
                 questionDoc={doc}

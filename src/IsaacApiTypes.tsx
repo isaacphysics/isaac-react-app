@@ -173,7 +173,7 @@ export interface IsaacQuickQuestionDTO extends QuestionDTO {
 export interface IsaacQuizDTO extends SeguePageDTO, HasTitleOrId {
     rubric?: ContentDTO;
     visibleToStudents?: boolean;
-    hiddenFromRoles?: Role[];
+    hiddenFromRoles?: UserRole[];
     defaultFeedbackMode?: QuizFeedbackMode;
     total?: number;
     sectionTotals?: { [index: string]: number };
@@ -316,6 +316,7 @@ export interface UserGroupDTO {
     lastUpdated?: Date;
     token?: string;
     archived?: boolean;
+    additionalManagerPrivileges?: boolean;
     ownerSummary?: UserSummaryWithEmailAddressDTO;
     additionalManagers?: UserSummaryWithEmailAddressDTO[];
     _id?: number;
@@ -377,7 +378,7 @@ export interface ContentSummaryDTO {
 
 export interface QuizSummaryDTO extends ContentSummaryDTO {
     visibleToStudents?: boolean;
-    hiddenFromRoles?: Role[];
+    hiddenFromRoles?: UserRole[];
 }
 
 export interface EmailTemplateDTO extends ContentDTO {
@@ -535,7 +536,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     gender?: Gender;
     registrationDate?: Date;
     schoolId?: string;
-    role?: Role;
+    role?: UserRole;
     schoolOther?: string;
     registeredContexts?: UserContext[];
     registeredContextsLastConfirmed?: Date;
@@ -562,7 +563,7 @@ export interface UserIdMergeDTO {
 export interface UserSummaryDTO extends AbstractSegueUserDTO {
     givenName?: string;
     familyName?: string;
-    role?: Role;
+    role?: UserRole;
     authorisedFullAccess?: boolean;
     emailVerificationStatus?: EmailVerificationStatus;
     registeredContexts?: UserContext[];
@@ -703,6 +704,15 @@ export interface TOTPSharedSecretDTO {
     created: Date;
 }
 
+export interface MisuseStatisticDTO {
+    agentIdentifier: string;
+    eventType: string;
+    isMisused: boolean;
+    isOverSoftThreshold: boolean;
+    lastEventTimestamp?: number;
+    currentCounter: number;
+}
+
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
 export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
@@ -711,8 +721,8 @@ export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 
 export type BookingStatus = "CONFIRMED" | "CANCELLED" | "WAITING_LIST" | "ATTENDED" | "ABSENT" | "RESERVED";
 
-export const ROLES = ["STUDENT", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
-export type Role = (typeof ROLES)[number];
+export const USER_ROLES = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR", "EVENT_MANAGER", "ADMIN"] as const;
+export type UserRole = (typeof USER_ROLES)[number];
 
 export type EmailVerificationStatus = "VERIFIED" | "NOT_VERIFIED" | "DELIVERY_FAILED";
 

@@ -1,15 +1,15 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {ContentDTO, IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
+import {ContentDTO} from "../../../IsaacApiTypes";
 import {RenderNothing} from "../elements/RenderNothing";
 import {goToSupersededByQuestion, selectors, useAppDispatch, useAppSelector} from "../../state";
-import {isStudent, isTeacher} from "../../services";
+import {isAQuestionLikeDoc, isStudent, isTutorOrAbove} from "../../services";
 
 export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
 
-    const supersededBy = doc.type === "isaacQuestionPage" ? (doc as IsaacQuestionPageDTO).supersededBy : undefined;
+    const supersededBy = isAQuestionLikeDoc(doc) ? doc.supersededBy : undefined;
 
     // If doc.deprecated or supersededBy is falsey, render nothing
     if (!doc.deprecated && !supersededBy) {
@@ -21,9 +21,11 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
         return RenderNothing;
     }
 
-    const contentType = doc.type === "isaacQuestionPage" ? "question" : "page";
+    const contentType = isAQuestionLikeDoc(doc) ? "question" : "page";
 
-    const teacherMessage = isTeacher(user) && <React.Fragment>
+    // Tutors and teachers should see superseded/deprecated messages because they have to setting assignments etc. and
+    // want up to date content.
+    const teacherMessage = isTutorOrAbove(user) && <React.Fragment>
         <span id="superseded-help" className="icon-help" />
         <RS.UncontrolledTooltip placement="bottom" target="superseded-help">
             <div className="text-left">
@@ -42,7 +44,7 @@ export function SupersededDeprecatedWarningBanner({doc}: {doc: ContentDTO}) {
 
     // First check if question is deprecated, if so amalgamate deprecated and superseded messages
     return <RS.Alert color="warning">
-        {isTeacher(user) && <strong>
+        {isTutorOrAbove(user) && <strong>
             Teacher note: {" "}
         </strong>}
         {doc.deprecated ? <>

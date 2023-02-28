@@ -16,7 +16,7 @@ import {userBookingModal} from "../modals/UserBookingModal";
 export const AddUsersToBooking = () => {
     const dispatch = useAppDispatch();
     const userResults = useAppSelector(selectors.admin.userSearch) || [];
-    const selectedEvent = useAppSelector((state: AppState) => state && state.currentEvent || null);
+    const selectedEvent = useAppSelector((state: AppState) => (state && state.currentEvent !== NOT_FOUND) ? state.currentEvent : null);
     const userBookings = useAppSelector((state: AppState) =>
         state && state.eventBookings && state.eventBookings.map(b => b.userBooked && b.userBooked.id) as number[] || []
     );
@@ -34,7 +34,7 @@ export const AddUsersToBooking = () => {
         return (value !== defaultValue) ? value : null;
     }
 
-    return <Accordion trustedTitle="Add users to booking">
+    return <Accordion trustedTitle="Add users to booking" disabled={selectedEvent?.isCancelled && "You cannot add users to a cancelled event"}>
         <RS.Form onSubmit={userSearch}>
             <RS.Row>
                 <RS.Col md={6}>
@@ -63,6 +63,7 @@ export const AddUsersToBooking = () => {
                             onChange={e => setQueryParams(Object.assign({}, queryParams, {role: nullIfDefault(e.target.value, "NO_ROLE")}))}
                         >
                             <option value="NO_ROLE">Any Role</option>
+                            <option value="TUTOR">Tutor</option>
                             <option value="TEACHER">Teacher</option>
                             <option value="CONTENT_EDITOR">Content editor</option>
                             <option value="ADMIN">Admin</option>
@@ -93,7 +94,7 @@ export const AddUsersToBooking = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {selectedEvent && selectedEvent !== NOT_FOUND && userResults.map(result => <tr key={result.id}>
+                    {selectedEvent && userResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
                             {!userBookings.includes(result.id as number) &&
                             <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>

@@ -49,7 +49,8 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<FormulaDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
-    const initialEditorSymbols = useRef(jsonHelper.parseOrDefault(doc.formulaSeed, []));
+    const editorSeed = useMemo(() => jsonHelper.parseOrDefault(doc.formulaSeed, undefined), []);
+    const initialEditorSymbols = useRef(editorSeed ?? []);
     const [textInput, setTextInput] = useState('');
 
     function currentAttemptPythonExpression(): string {
@@ -208,6 +209,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                 onEditorStateChange={updateState}
                 availableSymbols={doc.availableSymbols}
                 initialEditorSymbols={initialEditorSymbols.current}
+                editorSeed={editorSeed}
                 editorMode="maths"
                 questionDoc={doc}
             />}

@@ -3,8 +3,17 @@ import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {BookingStatus, Difficulty, ExamBoard, Stage} from "../../IsaacApiTypes";
-import {isCS, siteSpecific} from "./";
+import {
+    BookingStatus,
+    ContentDTO,
+    Difficulty,
+    ExamBoard,
+    IsaacFastTrackQuestionPageDTO,
+    IsaacQuestionPageDTO,
+    Stage,
+    UserRole
+} from "../../IsaacApiTypes";
+import {siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
@@ -42,6 +51,10 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
     "UA-122616705-1",
     "UA-137475074-1"
 );
+export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
+    "G-VE7RLWEL60",
+    "G-H95WP5C8DR"
+);
 
 export const SOCIAL_LINKS = siteSpecific(
     {
@@ -57,8 +70,8 @@ export const SOCIAL_LINKS = siteSpecific(
     }
 );
 
-export const CODE_EDITOR_BASE_URL = document.location.hostname === "localhost" ? "http://localhost:3000" : "https://editor.isaaccode.org";
-
+// Change to "http://localhost:3000" if you want to run a local version of the code editor
+export const CODE_EDITOR_BASE_URL = "https://editor.isaaccode.org";
 
 export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
@@ -883,6 +896,10 @@ export enum DOCUMENT_TYPE {
     GENERIC = "page",
     QUIZ = "isaacQuiz",
 }
+export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO | IsaacFastTrackQuestionPageDTO {
+    return doc.type === DOCUMENT_TYPE.QUESTION || doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+}
+
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
@@ -932,23 +949,15 @@ export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
     {title: "My markbook", to: "/my_markbook"}
 );
 
-export enum UserRole {
-    ADMIN = "ADMIN",
-    EVENT_MANAGER = "EVENT_MANAGER",
-    CONTENT_EDITOR = "CONTENT_EDITOR",
-    EVENT_LEADER = "EVENT_LEADER",
-    TEACHER = "TEACHER",
-    STUDENT = "STUDENT"
-}
-
-export enum UserFacingRole {
-    ADMIN = "Admin",
-    EVENT_MANAGER = "Event Manager",
-    CONTENT_EDITOR = "Content Editor",
-    EVENT_LEADER = "Event Leader",
-    TEACHER = "Teacher",
-    STUDENT = "Student"
-}
+export const UserFacingRole: {[role in UserRole]: string} = {
+    ADMIN: "Admin",
+    EVENT_MANAGER: "Event Manager",
+    CONTENT_EDITOR: "Content Editor",
+    EVENT_LEADER: "Event Leader",
+    TEACHER: "Teacher",
+    TUTOR: "Tutor",
+    STUDENT: "Student"
+};
 
 export enum SortOrder {
     ASC = "ASC",

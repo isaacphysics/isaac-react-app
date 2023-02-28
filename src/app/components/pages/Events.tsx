@@ -20,7 +20,7 @@ import {
     EventStatusFilter,
     EventTypeFilter,
     isCS,
-    isTeacher,
+    isTeacherOrAbove,
     stageExistsForSite
 } from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
@@ -82,9 +82,10 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
                             query.event_status = selectedFilter == EventStatusFilter["All events"] ? "all" : undefined;
                             history.push({pathname: location.pathname, search: queryString.stringify(query as any)});
                         }}>
+                            {/* Tutors are considered students w.r.t. events currently, so cannot see teacher-only events */}
                             {Object.entries(EventStatusFilter)
                                 .filter(([statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
-                                .filter(([statusLabel, statusValue]) => (user && user.loggedIn && isTeacher(user)) || statusValue !== EventStatusFilter["My event reservations"])
+                                .filter(([statusLabel, statusValue]) => (user && user.loggedIn && isTeacherOrAbove(user)) || statusValue !== EventStatusFilter["My event reservations"])
                                 .map(([statusLabel, statusValue]) =>
                                     <option key={statusValue} value={statusValue}>{statusLabel}</option>
                                 )

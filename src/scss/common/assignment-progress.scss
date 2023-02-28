@@ -273,12 +273,15 @@ $failed-bg-size: 25%;
 }
 
 .assignment-progress-gameboard .gameboard-header > *:first-child:before {
-  background: $primary;
+  background: $gray-118 !important;
   counter-increment: board-count;
   content: counter(board-count) ". ";
   display: inline-block;
   padding: 0.5rem 1rem;
   font-weight: bold;
+}
+.assignment-progress-gameboard .gameboard-header:not(.text-muted) > *:first-child:before {
+  background: $primary !important;
 }
 .assignment-progress-gameboard .gameboard-title span {
   padding-left: 0.75rem;

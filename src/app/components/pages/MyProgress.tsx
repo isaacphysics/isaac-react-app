@@ -14,7 +14,7 @@ import {
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
-    isTeacher,
+    isTeacherOrAbove,
     safePercentage,
     siteSpecific
 } from "../../services";
@@ -81,7 +81,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
         if (viewingOwnData && user.loggedIn) {
             dispatch(getMyProgress());
             dispatch(getMyAnsweredQuestionsByDate(user.id as number, 0, Date.now(), false));
-        } else if (isTeacher(user)) {
+        } else if (isTeacherOrAbove(user)) {
             dispatch(getUserProgress(userIdOfInterest));
             dispatch(getUserAnsweredQuestionsByDate(userIdOfInterest, 0, Date.now(), false));
         }
@@ -89,12 +89,14 @@ const MyProgress = withRouter((props: MyProgressProps) => {
 
     const tabRefs: FlushableRef[] = [useRef(), useRef()];
 
-    if (!viewingOwnData && !isTeacher(user)) {
+    // Only teachers and above can see other users progress. The API checks if the other user has shared data with the
+    // current user or not.
+    if (!viewingOwnData && !isTeacherOrAbove(user)) {
         return <Unauthorised />
     }
 
-    const progress = (!viewingOwnData && isTeacher(user)) ? userProgress : myProgress;
-    const answeredQuestionsByDate = (!viewingOwnData && isTeacher(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
+    const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;
+    const answeredQuestionsByDate = (!viewingOwnData && isTeacherOrAbove(user)) ? userAnsweredQuestionsByDate : myAnsweredQuestionsByDate;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
     const pageTitle = viewingOwnData ? "My progress" : `Progress for ${userName || "user"}`;
@@ -208,7 +210,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             </Col>}
                         </Row>
                     </div>,
-                    ...(isPhy && viewingOwnData && isTeacher(user) && {"Teacher Activity": <div>
+                    ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
                         <TeacherAchievement
                             verb="created"
                             count={achievements && achievements.TEACHER_GROUPS_CREATED}
@@ -232,14 +234,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             createMoreText="Board builder"
                             createMoreLink="/gameboard_builder"
                             iconClassName="gameboard-badge"/>
-
-                        <TeacherAchievement
-                            verb="set"
-                            count={achievements && achievements.TEACHER_BOOK_PAGES_SET}
-                            item="book page assignment"
-                            createMoreText="Set assignments"
-                            createMoreLink="/set_assignments"
-                            iconClassName="book-page-badge"/>
 
                         <TeacherAchievement
                             verb="visited"

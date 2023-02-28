@@ -438,7 +438,7 @@ export interface UserBetaFeaturePreferences {
     SCHEDULE_ASSIGNMENTS?: boolean;
 }
 
-export interface UserEmailPreferences {
+export type UserEmailPreferences = {
     NEWS_AND_UPDATES?: boolean;
     ASSIGNMENTS?: boolean;
     EVENTS?: boolean;
@@ -598,6 +598,7 @@ export interface AdminStatsResponse {
 export interface ValidAssignmentWithListingDate extends AssignmentDTO {
     gameboardId: string;
     groupId: number;
+    additionalManagerPrivileges: boolean;
     id: number;
     listingDate: Date;
 }
@@ -618,7 +619,7 @@ export const ClozeDropRegionContext = React.createContext<{
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
-export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}});
+export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
@@ -886,6 +887,7 @@ export interface PageSettings {
     setColourBlind: (newValue: boolean) => void;
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
+    isTeacher: boolean;
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;

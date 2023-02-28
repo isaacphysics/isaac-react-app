@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "2.7.9-SNAPSHOT",
+  "version": "2.8.7-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -30,6 +30,7 @@
     "katex": "^0.16.2",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
+    "object-hash": "^3.0.0",
     "p5": "^1.4.1",
     "qrcode": "^1.5.0",
     "query-string": "^7.0.1",
@@ -42,6 +43,7 @@
     "react-dom": "^17.0.2",
     "react-error-boundary": "^3.1.4",
     "react-ga": "^3.3.0",
+    "react-ga4": "^2.0.0",
     "react-helmet": "^6.1.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
@@ -128,6 +130,7 @@
     "@types/katex": "^0.11.1",
     "@types/leaflet": "^1.7.9",
     "@types/lodash": "^4.14.177",
+    "@types/object-hash": "^3.0.2",
     "@types/qrcode": "^1.4.1",
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.11",

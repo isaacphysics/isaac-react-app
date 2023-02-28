@@ -92,3 +92,5 @@ export const getDistinctAssignmentSetters = (assignments: AssignmentDTO[] | unde
 }
 
 export const getAssignmentStartDate = (a: AssignmentDTO): number => (a.scheduledStartDate ?? a.creationDate ?? 0).valueOf();
+
+export const hasAssignmentStarted = (a: AssignmentDTO): boolean => getAssignmentStartDate(a) <= Date.now();

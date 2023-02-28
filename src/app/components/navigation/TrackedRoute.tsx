@@ -1,19 +1,31 @@
 import React, {useEffect} from "react";
 import {Redirect, Route, RouteComponentProps, RouteProps} from "react-router";
 import ReactGA, {FieldsObject} from "react-ga";
+import ReactGA4 from "react-ga4";
 import {FigureNumberingContext, PotentialUser} from "../../../IsaacAppTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {selectors, useAppSelector} from "../../state";
-import {GOOGLE_ANALYTICS_ACCOUNT_ID, isTeacher, KEY, persistence, siteSpecific} from "../../services";
+import {
+    GOOGLE_ANALYTICS_ACCOUNT_ID,
+    GOOGLE_ANALYTICS_4_MEASUREMENT_ID,
+    isTeacherOrAbove,
+    isTutorOrAbove,
+    KEY,
+    persistence, TEACHER_REQUEST_ROUTE
+} from "../../services";
 import {Unauthorised} from "../pages/Unauthorised";
 import {Immutable} from "immer";
 
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
+ReactGA4.initialize(GOOGLE_ANALYTICS_4_MEASUREMENT_ID);
 ReactGA.set({ anonymizeIp: true });
+ReactGA4.set({ anonymizeIp: true });
 
 const trackPage = (page: string, options?: FieldsObject) => {
     ReactGA.set({ page, ...options });
+    ReactGA4.set({ page, ...options });
     ReactGA.pageview(page);
+    ReactGA4.send({ hitType: "pageview", page });
 };
 
 interface UserFilterProps {
@@ -42,20 +54,15 @@ export const TrackedRoute = function({component, trackingOptions, componentProps
             const {ifUser, ...rest$} = rest;
             return <Route {...rest$} render={props => {
                 const propsWithUser = {user, ...props};
-                const userNeedsToBeTeacher = rest.ifUser && rest.ifUser.name === isTeacher.name; // TODO we should try to find a more robust way than this
+                const userNeedsToBeTutorOrTeacher = rest.ifUser && [isTutorOrAbove.name, isTeacherOrAbove.name].includes(rest.ifUser.name); // TODO we should try to find a more robust way than this
                 return <ShowLoading until={user}>
                     {user && ifUser(user) ?
                         <WrapperComponent component={component} trackingOptions={trackingOptions} {...propsWithUser} {...componentProps} /> :
-                        user && !user.loggedIn && !isTeacher(user) && userNeedsToBeTeacher ?
+                        user && !user.loggedIn && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
                             persistence.save(KEY.AFTER_AUTH_PATH, props.location.pathname + props.location.search) && <Redirect to="/login"/>
                             :
-                            user && !isTeacher(user) && userNeedsToBeTeacher ?
-                                siteSpecific(
-                                    // Physics
-                                    <Redirect to="/pages/contact_us_teacher"/>,
-                                    // Computer science
-                                    <Redirect to="/pages/teacher_accounts"/>
-                                )
+                            user && !isTutorOrAbove(user) && userNeedsToBeTutorOrTeacher ?
+                                <Redirect to={TEACHER_REQUEST_ROUTE}/>
                                 :
                                 user && user.loggedIn && !ifUser(user) ?
                                     <Unauthorised/>

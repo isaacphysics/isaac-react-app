@@ -7,7 +7,13 @@ import {
     useAssignmentsCount
 } from "../../navigation/NavigationBar";
 import {useAppSelector, selectors} from "../../../state";
-import {isAdmin, isAdminOrEventManager, isEventLeader, isStaff, isTeacher} from "../../../services";
+import {
+    isAdmin,
+    isAdminOrEventManager,
+    isEventLeader,
+    isStaff,
+    isTeacherOrAbove, isTutorOrAbove
+} from "../../../services";
 
 export const NavigationBarCS = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -22,12 +28,14 @@ export const NavigationBarCS = () => {
             <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
-        {isTeacher(user) && <NavigationSection title="Teachers">
+        {isTutorOrAbove(user) && <NavigationSection title="Teachers">
             <LinkItem to="/groups">Manage groups</LinkItem>
             <LinkItem to="/set_assignments">Set assignments</LinkItem>
-            <LinkItem to="/assignment_progress">Markbook</LinkItem>
-            <LinkItem to="/set_tests">Manage tests</LinkItem>
-            <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
+            <LinkItem to="/my_markbook">Markbook</LinkItem>
+            {isTeacherOrAbove(user) && <>
+                <LinkItem to="/set_tests">Manage tests</LinkItem>
+                <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
+            </>}
         </NavigationSection>}
 
         <NavigationSection title="Learn">
@@ -40,7 +48,7 @@ export const NavigationBarCS = () => {
         </NavigationSection>
 
         <NavigationSection title="Events">
-            {isTeacher(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
+            {isTeacherOrAbove(user) && <LinkItem to="/events?show_reservations_only=true">My event reservations</LinkItem>}
             <LinkItem to="/events?types=student">Student events</LinkItem>
             <LinkItem to="/events?types=teacher">Teacher events</LinkItem>
             <LinkItem to="/pages/event_types">Event formats</LinkItem>

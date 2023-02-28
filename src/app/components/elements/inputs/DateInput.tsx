@@ -5,8 +5,7 @@ import {range} from 'lodash';
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
     labelSuffix?: string;
-    defaultYear?: number;
-    defaultMonth?: number | ((day: number | undefined) => number);
+    disableDefaults?: boolean;
     yearRange?: number[];
     value?: string | string[] | number | Date;
     noClear?: boolean;
@@ -153,20 +152,37 @@ export const DateInput = (props: DateInputProps) => {
         }
     }
 
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+
     const change = (what: string) => (e: ChangeEvent<HTMLInputElement>) => {
 
         values[what].set(parseInt(e.target.value, 10));
 
         const day = values.day.get();
-        if (day && day > lastInMonth()) {
-            values.day.set(lastInMonth());
+        if (!props.disableDefaults && (what == "day" || what == "month")) {
+            let month = values["month"].get() as number;
+            if (values["month"].get() == undefined) {
+                const defaultMonth = day && day <= currentDay ? currentMonth + 1 : currentMonth;
+                values["month"].set(defaultMonth > 12 ? 1 : defaultMonth);
+                month = defaultMonth;
+            }
+            if (values["year"].get() == undefined) {
+                const defaultYear = (month > 12 || (month < currentMonth)) ? currentYear + 1 : currentYear;
+                const scaledYear = props.yearRange && props.yearRange.length > 0
+                    ? defaultYear < (props.yearRange.at(0) as number)
+                        ? props.yearRange.at(0)
+                        : (defaultYear > (props.yearRange.at(-1) as number)
+                            ? props.yearRange.at(-1)
+                            : defaultYear)
+                    : defaultYear;
+                values["year"].set(scaledYear);
+            }
         }
 
-        if (what == "day" && values[what].get() != undefined) {
-            if (values["month"].get() == undefined && values["year"].get() == undefined) {
-                values["month"].set(typeof props.defaultMonth === 'function' ? props.defaultMonth(day) : props.defaultMonth);
-                values["year"].set(props.defaultYear);
-            }
+        if (day && day > lastInMonth()) {
+            values.day.set(lastInMonth());
         }
 
         const timestamp = setHiddenValue();
@@ -212,8 +228,10 @@ export const DateInput = (props: DateInputProps) => {
 
     const yearRange = props.yearRange || range(currentYear, 1899, -1);
 
+    const controlPropsWithValidationStripped = {...controlProps, valid: undefined, invalid: undefined};
+
     return <React.Fragment>
-        <InputGroup id={props.id} {...controlProps} className={inputGroupClasses}>
+        <InputGroup id={props.id} {...controlPropsWithValidationStripped} className={inputGroupClasses}>
             <Input className="date-input-day mr-1" type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
                 {values.day.get() === undefined && <option />}
                 {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
@@ -226,7 +244,7 @@ export const DateInput = (props: DateInputProps) => {
                 {values.year.get() === undefined && <option />}
                 {yearRange.map(year => <option key={year}>{year}</option>)}
             </Input>
-            {(props.noClear === undefined || !props.noClear) && <Button close {...controlProps} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
+            {(props.noClear === undefined || !props.noClear) && <Button close {...controlPropsWithValidationStripped} className="mx-1" aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={clear} />}
         </InputGroup>
         <Input innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
     </React.Fragment>;

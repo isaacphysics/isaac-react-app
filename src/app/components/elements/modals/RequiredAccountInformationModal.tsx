@@ -1,8 +1,8 @@
 import {AppState, closeActiveModal, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../../state";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
-import {UserEmailPreference} from "../panels/UserEmailPreferences";
-import {BooleanNotation, DisplaySettings, UserEmailPreferences, ValidationUser} from "../../../../IsaacAppTypes";
+import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailPreferences";
+import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
     isCS,
@@ -10,9 +10,10 @@ import {
     isLoggedIn,
     isMobile,
     isPhy,
-    isStudent,
-    SITE_SUBJECT_TITLE,
-    TEACHER_REQUEST_ROUTE,
+    isTutor,
+    isTutorOrAbove,
+    SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE,
+    UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
     validateUserGender,
@@ -29,7 +30,6 @@ const RequiredAccountInfoBody = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userPreferences = useAppSelector((state: AppState) => state?.userPreferences);
-    const student = isStudent({...user, loggedIn: true});
 
     // Local state
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -38,7 +38,7 @@ const RequiredAccountInfoBody = () => {
     const [userToUpdate, setUserToUpdate] = useState<Immutable<ValidationUser>>(initialUserValue);
 
     const initialEmailPreferencesValue = {...userPreferences?.EMAIL_PREFERENCE};
-    const [emailPreferences, setEmailPreferences] = useState<UserEmailPreferences>(initialEmailPreferencesValue);
+    const [emailPreferences, setEmailPreferences] = useEmailPreferenceState(initialEmailPreferencesValue);
 
     const initialUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
@@ -70,9 +70,9 @@ const RequiredAccountInfoBody = () => {
             <div className="text-right text-muted required-before">
                 Required
             </div>
-            {student && <div className="text-left mb-4">
-                Account type: <b>Student</b> <span>
-                    <small>(Are you a teacher? {" "}
+            {!isTutorOrAbove(user) && <div className="text-left mb-4">
+                Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
+                    <small>(Are you a teacher or tutor? {" "}
                         <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
                             Upgrade your account
                         </Link>{".)"}
@@ -101,7 +101,7 @@ const RequiredAccountInfoBody = () => {
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required
+                        required={!("role" in userToUpdate && isTutor(userToUpdate))}
                     />
                 </RS.Col>}
             </RS.Row>
