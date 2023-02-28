@@ -122,7 +122,7 @@ header {
         outline: unset;
       }
     }
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(nav) {
       left: 50%;
       transform: translateX(-50%);
     }
