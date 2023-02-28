@@ -45,8 +45,8 @@ export const HeaderCS = () => {
 
                         <NavigationSection title="Learn">
                             <LinkItem to="/topics">Topics</LinkItem>
-                            <LinkItem to="/quizzes/new">Question Finder</LinkItem>
-                            <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem>
+                            <LinkItem to="/quizzes/new">Questions</LinkItem>
+                            {/* <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem> Hidden for Ada launch */}
                             <LinkItem to="/glossary">Glossary</LinkItem>
                             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
                         </NavigationSection>
