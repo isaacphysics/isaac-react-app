@@ -426,12 +426,12 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
             {/* Buttons */}
             <Row className={"mt-4"}>
                 <Col>
-                    {previousBoard && <Button size="sm" color="primary" outline onClick={previousBoard}>
+                    {previousBoard && <Button size="sm" color="secondary" outline onClick={previousBoard}>
                         <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
                     </Button>}
                 </Col>
                 <Col className="text-right">
-                    <Button size="sm" color="primary" outline onClick={refresh}>
+                    <Button size="sm" color="secondary" outline onClick={refresh}>
                         <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
                     </Button>
                 </Col>
@@ -439,7 +439,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
         </CardBody>
 
         <CardFooter tag={Button} color="secondary" className="w-100" onClick={scrollToQuestions}>
-            Scroll straight to questions
+            Scroll straight to questions<img className={"ml-3"} src={"/assets/chevron_down_white.svg"}/>
         </CardFooter>
     </Card>;
 }
@@ -590,7 +590,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     }
 
     const pageHelp = <span>
-        You can build a gameboard by selecting the areas of interest, stage and difficulties.
+        You can build a {siteSpecific("gameboard", "quiz")} by selecting the areas of interest, stage and difficulties.
         <br />
         You can select more than one entry in each area.
     </span>;
@@ -624,7 +624,11 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         {/* The site-specific question filtering UI */}
         {siteSpecific(
             <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
-            <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
+            <CSFilter
+                {...filterProps}
+                examBoards={examBoards} setExamBoards={setExamBoards}
+                concepts={concepts} setConcepts={setConcepts}
+            />
         )}
 
         <div id={"gameboard-section"}>
