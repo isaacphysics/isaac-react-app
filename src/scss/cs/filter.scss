@@ -23,6 +23,14 @@
   }
 }
 
+#gameboard-generator {
+  .list-group-links {
+    .list-group-item:first-of-type {
+      border-top: $cs-list-outline-gray solid 1px !important;
+    }
+  }
+}
+
 $shapes: hex, square, octagon, diamond;
 
 svg {

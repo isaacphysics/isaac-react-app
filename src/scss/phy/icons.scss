@@ -1,5 +1,15 @@
 @import "../common/icons";
 
+.icon-help {
+  display: inline-block;
+  width: 19px;
+  height: 22px;
+  background: url(/assets/ru.png) -308px -324px no-repeat;
+  margin-bottom: -4px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
 .icon-person-active,
 .icon-person,
 .icon-warning,

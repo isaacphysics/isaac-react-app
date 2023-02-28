@@ -15,9 +15,6 @@
     border-color: $cs-list-outline-gray;
     border-left: 0;
     border-right: 0;
-    &:first-of-type {
-      border-top: $cs-list-outline-gray solid 1px !important;
-    }
   }
   .list-caret {
     position: relative;
