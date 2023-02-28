@@ -51,7 +51,7 @@ export const HeaderCS = () => {
                             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
                         </NavigationSection>
 
-                        {isTutorOrAbove(user) && <NavigationSection title="Teachers">
+                        {isTutorOrAbove(user) && <NavigationSection title="Teach">
                             <LinkItem to="/groups">Manage groups</LinkItem>
                             <LinkItem to="/set_assignments">Set assignments</LinkItem>
                             <LinkItem to="/my_markbook">Markbook</LinkItem>
