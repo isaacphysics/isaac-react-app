@@ -1,0 +1,12 @@
+@import "../common/boards";
+
+.board-percent-completed {
+  @extend .font-weight-semi-bold;
+  @extend .font-size-1;
+  color: #fff;
+  z-index: 10;
+  text-align: center;
+  line-height: 48px;
+  width: 48px;
+  height: 48px;
+}

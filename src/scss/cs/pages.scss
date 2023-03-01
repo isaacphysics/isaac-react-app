@@ -26,3 +26,20 @@
   background: $cs-white;
   #gameboard-title-section {}
 }
+
+// My quizzes page
+.my-gameboard-table {
+  thead {
+    background-color: rgba(0, 0, 0, 0.06);
+    tr, th, td {
+      background-color: transparent !important;
+    }
+    th {
+      border-bottom: solid 1px $cs-dark-silver !important;
+    }
+  }
+  tr, td, th {
+    background-color: $cs-white;
+    border: solid 1px $cs-dark-silver;
+  }
+}

@@ -216,7 +216,11 @@
     &.outline {
       @extend .btn-outline-icon;
       background-position: 48% 50%;
-      background-color: white; // FIXME ADA replace with correct grey shade
+      // FIXME ADA replace with correct grey shade
+      &:active {
+        background-color: white !important;
+      }
+      background-color: white !important;
       background-image: url("/assets/cs/icons/share-pink.svg");
     }
     margin-right: 7.5px;
