@@ -1,39 +1,67 @@
 @import "../common/button";
 
-@mixin button-primary($color) {
-  color: $color;
-  &:not(:disabled):not(.disabled):active {
-    // Keep colour the same on active (overrides base Bootstrap behaviour)
-    color: $color;
-  }
-  &.disabled {
-    @include button-disabled($cs-silver, $cs-jet);
-  }
-}
-
-@mixin button-secondary($color, $background-color){
-  border-width: 3px;
-  &:not(:disabled):not(.disabled):active {
-    // Keep colours the same on active (overrides base Bootstrap behaviour)
-    background-color: $background-color;
-    color: $color;
-  }
+@mixin ada-button($text-color, $color, $hover-color, $active-color) {
+  background-color: $color;
+  border: 3px solid $color;
+  box-shadow: none;
+  color: $text-color;
+  overflow: hidden;  // To stop margin collapse from hiding the focus outline
+  text-decoration: none;
   &:hover {
-    // Keep colours the same on hover (overrides base Bootstrap behaviour)
-    background-color: $background-color;
-    color: $color;
+    color: $text-color;
+    border-color: $hover-color;
+    background-color: $hover-color;
+    text-decoration: underline;
   }
-  &.disabled {
-    @include button-disabled(transparent, $cs-silver);
+  &:active {
+    color: $text-color !important;
+    text-decoration: none !important;
+    border-color: $active-color !important;
+    background-color: $active-color !important;
+    box-shadow: none !important;
+  }
+  &:focus:not(.disabled) {
+    box-shadow: none;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 3px $button-focus-blue !important;
+  }
+  &.disabled, &:disabled {
+    color: $cs-jet;
+    background-color: $cs-silver;
+    border-color: $cs-silver;
   }
 }
 
-@mixin button-disabled($background-color, $color) {
-  // Keep opacity and border when disabled (overrides base Bootstrap behaviour)
-  border: 3px solid $cs-silver;
-  opacity: 1;
-  background-color: $background-color;
+@mixin ada-button-outline($color, $hover-color, $active-color) {
+  background-color: transparent;
+  border: 3px solid $color;
+  box-shadow: none;
   color: $color;
+  overflow: hidden;  // To stop margin collapse from hiding the focus outline
+  text-decoration: none;
+  &:hover {
+    color: $hover-color;
+    text-decoration: underline;
+    background-color: transparent;
+  }
+  &:active {
+    color: $active-color !important;
+    text-decoration: none !important;
+    border-color: $active-color !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  &:focus:not(.disabled) {
+    box-shadow: none;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 3px $button-focus-blue !important;
+  }
+  &.disabled, &:disabled {
+    color: $cs-jet;
+    border-color: $cs-silver;
+  }
 }
 
 
@@ -41,29 +69,36 @@
   border-radius: 50px;
   border-width: 3px;
 
-  @extend .font-size-1-25;
+  font-size: 1.111rem;
+  &:not(.btn-sm):not(.btn-link) {
+    padding: 0.5rem 2.1rem;
+  }
   @extend .font-weight-semi-bold;
+  &.btn-sm {
+    padding: 0.2rem 0.7rem;
+  }
+  min-width: 25px !important;
 
   // Primary buttons (for dark background)
   &.btn-dark-primary {
-    @include button-primary($cs-black);
+    @include ada-button($cs-black, $cs-pink, $dark-hover-pink, $dark-active-pink);
   }
 
   // Secondary buttons (for dark background)
   // Secondary Button components are expected to use the 'outline' prop!
   &.btn-outline-dark-secondary {
-    @include button-secondary($cs-pink, transparent);
+    @include ada-button-outline($cs-pink, $dark-hover-pink, $dark-active-pink);
   }
 
   // Primary buttons (light background)
-  &.btn-primary {
-    @include button-primary($cs-white);
+  &.btn-primary, &.btn-secondary, &.btn-icon {
+    @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
-  &.btn-outline-secondary {
-    @include button-secondary($cs-dark-pink, transparent);
+  &.btn-outline-secondary, &.btn-outline-primary, &.btn-outline-icon {
+    @include ada-button-outline($cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   // FIXME ADA need to make all other buttons use these different hover and active colours
@@ -86,10 +121,10 @@
       text-decoration: none;
     }
     &:focus-visible {
-      outline: 2px solid $cs-turquoise-blue !important;
+      outline: 2px solid $button-focus-blue !important;
       border-radius: 0 !important;
     }
-    &.disabled {
+    &.disabled, &:disabled {
       color: $cs-silver;
     }
   }
@@ -150,10 +185,18 @@
   border-color: grey !important;
 }
 
+.btn-outline-icon {
+  @extend .btn;
+  padding: 0 !important;
+  min-width: unset !important;
+  width: 48px !important;
+  height: 48px !important;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
 .btn-icon {
   @extend .btn;
   background-color: $cs-dark-pink;
-  @include button-secondary($cs-dark-pink, $cs-dark-pink);
   padding: 0 !important;
   min-width: unset !important;
   width: 48px !important;
@@ -165,13 +208,21 @@
 .share-link-icon {
   position: relative;
   button {
-    @extend .btn-icon;
+    &:not(.outline) {
+      @extend .btn-icon;
+      background-position: 48% 50%;
+      background-image: url("/assets/cs/icons/share.svg");
+    }
+    &.outline {
+      @extend .btn-outline-icon;
+      background-position: 48% 50%;
+      background-color: white; // FIXME ADA replace with correct grey shade
+      background-image: url("/assets/cs/icons/share-pink.svg");
+    }
     margin-right: 7.5px;
     margin-left: 7.5px;
     position: relative;
     z-index: 2;
-    background-position: 48% 50%;
-    background-image: url("/assets/cs/icons/share.svg");
   }
   .share-link {
     z-index: 1;
@@ -212,14 +263,24 @@
 }
 
 .print-icon {
-  @extend .btn-icon;
+  &:not(.outline) {
+    @extend .btn-icon;
+  }
+  &.outline {
+    @extend .btn-outline-icon;
+  }
   margin-right: 7.5px;
   margin-left: 7.5px;
   background-image: url("/assets/cs/icons/print.svg");
 }
 
 .report-icon {
-  @extend .btn-icon;
+  &:not(.outline) {
+    @extend .btn-icon;
+  }
+  &.outline {
+    @extend .btn-outline-icon;
+  }
   margin-right: 7.5px;
   margin-left: 7.5px;
   background-image: url("/assets/cs/icons/flag.svg");

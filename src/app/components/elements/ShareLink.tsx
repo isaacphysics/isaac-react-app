@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
 import {isAda, isMobile, isPhy, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
+import classNames from "classnames";
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean; outline?: boolean}) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const user = useAppSelector(selectors.user.orNull);
@@ -41,7 +42,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
     return <div ref={shareLinkDivRef} className="share-link-icon">
-        <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
+        <button className={siteSpecific("btn-action", classNames({"outline": outline}))} onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
         <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
             <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
             {showDuplicateAndEdit && <React.Fragment>

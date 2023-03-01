@@ -89,6 +89,9 @@ i, em {
 }
 p, small {
   @extend .font-weight-regular;
+  .btn-link {
+    font-size: unset;
+  }
 }
 small {
   @extend .font-size-0-75;
