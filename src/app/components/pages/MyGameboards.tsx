@@ -247,7 +247,7 @@ export const MyGameboards = () => {
     </span>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle="My gameboards" help={pageHelp} />
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("My gameboards", "My quizzes")} help={pageHelp} />
         {boards && boards.totalResults == 0 ?
             <>
                 <h3 className="text-center mt-4">You have no gameboards to view.</h3>

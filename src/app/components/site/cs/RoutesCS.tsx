@@ -1,6 +1,6 @@
 import React from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {AllTopics, AllTopicsWithoutAStage} from "../../pages/AllTopics";
+import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {ComingSoon} from "../../pages/ComingSoon";
 import {Topic} from "../../pages/Topic";
@@ -14,10 +14,12 @@ import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {Glossary} from "../../pages/Glossary";
 import {GameboardFilter} from "../../pages/GameboardFilter";
+import {MyGameboards} from "../../pages/MyGameboards";
 
 let key = 0;
 export const RoutesCS = [
     // Quizzes
+    <TrackedRoute exact path="/quizzes" component={MyGameboards} />,
     <TrackedRoute exact path="/quizzes/new" component={GameboardFilter} />,
 
     // Student and teacher

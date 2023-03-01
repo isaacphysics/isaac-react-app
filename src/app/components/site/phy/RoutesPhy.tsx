@@ -30,6 +30,7 @@ import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 import {GameboardFilter} from "../../pages/GameboardFilter";
+import {MyGameboards} from "../../pages/MyGameboards";
 
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
@@ -37,6 +38,7 @@ const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 let key = 0;
 export const RoutesPhy = [
     // Gameboards
+    <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />,
     <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />,
 
     // Assignments
