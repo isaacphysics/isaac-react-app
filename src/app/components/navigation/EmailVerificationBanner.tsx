@@ -24,7 +24,7 @@ export const EmailVerificationBanner = () => {
                 <RS.Col xs={12} sm={2} md={1}>
                     <h3 className="text-center">
                         <span role="presentation" aria-labelledby="email-verification-heading">
-                            {siteSpecific("ℹ", <img src={"/assets/cs/icons/info.svg"} style={{height: "2rem"}}/>)}
+                            {siteSpecific("ℹ", <img className={"mt-n1 mt-sm-1"} src={"/assets/cs/icons/info.svg"} style={{height: "1.5rem"}}/>)}
                         </span>
                         <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
                     </h3>

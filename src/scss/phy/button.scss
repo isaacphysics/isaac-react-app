@@ -1,4 +1,5 @@
 @import "../common/button";
+
 .btn, input.btn {
   border-radius: 0.25rem;
   font-family: $secondary-font-bold;
@@ -317,7 +318,7 @@ a.btn {
 }
 
 .report-icon {
-  @extend .hex-button;
+  @extend .hex-icon;
   background-image: url(/assets/flag.svg);
 }
 

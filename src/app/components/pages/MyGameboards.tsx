@@ -93,12 +93,14 @@ const Board = (props: BoardTableProps) => {
         <tr className={siteSpecific("board-card", "")} data-testid={"my-gameboard-table-row"}>
             <td className={siteSpecific("", "align-middle text-center")}>
                 {siteSpecific(
-                    <div className="board-subject-hexagon-container table-view w-100">
-                        (board.percentageCompleted === 100) ? <span className="board-subject-hexagon subject-complete"/> :
-                        <>
-                            {generateGameboardSubjectHexagons(boardSubjects)}
-                            <div className="board-percent-completed">{board.percentageCompleted}</div>
-                        </>
+                    <div className="board-subject-hexagon-container table-view">
+                        {(board.percentageCompleted === 100)
+                            ? <span className="board-subject-hexagon subject-complete"/>
+                            : <>
+                                {generateGameboardSubjectHexagons(boardSubjects)}
+                                <div className="board-percent-completed">{board.percentageCompleted}</div>
+                            </>
+                        }
                     </div>,
                     <svg width={48} height={48}>
                         <Circle radius={24} properties={{fill: "#000"}}/>
