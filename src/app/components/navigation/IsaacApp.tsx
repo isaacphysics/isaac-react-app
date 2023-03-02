@@ -38,7 +38,7 @@ import {
     isStaff,
     KEY,
     showNotification,
-    isTutorOrAbove
+    isTutorOrAbove, PATHS
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
@@ -73,6 +73,9 @@ import {ChunkOrClientError} from "../pages/ClientError";
 import {Loading} from "../handlers/IsaacSpinner";
 import {ExternalRedirect} from "../handlers/ExternalRedirect";
 import {TutorRequest} from "../pages/TutorRequest";
+import {AssignmentProgress} from "../pages/AssignmentProgress";
+import {MyGameboards} from "../pages/MyGameboards";
+import {GameboardFilter} from "../pages/GameboardFilter";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
@@ -153,7 +156,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/concepts/:conceptId" component={Concept} />
                         <TrackedRoute exact path="/questions/:questionId" component={Question} />
 
-                        <TrackedRoute exact path="/gameboards" component={Gameboard} />
+                        <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
                         <TrackedRoute exact path="/gameboard_builder" ifUser={isTutorOrAbove} component={GameboardBuilder} />
                         <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
                         <TrackedRoute exact path="/add_gameboard/:gameboardId/:gameboardTitle?" ifUser={isLoggedIn} component={AddGameboard} />
@@ -162,11 +165,14 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />
                         <TrackedRoute exact path="/progress" ifUser={isLoggedIn} component={MyProgress} />
                         <TrackedRoute exact path="/progress/:userIdOfInterest" ifUser={isLoggedIn} component={MyProgress} />
+                        <TrackedRoute exact path={PATHS.MY_GAMEBOARDS} component={MyGameboards} />
+                        <TrackedRoute exact path={PATHS.QUESTION_FINDER} component={GameboardFilter} />
 
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
                         <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
                         <TrackedRoute exact path="/set_assignments" ifUser={isTutorOrAbove} component={SetAssignments} />
+                        <TrackedRoute exact path={PATHS.ASSIGNMENT_PROGRESS} ifUser={isTutorOrAbove} component={AssignmentProgress} />
 
                         {/* Admin */}
                         <TrackedRoute exact path="/admin" ifUser={isStaff} component={Admin} />

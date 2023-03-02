@@ -1,5 +1,5 @@
 import {getRelatedConcepts} from "./topics";
-import {DOCUMENT_TYPE, history, NOT_FOUND, useUserContext, UseUserContextReturnType} from "./";
+import {DOCUMENT_TYPE, history, NOT_FOUND, PATHS, useUserContext, UseUserContextReturnType} from "./";
 import * as ApiTypes from "../../IsaacApiTypes";
 import {ContentDTO, QuestionDTO} from "../../IsaacApiTypes";
 import {AppState, selectors, useAppSelector} from "../state";
@@ -43,7 +43,7 @@ function backToBoard(board: string) {
         value: "Return to Top 10 Questions",
         type: "button",
         onClick: function() {
-            goToUrl('/gameboards#' + board);
+            goToUrl(`${PATHS.GAMEBOARD}#` + board);
         }
     };
 }

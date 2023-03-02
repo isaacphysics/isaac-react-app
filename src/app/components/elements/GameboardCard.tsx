@@ -1,10 +1,9 @@
-import {Button, Card, CardBody, CardFooter, CardSubtitle, CardTitle, Col, Row} from "reactstrap";
+import {Button, Card, CardBody, CardFooter, Col, Row} from "reactstrap";
 import {
     determineGameboardStagesAndDifficulties,
-    determineGameboardSubjects,
     difficultyShortLabelMap,
     formatBoardOwner,
-    generateGameboardSubjectHexagons, isAda,
+    PATHS,
     stageLabelMap
 } from "../../services";
 import {formatDate} from "./DateString";
@@ -17,13 +16,11 @@ import {Circle} from "./svg/Circle";
 import {sortBy} from "lodash";
 import {Util} from "leaflet";
 import indexOf = Util.indexOf;
-import classNames from "classnames";
 
 export const GameboardCard = ({user, board}: {user: RegisteredUserDTO; board: GameboardDTO}) => {
     const dispatch = useAppDispatch();
 
-    // FIXME ADA change to quizzes
-    const boardLink = `/gameboards#${board.id}`;
+    const boardLink = `${PATHS.GAMEBOARD}#${board.id}`;
 
     function confirmCardDeleteBoard() {
         if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {

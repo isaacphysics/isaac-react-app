@@ -15,7 +15,7 @@ import {
     isStaff,
     isTeacherOrAbove,
     isTutor,
-    isTutorOrAbove
+    isTutorOrAbove, PATHS
 } from "../../../services";
 
 export const NavigationBarPhy = () => {
@@ -25,7 +25,7 @@ export const NavigationBarPhy = () => {
     return <NavigationBar>
         <NavigationSection title={<>My Isaac {<MenuBadge data-testid={"my-assignments-badge"} count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
             <LinkItem to="/account" muted={!isLoggedIn(user)}>My Account</LinkItem>
-            <LinkItem to="/my_gameboards" muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
+            <LinkItem to={PATHS.MY_GAMEBOARDS} muted={!isLoggedIn(user)}>My Gameboards</LinkItem>
             <LinkItem to="/assignments" muted={!isLoggedIn(user)}>My Assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
             <LinkItem to="/progress" muted={!isLoggedIn(user)}>My Progress</LinkItem>
             <LinkItem to="/tests" muted={!isLoggedIn(user)}>My Tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
@@ -35,7 +35,7 @@ export const NavigationBarPhy = () => {
             {isTeacherOrAbove(user) ? <LinkItem to="/teacher_features">Teacher Features</LinkItem> : <LinkItem to="/tutor_features">Tutor Features</LinkItem>}
             <LinkItem to="/groups">Manage Groups</LinkItem>
             <LinkItem to="/set_assignments">Set Assignments</LinkItem>
-            <LinkItem to="/assignment_progress">Assignment Progress</LinkItem>
+            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Assignment Progress</LinkItem>
             {isTeacherOrAbove(user) && <>
                 <LinkItem to="/set_tests">Set Tests</LinkItem>
                 <LinkItem to="/set_tests#manage">Manage Tests</LinkItem>
@@ -46,7 +46,7 @@ export const NavigationBarPhy = () => {
             <LinkItem to="/11_14">11-14 Resources</LinkItem>
             <LinkItem to="/gcse">GCSE Resources</LinkItem>
             <LinkItem to="/alevel">A Level Resources</LinkItem>
-            <LinkItem to="/gameboards/new">Question Finder</LinkItem>
+            <LinkItem to={PATHS.QUESTION_FINDER}>Question Finder</LinkItem>
             <LinkItem to="/concepts">Concepts</LinkItem>
             {/* <LinkItem to="/glossary">Glossary</LinkItem> */}
         </NavigationSection>

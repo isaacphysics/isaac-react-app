@@ -35,7 +35,7 @@ import {
     generateGameboardSubjectHexagons,
     isAda,
     isMobile,
-    isPhy,
+    isPhy, PATHS,
     siteSpecific,
     sortIcon,
     stageLabelMap,
@@ -67,8 +67,7 @@ type BoardTableProps = MyBoardsPageProps & {
 const Board = (props: BoardTableProps) => {
     const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
 
-    // FIXME ADA change this to quizzes
-    const boardLink = `/gameboards#${board.id}`;
+    const boardLink = `${PATHS.GAMEBOARD}#${board.id}`;
 
     const dispatch = useAppDispatch();
 
@@ -534,7 +533,7 @@ export const MyGameboards = () => {
             <>
                 <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>
                 {isPhy && <div className="text-center mt-3 mb-5">
-                    <Button color="secondary" tag={Link} to="/gameboards/new">Create a gameboard</Button>
+                    <Button color="secondary" tag={Link} to={PATHS.QUESTION_FINDER}>Create a gameboard</Button>
                 </div>}
             </>
             :

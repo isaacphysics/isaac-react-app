@@ -6,7 +6,7 @@ import {
     isTutorOrAbove,
     Item,
     KEY,
-    nthHourOf,
+    nthHourOf, PATHS,
     persistence,
     TODAY,
     toTuple
@@ -230,7 +230,7 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
                     history.push(`${assignBoardPath}#${boardId}`);
                     setAssignBoardPath("/set_assignments");
                 } else {
-                    history.push(`/my_gameboards#${boardId}`);
+                    history.push(`${PATHS.MY_GAMEBOARDS}#${boardId}`);
                 }
             }
             return {boardId, boardTitle};

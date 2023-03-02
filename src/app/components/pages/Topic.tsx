@@ -8,7 +8,7 @@ import {
     atLeastOne,
     examBoardLabelMap,
     getRelatedDocs,
-    NOT_FOUND,
+    NOT_FOUND, PATHS,
     stageLabelMap,
     TAG_ID,
     useUserContext
@@ -71,11 +71,11 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
-                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`/gameboards#${gameboard.id}`}>Preview</Link> | <Link to={`/add_gameboard/${gameboard.id}`}>Assign</Link>
+                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>Preview</Link> | <Link to={`/add_gameboard/${gameboard.id}`}>Assign</Link>
                                     </li>
                                 }
                                 {(!user?.loggedIn || user?.role === "STUDENT") &&
-                                    <li><strong><Link to={`/gameboards#${gameboard.id}`}>{gameboard.title || '-'}</Link></strong></li>
+                                    <li><strong><Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>{gameboard.title || '-'}</Link></strong></li>
                                 }
                             </div>)}</ul>
                         </CardBody>

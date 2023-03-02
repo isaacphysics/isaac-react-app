@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import countBy from "lodash/countBy";
 import sortBy from "lodash/sortBy";
 import intersection from "lodash/intersection";
-import {determineAudienceViews, difficultiesOrdered, isAda, isFound, isPhy, stagesOrdered} from "./";
+import {determineAudienceViews, difficultiesOrdered, isAda, isFound, isPhy, PATHS, stagesOrdered} from "./";
 import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
@@ -34,7 +34,7 @@ export function boardCompletionSelection(board: GameboardDTO, boardCompletion: B
     } else return boardCompletion == BoardCompletions.any;
 }
 
-const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
+const createGameabordLink = (gameboardId: string) => `${PATHS.GAMEBOARD}#${gameboardId}`;
 
 const createGameboardHistory = (title: string, gameboardId: string) => {
     return [

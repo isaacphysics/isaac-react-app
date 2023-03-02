@@ -7,13 +7,12 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove} from "../../../services";
+import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
-import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
 import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
@@ -29,20 +28,13 @@ import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
 import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
-import {GameboardFilter} from "../../pages/GameboardFilter";
-import {MyGameboards} from "../../pages/MyGameboards";
 
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
 let key = 0;
 export const RoutesPhy = [
-    // Gameboards
-    <TrackedRoute exact path="/my_gameboards" ifUser={isLoggedIn} component={MyGameboards} />,
-    <TrackedRoute exact path="/gameboards/new" component={GameboardFilter} />,
-
     // Assignments
-    <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <TrackedRoute exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} />, // Currently in beta, not yet advertised or listed on navigation menus
 
@@ -125,7 +117,7 @@ export const RoutesPhy = [
     <Redirect key={key++} exact from="/mission" to="/about" />,
     <Redirect key={key++} exact from="/boards" to="/my_gameboards" />,
     <Redirect key={key++} exact from="/game_builder" to="/gameboard_builder" />,
-    <Redirect key={key++} exact from="/board/:id" to="/gameboards#:id" />,
+    <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
     <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
     <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,

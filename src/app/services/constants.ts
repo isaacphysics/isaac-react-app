@@ -1119,7 +1119,17 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
 
-export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+export const PATHS = siteSpecific({
+    ASSIGNMENT_PROGRESS: "/assignment_progress",
+    MY_GAMEBOARDS: "/my_gameboards",
+    QUESTION_FINDER: "/gameboards/new",
+    GAMEBOARD: "/gameboards",
+}, {
+    ASSIGNMENT_PROGRESS: "/my_markbook",
+    MY_GAMEBOARDS: "/quizzes",
+    QUESTION_FINDER: "/quizzes/new",
+    GAMEBOARD: "/quizzes/view",
+});
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
