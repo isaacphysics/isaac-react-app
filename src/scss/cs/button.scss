@@ -289,3 +289,16 @@
   margin-left: 7.5px;
   background-image: url("/assets/cs/icons/flag.svg");
 }
+
+.bin-icon {
+  &:not(.outline) {
+    @extend .btn-icon;
+    background-image: url("/assets/cs/icons/bin.svg");
+  }
+  &.outline {
+    @extend .btn-outline-icon;
+    background-image: url("/assets/cs/icons/bin-pink.svg");
+  }
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+}

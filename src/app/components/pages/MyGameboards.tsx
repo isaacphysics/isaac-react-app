@@ -50,6 +50,7 @@ import {sortBy} from "lodash";
 import {Util} from "leaflet";
 import indexOf = Util.indexOf;
 import {Circle} from "../elements/svg/Circle";
+import {GameboardCard} from "../elements/GameboardCard";
 
 interface MyBoardsPageProps {
     user: RegisteredUserDTO;
@@ -66,6 +67,7 @@ type BoardTableProps = MyBoardsPageProps & {
 const Board = (props: BoardTableProps) => {
     const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
 
+    // FIXME ADA change this to quizzes
     const boardLink = `/gameboards#${board.id}`;
 
     const dispatch = useAppDispatch();
@@ -148,63 +150,66 @@ const Board = (props: BoardTableProps) => {
             </td>
         </tr>
         :
-        <Card className="board-card card-neat" data-testid={"my-gameboard-card"}>
-            <CardBody className="pb-4 pt-4">
-                <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-                <div className="board-subject-hexagon-container">
-                    {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
-                        <>
-                            {generateGameboardSubjectHexagons(boardSubjects)}
-                            <div className="board-percent-completed">{board.percentageCompleted}</div>
-                        </>
-                    }
-                </div>
-                <aside>
-                    <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                    <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                    <table className="w-100">
-                        <thead>
-                        <tr>
-                            <th className="w-50 font-weight-light">
-                                {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
-                            </th>
-                            <th className="w-50 font-weight-light pl-1">
-                                {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
-                                <td className="w-50 align-baseline text-lg-right">
-                                    <strong>{stageLabelMap[stage]}:</strong>
-                                </td>
-                                <td className="w-50 pl-1">
-                                    <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
-                                </td>
-                            </tr>)}
-                            {boardStagesAndDifficulties.length === 0 && <tr>
-                                <td className="w-50 align-baseline text-lg-right">
-                                    <strong>N/A:</strong>
-                                </td>
-                                <td className="w-50 pl-1">
-                                    <strong>-</strong>
-                                </td>
-                            </tr>}
-                        </tbody>
-                    </table>
-                </aside>
+        siteSpecific(
+            <Card className="board-card card-neat" data-testid={"my-gameboard-card"}>
+                <CardBody className="pb-4 pt-4">
+                    <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
+                    <div className="board-subject-hexagon-container">
+                        {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
+                            <>
+                                {generateGameboardSubjectHexagons(boardSubjects)}
+                                <div className="board-percent-completed">{board.percentageCompleted}</div>
+                            </>
+                        }
+                    </div>
+                    <aside>
+                        <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
+                        <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                        <table className="w-100">
+                            <thead>
+                            <tr>
+                                <th className="w-50 font-weight-light">
+                                    {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
+                                </th>
+                                <th className="w-50 font-weight-light pl-1">
+                                    {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>{stageLabelMap[stage]}:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
+                                    </td>
+                                </tr>)}
+                                {boardStagesAndDifficulties.length === 0 && <tr>
+                                    <td className="w-50 align-baseline text-lg-right">
+                                        <strong>N/A:</strong>
+                                    </td>
+                                    <td className="w-50 pl-1">
+                                        <strong>-</strong>
+                                    </td>
+                                </tr>}
+                            </tbody>
+                        </table>
+                    </aside>
 
-                <Row className="mt-1 mb-2">
-                    <Col>
-                        <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
-                        <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-                    </Col>
-                    <Col className="card-share-link col-auto">
-                        <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-                    </Col>
-                </Row>
-            </CardBody>
-        </Card>;
+                    <Row className="mt-1 mb-2">
+                        <Col>
+                            <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
+                            <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+                        </Col>
+                        <Col className="card-share-link col-auto">
+                            <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
+                        </Col>
+                    </Row>
+                </CardBody>
+            </Card>,
+            <GameboardCard user={user} board={board}/>
+        );
 };
 
 interface GameboardsTableProps {
