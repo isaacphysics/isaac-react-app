@@ -89,7 +89,7 @@ $cards-per-line: (
     position: relative;
   }
   .card-footer {
-    background-color: transparent;
+    background-color: transparent !important;
     position: absolute;
     bottom: 0;
     width: 100%;
