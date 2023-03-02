@@ -517,7 +517,7 @@ export const MyGameboards = () => {
     }, [boards]);
 
     const pageHelp = <span>
-        A summary of your gameboards
+        A summary of your {siteSpecific("gameboards", "quizzes")}
     </span>;
 
     const tableProps: GameboardsTableProps = {
@@ -532,7 +532,7 @@ export const MyGameboards = () => {
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My gameboards", "My quizzes")} help={pageHelp} />
         {boards && boards.totalResults == 0 ?
             <>
-                <h3 className="text-center mt-4">You have no gameboards to view.</h3>
+                <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>
                 {isPhy && <div className="text-center mt-3 mb-5">
                     <Button color="secondary" tag={Link} to="/gameboards/new">Create a gameboard</Button>
                 </div>}
@@ -540,9 +540,9 @@ export const MyGameboards = () => {
             :
             <>
                 <div className="mt-4 mb-2">
-                    {boards && boards.totalResults && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"},
+                    {boards && boards.totalResults && boards.totalResults > 0 && <h4>You have completed <strong>{completed}</strong> of <strong>{boards.totalResults}</strong> {siteSpecific("gameboard", "quiz")}{boards.totalResults > 1 && siteSpecific("s", "zes")},
                         with <strong>{inProgress}</strong> on the go and <strong>{notStarted}</strong> not started</h4>}
-                    {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved gameboards...</h4>}
+                    {!boards && <h4>You have <IsaacSpinner size="sm" inline /> saved {siteSpecific("gameboards", "quizzes")}...</h4>}
                 </div>
                 <div>
                     {boardView !== BoardViews.table && <Row>
