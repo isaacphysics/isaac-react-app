@@ -10,7 +10,7 @@ $news-cards-per-line: (
 @each $name, $breakpoint in $grid-breakpoints {
   @include media-breakpoint-up($name) {
     .card-deck .news-card {
-      flex: 0 0 calc(#{100/map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
+      flex: 0 0 calc(#{100 / map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
       width: 100%;
     }
   }
@@ -24,7 +24,7 @@ $cards-per-line: (
 @each $name, $breakpoint in $grid-breakpoints {
   @include media-breakpoint-up($name) {
     .card-deck .cs-card {
-      flex: 0 0 calc(#{100/map-get($cards-per-line, $name)}% - #{$grid-gutter-width});
+      flex: 0 0 calc(#{100 / map-get($cards-per-line, $name)}% - #{$grid-gutter-width});
     }
   }
 }
@@ -35,7 +35,7 @@ $cards-per-line: (
   border-radius: 15px;
   display: inline-block;
 
-  ::after {
+  &::before {
     content: " ";
     position: absolute;
     top: -28px;
@@ -45,7 +45,7 @@ $cards-per-line: (
   }
 
   &.backslash-1 {
-    ::after {
+    &::before {
       height: 56px;
       width: 28px;
       background-image: url(/assets/cs/decor/backslash-outline-1.svg);
@@ -53,7 +53,7 @@ $cards-per-line: (
   }
 
   &.backslash-2 {
-    ::after {
+    &::before {
       height: 56px;
       width: 46px;
       background-image: url(/assets/cs/decor/backslash-outline-2.svg);
@@ -61,7 +61,7 @@ $cards-per-line: (
   }
 
   &.backslash-3 {
-    ::after {
+    &::before {
       height: 56px;
       width: 64px;
       background-image: url(/assets/cs/decor/backslash-outline-3.svg);
@@ -75,5 +75,24 @@ $cards-per-line: (
 
   .news-card-title {
     height: 3rem;
+  }
+}
+
+
+.card {
+  // This is to make sure that the "footers" of multiple cards line up nicely
+  &::after {
+    @extend .mb-5;
+    display: block;
+    content: " ";
+    width: 100%;
+    position: relative;
+  }
+  .card-footer {
+    background-color: transparent;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
   }
 }

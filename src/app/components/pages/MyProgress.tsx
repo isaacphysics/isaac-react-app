@@ -14,7 +14,7 @@ import {
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
-    isTeacherOrAbove,
+    isTeacherOrAbove, PATHS,
     safePercentage,
     siteSpecific
 } from "../../services";
@@ -223,8 +223,8 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             verb="set"
                             count={achievements && achievements.TEACHER_ASSIGNMENTS_SET}
                             item="assignment"
-                            createMoreText="Set assignments"
-                            createMoreLink="/set_assignments"
+                            createMoreText={siteSpecific("Set assignments", "Set quizzes")}
+                            createMoreLink={PATHS.SET_ASSIGNMENTS}
                             iconClassName="assignment-badge"/>
 
                         <TeacherAchievement

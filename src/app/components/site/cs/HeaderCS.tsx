@@ -7,7 +7,7 @@ import {
     isEventLeader, isLoggedIn,
     isStaff,
     isTeacherOrAbove,
-    isTutorOrAbove
+    isTutorOrAbove, PATHS
 } from "../../../services";
 import {LinkItem, MenuBadge, MenuOpenContext, NavigationSection, useAssignmentsCount} from "../../navigation/NavigationBar";
 import classNames from "classnames";
@@ -45,7 +45,7 @@ export const HeaderCS = () => {
 
                         <NavigationSection title="Learn">
                             <LinkItem to="/topics">Topics</LinkItem>
-                            <LinkItem to="/quizzes/new">Questions</LinkItem>
+                            <LinkItem to={PATHS.QUESTION_FINDER}>Questions</LinkItem>
                             {/* <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem> Hidden for Ada launch */}
                             <LinkItem to="/glossary">Glossary</LinkItem>
                             <LinkItem to="/pages/computer_science_journeys_gallery">Computer science journeys</LinkItem>
@@ -53,17 +53,18 @@ export const HeaderCS = () => {
 
                         {isTutorOrAbove(user) && <NavigationSection title="Teach">
                             <LinkItem to="/groups">Manage groups</LinkItem>
-                            <LinkItem to="/set_assignments">Set assignments</LinkItem>
-                            <LinkItem to="/my_markbook">Markbook</LinkItem>
+                            <LinkItem to={PATHS.SET_ASSIGNMENTS}>Set quizzes</LinkItem>
+                            <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
                             {isTeacherOrAbove(user) && <>
                                 {/*<LinkItem to="/set_tests">Manage tests</LinkItem>*/}
                                 <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             </>}
+                            <LinkItem to={"/"}>Exam board specification</LinkItem> {/* FIXME ADA implement this when decided */}
                         </NavigationSection>}
 
                         {isLoggedIn(user) && <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
                             <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
-                            <LinkItem to="/quizzes">My quizzes</LinkItem>
+                            <LinkItem to={PATHS.MY_GAMEBOARDS}>My quizzes</LinkItem>
                             <LinkItem to="/progress">My progress</LinkItem>
                             <LinkItem to="/account">My account</LinkItem>
                             {/*<LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>*/}

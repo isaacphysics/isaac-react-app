@@ -53,7 +53,7 @@ import {
     isStaff,
     Item,
     itemise,
-    nthHourOf,
+    nthHourOf, PATHS,
     selectOnChange,
     siteSpecific,
     sortIcon,
@@ -473,9 +473,9 @@ export const SetAssignments = () => {
 
     // Page help
     const pageHelp = <span>
-        Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
+        Use this page to set {siteSpecific("assignments", "quizzes")} to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
         <br/>
-        Students in the group will be emailed when you set a new assignment.
+        Students in the group will be emailed when you set a new {siteSpecific("assignment", "quiz")}.
     </span>;
 
     return <Container>
@@ -491,23 +491,23 @@ export const SetAssignments = () => {
 
         <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} modalId="set_assignments_help"/>
         <h4 className="mt-4 mb-3">
-            Add a gameboard from ...
+            Add a {siteSpecific("gameboard", "quiz")} from ...
         </h4>
-        <AddGameboardButtons className={"mb-4"} redirectBackTo={"/set_assignments"}/>
+        <AddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
         {groups && groups.length === 0 && <Alert color="warning">
             You have not created any groups to assign work to.
             Please <Link to="/groups">create a group here first.</Link>
         </Alert>}
         {boards && boards.totalResults === 0
             ? <h3 className="text-center mt-4 mb-5">
-                You have no gameboards to assign; use one of the options above to find one.
+                You have no {siteSpecific("gameboards", "quizzes")} to assign; use one of the options above to find one.
             </h3>
             : <>
                 {boards && boards.totalResults > 0 && <h4>
-                    You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...
+                    You have <strong>{boards.totalResults}</strong> {siteSpecific("gameboard", "quiz")}{boards.totalResults > 1 && siteSpecific("s", "zes")} ready to assign...
                 </h4>}
                 {!boards && <h4>
-                    You have <IsaacSpinner size="sm" inline/> gameboards ready to assign...
+                    You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
                 </h4>}
                 <Row>
                     <Col sm={6} lg={3} xl={2}>

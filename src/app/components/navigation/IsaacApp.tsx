@@ -171,7 +171,7 @@ export const IsaacApp = () => {
                         {/* Teacher pages */}
                         {/* Tutors can set and manage assignments, but not tests/quizzes */}
                         <TrackedRoute exact path="/groups" ifUser={isTutorOrAbove} component={Groups} />
-                        <TrackedRoute exact path="/set_assignments" ifUser={isTutorOrAbove} component={SetAssignments} />
+                        <TrackedRoute exact path={PATHS.SET_ASSIGNMENTS} ifUser={isTutorOrAbove} component={SetAssignments} />
                         <TrackedRoute exact path={PATHS.ASSIGNMENT_PROGRESS} ifUser={isTutorOrAbove} component={AssignmentProgress} />
 
                         {/* Admin */}

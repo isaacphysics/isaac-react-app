@@ -15,12 +15,4 @@
   position: relative;
   border-radius: 0;
   border: none;
-  .card-footer {
-    @extend .p-3;
-    background-color: transparent;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    left: 0;
-  }
 }

@@ -226,9 +226,9 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
             }
             if (redirectOnSuccess) {
                 if (isTutorOrAbove(user)) {
-                    const assignBoardPath = persistence.load(KEY.ASSIGN_BOARD_PATH) ?? "/set_assignments";
+                    const assignBoardPath = persistence.load(KEY.ASSIGN_BOARD_PATH) ?? PATHS.SET_ASSIGNMENTS;
                     history.push(`${assignBoardPath}#${boardId}`);
-                    setAssignBoardPath("/set_assignments");
+                    setAssignBoardPath(PATHS.SET_ASSIGNMENTS);
                 } else {
                     history.push(`${PATHS.MY_GAMEBOARDS}#${boardId}`);
                 }

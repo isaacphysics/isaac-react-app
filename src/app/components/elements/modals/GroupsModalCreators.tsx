@@ -10,7 +10,7 @@ import {
     mutationSucceeded,
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history, isTeacherOrAbove} from "../../../services";
+import {history, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
@@ -101,9 +101,9 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
             <Col>
                 <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());
-                    history.push("/set_assignments");
+                    history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
-                    Set an assignment
+                    Set {siteSpecific("an assignment", "a quiz")}
                 </Button>
             </Col>
             <Col>

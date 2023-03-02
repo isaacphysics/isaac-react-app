@@ -43,7 +43,7 @@ export const GameboardCard = ({user, board}: {user: RegisteredUserDTO; board: Ga
                     <span>By: {formatBoardOwner(user, board)}</span>
                 </Col>
             </Row>
-            <Row className={"mb-5"}>
+            <Row className={"mb-0"}>
                 <Col>
                     <b>Created</b>: {formatDate(board.creationDate)}<br/>
                     <b>Last visited</b>: {formatDate(board.lastVisited)}<br/>
@@ -52,7 +52,7 @@ export const GameboardCard = ({user, board}: {user: RegisteredUserDTO; board: Ga
                     ).join(", ") || "-"}<br/>
                 </Col>
             </Row>
-            <CardFooter className={"text-right p-0"}>
+            <CardFooter className={"text-right p-3"}>
                 <ShareLink outline linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className={"d-inline-block"} />
                 <Button outline color={"secondary"} className={"mr-0 bin-icon d-inline-block outline"} onClick={confirmCardDeleteBoard} aria-label="Delete gameboard"/>
             </CardFooter>

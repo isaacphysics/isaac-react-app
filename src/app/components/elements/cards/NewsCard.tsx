@@ -57,7 +57,7 @@ const PhysicsNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
 
 export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <Card className={classNames("news-card border-0 pb-4 my-3 my-xl-0")}>
+    return <Card className={classNames("news-card border-0 pb-3 my-3 my-xl-0")}>
         {image && <a href={url} className={"w-100"}>
             <CardImg
                 className={"news-card-image"}
@@ -74,7 +74,7 @@ export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
                 <p>{value}</p>
             </CardBody>
         </>}
-        {url && !url?.startsWith("http") && isAppLink(url) && <CardFooter className={"bg-white border-top-0 pt-0"}>
+        {url && !url?.startsWith("http") && isAppLink(url) && <CardFooter className={"border-top-0 p-4"}>
             <Button outline color={"secondary"} tag={Link} to={url}>Read more</Button>
         </CardFooter>}
     </Card>;

@@ -22,7 +22,7 @@ import {
     isItemEqual,
     isPhy,
     Item,
-    NOT_FOUND,
+    NOT_FOUND, PATHS,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
     selectOnChange,
@@ -677,7 +677,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                     <Col xs={8} lg={"auto"} className="ml-auto text-right">
                         <Button size={siteSpecific("md", "sm")} tag={Link} color="secondary"
                                    to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}
-                                   onClick={() => setAssignBoardPath("/set_assignments")}
+                                   onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                         >
                             {siteSpecific(<>Save to My&nbsp;Gameboards</>, "Save to my quizzes")}
                         </Button>
