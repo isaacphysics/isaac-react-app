@@ -7,10 +7,11 @@ RUN mkdir /build
 WORKDIR /build
 
 COPY package.json /build
-RUN npm install
+COPY yarn.lock /build
+RUN yarn install --frozen-lockfile
 
 COPY . /build
-RUN npm run $BUILD_TARGET
+RUN yarn $BUILD_TARGET
 
 FROM nginx:stable
 ARG BUILD_TARGET
