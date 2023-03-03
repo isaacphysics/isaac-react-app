@@ -104,9 +104,6 @@
   overflow: auto;
   display: block;
   .table.table-bordered {
-    thead {
-      @include table-sticky();
-    }
     tr {
       td {
         .custom-control-label {

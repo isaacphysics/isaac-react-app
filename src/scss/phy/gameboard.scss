@@ -16,6 +16,9 @@
 .responsive {
   max-height: 60vh;
   .table.table-bordered {
+    thead {
+      @include table-sticky();
+    }
     tr {
       &.disabled {
         background-color: lightgrey;
