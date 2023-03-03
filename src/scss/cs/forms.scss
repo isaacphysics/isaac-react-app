@@ -8,36 +8,35 @@
 }
 
 // FIXME ADA this probably needs a rethink but it works for now
-.long-search-bar {
-  width: 100%;
-  #header-search {
+#homepage-search-group {
+  width: calc(100% + 30px);
+  height: 72px;
+  #homepage-search {
+    padding-left: $border-radius * 6;
+    height: 100%;
     max-width: unset !important;
-    width: 100%;
-    border-bottom-left-radius: ($border-radius * 10);
+    border-radius: ($border-radius * 10);
     border: 2px solid $cs-black;
-    z-index: 1;
+    z-index: 3;
   }
   .long-search-button {
+    z-index: 2 !important;
+    border-radius: 0 ($border-radius * 10) ($border-radius * 10) 0 !important;
     &:hover {
       background-color: $cs-black !important;
     }
-    &:focus {
-      border-radius: ($border-radius * 10) !important;
-    }
     &:active {
-      border-radius: ($border-radius * 10) !important;
       box-shadow: 0 2px 10px #9C9C9C;
     }
-    position: absolute;
-    z-index: 0;
-    right: -36px;
-    background-color: black;
-    width: calc(36px + 40px);
-    height: 40px;
+    background-color: black !important;
+    width: 100px;
+    left: -30px;
+    //height: 40px;
     svg {
+      height: 100%;
       position: absolute;
-      right: 3px;
-      top: 1px;
+      right: 7px;
+      top: 0;
     }
   }
 }

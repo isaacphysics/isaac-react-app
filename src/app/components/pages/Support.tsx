@@ -4,13 +4,13 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, isDefined, isAda, siteSpecific} from "../../services";
+import {history, isAda, isDefined, siteSpecific} from "../../services";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";
 
-type SupportType = "student" | "teacher";
+type SupportType = "student" | "teacher" | "tutor";
 
 interface Params {
     type?: SupportType;
@@ -28,7 +28,7 @@ interface SupportCategories {
     };
 }
 
-const support: {student: SupportCategories; teacher: SupportCategories} = siteSpecific(
+const support: {student: SupportCategories; teacher: SupportCategories, tutor?: SupportCategories} = siteSpecific(
     {
         student: {
             title: "Student FAQ",
@@ -49,6 +49,17 @@ const support: {student: SupportCategories; teacher: SupportCategories} = siteSp
                 suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
                 partner: { category: "partner", title: "Partner with us", icon: "teacher-hat" },
                 direct: { category: "direct", title: "Teacher support", icon: "teacher-hat"},
+                troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
+                legal: { category: "legal", title: "Legal", icon: "faq"}
+            }
+        },
+        tutor: {
+            title: "Tutor FAQ",
+            categories: {
+                general: { category: "general", title: "Get started", icon: "faq" },
+                assignments: { category: "assignments", title: "Set work", icon: "faq" },
+                progress: { category: "progress", title: "View student progress", icon: "faq" },
+                suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
                 troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
                 legal: { category: "legal", title: "Legal", icon: "faq"}
             }
@@ -108,7 +119,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     }
 
     function tabTitleClass(tabName: string, tabIndex: number) {
-        return "support-tab-" + section.categories[categoryNames[tabIndex - 1]].icon;
+        return "support-tab-" + section?.categories[categoryNames[tabIndex - 1]].icon;
     }
 
     const metaDescriptionMap = {
@@ -120,7 +131,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {isAda && isDefined(type) && <MetaDescription description={metaDescriptionMap[type]} />}
+                {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>

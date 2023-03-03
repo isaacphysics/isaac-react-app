@@ -222,7 +222,7 @@ const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
     {label: "University", value: STAGE.UNIVERSITY},
-    {label: "All Stages", value: STAGE.ALL},
+    {label: "All stages", value: STAGE.ALL},
 ];
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;

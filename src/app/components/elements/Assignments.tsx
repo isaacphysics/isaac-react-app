@@ -8,7 +8,7 @@ import {
     difficultyShortLabelMap,
     extractTeacherName,
     generateGameboardSubjectHexagons,
-    isDefined,
+    isDefined, PATHS,
     stageLabelMap,
     TAG_ID,
     tags
@@ -46,7 +46,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 </div>
             </Col>
             <Col xs={8} md={3} lg={4} className="pl-lg-5">
-                <Link to={`/gameboards#${assignment.gameboardId}`}>
+                <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                     <h4>{isDefined(assignment.gameboard) && assignment.gameboard.title}</h4>
                 </Link>
                 {isDefined(assignmentStartDate) &&
@@ -95,7 +95,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
             </Col>
             <Col xs={5} md={2} className="mt-sm-2 text-right">
-                <Link to={`/gameboards#${assignment.gameboardId}`}>
+                <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                     View Assignment
                 </Link>
                 {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && now > midnightOf(assignment.dueDate) && assignment.gameboard.percentageCompleted !== 100 &&

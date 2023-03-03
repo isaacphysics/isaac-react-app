@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {SearchButton, SearchInput} from "./SearchButton";
+import {MainSearchInput} from "./SearchInputs";
 import {isPhy} from "../../services";
 import {Collapse, Nav, Navbar, NavbarToggler, NavItem} from "reactstrap";
 import classNames from "classnames";
@@ -15,7 +15,7 @@ export const MainSearch = () => {
         <Collapse navbar isOpen={showSearchBox}>
             <Nav className={classNames("ml-auto",{"mb-3 mb-md-0": isPhy})} navbar id="search-menu">
                 <NavItem>
-                    <SearchInput button={<SearchButton/>} prompt={"Search"}/>
+                    <MainSearchInput inline/>
                 </NavItem>
             </Nav>
         </Collapse>

@@ -10,7 +10,7 @@ import {
     mutationSucceeded,
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history, isTeacherOrAbove} from "../../../services";
+import {history, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
@@ -101,9 +101,9 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
             <Col>
                 <Button block color="secondary" onClick={() => {
                     store.dispatch(closeActiveModal());
-                    history.push("/set_assignments");
+                    history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
-                    Set an assignment
+                    Set {siteSpecific("an assignment", "a quiz")}
                 </Button>
             </Col>
             <Col>
@@ -186,16 +186,19 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         <p>
             Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
             It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
-            <br/>
+        </p>
+
+        <p>
             {group.additionalManagerPrivileges
                 ? <>Additional managers have been allowed by the group owner to:
                     <ul>
                         <li>Modify and delete all assignments to the group</li>
+                        <li>Remove group members</li>
                         <li>Archive the group</li>
                         <li>Rename the group</li>
                     </ul>
                 </>
-                : "Additional managers cannot modify or delete each others assignments by default, or archive and rename the group, but these features can be enabled by the group owner."
+                : "Additional managers cannot modify or delete each others assignments by default, archive and rename the group, or remove group members, but these features can be enabled by the group owner."
             }
         </p>
 
@@ -252,11 +255,12 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             {group.additionalManagerPrivileges
                 ? <>
                     <span className={"font-weight-bold"}>Caution</span>: All other group managers are allowed delete
-                    and modify any assignments set to this group, by any other manager including you (the owner). Un-tick the above
-                    box if you would like to remove these additional privileges.
+                    and modify any assignments set to this group (by any other manager including the owner), remove
+                    group members, and archive and rename the group. <br/>
+                    Un-tick the above box if you would like to remove these additional privileges.
                 </>
                 : <>Enabling this allows other group managers to delete and modify <b>all assignments</b> set to this group
-                    (by any other manager, including the owner).
+                    (by any other manager, including the owner), remove group members, and archive and rename the group.
                 </>
             }
         </Alert>}

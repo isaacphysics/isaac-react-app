@@ -3,10 +3,12 @@ import {getMyProgress, selectors, useAppDispatch, useAppSelector} from "../../st
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {isTeacherOrAbove} from "../../services";
+import {isTeacherOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
+
+// FIXME ADA consider removing? /!\
 
 // TODO do we need a version of this for CS tutors?
 export const TeacherTools = () => {
@@ -72,7 +74,7 @@ export const TeacherTools = () => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Set an assignment" linkDestination="/set_assignments" linkText="Set assignments"
+                                    title="Set a quiz" linkDestination={PATHS.SET_ASSIGNMENTS} linkText={"Set quizzes"}
                                     amountText={achievementText("set", (achievementsSelector && achievementsSelector.TEACHER_ASSIGNMENTS_SET) || 0, "assignment")}
                                 >
                                     Set more assignments from the set assignments page.

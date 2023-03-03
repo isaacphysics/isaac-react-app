@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {useAppSelector, selectors} from "../../state";
-import {isLoggedIn, isTeacherOrAbove} from "../../services";
+import {isLoggedIn, isTeacherOrAbove, PATHS} from "../../services";
 import {Link} from "react-router-dom";
 import {IsaacCard} from "../content/IsaacCard";
 
@@ -43,7 +43,7 @@ export const TeacherFeatures = () => {
                 subtitle: "Create and manage class groups, and share them with colleagues."}}
                        imageClassName="teacher-features"
             />
-            <IsaacCard doc={{ clickUrl: "/set_assignments",
+            <IsaacCard doc={{ clickUrl: PATHS.SET_ASSIGNMENTS,
                 image: {src: "/assets/phy/teacher_features_sprite.svg#set-assignments"},
                 title: "2. Set Assignments",
                 disabled: isDisabled,
@@ -51,7 +51,7 @@ export const TeacherFeatures = () => {
                 subtitle: "Set assignments from our skills books, pre-made boards or create your own."}}
                        imageClassName="teacher-features"
             />
-            <IsaacCard doc={{ clickUrl: "/assignment_progress",
+            <IsaacCard doc={{ clickUrl: PATHS.ASSIGNMENT_PROGRESS,
                 image: {src: "/assets/phy/teacher_features_sprite.svg#track-progress"},
                 title: "3. Assignment Progress",
                 disabled: isDisabled,

@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isAda, isMobile, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
+import {isAda, isMobile, isPhy, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
+import classNames from "classnames";
 
-export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
+export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean; outline?: boolean; className?: string}) => {
     const [showShareLink, setShowShareLink] = useState(false);
     const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const user = useAppSelector(selectors.user.orNull);
@@ -38,15 +39,15 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     useOutsideCallback(shareLinkDivRef, () => clickAwayClose && setShowShareLink(false), [setShowShareLink])
 
     const buttonAriaLabel = showShareLink ? "Hide share link" : "Get share link";
-    const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * 9);
+    const linkWidth = isMobile() || reducedWidthLink ? 192 : (shareUrl.length * siteSpecific(9, 6));
     const showDuplicateAndEdit = gameboardId && isTutorOrAbove(user);
-    return <div ref={shareLinkDivRef} className="share-link-icon">
-        <button className="btn-action" onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
+    return <div ref={shareLinkDivRef} className={classNames("share-link-icon", className)}>
+        <button className={siteSpecific("btn-action", classNames({"outline": outline}))} onClick={() => toggleShareLink()} aria-label={buttonAriaLabel} />
         <div className={`share-link ${showShareLink ? "d-block" : ""} ${showDuplicateAndEdit ? "double-height" : ""}`} style={{width: linkWidth}}>
             <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
             {showDuplicateAndEdit && <React.Fragment>
-                <hr className="text-center mt-4" />
-                <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
+                {isPhy && <hr className="text-center mt-4" />}
+                <a href={`/gameboard_builder?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
                     {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
                 </a>
             </React.Fragment>}

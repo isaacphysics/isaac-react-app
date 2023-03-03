@@ -1,10 +1,135 @@
 @import "../common/button";
+
+@mixin ada-button($text-color, $color, $hover-color, $active-color) {
+  background-color: $color;
+  border: 3px solid $color;
+  box-shadow: none;
+  color: $text-color;
+  overflow: hidden;  // To stop margin collapse from hiding the focus outline
+  text-decoration: none;
+  &:hover {
+    color: $text-color;
+    border-color: $hover-color;
+    background-color: $hover-color;
+    text-decoration: underline;
+  }
+  &:active {
+    color: $text-color !important;
+    text-decoration: none !important;
+    border-color: $active-color !important;
+    background-color: $active-color !important;
+    box-shadow: none !important;
+  }
+  &:focus:not(.disabled) {
+    box-shadow: none;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 3px $button-focus-blue !important;
+  }
+  &.disabled, &:disabled {
+    color: $cs-jet;
+    background-color: $cs-silver;
+    border-color: $cs-silver;
+  }
+}
+
+@mixin ada-button-outline($color, $hover-color, $active-color) {
+  background-color: transparent;
+  border: 3px solid $color;
+  box-shadow: none;
+  color: $color;
+  overflow: hidden;  // To stop margin collapse from hiding the focus outline
+  text-decoration: none;
+  &:hover {
+    color: $hover-color;
+    text-decoration: underline;
+    background-color: transparent;
+  }
+  &:active {
+    color: $active-color !important;
+    text-decoration: none !important;
+    border-color: $active-color !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  &:focus:not(.disabled) {
+    box-shadow: none;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 3px $button-focus-blue !important;
+  }
+  &.disabled, &:disabled {
+    color: $cs-jet;
+    border-color: $cs-silver;
+  }
+}
+
+
 .btn, input.btn {
   border-radius: 50px;
-  //Button Secondary
-  &.btn-secondary {
-    color: $black;
+  border-width: 3px;
+
+  font-size: 1.111rem;
+  &:not(.btn-sm):not(.btn-link) {
+    padding: 0.5rem 2.1rem;
   }
+  @extend .font-weight-semi-bold;
+  &.btn-sm {
+    padding: 0.2rem 0.7rem;
+  }
+  min-width: 25px !important;
+
+  // Primary buttons (for dark background)
+  &.btn-dark-primary {
+    @include ada-button($cs-black, $cs-pink, $dark-hover-pink, $dark-active-pink);
+  }
+
+  // Secondary buttons (for dark background)
+  // Secondary Button components are expected to use the 'outline' prop!
+  &.btn-outline-dark-secondary {
+    @include ada-button-outline($cs-pink, $dark-hover-pink, $dark-active-pink);
+  }
+
+  // Primary buttons (light background)
+  &.btn-primary, &.btn-secondary, &.btn-icon {
+    @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
+  }
+
+  // Secondary buttons (for light background)
+  // Secondary Button components are expected to use the 'outline' prop!
+  &.btn-outline-secondary, &.btn-outline-primary, &.btn-outline-icon {
+    @include ada-button-outline($cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
+  }
+
+  // FIXME ADA need to make all other buttons use these different hover and active colours
+  &.btn-link {
+    margin: 0;
+    padding: 0;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: $cs-dark-pink;
+    overflow: hidden;  // To stop margin collapse from hiding the focus outline
+    text-decoration: underline;
+    &:hover {
+      color: $light-hover-dark-pink;
+      text-decoration: none;
+    }
+    &:active {
+      color: $light-active-dark-pink;
+      text-decoration: none;
+    }
+    &:focus-visible {
+      outline: 2px solid $button-focus-blue !important;
+      border-radius: 0 !important;
+    }
+    &.disabled, &:disabled {
+      color: $cs-silver;
+    }
+  }
+
+  // FIXME ADA: decide what to do with the following QQ buttons
   &.btn-negative {
     background-color: $highlight-yellow-50;
     color: black;
@@ -29,12 +154,6 @@
     background-color: $highlight-dark-pink;
     color: white;
   }
-  &.btn-secondary:not(:disabled):not(.disabled):active {
-    background-color: $cs-dark-pink;
-    border: 1px solid transparent;
-    color: $black;
-    text-decoration: underline;
-  }
   &.hide-answer {
     background-color: $highlight-dark-pink !important;
     border: 1px solid transparent !important;
@@ -46,22 +165,6 @@
   &.confidence-help {
     min-width: 20px !important;
   }
-
-  // FIXME ADA example temporary fix for styling of outline buttons
-  &.btn-outline-dark-pink {
-    color: $cs-black !important;
-    border-width: 3px;
-    &:hover {
-      color: $cs-white !important;
-      box-shadow: 0 2px 10px #9C9C9C;
-    }
-    &.disabled {
-      border: none !important;
-      background-color: $cs-silver;
-      color: $cs-jet; // FIXME ADA not sure about this one but it looks right
-    }
-  }
-
 }
 
 .alert-hide {
@@ -80,4 +183,122 @@
 
 .quick-question-muted {
   border-color: grey !important;
+}
+
+.btn-outline-icon {
+  @extend .btn;
+  padding: 0 !important;
+  min-width: unset !important;
+  width: 48px !important;
+  height: 48px !important;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+.btn-icon {
+  @extend .btn;
+  background-color: $cs-dark-pink;
+  padding: 0 !important;
+  min-width: unset !important;
+  width: 48px !important;
+  height: 48px !important;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.share-link-icon {
+  position: relative;
+  button {
+    &:not(.outline) {
+      @extend .btn-icon;
+      background-position: 48% 50%;
+      background-image: url("/assets/cs/icons/share.svg");
+    }
+    &.outline {
+      @extend .btn-outline-icon;
+      background-position: 48% 50%;
+      // FIXME ADA replace with correct grey shade
+      &:active {
+        background-color: white !important;
+      }
+      background-color: white !important;
+      background-image: url("/assets/cs/icons/share-pink.svg");
+    }
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+    position: relative;
+    z-index: 2;
+  }
+  .share-link {
+    z-index: 1;
+    top: 3px;
+    font-family: $secondary-font !important;
+    display: none;
+    position: absolute;
+    border: 1px solid gray;
+    transform: translate(calc(30px - 100%));
+    height: 42px;
+    width: 70%;
+
+    input {
+      z-index: 1;
+      padding-right: 40px;
+      padding-left: 10px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      user-select: all;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      -ms-user-select: all;
+      width: 100%;
+      height: 100%;
+    }
+
+    &.double-height {
+      height: auto;
+      padding-bottom: 10px;
+      background: #fff;
+      text-align: center;
+      input {
+        height: 42px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+}
+
+.print-icon {
+  &:not(.outline) {
+    @extend .btn-icon;
+  }
+  &.outline {
+    @extend .btn-outline-icon;
+  }
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+  background-image: url("/assets/cs/icons/print.svg");
+}
+
+.report-icon {
+  &:not(.outline) {
+    @extend .btn-icon;
+  }
+  &.outline {
+    @extend .btn-outline-icon;
+  }
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+  background-image: url("/assets/cs/icons/flag.svg");
+}
+
+.bin-icon {
+  &:not(.outline) {
+    @extend .btn-icon;
+    background-image: url("/assets/cs/icons/bin.svg");
+  }
+  &.outline {
+    @extend .btn-outline-icon;
+    background-image: url("/assets/cs/icons/bin-pink.svg");
+  }
+  margin-right: 7.5px;
+  margin-left: 7.5px;
 }

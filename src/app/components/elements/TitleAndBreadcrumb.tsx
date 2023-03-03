@@ -2,8 +2,9 @@ import React, {ReactElement} from "react";
 import {PageTitle, PageTitleProps} from "./PageTitle";
 import {Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {Link} from "react-router-dom";
-import {CollectionType, HOME_CRUMB, LinkInfo} from "../../services";
+import {CollectionType, HOME_CRUMB, isAda, isPhy, LinkInfo} from "../../services";
 import {Markup} from "./markup";
+import classNames from "classnames";
 
 interface BreadcrumbTrailProps {
     currentPageTitle: string;
@@ -52,17 +53,20 @@ export const formatBreadcrumbItem = (currentPageTitle: string, disallowLaTeX?: b
 type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
     breadcrumbTitleOverride?: string;
     children?: ReactElement | boolean;
-    modalId?: string;
 };
-
-export const TitleAndBreadcrumb = (props: TitleAndBreadcrumbProps) => {
-    const breadcrumbProps = {...props, className: undefined};
-    if (props.breadcrumbTitleOverride) {
-        breadcrumbProps.currentPageTitle = props.breadcrumbTitleOverride;
-    }
-    return <React.Fragment>
-        <BreadcrumbTrail {...breadcrumbProps} />
-        {props.children}
-        <PageTitle {...props} />
-    </React.Fragment>;
+export const TitleAndBreadcrumb = ({modalId, children, breadcrumbTitleOverride, currentPageTitle, subTitle, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs}: TitleAndBreadcrumbProps) => {
+    return <div className={classNames(className, {"pt-4 pt-md-5": isAda})}>
+        {isPhy && <BreadcrumbTrail
+            currentPageTitle={breadcrumbTitleOverride ?? currentPageTitle}
+            intermediateCrumbs={intermediateCrumbs}
+            collectionType={collectionType}
+        />}
+        {children}
+        <PageTitle
+            modalId={modalId} subTitle={subTitle}
+            disallowLaTeX={disallowLaTeX} audienceViews={audienceViews}
+            currentPageTitle={currentPageTitle} help={help}
+        />
+        {isAda && <hr/>}
+    </div>;
 };

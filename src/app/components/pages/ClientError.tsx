@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
+import ReactGA4 from "react-ga4";
 import {WEBMASTER_EMAIL} from "../../services";
 import {FallbackProps} from "react-error-boundary";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
@@ -20,6 +21,10 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     ReactGA.exception({
+        description: `client_error: ${error?.message || 'unknown'}`,
+        fatal: true
+    });
+    ReactGA4.gtag("event", "exception", {
         description: `client_error: ${error?.message || 'unknown'}`,
         fatal: true
     });

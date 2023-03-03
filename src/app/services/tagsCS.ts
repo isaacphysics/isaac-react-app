@@ -13,18 +13,18 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.computerScience, title: "Computer Science"},
 
         // Computer science strands
-        {id: TAG_ID.machineLearningAi, title: "Artificial intelligence", parent: TAG_ID.computerScience, hidden: true},
+        {id: TAG_ID.artificialIntelligence, title: "Artificial intelligence", parent: TAG_ID.computerScience, hidden: true},
         {id: TAG_ID.dataStructuresAndAlgorithms, title: "Algorithms and data structures", parent: TAG_ID.computerScience},
         {id: TAG_ID.computerSystems, title: "Computing systems", parent: TAG_ID.computerScience},
         {id: TAG_ID.creatingMedia, title: "Creating media", parent: TAG_ID.computerScience},
         {id: TAG_ID.dataAndInformation, title: "Data and information", parent: TAG_ID.computerScience},
         {id: TAG_ID.designAndDevelopment, title: "Design and development", parent: TAG_ID.computerScience},
         {id: TAG_ID.effectiveUseOfTools, title: "Effective use of tools", parent: TAG_ID.computerScience},
-        {id: TAG_ID.impactsOfDigitalTechnology, title: "Impacts of technology", parent: TAG_ID.computerScience},
-        {id: TAG_ID.networking, title: "Networks", parent: TAG_ID.computerScience},
+        {id: TAG_ID.impactsOfDigitalTechnology, title: "Impact of technology", parent: TAG_ID.computerScience},
+        {id: TAG_ID.computerNetworks, title: "Networks", parent: TAG_ID.computerScience},
         {id: TAG_ID.programming, title: "Programming", parent: TAG_ID.computerScience},
         {id: TAG_ID.cyberSecurity, title: "Safety and security", parent: TAG_ID.computerScience},
-        {id: TAG_ID.modelsOfComputation, title: "Models of computation", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.theoryOfComputation, title: "Models of computation", parent: TAG_ID.computerScience, stageOverride: GCSE_HIDDEN},
 
         // Algorithms and data structures topics
         {id: TAG_ID.complexity, title: "Complexity", parent: TAG_ID.dataStructuresAndAlgorithms, stageOverride: GCSE_HIDDEN},
@@ -58,7 +58,6 @@ export class CsTagService extends AbstractBaseTagService {
         // Design and development topics
         {id: TAG_ID.programDesign, title: "Program design", parent: TAG_ID.designAndDevelopment},
         {id: TAG_ID.softwareEngineeringPrinciples, title: "Software engineering principles", parent: TAG_ID.designAndDevelopment, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.softwareProject, title: "Software projects", parent: TAG_ID.designAndDevelopment, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.testing, title: "Testing", parent: TAG_ID.designAndDevelopment},
 
         // Effective use of tools topics
@@ -70,10 +69,10 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.legislation, title: "Legislation", parent: TAG_ID.impactsOfDigitalTechnology},
 
         // Networks topics
-        {id: TAG_ID.communication, title: "Communication systems", parent: TAG_ID.networking, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.computerNetworks, title: "Computer networks", parent: TAG_ID.networking},
-        {id: TAG_ID.theInternet, title: "The internet", parent: TAG_ID.networking},
-        {id: TAG_ID.webTechnologies, title: "Web technologies", parent: TAG_ID.networking, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.communication, title: "Communication systems", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.networking, title: "Network fundamentals", parent: TAG_ID.computerNetworks},
+        {id: TAG_ID.theInternet, title: "The internet", parent: TAG_ID.computerNetworks},
+        {id: TAG_ID.webTechnologies, title: "Web technologies", parent: TAG_ID.computerNetworks, stageOverride: GCSE_HIDDEN},
 
         // Programming topics
         {id: TAG_ID.eventDrivenProgramming, title: "Event-driven programming", parent: TAG_ID.programming},
@@ -93,8 +92,8 @@ export class CsTagService extends AbstractBaseTagService {
         {id: TAG_ID.socialEngineering, title: "Social engineering", parent: TAG_ID.cyberSecurity},
 
         // Models of computation topics
-        {id: TAG_ID.machinesWithMemory, title: "Machines with memory", parent: TAG_ID.modelsOfComputation, stageOverride: GCSE_HIDDEN},
-        {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.modelsOfComputation, stageOverride: GCSE_HIDDEN}
+        {id: TAG_ID.machinesWithMemory, title: "Machines with memory", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN},
+        {id: TAG_ID.mathsForCs, title: "Maths for computer science", parent: TAG_ID.theoryOfComputation, stageOverride: GCSE_HIDDEN}
     ];
     public getTagHierarchy() {return CsTagService.tagHierarchy;}
     public getBaseTags() {return CsTagService.baseTags;}

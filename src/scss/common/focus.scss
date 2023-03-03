@@ -27,12 +27,6 @@
   border-radius: 3px;
 }
 
-.btn.btn-link:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
-}
-
 .navbar-toggler:focus {
   box-shadow: none;
   border: 0.2rem solid $focus-blue;
@@ -54,24 +48,6 @@
   outline: 0.2rem solid $secondary;
 }
 
-.btn-action:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 2px;
-  outline: none !important;
-}
-
-.btn.btn-outline-primary:focus {
-  box-shadow: 0 0 0 2pt $secondary !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
-.btn-secondary:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
 .book-chapter:focus {
   box-shadow: 0 0 0 2pt black !important;
   border-radius: 1px;
@@ -90,34 +66,18 @@
   outline: none !important;
 }
 
-.btn-danger:focus {
-  box-shadow: 0 0 0 2pt black !important;
-  border-radius: 8px;
-  outline: none !important;
-}
-
 .login-b:focus {
   box-shadow: none;
   border: 0.2rem solid $focus-blue;
 }
 
-.btn-outline-primary:focus {
-  border-color: $secondary !important;
-}
-
-.btn.btn-sm.a-alt:focus {
-  box-shadow: 0 0 0 0.2rem $focus-blue !important;
-  outline: none !important;
-  border-radius: 3px;
-}
-
-.footerLink:focus {
+.footer-link:focus {
   box-shadow: 0 0 0 2pt white;
   border-radius: 3px;
   outline: none !important;
 }
 
-.footerTop a:focus {
+.footer-top a:focus {
   outline: 0.2rem solid white;
 }
 

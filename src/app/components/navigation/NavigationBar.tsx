@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {isaacApi, loadQuizAssignedToMe, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {
     Badge,
-    Collapse,
+    Collapse, Dropdown,
     DropdownItem,
     DropdownItemProps,
     DropdownMenu,
@@ -12,23 +12,30 @@ import {
     Navbar,
     NavbarToggler,
     NavLink,
-    UncontrolledDropdown
 } from "reactstrap";
-import {filterAssignmentsByStatus, isAda, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
+import {
+    filterAssignmentsByStatus,
+    isAda,
+    isFound,
+    partitionCompleteAndIncompleteQuizzes,
+    isLoggedIn,
+    isPhy, siteSpecific
+} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
 
-const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
+export const MenuOpenContext = React.createContext<{menuOpen: boolean; setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>}>({
     menuOpen: false, setMenuOpen: () => {}
 });
 
-export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWithChildren<DropdownItemProps & {muted?: boolean, badgeTitle?: string}>) => (
-    <DropdownItem tag={Link} className={classNames("pl-4 py-3 p-md-3", {"text-muted": muted})} {...props}>
+export const LinkItem = ({children, muted, badgeTitle, ...props}: React.PropsWithChildren<DropdownItemProps & {muted?: boolean, badgeTitle?: string}>) => {
+    const className = classNames(siteSpecific("pl-4 py-3 p-md-3", "pl-2 py-2 p-nav-3 font-h4"), {"text-muted": muted});
+    return <DropdownItem tag={Link} className={className} {...props}>
         {children}
         {badgeTitle && <Badge color="light" className="border-secondary border bg-white ml-2 mr-1">{badgeTitle}</Badge>}
     </DropdownItem>
-);
+};
 
 export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     <LinkItem to="/coming_soon" aria-disabled="true">
@@ -37,19 +44,28 @@ export const LinkItemComingSoon = ({children}: {children: React.ReactNode}) => (
     </LinkItem>
 );
 
-interface NavigationSectionProps {children: React.ReactNode; title: React.ReactNode; topLevelLink?: boolean; to?: string}
-export const NavigationSection = ({children, title, topLevelLink, to}: NavigationSectionProps) => (
-    <MenuOpenContext.Consumer>
-        {({setMenuOpen}) => <UncontrolledDropdown nav inNavbar>
+interface NavigationSectionProps {className?: string; children?: React.ReactNode; title: React.ReactNode; topLevelLink?: boolean; to?: string}
+export const NavigationSection = ({className, children, title, topLevelLink, to}: NavigationSectionProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const toggle = () => {
+        setIsOpen(!isOpen);
+    }
+    const linkClasses = siteSpecific("p-3 ml-3 mr-3", classNames("mx-0 mx-nav-1 p-3 font-h4", {"open": isOpen}));
+    const dropdownClasses = siteSpecific("p-3 pt-0 m-0 mx-lg-4 nav-section", "p-3 pt-0 m-0 nav-section");
+    return <MenuOpenContext.Consumer>
+        {({setMenuOpen}) => <Dropdown className={className} nav inNavbar isOpen={isOpen} toggle={toggle}>
             {topLevelLink ?
-                <NavLink className="p-3 ml-3 mr-3" tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> :
-                <DropdownToggle nav caret className="p-3 ml-3 mr-3">{title}</DropdownToggle>}
-            <DropdownMenu className="p-3 pt-0 m-0 mx-lg-4" onClick={() => setMenuOpen(false)}>
+                <NavLink className={linkClasses} tag={Link} to={to} onClick={() => setMenuOpen(false)}>{title}</NavLink> :
+                <DropdownToggle nav caret={isPhy} className={linkClasses}>
+                    {title}
+                    {isAda && <span onClick={toggle} className={classNames("cs-caret float-right d-nav-none d-inline-block", {"open": isOpen})}/>}
+                </DropdownToggle>}
+            {children && <DropdownMenu className={dropdownClasses} onClick={() => setMenuOpen(false)}>
                 {children}
-            </DropdownMenu>
-        </UncontrolledDropdown>}
+            </DropdownMenu>}
+        </Dropdown>}
     </MenuOpenContext.Consumer>
-);
+};
 
 export function MenuBadge({count, message, ...rest}: {count: number, message: string} & HTMLProps<HTMLDivElement>) {
     if (count == 0) {

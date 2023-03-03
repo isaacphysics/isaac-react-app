@@ -56,15 +56,15 @@ const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
 
 const AdaCard = ({doc, imageClassName, buttonText}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
-    return <Card className={classNames("cs-card border-0 py-4 pt-5 my-4 my-lg-0", imageClassName)}>
+    return <Card className={classNames("cs-card border-0 pt-4 pt-5 mt-4 my-lg-0", imageClassName)}>
         <CardTitle className={"px-4 mt-1"}>
-            <h4>{title}</h4>
+            <h3>{title}</h3>
         </CardTitle>
         <CardBody className={"px-4"}>
             <p>{subtitle}</p>
         </CardBody>
-        {clickUrl && isAppLink(clickUrl) && <CardFooter className={"bg-white border-top-0 pt-0"}>
-            <Button disabled={disabled} outline color={"dark-pink"} tag={Link} to={clickUrl}>{buttonText ?? "See more"}</Button>
+        {clickUrl && isAppLink(clickUrl) && <CardFooter className={"border-top-0 p-4"}>
+            <Button disabled={disabled} outline color="secondary" tag={Link} to={clickUrl}>{buttonText ?? "See more"}</Button>
         </CardFooter>}
     </Card>;
 };

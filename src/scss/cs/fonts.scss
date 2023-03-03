@@ -77,3 +77,21 @@
   url('/assets/cs/fonts/poppins-semibolditalic.woff') format('woff'),
   url('/assets/cs/fonts/poppins-semibolditalic.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'azaret-mono-regular';
+  font-weight: normal;
+  font-style: normal;
+  src: url('/assets/cs/fonts/azeret-mono-regular.woff2') format('woff2'),
+  url('/assets/cs/fonts/azeret-mono-regular.ttf') format('truetype'),
+  url('/assets/cs/fonts/azeret-mono-regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'azaret-mono-semibold';
+  font-weight: normal;
+  font-style: normal;
+  src: url('/assets/cs/fonts/azeret-mono-semibold.woff2') format('woff2'),
+  url('/assets/cs/fonts/azeret-mono-semibold.ttf') format('truetype'),
+  url('/assets/cs/fonts/azeret-mono-semibold.woff') format('woff');
+}

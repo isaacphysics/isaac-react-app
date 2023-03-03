@@ -22,7 +22,6 @@ import {
     Row
 } from "reactstrap";
 import {
-    ASSIGNMENT_PROGRESS_PATH,
     BoardLimit,
     formatBoardOwner,
     getAssignmentStartDate,
@@ -31,7 +30,7 @@ import {
     Item,
     itemise,
     MONTH_NAMES,
-    nthHourOf,
+    nthHourOf, PATHS,
     selectOnChange,
     siteSpecific,
     TODAY
@@ -61,7 +60,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const assignmentOwnedByMe = assignment.ownerUserId === user.id;
     const assignmentStartDate = getAssignmentStartDate(assignment);
     const gameboardTitle = assignment.gameboard?.title ?? "No gameboard title";
-    const gameboardLink = assignment.gameboardId ? `/gameboards#${assignment.gameboardId}` : undefined;
+    const gameboardLink = assignment.gameboardId ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}` : undefined;
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
             <h4><a target={"_blank"} rel={"noreferrer noopener"} href={gameboardLink}>{gameboardTitle}</a></h4>
@@ -81,7 +80,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             {assignment.gameboard && <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>}
             {assignment.gameboard && <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
             {assignment.listingDate <= TODAY() && <div>
-                <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`}>
+                <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`}>
                     View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
                 </a>
             </div>}
@@ -229,7 +228,6 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         setDueDate, setScheduledStartDate, setAssignmentNotes]);
 
     const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getMonth() + 1;
 
     const dueDateInvalid = dueDate && scheduledStartDate ? scheduledStartDate.valueOf() > dueDate.valueOf() : false;
 
@@ -277,11 +275,11 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 </Card>}
             </Label>
             <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setScheduledStartDate(e.target.valueAsDate as Date)} />
             </Label>
             <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+                <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                            onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} />
                 {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
             </Label>

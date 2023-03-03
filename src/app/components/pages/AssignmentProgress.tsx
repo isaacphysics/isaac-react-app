@@ -49,7 +49,6 @@ import {
 import {Link} from "react-router-dom";
 import {
     API_PATH,
-    ASSIGNMENT_PROGRESS_PATH,
     getAssignmentCSVDownloadLink,
     getAssignmentStartDate,
     hasAssignmentStarted,
@@ -58,7 +57,8 @@ import {
     isFound, isTeacherOrAbove,
     MARKBOOK_TYPE_TAB,
     siteSpecific,
-    useAssignmentProgressAccessibilitySettings
+    useAssignmentProgressAccessibilitySettings,
+    isPhy, PATHS
 } from "../../services";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
 import {formatDate} from "../elements/DateString";
@@ -258,7 +258,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 
     return <div className="assignment-progress-progress">
         <div className="progress-header">
-            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong> students have completed the gameboard <Link to={`/gameboards#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link> correctly.
+            <strong>{studentsCorrect}</strong> of <strong>{progress.length}</strong> students have completed the gameboard <Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>{assignment.gameboard.title}</Link> correctly.
         </div>
         {progress.length > 0 && <>
             <div className="progress-questions">
@@ -367,7 +367,7 @@ const AssignmentDetails = ({assignment}: {assignment: EnhancedAssignment}) => {
                 <span className="d-none d-md-inline">,</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getAssignmentCSVDownloadLink(assignment.id as number)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
-                <Button className="d-none d-md-inline" color="link" tag="a" href={`/${ASSIGNMENT_PROGRESS_PATH}/${assignment.id}`} onClick={openSingleAssignment}>View individual assignment</Button>
+                <Button className="d-none d-md-inline" color="link" tag="a" href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`} onClick={openSingleAssignment}>View individual assignment</Button>
             </div>
         </div>
         {isExpanded && <ProgressLoader assignment={assignment} />}
@@ -512,8 +512,8 @@ const GroupDetails = ({group}: {group: AppGroup}) => {
 
     return <div className={"assignment-progress-details" + (pageSettings.colourBlind ? " colour-blind" : "")}>
         <AssignmentProgressLegend showQuestionKey={activeTab === MARKBOOK_TYPE_TAB.tests} />
-        {/* Only full teachers can see the tests tab */}
-        {pageSettings.isTeacher
+        {/* Only full teachers on Isaac Physics can see the tests tab */}
+        {pageSettings.isTeacher && isPhy
             ? <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={setActiveTab}>
                 {{
                     [`Assignments (${assignments.length || 0})`]: assignmentTabComponents,
@@ -552,7 +552,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> Assignment{assignmentCount != 1 && "s"}<span className="d-none d-md-inline"> set</span></div>
             <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Assignments CSV)</a></div>
-            {pageSettings.isTeacher && <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>}
+            {pageSettings.isTeacher && isPhy && <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
                 <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>

@@ -2,17 +2,16 @@
 .header-logo {
   float: left;
 
-  @include respond-above(sm) {
+  @include respond-above(nav) {
     float: none;
   }
 
   img {
-    width: 104px;
-    height: 46px;
-
-    @include respond-above(sm) {
-      width: 250px;
-      height: 125px;
+    width: auto;
+    height: 3rem;
+    @include respond-above(nav) {
+      height: 4rem;
+      float: none;
     }
   }
 }

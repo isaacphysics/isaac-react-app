@@ -53,7 +53,7 @@ import {
     isStaff,
     Item,
     itemise,
-    nthHourOf,
+    nthHourOf, PATHS,
     selectOnChange,
     siteSpecific,
     sortIcon,
@@ -94,7 +94,6 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
     }
 
     const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getMonth() + 1;
     const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
@@ -118,11 +117,11 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
             />
         </Label>
         {allowScheduling && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                        onChange={setScheduledStartDateAtSevenAM} />
         </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>
@@ -473,9 +472,9 @@ export const SetAssignments = () => {
 
     // Page help
     const pageHelp = <span>
-        Use this page to set assignments to your groups. You can assign any gameboard you have saved to your account.
+        Use this page to set {siteSpecific("assignments", "quizzes")} to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
         <br/>
-        Students in the group will be emailed when you set a new assignment.
+        Students in the group will be emailed when you set a new {siteSpecific("assignment", "quiz")}.
     </span>;
 
     return <Container>
@@ -491,23 +490,23 @@ export const SetAssignments = () => {
 
         <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} modalId="set_assignments_help"/>
         <h4 className="mt-4 mb-3">
-            Add a gameboard from ...
+            Add a {siteSpecific("gameboard", "quiz")} from ...
         </h4>
-        <AddGameboardButtons className={"mb-4"} redirectBackTo={"/set_assignments"}/>
+        <AddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
         {groups && groups.length === 0 && <Alert color="warning">
             You have not created any groups to assign work to.
             Please <Link to="/groups">create a group here first.</Link>
         </Alert>}
         {boards && boards.totalResults === 0
             ? <h3 className="text-center mt-4 mb-5">
-                You have no gameboards to assign; use one of the options above to find one.
+                You have no {siteSpecific("gameboards", "quizzes")} to assign; use one of the options above to find one.
             </h3>
             : <>
                 {boards && boards.totalResults > 0 && <h4>
-                    You have <strong>{boards.totalResults}</strong> gameboard{boards.totalResults > 1 && "s"} ready to assign...
+                    You have <strong>{boards.totalResults}</strong> {siteSpecific("gameboard", "quiz")}{boards.totalResults > 1 && siteSpecific("s", "zes")} ready to assign...
                 </h4>}
                 {!boards && <h4>
-                    You have <IsaacSpinner size="sm" inline/> gameboards ready to assign...
+                    You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...
                 </h4>}
                 <Row>
                     <Col sm={6} lg={3} xl={2}>

@@ -1,19 +1,18 @@
 import React from "react";
 import * as RS from "reactstrap";
 
-interface TrueFalseRadioProps<T> {
+interface TrueFalseRadioProps {
     id: string;
-    stateObject: T;
+    stateObject: Nullable<Record<string, Nullable<boolean>>>;
     propertyName: string;
-    setStateFunction: (stateObject: T) => void;
+    setStateFunction: (stateObject: Record<string, Nullable<boolean>>) => void;
     submissionAttempted: boolean;
     error?: string;
     trueLabel?: string;
     falseLabel?: string;
 }
-export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
-    const {id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"} = props;
-    const invalid = submissionAttempted && ![true, false].includes(stateObject[propertyName]);
+export function TrueFalseRadioInput({id, stateObject, propertyName, setStateFunction, submissionAttempted, trueLabel="Yes", falseLabel="No"}: TrueFalseRadioProps) {
+    const invalid = submissionAttempted && (typeof stateObject?.[propertyName] !== "boolean");
 
     return <RS.FormGroup>
         <div className="d-flex flex-nowrap">
@@ -22,12 +21,9 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             </RS.Label>
             <RS.CustomInput
                 id={`${id}-t`} type="radio" name={id} color="$secondary" className="d-inline"
-                checked={stateObject[propertyName] === true} invalid={invalid}
+                checked={stateObject?.[propertyName] === true} invalid={invalid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if (e.target.checked) {
-                        stateObject[propertyName] = true;
-                    }
-                    setStateFunction(Object.assign({}, stateObject));
+                    setStateFunction({...stateObject, [propertyName]: e.target.checked});
                 }}
                 aria-describedby={`${id}-feedback`}
             />
@@ -38,12 +34,9 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             </RS.Label>
             <RS.CustomInput
                 id={`${id}-f`} type="radio" name={id} color="$secondary" className="d-inline"
-                checked={stateObject[propertyName] === false} invalid={invalid}
+                checked={stateObject?.[propertyName] === false} invalid={invalid}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    if (e.target.checked) {
-                        stateObject[propertyName] = false;
-                    }
-                    setStateFunction(Object.assign({}, stateObject));
+                    setStateFunction({...stateObject, [propertyName]: !e.target.checked});
                 }}
                 aria-describedby={`${id}-feedback`}
             />
@@ -52,4 +45,4 @@ export const TrueFalseRadioInput = (props: TrueFalseRadioProps<any>) => {
             required
         </div>}
     </RS.FormGroup>
-};
+}

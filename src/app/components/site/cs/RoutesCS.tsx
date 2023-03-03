@@ -1,14 +1,13 @@
 import React from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {AllTopics, AllTopicsWithoutAStage} from "../../pages/AllTopics";
+import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {ComingSoon} from "../../pages/ComingSoon";
 import {Topic} from "../../pages/Topic";
 import {Students} from "../../pages/Students";
 import {TeacherTools} from "../../pages/TeacherTools";
-import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
-import {isEventLeaderOrStaff, isTutorOrAbove, STAGE} from "../../../services";
+import {isEventLeaderOrStaff, isTutorOrAbove} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
@@ -21,23 +20,11 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
 
     // Assignments
-    <TrackedRoute key={key++} exact path="/my_markbook" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
     <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
 
-    // Topics
-    <Redirect key={key++} from="/topics/procedural_and_structured_programming" to="/topics/procedural_programming" />,
-    <Redirect key={key++} from="/topics/guis" to="/topics/event_driven_programming" />,
-    <Redirect key={key++} from="/topics/searching_sorting_pathfinding" to="/topics/searching" />,
-    <Redirect key={key++} from="/topics/theory_of_computation" to="/topics/models_of_computation" />,
-    <Redirect key={key++} from="/topics/operating_systems_and_software" to="/topics/operating_systems" />,
-    <Redirect key={key++} from="/topics/number_bases" to="/topics/number_representation" />,
-    <Redirect key={key++} from="/topics/string_manipulation" to="/topics/string_handling" />,
-
-    <TrackedRoute key={key++} exact path="/topics" component={AllTopicsWithoutAStage} />,
-    <TrackedRoute key={key++} exact path="/topics/gcse" component={AllTopics} componentProps={{stage: STAGE.GCSE}} />,
-    <TrackedRoute key={key++} exact path="/topics/a_level" component={AllTopics} componentProps={{stage: STAGE.A_LEVEL}} />,
+    <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
 
     // Books:

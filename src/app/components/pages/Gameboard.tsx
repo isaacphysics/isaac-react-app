@@ -21,8 +21,7 @@ import {
     isDefined,
     isFound,
     isPhy,
-    isTutorOrAbove,
-    NOT_FOUND,
+    isTutorOrAbove, PATHS,
     showWildcard,
     siteSpecific,
     TAG_ID,
@@ -48,7 +47,7 @@ function extractFilterQueryString(gameboard: GameboardDTO): string {
 }
 
 const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO, question: GameboardItem}) => {
-    let itemClasses = "p-3 content-summary-link text-info bg-transparent";
+    let itemClasses = classNames("content-summary-link text-info bg-transparent", {"p-3": isPhy, "p-0": isAda});
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
     let iconHref = siteSpecific("/assets/question-hex.svg#icon", "/assets/question.svg");
@@ -76,21 +75,18 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
-        <Link to={`/questions/${question.id}?board=${gameboard.id}`} className="align-items-center">
-            <span>
-                {siteSpecific(
-                    <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>,
-                    <img src={iconHref} alt=""/>
-                )}
-            </span>
-            <div className={`d-md-flex flex-fill`}>
+        <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "pl-3 justify-content-center": isAda})}>
+            {isPhy && <span>
+                <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>
+            </span>}
+            <div className={classNames("d-md-flex flex-fill", {"py-3 pr-3": isAda})}>
                 {/* TODO CP shouldn't the subject colour here depend on the contents/tags of the gameboard? */}
-                <div className={"flex-grow-1 " + itemSubject?.id || (isPhy ? "physics" : "")}>
-                    <Markup encoding={"latex"} className={classNames({"text-secondary": isPhy})}>
+                <div className={"flex-grow-1 " + (itemSubject?.id ?? (isPhy ? "physics" : ""))}>
+                    <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
                     {message && <span className={"gameboard-item-message" + (isPhy ? "-phy " : " ") + messageClasses}>{message}</span>}
-                    {questionTags && <div className="hierarchy-tags">
+                    {questionTags && <div className={classNames("hierarchy-tags", {"mt-2": isAda})}>
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}
                 </div>
@@ -99,6 +95,7 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
                 } />}
             </div>
+            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/chevron_right.svg"}/></div>}
         </Link>
     </RS.ListGroupItem>;
 };
@@ -167,7 +164,7 @@ export const Gameboard = withRouter(({ location }) => {
                 {"We're sorry, we were not able to find a gameboard with the id "}<code>{gameboardId}</code>{"."}
             </small>
             {isPhy && <div className="mt-4 text-center">
-                <RS.Button tag={Link} to={`/gameboards/new`} color="primary" outline className="btn-lg">
+                <RS.Button tag={Link} to={PATHS.QUESTION_FINDER} color="primary" outline className="btn-lg">
                     Generate a new gameboard
                 </RS.Button>
             </div>}
@@ -175,7 +172,7 @@ export const Gameboard = withRouter(({ location }) => {
     </Container>;
 
     return !gameboardId
-        ? <Redirect to={siteSpecific("/gameboards/new", "/gameboards#example-gameboard")} />
+        ? <Redirect to={PATHS.QUESTION_FINDER} />
         : <RS.Container className="mb-5">
             <ShowLoadingQuery
                 query={gameboardQuery}
@@ -183,7 +180,7 @@ export const Gameboard = withRouter(({ location }) => {
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     if (showFilter) {
-                        return <Redirect to={`/gameboards/new?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
+                        return <Redirect to={`${PATHS.QUESTION_FINDER}?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
                     }
                     return <>
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
@@ -204,10 +201,10 @@ export const Gameboard = withRouter(({ location }) => {
                             : gameboard && !gameboard.savedToCurrentUser && <RS.Row>
                                 <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
                                     <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`}
-                                               onClick={() => setAssignBoardPath("/set_assignments")}
+                                               onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                                                color="primary" outline className="btn-block"
                                     >
-                                        {siteSpecific("Save to My Gameboards", "Save to My gameboards")}
+                                        {siteSpecific("Save to My Gameboards", "Save to My quizzes")}
                                     </RS.Button>
                                 </RS.Col>
                             </RS.Row>

@@ -1,14 +1,41 @@
 @import "../common/cards";
 
-.cs-card {
+// number of news cards per line for each breakpoint
+$news-cards-per-line: (
+        xs: 2,
+        lg: 3,
+        xl: 4
+);
+
+@each $name, $breakpoint in $grid-breakpoints {
+  @include media-breakpoint-up($name) {
+    .card-deck .news-card {
+      flex: 0 0 calc(#{100 / map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
+      width: 100%;
+    }
+  }
+}
+
+// number of cards per line for each breakpoint
+$cards-per-line: (
+        xs: 1,
+        lg: 2
+);
+@each $name, $breakpoint in $grid-breakpoints {
+  @include media-breakpoint-up($name) {
+    .card-deck .cs-card {
+      flex: 0 0 calc(#{100 / map-get($cards-per-line, $name)}% - #{$grid-gutter-width});
+    }
+  }
+}
+
+
+.cs-card, .news-card {
   position: relative;
   border-radius: 15px;
+  display: inline-block;
 
-  @media (max-width: map-get($breakpoints, md)) {
-    min-width: 100%;
-  }
-
-  ::after {
+  &::before {
     content: " ";
     position: absolute;
     top: -28px;
@@ -18,7 +45,7 @@
   }
 
   &.backslash-1 {
-    ::after {
+    &::before {
       height: 56px;
       width: 28px;
       background-image: url(/assets/cs/decor/backslash-outline-1.svg);
@@ -26,7 +53,7 @@
   }
 
   &.backslash-2 {
-    ::after {
+    &::before {
       height: 56px;
       width: 46px;
       background-image: url(/assets/cs/decor/backslash-outline-2.svg);
@@ -34,7 +61,7 @@
   }
 
   &.backslash-3 {
-    ::after {
+    &::before {
       height: 56px;
       width: 64px;
       background-image: url(/assets/cs/decor/backslash-outline-3.svg);
@@ -42,10 +69,30 @@
   }
 
   .news-card-image {
+    width: 100%;
     border-radius: 15px 15px 0 0;
   }
 
   .news-card-title {
     height: 3rem;
+  }
+}
+
+
+.cs-card, .news-card {
+  // This is to make sure that the "footers" of multiple cards line up nicely
+  &::after {
+    @extend .mb-5;
+    display: block;
+    content: " ";
+    width: 100%;
+    position: relative;
+  }
+  .card-footer {
+    background-color: transparent !important;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
   }
 }

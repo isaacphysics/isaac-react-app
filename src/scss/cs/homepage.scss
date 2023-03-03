@@ -8,6 +8,17 @@
   section#call-to-action {
     background-color: $cs-black;
     color: $cs-white;
+    .mw-640 {
+      max-width: 640px;
+    }
+    .spacer {
+      @include media-breakpoint-between(xl, xxl) {
+        max-width: 80px;
+      }
+      @include media-breakpoint-up(xxl) {
+        max-width: 160px;
+      }
+    }
   }
 
   img#homepageHeroImg {
@@ -31,27 +42,54 @@
   }
 
   section#computer-science-stories {
+    .container {
+      position: relative;
+      .row {
+        @include media-breakpoint-down(sm) {
+          padding-bottom: 40vw !important;
+        }
+        #cs-stories-text {
+          background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
+
+        }
+      }
+      &:before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        // Hand-tuned background positioning to make this particular SVG look nice on different screen sizes
+        background-image: url(/assets/cs/decor/fingerprint-cs-stories.svg);
+        background-repeat: no-repeat;
+        background-position-x: 100%;
+        background-position-y: 40%;
+        background-size: auto 120%;
+        @include media-breakpoint-down(md) {
+          left: 11vw;
+        }
+        @include media-breakpoint-down(sm) {
+          left: 0;
+          width: 100%;
+          background-position-x: 100%;
+          background-position-y: 150%;
+          background-size: 100% 80%;
+        }
+      }
+    }
     background-color: $cs-white;
     position: relative;
-    // Hand-tuned background positioning to make this particular SVG look nice on different screen sizes
-    background-image: url(/assets/cs/decor/fingerprint-cs-stories.svg);
-    background-repeat: no-repeat;
-    background-size: 100% 200%;
-    background-position-y: 55%;
-    background-position-x: 100%;
-    @media (max-width: map-get($breakpoints, sm)) {
-      padding-bottom: 50vw;
-      background-position-y: -33vw;
-      background-position-x: 85%;
-      background-size: 160% 200%;
-    }
-    #cs-stories-text {
-      background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
-    }
   }
 
   section#news {
     background-color: $cs-cultured;
+
+    @include media-breakpoint-only(lg) {
+      .card-deck .news-card:nth-child(4) {
+        display: none !important;
+      }
+    }
   }
 
   section#search {

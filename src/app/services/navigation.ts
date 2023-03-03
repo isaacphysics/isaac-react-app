@@ -11,7 +11,7 @@ import {
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
     makeAttemptAtTopicHistory,
-    NOT_FOUND,
+    NOT_FOUND, PATHS,
     TAG_ID,
     useQueryParams,
     useUserContext
@@ -66,7 +66,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
         return {
             collectionType: "Master Mathematics",
             breadcrumbHistory: gameboardHistory,
-            backToCollection: currentGameboard ? {title: "Return to Top 10 Questions", to: `/gameboards#${currentGameboard.id}`} : undefined,
+            backToCollection: currentGameboard ? {title: "Return to Top 10 Questions", to: `${PATHS.GAMEBOARD}#${currentGameboard.id}`} : undefined,
             nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
             previousItem: previousQuestion ? {title: "Return to Previous Question", to: `/questions/${previousQuestion}`} : undefined,
             search: queryString.stringify(previousQuestion ? {board, modifiedQuestionHistory} : {board}),

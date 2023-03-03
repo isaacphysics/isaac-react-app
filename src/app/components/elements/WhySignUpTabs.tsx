@@ -8,7 +8,7 @@ export const WhySignUpTabs = () => (
     <Tabs tabContentClass="pt-5">
         {{
             Teachers: <>
-                <h3 className={"mb-4"}>Benefits for Teachers:</h3>
+                <h2 className={"mb-4"}>Benefits for Teachers:</h2>
                 <p>
                     Why use Ada?
                 </p>
@@ -30,10 +30,10 @@ export const WhySignUpTabs = () => (
                     <li>Save time while our website does the marking</li>
                     <li>Track your students’ progress and identify new areas to focus on</li>
                 </ul>
-                <Button tag={Link} to="/teachers" color="secondary">Teacher Account Page</Button>
+                <Button tag={Link} to="/teachers" color="primary">Learn about Teacher accounts</Button>
             </>,
             Students: <>
-                <h3 className={"mb-4"}>Benefits for Students:</h3>
+                <h2 className={"mb-4"}>Benefits for Students:</h2>
                 <p>
                     Why use Ada?
                 </p>
@@ -55,7 +55,7 @@ export const WhySignUpTabs = () => (
                     <li>Monitor your progress as you answer questions</li>
                     <li>Work towards achieving better exam results</li>
                 </ul>
-                <Button tag={Link} to="/register" color="secondary">Sign Up</Button>
+                <Button tag={Link} to="/register" color="primary">Learn about Student accounts</Button>
             </>
         }}
     </Tabs>

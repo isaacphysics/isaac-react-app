@@ -6,14 +6,20 @@ $cs-pink: #FF4DC9;
 $cs-dark-pink: #870D5A;
 $cs-yellow: #FFE672;
 $cs-jet: #333333;
+$cs-dark-silver: #B9B9B9;
 $cs-silver: #C2C2C2;
 $cs-light-gray: #D6D6D6;
+$cs-list-outline-gray: #EBEBEB;
 $cs-cultured: #F5F5F5;
 
 // Theme
 $theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
-    "primary": $cs-pink,
-    "secondary": $cs-turquoise-blue,
+    // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
+    "primary": $cs-dark-pink,
+    "secondary": $cs-dark-pink,
+    "dark-primary": $cs-pink,
+    "dark-secondary": $cs-pink,
+
     "turquoise-blue": $cs-turquoise-blue,
     "pink" : $cs-pink,
     "dark-pink" : $cs-dark-pink,
@@ -25,7 +31,16 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
 );
 $spacer: 1rem !default;
 $spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
-        6: ($spacer * 6.25) // 100px-ish
+    6: ($spacer * 6.25) // 100px-ish
+);
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    nav: 1256px,
+    xxl: 1400px
 );
 
 // fonts
@@ -70,6 +85,13 @@ $highlight-turquoise-25: mix($cs-turquoise-blue, $cs-white, 25%); // "is your an
 $highlight-yellow: $cs-yellow; // Used for buttons - "is your answer correct" negative QQ answer
 $highlight-yellow-50: mix($cs-yellow, $cs-white, 50%); // Used for buttons - quick question negative answer
 
+// Button colours
+$light-hover-dark-pink: #7A0C51;
+$light-active-dark-pink: #6C0A48;
+$dark-hover-pink: #E545B5;
+$dark-active-pink: #CC3EA1;
+$button-focus-blue: #14BCAC;
+
 // Greys
 // FIXME ADA: these can be presumably somehow be replaced with generated shades based on Nomensa greys.
 $gray-103: #f8f8f8; // All used in various places, mainly for borders
@@ -109,21 +131,20 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Atoms
 @import "fonts";
 @import "typography";
-@import "headings";
 @import "../common/modals";
 @import "questions";
 @import "forms";
 @import "../common/elements";
-@import "../common/breadcrumbs";
+@import "breadcrumbs";
 @import "../common/media";
 @import "tabs";
 @import "../common/accordions";
 @import "cards";
-@import "../common/list-groups";
+@import "list-groups";
 @import "inequality-modal";
 @import "../common/carousel";
-@import "../common/icons";
-@import "../common/boards";
+@import "icons";
+@import "boards";
 @import "../common/focus";
 @import "../common/progress-bar";
 @import "../common/anvil";
@@ -135,22 +156,21 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 @import "logo";
 @import "featured-profile";
 @import "../common/code";
-@import "question-finder";
 
 // Navigation
 @import "header";
+@import "search";
 @import "../common/navigation-bar";
-@import "../common/footer";
+@import "footer";
 
 // Pages
-@import "../common/pages";
+@import "pages";
 @import "homepage";
 @import "../common/login";
 @import "../common/registration";
 @import "../common/assignments";
 @import "../common/my-account";
 @import "../common/topic";
-@import "../common/search";
 @import "../common/my-progress";
 @import "../common/gameboard";
 @import "../common/assignment-progress";
@@ -214,9 +234,6 @@ p small {
 
 body {
     color: $black;
-    font-size: 1rem;
-    font-family: $primary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    line-height: 1.5rem;
     display: -ms-flexbox;
     -ms-flex-direction: column;
     flex-direction: column;

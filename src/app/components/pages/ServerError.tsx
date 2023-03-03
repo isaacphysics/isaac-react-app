@@ -3,11 +3,16 @@ import {Link} from "react-router-dom";
 import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
+import ReactGA4 from "react-ga4";
 import {WEBMASTER_EMAIL} from "../../services";
 
 export const ServerError = () => {
 
     ReactGA.exception({
+        description: 'server_error',
+        fatal: true
+    });
+    ReactGA4.gtag("event", "exception", {
         description: 'server_error',
         fatal: true
     });

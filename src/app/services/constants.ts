@@ -3,7 +3,16 @@ import {Remarkable} from "remarkable";
 // @ts-ignore
 import {linkify} from "remarkable/linkify";
 import {BooleanNotation, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
-import {BookingStatus, Difficulty, ExamBoard, Stage, UserRole} from "../../IsaacApiTypes";
+import {
+    BookingStatus,
+    ContentDTO,
+    Difficulty,
+    ExamBoard,
+    IsaacFastTrackQuestionPageDTO,
+    IsaacQuestionPageDTO,
+    Stage,
+    UserRole
+} from "../../IsaacApiTypes";
 import {siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
@@ -32,7 +41,7 @@ export const API_PATH: string = apiPath;
 
 export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.isaacphysics.org",
-    "https://editor.isaaccomputerscience.org",
+    "https://editor.ada.isaacphysics.org", // FIXME ADA revert once ada is not hidden
 );
 
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
@@ -42,6 +51,10 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
     "UA-122616705-1",
     "UA-137475074-1"
 );
+export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
+    "G-VE7RLWEL60",
+    "G-H95WP5C8DR"
+);
 
 export const SOCIAL_LINKS = siteSpecific(
     {
@@ -50,6 +63,7 @@ export const SOCIAL_LINKS = siteSpecific(
         facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
     },
     {
+        // FIXME ADA: update these - also we don't have an instagram logo
         youtube: {name: "YouTube", href: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"},
         twitter: {name: "Twitter", href: "https://twitter.com/isaaccompsci"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience"},
@@ -459,6 +473,8 @@ export enum PROGRAMMING_LANGUAGE {
     ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
+    JAVA = "JAVA",
+    VBA = "VBA",
     NONE = "NONE",
 }
 
@@ -471,6 +487,8 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
+    [PROGRAMMING_LANGUAGE.JAVA]: "Java",
+    [PROGRAMMING_LANGUAGE.VBA]: "Visual Basic",
 };
 
 // EXAM BOARDS
@@ -558,8 +576,8 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_3: "Challenge\u00A0(C3)",
 }
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
-    practice_1: `Practice (P1) \u2B22\u2B21${siteSpecific("\u2B21", "")}`,
-    practice_2: `Practice (P2) \u2B22\u2B22${siteSpecific("\u2B21", "")}`,
+    practice_1: `Practice (P1) ${siteSpecific("\u2B22\u2B21\u2B21", "\u25CF\u25CB")}`,
+    practice_2: `Practice (P2) ${siteSpecific("\u2B22\u2B22\u2B21", "\u25CF\u25CF")}`,
     practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
     challenge_1: `Challenge (C1) \u25A0\u25A1${siteSpecific("\u25A1", "")}`,
     challenge_2: `Challenge (C2) \u25A0\u25A0${siteSpecific("\u25A1", "")}`,
@@ -612,7 +630,7 @@ export enum TAG_ID {
     computerScience = "computer_science",
 
     // Strands
-    machineLearningAi = "machine_learning_ai",
+    artificialIntelligence = "artificial_intelligence",
     dataStructuresAndAlgorithms = "data_structures_and_algorithms",
     computerSystems = "computer_systems",
     creatingMedia = "creating_media",
@@ -620,10 +638,10 @@ export enum TAG_ID {
     designAndDevelopment = "design_and_development",
     effectiveUseOfTools = "effective_use_of_tools",
     impactsOfDigitalTechnology = "impacts_of_digital_tech",
-    networking = "networking",
+    computerNetworks = "computer_networks",
     programming = "programming",
     cyberSecurity = "cyber_security",
-    modelsOfComputation = "models_of_computation",
+    theoryOfComputation = "theory_of_computation",
 
     // Artificial intelligence topics
 
@@ -659,7 +677,6 @@ export enum TAG_ID {
     // Design and development topics
     programDesign = "program_design",
     softwareEngineeringPrinciples = "software_engineering_principles",
-    softwareProject = "software_project",
     testing = "testing",
 
     // Effective use of tools topics
@@ -672,7 +689,7 @@ export enum TAG_ID {
 
     // Networks topics
     communication = "communication",
-    computerNetworks = "computer_networks",
+    networking = "networking",
     theInternet = "the_internet",
     webTechnologies = "web_technologies",
 
@@ -900,6 +917,10 @@ export enum DOCUMENT_TYPE {
     GENERIC = "page",
     QUIZ = "isaacQuiz",
 }
+export function isAQuestionLikeDoc(doc: ContentDTO): doc is IsaacQuestionPageDTO | IsaacFastTrackQuestionPageDTO {
+    return doc.type === DOCUMENT_TYPE.QUESTION || doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
+}
+
 export enum SEARCH_RESULT_TYPE {SHORTCUT = "shortcut"}
 
 export const documentDescription: {[documentType in DOCUMENT_TYPE]: string} = {
@@ -1098,7 +1119,19 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
 
-export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+export const PATHS = siteSpecific({
+    ASSIGNMENT_PROGRESS: "/assignment_progress",
+    MY_GAMEBOARDS: "/my_gameboards",
+    QUESTION_FINDER: "/gameboards/new",
+    GAMEBOARD: "/gameboards",
+    SET_ASSIGNMENTS: "/set_assignments",
+}, {
+    ASSIGNMENT_PROGRESS: "/my_markbook",
+    MY_GAMEBOARDS: "/quizzes",
+    QUESTION_FINDER: "/quizzes/new",
+    GAMEBOARD: "/quizzes/view",
+    SET_ASSIGNMENTS: "/quizzes/set",
+});
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";

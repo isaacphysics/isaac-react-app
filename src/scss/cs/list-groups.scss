@@ -1,0 +1,26 @@
+@import "../common/list-groups.scss";
+
+.content-summary-item {
+  min-height: 88px;
+}
+
+.list-group-links {
+  border: 0;
+  border-radius: 0;
+  .list-group-item {
+    .question-link-title {
+      @extend .font-size-1-25;
+      @extend .font-weight-semi-bold;
+    }
+    border-color: $cs-list-outline-gray;
+    border-left: 0;
+    border-right: 0;
+  }
+  .list-caret {
+    position: relative;
+    text-align: center;
+    width: 50px;
+    min-width: 50px !important;
+    border-left: 1px solid $cs-list-outline-gray;
+  }
+}

@@ -82,9 +82,6 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
 
     // Date input variables
     const yearRange = range(currentYear, currentYear + 5);
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1;
-    const currentDay = now.getDate();
 
     const [settingDueDate, setSettingDueDate] = useState<boolean>(false);
     const [dueDate, setDueDate] = useState<Date | null>( null);
@@ -128,8 +125,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 <Row>
                     {assignment.dueDate && <Col xs={12} sm={6} md={4}>
                         <Label for="dueDate" className="pr-1">Extend the due date:
-                            <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined} yearRange={yearRange} defaultYear={currentYear} noClear
-                                       defaultMonth={(day) => (day && day <= currentDay) ? currentMonth + 1 : currentMonth} onChange={(e) => setDueDate(e.target.valueAsDate)}/>
+                            <DateInput id="dueDate" value={dueDate ?? undefined} invalid={(dueDate && (dueDate < assignment.dueDate)) ?? undefined}
+                                       yearRange={yearRange} noClear onChange={(e) => setDueDate(e.target.valueAsDate)}/>
                         </Label>
                         <div className={"mt-2 w-100 text-center mb-2"}>
                             {dueDate && (dueDate > assignment.dueDate) && <Button color="primary" outline className={"btn-md"} onClick={() => setValidDueDate(dueDate)}>
