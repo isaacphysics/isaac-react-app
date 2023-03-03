@@ -40,6 +40,7 @@ import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
+import classNames from "classnames";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -115,7 +116,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 if (mutationSucceeded(gameboardResponse)) {
                     cloneGameboard(gameboardResponse.data);
                 } else {
-                    console.error("Failed to create gameboard from concepts.");
+                    console.error(`Failed to create ${siteSpecific("gameboard", "quiz")} from concepts.`);
                 }
             });
         }
@@ -129,10 +130,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const pageHelp = <span>
         You can create custom question sets to assign to your groups. Search by question title or topic and add up to
-        ten questions to a gameboard.
+        ten questions to a {siteSpecific("gameboard", "quiz")}.
         <br/>
-        You cannot modify a gameboard after it has been created. You&apos;ll find a link underneath any
-        existing gameboard to duplicate and edit it.
+        You cannot modify a {siteSpecific("gameboard", "quiz")} after it has been created. You&apos;ll find a
+        link underneath any existing {siteSpecific("gameboard", "quiz")} to duplicate and edit it.
     </span>;
 
     const sentinel = useRef<HTMLDivElement>(null);
@@ -146,15 +147,15 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setTimeout(() => sentinel.current?.scrollIntoView(), 50);
     };
 
-    return <Container id="gameboard-builder">
+    return <Container id="gameboard-builder" fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <div ref={sentinel}/>
-        <TitleAndBreadcrumb currentPageTitle="Gameboard builder" help={pageHelp} modalId="gameboard_builder_help"/>
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} builder`} help={pageHelp} modalId="gameboard_builder_help"/>
 
         <Card className="p-3 mt-4 mb-5">
             <CardBody>
                 <Row>
                     <Col>
-                        <Label htmlFor="gameboard-builder-name">Gameboard title:</Label>
+                        <Label htmlFor="gameboard-builder-name">{siteSpecific("Gameboard", "Quiz")} title:</Label>
                         <Input id="gameboard-builder-name"
                                type="text"
                                placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
@@ -174,7 +175,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 options={siteSpecific([
                                     {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
                                 ], [
-                                    {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
+                                    {value: 'ISAAC_BOARD', label: 'Created by Ada'},
                                     {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
                                 ])}
                                 name="colors"
@@ -219,11 +220,11 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                             <thead>
                             <tr>
                                 <th className="w-5"/>
-                                <th className="w-40">Question title</th>
-                                <th className="w-25">Topic</th>
+                                <th className={siteSpecific("w-40", "w-30")}>Question title</th>
+                                <th className={siteSpecific("w-25", "w-20")}>Topic</th>
                                 <th className="w-15">Stage</th>
-                                <th className={siteSpecific("w-15", "w-10")}>Difficulty</th>
-                                {isAda && <th className="w-5">Exam boards</th>}
+                                <th className="w-15">Difficulty</th>
+                                {isAda && <th className="w-15">Exam boards</th>}
                             </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -234,9 +235,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                             const question = selectedQuestions.get(questionId);
                                             return question && question.id &&
                                                 <Draggable key={question.id} draggableId={question.id} index={index}>
-                                                    {(provided) => (
+                                                    {(provided, snapshot) => (
                                                         <GameboardBuilderRow
                                                             provided={provided}
+                                                            snapshot={snapshot}
                                                             key={`gameboard-builder-row-${question.id}`}
                                                             question={question} selectedQuestions={selectedQuestions}
                                                             setSelectedQuestions={setSelectedQuestions}
@@ -248,7 +250,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         })}
                                         {provided.placeholder}
                                         <tr>
-                                            <td colSpan={siteSpecific(5, 6)}>
+                                            <td colSpan={20}>
                                                 <div className="img-center">
                                                     <ShowLoading
                                                         placeholder={<div className="text-center"><IsaacSpinner/></div>}
@@ -338,7 +340,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 const gameboardId = 'data' in gameboardOrError ? gameboardOrError.data.id : undefined;
                                 dispatch(openActiveModal({
                                     closeAction: () => dispatch(closeActiveModal()),
-                                    title: gameboardId ? "Gameboard created" : "Gameboard creation failed",
+                                    title: `${siteSpecific("Gameboard", "Quiz")} ${gameboardId ? "created" : "creation failed"}`,
                                     body: <GameboardCreatedModal resetBuilder={resetBuilder} gameboardId={gameboardId} error={error}/>,
                                 }));
                             });
@@ -348,7 +350,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         }}
                     >
                         {isWaitingForCreateGameboard ?
-                            <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save gameboard")}
+                            <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save quiz")}
                     </Button>
                 </div>
 
@@ -356,9 +358,9 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     id="gameboard-help" color="light"
                     className={`text-center mb-0 pt-3 pb-0 ${selectedQuestions.size > 10 ? "text-danger" : ""}`}
                 >
-                    Gameboards require both a title and between 1 and 10 questions.
+                    {siteSpecific("Gameboards", "Quizzes")} require both a title and between 1 and 10 questions.
                     {!isValidGameboardId(gameboardURL) && <div className="text-danger">
-                        The gameboard ID should contain numbers, lowercase letters, underscores and hyphens only.<br/>
+                        The {siteSpecific("gameboard", "quiz")} ID should contain numbers, lowercase letters, underscores and hyphens only.<br/>
                         It should not be the full URL.
                     </div>}
                 </div>}

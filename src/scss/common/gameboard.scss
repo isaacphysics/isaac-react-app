@@ -103,7 +103,6 @@
 .responsive {
   overflow: auto;
   display: block;
-  max-height: 60vh;
   .table.table-bordered {
     thead {
       @include table-sticky();

@@ -3,7 +3,16 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import countBy from "lodash/countBy";
 import sortBy from "lodash/sortBy";
 import intersection from "lodash/intersection";
-import {determineAudienceViews, difficultiesOrdered, isAda, isFound, isPhy, PATHS, stagesOrdered} from "./";
+import {
+    determineAudienceViews,
+    difficultiesOrdered,
+    isAda,
+    isFound,
+    isPhy,
+    PATHS,
+    siteSpecific,
+    stagesOrdered
+} from "./";
 import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
@@ -16,7 +25,7 @@ export enum BoardCompletions {
 
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (board.tags && board.tags.includes("ISAAC_BOARD")) {
-        return "Isaac";
+        return siteSpecific("Isaac", "Ada");
     }
     if (user.id == board.ownerUserId) {
         return "Me";

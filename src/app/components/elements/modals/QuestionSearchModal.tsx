@@ -150,7 +150,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         <div>
             <RS.Input
                 type="button"
-                value={siteSpecific("Add Selections to Gameboard", "Add selections to gameboard")}
+                value={siteSpecific("Add Selections to Gameboard", "Add selections to quiz")}
                 disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
@@ -246,14 +246,14 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     <tr>
                         <th className="w-5"> </th>
                         <SortableTableHeader
-                            className="w-40" title="Question title"
+                            className={siteSpecific("w-40", "w-30")} title="Question title"
                             updateState={sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title")}
                             enabled={!isBookSearch}
                         />
-                        <th className="w-25">Topic</th>
+                        <th className={siteSpecific("w-25", "w-20")}>Topic</th>
                         <th className="w-15">Stage</th>
-                        <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
-                        {isAda && <th className="w-5">Exam boards</th>}
+                        <th className="w-15">Difficulty</th>
+                        {isAda && <th className="w-15">Exam boards</th>}
                     </tr>
                 </thead>
                 <tbody>
