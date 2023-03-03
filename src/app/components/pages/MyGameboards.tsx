@@ -355,7 +355,7 @@ export const MyGameboards = () => {
         boardOrder, setBoardOrder
     };
 
-    return <Container fluid={siteSpecific(false, true)} className={classNames({"px-lg-6": isAda})}>
+    return <Container fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My gameboards", "My quizzes")} help={pageHelp} />
         {boards && boards.totalResults == 0 ?
             <>

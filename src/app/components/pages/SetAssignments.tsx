@@ -40,7 +40,7 @@ import {
     determineGameboardSubjects,
     difficultiesOrdered,
     difficultyShortLabelMap,
-    formatBoardOwner,
+    formatBoardOwner, isAda,
     isDefined,
     isPhy,
     isStaff,
@@ -516,7 +516,7 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
-    return <Container>
+    return <Container fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
 
         <SetAssignmentsModal
             isOpen={isModalOpen}
