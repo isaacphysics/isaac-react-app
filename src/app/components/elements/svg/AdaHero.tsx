@@ -3,14 +3,8 @@ import React from "react";
 // Complicated SVG composition for Ada CS homepage
 export const AdaHero1x1 = ({className}: {className?: string}) => {
     return <svg className={className} width="100%" height="100%" viewBox="0 0 644 644" fill="none" xmlns="http://www.w3.org/2000/svg" version="1.1">
-        <foreignObject x="0" y="249" width="343.61" height="343.61">
-            <div className="ada-pink"/>
-        </foreignObject>
-        <foreignObject x="337.429" y="46" width="272.528" height="272.528">
-            <div className="ada-blue"/>
-        </foreignObject>
-        <ellipse cx="171.805" cy="171.805" rx="171.805" ry="171.805" transform="matrix(1 8.74228e-08 8.74228e-08 -1 5 597.753)" fill="url(#paint0_angular_81_5163)"/>
-        <circle cx="478.693" cy="182.264" r="136.264" transform="rotate(-180 478.693 182.264)" fill="url(#paint1_angular_81_5163)"/>
+        <image x="0" y="249" width="343.61" height="343.61" href="/assets/cs/decor/ada_pie_pink.png"/>
+        <image x="337.429" y="46" width="272.528" height="272.528" href="/assets/cs/decor/ada_pie_turquoise.png" />
         <ellipse cx="562.772" cy="271.087" rx="75.2281" ry="75.228" transform="rotate(90 562.772 271.087)" fill="url(#paint2_linear_81_5163)"/>
         <circle cx="302.862" cy="205.009" r="96.5766" transform="rotate(90 302.862 205.009)" fill="url(#paint3_linear_81_5163)"/>
         <line x1="228.795" y1="109.649" x2="278.484" y2="109.649" stroke="white" stroke-width="3" stroke-linecap="round"/>
@@ -125,12 +119,8 @@ export const AdaHero2x1 = ({className}: {className?: string}) => {
         <line x1="723.536" y1="78.2848" x2="721.124" y2="78.2848" stroke="white" stroke-width="3.805" stroke-linecap="round"/>
         <path d="M720.776 77.9368L663.662 111.585L663.662 44.2889L720.776 77.9368Z" stroke="white" stroke-width="3.805"/>
         <circle cx="730.101" cy="77.9365" r="4.31404" stroke="white" stroke-width="3.805"/>
-        <foreignObject x="20" y="175" width="444.336" height="444.336">
-            <div className="ada-pink"/>
-        </foreignObject>
-        <foreignObject x="577" y="23" width="604" height="604">
-            <div className="ada-blue"/>
-        </foreignObject>
+        <image x="20" y="175" width="444.336" height="444.336" href="/assets/cs/decor/ada_pie_pink.png" />
+        <image x="577" y="23" width="604" height="604" href="/assets/cs/decor/ada_pie_turquoise.png" />
         <ellipse cx="1142.45" cy="368.736" rx="115.551" ry="115.551" transform="rotate(90 1142.45 368.736)" fill="url(#paint3_linear_99_6040)"/>
         <path d="M1032.62 444.096C1112.11 485.354 1139.4 383.129 1238.03 444.096" stroke="#FFFFF2" stroke-width="4.31354" stroke-linecap="round"/>
         <path d="M1032.62 474.061C1112.11 515.319 1139.4 413.093 1238.03 474.061" stroke="#FFFFF2" stroke-width="4.31354" stroke-linecap="round"/>
