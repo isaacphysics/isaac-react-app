@@ -48,7 +48,7 @@ export const HomepageCS = () => {
                             <img className={"d-lg-none d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-4x3.png"} />
                         </Col>
                         <Col lg={6} className={"order-first order-lg-last pb-5 pb-md-0"}>
-                            <WhySignUpTabs/>
+                            <WhySignUpTabs user={user}/>
                         </Col>
                     </Row>
                 </Container>

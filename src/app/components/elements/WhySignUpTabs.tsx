@@ -2,9 +2,11 @@ import React from "react";
 import {Tabs} from "./Tabs";
 import {Button} from "reactstrap";
 import {Link} from "react-router-dom";
+import {isLoggedIn} from "../../services";
+import {PotentialUser} from "../../../IsaacAppTypes";
+import {Immutable} from "immer";
 
-// FIXME ADA needs a complete rewrite by Ada content team
-export const WhySignUpTabs = () => (
+export const WhySignUpTabs = ({user}: {user: Immutable<PotentialUser> | null}) => (
     <Tabs tabContentClass="pt-5">
         {{
             Teachers: <>
@@ -55,7 +57,7 @@ export const WhySignUpTabs = () => (
                     <li>Monitor your progress as you answer questions</li>
                     <li>Work towards achieving better exam results</li>
                 </ul>
-                <Button tag={Link} to="/register" color="primary">Learn about Student accounts</Button>
+                <Button tag={Link} to={isLoggedIn(user) ? "/topics" : "/register"} color="primary">{isLoggedIn(user) ? "Browse topics" : "Get started"}</Button>
             </>
         }}
     </Tabs>
