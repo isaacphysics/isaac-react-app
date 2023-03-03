@@ -263,7 +263,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                     closeAction: () => {
                                                                         dispatch(closeActiveModal())
                                                                     },
-                                                                    closeLabelOverride: "CANCEL",
+                                                                    closeLabelOverride: "Cancel",
                                                                     size: "xl",
                                                                     title: "Search questions",
                                                                     body: <QuestionSearchModal
