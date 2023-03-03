@@ -69,10 +69,10 @@ $purple: $cs-dark-pink; // Something to do with links
 $green: $cs-turquoise-blue; // Used in assignment progress table cells
 
 // Stage colours
-// FIXME ADA: Provisional.
-$gcse-colour: $cs-pink; // All used for stage tags in accordions
-$all-stages-colour: mix($cs-dark-pink, $cs-pink, 50%);
-$a-level-colour: $cs-dark-pink;
+// Used for staged accordion sections - we currently do not distinguish by colours
+$gcse-colour: $cs-yellow;
+$all-stages-colour: $cs-yellow;
+$a-level-colour: $cs-yellow;
 
 // Highlighting colours
 // FIXME ADA: Very provisional

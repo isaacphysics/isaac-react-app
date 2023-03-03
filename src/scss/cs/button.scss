@@ -123,6 +123,7 @@
     &:focus-visible {
       outline: 2px solid $button-focus-blue !important;
       border-radius: 0 !important;
+      z-index: 10;
     }
     &.disabled, &:disabled {
       color: $cs-silver;
