@@ -1,7 +1,7 @@
 import React, {MouseEventHandler, useContext, useState} from "react";
 import classNames from "classnames";
 import ReactDOM from "react-dom";
-import {above, isAda, isMobile, useDeviceSize} from "../../../../services";
+import {above, isAda, isMobile, siteSpecific, useDeviceSize} from "../../../../services";
 import {ScrollShadows} from "../../ScrollShadows";
 import {ExpandableParentContext} from "../../../../../IsaacAppTypes";
 import {PortalInHtmlHook, useStatefulElementRef, useTableCompatiblePortalsInHtml} from "./utils";
@@ -10,7 +10,7 @@ import {PortalInHtmlHook, useStatefulElementRef, useTableCompatiblePortalsInHtml
 const Table = ({id, html, classes, rootElement}: TableData & {rootElement: HTMLElement}) => {
     const parentElement = rootElement.querySelector(`#table-${id}`);
 
-    const tableHtml = `<table class="${classNames(classes, "table table-bordered w-100 text-center bg-white m-0")}">${html}</table>`;
+    const tableHtml = `<table class="${classNames(classes, "table table-bordered w-100 bg-white m-0", siteSpecific("text-center", "text-left"))}">${html}</table>`;
     const [modifiedHtml, renderPortalElements] = useTableCompatiblePortalsInHtml(tableHtml);
 
     const [scrollRef, updateScrollRef] = useStatefulElementRef<HTMLDivElement>();

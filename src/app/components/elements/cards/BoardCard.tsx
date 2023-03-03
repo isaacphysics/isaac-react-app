@@ -193,7 +193,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         }} aria-label="Delete gameboard"
                     />
                 </td>,
-                <td className={"text-center align-middle"}>
+                <td className={"text-center align-middle overflow-hidden"}>
                     <CustomInput
                         id={`board-delete-${board.id}`}
                         type="checkbox"
