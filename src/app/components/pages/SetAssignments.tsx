@@ -1,4 +1,5 @@
 import React, {ChangeEvent, useCallback, useEffect, useMemo, useState} from "react";
+import * as RS from "reactstrap";
 import {
     Alert,
     Button,
@@ -32,6 +33,7 @@ import {range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {
+    above,
     BOARD_ORDER_NAMES,
     BoardCreators,
     BoardLimit,
@@ -40,16 +42,19 @@ import {
     determineGameboardSubjects,
     difficultiesOrdered,
     difficultyShortLabelMap,
-    formatBoardOwner, isAda,
+    formatBoardOwner,
+    isAda,
     isDefined,
     isPhy,
     isStaff,
     Item,
     itemise,
-    nthHourOf, PATHS,
+    nthHourOf,
+    PATHS,
     selectOnChange,
     siteSpecific,
     sortIcon,
+    useDeviceSize,
     useGameboards
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
@@ -57,7 +62,6 @@ import Select from "react-select";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
-import * as RS from "reactstrap";
 import classNames from "classnames";
 
 interface AssignGroupProps {
@@ -385,7 +389,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
                         Last viewed {boardOrder == BoardOrder.visited ? sortIcon.ascending : boardOrder == BoardOrder["-visited"] ? sortIcon.descending : sortIcon.sortable}
                     </button>
                 </th>
-                <th>Assignments</th>
+                <th>Assign</th>
                 <th>Share</th>
             </tr>
             </thead>
@@ -409,35 +413,33 @@ const CSTable = (props: SetAssignmentsTableProps) => {
 }
 const SetAssignmentsTable = siteSpecific(PhyTable, CSTable);
 
-export const AddGameboardButtons = ({className, redirectBackTo}: {className: string, redirectBackTo: string}) => {
+export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: string, redirectBackTo: string}) => {
     const dispatch = useAppDispatch();
-    return <Row className={className}>
-        <Col md={6} lg={4} className="pt-1">
-            {siteSpecific(
-                // Physics
+    return <>
+        <h4 className="mt-4 mb-3">
+            Add a gameboard from ...
+        </h4>
+        <Row className={className}>
+            <Col md={6} lg={4} className="pt-1">
                 <Button role={"link"} onClick={() => {
                     setAssignBoardPath(redirectBackTo);
                     dispatch(openIsaacBooksModal());
                 }} color="secondary" block className="px-3">
                     our books
-                </Button>,
-                // Computer science
-                <Button tag={Link} to={"/pages/gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                    Pre-made quizzes
                 </Button>
-            )}
-        </Col>
-        <Col md={6} lg={4} className="pt-1">
-            <Button tag={Link} to={siteSpecific("/pages/pre_made_gameboards", "/topics")} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                {siteSpecific("our Boards for Lessons", "Topics list")}
-            </Button>
-        </Col>
-        <Col md={12} lg={4} className="pt-1">
-            <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                {siteSpecific("create a gameboard", "Create a quiz")}
-            </Button>
-        </Col>
-    </Row>;
+            </Col>
+            <Col md={6} lg={4} className="pt-1">
+                <Button tag={Link} to={"/pages/pre_made_gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    our Boards for Lessons
+                </Button>
+            </Col>
+            <Col md={12} lg={4} className="pt-1">
+                <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                    create a gameboard
+                </Button>
+            </Col>
+        </Row>
+    </>;
 };
 
 export const SetAssignments = () => {
@@ -460,13 +462,14 @@ export const SetAssignments = () => {
     const [boardCreator, setBoardCreator] = useState<BoardCreators>(BoardCreators.all);
     const [boardSubject, setBoardSubject] = useState<BoardSubjects>(BoardSubjects.all);
 
+    const deviceSize = useDeviceSize();
     const {
         boards, loading, viewMore,
         boardOrder, setBoardOrder,
         boardView, setBoardView,
         boardLimit, setBoardLimit,
         boardTitleFilter, setBoardTitleFilter
-    } = useGameboards(BoardViews.card, BoardLimit.six);
+    } = useGameboards(isAda && above["lg"](deviceSize) ? BoardViews.table : BoardViews.card, BoardLimit.six);
 
     const switchView = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setBoardView(e.target.value as BoardViews);
@@ -503,7 +506,7 @@ export const SetAssignments = () => {
 
     // Page help
     const pageHelp = <span>
-        Use this page to set {siteSpecific("assignments", "quizzes")} to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
+        Use this page to set {siteSpecific("assignments", "quizzes")} to your groups. You can {siteSpecific("assign", "set")} any {siteSpecific("gameboard", "quiz")} you have saved to your account.
         <br/>
         Students in the group will be emailed when you set a new {siteSpecific("assignment", "quiz")}.
     </span>;
@@ -527,22 +530,27 @@ export const SetAssignments = () => {
             assignees={(isDefined(modalBoard) && isDefined(modalBoard?.id) && groupsByGameboard[modalBoard.id]) || []}
         />
 
-        <TitleAndBreadcrumb currentPageTitle="Set assignments" help={pageHelp} modalId="set_assignments_help"/>
-        <h4 className="mt-4 mb-3">
-            Add a {siteSpecific("gameboard", "quiz")} from ...
-        </h4>
-        <AddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>
+        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Set quizzes")} help={pageHelp} modalId="set_assignments_help"/>
+        {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
         {groups && groups.length === 0 && <Alert color="warning">
             You have not created any groups to assign work to.
             Please <Link to="/groups">create a group here first.</Link>
         </Alert>}
         {boards && boards.totalResults === 0
             ? <h3 className="text-center mt-4 mb-5">
-                You have no {siteSpecific("gameboards", "quizzes")} to assign; use one of the options above to find one.
+                You have no {siteSpecific("gameboards", "quizzes")} to assign; {siteSpecific(
+                    "use one of the options above to find one.",
+                    <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                        create a quiz here.
+                    </Button>
+                )}
             </h3>
             : <>
                 {boards && boards.totalResults > 0 && <h4>
-                    You have <strong>{boards.totalResults}</strong> {siteSpecific("gameboard", "quiz")}{boards.totalResults > 1 && siteSpecific("s", "zes")} ready to assign...
+                    You have <strong>{boards.totalResults}</strong> {siteSpecific("gameboard", "quiz")}{boards.totalResults > 1 && siteSpecific("s", "zes")} ready to assign...{" "}
+                    {isAda && <Button className={"font-size-1-25"} tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                        create another quiz?
+                    </Button>}
                 </h4>}
                 {!boards && <h4>
                     You have <IsaacSpinner size="sm" inline/> {siteSpecific("gameboards", "quizzes")} ready to assign...

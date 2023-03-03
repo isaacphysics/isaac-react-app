@@ -43,7 +43,7 @@ import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
 import {combineQueries, ShowLoadingQuery, discardResults} from "../handlers/ShowLoadingQuery";
-import {AddGameboardButtons} from "./SetAssignments";
+import {PhyAddGameboardButtons} from "./SetAssignments";
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -518,7 +518,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
         <h4 className="mt-4 mb-3">
             Assign a gameboard from...
         </h4>
-        <AddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
+        <PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or gameboards"
             query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, discardResults)}
