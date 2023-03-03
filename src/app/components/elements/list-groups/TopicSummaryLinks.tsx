@@ -21,7 +21,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
     const userContext = useUserContext();
     const user = useAppSelector(selectors.user.orNull);
 
-    return <RS.ListGroup className="mt-3 link-list list-group-links">
+    return <RS.ListGroup className="mt-4 link-list list-group-links">
         {items
             // For CS we want relevant sections to appear first
             .sort((itemA, itemB) => {
