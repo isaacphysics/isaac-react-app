@@ -94,7 +94,6 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
     }
 
     const yearRange = range(currentYear, currentYear + 5);
-    const currentMonth = (new Date()).getMonth() + 1;
     const dueDateInvalid = dueDate && scheduledStartDate ? nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf() : false;
 
     function setScheduledStartDateAtSevenAM(e: ChangeEvent<HTMLInputElement>) {
@@ -118,11 +117,11 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
             />
         </Label>
         {allowScheduling && <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
-            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+            <DateInput value={scheduledStartDate} placeholder="Select your scheduled start date..." yearRange={yearRange}
                        onChange={setScheduledStartDateAtSevenAM} />
         </Label>}
         <Label className="w-100 pb-2">Due date reminder <span className="text-muted"> (optional)</span>
-            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange} defaultYear={currentYear} defaultMonth={currentMonth}
+            <DateInput value={dueDate} placeholder="Select your due date..." yearRange={yearRange}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setDueDate(e.target.valueAsDate as Date)} /> {/* DANGER here with force-casting Date|null to Date */}
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be on or after start date.</small>}
         </Label>

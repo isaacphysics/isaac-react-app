@@ -5,8 +5,7 @@ import {range} from 'lodash';
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
     labelSuffix?: string;
-    defaultYear?: number;
-    defaultMonth?: number | ((day: number | undefined) => number);
+    disableDefaults?: boolean;
     yearRange?: number[];
     value?: string | string[] | number | Date;
     noClear?: boolean;
@@ -153,20 +152,37 @@ export const DateInput = (props: DateInputProps) => {
         }
     }
 
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+
     const change = (what: string) => (e: ChangeEvent<HTMLInputElement>) => {
 
         values[what].set(parseInt(e.target.value, 10));
 
         const day = values.day.get();
-        if (day && day > lastInMonth()) {
-            values.day.set(lastInMonth());
+        if (!props.disableDefaults && (what == "day" || what == "month")) {
+            let month = values["month"].get() as number;
+            if (values["month"].get() == undefined) {
+                const defaultMonth = day && day <= currentDay ? currentMonth + 1 : currentMonth;
+                values["month"].set(defaultMonth > 12 ? 1 : defaultMonth);
+                month = defaultMonth;
+            }
+            if (values["year"].get() == undefined) {
+                const defaultYear = (month > 12 || (month < currentMonth)) ? currentYear + 1 : currentYear;
+                const scaledYear = props.yearRange && props.yearRange.length > 0
+                    ? defaultYear < (props.yearRange.at(0) as number)
+                        ? props.yearRange.at(0)
+                        : (defaultYear > (props.yearRange.at(-1) as number)
+                            ? props.yearRange.at(-1)
+                            : defaultYear)
+                    : defaultYear;
+                values["year"].set(scaledYear);
+            }
         }
 
-        if (what == "day" && values[what].get() != undefined) {
-            if (values["month"].get() == undefined && values["year"].get() == undefined) {
-                values["month"].set(typeof props.defaultMonth === 'function' ? props.defaultMonth(day) : props.defaultMonth);
-                values["year"].set(props.defaultYear);
-            }
+        if (day && day > lastInMonth()) {
+            values.day.set(lastInMonth());
         }
 
         const timestamp = setHiddenValue();
