@@ -587,14 +587,14 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     }, [dispatch]);
 
     const pageHelp = <span>
-        Click on your groups to see the assignments you have set. View your students' progress by question.
+        {`Click on your groups to see the ${siteSpecific("assignments", "quizzes")} you have set. View your students' progress by question.`}
     </span>;
 
     return <>
         <Container>
             <TitleAndBreadcrumb
                 currentPageTitle={siteSpecific("Assignment Progress", "My markbook")}
-                subTitle="Track your group performance by question"
+                subTitle={"Track your group performance" + (isPhy ? " by question" : "")}
                 help={pageHelp}
                 modalId="assignment_progress_help"
             />
