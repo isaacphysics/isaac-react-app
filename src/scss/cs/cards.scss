@@ -79,7 +79,7 @@ $cards-per-line: (
 }
 
 
-.card {
+.cs-card, .news-card {
   // This is to make sure that the "footers" of multiple cards line up nicely
   &::after {
     @extend .mb-5;
