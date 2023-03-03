@@ -6,11 +6,8 @@ import {
     Button,
     Card,
     CardBody,
-    CardSubtitle,
-    CardTitle,
     Col,
     Container,
-    CustomInput,
     Input,
     Label,
     Row,
@@ -27,189 +24,20 @@ import {
     BoardCreators,
     BoardLimit,
     BoardViews,
-    determineGameboardStagesAndDifficulties,
-    determineGameboardSubjects,
     difficultiesOrdered,
     difficultyShortLabelMap,
     formatBoardOwner,
-    generateGameboardSubjectHexagons,
     isAda,
     isMobile,
     isPhy, PATHS,
     siteSpecific,
     sortIcon,
-    stageLabelMap,
     useGameboards
 } from "../../services";
-import {formatDate} from "../elements/DateString";
-import {ShareLink} from "../elements/ShareLink";
 import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {sortBy} from "lodash";
-import {Util} from "leaflet";
-import indexOf = Util.indexOf;
-import {Circle} from "../elements/svg/Circle";
-import {GameboardCard} from "../elements/GameboardCard";
-
-interface MyBoardsPageProps {
-    user: RegisteredUserDTO;
-    boards: Boards | null;
-}
-
-type BoardTableProps = MyBoardsPageProps & {
-    board: GameboardDTO;
-    setSelectedBoards: (e: any) => void;
-    selectedBoards: GameboardDTO[];
-    boardView: BoardViews;
-}
-
-const Board = (props: BoardTableProps) => {
-    const {user, board, setSelectedBoards, selectedBoards, boardView} = props;
-
-    const boardLink = `${PATHS.GAMEBOARD}#${board.id}`;
-
-    const dispatch = useAppDispatch();
-
-    const updateBoardSelection = (board: GameboardDTO, checked: boolean) => {
-        if (checked) {
-            setSelectedBoards([...selectedBoards, board]);
-        } else {
-            setSelectedBoards(selectedBoards.filter((thisBoard) => thisBoard.id !== board.id));
-        }
-    };
-
-    function confirmCardDeleteBoard() {
-        if (confirm(`Are you sure you want to remove '${board.title}' from your account?`)) {
-            dispatch(unlinkUserFromGameboard({boardId: board.id, boardTitle: board.title}));
-        }
-    }
-
-    const boardSubjects = determineGameboardSubjects(board);
-    const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(board);
-
-    const basicCellClasses = `align-middle ${siteSpecific("text-center", "text-left")}`;
-
-    return boardView == BoardViews.table ?
-        <tr className={siteSpecific("board-card", "")} data-testid={"my-gameboard-table-row"}>
-            <td className={siteSpecific("", "align-middle text-center")}>
-                {siteSpecific(
-                    <div className="board-subject-hexagon-container table-view">
-                        {(board.percentageCompleted === 100)
-                            ? <span className="board-subject-hexagon subject-complete"/>
-                            : <>
-                                {generateGameboardSubjectHexagons(boardSubjects)}
-                                <div className="board-percent-completed">{board.percentageCompleted}</div>
-                            </>
-                        }
-                    </div>,
-                    <svg width={48} height={48}>
-                        <Circle radius={24} properties={{fill: "#000"}}/>
-                        <foreignObject className="board-percent-completed" x={0} y={0} width={48} height={48}>
-                            {board.percentageCompleted}%
-                        </foreignObject>
-                    </svg>
-                )}
-            </td>
-            <td colSpan={siteSpecific(1, 4)} className="align-middle">
-                <a href={boardLink} className={isAda ? "font-weight-semi-bold" : ""}>{board.title}</a>
-            </td>
-            <td className={basicCellClasses + " p-0"} colSpan={2}>
-                {boardStagesAndDifficulties.length > 0 && <table className="w-100 border-0">
-                    <tbody>
-                        {boardStagesAndDifficulties.map(([stage,difficulties], i) => {
-                            return <tr key={stage} className={classNames({"border-0": i === 0, "border-left-0 border-right-0 border-bottom-0": i === 1})}>
-                                <td className="text-center align-middle border-0 p-1 w-50">
-                                    {stageLabelMap[stage]}
-                                </td>
-                                <td className="text-center align-middle border-0 p-1 w-50">
-                                    {isAda && "("}{sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")}{isAda && ")"}
-                                </td>
-                            </tr>
-                        })}
-                    </tbody>
-                </table>}
-            </td>
-            <td className={basicCellClasses}>{formatBoardOwner(user, board)}</td>
-            <td className={basicCellClasses}>{formatDate(board.creationDate)}</td>
-            <td className={basicCellClasses}>{formatDate(board.lastVisited)}</td>
-            <td className={basicCellClasses}>
-                <div className="table-share-link">
-                    <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
-                </div>
-            </td>
-            <td>
-                <CustomInput
-                    id={`board-delete-${board.id}`} type="checkbox"
-                    checked={board && (selectedBoards.some(e => e.id === board.id))}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        board && updateBoardSelection(board, event.target.checked)
-                    }} aria-label="Delete gameboard"
-                />
-            </td>
-        </tr>
-        :
-        siteSpecific(
-            <Card className="board-card card-neat" data-testid={"my-gameboard-card"}>
-                <CardBody className="pb-4 pt-4">
-                    <button className="close" onClick={confirmCardDeleteBoard} aria-label="Delete gameboard">×</button>
-                    <div className="board-subject-hexagon-container">
-                        {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
-                            <>
-                                {generateGameboardSubjectHexagons(boardSubjects)}
-                                <div className="board-percent-completed">{board.percentageCompleted}</div>
-                            </>
-                        }
-                    </div>
-                    <aside>
-                        <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                        <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
-                        <table className="w-100">
-                            <thead>
-                            <tr>
-                                <th className="w-50 font-weight-light">
-                                    {`Stage${boardStagesAndDifficulties.length > 1 ? "s" : ""}:`}
-                                </th>
-                                <th className="w-50 font-weight-light pl-1">
-                                    {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {boardStagesAndDifficulties.map(([stage, difficulties]) => <tr key={stage}>
-                                    <td className="w-50 align-baseline text-lg-right">
-                                        <strong>{stageLabelMap[stage]}:</strong>
-                                    </td>
-                                    <td className="w-50 pl-1">
-                                        <strong>{difficulties.map((d) => difficultyShortLabelMap[d]).join(", ")}</strong>
-                                    </td>
-                                </tr>)}
-                                {boardStagesAndDifficulties.length === 0 && <tr>
-                                    <td className="w-50 align-baseline text-lg-right">
-                                        <strong>N/A:</strong>
-                                    </td>
-                                    <td className="w-50 pl-1">
-                                        <strong>-</strong>
-                                    </td>
-                                </tr>}
-                            </tbody>
-                        </table>
-                    </aside>
-
-                    <Row className="mt-1 mb-2">
-                        <Col>
-                            <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
-                            <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
-                        </Col>
-                        <Col className="card-share-link col-auto">
-                            <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
-                        </Col>
-                    </Row>
-                </CardBody>
-            </Card>,
-            <GameboardCard user={user} board={board}/>
-        );
-};
+import {BoardCard} from "../elements/cards/BoardCard";
 
 interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -339,7 +167,7 @@ const PhyTable = (props: GameboardsTableProps) => {
                                 && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
                                 && (boardCompletionSelection(board, boardCompletion)))
                             .map(board =>
-                                <Board
+                                <BoardCard
                                     key={board.id}
                                     board={board}
                                     selectedBoards={selectedBoards}
@@ -442,7 +270,7 @@ const CSTable = (props: GameboardsTableProps) => {
                     && (formatBoardOwner(user, board) == boardCreator || boardCreator == "All")
                     && (boardCompletionSelection(board, boardCompletion)))
                 .map(board =>
-                    <Board
+                    <BoardCard
                         key={board.id}
                         board={board}
                         selectedBoards={selectedBoards}
@@ -576,7 +404,7 @@ export const MyGameboards = () => {
                             <>
                                 <Row className={"row-cols-lg-3 row-cols-md-2 row-cols-1"}>
                                     {boards.boards.map(board => <Col key={board.id}>
-                                        <Board
+                                        <BoardCard
                                             board={board}
                                             selectedBoards={selectedBoards}
                                             setSelectedBoards={setSelectedBoards}

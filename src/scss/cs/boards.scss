@@ -6,13 +6,38 @@
   color: #fff;
   z-index: 10;
   text-align: center;
-  line-height: 48px;
+  &:not(.set-assignments) {
+    line-height: 48px;
+    span {
+      line-height: 48px;
+    }
+  }
+  &.set-assignments {
+    padding-top: 9px;
+    line-height: 13px;
+    span {
+      line-height: 13px;
+    }
+    small {
+      @extend .font-size-0-5;
+    }
+  }
   width: 48px;
   height: 48px;
 }
 
+// Only used for *actual cards* on Ada
 .board-card {
   position: relative;
   border-radius: 0;
   border: none;
+}
+
+.board-circle {
+  outline: none !important;
+  border: none !important;
+  &:focus-visible {
+    outline: 2px solid $button-focus-blue !important;
+    border-radius: 50px !important;
+  }
 }

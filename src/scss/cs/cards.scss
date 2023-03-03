@@ -78,8 +78,7 @@ $cards-per-line: (
   }
 }
 
-
-.cs-card, .news-card {
+.cs-card, .news-card, .board-card {
   // This is to make sure that the "footers" of multiple cards line up nicely
   &::after {
     @extend .mb-5;
@@ -94,5 +93,8 @@ $cards-per-line: (
     bottom: 0;
     width: 100%;
     left: 0;
+    .assign-button {
+      margin-top: 15px;
+    }
   }
 }
