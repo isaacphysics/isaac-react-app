@@ -1,3 +1,11 @@
 .table {
   text-align: left;
+  tr {
+    &.disabled {
+      background-color: $cs-cultured;
+    }
+    &.selected {
+      background-color: white !important;
+    }
+  }
 }
