@@ -277,6 +277,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                             }}
                                                         >
                                                             {siteSpecific("Add Questions", "Add questions")}
+                                                            {isAda && <img className={"plus-icon"} src={"/assets/cs/icons/add-circle-outline-pink.svg"}/>}
                                                         </Button>
                                                     </ShowLoading>
                                                 </div>

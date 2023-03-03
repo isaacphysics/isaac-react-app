@@ -172,7 +172,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
             <td className={basicCellClasses}>{formatBoardOwner(user, board)}</td>
             <td className={basicCellClasses}>{formatDate(board.creationDate)}</td>
             <td className={basicCellClasses}>{formatDate(board.lastVisited)}</td>
-            {isSetAssignments && <td className="text-center align-middle">
+            {isSetAssignments && <td className={basicCellClasses}>
                 <Button color={siteSpecific("tertiary", "secondary")} size="sm" style={siteSpecific({fontSize: 15}, undefined)} onClick={toggleAssignModal}>
                     {siteSpecific(<>Assign&nbsp;/ Unassign</>, "Manage")}
                 </Button>
@@ -182,15 +182,30 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <ShareLink linkUrl={boardLink} gameboardId={board.id} outline={isAda} clickAwayClose={isAda} />
                 </div>
             </td>
-            {!isSetAssignments && <td>
-                <CustomInput
-                    id={`board-delete-${board.id}`} type="checkbox"
-                    checked={board && selectedBoards?.some(e => e.id === board.id)}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        board && updateBoardSelection(board, event.target.checked)
-                    }} aria-label="Delete gameboard"
-                />
-            </td>}
+            {!isSetAssignments && siteSpecific(
+                <td>
+                    <CustomInput
+                        id={`board-delete-${board.id}`}
+                        type="checkbox"
+                        checked={board && selectedBoards?.some(e => e.id === board.id)}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            board && updateBoardSelection(board, event.target.checked)
+                        }} aria-label="Delete gameboard"
+                    />
+                </td>,
+                <td className={"text-center align-middle"}>
+                    <CustomInput
+                        id={`board-delete-${board.id}`}
+                        type="checkbox"
+                        color="secondary"
+                        className={"isaac-checkbox mr-n2"}
+                        checked={board && selectedBoards?.some(e => e.id === board.id)}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                            board && updateBoardSelection(board, event.target.checked)
+                        }} aria-label="Delete gameboard"
+                    />
+                </td>
+            )}
         </tr>
         :
         siteSpecific(

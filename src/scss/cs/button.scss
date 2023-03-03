@@ -303,3 +303,14 @@
   margin-right: 7.5px;
   margin-left: 7.5px;
 }
+
+.btn.plus-button {
+  position: relative;
+  &::after {
+    background-image: none !important;
+  }
+  .plus-icon {
+    @extend .ml-2;
+    height: 24px;
+  }
+}
