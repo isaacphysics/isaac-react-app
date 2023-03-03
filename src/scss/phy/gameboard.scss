@@ -15,4 +15,15 @@
 
 .responsive {
   max-height: 60vh;
+  .table.table-bordered {
+    tr {
+      &.disabled {
+        background-color: lightgrey;
+      }
+
+      &.selected {
+        background-color: lightyellow;
+      }
+    }
+  }
 }
