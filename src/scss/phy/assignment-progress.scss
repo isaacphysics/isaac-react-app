@@ -9,3 +9,8 @@
   background: $secondary;
   color: white;
 }
+
+.assignment-progress-gameboard .gameboard-header:not(.text-muted) > *:first-child:before {
+  background: $primary !important;
+}
+
