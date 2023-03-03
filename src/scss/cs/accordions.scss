@@ -1,14 +1,17 @@
+
+.stage-label-gcse, .stage-label-alevel, .stage-label-all {
+  color: black;
+  font-weight: 600;
+}
+
 .stage-label-gcse {
   background-color: $gcse-colour;
-  color: white;
 }
 
 .stage-label-alevel {
   background-color: $a-level-colour;
-  color: white;
 }
 
 .stage-label-all {
   background-color: $all-stages-colour;
-  color: white;
 }
