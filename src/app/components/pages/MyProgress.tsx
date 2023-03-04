@@ -105,7 +105,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
         <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
         <Card className="mt-4">
             <CardBody>
-                <Tabs>{{
+                <Tabs tabContentClass="mt-3">{{
                     "Question activity": <div>
                         <Row>
                             <Col>

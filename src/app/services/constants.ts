@@ -1095,14 +1095,13 @@ export const doughnutColours = siteSpecific(
         "#fea100"
     ],
     [
-        "#feae42",
-        "#000000",
-        "#e51f6f",
-        "#ef67ac",
-        "#bf6707",
-        "#0f8294",
-        "#aaaaaa",
-        "#dbdbdb"
+        "#870D5A",
+        "#333333",
+        "#0AFFE7",
+        "#B9B9B9",
+        "#FF4DC9",
+        "#FFE672",
+        "#EBEBEB"
     ]
 );
 
