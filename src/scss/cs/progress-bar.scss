@@ -1,0 +1,10 @@
+@import "../common/progress-bar";
+
+.progress-bar-outer, .progress-bar-inner {
+  border-radius: 15px;
+}
+.progress-bar-outer {
+  .progress-bar-inner {
+    background: $cs-yellow;
+  }
+}

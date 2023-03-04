@@ -26,9 +26,9 @@ export const ProgressBar = ({percentage, primaryTitle, secondaryPercentage, seco
     return <div className="progress-bar-outer mb-2">
         {isDefined(secondaryPercentage) && <div className={`progress-bar-secondary ${colour}`} title={secondaryTitle} style={{width: `${secondaryPercentage}%`}} />}
         <div className={`progress-bar-inner ${colour}`} style={{width: `${percentage}%`}} title={primaryTitle}>
-            <span className="pl-3">
+            <div className="pl-3 pt-1">
                 {children}
-            </span>
+            </div>
         </div>
     </div>
 };
