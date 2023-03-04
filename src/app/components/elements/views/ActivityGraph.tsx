@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {bb} from "billboard.js";
 import {AnsweredQuestionsByDate} from "../../../../IsaacApiTypes";
 import {formatISODateOnly} from "../DateString";
+import {siteSpecific} from "../../../services";
 
 export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDate: AnsweredQuestionsByDate}) => {
 
@@ -35,7 +36,7 @@ export const ActivityGraph = ({answeredQuestionsByDate}: {answeredQuestionsByDat
                     ["activity", ...selectedDates.map((date) => answeredQuestionsByDate ? answeredQuestionsByDate[date] || 0 : 0)]
                 ],
                 types: {activity: "area-spline"},
-                colors: {activity: "#ffb53f"},
+                colors: {activity: siteSpecific("#FFB53F", "#FF4DC9")},
                 xFormat: "%Y-%m-%d"
             },
             axis: {
