@@ -48,7 +48,7 @@ export const HeaderCS = () => {
                             <LinkItem to={PATHS.QUESTION_FINDER}>Questions</LinkItem>
                             {/* <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem> Hidden for Ada launch */}
                             <LinkItem to="/glossary">Glossary</LinkItem>
-                            <LinkItem to="/pages/computer_science_journeys_gallery">Computer science in context</LinkItem>
+                            <LinkItem to="/pages/computer_science_in_context">Computer science in Context</LinkItem>
                         </NavigationSection>
 
                         {isTutorOrAbove(user) && <NavigationSection title="Teach">
