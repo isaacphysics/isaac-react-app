@@ -41,3 +41,19 @@
     border-radius: 50px !important;
   }
 }
+
+.question-progress-icon {
+  width: 95px !important;
+  min-width: 95px !important;
+  display: block;
+  padding: 14px 0 !important;
+  position: relative;
+  div {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    img {
+      width: 2rem;
+    }
+  }
+}
