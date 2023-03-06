@@ -80,8 +80,21 @@ export const GoogleSignInButton = () => {
         dispatch(handleProviderLoginRedirect("GOOGLE"));
     };
 
-    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithGoogle}>
-        <img id={"google-button-logo"} src={"/assets/google-logo.svg"} alt={"Google logo"}/> Log in with Google
+    return <Button className={"position-relative"} block outline color="secondary" onClick={logInWithGoogle}>
+        <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Log in with Google
+    </Button>
+}
+
+// Button prompting the user to sign in via Raspberry Pi Accounts
+export const RaspberryPiSignInButton = () => {
+    const dispatch = useAppDispatch();
+
+    const logInWithRaspberryPi = () => {
+        dispatch(handleProviderLoginRedirect("RASPBERRYPI"));
+    };
+
+    return <Button className={"position-relative"} block outline color="secondary" onClick={logInWithRaspberryPi}>
+        <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>Log in with Raspberry Pi
     </Button>
 }
 
@@ -288,7 +301,11 @@ export const LogIn = () => {
                                     </Row>
 
                                     <hr className="text-center"/>
-
+                                    <Row className="my-4 justify-content-center">
+                                        <Col sm={9}>
+                                            <RaspberryPiSignInButton/>
+                                        </Col>
+                                    </Row>
                                     <Row className="my-4 justify-content-center">
                                         <Col sm={9}>
                                             <GoogleSignInButton/>

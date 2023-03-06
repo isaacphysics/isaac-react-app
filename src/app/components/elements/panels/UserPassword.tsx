@@ -153,8 +153,19 @@ export const UserPassword = (
                 <Col md={{size: 6, offset: 3}}>
                     <FormGroup>
                         <h4>Linked Accounts</h4>
-                        <Col className="text-center">
-                            <div className="vertical-center ml-2">
+                        <Col>
+                            <Row className="align-items-center ml-2">
+                                <input
+                                    type="button"
+                                    id="linked-accounts-no-password"
+                                    className="linked-account-button rpf-button"
+                                    onClick={() => dispatch(authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccount("RASPBERRYPI"))}
+                                />
+                                <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
+                                    {authenticationProvidersUsed("RASPBERRYPI") ? " Remove linked Raspberry Pi account" : " Add linked Raspberry Pi account"}
+                                </Label>
+                            </Row>
+                            <Row className="align-items-center ml-2">
                                 <input
                                     type="button"
                                     id="linked-accounts-no-password"
@@ -164,7 +175,7 @@ export const UserPassword = (
                                 <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
                                     {authenticationProvidersUsed("GOOGLE") ? " Remove linked Google account" : " Add linked Google account"}
                                 </Label>
-                            </div>
+                            </Row>
                         </Col>
                     </FormGroup>
                 </Col>
