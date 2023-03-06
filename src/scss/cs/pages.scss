@@ -43,3 +43,10 @@
     border: solid 1px $cs-dark-silver;
   }
 }
+
+// My assignments
+.my-assignments-card {
+  @extend .my-5;
+  border: none;
+  border-radius: 0;
+}

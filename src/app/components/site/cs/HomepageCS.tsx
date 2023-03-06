@@ -76,7 +76,6 @@ export const HomepageCS = () => {
             </section>
 
             <section id="computer-science-stories">
-                {/*<img id={"fingerprint-cs-stories"} src={"/assets/cs/decor/fingerprint-cs-stories.svg"}/>*/}
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
                         <Col xs={12} md={6} id={"cs-stories-text"}>

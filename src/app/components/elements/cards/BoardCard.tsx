@@ -275,8 +275,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                             <b>Created</b>: {formatDate(board.creationDate)}<br/>
                             <b>Last visited</b>: {formatDate(board.lastVisited)}<br/>
                             <b>Stages and difficulties</b>: {boardStagesAndDifficulties.map(([stage,difficulties], i) =>
-                            `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
-                        ).join(", ") || "-"}<br/>
+                                `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
+                            ).join(", ") || "-"}<br/>
                         </Col>
                     </Row>
                     <CardFooter className={"text-right p-3"}>
