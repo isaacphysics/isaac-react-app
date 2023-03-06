@@ -80,8 +80,8 @@ export const GoogleSignInButton = () => {
         dispatch(handleProviderLoginRedirect("GOOGLE"));
     };
 
-    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithGoogle}>
-        <img id={"google-button-logo"} src={"/assets/google-logo.svg"} alt={"Google logo"}/> Log in with Google
+    return <Button className={"position-relative"} block outline color="secondary" onClick={logInWithGoogle}>
+        <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Log in with Google
     </Button>
 }
 
@@ -93,8 +93,8 @@ export const RaspberryPiSignInButton = () => {
         dispatch(handleProviderLoginRedirect("RASPBERRYPI"));
     };
 
-    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
-        <img id={"rasbperrypi-button-logo"} src={"/assets/raspberrypi-logo.svg"} alt={"Raspberry Pi logo"}/> Log in with Raspberry Pi
+    return <Button className={"position-relative"} block outline color="secondary" onClick={logInWithRaspberryPi}>
+        <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>Log in with Raspberry Pi
     </Button>
 }
 
@@ -301,15 +301,14 @@ export const LogIn = () => {
                                     </Row>
 
                                     <hr className="text-center"/>
-
                                     <Row className="my-4 justify-content-center">
                                         <Col sm={9}>
-                                            <GoogleSignInButton/>
+                                            <RaspberryPiSignInButton/>
                                         </Col>
                                     </Row>
                                     <Row className="my-4 justify-content-center">
                                         <Col sm={9}>
-                                            <RaspberryPiSignInButton/>
+                                            <GoogleSignInButton/>
                                         </Col>
                                     </Row>
                                 </React.Fragment>
