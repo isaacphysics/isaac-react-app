@@ -1,3 +1,4 @@
+@use "sass:math";
 @import "../common/cards";
 
 // number of news cards per line for each breakpoint
@@ -8,10 +9,12 @@ $news-cards-per-line: (
 );
 
 @each $name, $breakpoint in $grid-breakpoints {
-  @include media-breakpoint-up($name) {
-    .card-deck .news-card {
-      flex: 0 0 calc(#{100 / map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
-      width: 100%;
+  @if (map-has-key($news-cards-per-line, $name)) {
+    @include media-breakpoint-up($name) {
+      .card-deck .news-card {
+        flex: 0 0 calc(#{100/map-get($news-cards-per-line, $name)}% - #{$grid-gutter-width});
+        width: 100%;
+      }
     }
   }
 }
@@ -19,13 +22,38 @@ $news-cards-per-line: (
 // number of cards per line for each breakpoint
 $cards-per-line: (
         xs: 1,
+        md: 2,
+        xl: 3
+);
+@each $name, $breakpoint in $grid-breakpoints {
+  @if (map-has-key($cards-per-line, $name)) {
+    @include media-breakpoint-up($name) {
+      .card-deck:not(.homepage-cards) .cs-card {
+        flex: 0 0 calc(#{100/map-get($cards-per-line, $name)}% - #{$grid-gutter-width});
+      }
+    }
+  }
+}
+
+// number of cards per line for each breakpoint
+$homepage-cards-per-line: (
+        xs: 1,
         lg: 2
 );
 @each $name, $breakpoint in $grid-breakpoints {
-  @include media-breakpoint-up($name) {
-    .card-deck .cs-card {
-      flex: 0 0 calc(#{100 / map-get($cards-per-line, $name)}% - #{$grid-gutter-width});
+  @if (map-has-key($homepage-cards-per-line, $name)) {
+    @include media-breakpoint-up($name) {
+      .homepage-cards .cs-card {
+        flex: 0 0 calc(#{100/map-get($homepage-cards-per-line, $name)}% - #{$grid-gutter-width});
+      }
     }
+  }
+}
+
+.homepage-cards {
+  .cs-card {
+    @extend .mt-4;
+    @extend .my-lg-0;
   }
 }
 
@@ -34,6 +62,7 @@ $cards-per-line: (
   position: relative;
   border-radius: 15px;
   display: inline-block;
+  margin-bottom: $grid-gutter-width !important;
 
   &::before {
     content: " ";
@@ -68,7 +97,7 @@ $cards-per-line: (
     }
   }
 
-  .news-card-image {
+  .card-img, .card-img-top {
     width: 100%;
     border-radius: 15px 15px 0 0;
   }

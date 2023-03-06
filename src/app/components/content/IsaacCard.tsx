@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Card, CardBody, CardFooter, CardTitle, Col, Row} from "reactstrap";
+import {Button, Card, CardBody, CardFooter, CardImg, CardTitle, Col, Row} from "reactstrap";
 import classNames from "classnames";
 import {apiHelper, isAppLink, siteSpecific} from "../../services";
 import {Link} from "react-router-dom";
@@ -8,7 +8,6 @@ import {IsaacCardDTO} from "../../../IsaacApiTypes";
 interface IsaacCardProps {
     doc: IsaacCardDTO;
     imageClassName?: string;
-    buttonText?: string;
 }
 
 const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
@@ -54,17 +53,19 @@ const PhysicsCard = ({doc, imageClassName}: IsaacCardProps) => {
         </Card>;
 };
 
-const AdaCard = ({doc, imageClassName, buttonText}: IsaacCardProps) => {
+const AdaCard = ({doc, imageClassName}: IsaacCardProps) => {
     const {title, subtitle, image, clickUrl, disabled, verticalContent} = doc;
-    return <Card className={classNames("cs-card border-0 pt-4 pt-5 mt-4 my-lg-0", imageClassName)}>
-        <CardTitle className={"px-4 mt-1"}>
-            <h3>{title}</h3>
+    const imageSrc = image?.src && apiHelper.determineImageUrl(image.src);
+    return <Card className={classNames("cs-card border-0", {[imageClassName ?? ""]: !image})}>
+        {image && <CardImg className={imageClassName} src={imageSrc} alt={image.altText}/>}
+        <CardTitle className={"px-4 mt-5"}>
+            <h3 className={"mt-1"}>{title}</h3>
         </CardTitle>
         <CardBody className={"px-4"}>
             <p>{subtitle}</p>
         </CardBody>
         {clickUrl && isAppLink(clickUrl) && <CardFooter className={"border-top-0 p-4"}>
-            <Button disabled={disabled} outline color="secondary" tag={Link} to={clickUrl}>{buttonText ?? "See more"}</Button>
+            <Button disabled={disabled} outline color="secondary" tag={Link} to={clickUrl}>{doc?.buttonText || "See more"}</Button>
         </CardFooter>}
     </Card>;
 };

@@ -71,7 +71,7 @@ export const HomepageCS = () => {
                             buttonText: "View A level resources",
                             imageClassName: "backslash-2"
                         }]
-                    }}/>
+                    }} className={"homepage-cards"} />
                 </Container>
             </section>
 

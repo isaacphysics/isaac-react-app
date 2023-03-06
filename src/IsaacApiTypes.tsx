@@ -9,6 +9,7 @@ import {Immutable} from "immer";
 export interface IsaacCardDTO extends ContentDTO {
     image?: ImageDTO;
     clickUrl?: string;
+    buttonText?: string;
     disabled?: boolean;
     verticalContent?: boolean;
 }
