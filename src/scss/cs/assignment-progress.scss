@@ -1,0 +1,32 @@
+@import "../common/assignment-progress";
+
+.assignment-progress-group .group-name {
+  background: $cs-yellow;
+}
+
+.assignment-progress-gameboard .gameboard-header:not(.text-muted) > *:first-child:before {
+  background: $cs-yellow !important;
+  color: black;
+  text-decoration: none !important;
+}
+
+.progress-questions {
+  font-size: 1.1rem;
+}
+
+.progress-header {
+  font-size: 1.0rem;
+}
+
+.assignment-progress-gameboard .gameboard-title {
+  //@extend .font-weight-regular;
+  font-size: 0.9rem;
+  text-decoration: none !important;
+  color: black;
+}
+
+.gameboard-links a {
+  @extend .font-weight-regular;
+  font-size: 0.9rem;
+  color: #0F0F0F !important;
+}
