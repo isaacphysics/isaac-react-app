@@ -195,7 +195,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         }));
     }
 
-    const accountInfoChanged = contextsChanged || userChanged || (preferencesChanged && activeTab === ACCOUNT_TAB.emailpreferences);
+    const accountInfoChanged = contextsChanged || userChanged || preferencesChanged;
     useEffect(() => {
         if (accountInfoChanged && !saving) {
             return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");
