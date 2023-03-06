@@ -160,7 +160,7 @@ interface AssignmentsProps {
 }
 export const Assignments = ({assignments, showOld}: AssignmentsProps) => {
     return <>
-        {assignments.concat(assignments).concat(assignments).concat(assignments).map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
+        {assignments.map((assignment, index) => <AssignmentCard assignment={assignment} key={index}/>)}
         {assignments.length === 0 &&
             (showOld
                 ? <p className="text-center py-4"><strong>You have <a href="#" onClick={showOld}>unfinished older {siteSpecific("assignments", "quizzes")}</a></strong></p>
