@@ -36,9 +36,10 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isAda, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import classNames from "classnames";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -423,12 +424,11 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                 <Col md={4}>
                     <Card>
                         <CardBody className="mt-2">
-                            <Nav tabs className="d-flex flex-wrap">
+                            <Nav tabs className="d-flex flex-wrap guaranteed-single-line">
                                 {tabs.map((tab, index) => {
-                                    const classes = tab.active() ? "active" : "";
-                                    return <NavItem key={index} className="mx-2">
+                                    return <NavItem key={index} classNa me={classNames({"mx-2": isPhy, "active": tab.active() && isAda})}>
                                         <NavLink
-                                            className={`text-center ${classes}`} tabIndex={0}
+                                            className={classNames("text-center", {"mx-2": isAda, "active": tab.active()})} tabIndex={0}
                                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                                         >
                                             {tab.name}
