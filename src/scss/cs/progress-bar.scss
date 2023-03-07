@@ -1,6 +1,7 @@
 @import "../common/progress-bar";
 
-.progress-bar-outer, .progress-bar-inner {
+.progress-bar-outer {
+  overflow: hidden;
   border-radius: 15px;
 }
 .progress-bar-outer {
