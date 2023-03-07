@@ -260,18 +260,18 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
-                    <Nav tabs className="my-4 mx-4 flex-wrap justify-content-center">
+                    <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})}>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
                             <NavLink
-                                className={classnames("mx-2", {active: activeTab === ACCOUNT_TAB.account})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                             >
-                                <span>Profile</span>
+                                Profile
                             </NavLink>
                         </NavItem>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}>
                             <NavLink
-                                className={classnames("mx-2", {active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
                                 <span className="d-none d-lg-block">Account security</span>
@@ -280,7 +280,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         </NavItem>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}>
                             <NavLink
-                                className={classnames("mx-2", {active: activeTab === ACCOUNT_TAB.teacherconnections})}
+                                className={"mx-2"}
                                 tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)}
                                 onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
@@ -291,7 +291,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         </NavItem>
                         {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}>
                             <NavLink
-                                className={classnames("mx-2", {active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                             >
                                 <span className="d-none d-lg-block">Email preferences</span>
@@ -300,7 +300,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         </NavItem>}
                         {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.betafeatures})}>
                             <NavLink
-                                className={classnames("mx-2", {active: activeTab === ACCOUNT_TAB.betafeatures})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.betafeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.betafeatures))}
                             >
                                 <span className="d-none d-lg-block">Beta features</span>

@@ -8,6 +8,8 @@ $link-text-bottom-padding: 4px;
   align-items: stretch;
   border-bottom: none;
   .nav-item {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
     transition-property: border-bottom-width, border-bottom-color, padding-bottom;
     transition-duration: 0.2s;
     transition-timing-function: ease-out;
