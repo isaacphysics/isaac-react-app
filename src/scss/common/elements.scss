@@ -48,6 +48,12 @@
   justify-content: center;
 }
 
+.vertical-center-transform {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .isaac-checkbox {
   text-align: center;
   transform: scale(1.5);

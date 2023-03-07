@@ -71,12 +71,11 @@ export const HomepageCS = () => {
                             buttonText: "View A level resources",
                             imageClassName: "backslash-2"
                         }]
-                    }}/>
+                    }} className={"homepage-cards"} />
                 </Container>
             </section>
 
             <section id="computer-science-stories">
-                {/*<img id={"fingerprint-cs-stories"} src={"/assets/cs/decor/fingerprint-cs-stories.svg"}/>*/}
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
                         <Col xs={12} md={6} id={"cs-stories-text"}>
@@ -86,7 +85,7 @@ export const HomepageCS = () => {
                                 Inspiring professionals, passionate educators, and young graduates are shaping the field of computer science today.
                                 We share some of their stories.
                             </p>
-                            <Button tag={Link} to="/pages/computer_science_journeys_gallery" color="primary">Discover stories</Button>
+                            <Button tag={Link} to="/pages/computer_science_in_context" color="primary">Discover stories</Button>
                         </Col>
                     </Row>
                 </Container>

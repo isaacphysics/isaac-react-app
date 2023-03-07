@@ -18,8 +18,7 @@ export const IsaacCardDeck = ({doc, className}: IsaacCardDeckProps) => {
             </Col>
         </Row>}
         <CardDeck className={classNames("card-deck isaac-cards-body my-3", className)}>
-            {doc?.cards?.map((props, i) => <IsaacCard key={i} doc={props} imageClassName={props.imageClassName} buttonText={props.buttonText}/>)}
+            {doc?.cards?.map((props, i) => <IsaacCard key={i} doc={props} imageClassName={props.imageClassName}/>)}
         </CardDeck>
-    </Container>
-
+    </Container>;
 };

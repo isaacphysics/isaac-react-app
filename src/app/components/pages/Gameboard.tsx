@@ -50,24 +50,26 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     let itemClasses = classNames("content-summary-link text-info bg-transparent", {"p-3": isPhy, "p-0": isAda});
     const itemSubject = tags.getSpecifiedTag(TAG_LEVEL.subject, question.tags as TAG_ID[]);
     const iconClasses = `gameboard-item-icon ${itemSubject?.id}-fill`;
-    let iconHref = siteSpecific("/assets/question-hex.svg#icon", "/assets/question.svg");
-    let message = "";
+    let iconHref = siteSpecific("/assets/question-hex.svg#icon", "/assets/cs/icons/question-not-started.svg");
+    let message = siteSpecific("", "Not started");
     let messageClasses = "";
 
     switch (question.state) {
         case "PERFECT":
-            itemClasses += " bg-success";
-            message = "perfect!"
-            iconHref = siteSpecific("/assets/tick-rp-hex.svg#icon", "/assets/tick-rp.svg");
+            if (isPhy) {
+                itemClasses += " bg-success";
+            }
+            message = siteSpecific("perfect!", "Correct");
+            iconHref = siteSpecific("/assets/tick-rp-hex.svg#icon", "/assets/cs/icons/question-correct.svg");
             break;
         case "PASSED":
         case "IN_PROGRESS":
-            message = "in progress"
-            iconHref = siteSpecific("/assets/incomplete-hex.svg#icon", "/assets/incomplete.svg");
+            message = siteSpecific("in progress", "In progress");
+            iconHref = siteSpecific("/assets/incomplete-hex.svg#icon", "/assets/cs/icons/question-in-progress.svg");
             break;
         case "FAILED":
-            message = "try again!"
-            iconHref = siteSpecific("/assets/cross-rp-hex.svg#icon", "/assets/cross-rp.svg");
+            message = siteSpecific("try again!", "Try again");
+            iconHref = siteSpecific("/assets/cross-rp-hex.svg#icon", "/assets/cs/icons/question-incorrect.svg");
             break;
     }
 
@@ -75,17 +77,23 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
     return <RS.ListGroupItem key={question.id} className={itemClasses}>
-        <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "pl-3 justify-content-center": isAda})}>
-            {isPhy && <span>
-                <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>
-            </span>}
+        <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
+            <span className={"question-progress-icon"}>
+                {siteSpecific(
+                    <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>,
+                    <div className={"text-center px-2"}>
+                        <img src={iconHref} /><br/>
+                        <span className={"font-size-0-75 font-weight-bold"}>{message}</span>
+                    </div>
+                )}
+            </span>
             <div className={classNames("d-md-flex flex-fill", {"py-3 pr-3": isAda})}>
                 {/* TODO CP shouldn't the subject colour here depend on the contents/tags of the gameboard? */}
                 <div className={"flex-grow-1 " + (itemSubject?.id ?? (isPhy ? "physics" : ""))}>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
                         {generateQuestionTitle(question)}
                     </Markup>
-                    {message && <span className={"gameboard-item-message" + (isPhy ? "-phy " : " ") + messageClasses}>{message}</span>}
+                    {isPhy && message && <span className={"gameboard-item-message" + (isPhy ? "-phy " : " ") + messageClasses}>{message}</span>}
                     {questionTags && <div className={classNames("hierarchy-tags", {"mt-2": isAda})}>
                         {questionTags.map(tag => (<span className="hierarchy-tag" key={tag.id}>{tag.title}</span>))}
                     </div>}

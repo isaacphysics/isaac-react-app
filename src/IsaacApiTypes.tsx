@@ -9,6 +9,7 @@ import {Immutable} from "immer";
 export interface IsaacCardDTO extends ContentDTO {
     image?: ImageDTO;
     clickUrl?: string;
+    buttonText?: string;
     disabled?: boolean;
     verticalContent?: boolean;
 }
@@ -732,7 +733,7 @@ export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
 export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
 
-export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE";
+export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI";
 
 export type GameboardItemState = "PERFECT" | "PASSED" | "IN_PROGRESS" | "NOT_ATTEMPTED" | "FAILED";
 
