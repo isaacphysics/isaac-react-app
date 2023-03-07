@@ -10,13 +10,14 @@ import {
     mutationSucceeded,
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
+import {history, isAda, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
+import classNames from "classnames";
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -64,7 +65,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <>
                 <Jumbotron>
-                    <h2>Option 1: Share link</h2>
+                    <h2 className={classNames({"font-size-1-5": isAda})}>Option 1: Share link</h2>
                     <p>Share the following link with your students to have them join your group:</p>
                     <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
                         {location.origin}/account?authToken={token?.token}
@@ -72,7 +73,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                 </Jumbotron>
 
                 <Jumbotron>
-                    <h2>Option 2: Share code</h2>
+                    <h2 className={classNames({"font-size-1-5": isAda})}>Option 2: Share code</h2>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
                     <h3 className="text-center user-select-all d-block border bg-light p-1" data-testid={"share-code"}>{token?.token}</h3>
                 </Jumbotron>
@@ -90,24 +91,24 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     buttons: [
         <Row key={0}>
             {/* Only teachers are allowed to add additional managers to a group. */}
-            {isTeacherOrAbove(user) && <Col>
-                <Button block color="secondary" onClick={() => {
+            {isTeacherOrAbove(user) && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
                 }}>
                     {firstTime ? "Add group managers" : "Edit group managers"}
                 </Button>
             </Col>}
-            <Col>
-                <Button block color="secondary" onClick={() => {
+            <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                     history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
                     Set {siteSpecific("an assignment", "a quiz")}
                 </Button>
             </Col>
-            <Col>
-                <Button block color="secondary" onClick={() => {
+            <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Create another group
