@@ -17,7 +17,6 @@ import {
     tags,
     useUserContext
 } from "../../../services";
-import * as RS from "reactstrap";
 import {Link} from "react-router-dom";
 import React, {useRef} from "react";
 import {selectors, useAppSelector} from "../../../state";
@@ -26,6 +25,7 @@ import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons"
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
 import classNames from "classnames";
+import {ListGroup, ListGroupItem, UncontrolledTooltip} from "reactstrap";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -34,7 +34,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const isContentsIntendedAudience = isIntendedAudience(item.audience, {...userContext, showOtherContent: false}, user);
     const hash = item.hash;
 
-    let linkDestination, icon, iconLabel, audienceViews;
+    let linkDestination, icon, audienceViews;
     let itemClasses = "p-0 content-summary-link ";
     itemClasses += isContentsIntendedAudience ? "bg-transparent " : "de-emphasised ";
 
@@ -48,13 +48,15 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
+    // FIXME ADA "correct" never actually exists on questions here...
+    const questionIconLabel = item.correct ? "Completed question icon" : "Question icon";
     const questionIcon = siteSpecific(
         item.correct ?
-            <svg className={iconClasses}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
-            <svg className={iconClasses}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>,
+            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
+            <svg className={iconClasses} aria-label={questionIconLabel}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>,
         item.correct ?
-            <img src="/assets/tick-rp.svg" alt=""/> :
-            <img src="/assets/question.svg" alt="Question page"/>
+            <img src="/assets/cs/icons/question-correct.svg" alt={questionIconLabel}/> :
+            <img src="/assets/cs/icons/question-not-started.svg" alt={questionIconLabel}/>
     );
 
     let typeLabel;
@@ -62,16 +64,19 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     switch (item.type) {
         case (SEARCH_RESULT_TYPE.SHORTCUT):
             linkDestination = item.url;
-            icon = <img src="/assets/concept.svg" alt="Shortcut"/>;
-            iconLabel = "Shortcut icon";
+            icon = <img src={siteSpecific("/assets/concept.svg", "/assets/cs/icons/concept.svg")} alt="Shortcut icon"/>;
+            if (isAda) {
+                typeLabel = "Shortcut";
+            }
             break;
         case (DOCUMENT_TYPE.QUESTION):
         case (DOCUMENT_TYPE.FAST_TRACK_QUESTION):
             title = generateQuestionTitle(item);
-            itemClasses += item.correct ? "bg-success" : "text-info";
+            if (isPhy) {
+                itemClasses += item.correct ? "bg-success" : "text-info";
+            }
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.QUESTION]}/${item.id}`;
             icon = questionIcon;
-            iconLabel = item.correct ? "Completed question icon" : "Question icon";
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
             if (isAda) {
                 typeLabel = "Question";
@@ -79,28 +84,27 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
-            icon = <img src="/assets/concept.svg" alt="Concept page"/>;
-            iconLabel = "Concept page icon";
+            icon = <img src={siteSpecific("/assets/concept.svg", "/assets/cs/icons/concept.svg")} alt="Concept page icon"/>;
             if (isAda) {
                 typeLabel = "Concept";
             }
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
-            icon = <img src="/assets/event-md.svg" alt="Event"/>;
-            iconLabel = "Event page icon";
+            icon = <img src={siteSpecific("/assets/event-md.svg", "/assets/cs/icons/event.svg")} alt="Event page icon"/>;
             typeLabel = "Event";
             break;
         case (DOCUMENT_TYPE.TOPIC_SUMMARY):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.TOPIC_SUMMARY]}/${item.id?.slice("topic_summary_".length)}`;
-            icon = <img src="/assets/work-md.svg" alt="Topic summary"/>;
-            iconLabel = "Topic summary page icon";
+            icon = <img src={siteSpecific("/assets/work-md.svg", "/assets/cs/icons/topic.svg")} alt="Topic summary page icon"/>;
             typeLabel = "Topic"
             break;
         case (DOCUMENT_TYPE.GENERIC):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.GENERIC]}/${item.id}`;
-            icon = <img src="/assets/info-md.svg" alt="Generic page"/>;
-            iconLabel = "Topic summary page icon";
+            icon = <img src={siteSpecific("/assets/info-md.svg", "/assets/cs/icons/info-filled.svg")} alt="Generic page icon"/>;
+            if (isAda) {
+                typeLabel = "Info";
+            }
             break;
         default:
             // Do not render this item if there is no matching DOCUMENT_TYPE
@@ -108,18 +112,24 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             return null;
     }
 
-    const displayStage = audienceViews && audienceViews.length > 0;
-
-    return <RS.ListGroupItem className={`p-3 content-summary-item d-md-flex flex-column justify-content-center ${itemClasses}`} key={linkDestination}>
-        <Link to={{pathname: linkDestination, search: search, hash: hash}}>
-            <span className="content-summary-link-title align-self-center" role="img" aria-label={iconLabel}>{icon}</span>
-            <div className="d-md-flex flex-fill">
+    return <ListGroupItem className={classNames(itemClasses, {"p-3 content-summary-item d-md-flex flex-column justify-content-center": isPhy})} key={linkDestination}>
+        <Link className={classNames({"position-relative justify-content-center": isAda})} to={{pathname: linkDestination, search: search, hash: hash}}>
+            <span className={classNames({"content-summary-link-title align-self-center": isPhy, "question-progress-icon": isAda})}>
+                {siteSpecific(
+                    icon,
+                    <div className={"inner-progress-icon"}>
+                        {icon}<br/>
+                        <span className={"icon-title"}>{typeLabel}</span>
+                    </div>
+                )}
+            </span>
+            <div className={classNames("flex-fill", {"d-flex py-3 pr-3": isAda, "d-md-flex": isPhy})}>
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <Markup encoding={"latex"} className={classNames({"text-secondary": isPhy})}>
+                        <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
                             {title ?? ""}
                         </Markup>
-                        {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>
+                        {isPhy && typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>
                             ({typeLabel})
                         </span>}
                     </div>
@@ -133,18 +143,15 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
 
                 {!isContentsIntendedAudience && <div className="ml-auto mr-3 d-flex align-items-center">
                     <span id={`audience-help-${componentId}`} className="icon-help mx-1" />
-                    <RS.UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
+                    <UncontrolledTooltip placement="bottom" target={`audience-help-${componentId}`}>
                         {`This content has ${notRelevantMessage(userContext)}.`}
-                    </RS.UncontrolledTooltip>
+                    </UncontrolledTooltip>
                 </div>}
-                {audienceViews && displayStage && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
+                {audienceViews && audienceViews.length > 0 && <StageAndDifficultySummaryIcons audienceViews={audienceViews} />}
             </div>
+            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/chevron_right.svg"} alt={"Go to page"}/></div>}
         </Link>
-    </RS.ListGroupItem>;
-};
-
-export const linkToContent = (search: string | undefined, item: ContentSummaryDTO, displayTopicTitle: boolean | undefined) => {
-    return <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}/>
+    </ListGroupItem>;
 };
 
 export const LinkToContentSummaryList = ({items, search, displayTopicTitle, ...rest}: {
@@ -156,7 +163,7 @@ export const LinkToContentSummaryList = ({items, search, displayTopicTitle, ...r
     className?: string;
     cssModule?: any;
 }) => {
-    return <RS.ListGroup {...rest} className="mb-3 link-list list-group-links">
-        {items.map(item => linkToContent(search, item, displayTopicTitle))}
-    </RS.ListGroup>;
+    return <ListGroup {...rest} className={classNames("link-list list-group-links", {"mb-3": isPhy})}>
+        {items.map(item => <ContentSummaryListGroupItem item={item} search={search} key={item.type + "/" + item.id} displayTopicTitle={displayTopicTitle}/>)}
+    </ListGroup>;
 };

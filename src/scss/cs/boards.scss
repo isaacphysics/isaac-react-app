@@ -48,12 +48,25 @@
   display: block;
   padding: 14px 0 !important;
   position: relative;
-  div {
+  .inner-progress-icon {
+    @extend .text-center;
+    @extend .px-2;
     position: relative;
-    top: 50%;
+    top: calc(50% + 5px);
     transform: translateY(-50%);
     img {
       width: 2rem;
+      max-height: 2rem;
+    }
+    .icon-title {
+      @extend .font-size-0-75;
+      @extend .font-weight-bold;
+      margin-top: 15px;
+      color: $cs-jet;
     }
   }
+}
+
+.question-link-title {
+  color: $cs-jet;
 }
