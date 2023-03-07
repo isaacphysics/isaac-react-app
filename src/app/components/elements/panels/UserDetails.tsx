@@ -142,7 +142,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="programming-language-select">
-                        Default programming language
+                        Preferred programming language
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
