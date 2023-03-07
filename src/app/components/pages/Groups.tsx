@@ -426,9 +426,9 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                         <CardBody className="mt-2">
                             <Nav tabs className="d-flex flex-wrap guaranteed-single-line">
                                 {tabs.map((tab, index) => {
-                                    return <NavItem key={index} classNa me={classNames({"mx-2": isPhy, "active": tab.active() && isAda})}>
+                                    return <NavItem key={index} className={classNames({"mx-2": isPhy, "active": tab.active()})}>
                                         <NavLink
-                                            className={classNames("text-center", {"mx-2": isAda, "active": tab.active()})} tabIndex={0}
+                                            className={classNames("text-center", {"mx-2": isAda})} tabIndex={0}
                                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                                         >
                                             {tab.name}
