@@ -7,7 +7,7 @@ import {PotentialUser} from "../../../IsaacAppTypes";
 import {Immutable} from "immer";
 
 export const WhySignUpTabs = ({user}: {user: Immutable<PotentialUser> | null}) => (
-    <Tabs tabContentClass="pt-5">
+    <Tabs tabContentClass="pt-5" singleLine>
         {{
             Teachers: <>
                 <h2 className={"mb-4"}>Benefits for Teachers:</h2>

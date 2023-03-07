@@ -1,7 +1,7 @@
 import React, {ReactNode, useEffect, useState} from "react";
 import {Nav, NavItem, NavLink, TabContent, TabPane} from "reactstrap";
 import {pauseAllVideos} from "../content/IsaacVideo";
-import {isDefined, siteSpecific} from "../../services";
+import {isAda, isDefined, siteSpecific} from "../../services";
 import classNames from "classnames";
 import {useStatefulElementRef} from "./markup/portals/utils";
 import {useExpandContent} from "./markup/portals/Tables";
@@ -20,6 +20,7 @@ interface TabsProps {
     deselectable?: boolean;
     refreshHash?: string;
     expandable?: boolean;
+    singleLine?: boolean;
 }
 
 function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string, tabIndex: number) {
@@ -28,7 +29,7 @@ function callOrString(stringOrTabFunction: StringOrTabFunction, tabTitle: string
 }
 
 export const Tabs = (props: TabsProps) => {
-    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false, refreshHash, expandable} = props;
+    const {className="", tabTitleClass="", tabContentClass="", children, activeTabOverride, onActiveTabChange, deselectable=false, refreshHash, expandable, singleLine=false} = props;
     const [activeTab, setActiveTab] = useState(activeTabOverride || 1);
 
     useEffect(() => {
@@ -57,12 +58,12 @@ export const Tabs = (props: TabsProps) => {
         <div
             className={classNames(className, innerClasses, "position-relative")}
         >
-            <Nav tabs className="flex-wrap">
+            <Nav tabs className={classNames("flex-wrap", {"guaranteed-single-line": singleLine})}>
                 {Object.keys(children).map((tabTitle, mapIndex) => {
                     const tabIndex = mapIndex + 1;
                     const c = callOrString(tabTitleClass, tabTitle, tabIndex);
                     const classes = activeTab === tabIndex ? `${c} active` : c;
-                    return <NavItem key={tabTitle} className="text-center">
+                    return <NavItem key={tabTitle} className={classNames("text-center", {"active": isAda && (activeTab === tabIndex)})}>
                         <NavLink
                             tag="button" type="button" name={tabTitle.replace(" ", "_")}
                             tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}

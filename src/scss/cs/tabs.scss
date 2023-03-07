@@ -1,59 +1,80 @@
 
 $nav-bottom-line: 2px;
+$link-text-bottom-padding: 4px;
 
 .nav-tabs {
-  justify-content: left;
   padding-bottom: 0.444rem;
   box-sizing: border-box;
-  border-bottom: $nav-bottom-line solid $cs-silver;
-  flex-wrap: nowrap !important;
   align-items: stretch;
+  border-bottom: none;
   .nav-item {
-    padding-right: 1.111rem !important;
+    transition-property: border-bottom-width, border-bottom-color, padding-bottom;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+
+    border-bottom-style: solid;
+    border-bottom-width: $nav-bottom-line;
+    border-bottom-color: $cs-silver;
+    padding-bottom: #{$link-text-bottom-padding + $nav-bottom-line};
+
+    &:hover {
+      border-bottom-width: #{$nav-bottom-line * 2};
+      padding-bottom: $link-text-bottom-padding;
+    }
+
+    &.active {
+      .nav-link {
+        color: $cs-dark-pink;
+        cursor: default;
+      }
+      border-bottom-width: #{$nav-bottom-line * 2};
+      border-bottom-color: $cs-dark-pink;
+      padding-bottom: $link-text-bottom-padding;
+    }
+
     .nav-link {
       @extend .font-size-1-25;
       @extend .font-weight-regular;
       position: relative;
       text-decoration: none;
       vertical-align: bottom;
+      cursor: pointer;
       height: 100%;
       background: none !important;
-      padding: 0 !important;
+      padding: 3px;
       border: none !important;
-
-      ::after {
-        content: ' ';
-        width: 100%;
-        transform: scaleY(0);
-        transition-property: transform;
-        transition-duration: 0.3s;
-        transform-origin: 50% 100%;
-        transition-timing-function: ease-out;
-        bottom: -0.444rem;
-        display: block;
-        position: absolute;
-        box-sizing: border-box;
-        margin-bottom: - $nav-bottom-line;
-        border-bottom: #{$nav-bottom-line * 2} solid;
-        border-color: $cs-silver;
-      }
-
-      :hover {
-        &::after {
-          transform: scaleY(1);
+      margin-top: #{1.5 * $link-text-bottom-padding};
+      box-shadow: none !important;
+      &:focus-visible {
+        &:after {
+          display: block;
+          content: " ";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          outline: $button-focus-blue solid 2px !important;
         }
       }
-
-      &.active {
-        color: $cs-dark-pink;
-        cursor: default;
-        ::after {
-          opacity: 1 !important;
-          transform: scaleY(1);
-          border-color: $cs-dark-pink;
-        }
-      }
-
     }
+  }
+
+  // An idea for extending the bottom border to the right of the container
+  &.guaranteed-single-line {
+    justify-content: left;
+    &:after {
+      position: relative;
+      content: " ";
+      display: list-item;
+      flex-grow: 1;
+      border-bottom-style: solid;
+      border-bottom-width: $nav-bottom-line;
+      border-bottom-color: $cs-silver;
+      padding-bottom: #{$link-text-bottom-padding + $nav-bottom-line};
+    }
+  }
+  &:not(.guaranteed-single-line) {
+    justify-content: center;
   }
 }
