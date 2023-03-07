@@ -79,13 +79,13 @@ export const HomepageCS = () => {
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
                         <Col xs={12} md={6} id={"cs-stories-text"}>
-                            <h2 className={"mb-4"}>Computer Science in context</h2>
+                            <h2 className={"mb-4"}>Computer Science Stories</h2>
                             <p className={"mb-4"}>
                                 Ada Lovelace was a true pioneer who is a celebrated figure in the history of computer science.
                                 Inspiring professionals, passionate educators, and young graduates are shaping the field of computer science today.
                                 We share some of their stories.
                             </p>
-                            <Button tag={Link} to="/pages/computer_science_in_context" color="primary">Discover stories</Button>
+                            <Button tag={Link} to="/pages/computer_science_stories" color="primary">Discover stories</Button>
                         </Col>
                     </Row>
                 </Container>
