@@ -37,6 +37,16 @@
       border-width: 0;
     }
 
+    &.active {
+      .nav-link {
+        font-family: $secondary-font-semi-bold;
+        background-color: $black;
+        color: $white;
+        text-decoration: none;
+        cursor: default;
+      }
+    }
+
     .nav-link {
       background-color: transparent;
       border-radius: 0;
@@ -48,14 +58,6 @@
       text-decoration: underline;
       @include respond-above(sm) {
         font-size: 1.25rem;
-      }
-
-      &.active {
-        font-family: $secondary-font-semi-bold;
-        background-color: $black;
-        color: $white;
-        text-decoration: none;
-        cursor: default;
       }
     }
   }

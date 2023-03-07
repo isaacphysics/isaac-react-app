@@ -13,6 +13,7 @@ import {
 } from "../../services";
 import {Assignments} from "../elements/Assignments";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import classNames from "classnames";
 
 export const MyAssignments = () => {
     const dispatch = useAppDispatch();
@@ -58,10 +59,9 @@ export const MyAssignments = () => {
                             <Nav className="mt-4 mb-3" tabs>
                                 {tabs.map(([tabTitle, tabItems, tabAccessibleName], mapIndex) => {
                                     const tabIndex = mapIndex;
-                                    const classes = activeTab === tabIndex ? "active" : "";
-                                    return <NavItem key={tabIndex} className="px-3">
+                                    return <NavItem key={tabIndex} className={classNames("px-3", {"active": activeTab === tabIndex})} >
                                         <NavLink
-                                            className={classes} tabIndex={0} onClick={() => setActiveTab(tabIndex)}
+                                            tabIndex={0} onClick={() => setActiveTab(tabIndex)}
                                             onKeyDown={ifKeyIsEnter(() => setActiveTab(tabIndex))}
                                             title={`${tabAccessibleName} tab`}
                                         >

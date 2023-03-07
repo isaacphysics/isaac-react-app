@@ -61,12 +61,11 @@ export const Tabs = (props: TabsProps) => {
             <Nav tabs className={classNames("flex-wrap", {"guaranteed-single-line": singleLine})}>
                 {Object.keys(children).map((tabTitle, mapIndex) => {
                     const tabIndex = mapIndex + 1;
-                    const c = callOrString(tabTitleClass, tabTitle, tabIndex);
-                    const classes = activeTab === tabIndex ? `${c} active` : c;
-                    return <NavItem key={tabTitle} className={classNames("text-center", {"active": isAda && (activeTab === tabIndex)})}>
+                    const linkClasses = callOrString(tabTitleClass, tabTitle, tabIndex);
+                    return <NavItem key={tabTitle} className={classNames("text-center", {"active": activeTab === tabIndex})}>
                         <NavLink
-                            tag="button" type="button" name={tabTitle.replace(" ", "_")}
-                            tabIndex={0} className={classes} onClick={() => changeTab(tabIndex)}
+                            tag="button" type="button" className={linkClasses} name={tabTitle.replace(" ", "_")}
+                            tabIndex={0} onClick={() => changeTab(tabIndex)}
                         >
                             <Markup encoding={"latex"} className={siteSpecific("", "px-2")}>
                                 {tabTitle}
