@@ -12,6 +12,7 @@ import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {Glossary} from "../../pages/Glossary";
+import {ExamSpecifications} from "../../pages/ExamSpecifications";
 
 let key = 0;
 export const RoutesCS = [
@@ -26,6 +27,7 @@ export const RoutesCS = [
 
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
+    <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecifications} />,
 
     // Books:
     <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,

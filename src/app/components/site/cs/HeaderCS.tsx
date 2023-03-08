@@ -59,7 +59,7 @@ export const HeaderCS = () => {
                                 {/*<LinkItem to="/set_tests">Manage tests</LinkItem>*/}
                                 <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             </>}
-                            <LinkItem to={"/"}>Exam board specification</LinkItem> {/* FIXME ADA implement this when decided */}
+                            <LinkItem to={"/exam_specifications"}>Exam specifications</LinkItem>
                         </NavigationSection>}
 
                         {isLoggedIn(user) && <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
