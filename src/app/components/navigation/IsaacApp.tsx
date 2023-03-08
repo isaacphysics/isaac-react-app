@@ -159,7 +159,7 @@ export const IsaacApp = () => {
                         <TrackedRoute exact path={PATHS.GAMEBOARD} component={Gameboard} />
                         <TrackedRoute exact path={PATHS.GAMEBOARD_BUILDER} ifUser={isTutorOrAbove} component={GameboardBuilder} />
                         <TrackedRoute exact path="/assignment/:gameboardId" ifUser={isLoggedIn} component={RedirectToGameboard} />
-                        <TrackedRoute exact path="/add_gameboard/:gameboardId/:gameboardTitle?" ifUser={isLoggedIn} component={AddGameboard} />
+                        <TrackedRoute exact path={`${PATHS.ADD_GAMEBOARD}/:gameboardId/:gameboardTitle?`} ifUser={isLoggedIn} component={AddGameboard} />
 
                         {/* Student pages */}
                         <TrackedRoute exact path="/assignments" ifUser={isLoggedIn} component={MyAssignments} />

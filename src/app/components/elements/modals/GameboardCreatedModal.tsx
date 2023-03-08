@@ -28,7 +28,7 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
     return <Row>
         <Col className="mb-1">
             <Button
-                tag={Link} to={`/add_gameboard/${gameboardId}`} color="secondary" block
+                tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
             >
                 Set as assignment
