@@ -622,6 +622,7 @@ export enum SUBJECTS {
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
+    'ft_further_stage2_2018',
 ];
 
 export enum TAG_ID {
