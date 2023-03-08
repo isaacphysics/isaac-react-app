@@ -185,7 +185,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         <h2>Selected group: {group.groupName}</h2>
 
         <p>
-            Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
+            Sharing this group lets other teachers add and remove students, set new {siteSpecific("assignments", "quizzes")} and view assignment progress.
             It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
         </p>
 
