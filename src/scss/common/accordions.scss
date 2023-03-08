@@ -93,7 +93,7 @@
       }
 
       &.active {
-        border-bottom: 1px solid $shadow-08;
+        border-bottom: 1px solid $shadow-08 !important;
         &:after {
           background-image: url('/assets/chevron_up.svg');
         }
