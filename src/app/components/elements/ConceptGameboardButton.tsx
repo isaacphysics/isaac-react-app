@@ -17,6 +17,6 @@ export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboard
     );
 
     return <Link className={classNames(className, "btn btn-sm btn-primary")} to={gameboardGenerateHref} >
-        Generate a gameboard
+        Generate a {siteSpecific("gameboard", "quiz")}
     </Link>
 }
