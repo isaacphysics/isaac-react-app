@@ -13,7 +13,7 @@ const expectedTopLinks = siteSpecific(
         "our Boards for Lessons": "/pages/pre_made_gameboards",
         "create a gameboard": "/gameboard_builder"
     },
-    {
+    { // FIXME ADA there are no more buttons here, so this test needs adapting
         "Pre-made gameboards": "/pages/gameboards",
         "Topics list": "/topics",
         "Create gameboard": "/gameboard_builder"

@@ -1125,12 +1125,14 @@ export const PATHS = siteSpecific({
     QUESTION_FINDER: "/gameboards/new",
     GAMEBOARD: "/gameboards",
     SET_ASSIGNMENTS: "/set_assignments",
+    GAMEBOARD_BUILDER: "/gameboard_builder",
 }, {
     ASSIGNMENT_PROGRESS: "/my_markbook",
     MY_GAMEBOARDS: "/quizzes",
     QUESTION_FINDER: "/quizzes/new",
     GAMEBOARD: "/quizzes/view",
     SET_ASSIGNMENTS: "/quizzes/set",
+    GAMEBOARD_BUILDER: "/quizzes/builder",
 });
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";

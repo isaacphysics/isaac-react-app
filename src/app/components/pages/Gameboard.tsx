@@ -200,7 +200,7 @@ export const Gameboard = withRouter(({ location }) => {
                                     </Button>
                                 </Col>
                                 <Col className="mt-4">
-                                    <Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
+                                    <Button tag={Link} to={{pathname: PATHS.GAMEBOARD_BUILDER, search: `?base=${gameboardId}`}} color="primary" block outline>
                                         {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
                                     </Button>
                                 </Col>
