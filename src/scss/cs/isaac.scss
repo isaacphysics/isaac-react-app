@@ -166,10 +166,10 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 // Pages
 @import "pages";
 @import "homepage";
-@import "../common/login";
+@import "login";
 @import "../common/registration";
 @import "../common/assignments";
-@import "../common/my-account";
+@import "my-account";
 @import "../common/topic";
 @import "../common/my-progress";
 @import "../common/gameboard";

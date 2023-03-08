@@ -23,7 +23,7 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isAda, SITE_TITLE} from "../../services";
+import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -80,7 +80,7 @@ export const GoogleSignInButton = () => {
         dispatch(handleProviderLoginRedirect("GOOGLE"));
     };
 
-    return <Button className={"position-relative"} block outline color="secondary" onClick={logInWithGoogle}>
+    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithGoogle}>
         <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Log in with Google
     </Button>
 }
@@ -93,7 +93,7 @@ export const RaspberryPiSignInButton = () => {
         dispatch(handleProviderLoginRedirect("RASPBERRYPI"));
     };
 
-    return <Button className={"position-relative"} block outline color="secondary" onClick={logInWithRaspberryPi}>
+    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
         <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>Log in with Raspberry Pi
     </Button>
 }
@@ -301,11 +301,14 @@ export const LogIn = () => {
                                     </Row>
 
                                     <hr className="text-center"/>
-                                    <Row className="my-4 justify-content-center">
-                                        <Col sm={9}>
-                                            <RaspberryPiSignInButton/>
-                                        </Col>
-                                    </Row>
+                                    {
+                                        isAda &&
+                                            <Row className="my-4 justify-content-center">
+                                                <Col sm={9}>
+                                                    <RaspberryPiSignInButton/>
+                                                </Col>
+                                            </Row>
+                                    }
                                     <Row className="my-4 justify-content-center">
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
