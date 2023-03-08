@@ -3,7 +3,7 @@ import React, {Dispatch, SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {AppState, useAppSelector} from "../../../state";
-import {SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
+import {isPhy, SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 
 // Extended useState hook for email preferences, enforcing a default of {ASSIGNMENTS: true}
 export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
@@ -86,7 +86,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                             />
                         </td>
                     </tr>
-                    <tr>
+                    {isPhy && <tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.events}
@@ -98,7 +98,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                                 submissionAttempted={submissionAttempted}
                             />
                         </td>
-                    </tr>
+                    </tr>}
                 </tbody>
             </Table>
             <hr />

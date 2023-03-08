@@ -2,7 +2,14 @@ import {Button, CardBody, Col, FormFeedback, FormGroup, Input, Label, Row} from 
 import React, {useState} from "react";
 import {PasswordFeedback, ValidationUser} from "../../../../IsaacAppTypes";
 import {AuthenticationProvider, UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {loadZxcvbnIfNotPresent, MINIMUM_PASSWORD_LENGTH, passwordDebounce, validateEmail} from "../../../services";
+import {
+    isAda,
+    loadZxcvbnIfNotPresent,
+    MINIMUM_PASSWORD_LENGTH,
+    passwordDebounce,
+    siteSpecific,
+    validateEmail
+} from "../../../services";
 import {linkAccount, logOutUserEverywhere, resetPassword, unlinkAccount, useAppDispatch} from "../../../state";
 
 interface UserPasswordProps {
@@ -154,17 +161,21 @@ export const UserPassword = (
                     <FormGroup>
                         <h4>Linked Accounts</h4>
                         <Col>
-                            <Row className="align-items-center ml-2">
-                                <input
-                                    type="button"
-                                    id="linked-accounts-no-password"
-                                    className="linked-account-button rpf-button"
-                                    onClick={() => dispatch(authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccount("RASPBERRYPI"))}
-                                />
-                                <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
-                                    {authenticationProvidersUsed("RASPBERRYPI") ? " Remove linked Raspberry Pi account" : " Add linked Raspberry Pi account"}
-                                </Label>
-                            </Row>
+                            {
+                                isAda &&
+                                    <Row className="align-items-center ml-2">
+                                        <input
+                                            type="button"
+                                            id="linked-accounts-no-password"
+                                            className="linked-account-button rpf-button"
+                                            onClick={() => dispatch(authenticationProvidersUsed("RASPBERRYPI") ? unlinkAccount("RASPBERRYPI") : linkAccount("RASPBERRYPI"))}
+                                        />
+                                        <Label htmlFor="linked-accounts-no-password" className="ml-2 mb-0">
+                                            {authenticationProvidersUsed("RASPBERRYPI") ? " Remove linked Raspberry Pi account" : " Add linked Raspberry Pi account"}
+                                        </Label>
+                                    </Row>
+
+                            }
                             <Row className="align-items-center ml-2">
                                 <input
                                     type="button"

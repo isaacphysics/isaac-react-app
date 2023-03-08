@@ -421,7 +421,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
-                <Col md={4}>
+                <Col lg={4}>
                     <Card>
                         <CardBody className="mt-2">
                             <Nav tabs className="d-flex flex-wrap guaranteed-single-line">
@@ -479,7 +479,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                                     ×
                                                 </button>
                                             </div>
-                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-md-none py-2">
+                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
                                                 <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
                                             </div>}
                                         </div>
@@ -489,7 +489,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                         </CardBody>
                     </Card>
                 </Col>
-                <Col md={8} className="d-none d-md-block" data-testid={"group-editor"}>
+                <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
                 </Col>
             </Row>
