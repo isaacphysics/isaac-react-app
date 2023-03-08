@@ -20,7 +20,7 @@ export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError |
         <br/>
         You may want to refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
         this continues to happen.
-        Please include in your email the name and email associated with this
+        Please include in your email the name and email associated with this{" "}
         {SITE_TITLE} account, alongside the details of the error given above.
     </Alert>;
 };

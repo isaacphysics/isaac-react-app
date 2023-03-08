@@ -216,7 +216,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                             {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
                         </Button>
                         <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
-                        <span className="d-inline-block d-md-none">&nbsp;</span>
+                        <span className="d-inline-block d-lg-none">&nbsp;</span>
                     </>}
                     <Button
                         size="sm" className={isAda ? "text-white" : "" + " d-none d-sm-inline"}
@@ -311,15 +311,15 @@ const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorPr
         });
     }
     return <Row className={className}>
-        <Col size={12} className="mt-2">
-            <h6>Create New Group</h6>
+        <Col size={12} className={siteSpecific("mt-2", "")}>
+            <h6 className={siteSpecific("", "font-weight-semi-bold")}>Create New Group</h6>
         </Col>
         <Col size={12} className="mb-2">
             <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
                 onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"/>
         </Col>
-        <Col size={12}>
-            <Button block color="primary" onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
+        <Col size={12} className={siteSpecific("", "mt-2")}>
+            <Button block color="primary" outline={isAda} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
                 Create group
             </Button>
         </Col>
@@ -423,8 +423,31 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
             <Row className="mb-5">
                 <Col lg={4}>
                     <Card>
-                        <CardBody className="mt-2">
-                            <Nav tabs className="d-flex flex-wrap guaranteed-single-line">
+                        <CardBody>
+                            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup}/>
+                            <div className="d-none d-lg-block mb-3">
+                                <Button block color="primary" outline onClick={() => {
+                                    setSelectedGroupId(undefined);
+                                    if (groupNameInputRef.current) {
+                                        groupNameInputRef.current.focus();
+                                    }
+                                }}>Create new group</Button>
+                            </div>
+                            <hr/>
+                            <div className="text-left mt-3">
+                                <strong className={"mr-2"}>Groups:</strong>
+                                <UncontrolledButtonDropdown size="sm">
+                                    <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={"sm"}>
+                                        {sortOrder}
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        {Object.values(SortOrder).map(item =>
+                                            <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </UncontrolledButtonDropdown>
+                            </div>
+                            <Nav tabs className={classNames("d-flex flex-wrap guaranteed-single-line mt-3", {"mb-3": isPhy})}>
                                 {tabs.map((tab, index) => {
                                     return <NavItem key={index} className={classNames({"mx-2": isPhy, "active": tab.active()})}>
                                         <NavLink
@@ -436,37 +459,9 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                     </NavItem>;
                                 })}
                             </Nav>
-                            <Row className="align-items-center pt-4 pb-3 d-none d-md-flex">
-                                <Col>
-                                    <strong>Groups:</strong>
-                                </Col>
-                                <Col className="text-right">
-                                    <UncontrolledButtonDropdown size="sm">
-                                        <DropdownToggle color="tertiary" caret>
-                                            {sortOrder}
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            {Object.values(SortOrder).map(item =>
-                                                <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
-                                            )}
-                                        </DropdownMenu>
-                                    </UncontrolledButtonDropdown>
-                                </Col>
-                            </Row>
-                            <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
-                            <Row className="d-none d-md-block mb-3">
-                                <Col>
-                                    <Button block color="primary" outline onClick={() => {
-                                        setSelectedGroupId(undefined);
-                                        if (groupNameInputRef.current) {
-                                            groupNameInputRef.current.focus();
-                                        }
-                                    }}>Create new group</Button>
-                                </Col>
-                            </Row>
-                            <Row className="mt-3 mt-md-0">
-                                <Col>
-                                    {sortedGroups && sortedGroups.map((g: AppGroup) =>
+                            <div className="mt-3 mt-lg-0">
+                                {sortedGroups && sortedGroups.length > 0
+                                    ? sortedGroups.map((g: AppGroup) =>
                                         <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                             <div className="d-flex justify-content-between align-items-center">
                                                 <Button color="link text-left" data-testid={"select-group"} className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
@@ -482,10 +477,10 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                             {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
                                                 <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
                                             </div>}
-                                        </div>
-                                    )}
-                                </Col>
-                            </Row>
+                                        </div>)
+                                    : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
+                                }
+                            </div>
                         </CardBody>
                     </Card>
                 </Col>
