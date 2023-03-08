@@ -11,12 +11,13 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin} from "../../services";
+import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin, isPhy} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {MisuseStats} from "../elements/MisuseStats";
+import classNames from "classnames";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -89,8 +90,8 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                         />
                                         <RS.InputGroupAddon addonType="append">
                                             <a
-                                                className={classnames({
-                                                    "p-1 border-dark btn btn-secondary": true,
+                                                className={classnames("btn btn-secondary", {
+                                                    "p-1 border-dark": isPhy,
                                                     "disabled": displayVersion === contentVersion.liveVersion
                                                 })}
                                                 href={`${EDITOR_COMPARE_URL}/${contentVersion?.liveVersion}/${displayVersion}`}
@@ -101,7 +102,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                         </RS.InputGroupAddon>
                                         <RS.InputGroupAddon addonType="append">
                                             <RS.Button
-                                                type="button" className="p-0 border-dark"
+                                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
                                                 onClick={startVersionUpdate}
                                                 disabled={!isAdmin(user) || displayVersion === contentVersion.liveVersion}
                                             >

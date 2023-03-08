@@ -18,8 +18,9 @@ import {
 import {EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ADMIN_CRUMB, isAdmin, isDefined} from "../../services";
+import {ADMIN_CRUMB, isAdmin, isDefined, isPhy} from "../../services";
 import {Link} from "react-router-dom";
+import classNames from "classnames";
 
 export const AdminUserManager = () => {
     const dispatch = useAppDispatch();
@@ -363,7 +364,7 @@ export const AdminUserManager = () => {
                         />
                         <RS.InputGroupAddon addonType="append">
                             <RS.Button
-                                type="button" className="p-0 border-dark"
+                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
                                 disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
                                 onClick={() => dispatch(mergeUsers(Number(mergeTargetId), Number(mergeSourceId)))}
                             >

@@ -246,7 +246,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                         <Button
                             color={siteSpecific("secondary", "primary")}
-                            className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
+                            className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                             onClick={saveUpdatedGroup}
                         >
                             {group ? "Update" : "Create"}

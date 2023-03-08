@@ -15,7 +15,8 @@ import {
     useAppSelector
 } from "../../../state";
 import classnames from "classnames";
-import {extractTeacherName, isLoggedIn, isStudent, MEMBERSHIP_STATUS} from "../../../services";
+import {extractTeacherName, isLoggedIn, isPhy, isStudent, MEMBERSHIP_STATUS} from "../../../services";
+import classNames from "classnames";
 
 
 interface TeacherConnectionsProps {
@@ -74,7 +75,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                             />
                             <RS.InputGroupAddon addonType="append">
-                                <RS.Button onClick={processToken} className="p-0 border-dark" color="secondary" disabled={editingOtherUser}>
+                                <RS.Button onClick={processToken} className={classNames("py-0", {"px-0 border-dark": isPhy})} color="secondary" disabled={editingOtherUser}>
                                     Connect
                                 </RS.Button>
                             </RS.InputGroupAddon>

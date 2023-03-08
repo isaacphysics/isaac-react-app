@@ -101,7 +101,6 @@
     @include ada-button-outline($cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
-  // FIXME ADA need to make all other buttons use these different hover and active colours
   &.btn-link {
     margin: 0;
     padding: 0;
@@ -165,6 +164,12 @@
   }
   &.confidence-help {
     min-width: 20px !important;
+  }
+}
+
+.input-group-append {
+  .btn {
+    // FIXME ADA do we need extra styling for these?
   }
 }
 
