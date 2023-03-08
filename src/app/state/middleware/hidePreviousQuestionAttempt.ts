@@ -11,7 +11,7 @@ export const hidePreviousQuestionAttemptMiddleware: Middleware = (middlewareApi:
                 type: ACTION_TYPE.QUESTION_REGISTRATION,
                 questions: action.questions.map(q => ({
                     ...q,
-                    bestAttempt: BEST_ATTEMPT_HIDDEN
+                    bestAttempt: q.bestAttempt && BEST_ATTEMPT_HIDDEN
                 })),
                 accordionClientId: action.accordionClientId
             });
