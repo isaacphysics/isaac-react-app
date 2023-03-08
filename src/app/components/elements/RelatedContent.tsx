@@ -153,11 +153,14 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
     const showConceptGameboardButton = isAda && isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
-    // level, difficulty, title; all ascending (reverse the calls for required ordering)
-    const sortedContent = audienceFilteredContent
-        .sort(sortByStringValue("title"))
-        .sort(sortByNumberStringValue("difficulty"))
-        .sort(sortByNumberStringValue("level")); // TODO should this reference to level still be here?
+    const sortedContent = siteSpecific(
+        // level, difficulty, title; all ascending (reverse the calls for required ordering)
+        (c: ContentSummaryDTO[]) => c.sort(sortByStringValue("title"))
+            .sort(sortByNumberStringValue("difficulty"))
+            .sort(sortByNumberStringValue("level")), // TODO should this reference to level still be here?
+        // On Ada, just sort by title (ascending)
+        (c: ContentSummaryDTO[]) => c.sort(sortByStringValue("title"))
+    )(audienceFilteredContent);
 
     const concepts = sortedContent
         .filter(contentSummary => contentSummary.type === DOCUMENT_TYPE.CONCEPT);
