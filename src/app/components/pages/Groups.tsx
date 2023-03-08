@@ -207,36 +207,34 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     return <Card>
         <CardBody>
-            <Row className="mt-2">
-                <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
-                {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
+            <h4 className={"mb-2"}>{group ? "Edit group" : "Create group"}</h4>
+            {isAda && <hr/>}
+            {group && <Row className="mt-2 justify-content-end">
+                {isTeacherOrAbove(user) && <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
                     {/* Only teachers and above can add group managers */}
-                    {isTeacherOrAbove(user) && <>
-                        <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                            {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
-                        </Button>
-                        <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
-                        <span className="d-inline-block d-lg-none">&nbsp;</span>
-                    </>}
+                    <Button outline={isAda} className="w-100 w-md-auto d-inline-block text-nowrap" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                        {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                    </Button>
+                </Col>}
+                <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
                     <Button
-                        size="sm" className={isAda ? "text-white" : "" + " d-none d-sm-inline"}
+                        size="sm" className={"w-100 w-md-auto d-inline-block text-nowrap"}
                         color={siteSpecific("primary", "secondary")}
                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                     >
                         Invite users
                     </Button>
-                    {isStaff(user) && usersInGroup.length > 0 &&
-                        <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;
-                            <Button
-                                size="sm" className={isAda ? "text-white" : ""}
-                                color={siteSpecific("primary", "secondary")}
-                                onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
-                            >
-                                Email users
-                            </Button>
-                        </span>}
+                </Col>
+                {isStaff(user) && usersInGroup.length > 0 && <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
+                    <Button
+                        size="sm" className={"w-100 w-md-auto d-inline-block text-nowrap"}
+                        color={siteSpecific("primary", "secondary")}
+                        onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
+                    >
+                        Email users
+                    </Button>
                 </Col>}
-            </Row>
+            </Row>}
             <Form inline onSubmit={saveUpdatedGroup} className="pt-3">
                 <InputGroup className="w-100">
                     <Input
@@ -262,7 +260,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
             {group && <React.Fragment>
                 {(isUserGroupOwner || group.additionalManagerPrivileges) && <Row>
                     <Col>
-                        <Button block color="tertiary" onClick={toggleArchived}>
+                        <Button block outline={isAda} color={siteSpecific("tertiary", "secondary")} onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
                         </Button>
                     </Col>
