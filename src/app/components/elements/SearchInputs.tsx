@@ -58,7 +58,7 @@ export const AdaHomepageSearch = withSearch(({inputProps, setSearchText, searchT
     }
     return <>
         <Label for='homepage-search' className='sr-only'>Search</Label>
-        <InputGroup id={"homepage-search-group"} className={"flex-"}>
+        <InputGroup id={"homepage-search-group"}>
             <Input
                 id="homepage-search" {...inputProps} placeholder={"Search your topic here"}
                 value={searchText} onChange={setSearchTextAsValue}
@@ -77,7 +77,7 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
     }
     return <>
         <Label for='header-search' className='sr-only'>Search</Label>
-        <InputGroup id={"header-search-group"} className={"flex-"}>
+        <InputGroup id={"header-search-group"}>
             <Input
                 id="header-search" {...inputProps}
                 value={searchText} onChange={setSearchTextAsValue}

@@ -36,9 +36,10 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isAda, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import classNames from "classnames";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -420,15 +421,14 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
-                <Col md={4}>
+                <Col lg={4}>
                     <Card>
                         <CardBody className="mt-2">
-                            <Nav tabs className="d-flex flex-wrap">
+                            <Nav tabs className="d-flex flex-wrap guaranteed-single-line">
                                 {tabs.map((tab, index) => {
-                                    const classes = tab.active() ? "active" : "";
-                                    return <NavItem key={index} className="mx-2">
+                                    return <NavItem key={index} className={classNames({"mx-2": isPhy, "active": tab.active()})}>
                                         <NavLink
-                                            className={`text-center ${classes}`} tabIndex={0}
+                                            className={classNames("text-center", {"mx-2": isAda})} tabIndex={0}
                                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                                         >
                                             {tab.name}
@@ -479,7 +479,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                                     ×
                                                 </button>
                                             </div>
-                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-md-none py-2">
+                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
                                                 <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
                                             </div>}
                                         </div>
@@ -489,7 +489,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                         </CardBody>
                     </Card>
                 </Col>
-                <Col md={8} className="d-none d-md-block" data-testid={"group-editor"}>
+                <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
                 </Col>
             </Row>

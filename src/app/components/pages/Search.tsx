@@ -25,6 +25,8 @@ import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
+import classNames from "classnames";
+import {AdaHeaderSearch} from "../elements/SearchInputs";
 
 interface Item<T> {
     value: T;
@@ -96,6 +98,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
         .filter(result => isPhy || isIntendedAudience(result.audience, userContext, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
+    const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
 
     return (
         <Container id="search-page">
@@ -106,27 +109,19 @@ export const Search = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col>
-                    <Form inline onSubmit={updateSearchUrl}>
-                        <Input
-                            className='search--filter-input mt-4'
-                            type="search" value={queryState || ""}
-                            placeholder="Search"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => setQueryState(e.target.value)}
-                            maxLength={SEARCH_CHAR_LENGTH_LIMIT}
-                        />
-                    </Form>
+                    <AdaHeaderSearch className={"border-secondary"}/>
                 </Col>
             </Row>
             <Row>
                 <Col className="py-4">
                     <RS.Card>
                         <RS.CardHeader className="search-header">
-                            <RS.Col md={5} sm={12}>
+                            <RS.Col sm={12} md={5} lg={4} xl={3}>
                                 <h3>
                                     <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </RS.Col>
-                            <RS.Col md={7} sm={12}>
+                            <RS.Col sm={12} md={7} lg={8} xl={9}>
                                 <RS.Form inline className="search-filters">
                                     <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
                                         {`Filter${siteSpecific("","s")}:`}
@@ -152,9 +147,9 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                 </RS.Form>
                             </RS.Col>
                         </RS.CardHeader>
-                        {urlQuery != "" && <RS.CardBody>
+                        {urlQuery != "" && <RS.CardBody className={classNames({"p-0 m-0": isAda && gotResults})}>
                             <ShowLoading until={shortcutAndFilteredSearchResults}>
-                                {shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0 ?
+                                {gotResults ?
                                     <LinkToContentSummaryList items={shortcutAndFilteredSearchResults} displayTopicTitle={true}/>
                                     : <em>No results found</em>}
                             </ShowLoading>

@@ -41,7 +41,7 @@ import {
     ACCOUNT_TAB,
     allRequiredInformationIsPresent,
     history,
-    ifKeyIsEnter,
+    ifKeyIsEnter, isAda,
     isDefined,
     isDobOldEnoughForSite,
     isStaff,
@@ -58,6 +58,8 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
 import hash from "object-hash";
+import {Tabs} from "../elements/Tabs";
+import classNames from "classnames";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -258,27 +260,27 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
-                    <Nav tabs className="my-4 flex-wrap">
-                        <NavItem>
+                    <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})}>
+                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.account})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                             >
                                 Profile
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
                                 <span className="d-none d-lg-block">Account security</span>
                                 <span className="d-block d-lg-none">Security</span>
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})}
+                                className={"mx-2"}
                                 tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)}
                                 onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
@@ -287,18 +289,18 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                                 <span className="d-block d-md-none">Connections</span>
                             </NavLink>
                         </NavItem>
-                        {!editingOtherUser && <NavItem>
+                        {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                             >
                                 <span className="d-none d-lg-block">Email preferences</span>
                                 <span className="d-block d-lg-none">Emails</span>
                             </NavLink>
                         </NavItem>}
-                        {!editingOtherUser && <NavItem>
+                        {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.betafeatures})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.betafeatures})} tabIndex={0}
+                                className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.betafeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.betafeatures))}
                             >
                                 <span className="d-none d-lg-block">Beta features</span>

@@ -30,11 +30,19 @@
     height: 100%;
     line-height: 1.5;
     align-self: center !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
 
     &:first-child {
       border-width: 0;
+    }
+
+    &.active {
+      .nav-link {
+        font-family: $secondary-font-semi-bold;
+        background-color: $black;
+        color: $white;
+        text-decoration: none;
+        cursor: default;
+      }
     }
 
     .nav-link {
@@ -48,14 +56,6 @@
       text-decoration: underline;
       @include respond-above(sm) {
         font-size: 1.25rem;
-      }
-
-      &.active {
-        font-family: $secondary-font-semi-bold;
-        background-color: $black;
-        color: $white;
-        text-decoration: none;
-        cursor: default;
       }
     }
   }

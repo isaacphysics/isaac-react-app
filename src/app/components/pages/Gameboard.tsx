@@ -8,8 +8,7 @@ import {
     useAppSelector
 } from "../../state";
 import {Link, withRouter} from "react-router-dom";
-import * as RS from "reactstrap";
-import {Container} from "reactstrap";
+import {Button, Col, Container, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {GameboardDTO, GameboardItem, IsaacWildcard} from "../../../IsaacApiTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -76,18 +75,18 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
     const questionTags = tags.getByIdsAsHierarchy((question.tags || []) as TAG_ID[])
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
-    return <RS.ListGroupItem key={question.id} className={itemClasses}>
+    return <ListGroupItem key={question.id} className={itemClasses}>
         <Link to={`/questions/${question.id}?board=${gameboard.id}`} className={classNames("position-relative", {"align-items-center": isPhy, "justify-content-center": isAda})}>
             <span className={"question-progress-icon"}>
                 {siteSpecific(
                     <svg className={iconClasses}><use href={iconHref} xlinkHref={iconHref}/></svg>,
-                    <div className={"text-center px-2"}>
+                    <div className={"inner-progress-icon"}>
                         <img src={iconHref} /><br/>
-                        <span className={"font-size-0-75 font-weight-bold"}>{message}</span>
+                        <span className={"icon-title"}>{message}</span>
                     </div>
                 )}
             </span>
-            <div className={classNames("d-md-flex flex-fill", {"py-3 pr-3": isAda})}>
+            <div className={classNames("flex-fill", {"d-flex py-3 pr-3": isAda, "d-md-flex": isPhy})}>
                 {/* TODO CP shouldn't the subject colour here depend on the contents/tags of the gameboard? */}
                 <div className={"flex-grow-1 " + (itemSubject?.id ?? (isPhy ? "physics" : ""))}>
                     <Markup encoding={"latex"} className={classNames( "question-link-title", {"text-secondary": isPhy})}>
@@ -103,15 +102,15 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
                     filterAudienceViewsByProperties(determineAudienceViews(question.audience, question.creationContext), AUDIENCE_DISPLAY_FIELDS)
                 } />}
             </div>
-            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/chevron_right.svg"}/></div>}
+            {isAda && <div className={"list-caret vertical-center"}><img src={"/assets/chevron_right.svg"} alt={"Go to question"}/></div>}
         </Link>
-    </RS.ListGroupItem>;
+    </ListGroupItem>;
 };
 
 export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
     const itemClasses = "p-3 content-summary-link text-info bg-transparent";
     const icon = <img src="/assets/wildcard.svg" alt="Optional extra information icon"/>;
-    return <RS.ListGroupItem key={wildcard.id} className={itemClasses}>
+    return <ListGroupItem key={wildcard.id} className={itemClasses}>
         <a href={wildcard.url} className="align-items-center">
             <span className="gameboard-item-icon">{icon}</span>
             <div className={"flex-grow-1"}>
@@ -121,26 +120,26 @@ export const Wildcard = ({wildcard}: {wildcard: IsaacWildcard}) => {
                 </div>}
             </div>
         </a>
-    </RS.ListGroupItem>
+    </ListGroupItem>
 }
 
 export const GameboardViewerInner = ({gameboard}: {gameboard: GameboardDTO}) => {
-    return <RS.ListGroup className="link-list list-group-links list-gameboard">
+    return <ListGroup className="link-list list-group-links list-gameboard">
         {gameboard?.wildCard && showWildcard(gameboard) &&
             <Wildcard wildcard={gameboard.wildCard} />
         }
         {gameboard?.contents && gameboard.contents.map(q =>
             <GameboardItemComponent key={q.id} gameboard={gameboard} question={q} />
         )}
-    </RS.ListGroup>
+    </ListGroup>
 };
 
 export const GameboardViewer = ({gameboard, className}: {gameboard: GameboardDTO; className?: string}) => (
-    <RS.Row className={className}>
-        <RS.Col lg={{size: 10, offset: 1}}>
+    <Row className={className}>
+        <Col lg={{size: 10, offset: 1}}>
             <GameboardViewerInner gameboard={gameboard}/>
-        </RS.Col>
-    </RS.Row>
+        </Col>
+    </Row>
 );
 
 export const Gameboard = withRouter(({ location }) => {
@@ -172,16 +171,16 @@ export const Gameboard = withRouter(({ location }) => {
                 {"We're sorry, we were not able to find a gameboard with the id "}<code>{gameboardId}</code>{"."}
             </small>
             {isPhy && <div className="mt-4 text-center">
-                <RS.Button tag={Link} to={PATHS.QUESTION_FINDER} color="primary" outline className="btn-lg">
+                <Button tag={Link} to={PATHS.QUESTION_FINDER} color="primary" outline className="btn-lg">
                     Generate a new gameboard
-                </RS.Button>
+                </Button>
             </div>}
         </h3>
     </Container>;
 
     return !gameboardId
         ? <Redirect to={PATHS.QUESTION_FINDER} />
-        : <RS.Container className="mb-5">
+        : <Container className="mb-5">
             <ShowLoadingQuery
                 query={gameboardQuery}
                 defaultErrorTitle={`Error fetching gameboard with id: ${gameboardId}`}
@@ -194,31 +193,31 @@ export const Gameboard = withRouter(({ location }) => {
                         <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
                         {user && isTutorOrAbove(user)
-                            ? <RS.Row className="col-8 offset-2">
-                                <RS.Col className="mt-4">
-                                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
+                            ? <Row className="col-8 offset-2">
+                                <Col className="mt-4">
+                                    <Button tag={Link} to={`/add_gameboard/${gameboardId}`} color="primary" outline className="btn-block">
                                         {siteSpecific("Set as Assignment", "Set as assignment")}
-                                    </RS.Button>
-                                </RS.Col>
-                                <RS.Col className="mt-4">
-                                    <RS.Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
+                                    </Button>
+                                </Col>
+                                <Col className="mt-4">
+                                    <Button tag={Link} to={{pathname: "/gameboard_builder", search: `?base=${gameboardId}`}} color="primary" block outline>
                                         {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
-                                    </RS.Button>
-                                </RS.Col>
-                            </RS.Row>
-                            : gameboard && !gameboard.savedToCurrentUser && <RS.Row>
-                                <RS.Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
-                                    <RS.Button tag={Link} to={`/add_gameboard/${gameboardId}`}
+                                    </Button>
+                                </Col>
+                            </Row>
+                            : gameboard && !gameboard.savedToCurrentUser && <Row>
+                                <Col className="mt-4" sm={{size: 8, offset: 2}} md={{size: 4, offset: 4}}>
+                                    <Button tag={Link} to={`/add_gameboard/${gameboardId}`}
                                                onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)}
                                                color="primary" outline className="btn-block"
                                     >
                                         {siteSpecific("Save to My Gameboards", "Save to My quizzes")}
-                                    </RS.Button>
-                                </RS.Col>
-                            </RS.Row>
+                                    </Button>
+                                </Col>
+                            </Row>
                         }
                     </>
                 }}
             />
-        </RS.Container>;
+        </Container>;
 });

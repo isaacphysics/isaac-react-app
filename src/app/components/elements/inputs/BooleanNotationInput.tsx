@@ -12,7 +12,7 @@ export const BooleanNotationInput = ({booleanNotation, setBooleanNotation, isReq
 
     return <FormGroup>
         <Label className={`d-inline-block pr-2 ${isRequired ? "form-required" : ""}`} htmlFor="boolean-notation-preference">
-            Boolean logic notation
+            Preferred Boolean logic notation
         </Label>
         <Input
             type="select" name="select" id="boolean-notation-preference"
