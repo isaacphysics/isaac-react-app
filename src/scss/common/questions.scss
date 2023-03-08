@@ -110,11 +110,8 @@ button {
 
 .symbolic-question, .equality-page {
   .eqn-editor-preview {
-    border: solid 1px $black;
     padding: 0.15em 0.6em;
-    font-size: 1.5rem;
     cursor: default;
-
     &.empty {
       color: $gray-500;
     }

@@ -64,6 +64,22 @@
   }
 }
 
+@mixin ada-icon-button-base($width, $height, $outlined: false) {
+  @extend .btn;
+  @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
+
+  @if not $outlined {
+    background-color: $cs-dark-pink;
+    padding: 0 !important;
+  }
+
+  padding: 0 !important;
+  min-width: unset !important;
+  width: $width !important;
+  height: $height !important;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
 
 .btn, input.btn {
   border-radius: 50px;
@@ -91,7 +107,7 @@
   }
 
   // Primary buttons (light background)
-  &.btn-primary, &.btn-secondary, &.btn-icon {
+  &.btn-primary, &.btn-secondary {
     @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
@@ -129,93 +145,18 @@
       color: $cs-silver;
     }
   }
-
-  // FIXME ADA: decide what to do with the following QQ buttons
-  &.btn-negative {
-    background-color: $highlight-yellow-50;
-    color: black;
-  }
-  &.btn-neutral {
-    background-color: $highlight-turquoise-50;
-    color: black;
-  }
-  &.btn-positive {
-    background-color: $highlight-dark-pink-50;
-    color: black;
-  }
-  &.btn-negative-answer {
-    background-color: $highlight-yellow;
-    color: white;
-  }
-  &.btn-neutral-answer {
-    background-color: $highlight-turquoise;
-    color: white;
-  }
-  &.btn-positive-answer {
-    background-color: $highlight-dark-pink;
-    color: white;
-  }
-  &.hide-answer {
-    background-color: $highlight-dark-pink !important;
-    border: 1px solid transparent !important;
-    color: $white !important;
-  }
-  &.hide-answer:not(:disabled):not(.disabled):active {
-    text-decoration: underline;
-  }
-  &.confidence-help {
-    min-width: 20px !important;
-  }
-}
-
-.alert-hide {
-  background-color: $highlight-dark-pink-25;
-}
-
-.quick-question-options {
-  background: white;
-  border: 2px solid $highlight-dark-pink;
-}
-
-.quick-question-secondary {
-  background: $highlight-turquoise-25 !important;
-  border: none !important;
-}
-
-.quick-question-muted {
-  border-color: grey !important;
-}
-
-.btn-outline-icon {
-  @extend .btn;
-  padding: 0 !important;
-  min-width: unset !important;
-  width: 48px !important;
-  height: 48px !important;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-}
-.btn-icon {
-  @extend .btn;
-  background-color: $cs-dark-pink;
-  padding: 0 !important;
-  min-width: unset !important;
-  width: 48px !important;
-  height: 48px !important;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
 }
 
 .share-link-icon {
   position: relative;
   button {
     &:not(.outline) {
-      @extend .btn-icon;
+      @include ada-icon-button-base(48px, 48px, false);
       background-position: 48% 50%;
       background-image: url("/assets/cs/icons/share.svg");
     }
     &.outline {
-      @extend .btn-outline-icon;
+      @include ada-icon-button-base(48px, 48px, true);
       background-position: 48% 50%;
       // FIXME ADA replace with correct grey shade
       &:active {
@@ -269,10 +210,10 @@
 
 .print-icon {
   &:not(.outline) {
-    @extend .btn-icon;
+    @include ada-icon-button-base(48px, 48px, false);
   }
   &.outline {
-    @extend .btn-outline-icon;
+    @include ada-icon-button-base(48px, 48px, true);
   }
   margin-right: 7.5px;
   margin-left: 7.5px;
@@ -281,10 +222,10 @@
 
 .report-icon {
   &:not(.outline) {
-    @extend .btn-icon;
+    @include ada-icon-button-base(48px, 48px, false);
   }
   &.outline {
-    @extend .btn-outline-icon;
+    @include ada-icon-button-base(48px, 48px, true);
   }
   margin-right: 7.5px;
   margin-left: 7.5px;
@@ -293,11 +234,11 @@
 
 .bin-icon {
   &:not(.outline) {
-    @extend .btn-icon;
+    @include ada-icon-button-base(48px, 48px, false);
     background-image: url("/assets/cs/icons/bin.svg");
   }
   &.outline {
-    @extend .btn-outline-icon;
+    @include ada-icon-button-base(48px, 48px, true);
     background-image: url("/assets/cs/icons/bin-pink.svg");
   }
   margin-right: 7.5px;
@@ -313,4 +254,9 @@
     @extend .ml-2;
     height: 24px;
   }
+}
+
+.btn.confidence-help {
+  @include ada-icon-button-base(2rem, 2rem, false);
+  background-image: url("/assets/cs/icons/info-white.svg");
 }

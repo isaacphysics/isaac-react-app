@@ -24,6 +24,7 @@ interface ConfidenceVariables {
 }
 
 // Text to show in the confidence component depending on the type of content
+// "color" only applies to Physics.
 const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
     "question": {
         title: "Click a button to check your answer",
@@ -39,9 +40,9 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
             followUp: {
                 question: "Having read the feedback, what is your level of confidence in answering this question correctly now?",
                 options: [
-                    {label: "Low", color: siteSpecific("negative", "negative-answer")},
-                    {label: "Medium", color: siteSpecific("neutral", "neutral-answer")},
-                    {label: "High", color: siteSpecific("positive", "positive-answer")}
+                    {label: "Low", color: "negative"},
+                    {label: "Medium", color: "neutral"},
+                    {label: "High", color: "positive"}
                 ]
             }
         }
@@ -60,9 +61,9 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
             followUp: {
                 question: "Is your own answer correct?",
                 options: [
-                    {label: "No", color: siteSpecific("negative", "negative-answer")},
-                    {label: "Partly", color: siteSpecific("neutral", "neutral-answer")},
-                    {label: "Yes", color: siteSpecific("positive", "positive-answer")}
+                    {label: "No", color:"negative"},
+                    {label: "Partly", color: "neutral"},
+                    {label: "Yes", color: "secondary"}
                 ]
             }
         }
@@ -154,15 +155,17 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
 
     const disabled = state === "initial" && disableInitialState === true;
 
-    return <div className={classNames("quick-question-options", {"quick-question-secondary": isAda && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isAda, "quick-question-muted": disabled})}>
+    return <div className={classNames("quick-question-options", {"quick-question-secondary": isAda && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isAda, "quick-question-muted": disabled && isPhy})}>
         {state === "initial" && <Row>
             <Col md="9">
                 <h4 className={classNames({"text-muted": disabled && isAda})}>{confidenceVariables?.title}</h4>
             </Col>
             <Col md="auto" className="ml-auto text-center not-mobile">
-                <Button outline color="primary" className={classNames("confidence-help", {"border-muted": disabled && isAda})} size="sm"
+                <Button outline={isPhy} color="primary" className={classNames("confidence-help")} size="sm"
                         onClick={() => dispatch(confidenceInformationModal())}>
-                    <i className={classNames({"text-muted": disabled && isAda})}>i</i>
+                    {
+                        isPhy && <i>i</i>
+                    }
                 </Button>
             </Col>
         </Row>}
@@ -173,8 +176,8 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
         </Row>
         <Row className={"justify-content-center"}>
             {confidenceStateVariables.options.map(option => <Col key={option.label} lg={4} md={6} sm={12} className={classNames("mb-2")}>
-                <Button color={option.color} disabled={disabled} block
-                        className={classNames({"active": state === "followUp"})} type="submit"
+                <Button outline={isAda} color={isAda ? "secondary" : option.color} disabled={disabled} block
+                        className={classNames({"active": isPhy && state === "followUp"})} type="submit"
                         onClick={() => toggle(option.label, state)}>
                     {option.label}
                 </Button>

@@ -52,6 +52,8 @@ $secondary-font-italic: 'poppins-italic', sans-serif;
 $secondary-font-medium: $secondary-font;
 $tertiary-font: 'poppins-light', sans-serif;
 
+$text-muted: $cs-dark-silver;
+
 /*
 *****************************************************************************************
 * FIXME ADA: remove or replace all remaining colours between here and the imports below *
@@ -72,17 +74,6 @@ $purple: $cs-dark-pink; // Something to do with links
 $gcse-colour: $cs-yellow;
 $all-stages-colour: $cs-yellow;
 $a-level-colour: $cs-yellow;
-
-// Highlighting colours
-// FIXME ADA: Very provisional
-$highlight-dark-pink: $cs-dark-pink; // Used for buttons - "is your answer correct" positive QQ answer
-$highlight-dark-pink-50: mix($cs-dark-pink, $cs-white, 50%); // Used for buttons - positive quick question answer
-$highlight-dark-pink-25: mix($cs-dark-pink, $cs-white, 25%); // Used for buttons - "is your answer correct" hide
-$highlight-turquoise: $cs-turquoise-blue; // Used for buttons - "is your answer correct" neutral QQ answer
-$highlight-turquoise-50: mix($cs-turquoise-blue, $cs-white, 50%); // Used for buttons - quick question neutral answer
-$highlight-turquoise-25: mix($cs-turquoise-blue, $cs-white, 25%); // "is your answer correct" background
-$highlight-yellow: $cs-yellow; // Used for buttons - "is your answer correct" negative QQ answer
-$highlight-yellow-50: mix($cs-yellow, $cs-white, 50%); // Used for buttons - quick question negative answer
 
 // Button colours
 $light-hover-dark-pink: #7A0C51;
@@ -189,9 +180,6 @@ $shadow-black: rgb(0, 0, 0); // Used by buttons
 
 // Difficulty icons
 @import "filter";
-
-// Highlights
-@import "highlight";
 
 a.disabled {
     color: $gray-600;

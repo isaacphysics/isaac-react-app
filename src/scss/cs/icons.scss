@@ -11,3 +11,8 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+// FIXME ADA: this class used in a number of non-icon-related places on both sites
+.bg-grey {
+  background: $cs-silver;
+}

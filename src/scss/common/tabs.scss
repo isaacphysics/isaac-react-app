@@ -62,19 +62,6 @@
 }
 
 .question-hints {
-  border-top: 1px solid $gray-107;
-
-  &.list-group {
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    .list-group-item {
-      background-color: transparent;
-      border-color: $white;
-      width: auto;
-    }
-  }
-
   .feattab-image & {
     border-width: 0;
 

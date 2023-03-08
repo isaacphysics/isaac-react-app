@@ -1,10 +1,47 @@
 @import "../common/questions";
 
-.validation-response-panel {
-  text-align: left;
+.question-component {
+  hr {
+    border-color: $cs-dark-silver
+  }
 }
 
+// Validation response
+.validation-response-panel {
+  text-align: left;
+  &.correct {
+    background: $cs-turquoise-blue;
+  }
+}
+
+// Quick questions
 .quick-question-title {
   display: flex;
   justify-content: center;
+}
+
+// Cloze questions
+.cloze-item {
+  background: $cs-yellow;
+  color: $cs-black;
+}
+
+.cloze-drop-zone {
+  &.border {
+    border-style: dashed !important; // necessary because Bootstrap has no border style utilities
+  }
+}
+
+// Symbolic questions
+.symbolic-question,
+.equality-page {
+  .eqn-editor-preview {
+    border: solid 1px $cs-black;
+  }
+}
+
+// Confidence questions
+.alert {
+  background-color: $cs-cultured;
+  margin-top: 1rem;
 }
