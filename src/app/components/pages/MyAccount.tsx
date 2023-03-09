@@ -1,6 +1,7 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
+import classNames from "classnames";
 import {
     Card,
     CardFooter,
@@ -41,7 +42,8 @@ import {
     ACCOUNT_TAB,
     allRequiredInformationIsPresent,
     history,
-    ifKeyIsEnter, isAda,
+    ifKeyIsEnter,
+    isAda,
     isDefined,
     isDobOldEnoughForSite,
     isStaff,
@@ -57,9 +59,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
-import hash from "object-hash";
-import {Tabs} from "../elements/Tabs";
-import classNames from "classnames";
+import hash, {NormalOption} from "object-hash";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -98,8 +98,16 @@ interface AccountPageProps {
     adminUserToEdit?: AdminUserGetState;
 }
 
-function hashEqual<T>(a: NonNullable<T>, b: NonNullable<T>, options?: any) {
-    return hash(a, options) === hash(b, options);
+// The order of the first two arguments doesn't matter really, but sticking to it helps with debugging when something
+// on this page inevitably goes wrong
+function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: NormalOption, debug?: boolean) {
+    if (debug) {
+        console.log("New", current);
+        console.log("Old", prev);
+    }
+    const equal = hash(current, options) === hash(prev, options);
+    if (debug) console.log("Equal?:", equal);
+    return equal;
 }
 
 const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
@@ -126,7 +134,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
             {...userToEdit, loggedIn: true, password: ""} :
             {...user, password: ""}
     );
-    const userChanged = useMemo(() => !hashEqual(userToUpdate, {...(editingOtherUser ? userToEdit : user), password: ""}), [userToUpdate, userToEdit, user, editingOtherUser]);
+    const userChanged = useMemo(() => !hashEqual({...(editingOtherUser ? userToEdit : user), password: ""}, userToUpdate), [userToUpdate, userToEdit, user, editingOtherUser]);
 
     // This is necessary for updating the user when the user updates fields from the required account info modal, for example.
     useEffect(function keepUserInSyncWithChangesElsewhere() {
@@ -149,7 +157,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
     // - User preferences
     const [emailPreferences, setEmailPreferences] = useEmailPreferenceState();
     const [myUserPreferences, setMyUserPreferences] = useState<UserPreferencesDTO | null | undefined>({});
-    const preferencesChanged = useMemo(() => !hashEqual({...myUserPreferences, EMAIL_PREFERENCE: emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? undefined}, userPreferences ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
+    const emailPreferencesChanged = useMemo(() => !hashEqual(userPreferences?.EMAIL_PREFERENCE ?? {}, emailPreferences ?? myUserPreferences?.EMAIL_PREFERENCE ?? {}), [emailPreferences, myUserPreferences, userPreferences]);
+    const otherPreferencesChanged = useMemo(() => !hashEqual(userPreferences ?? {}, myUserPreferences ?? {}, {excludeKeys: k => k === "EMAIL_PREFERENCE"}), [myUserPreferences, userPreferences]);
 
     // - User Contexts
     const [userContextsToUpdate, setUserContextsToUpdate] =
@@ -197,7 +206,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         }));
     }
 
-    const accountInfoChanged = contextsChanged || userChanged || preferencesChanged;
+    const accountInfoChanged = contextsChanged || userChanged || otherPreferencesChanged || (emailPreferencesChanged && activeTab == ACCOUNT_TAB.emailpreferences);
     useEffect(() => {
         if (accountInfoChanged && !saving) {
             return history.block("If you leave this page without saving, your account changes will be lost. Are you sure you would like to leave?");

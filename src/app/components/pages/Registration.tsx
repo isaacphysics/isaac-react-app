@@ -262,6 +262,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                                             invalid={
                                                 dobTooYoung || (attemptedSignUp && !confirmedOldEnoughForSite)
                                             }
+                                            disableDefaults
                                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                                 assignToRegistrationUser({dateOfBirth: event.target.valueAsDate});
                                                 // DOB takes priority over age confirmation
