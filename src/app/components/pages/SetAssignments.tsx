@@ -434,7 +434,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
-                <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
                     create a gameboard
                 </Button>
             </Col>
@@ -540,7 +540,7 @@ export const SetAssignments = () => {
             ? <h3 className="text-center mt-4 mb-5">
                 You have no {siteSpecific("gameboards", "quizzes")} to assign; {siteSpecific(
                     "use one of the options above to find one.",
-                    <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                    <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
                         create a quiz here.
                     </Button>
                 )}
@@ -548,7 +548,7 @@ export const SetAssignments = () => {
             : <>
                 {boards && boards.totalResults > 0 && <h4>
                     You have <strong>{boards.totalResults}</strong> {siteSpecific("gameboard", "quiz")}{boards.totalResults > 1 && siteSpecific("s", "zes")} ready to assign...{" "}
-                    {isAda && <Button className={"font-size-1-25"} tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                    {isAda && <Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
                         create another quiz?
                     </Button>}
                 </h4>}

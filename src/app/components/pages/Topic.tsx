@@ -71,7 +71,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
-                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>Preview</Link> | <Link to={`/add_gameboard/${gameboard.id}`}>Assign</Link>
+                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>Preview</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>Assign</Link>
                                     </li>
                                 }
                                 {(!user?.loggedIn || user?.role === "STUDENT") &&

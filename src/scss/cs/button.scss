@@ -65,12 +65,14 @@
 }
 
 @mixin ada-icon-button-base($width, $height, $outlined: false) {
+  // Factored out so buttons of this style can be created at any size
   @extend .btn;
-  @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
 
-  @if not $outlined {
+  @if $outlined {
+    @include ada-button-outline($cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
+  } @else {
+    @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
     background-color: $cs-dark-pink;
-    padding: 0 !important;
   }
 
   padding: 0 !important;
@@ -113,11 +115,10 @@
 
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
-  &.btn-outline-secondary, &.btn-outline-primary, &.btn-outline-icon {
+  &.btn-outline-secondary, &.btn-outline-primary {
     @include ada-button-outline($cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
-  // FIXME ADA need to make all other buttons use these different hover and active colours
   &.btn-link {
     margin: 0;
     padding: 0;

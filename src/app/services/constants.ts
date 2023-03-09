@@ -622,6 +622,7 @@ export enum SUBJECTS {
 export const fastTrackProgressEnabledBoards = [
     'ft_core_2017', 'ft_core_2018', 'ft_core_stage2',
     'ft_mech_year1_2018', 'ft_mech_year2_2018', 'ft_further_stage1_2018',
+    'ft_further_stage2_2018',
 ];
 
 export enum TAG_ID {
@@ -1124,12 +1125,16 @@ export const PATHS = siteSpecific({
     QUESTION_FINDER: "/gameboards/new",
     GAMEBOARD: "/gameboards",
     SET_ASSIGNMENTS: "/set_assignments",
+    GAMEBOARD_BUILDER: "/gameboard_builder",
+    ADD_GAMEBOARD: "/add_gameboard",
 }, {
     ASSIGNMENT_PROGRESS: "/my_markbook",
     MY_GAMEBOARDS: "/quizzes",
     QUESTION_FINDER: "/quizzes/new",
     GAMEBOARD: "/quizzes/view",
     SET_ASSIGNMENTS: "/quizzes/set",
+    GAMEBOARD_BUILDER: "/quizzes/builder",
+    ADD_GAMEBOARD: "/quizzes/add",
 });
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";

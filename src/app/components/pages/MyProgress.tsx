@@ -232,7 +232,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             count={achievements && achievements.TEACHER_GAMEBOARDS_CREATED}
                             item="gameboard"
                             createMoreText="Board builder"
-                            createMoreLink="/gameboard_builder"
+                            createMoreLink={PATHS.GAMEBOARD_BUILDER}
                             iconClassName="gameboard-badge"/>
 
                         <TeacherAchievement

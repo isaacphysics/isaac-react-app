@@ -116,7 +116,7 @@ export const RoutesPhy = [
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
     <Redirect key={key++} exact from="/boards" to="/my_gameboards" />,
-    <Redirect key={key++} exact from="/game_builder" to="/gameboard_builder" />,
+    <Redirect key={key++} exact from="/game_builder" to={PATHS.GAMEBOARD_BUILDER} />,
     <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
     <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,

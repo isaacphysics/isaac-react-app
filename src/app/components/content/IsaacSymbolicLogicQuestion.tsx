@@ -4,7 +4,7 @@ import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacSymbolicLogicQuestionDTO, LogicFormulaDTO} from "../../../IsaacApiTypes";
 import katex from "katex";
 import {
-    ifKeyIsEnter,
+    ifKeyIsEnter, isAda,
     isDefined,
     isStaff,
     jsonHelper,
@@ -18,6 +18,7 @@ import {v4 as uuid_v4} from "uuid";
 import {Inequality, makeInequality} from 'inequality';
 import {parseBooleanExpression, ParsingError} from 'inequality-grammar';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import classNames from "classnames";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -228,7 +229,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                     <Input type="text" onChange={updateEquation} value={textInput}
                            placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
-                        <Button type="button" className="eqn-editor-help" id={helpTooltipId}>?</Button>
+                        <Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId}>?</Button>
                         <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />

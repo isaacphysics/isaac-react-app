@@ -126,7 +126,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
 
                 {isAda &&
                     <div className="mt-4">
-                        <hr />
+                        <hr className="border-silver-grey" />
                     </div>
                 }
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isAda, isMobile, isPhy, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
+import {isAda, isMobile, isPhy, isTutorOrAbove, PATHS, siteSpecific, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 import classNames from "classnames";
 
@@ -47,7 +47,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
             {showDuplicateAndEdit && <React.Fragment>
                 {isPhy && <hr className="text-center mt-4" />}
-                <a href={`/gameboard_builder?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
+                <a href={`${PATHS.GAMEBOARD_BUILDER}?base=${gameboardId}`} className={isPhy ? "px-1" : ""}>
                     {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
                 </a>
             </React.Fragment>}

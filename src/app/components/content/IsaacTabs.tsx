@@ -2,7 +2,8 @@ import React, {ReactElement, useEffect, useState} from "react";
 import {Tabs} from "../elements/Tabs";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {isDefined} from "../../services";
+import {isAda, isDefined} from "../../services";
+import classNames from "classnames";
 
 interface IsaacTabsProps {
     doc: {
@@ -28,7 +29,8 @@ export const IsaacTabs = (props: any) => {
         setTabTitlesToContent(newTabTitlesToContent);
     }, [tabs]);
 
-    return <Tabs className="isaac-tab" tabContentClass="pt-4" expandable={expandable}>
+    const adaCardClasses = "card card-body border bg-white pb-2 mb-4";
+    return <Tabs className={classNames("isaac-tab", {[adaCardClasses]: isAda})} tabContentClass="pt-4" expandable={expandable}>
         {tabTitlesToContent}
     </Tabs>;
 };

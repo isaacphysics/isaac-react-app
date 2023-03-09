@@ -64,7 +64,6 @@ export const AdaHomepageSearch = withSearch(({inputProps, setSearchText, searchT
                 value={searchText} onChange={setSearchTextAsValue}
             />
             <InputGroupAddon addonType={"append"}>
-                {/* FIXME ADA properly define icon buttons as per the Figma design */}
                 <LongSearchButton/>
             </InputGroupAddon>
         </InputGroup>
@@ -83,7 +82,6 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
                 value={searchText} onChange={setSearchTextAsValue}
             />
             <InputGroupAddon addonType={"append"}>
-                {/* FIXME ADA properly define icon buttons as per the Figma design */}
                 <button>
                     <img src={"/assets/cs/icons/search-jet.svg"}/>
                 </button>
