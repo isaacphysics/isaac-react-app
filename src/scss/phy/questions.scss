@@ -1,20 +1,12 @@
 @import "../common/questions";
 
 .question-actions {
-
-  &.question-actions-leftmost {
-    margin-left: auto;
-  }
-
   .question-actions-icon {
-    float: right;
     height: 3rem;
-
     &:focus {
       outline: none;
     }
   }
-
   .question-actions-link-box {
     float:right;
     border: 1px solid gray;

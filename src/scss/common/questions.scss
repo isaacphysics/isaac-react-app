@@ -344,6 +344,15 @@
   }
 }
 
+.question-actions {
+  &.question-actions-leftmost {
+    margin-left: auto;
+  }
+  .question-actions-icon {
+    float: right;
+  }
+}
+
 // Could be used to display draggables when using drop zones in text or code (if we got rid of the purple blocks)
 //.cloze-item & .minimal {
 //  text-decoration: underline dashed $secondary;
