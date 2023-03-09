@@ -15,7 +15,7 @@ import {
     useAppSelector
 } from "../../../state";
 import classnames from "classnames";
-import {extractTeacherName, isLoggedIn, isPhy, isStudent, MEMBERSHIP_STATUS} from "../../../services";
+import {extractTeacherName, isLoggedIn, isPhy, isStudent, MEMBERSHIP_STATUS, siteSpecific} from "../../../services";
 import classNames from "classnames";
 
 
@@ -85,7 +85,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
                 <RS.Col lg={5} className="mt-4 mt-lg-0">
                     <div className="connect-list">
-                        <h3><span className="icon-person-active" />Teacher connections</h3>
+                        <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} />Teacher connections</h3>
                         <div className="connect-list-inner">
                             <ul className="teachers-connected list-unstyled">
                                 {activeAuthorisations && activeAuthorisations.map((teacherAuthorisation) =>
@@ -138,7 +138,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     </RS.Col>
                     <RS.Col lg={5}>
                         <div className="connect-list">
-                            <h3><span className="icon-person-active" /> Student connections </h3>
+                            <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} /> Student connections </h3>
 
                             <div className="connect-list-inner">
                                 <ul className="teachers-connected list-unstyled">
