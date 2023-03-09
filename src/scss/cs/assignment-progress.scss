@@ -1,11 +1,11 @@
 @import "../common/assignment-progress";
 
 .assignment-progress-group .group-name {
-  background: $cs-yellow;
+  background: $yellow-300;
 }
 
 .assignment-progress-gameboard .gameboard-header:not(.text-muted) > *:first-child:before {
-  background: $cs-yellow !important;
+  background: $yellow-300 !important;
   color: black;
   text-decoration: none !important;
 }

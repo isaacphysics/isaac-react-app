@@ -7,7 +7,7 @@
   border: none;
   .card-footer {
     border-radius: 0 !important;
-    background: $cs-dark-pink;
+    background: $dark-pink-300;
   }
   &:before {
     position: absolute;
@@ -56,13 +56,13 @@ svg {
       }
 
       &.active.difficulty.practice {
-        fill: $cs-yellow;
+        fill: $yellow-300;
         stroke: $cs-black;
         stroke-width: 1px;
       }
 
       &.active.difficulty.challenge {
-        fill: $cs-turquoise-blue;
+        fill: $cyan-300;
         stroke: $cs-black;
         stroke-width: 1px;
       }

@@ -21,40 +21,40 @@ $cs-cultured: #F5F5F5;
 $cs-white: #ffffff;
 
 // Dark pinks
-$highlight-dark-pink: #510937;
-$highlight-dark-pink-a: #6C0A48;
-$cs-dark-pink: #870C5A; // theme colour
-$highlight-dark-pink-50: #9E2372;
-$highlight-dark-pink-b: #D94BAA; // black text this and below
-$highlight-dark-pink-25: #F07DD2;
-$highlight-dark-pink-c: #FFD2F0;
+$dark-pink-100: #510937;
+$dark-pink-200: #6C0A48;
+$dark-pink-300: #870C5A; // theme colour
+$dark-pink-400: #9E2372;
+$dark-pink-500: #D94BAA; // black text this and below
+$dark-pink-600: #F07DD2;
+$dark-pink-700: #FFD2F0;
 
 // Pinks
-$highlight-pink: #A8007A;
-$highlight-pink-a: #E11EA2; // black text this and below
-$cs-pink: #FF4DC9; // theme colour
-$highlight-pink-50: #FF73DC;
-$highlight-pink-b: #FFA0F2;
-$highlight-pink-25: #FFC4FA;
-$highlight-pink-c: #FFF0FF;
+$pink-100: #A8007A;
+$pink-200: #E11EA2; // black text this and below
+$pink-300: #FF4DC9; // theme colour
+$pink-400: #FF73DC;
+$pink-500: #FFA0F2;
+$pink-600: #FFC4FA;
+$pink-700: #FFF0FF;
 
 // Cyans - all black text
-$highlight-cyan: #00A8A6;
-$highlight-cyan-a: #00D2C0;
-$cs-turquoise-blue: #05FFE7; // theme colour
-$highlight-cyan-50: #8CFFFA;
-$highlight-cyan-b: #AFFFFF;
-$highlight-cyan-25: #D0FFFF;
-$highlight-cyan-c: #EBFFFF;
+$cyan-100: #00A8A6;
+$cyan-200: #00D2C0;
+$cyan-300: #05FFE7; // theme colour
+$cyan-400: #8CFFFA;
+$cyan-500: #AFFFFF;
+$cyan-600: #D0FFFF;
+$cyan-700: #EBFFFF;
 
 // Yellows - all black text
-$highlight-yellow: #DCAA3C;
-$highlight-yellow-a: #F5C254;
-$cs-yellow: #FFE672; // theme colour
-$highlight-yellow-50: #FFF596;
-$highlight-yellow-b: #FFFAC3;
-$highlight-yellow-25: #FFFFE6;
-$highlight-yellow-c: #FFFFF5;
+$yellow-100: #DCAA3C;
+$yellow-200: #F5C254;
+$yellow-300: #FFE672; // theme colour
+$yellow-400: #FFF596;
+$yellow-500: #FFFAC3;
+$yellow-600: #FFFFE6;
+$yellow-700: #FFFFF5;
 
 //Text Colour
 $highlight-text-light: $cs-white;
@@ -62,66 +62,66 @@ $highlight-text-dark: $cs-black;
 
 // Content highlight classes
 .hi-dark-pink {
-    background-color: $highlight-dark-pink;
+    background-color: $dark-pink-100;
     color: $highlight-text-light;
 }
 .hi-dark-pink-50 {
-    background-color: $highlight-dark-pink-50;
+    background-color: $dark-pink-400;
     color: $highlight-text-light;
 }
 .hi-dark-pink-25 {
-    background-color: $highlight-dark-pink-50;
+    background-color: $dark-pink-400;
     color: $highlight-text-dark;
 }
 .hi-cyan {
-    background-color: $highlight-cyan;
+    background-color: $cyan-100;
     color: $highlight-text-dark;
 }
 .hi-cyan-50 {
-    background-color: $highlight-cyan-50;
+    background-color: $cyan-400;
     color: $highlight-text-dark;
 }
 .hi-cyan-25 {
-    background-color: $highlight-cyan-25;
+    background-color: $cyan-600;
     color: $highlight-text-dark;
 }
 .hi-pink {
-    background-color: $highlight-pink;
+    background-color: $pink-100;
     color: $highlight-text-light;
 }
 .hi-pink-50 {
-    background-color: $highlight-pink-50;
+    background-color: $pink-400;
     color: $highlight-text-dark;
 }
 .hi-pink-25 {
-    background-color: $highlight-pink-25;
+    background-color: $pink-600;
     color: $highlight-text-dark;
 }
 .hi-yellow {
-    background-color: $highlight-yellow;
+    background-color: $yellow-100;
     color: $highlight-text-dark;
 }
 .hi-yellow-50 {
-    background-color: $highlight-yellow-50;
+    background-color: $yellow-400;
     color: $highlight-text-dark;
 }
 .hi-yellow-25 {
-    background-color: $highlight-yellow-25;
+    background-color: $yellow-600;
     color: $highlight-text-dark;
 }
 
 // Theme
 $theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
     // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
-    "primary": $cs-dark-pink,
-    "secondary": $cs-dark-pink,
-    "dark-primary": $cs-pink,
-    "dark-secondary": $cs-pink,
+    "primary": $dark-pink-300,
+    "secondary": $dark-pink-300,
+    "dark-primary": $pink-300,
+    "dark-secondary": $pink-300,
 
-    "turquoise-blue": $cs-turquoise-blue,
-    "pink" : $cs-pink,
-    "dark-pink" : $cs-dark-pink,
-    "yellow" : $cs-yellow,
+    "turquoise-blue": $cyan-300,
+    "pink" : $pink-300,
+    "dark-pink" : $dark-pink-300,
+    "yellow" : $yellow-300,
     "jet-grey" : $cs-jet,
     "silver-grey" : $cs-silver,
     "light-grey" : $cs-light-gray,
@@ -156,20 +156,20 @@ $text-muted: $cs-dark-silver;
 // Colour Overrides
 // FIXME ADA: I don't think overriding base Bootstrap colour definitions is the right way to go about this.
 //  These are shared with and redefined by Physics.
-$purple: $cs-dark-pink; // Something to do with links
+$purple: $dark-pink-300; // Something to do with links
 
 // Stage colours
 // Used for staged accordion sections - we currently do not distinguish by colours
-$gcse-colour: $cs-yellow;
-$all-stages-colour: $cs-yellow;
-$a-level-colour: $cs-yellow;
+$gcse-colour: $yellow-300;
+$all-stages-colour: $yellow-300;
+$a-level-colour: $yellow-300;
 
 // Button/input colours
-$light-hover-dark-pink: $highlight-dark-pink-a;
-$light-active-dark-pink: $highlight-dark-pink;
-$dark-hover-pink: $highlight-pink-a;
-$dark-active-pink: $highlight-pink;
-$focus-blue: $highlight-cyan-a; // focus indicator colour
+$light-hover-dark-pink: $dark-pink-200;
+$light-active-dark-pink: $dark-pink-100;
+$dark-hover-pink: $pink-200;
+$dark-active-pink: $pink-100;
+$focus-blue: $cyan-100; // focus indicator colour
 
 // Greys - All used in various places, mainly for borders
 $gray-103: $cs-cultured;

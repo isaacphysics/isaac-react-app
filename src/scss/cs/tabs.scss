@@ -22,10 +22,10 @@ $link-text-bottom-padding: 4px;
 
     &.active {
       .nav-link {
-        color: $cs-dark-pink;
+        color: $dark-pink-300;
         cursor: default;
         border-bottom-width: #{$nav-bottom-line * 2};
-        border-bottom-color: $cs-dark-pink;
+        border-bottom-color: $dark-pink-300;
         padding-bottom: $link-text-bottom-padding;
       }
     }

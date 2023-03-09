@@ -4,7 +4,7 @@
 .validation-response-panel {
   text-align: left;
   &.correct {
-    background: $cs-turquoise-blue;
+    background: $cyan-300;
   }
 }
 
@@ -16,7 +16,7 @@
 
 // Cloze questions
 .cloze-item {
-  background: $cs-yellow;
+  background: $yellow-300;
   color: $cs-black;
 }
 

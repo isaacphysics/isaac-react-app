@@ -69,10 +69,10 @@
   @extend .btn;
 
   @if $outlined {
-    @include ada-button-outline($cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
+    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   } @else {
-    @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
-    background-color: $cs-dark-pink;
+    @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
+    background-color: $dark-pink-300;
   }
 
   padding: 0 !important;
@@ -99,24 +99,24 @@
 
   // Primary buttons (for dark background)
   &.btn-dark-primary {
-    @include ada-button($cs-black, $cs-pink, $dark-hover-pink, $dark-active-pink);
+    @include ada-button($cs-black, $pink-300, $dark-hover-pink, $dark-active-pink);
   }
 
   // Secondary buttons (for dark background)
   // Secondary Button components are expected to use the 'outline' prop!
   &.btn-outline-dark-secondary {
-    @include ada-button-outline($cs-pink, $dark-hover-pink, $dark-active-pink);
+    @include ada-button-outline($pink-300, $dark-hover-pink, $dark-active-pink);
   }
 
   // Primary buttons (light background)
   &.btn-primary, &.btn-secondary {
-    @include ada-button($cs-white, $cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
+    @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   // Secondary buttons (for light background)
   // Secondary Button components are expected to use the 'outline' prop!
   &.btn-outline-secondary, &.btn-outline-primary {
-    @include ada-button-outline($cs-dark-pink, $light-hover-dark-pink, $light-active-dark-pink);
+    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
 
   &.btn-link {
@@ -126,7 +126,7 @@
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    color: $cs-dark-pink;
+    color: $dark-pink-300;
     overflow: hidden;  // To stop margin collapse from hiding the focus outline
     text-decoration: underline;
     &:hover {
