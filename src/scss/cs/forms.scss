@@ -47,3 +47,28 @@ input, textarea {
     border: solid 1px $cs-black;
   }
 }
+
+.basic-multi-select {
+  .select__control.select__control--is-focused {
+    box-shadow: 0 0 0 3px $focus-blue;
+  }
+  .select__control, .select__control:hover {
+    border-color: $cs-jet;
+  }
+
+  .select__menu {
+    z-index: 2;
+    .select__option {
+      &.select__option--is-focused {
+        background-color: $cyan-700;
+      }
+      &.select__option--is-selected {
+        background-color: $cyan-600;
+      }
+      &:active {
+        background-color: $cyan-600;
+      }
+    }
+  }
+}
+
