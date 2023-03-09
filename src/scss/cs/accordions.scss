@@ -17,5 +17,11 @@
 }
 
 .accordion-icon-report {
-    background-image: url(/assets/cs/icons/flag-black.svg);
+  background-image: url(/assets/cs/icons/flag-black.svg);
+}
+
+.accordion .accordion-header {
+  button, button:hover {
+    color: black;
+  }
 }
