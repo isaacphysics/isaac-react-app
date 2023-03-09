@@ -170,12 +170,14 @@ export enum BoardViews {
     "card" = "Card View"
 }
 
-export enum BoardCreators {
-    "all" = "All",
-    "isaac" = "Isaac",
-    "me" = "Me",
-    "someoneElse" = "Someone else"
-}
+// Reusable pattern for site-specific "enums"
+export const BoardCreators = {
+    "all": "All",
+    "isaac": siteSpecific("Isaac", "Ada"),
+    "me": "Me",
+    "someoneElse": "Someone else"
+} as const;
+export type BoardCreators = typeof BoardCreators[keyof (typeof BoardCreators)];
 
 export enum BoardSubjects {
     "all" = "All",
