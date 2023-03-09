@@ -102,13 +102,14 @@ export const Contact = () => {
         <div className="pt-4">
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
-                    {isPhy && <div>
+                    <div>
                         <h3>Frequently Asked Question?</h3>
                         <p> You might like to check our FAQs pages to see if they can help you: <a href="/support/student">student FAQs</a> | <a href="/support/teacher">teacher FAQs</a></p>
                     </div>
-                    }
-                    <h3>Upcoming events</h3>
-                    <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a></p>
+                    {isPhy && <>
+                        <h3>Upcoming events</h3>
+                        <p>If you&apos;d like to find out more about our upcoming events, visit our <a href="/events">Events Page</a></p>
+                    </>}
                     <h3>Problems with the site?</h3>
                     <p>We always want to improve so please report any issues to <a className="small" href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
                     {isPhy && <div>
