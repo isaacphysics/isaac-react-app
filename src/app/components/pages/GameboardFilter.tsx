@@ -38,7 +38,7 @@ import {GameboardViewer, GameboardViewerInner} from './Gameboard';
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
 import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
-import Select, {GroupBase} from "react-select";
+import {GroupBase} from "react-select";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {debounce} from "lodash";
@@ -60,6 +60,7 @@ import {
     CardFooter,
     CardBody
 } from "reactstrap";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 function itemiseByValue<R extends {value: string}>(values: string[], options: R[]) {
     return options.filter(option => values.includes(option.value));
@@ -230,13 +231,13 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                             {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
                         </UncontrolledTooltip>
                     </Label>
-                    <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
+                    <StyledSelect id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
                 </div>
                 {/*<div>*/}
                 {/*    <Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
                 {/*        I would like some questions from Isaac to...*/}
                 {/*    </Label>*/}
-                {/*    <Select id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
+                {/*    <StyledSelect id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
                 {/*</div>*/}
                 <div>
                     <Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
@@ -252,7 +253,7 @@ const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setSt
                         </UncontrolledTooltip>
                     </Label>
                     <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                    {/*<Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
+                    {/*<StyledSelect id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
                 </div>
             </Col>
             <Col lg={8}>
@@ -362,13 +363,13 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                             Find questions that are suitable for this stage of learning.
                         </UncontrolledTooltip>
                     </Label>
-                    <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions({includeNullOptions: isAda})} />
+                    <StyledSelect id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions({includeNullOptions: isAda})} />
                 </Col>
                 <Col md={6}>
                     <Label className={`mt-2 mt-lg-0`} htmlFor="exam-boards">
                         and exam board...
                     </Label>
-                    <Select
+                    <StyledSelect
                         inputId="exam-boards" isClearable placeholder="Any"
                         value={examBoards}
                         options={getFilteredExamBoardOptions({byStages: stages.map(item => item.value as STAGE)})}
@@ -390,7 +391,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                             C2 questions cover more than one concept which must be selected and combined with skill.
                         </UncontrolledTooltip>
                     </Label>
-                    <Select
+                    <StyledSelect
                         id="difficulty-selector" isClearable isMulti
                         options={DIFFICULTY_ICON_ITEM_OPTIONS}
                         value={difficulties}
@@ -400,7 +401,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 </Col>
                 <Col md={6}>
                     <Label className={`mt-2 mt-lg-0`} htmlFor="question-search-topic">from topics...</Label>
-                    <Select
+                    <StyledSelect
                         inputId="question-search-topic" isMulti isClearable placeholder="Any" value={selections[2]}
                         options={topicChoices} onChange={(v, {action}) => {
                         if ((Array.isArray(v) && v.length === 0) || v === null) {
@@ -415,7 +416,7 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
                 <Col md={12}>
                     <Label className={`mt-2 mt-lg-0`} htmlFor="concepts">and concepts...</Label>
                     {concepts?.filter(c => c.label === QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER).length === 0 ?
-                        <Select
+                        <StyledSelect
                             inputId="concepts" isMulti isClearable isDisabled={!(selectedTopics && selectedTopics.length > 0)}
                             placeholder={selectedTopics?.length > 0 ? "Any" : "Please select one or more topics"}
                             value={concepts} options={conceptChoices} onChange={selectOnChange(setConcepts, false)}

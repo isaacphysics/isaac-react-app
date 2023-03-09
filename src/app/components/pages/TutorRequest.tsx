@@ -34,7 +34,7 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
-import Select from "react-select";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
@@ -146,7 +146,7 @@ export const TutorRequest = () => {
                                         {isPhy && <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="subject-input">Subjects</Label>
-                                                <Select
+                                                <StyledSelect
                                                     inputId="subject-input"
                                                     placeholder="All"
                                                     isClearable

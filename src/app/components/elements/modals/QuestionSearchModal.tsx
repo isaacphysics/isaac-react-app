@@ -10,7 +10,7 @@ import {
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
 import {debounce, isEqual} from "lodash";
-import Select, {MultiValue} from "react-select";
+import {MultiValue} from "react-select";
 import {
     tags,
     DIFFICULTY_ICON_ITEM_OPTIONS,
@@ -35,6 +35,7 @@ import {ContentSummary} from "../../../../IsaacAppTypes";
 import {AudienceContext, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {GroupBase} from "react-select/dist/declarations/src/types";
 import {Loading} from "../../handlers/IsaacSpinner";
+import {StyledSelect} from "../inputs/StyledSelect";
 
 // Immediately load GameboardBuilderRow, but allow splitting
 const importGameboardBuilderRow = import("../GameboardBuilderRow");
@@ -166,7 +167,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         <RS.Row>
             {isPhy && <RS.Col lg={3} className="text-wrap my-2">
                 <RS.Label htmlFor="question-search-book">Book</RS.Label>
-                <Select
+                <StyledSelect
                     inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
                     onChange={(e) => {
                         selectOnChange(setSearchBook, true)(e);
@@ -185,7 +186,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
             </RS.Col>}
             <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
-                <Select
+                <StyledSelect
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
                     options={groupBaseTagOptions} onChange={(x : readonly Item<string>[], {action}) => {
                         selectOnChange(setSearchTopics, true)(x)
@@ -196,21 +197,21 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         <RS.Row className={isBookSearch ? "d-none" : ""}>
             <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-stage">Stage</RS.Label>
-                <Select
+                <StyledSelect
                     inputId="question-search-stage" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={getFilteredStageOptions()} onChange={selectOnChange(setSearchStages, true)}
                 />
             </RS.Col>
             <RS.Col lg={6} className={`text-wrap my-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-difficulty">Difficulty</RS.Label>
-                <Select
+                <StyledSelect
                     inputId="question-search-difficulty" isClearable isMulti placeholder="Any" {...selectStyle}
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
             {isAda && <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
-                <Select
+                <StyledSelect
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
                     value={getFilteredExamBoardOptions({byStages: searchStages}).filter(o => searchExamBoards.includes(o.value))}
                     options={getFilteredExamBoardOptions({byStages: searchStages})}

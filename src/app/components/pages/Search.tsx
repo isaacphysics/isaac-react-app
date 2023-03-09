@@ -1,8 +1,8 @@
-import React, {ChangeEvent, FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
+import React, {FormEvent, MutableRefObject, useEffect, useRef, useState} from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {AppState, fetchSearch, selectors, useAppDispatch, useAppSelector} from "../../state";
 import * as RS from "reactstrap";
-import {Col, Container, Form, Input, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 import {
@@ -13,7 +13,6 @@ import {
     isPhy,
     parseLocationSearch,
     pushSearchToHistory,
-    SEARCH_CHAR_LENGTH_LIMIT,
     searchResultIsPublic,
     selectOnChange,
     shortcuts,
@@ -23,10 +22,11 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShortcutResponse} from "../../../IsaacAppTypes";
 import {UserContextPicker} from "../elements/inputs/UserContextPicker";
-import Select, {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
+import {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {AdaHeaderSearch} from "../elements/SearchInputs";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 interface Item<T> {
     value: T;
@@ -126,7 +126,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                     <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
                                         {`Filter${siteSpecific("","s")}:`}
                                     </RS.Label>
-                                    <Select
+                                    <StyledSelect
                                         inputId="document-filter" isMulti
                                         placeholder="No page type filter"
                                         value={filtersState}

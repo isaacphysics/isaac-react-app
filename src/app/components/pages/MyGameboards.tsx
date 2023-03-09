@@ -85,7 +85,7 @@ const PhyTable = (props: GameboardsTableProps) => {
                     {/* TODO MT add stage selector */}
                     {/*{SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>*/}
                     {/*    <Label className="w-100">Levels*/}
-                    {/*        <Select inputId="levels-select"*/}
+                    {/*        <StyledSelect inputId="levels-select"*/}
                     {/*            isMulti*/}
                     {/*            options={[*/}
                     {/*                {value: '1', label: '1'},*/}

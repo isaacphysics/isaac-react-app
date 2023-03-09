@@ -1,6 +1,5 @@
 import React from "react";
 import * as RS from "reactstrap";
-import Select from "react-select";
 import {
     tags,
     addHexagonKeyPoints,
@@ -18,6 +17,7 @@ import {
 import {calculateHexagonProportions, Hexagon, HexagonProportions} from "./Hexagon";
 import {HexagonConnection} from "./HexagonConnection";
 import classNames from "classnames";
+import {StyledSelect} from "../inputs/StyledSelect";
 
 export interface Tier {id: string; name: string; for: string}
 
@@ -198,7 +198,7 @@ export function HierarchyFilterSelects({tiers, choices, selections, setTierSelec
     return <React.Fragment>
         {tiers.map((tier, i) => <React.Fragment key={tier.for}>
             <RS.Label htmlFor={tier.for} className="pt-2 pb-0">{tier.name}: </RS.Label>
-            <Select name={tier.for} onChange={selectOnChange(setTierSelection(i), false)} isMulti options={choices[i]} value={selections[i]} />
+            <StyledSelect name={tier.for} onChange={selectOnChange(setTierSelection(i), false)} isMulti options={choices[i]} value={selections[i]} />
         </React.Fragment>)}
     </React.Fragment>;
 }

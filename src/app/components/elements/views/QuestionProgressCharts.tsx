@@ -19,8 +19,9 @@ import {
     TAG_ID,
     tags
 } from "../../../services";
-import Select, {SingleValue} from "react-select";
+import {SingleValue} from "react-select";
 import {Difficulty} from "../../../../IsaacApiTypes";
+import {StyledSelect} from "../inputs/StyledSelect";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -152,7 +153,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         {isAda && <RS.Col md={3}/>}
         <RS.Col xl={12/noCharts} md={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
-                <Select
+                <StyledSelect
                     inputId={`${subId}-subcategory-select`}
                     name="subcategory"
                     className="d-inline-block text-left pr-2 w-50"
@@ -172,7 +173,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         {isAda && <RS.Col md={3}/>}
         {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
-                <Select
+                <StyledSelect
                     inputId={`${subId}-stage-select`}
                     name="stage"
                     className="d-inline-block text-left pr-2 w-50"

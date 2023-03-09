@@ -32,7 +32,6 @@ import {
     TAG_ID,
     useUserContext
 } from "../../services";
-import Select from "react-select";
 import {useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
@@ -41,6 +40,7 @@ import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 import classNames from "classnames";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 const GameboardBuilderRow = lazy(() => import("../elements/GameboardBuilderRow"));
 
@@ -170,7 +170,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 {isStaff(user) && <Row className="mt-2">
                     <Col>
                         <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
-                        <Select inputId="question-search-level"
+                        <StyledSelect inputId="question-search-level"
                                 isMulti
                                 options={siteSpecific([
                                     {value: 'ISAAC_BOARD', label: 'Created by Isaac'},

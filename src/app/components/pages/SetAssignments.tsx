@@ -58,11 +58,11 @@ import {
     useGameboards
 } from "../../services";
 import {IsaacSpinner, Loading} from "../handlers/IsaacSpinner";
-import Select from "react-select";
 import {GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
 import classNames from "classnames";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -106,7 +106,7 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
 
     return <Container className="py-2">
         <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
-            <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
+            <StyledSelect inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
                     value={selectedGroups}
                     closeMenuOnSelect={!isStaff(user)}
                     onChange={selectOnChange(setSelectedGroups, false)}

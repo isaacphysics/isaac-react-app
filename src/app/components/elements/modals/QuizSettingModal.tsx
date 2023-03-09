@@ -14,9 +14,9 @@ import {isDefined, Item, selectOnChange} from "../../../services";
 import {range} from "lodash";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import * as RS from "reactstrap";
-import Select from "react-select";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
+import {StyledSelect} from "../inputs/StyledSelect";
 
 type QuizFeedbackOption = Item<QuizFeedbackMode>;
 const feedbackOptions = {
@@ -74,7 +74,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: i
                 defaultErrorTitle={"Error fetching groups"}
                 thenRender={groups => {
                     const groupOptions: Item<number>[] = groups.map(g => ({label: g.groupName as string, value: g.id as number}));
-                    return <Select
+                    return <StyledSelect
                         options={groupOptions}
                         onChange={(s) => {
                             selectOnChange(setSelectedGroups, false)(s);
@@ -98,7 +98,7 @@ export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: i
             {dueDateInvalid && <small className={"pt-2 text-danger"}>Due date must be after today.</small>}
         </RS.Label>
         <RS.Label className="w-100 mb-4">What level of feedback should students get:<br/>
-            <Select
+            <StyledSelect
                 value={feedbackMode ? feedbackOptionsMap[feedbackMode] : null}
                 onChange={(s) => {
                     if (s && (s as QuizFeedbackOption).value) {

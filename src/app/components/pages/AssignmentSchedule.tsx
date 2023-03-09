@@ -38,12 +38,12 @@ import {
 import {AssignmentScheduleContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
 import classNames from "classnames";
-import Select from "react-select";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
 import {Link, useLocation} from "react-router-dom";
 import {combineQueries, ShowLoadingQuery, discardResults} from "../handlers/ShowLoadingQuery";
 import {PhyAddGameboardButtons} from "./SetAssignments";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 interface AssignmentListEntryProps {
     assignment: ValidAssignmentWithListingDate;
@@ -252,7 +252,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
         </ModalHeader>
         <ModalBody>
             <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
-                <Select inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
+                <StyledSelect inputId="groups-to-assign" isMulti={isStaff(user)} isClearable placeholder="None"
                         value={selectedGroups}
                         closeMenuOnSelect={!isStaff(user)}
                         onChange={selectOnChange(setSelectedGroups, false)}
@@ -260,7 +260,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 />
             </Label>
             <Label className="w-100 pb-2">Gameboard:
-                <Select inputId="gameboard-to-assign" isClearable placeholder="None"
+                <StyledSelect inputId="gameboard-to-assign" isClearable placeholder="None"
                         value={selectedGameboard}
                         onChange={selectOnChange(setSelectedGameboard, false)}
                         options={gameboards.map(g => itemise(g.id ?? "", g.title ?? "No gameboard title"))}
@@ -462,7 +462,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
                 {assignmentsSetByMe && assignmentsSetByMe.length > 0
                     ? <>
                         <Label className={"w-100"}>Filter by group:
-                            <Select inputId="groups-filter" isMulti isClearable placeholder="All"
+                            <StyledSelect inputId="groups-filter" isMulti isClearable placeholder="All"
                                     value={groupsToInclude}
                                     closeMenuOnSelect={!isStaff(user)}
                                     onChange={selectOnChange(setGroupsToInclude, false)}
