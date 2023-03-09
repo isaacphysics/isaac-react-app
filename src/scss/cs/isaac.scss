@@ -312,11 +312,13 @@ body {
     display: -ms-flexbox;
     -ms-flex-direction: column;
     flex-direction: column;
+    background-color: $cs-cultured;
 }
 
 .content-body {
     background-color: $cs-cultured;
 }
+
 .pattern-01 {
     background-image: url('/assets/pattern_sm.svg');
     background-position: left top;
