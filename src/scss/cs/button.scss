@@ -24,7 +24,7 @@
     box-shadow: none;
   }
   &:focus-visible {
-    box-shadow: 0 0 0 3px $button-focus-blue !important;
+    box-shadow: 0 0 0 3px $focus-blue !important;
   }
   &.disabled, &:disabled {
     color: $cs-jet;
@@ -56,7 +56,7 @@
     box-shadow: none;
   }
   &:focus-visible {
-    box-shadow: 0 0 0 3px $button-focus-blue !important;
+    box-shadow: 0 0 0 3px $focus-blue !important;
   }
   &.disabled, &:disabled {
     color: $cs-jet;
@@ -138,7 +138,7 @@
       text-decoration: none;
     }
     &:focus-visible {
-      outline: 2px solid $button-focus-blue !important;
+      outline: 2px solid $focus-blue !important;
       border-radius: 0 !important;
       z-index: 10;
     }

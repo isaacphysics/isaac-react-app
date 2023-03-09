@@ -37,7 +37,7 @@
   outline: none !important;
   border: none !important;
   &:focus-visible {
-    outline: 2px solid $button-focus-blue !important;
+    outline: 2px solid $focus-blue !important;
     border-radius: 50px !important;
   }
 }
