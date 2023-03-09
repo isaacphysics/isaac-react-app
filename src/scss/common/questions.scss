@@ -20,48 +20,6 @@
   min-width: auto;
 }
 
-button {
-  -webkit-appearance: none;
-  border: none;
-  outline: none !important;
-}
-
-.question-actions {
-
-  &.question-actions-leftmost {
-    margin-left: auto;
-  }
-
-  .question-actions-icon {
-    float: right;
-    height: 3rem;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .question-actions-link-box {
-    float:right;
-    border: 1px solid gray;
-    height: 3.6rem;
-    border-right: none;
-    padding-right: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-right: -1.9rem;
-    background: white;
-
-    .question-actions-link {
-      padding-left: 3px;
-      padding-right: 3px;
-      margin-left: 1rem;
-      font-style: italic;
-    }
-  }
-}
-
 .question-component {
   margin-bottom: 2rem;
   clear: both;

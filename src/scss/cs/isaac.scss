@@ -110,13 +110,18 @@ $highlight-text-dark: $cs-black;
     color: $highlight-text-dark;
 }
 
+$primary: $dark-pink-300;
+$secondary: $dark-pink-300;
+$dark-primary: $pink-300;
+$dark-secondary: $pink-300;
+
 // Theme
 $theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
     // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
-    "primary": $dark-pink-300,
-    "secondary": $dark-pink-300,
-    "dark-primary": $pink-300,
-    "dark-secondary": $pink-300,
+    "primary": $primary,
+    "secondary": $secondary,
+    "dark-primary": $dark-primary,
+    "dark-secondary": $dark-secondary,
 
     "turquoise-blue": $cyan-300,
     "pink" : $pink-300,

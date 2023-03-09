@@ -210,6 +210,8 @@
 }
 
 .print-icon {
+  position: relative;
+  z-index: 1;
   &:not(.outline) {
     @include ada-icon-button-base(48px, 48px, false);
   }

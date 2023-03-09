@@ -1,5 +1,30 @@
 @import "../common/questions";
 
+.question-actions-link-box {
+  $x-translation: 24px;
+  margin-left: -$x-translation;
+  float: left;
+  z-index: -1;
+  transform: translateX(7.5px + $x-translation);
+  height: 48px; // height of an icon button, should be a variable probably
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid $secondary;
+  padding-left: 15px;
+  padding-right: 32px;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  .question-actions-link {
+    margin-top: 2px; // Just to vertically center the links nicely
+    color: $secondary;
+    .btn {
+      margin-left: 7px;
+      margin-right: 7px;
+    }
+  }
+}
+
 // Validation response
 .validation-response-panel {
   text-align: left;

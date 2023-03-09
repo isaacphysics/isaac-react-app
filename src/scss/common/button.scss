@@ -23,3 +23,10 @@
 .border-muted {
   border-color: grey !important;
 }
+
+// What on earth does this do and why when I remove it does it break input addon buttons?
+button {
+  -webkit-appearance: none;
+  border: none;
+  outline: none !important;
+}
