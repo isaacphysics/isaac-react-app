@@ -28,7 +28,7 @@ export const HeaderCS = () => {
                 <img src="/assets/logos/ada_logo_3-stack_aqua_white_text.svg" alt="Ada Computer Science" />
             </NavbarBrand>
 
-            <a href={`#${mainContentId}`} className="skip-main">Skip to main content</a>
+            <a href={`#${mainContentId}`} className="skip-main position-absolute">Skip to main content</a>
 
             <button aria-label="Toggle search bar" className={"ml-auto mr-4 search-toggler d-nav-none"} onClick={() => setIsSearchOpen(!isSearchOpen)}>
                 <span className={"search-toggler-icon"}/>
