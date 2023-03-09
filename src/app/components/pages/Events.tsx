@@ -65,6 +65,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         Follow the links below to find out more about our FREE events.
     </span>;
 
+    // FIXME ADA this is the old meta description
     const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
 
     return <div>

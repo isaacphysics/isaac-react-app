@@ -239,7 +239,7 @@ export const LogIn = () => {
         return logInAttempted ? <Loading/> : <Redirect to="/"/>;
     }
 
-    const metaDescriptionCS = "Log in to your account. Access free GCSE and A level Computer Science resources. Use our materials to learn and revise for your exams.";
+    const metaDescriptionCS = "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.";
 
     return <Container id="login-page" className="my-4">
         {isAda && <MetaDescription description={metaDescriptionCS} />}

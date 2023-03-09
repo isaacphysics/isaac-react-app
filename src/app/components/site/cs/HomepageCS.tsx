@@ -9,6 +9,7 @@ import {AdaHero2x1, AdaHero1x1} from "../../elements/svg/AdaHero";
 import {IsaacCardDeck} from "../../content/IsaacCardDeck";
 import {NewsCard} from "../../elements/cards/NewsCard";
 import {AdaHomepageSearch} from "../../elements/SearchInputs";
+import {MetaDescription} from "../../elements/MetaDescription";
 
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
@@ -17,6 +18,7 @@ export const HomepageCS = () => {
 
     return <>
         <WarningBanner/>
+        <MetaDescription description={"Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!"}/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
                 <Container className="py-lg-6 pt-3 pb-5 z1 px-lg-6 px-4" fluid>

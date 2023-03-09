@@ -123,8 +123,8 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     }
 
     const metaDescriptionMap = {
-        "student": "Got a question about our GCSE and A Level Computer Science online learning programme? Read our student FAQs.",
-        "teacher": "Got a question about our GCSE and A Level Computer Science online learning programme? Read our teacher FAQs."
+        "student": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!",
+        "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!"
     };
 
     return <Container>

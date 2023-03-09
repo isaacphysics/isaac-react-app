@@ -94,7 +94,7 @@ export const Contact = () => {
 
     const isValidEmail = validateEmail(email);
 
-    const metaDescriptionCS = "Ask us a question about our GCSE and A level Computer Science online learning programme. We are here to help.";
+    const metaDescriptionCS = "Ask us a question about Ada Computer Science, the free online computer science programme for students and teachers. We are here to help!";
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Contact us" />

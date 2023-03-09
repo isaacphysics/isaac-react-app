@@ -109,7 +109,8 @@ export const AllTopics = () => {
     return <div id={"topics-bg"}>
         <Container className={"mb-4"}>
             <TitleAndBreadcrumb currentPageTitle={"Topics"}/>
-            {isAda && <MetaDescription description={"Our free Computer Science topics..." /* FIXME ADA wait for copy here */} />}
+            {/* FIXME ADA this is different to what Dan F provided, since the formats of the topic/exam spec pages have changed */}
+            {isAda && <MetaDescription description={"Discover our free computer science topics and questions. Learn or revise for your exams with us today."} />}
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="pt-md-4">
                     <PageFragment fragmentId={`a_level_all_topics`} ifNotFound={RenderNothing} />

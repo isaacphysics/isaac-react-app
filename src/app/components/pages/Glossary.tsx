@@ -188,7 +188,7 @@ export const Glossary = () => {
         }
     });
 
-    const metaDescriptionCS = "Confused about an A level or GCSE Computer Science term? Look it up in our glossary.";
+    const metaDescriptionCS = "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!";
 
     const thenRender = <div className="glossary-page">
         <Container>

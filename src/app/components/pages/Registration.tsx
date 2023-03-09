@@ -116,7 +116,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         return <Redirect to="/" />;
     }
 
-    const metaDescriptionCS =  "Sign up for a free account and get powerful GCSE and A Level Computer Science resources and questions. For classwork, homework, and revision.";
+    const metaDescriptionCS = "Sign up for an Ada Computer Science account to access hundreds of computer science topics and questions.";
 
     // Render
     return <Container id="registration-page" className="mb-5">
