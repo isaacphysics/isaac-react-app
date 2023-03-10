@@ -16,9 +16,9 @@ export const WhySignUpTabs = ({user}: {user: Immutable<PotentialUser> | null}) =
                 </p>
                 <ul>
                     <li>Free computer science learning resources, written by specialist teachers</li>
-                    <li>Saves time when planning lessons, setting assignments, and marking homework</li>
+                    <li>Saves time when planning lessons, and setting and marking work</li>
                     <li>Features interactive coding questions for Python</li>
-                    <li>Includes real code examples in Java, VB.net, and C#</li>
+                    <li>Includes real code examples in Python, C#, VB and Java</li>
                     <li>Tailored to GCSE and A level computer science exam specifications</li>
                     <li>Constantly updated based on research and your feedback</li>
                 </ul>
@@ -44,7 +44,7 @@ export const WhySignUpTabs = ({user}: {user: Immutable<PotentialUser> | null}) =
                     <li>Designed to support your learning</li>
                     <li>Prepares you for your exams</li>
                     <li>Features interactive coding questions for Python</li>
-                    <li>Includes real code examples in Java, VB.net, and C#</li>
+                    <li>Includes real code examples in Python, C#, VB and Java</li>
                     <li>Constantly updated based on research and your feedback</li>
                 </ul>
                 <p>

@@ -68,7 +68,7 @@ export const HomepageCS = () => {
                             imageClassName: "backslash-1"
                         }, {
                             title: "A level computer science",
-                            subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 18.",
+                            subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 19.",
                             clickUrl: "/topics/a_level",
                             buttonText: "View A level resources",
                             imageClassName: "backslash-2"

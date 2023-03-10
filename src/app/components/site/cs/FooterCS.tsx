@@ -35,7 +35,7 @@ export const FooterCS = () => (
                     <Row className="justify-content-between">
                         <Col xs={{size: 12}} md={{size: 6}} className="footer-bottom-info">
                             <p>
-                                All teaching materials on this site are available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" className="d-inline">Open Government Licence v3.0</a>, except where otherwise stated.
+                                All teaching materials on this site are available under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" className="d-inline">CC BY-NC-SA 4.0</a> license, except where otherwise stated.
                             </p>
                         </Col>
                         <Col xs={{size: 12}} md={{size: 5}} lg={{size: 2}}>
