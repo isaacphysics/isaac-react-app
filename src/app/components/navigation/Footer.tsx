@@ -48,7 +48,7 @@ export const Footer = () => (
                             <div className="d-flex flex-row">
                                 <Link to="/">
                                     <img
-                                        src="/assets/logo-inverse.svg"
+                                        src="/assets/logo-mustard.svg"
                                         className="footerLogo"
                                         alt="Isaac Computer Science homepage"
                                     />
@@ -56,10 +56,8 @@ export const Footer = () => (
                             </div>
                             <div className="footer-links logo-text pt-3">
                                 <p>
-                                    A <ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">Department for Education</ExternalLink> project,
-                                    part of the <Link to="/teachcomputing">National Centre for Computing Education</Link> and created by
-                                    the <ExternalLink href="https://www.cam.ac.uk/">University of Cambridge</ExternalLink> and
-                                    the <ExternalLink href="https://www.raspberrypi.org/">Raspberry Pi Foundation</ExternalLink>.
+                                    Isaac Computer Science is part of the
+                                    <Link to="/teachcomputing">National Centre for Computing Education.</Link>
                                 </p>
                             </div>
                         </Col>
