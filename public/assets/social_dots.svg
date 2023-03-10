@@ -1,19 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="250" height="10" viewBox="0 0 250 10">
-  <g id="morse-ics" style="fill:#ff3369;fill-rule:evenodd;">
-    <g id="i">
-      <path d="M 25,10 A 5,5 0 1 1 25,0 5,5 0 0 1 25,10 Z" />
-      <path d="M 5,10 A 5,5 0 0 1 0,5 5,5 0 1 1 10,5 c 0,2.75 -2.25,5 -5,5 z" />
-    </g>
-    <g id="c">
-      <path d="M 165,10 A 5,5 0 0 1 160,5 a 5,5 0 0 1 10,0 5,5 0 0 1 -5,5 z" />
-      <path d="M 105,10 A 5,5 0 0 1 100,5 5,5 0 0 1 105,0 5,5 0 0 1 110,5 a 5,5 0 0 1 -5,5 z" />
-      <path d="m 145,10 h -20 A 5,5 0 0 1 120,5 5,5 0 0 1 125,0 h 20 A 5,5 0 0 1 150,5 a 5,5 0 0 1 -5,5 z" />
-      <path d="M 85,10 H 65 a 5,5 0 0 1 0,-10 h 20 a 5,5 0 1 1 0,10 z" />
-    </g>
-    <g id="s">
-      <path d="M 245,10 A 5,5 0 0 1 240,5 5,5 0 0 1 245,0 C 247.75,0 250,2.25 250,5 a 5,5 0 0 1 -5,5 z" />
-      <path d="M 225,0 C 227.75,0 230,2.25 230,5 A 5,5 0 1 1 225,0 Z" />
-      <path d="m 205,0 a 5,5 0 0 1 0,10 A 5,5 0 0 1 200,5 5,5 0 0 1 205,0 Z" />
-    </g>
-   </g>
+  <g id="Group_2" data-name="Group 2" transform="translate(-1025 -851)">
+    <circle id="Ellipse_3" data-name="Ellipse 3" cx="5" cy="5" r="5" transform="translate(1025 851)" fill="#ff1e8a"/>
+    <circle id="Ellipse_4" data-name="Ellipse 4" cx="5" cy="5" r="5" transform="translate(1045 851)" fill="#ff1e8a"/>
+    <circle id="Ellipse_5" data-name="Ellipse 5" cx="5" cy="5" r="5" transform="translate(1125 851)" fill="#ff1e8a"/>
+    <circle id="Ellipse_6" data-name="Ellipse 6" cx="5" cy="5" r="5" transform="translate(1185 851)" fill="#ff1e8a"/>
+    <circle id="Ellipse_7" data-name="Ellipse 7" cx="5" cy="5" r="5" transform="translate(1225 851)" fill="#ff1e8a"/>
+    <circle id="Ellipse_8" data-name="Ellipse 8" cx="5" cy="5" r="5" transform="translate(1245 851)" fill="#ff1e8a"/>
+    <circle id="Ellipse_9" data-name="Ellipse 9" cx="5" cy="5" r="5" transform="translate(1265 851)" fill="#ff1e8a"/>
+    <rect id="Rectangle_9" data-name="Rectangle 9" width="31" height="10" rx="5" transform="translate(1085 851)" fill="#ff1e8a"/>
+    <rect id="Rectangle_10" data-name="Rectangle 10" width="31" height="10" rx="5" transform="translate(1145 851)" fill="#ff1e8a"/>
+  </g>
 </svg>
