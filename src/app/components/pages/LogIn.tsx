@@ -241,7 +241,7 @@ export const LogIn = () => {
 
     const metaDescriptionCS = "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.";
 
-    return <Container id="login-page" className="my-4">
+    return <Container id="login-page" className="my-4 mb-5">
         {isAda && <MetaDescription description={metaDescriptionCS} />}
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
@@ -300,16 +300,16 @@ export const LogIn = () => {
                                         </Col>
                                     </Row>
 
-                                    <hr className="text-center"/>
+                                    <hr className="text-center mb-4"/>
                                     {
                                         isAda &&
-                                            <Row className="my-4 justify-content-center">
+                                            <Row className="mb-2 justify-content-center">
                                                 <Col sm={9}>
                                                     <RaspberryPiSignInButton/>
                                                 </Col>
                                             </Row>
                                     }
-                                    <Row className="my-4 justify-content-center">
+                                    <Row className="mb-3 justify-content-center">
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>
