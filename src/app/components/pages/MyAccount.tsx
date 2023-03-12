@@ -283,8 +283,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                                 className={"mx-2"} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
-                                <span className="d-none d-lg-block">Account security</span>
-                                <span className="d-block d-lg-none">Security</span>
+                                <span className="d-none d-xl-block">Account security</span>
+                                <span className="d-block d-xl-none">Security</span>
                             </NavLink>
                         </NavItem>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}>
@@ -294,8 +294,8 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                                 onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)}
                                 onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
                             >
-                                <span className="d-none d-lg-block d-md-block">Teacher connections</span>
-                                <span className="d-block d-md-none">Connections</span>
+                                <span className="d-none d-lg-block d-lg-block">Teacher connections</span>
+                                <span className="d-block d-lg-none">Connections</span>
                             </NavLink>
                         </NavItem>
                         {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}>
