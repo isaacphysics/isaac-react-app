@@ -104,7 +104,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
             <hr />
             <div>
                 <small>
-                    <b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher.
+                    <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
                 </small>
             </div>
             {errorMessage && <h4 role="alert" className="text-danger text-center">
