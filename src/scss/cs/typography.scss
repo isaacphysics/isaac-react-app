@@ -118,15 +118,10 @@ hr {
   border-top: solid $cs-black 1px;
 }
 
-
-// FIXME ADA what do these do and why are they here?
 div.isaac-nav-link {
-  color: $cs-white;
   display: inline-block;
   text-decoration: underline;
-
   &:hover {
-    color: $cs-white;
     text-decoration: none;
   }
 }
