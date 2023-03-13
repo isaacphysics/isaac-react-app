@@ -59,6 +59,7 @@ input, textarea {
   .select__menu {
     z-index: 2;
     .select__option {
+      color: $cs-black;
       &.select__option--is-focused {
         background-color: $cyan-700;
       }
