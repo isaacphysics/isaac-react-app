@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Link, useHistory} from "react-router-dom";
+import {Link, useHistory, useLocation} from "react-router-dom";
 import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
 import {
-    isAda,
+    history,
+    isAda, isPhy,
     KEY,
     persistence,
     STAGE,
@@ -19,6 +20,7 @@ import {Redirect} from "react-router";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
+import queryString from "query-string";
 
 export function AllTopicsWithoutAStage() {
     const history = useHistory();
@@ -101,11 +103,32 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
 export const AllTopics = () => {
     const subcategoryTags = tags.allSubcategoryTags;
 
-    const {view} = useQueryParams(true);
+    const existingLocation = useLocation();
+    const {stage: view, setStage: setTransientStage} = useUserContext();
     const initialStage = ([STAGE.A_LEVEL, STAGE.GCSE, STAGE.ALL] as any[]).includes(view)
         ? view as STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL
         : STAGE.ALL;
     const [stage, setStage] = useState<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>(initialStage);
+
+    useEffect(() => {
+        setTransientStage(stage);
+        const actualParams = queryString.parse(window.location.search);
+        if (stage !== actualParams.stage) {
+            try {
+                history.replace({
+                    ...existingLocation,
+                    search: queryString.stringify({
+                        ...actualParams,
+                        stage,
+                    }, {encode: false})
+                });
+            } catch (e) {
+                // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
+                // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
+                // trying to render, causing a loop and a spike in client-side errors.
+            }
+        }
+    }, [stage]);
 
     const charToCutAt = "D";
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
