@@ -12,7 +12,7 @@ export const passwordStrengthText: {[score: number]: string} = {
 
 const zxcvbnSrc = siteSpecific(
     'https://cdn.isaacphysics.org',
-    'https://cdn.isaaccomputerscience.org'
+    'https://cdn.adacomputerscience.org'
 ) + "/vendor/dropbox/zxcvbn-isaac.js";
 
 
