@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useHistory} from "react-router-dom";
-import {Badge, Col, Container, Row} from "reactstrap";
+import {Badge, Button, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
 import {
@@ -70,7 +70,7 @@ const renderTopic = (topic: Tag) => {
     }
 };
 
-const topicColumn = (subTags: Tag[], stage: STAGE.A_LEVEL | STAGE.GCSE) => {
+const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GCSE) => {
     return <Col key={TAG_ID.computerScience + "_" + subTags[0].id} md={6}>
         {subTags.sort((a, b) => (a.title > b.title) ? 1 : -1)
             // Overwrite subcategory with stage properties
@@ -99,27 +99,56 @@ const topicColumn = (subTags: Tag[], stage: STAGE.A_LEVEL | STAGE.GCSE) => {
 };
 
 export const AllTopics = () => {
-    // FIXME ADA review use of "a_level" and consider removing stage considerations entirely from this component
     const subcategoryTags = tags.allSubcategoryTags;
+
+    const {view} = useQueryParams(true);
+    const initialStage = ([STAGE.A_LEVEL, STAGE.GCSE, STAGE.ALL] as any[]).includes(view)
+        ? view as STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL
+        : STAGE.ALL;
+    const [stage, setStage] = useState<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>(initialStage);
 
     const charToCutAt = "D";
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
 
+    const title = ({
+        [STAGE.ALL]: "Topics",
+        [STAGE.A_LEVEL]: "A Level topics",
+        [STAGE.GCSE]: "GCSE topics"
+    })[stage];
+
+    {/* FIXME ADA this is different to what Dan F provided, since the formats of the topic/exam spec pages have changed */}
+    const metaDescription = ({
+        [STAGE.ALL]: "Discover our free computer science topics and questions. Learn or revise for your exams with us today.",
+        [STAGE.A_LEVEL]: "Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.",
+        [STAGE.GCSE]: "Discover our free GCSE computer science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn or revise for your exams with us today."
+    })[stage];
+
     return <div id={"topics-bg"}>
         <Container className={"mb-4"}>
-            <TitleAndBreadcrumb currentPageTitle={"Topics"}/>
-            {/* FIXME ADA this is different to what Dan F provided, since the formats of the topic/exam spec pages have changed */}
-            {isAda && <MetaDescription description={"Discover our free computer science topics and questions. Learn or revise for your exams with us today."} />}
+            <TitleAndBreadcrumb currentPageTitle={title} />
+            <MetaDescription description={metaDescription} />
+            <Row>
+                <Col xs={12} md={4} className={"text-center"}>
+                    <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.ALL)} outline={stage !== STAGE.ALL}>All topics</Button>
+                </Col>
+                <Col xs={12} md={4} className={"text-center mt-3 mt-md-0"}>
+                    <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.A_LEVEL)} outline={stage !== STAGE.A_LEVEL}>A Level topics</Button>
+                </Col>
+                <Col xs={12} md={4} className={"text-center mt-3 mt-md-0"}>
+                    <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.GCSE)} outline={stage !== STAGE.GCSE}>GCSE topics</Button>
+                </Col>
+            </Row>
+            <hr/>
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="pt-md-4">
-                    <PageFragment fragmentId={`a_level_all_topics`} ifNotFound={RenderNothing} />
+                    <PageFragment fragmentId={`${stage}_all_topics`} ifNotFound={RenderNothing} />
                 </Col>
             </Row>
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
-                    {topicColumn(firstColTags, STAGE.A_LEVEL)}
-                    {topicColumn(secondColTags, STAGE.A_LEVEL)}
+                    {topicColumn(firstColTags, stage)}
+                    {topicColumn(secondColTags, stage)}
                 </Col>
             </Row>
         </Container>

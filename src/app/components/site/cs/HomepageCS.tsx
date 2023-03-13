@@ -63,13 +63,13 @@ export const HomepageCS = () => {
                         cards: [{
                             title: "GCSE computer science",
                             subtitle: "Our GCSE computer science topics cover the secondary school phase of learning for students aged 14 to 16.",
-                            clickUrl: "/topics/gcse",
+                            clickUrl: "/topics?view=gcse",
                             buttonText: "View GCSE resources",
                             imageClassName: "backslash-1"
                         }, {
                             title: "A level computer science",
                             subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 19.",
-                            clickUrl: "/topics/a_level",
+                            clickUrl: "/topics?view=a_level",
                             buttonText: "View A level resources",
                             imageClassName: "backslash-2"
                         }]
