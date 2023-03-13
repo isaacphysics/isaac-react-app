@@ -69,7 +69,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
                     {/* TODO Need to handle nested form complaint */}
                     <RS.Form onSubmit={processToken}>
-                        <RS.InputGroup>
+                        <RS.InputGroup className={"separate-input-group"}>
                             <RS.Input
                                 type="text" placeholder="Enter your code in here" value={authToken || undefined}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}

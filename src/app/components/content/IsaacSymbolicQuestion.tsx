@@ -216,7 +216,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             />}
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <RS.InputGroup className="my-2">
+                <RS.InputGroup className="my-2 separate-input-group">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
                               placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">

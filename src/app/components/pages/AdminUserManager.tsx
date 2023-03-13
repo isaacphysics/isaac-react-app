@@ -349,7 +349,7 @@ export const AdminUserManager = () => {
             <RS.CardBody>
                 <h3>Merge user accounts</h3>
                 <FormGroup>
-                    <RS.InputGroup>
+                    <RS.InputGroup className={"separate-input-group"}>
                         <RS.Input
                             type="text"
                             placeholder="User ID to keep"

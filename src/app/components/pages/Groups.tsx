@@ -234,7 +234,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                 </Col>}
             </Row>}
             <Form inline onSubmit={saveUpdatedGroup} className="pt-3">
-                <InputGroup className="w-100">
+                <InputGroup className="w-100 separate-input-group">
                     <Input
                         innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
                         onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}

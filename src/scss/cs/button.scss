@@ -263,3 +263,16 @@
   @include ada-icon-button-base(2rem, 2rem, false);
   background-image: url("/assets/cs/icons/info-white.svg");
 }
+
+.separate-input-group {
+  input {
+    border-radius: 0.25rem !important;
+  }
+  .input-group-append {
+    margin-left: 1rem !important;
+    button {
+      border-radius: 50px !important;
+    }
+  }
+}
+

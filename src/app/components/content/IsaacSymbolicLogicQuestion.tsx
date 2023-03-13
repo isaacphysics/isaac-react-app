@@ -225,7 +225,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             />}
             {!readonly && isStaff(user) && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <InputGroup className="my-2">
+                <InputGroup className="my-2 separate-input-group">
                     <Input type="text" onChange={updateEquation} value={textInput}
                            placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
