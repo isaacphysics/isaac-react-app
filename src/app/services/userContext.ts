@@ -41,7 +41,7 @@ export interface UseUserContextReturnType {
 }
 
 const urlMessage = "URL query parameters";
-const gameboardMessage = "gameboard settings"
+const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
 
 export function useUserContext(): UseUserContextReturnType {
     const existingLocation = useLocation();

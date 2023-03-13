@@ -417,7 +417,7 @@ export const PhyAddGameboardButtons = ({className, redirectBackTo}: {className: 
     const dispatch = useAppDispatch();
     return <>
         <h4 className="mt-4 mb-3">
-            Add a gameboard from ...
+            Add a {siteSpecific("gameboard", "quiz")} from ...
         </h4>
         <Row className={className}>
             <Col md={6} lg={4} className="pt-1">

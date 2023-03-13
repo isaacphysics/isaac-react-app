@@ -1,5 +1,5 @@
 import React from "react";
-import {ifKeyIsEnter, Item, selectOnChange} from "../../../services";
+import {ifKeyIsEnter, Item, selectOnChange, siteSpecific} from "../../../services";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
 import {StyledSelect} from "../inputs/StyledSelect";
 
@@ -75,7 +75,7 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                             >
                                 <title>
-                                    {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                    {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("gameboard", "quiz")} filter`}
                                 </title>
                             </Hexagon>
                         </g>

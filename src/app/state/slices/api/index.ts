@@ -7,7 +7,7 @@ import {
     MEMBERSHIP_STATUS,
     NO_CONTENT,
     NOT_FOUND,
-    QUESTION_CATEGORY
+    QUESTION_CATEGORY, siteSpecific
 } from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
@@ -269,7 +269,7 @@ const isaacApi = createApi({
             }),
             invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Linking the gameboard to your account failed"
+                errorTitle: `Linking the ${siteSpecific("gameboard", "quiz")} to your account failed`
             })
         }),
 
@@ -280,7 +280,7 @@ const isaacApi = createApi({
             }),
             invalidatesTags: ["AllGameboards"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Linking the gameboard to your account failed"
+                errorTitle: `Linking the ${siteSpecific("gameboard", "quiz")} to your account failed`
             })
         }),
 
@@ -291,9 +291,9 @@ const isaacApi = createApi({
             }),
             invalidatesTags: (_, error, boardId) => !error ? [{type: "Gameboard", id: boardId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Gameboard deleted",
-                successMessage: "You have successfully unlinked your account from this gameboard.",
-                errorTitle: "Gameboard deletion failed"
+                successTitle: `${siteSpecific("Gameboard", "Quiz")} deleted`,
+                successMessage: `You have successfully unlinked your account from this ${siteSpecific("gameboard", "quiz")}.`,
+                errorTitle: `${siteSpecific("Gameboard", "Quiz")} deletion failed`
             })
         }),
 

@@ -7,7 +7,7 @@ import {
     Item,
     KEY,
     nthHourOf, PATHS,
-    persistence,
+    persistence, siteSpecific,
     TODAY,
     toTuple
 } from "../../../services";
@@ -41,7 +41,7 @@ export const assignGameboard = createAsyncThunk(
         const appDispatch = dispatch as AppDispatch;
         if (groups.length === 0) {
             appDispatch(showErrorToast(
-                "Gameboard assignment failed",
+                `${siteSpecific("Gameboard", "Quiz")} assignment failed`,
                 "Error: Please choose one or more groups."
             ));
             return rejectWithValue(null);
@@ -53,7 +53,7 @@ export const assignGameboard = createAsyncThunk(
         if (dueDate !== undefined) {
             dueDate?.setHours(0, 0, 0, 0);
             if ((dueDate.valueOf() - today.valueOf()) < 0) {
-                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}));
+                appDispatch(showToast({color: "danger", title: `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date cannot be in the past.", timeout: 5000}));
                 return rejectWithValue(null);
             }
         }
@@ -61,14 +61,14 @@ export const assignGameboard = createAsyncThunk(
         if (scheduledStartDate !== undefined) {
             // Start date can be today, in which case the assignment will be immediately set (if it is past 7am)
             if (nthHourOf(0, scheduledStartDate).valueOf() < nthHourOf(0, new Date()).valueOf()) {
-                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
+                appDispatch(showToast({color: "danger", title: `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Scheduled start date cannot be in the past.", timeout: 5000}));
                 return rejectWithValue(null);
             }
         }
 
         if (dueDate !== undefined && scheduledStartDate !== undefined) {
             if (nthHourOf(0, scheduledStartDate).valueOf() > dueDate.valueOf()) {
-                appDispatch(showToast({color: "danger", title: `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be on or after scheduled start date.", timeout: 5000}));
+                appDispatch(showToast({color: "danger", title: `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`, body: "Error: Due date must be on or after scheduled start date.", timeout: 5000}));
                 return rejectWithValue(null);
             }
         }
@@ -106,7 +106,7 @@ export const assignGameboard = createAsyncThunk(
                 // Show each group assignment error in a separate toast
                 failedIds.forEach(({groupId, errorMessage}) => {
                     appDispatch(showErrorToast(
-                        `Gameboard assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
+                        `${siteSpecific("Gameboard", "Quiz")} assignment to ${groupLookUp.get(groupId) ?? "unknown group"} failed`,
                         errorMessage as string
                     ));
                 });
@@ -139,7 +139,7 @@ export const assignGameboard = createAsyncThunk(
             return newAssignments;
         } else {
             appDispatch(showRTKQueryErrorToastIfNeeded(
-            `Gameboard assignment${groups.length > 1 ? "(s)" : ""} failed`,
+            `${siteSpecific("Gameboard", "Quiz")} assignment${groups.length > 1 ? "(s)" : ""} failed`,
                 response
             ));
             return rejectWithValue(null);
@@ -153,8 +153,8 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
         if (!isDefined(boardId)) {
             // This really shouldn't happen!
             dispatch(showErrorToast(
-                "Gameboard deletion failed",
-                "Gameboard ID is missing: please contact us about this error."
+                `${siteSpecific("Gameboard", "Quiz")} deletion failed`,
+                `${siteSpecific("Gameboard", "Quiz")} ID is missing: please contact us about this error.`
             ) as any);
             return rejectWithValue(null);
         }
@@ -169,13 +169,13 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
                 const hasAssignedGroups = (assignmentsByMe?.filter(a => a.gameboardId === boardId) ?? []).length > 0;
                 if (hasAssignedGroups) {
                     if (reduxState && reduxState.user && reduxState.user.loggedIn && isAdminOrEventManager(reduxState.user)) {
-                        if (!confirm(`Warning: You currently have groups assigned to ${boardTitle}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.`)) {
+                        if (!confirm(`Warning: You currently have groups assigned to ${boardTitle}. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("gameboard", "quiz")} in your assigned gameboards or 'My gameboards' page.`)) {
                             return rejectWithValue(null);
                         }
                     } else {
                         dispatch(showErrorToast(
-                            "Gameboard deletion not allowed",
-                            `You have groups assigned to ${boardTitle}. To delete this gameboard, you must unassign all groups.`
+                            `${siteSpecific("Gameboard", "Quiz")} deletion not allowed`,
+                            `You have groups assigned to ${boardTitle}. To delete this ${siteSpecific("gameboard", "quiz")}, you must unassign all groups.`
                         ) as any);
                         return rejectWithValue(null);
                     }
@@ -184,14 +184,14 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
                 return mutationSucceeded(deleteResponse) ? boardId : rejectWithValue(null);
             } else {
                 dispatch(showErrorToast(
-                    "Gameboard deletion failed",
-                    `Could not fetch assignments to determine if the board deletion is safe.`
+                    `${siteSpecific("Gameboard", "Quiz")} deletion failed`,
+                    `Could not fetch assignments to determine if the ${siteSpecific("gameboard", "quiz")} deletion is safe.`
                 ) as any);
                 return rejectWithValue(null);
             }
         } catch (e) {
             dispatch(showRTKQueryErrorToastIfNeeded(
-                "Gameboard deletion failed",
+                `${siteSpecific("Gameboard", "Quiz")} deletion failed`,
                 e
             ) as any);
             return rejectWithValue(null);

@@ -59,7 +59,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     };
     const assignmentOwnedByMe = assignment.ownerUserId === user.id;
     const assignmentStartDate = getAssignmentStartDate(assignment);
-    const gameboardTitle = assignment.gameboard?.title ?? "No gameboard title";
+    const gameboardTitle = assignment.gameboard?.title ?? `No ${siteSpecific("gameboard", "quiz")} title`;
     const gameboardLink = assignment.gameboardId ? `${PATHS.GAMEBOARD}#${assignment.gameboardId}` : undefined;
     return <Card className={"my-1"}>
         <CardHeader className={"pt-2 pb-0 d-flex text-break"}>
@@ -266,12 +266,12 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                         options={gameboards.map(g => itemise(g.id ?? "", g.title ?? "No gameboard title"))}
                 />
                 {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
-                    This gameboard is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
+                    This {siteSpecific("gameboard", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
                 </Alert>}
                 {selectedGameboard && selectedGameboard?.[0]?.value && boardsById[selectedGameboard[0].value] && boardsById[selectedGameboard[0].value]?.contents && <Card className={"my-1"} >
-                    <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"} gameboard preview</Button></CardHeader>
+                    <CardHeader className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>{showGameboardPreview ? "Hide" : "Show"}{" "}{siteSpecific("gameboard", "quiz")} preview</Button></CardHeader>
                     {showGameboardPreview && gameboardToPreview && <GameboardViewerInner gameboard={gameboardToPreview}/>}
-                    {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide gameboard preview</Button></CardFooter>}
+                    {showGameboardPreview && <CardFooter className={"text-right"}><Button color={"link"} onClick={toggleGameboardPreview}>Hide {siteSpecific("gameboard", "quiz")} preview</Button></CardFooter>}
                 </Card>}
             </Label>
             <Label className="w-100 pb-2">Schedule an assignment start date <span className="text-muted"> (optional)</span>
@@ -508,7 +508,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     // --- End sticky header logic ---
 
     const pageHelp = <span>
-        Use this page to set and manage assignments to your groups. You can assign any gameboard you have saved to your account.
+        Use this page to set and manage assignments to your groups. You can assign any {siteSpecific("gameboard", "quiz")} you have saved to your account.
         <br/>
         Students in the group will be emailed when you set a new assignment.
     </span>;
@@ -516,7 +516,7 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" help={pageHelp}/>
         <h4 className="mt-4 mb-3">
-            Assign a gameboard from...
+            Assign a {siteSpecific("gameboard", "quiz")} from...
         </h4>
         <PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
         <ShowLoadingQuery

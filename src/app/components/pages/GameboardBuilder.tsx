@@ -187,7 +187,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         />
                     </Col>
                     <Col>
-                        <Label htmlFor="gameboard-builder-url">Gameboard ID</Label>
+                        <Label htmlFor="gameboard-builder-url">{siteSpecific("Gameboard", "Quiz")} ID</Label>
                         <Input id="gameboard-builder-url"
                                type="text"
                                placeholder="Optional"

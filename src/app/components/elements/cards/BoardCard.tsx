@@ -53,7 +53,7 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
             {isDefined(assignees) &&
             <UncontrolledTooltip placement={"top"} target={"#" + id}>{assignees.length === 0 ?
                 "No groups have been assigned."
-                : ("Gameboard assigned to: " + assignees.map(g => g.groupName).join(", "))}
+                : (`${siteSpecific("Gameboard", "Quiz")} assigned to: ` + assignees.map(g => g.groupName).join(", "))}
             </UncontrolledTooltip>}
         </span>
     </button>;
@@ -93,9 +93,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     function confirmDeleteBoard() {
         if (hasAssignedGroups) {
             if (isAdminOrEventManager(user)) {
-                alert("Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the gameboard in your assigned gameboards or 'My gameboards' page.");
+                alert(`Warning: You currently have groups assigned to this gameboard. If you delete this your groups will still be assigned but you won't be able to unassign them or see the ${siteSpecific("gameboard", "quiz")} in your assigned ${siteSpecific("gameboards", "quizzes")} or '${siteSpecific("My gameboards", "My quizzes")}' page.`);
             } else {
-                dispatch(showErrorToast("Gameboard Deletion Not Allowed", "You have groups assigned to this gameboard. To delete this gameboard, you must unassign all groups."));
+                dispatch(showErrorToast(`${siteSpecific("Gameboard", "Quiz")} Deletion Not Allowed`, `You have groups assigned to this gameboard. To delete this ${siteSpecific("gameboard", "quiz")}, you must unassign all groups.`));
                 return;
             }
         }

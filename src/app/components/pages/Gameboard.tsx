@@ -165,10 +165,10 @@ export const Gameboard = withRouter(({ location }) => {
     }, [dispatch, gameboard]);
 
     const notFoundComponent = <Container>
-        <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle="Gameboard not found" />
+        <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} not found`} />
         <h3 className="my-4">
             <small>
-                {"We're sorry, we were not able to find a gameboard with the id "}<code>{gameboardId}</code>{"."}
+                {`We're sorry, we were not able to find a ${siteSpecific("Gameboard", "Quiz")} with the id `}<code>{gameboardId}</code>{"."}
             </small>
             {isPhy && <div className="mt-4 text-center">
                 <Button tag={Link} to={PATHS.QUESTION_FINDER} color="primary" outline className="btn-lg">
@@ -183,14 +183,14 @@ export const Gameboard = withRouter(({ location }) => {
         : <Container className="mb-5">
             <ShowLoadingQuery
                 query={gameboardQuery}
-                defaultErrorTitle={`Error fetching gameboard with id: ${gameboardId}`}
+                defaultErrorTitle={`Error fetching ${siteSpecific("gameboard", "quiz")} with id: ${gameboardId}`}
                 ifNotFound={notFoundComponent}
                 thenRender={(gameboard) => {
                     if (showFilter) {
                         return <Redirect to={`${PATHS.QUESTION_FINDER}?${extractFilterQueryString(gameboard)}#${gameboardId}`} />
                     }
                     return <>
-                        <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || "Filter Generated Gameboard"}/>
+                        <TitleAndBreadcrumb currentPageTitle={gameboard && gameboard.title || `Filter Generated ${siteSpecific("Gameboard", "Quiz")}`}/>
                         <GameboardViewer gameboard={gameboard} className="mt-4 mt-lg-5" />
                         {user && isTutorOrAbove(user)
                             ? <Row className="col-8 offset-2">

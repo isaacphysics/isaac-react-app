@@ -12,7 +12,7 @@ import {
     svgLine,
     svgMoveTo,
     TAG_ID,
-    useDeviceSize
+    useDeviceSize, siteSpecific
 } from "../../../services";
 import {calculateHexagonProportions, Hexagon, HexagonProportions} from "./Hexagon";
 import {HexagonConnection} from "./HexagonConnection";
@@ -125,7 +125,7 @@ export function HierarchyFilterHexagonal({tiers, choices, selections, setTierSel
                             tabIndex={isComingSoon ? -1 : 0} onClick={isComingSoon ? noop : selectValue} onKeyPress={isComingSoon ? noop : ifKeyIsEnter(selectValue)}
                         >
                             {!isComingSoon && <title>
-                                {`${isSelected ? "Remove" : "Add"} the ${tier.name.toLowerCase()} "${choice.label}" ${isSelected ? "from" : "to"} your gameboard filter`}
+                                {`${isSelected ? "Remove" : "Add"} the ${tier.name.toLowerCase()} "${choice.label}" ${isSelected ? "from" : "to"} your ${siteSpecific("gameboard", "quiz")} filter`}
                             </title>}
                         </Hexagon>
                         {isComingSoon && <title>
