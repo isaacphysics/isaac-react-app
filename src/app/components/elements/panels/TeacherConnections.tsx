@@ -60,7 +60,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
             <h3>
                 <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
-                    The teachers that you are connected to can view your Isaac assignment progress.
+                    The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
                 </RS.UncontrolledTooltip>
             </h3>
 
@@ -127,12 +127,12 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         <h3>
                             <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
                             <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
-                                These are the students who have shared their Isaac data with you.
+                                These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
                                 These students are also able to view your name and email address on their Teacher connections page.
                             </RS.UncontrolledTooltip>
                         </h3>
                         <p>
-                            You can invite students to share their Isaac data with you through the {" "}
+                            You can invite students to share their {siteSpecific("Isaac", "Ada")} data with you through the {" "}
                             <Link to="/groups">group management page</Link>.
                         </p>
                     </RS.Col>
@@ -188,7 +188,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </span>
                         <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
                             These are the groups you are currently a member of.
-                            Groups on Isaac let teachers set assignments to multiple students in one go.
+                            Groups on {siteSpecific("Isaac", "Ada")} let teachers set assignments to multiple students in one go.
                         </RS.UncontrolledTooltip>
                     </h3>
                     <p>

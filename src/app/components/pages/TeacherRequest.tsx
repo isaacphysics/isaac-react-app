@@ -27,7 +27,7 @@ import {
     isPhy,
     isTeacherOrAbove,
     schoolNameWithPostcode,
-    SITE_TITLE,
+    SITE_TITLE, siteSpecific,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
@@ -57,7 +57,7 @@ export const TeacherRequest = () => {
     const urn = user?.loggedIn && user.schoolId || "";
     const subject = "Teacher Account Request";
     const message = "Hello,\n\n" +
-        "Please could you convert my Isaac account into a teacher account.\n\n" +
+        `Please could you convert my ${siteSpecific("Isaac", "Ada")} account into a teacher account.` + "\n\n" +
         "My school is: " + school + "\n" +
         "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\n" +
         "Any other information: " + otherInformation + "\n\n" +

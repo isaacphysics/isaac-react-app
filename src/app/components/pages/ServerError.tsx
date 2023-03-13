@@ -4,7 +4,7 @@ import {Container} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
 import ReactGA4 from "react-ga4";
-import {WEBMASTER_EMAIL} from "../../services";
+import {siteSpecific, WEBMASTER_EMAIL} from "../../services";
 
 export const ServerError = () => {
 
@@ -21,7 +21,7 @@ export const ServerError = () => {
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" />
 
-            <h3 className="my-4"><small>{"We're sorry, but an error has occurred on the Isaac server!"}</small></h3>
+            <h3 className="my-4"><small>{`We're sorry, but an error has occurred on the ${siteSpecific("Isaac", "Ada")} server!`}</small></h3>
 
             <h3>
                 <small>

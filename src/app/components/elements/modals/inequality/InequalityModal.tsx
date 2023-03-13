@@ -3,7 +3,7 @@ import {Inequality, WidgetSpec} from "inequality";
 import {
     isDefined,
     parsePseudoSymbolicAvailableSymbols,
-    sanitiseInequalityState
+    sanitiseInequalityState, siteSpecific
 } from "../../../../services";
 import {IsaacContentValueOrChildren} from "../../../content/IsaacContentValueOrChildren";
 import {ContentDTO} from "../../../../../IsaacApiTypes";
@@ -509,7 +509,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             >Hide Question</div>
         </div>}
 
-        <div className="orientation-warning">The Isaac Equation Editor may only be used in landscape mode. Please rotate your device.</div>
+        <div className="orientation-warning">The {siteSpecific("Isaac", "Ada")} Equation Editor may only be used in landscape mode. Please rotate your device.</div>
 
         <InequalityMenu
             menuItems={menuItems}

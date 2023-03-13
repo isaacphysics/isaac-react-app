@@ -11,7 +11,7 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin, isPhy} from "../../services";
+import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
 import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
@@ -44,7 +44,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
     const updateState = contentVersion && contentVersion.updateState || null;
 
     return <RS.Container id="admin-page">
-        <TitleAndBreadcrumb currentPageTitle="Isaac administration" breadcrumbTitleOverride="Admin tools" />
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} administration`} breadcrumbTitleOverride="Admin tools" />
 
         <div className="py-4">
 
