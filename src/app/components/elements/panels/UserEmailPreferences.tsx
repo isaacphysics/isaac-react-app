@@ -32,7 +32,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         ),
         news: siteSpecific(
             "New content and website feature updates, as well as interesting news about Isaac.",
-            "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
+            "Be the first to know about new topics and platform features."
         ),
         events: siteSpecific(
             "Information about new virtual or real world physics events.",
