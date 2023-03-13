@@ -230,12 +230,12 @@ const CSTable = (props: GameboardsTableProps) => {
                         Completion {boardOrder == BoardOrder.completion ? sortIcon.ascending : boardOrder == BoardOrder["-completion"] ? sortIcon.descending : sortIcon.sortable}
                     </button>
                 </th>
-                <th colSpan={4}>
+                <th colSpan={4} className="w-100">
                     <button className="table-button" onClick={() => boardOrder == BoardOrder.title ? setBoardOrder(BoardOrder["-title"]) : setBoardOrder(BoardOrder.title)}>
                         Quiz name {boardOrder == BoardOrder.title ? sortIcon.ascending : boardOrder == BoardOrder["-title"] ? sortIcon.descending : sortIcon.sortable}
                     </button>
                 </th>
-                <th colSpan={2}>
+                <th colSpan={2} className="long-titled-col">
                     Stages and Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
                     <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
                         Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />

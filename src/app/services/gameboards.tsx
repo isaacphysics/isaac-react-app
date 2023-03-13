@@ -27,7 +27,7 @@ export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (board.tags && board.tags.includes("ISAAC_BOARD")) {
         return siteSpecific("Isaac", "Ada");
     }
-    if (user.id == board.ownerUserId) {
+    if (user && (user.id == board.ownerUserId)) {
         return "Me";
     }
     return "Someone else";
