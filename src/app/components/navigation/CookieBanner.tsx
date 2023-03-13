@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import Cookies from 'js-cookie';
 import {logAction, useAppDispatch} from "../../state";
+import {isPhy, siteSpecific} from "../../services";
 
 const COOKIE_COOKIE = "isaacCookiesAccepted";
 
@@ -25,7 +26,9 @@ export const CookieBanner = () => {
             <RS.Row style={{alignItems: "center"}}>
                 <RS.Col xs={12} sm={2} md={1}>
                     <h3 className="text-center">
-                        <span role="presentation" aria-labelledby="cookies-heading">ℹ</span>
+                        <span role="presentation" aria-labelledby="cookies-heading">
+                            {siteSpecific("ℹ", <img className={"mt-n1 mt-sm-1"} src={"/assets/cs/icons/info.svg"} style={{height: "1.5rem"}}/>)}
+                        </span>
                         <span id="cookies-heading" className="d-inline-block d-sm-none">&nbsp;Cookies</span>
                     </h3>
                 </RS.Col>
@@ -36,7 +39,7 @@ export const CookieBanner = () => {
                     Do you agree to participate in this research?</small>
                 </RS.Col>
                 <RS.Col xs={12} md={3} className="text-center">
-                    <RS.Button color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
+                    <RS.Button color="primary" outline={isPhy} className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
                         I Agree
                     </RS.Button>
                 </RS.Col>

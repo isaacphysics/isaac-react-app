@@ -49,7 +49,7 @@ export const EmailVerificationBanner = () => {
                 {(status == "DELIVERY_FAILED") &&
                     <RS.Col xs={12} sm={10} md={11}>
                         <small>One or more email(s) sent to your email
-                            address failed. This means you won&apos;t receive emails from Isaac, and may prevent you
+                            address failed. This means you won&apos;t receive emails from {siteSpecific("Isaac", "Ada")}, and may prevent you
                             regaining access to your account. <br/>To start receiving emails again, update your email
                             address on your <Link to="/account">My account</Link> page. If you believe this is in
                             error, please <a href={`mailto:${WEBMASTER_EMAIL}`}>email us</a>.
