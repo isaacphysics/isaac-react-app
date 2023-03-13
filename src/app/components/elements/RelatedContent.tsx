@@ -21,6 +21,7 @@ import {
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {ConceptGameboardButton} from "./ConceptGameboardButton";
+import classNames from "classnames";
 
 interface RelatedContentProps {
     content: ContentSummaryDTO[];
@@ -171,21 +172,24 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         const audienceViews = filterAudienceViewsByProperties(determineAudienceViews(contentSummary.audience), AUDIENCE_DISPLAY_FIELDS);
         return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link
+                className={classNames({"btn-link btn": isAda})}
                 to={getURLForContent(contentSummary)}
                 onClick={() => {
                     dispatch(logAction(getEventDetails(contentSummary, parentPage)))
                 }}
             >
-                {contentSummary.title}
-                {audienceViews.length > 0 && " ("}
-                {audienceViews.map(av => {
-                    let result = "";
-                    if (av.stage) {result += stageLabelMap[av.stage]}
-                    if (av.stage && av.difficulty) {result += " - "}
-                    if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
-                    return result;
-                }).join(", ")}
-                {audienceViews.length > 0 && ")"}
+                <span className={classNames({"font-size-1 font-weight-regular": isAda})}>
+                    {contentSummary.title}
+                    {audienceViews.length > 0 && " ("}
+                    {audienceViews.map(av => {
+                        let result = "";
+                        if (av.stage) {result += stageLabelMap[av.stage]}
+                        if (av.stage && av.difficulty) {result += " - "}
+                        if (av.difficulty) {result += difficultyShortLabelMap[av.difficulty]}
+                        return result;
+                    }).join(", ")}
+                    {audienceViews.length > 0 && ")"}
+                </span>
             </Link>
         </ListGroupItem>
     };
