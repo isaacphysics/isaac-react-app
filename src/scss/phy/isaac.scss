@@ -132,14 +132,13 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/topic";
 @import "../common/search";
 @import "../common/my-progress";
-@import "../common/gameboard";
+@import "gameboard";
 @import "groups";
 @import "../common/events";
 @import "../common/fasttrack";
 @import "../common/scroll";
 @import "assignment-progress";
 @import "books";
-@import "gameboard";
 @import "menu-page-phy";
 @import "../common/quiz";
 
