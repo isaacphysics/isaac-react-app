@@ -3,7 +3,7 @@ import {getMyProgress, selectors, useAppDispatch, useAppSelector} from "../../st
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {isTeacherOrAbove, PATHS} from "../../services";
+import {isTeacherOrAbove, PATHS, siteSpecific} from "../../services";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
@@ -110,7 +110,7 @@ export const TeacherTools = () => {
                                     title="CPD events" imageSource="/assets/card02.png"
                                     linkDestination="/events" linkText="View our events"
                                 >
-                                    Receive guidance on how to use isaaccomputerscience.org by attending our professional development events.
+                                    Receive guidance on how to use adacomputerscience.org by attending our professional development events.
                                 </LinkCard>
                             </RS.ListGroupItem>
 
