@@ -60,52 +60,52 @@ $yellow-700: #FFFFF5;
 $highlight-text-light: $cs-white;
 $highlight-text-dark: $cs-black;
 
-// Content highlight classes
-.hi-dark-pink {
+// Content highlight classes, doubled up for specificity
+.hi-dark-pink.hi-dark-pink {
     background-color: $dark-pink-100;
     color: $highlight-text-light;
 }
-.hi-dark-pink-50 {
+.hi-dark-pink-50.hi-dark-pink-50 {
     background-color: $dark-pink-400;
     color: $highlight-text-light;
 }
-.hi-dark-pink-25 {
+.hi-dark-pink-25.hi-dark-pink-25 {
     background-color: $dark-pink-400;
     color: $highlight-text-dark;
 }
-.hi-cyan {
+.hi-cyan.hi-cyan {
     background-color: $cyan-100;
     color: $highlight-text-dark;
 }
-.hi-cyan-50 {
+.hi-cyan-50.hi-cyan-50 {
     background-color: $cyan-400;
     color: $highlight-text-dark;
 }
-.hi-cyan-25 {
+.hi-cyan-25.hi-cyan-25 {
     background-color: $cyan-600;
     color: $highlight-text-dark;
 }
-.hi-pink {
+.hi-pink.hi-pink {
     background-color: $pink-100;
     color: $highlight-text-light;
 }
-.hi-pink-50 {
+.hi-pink-50.hi-pink-50 {
     background-color: $pink-400;
     color: $highlight-text-dark;
 }
-.hi-pink-25 {
+.hi-pink-25.hi-pink-25 {
     background-color: $pink-600;
     color: $highlight-text-dark;
 }
-.hi-yellow {
+.hi-yellow.hi-yellow {
     background-color: $yellow-100;
     color: $highlight-text-dark;
 }
-.hi-yellow-50 {
+.hi-yellow-50.hi-yellow-50 {
     background-color: $yellow-400;
     color: $highlight-text-dark;
 }
-.hi-yellow-25 {
+.hi-yellow-25.hi-yellow-25 {
     background-color: $yellow-600;
     color: $highlight-text-dark;
 }
