@@ -99,7 +99,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                 {<Options/>}
                 {isVisible && <Row>
                     <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
-                        <Alert color={isAda ? "hide" : "secondary"}>
+                        <Alert className={"quick-q-alert"} color={isAda ? "hide" : "secondary"}>
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
                     </Col>

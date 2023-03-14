@@ -143,7 +143,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     <div className="numeric-value w-100 w-sm-50 w-md-100 w-lg-50">
                         <Label className="w-100">
                             Value <br />
-                            <InputGroup className={"feedback-zone nq-feedback"}>
+                            <InputGroup className={"feedback-zone nq-feedback separate-input-group"}>
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                        onChange={updateValue} readOnly={readonly}
                                 />

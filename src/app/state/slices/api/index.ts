@@ -190,7 +190,7 @@ const isaacApi = createApi({
                 totalResults: response.totalResults ?? 0
             }),
             onQueryStarted: onQueryLifecycleEvents({
-               errorTitle: "Loading gameboards failed"
+               errorTitle: `Loading ${siteSpecific("gameboards", "quizzes")} failed`
             })
         }),
 
@@ -234,7 +234,7 @@ const isaacApi = createApi({
                         }));
                     }
                 },
-                errorTitle: "Error creating gameboard"
+                errorTitle: `Error creating ${siteSpecific("gameboard", "quiz")}`
             })
         }),
 
@@ -257,7 +257,7 @@ const isaacApi = createApi({
                 }
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Error creating temporary gameboard"
+                errorTitle: `Error creating temporary ${siteSpecific("gameboard", "quiz")}`
             })
         }),
         
@@ -375,9 +375,9 @@ const isaacApi = createApi({
                         allAssignmentsPromise.undo(); groupAssignmentsPromise.undo();
                     }};
                 },
-                successTitle: "Assignment deleted",
-                successMessage: "This assignment has been unset successfully.",
-                errorTitle: "Assignment deletion failed"
+                successTitle: siteSpecific("Assignment deleted", "Quiz unassigned"),
+                successMessage: siteSpecific("This assignment has been unset successfully.", "You have successfully unassigned the quiz"),
+                errorTitle: siteSpecific("Assignment deletion failed", "Quiz unassignment failed")
             })
         }),
 

@@ -81,7 +81,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                         <ShowLoading until={displayVersion !== null} thenRender={() => {
                             return displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING &&
                                 <RS.Form onSubmit={startVersionUpdate}>
-                                    <RS.InputGroup>
+                                    <RS.InputGroup className={"separate-input-group"}>
                                         <RS.Input
                                             aria-label="Live content commit SHA"
                                             type="text" value={displayVersion}

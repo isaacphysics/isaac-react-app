@@ -1,7 +1,7 @@
 import React from "react";
 import {Container, Col, Row} from "reactstrap";
 import {ListGroupFooter} from "../../elements/list-groups/ListGroupFooter";
-import {ListGroupSocial} from "../../elements/list-groups/ListGroupSocial";
+import {SocialLinks} from "../../elements/list-groups/SocialLinks";
 import {Link} from "react-router-dom";
 
 const ExternalLink = ({href, children}: {href: string; children: any}) => (
@@ -43,7 +43,7 @@ export const FooterPhy = () => (
                         <ListGroupFooter />
                     </Col>
                     <Col md="5" lg="3" className="pt-5 mt-4 mt-lg-0">
-                        <ListGroupSocial />
+                        <SocialLinks />
                     </Col>
                 </Row>
             </Container>

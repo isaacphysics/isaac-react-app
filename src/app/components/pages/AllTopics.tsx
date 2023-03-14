@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Link, useHistory} from "react-router-dom";
-import {Badge, Button, Col, Container, Row} from "reactstrap";
+import {Link, useHistory, useLocation} from "react-router-dom";
+import {Badge, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
 import {
-    isAda,
+    history,
     KEY,
     persistence,
     STAGE,
@@ -19,6 +19,8 @@ import {Redirect} from "react-router";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
+import queryString from "query-string";
+import {Tabs} from "../elements/Tabs";
 
 export function AllTopicsWithoutAStage() {
     const history = useHistory();
@@ -101,21 +103,37 @@ const topicColumn = (subTags: Tag[], stage: STAGE.ALL | STAGE.A_LEVEL | STAGE.GC
 export const AllTopics = () => {
     const subcategoryTags = tags.allSubcategoryTags;
 
-    const {view} = useQueryParams(true);
+    //const existingLocation = useLocation();
+    const {stage: view, setStage: setTransientStage} = useUserContext();
     const initialStage = ([STAGE.A_LEVEL, STAGE.GCSE, STAGE.ALL] as any[]).includes(view)
         ? view as STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL
         : STAGE.ALL;
     const [stage, setStage] = useState<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>(initialStage);
 
+    // TODO update users transient user context so they see the correct topics etc. when clicking through?
+    // useEffect(() => {
+    //     setTransientStage(stage);
+    //     const actualParams = queryString.parse(window.location.search);
+    //     if (stage !== actualParams.stage) {
+    //         try {
+    //             history.replace({
+    //                 ...existingLocation,
+    //                 search: queryString.stringify({
+    //                     ...actualParams,
+    //                     stage,
+    //                 }, {encode: false})
+    //             });
+    //         } catch (e) {
+    //             // This is to handle the case where the existingLocation pathname is invalid, i.e. "isaacphysics.org//".
+    //             // In that case history.replace(...) throws an exception, and it will do this while the ErrorBoundary is
+    //             // trying to render, causing a loop and a spike in client-side errors.
+    //         }
+    //     }
+    // }, [stage]);
+
     const charToCutAt = "D";
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
-
-    const title = ({
-        [STAGE.ALL]: "Topics",
-        [STAGE.A_LEVEL]: "A Level topics",
-        [STAGE.GCSE]: "GCSE topics"
-    })[stage];
 
     {/* FIXME ADA this is different to what Dan F provided, since the formats of the topic/exam spec pages have changed */}
     const metaDescription = ({
@@ -124,33 +142,58 @@ export const AllTopics = () => {
         [STAGE.GCSE]: "Discover our free GCSE computer science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn or revise for your exams with us today."
     })[stage];
 
-    return <div id={"topics-bg"}>
-        <Container className={"mb-4"}>
-            <TitleAndBreadcrumb currentPageTitle={title} />
-            <MetaDescription description={metaDescription} />
+    const tabs = {
+        ["All topics"]: <>
             <Row>
-                <Col xs={12} md={4} className={"text-center"}>
-                    <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.ALL)} outline={stage !== STAGE.ALL}>All topics</Button>
-                </Col>
-                <Col xs={12} md={4} className={"text-center mt-3 mt-md-0"}>
-                    <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.A_LEVEL)} outline={stage !== STAGE.A_LEVEL}>A Level topics</Button>
-                </Col>
-                <Col xs={12} md={4} className={"text-center mt-3 mt-md-0"}>
-                    <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.GCSE)} outline={stage !== STAGE.GCSE}>GCSE topics</Button>
-                </Col>
-            </Row>
-            <hr/>
-            <Row>
-                <Col lg={{size: 8, offset: 2}} className="pt-md-4">
-                    <PageFragment fragmentId={`${stage}_all_topics`} ifNotFound={RenderNothing} />
+                <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">
+                    <PageFragment fragmentId={`${STAGE.ALL}_all_topics`} ifNotFound={RenderNothing} />
                 </Col>
             </Row>
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
-                    {topicColumn(firstColTags, stage)}
-                    {topicColumn(secondColTags, stage)}
+                    {topicColumn(firstColTags, STAGE.ALL)}
+                    {topicColumn(secondColTags, STAGE.ALL)}
                 </Col>
             </Row>
+        </>,
+        ["A Level topics"]: <>
+            <Row>
+                <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">
+                    <PageFragment fragmentId={`${STAGE.A_LEVEL}_all_topics`} ifNotFound={RenderNothing} />
+                </Col>
+            </Row>
+            <Row>
+                <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
+                    {topicColumn(firstColTags, STAGE.A_LEVEL)}
+                    {topicColumn(secondColTags, STAGE.A_LEVEL)}
+                </Col>
+            </Row>
+        </>,
+        ["GCSE topics"]: <>
+            <Row>
+                <Col lg={{size: 8, offset: 2}} className="pt-3 pt-md-4">
+                    <PageFragment fragmentId={`${STAGE.GCSE}_all_topics`} ifNotFound={RenderNothing} />
+                </Col>
+            </Row>
+            <Row>
+                <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
+                    {topicColumn(firstColTags, STAGE.GCSE)}
+                    {topicColumn(secondColTags, STAGE.GCSE)}
+                </Col>
+            </Row>
+        </>
+    };
+
+    return <div id={"topics-bg"}>
+        <Container className={"mb-4"}>
+            <TitleAndBreadcrumb currentPageTitle={"Topics"} />
+            <MetaDescription description={metaDescription} />
+            <Tabs style={"buttons"} activeTabOverride={[STAGE.ALL, STAGE.A_LEVEL, STAGE.GCSE].indexOf(stage) + 1}
+                  onActiveTabChange={(activeTab) => setStage(([STAGE.ALL, STAGE.A_LEVEL, STAGE.GCSE].at(activeTab - 1) ?? STAGE.ALL) as STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL)}
+                  className={"mt-3"}
+            >
+                {tabs}
+            </Tabs>
         </Container>
     </div>;
 };

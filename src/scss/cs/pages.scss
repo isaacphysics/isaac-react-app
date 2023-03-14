@@ -22,9 +22,12 @@
 }
 
 // Gameboard filter page
-#gameboard-section {
-  background: $cs-white;
-  #gameboard-title-section {}
+#gameboard-generator {
+  z-index: 0;
+  #gameboard-section {
+    background: $cs-white;
+    #gameboard-title-section {}
+  }
 }
 
 // My quizzes page

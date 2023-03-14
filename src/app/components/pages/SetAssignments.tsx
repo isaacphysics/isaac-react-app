@@ -170,6 +170,11 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
         }
     }
 
+    const description = siteSpecific(
+        "Manage assignment of groups to the selected gameboard",
+        "Select a group to which to assign the quiz"
+    );
+
     return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
         <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
             <button role={"button"} className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggle}>
@@ -179,7 +184,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
             {board?.title}
         </ModalHeader>
         <ModalBody>
-            <p className="px-1">Manage assignment of groups to the selected {siteSpecific("gameboard", "quiz")}</p>
+            <p className="px-1">{description}</p>
             <hr className="text-center" />
             <AssignGroup {...props} />
             <hr className="text-center" />

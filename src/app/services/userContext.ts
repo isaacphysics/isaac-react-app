@@ -25,15 +25,17 @@ import {
 } from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {AppState, useAppSelector} from "../state";
+import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
 import {Immutable} from "immer";
 
 export interface UseUserContextReturnType {
-    examBoard: EXAM_BOARD;
     stage: STAGE;
+    setStage: (stage: STAGE) => void;
+    examBoard: EXAM_BOARD;
+    setExamBoard: (stage: EXAM_BOARD) => void;
     showOtherContent?: boolean;
     preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
     preferredBooleanNotation?: BOOLEAN_NOTATION;
@@ -44,6 +46,7 @@ const urlMessage = "URL query parameters";
 const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
 
 export function useUserContext(): UseUserContextReturnType {
+    const dispatch = useAppDispatch();
     const existingLocation = useLocation();
     const queryParams = useQueryParams(true);
 
@@ -52,6 +55,9 @@ export function useUserContext(): UseUserContextReturnType {
         useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
+
+    const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
+    const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
     const explanation: UseUserContextReturnType["explanation"] = {};
 
@@ -161,7 +167,7 @@ export function useUserContext(): UseUserContextReturnType {
     }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
 
     return {
-        stage, examBoard, explanation,
+        stage, setStage, examBoard, setExamBoard, explanation,
         showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation
     };
 }

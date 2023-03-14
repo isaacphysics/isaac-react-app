@@ -15,7 +15,6 @@
   }
   &:active {
     color: $text-color !important;
-    text-decoration: none !important;
     border-color: $active-color !important;
     background-color: $active-color !important;
     box-shadow: none !important;
@@ -47,7 +46,6 @@
   }
   &:active {
     color: $active-color !important;
-    text-decoration: none !important;
     border-color: $active-color !important;
     background-color: transparent !important;
     box-shadow: none !important;
@@ -135,7 +133,6 @@
     }
     &:active {
       color: $light-active-dark-pink;
-      text-decoration: none;
     }
     &:focus-visible {
       outline: 2px solid $focus-blue !important;
@@ -262,4 +259,55 @@
 .btn.confidence-help {
   @include ada-icon-button-base(2rem, 2rem, false);
   background-image: url("/assets/cs/icons/info-white.svg");
+}
+
+// Used to visually separate the button from the input in an input group (see groups page for example)
+.separate-input-group {
+  input {
+    border-radius: 0.25rem !important;
+  }
+  .input-group-append {
+    margin-left: 1rem !important;
+    button {
+      border-radius: 50px !important;
+    }
+  }
+}
+
+.selector-tabs {
+  z-index: 0;
+  position: relative;
+  button.btn-secondary {
+    background: none !important;
+    z-index: 2;
+    &:hover, &:active {
+      background: none !important;
+    }
+    &:hover ~ .glider {
+      background-color: $light-hover-dark-pink !important;
+      border-color: $light-hover-dark-pink !important;
+    }
+    &:active ~ .glider {
+      background-color: $light-active-dark-pink !important;
+      border-color: $light-active-dark-pink !important;
+    }
+  }
+  button:not(:first-of-type) {
+    border-left: none !important;
+  }
+  button:not(:last-of-type) {
+    border-right: none !important;
+  }
+  button:last-of-type {
+    border-top-right-radius: 50px !important;
+    border-bottom-right-radius: 50px !important;
+  }
+  .glider {
+    @extend .btn;
+    @extend .btn-secondary;
+    transition-property: transform, width;
+    position: absolute;
+    height: 100%;
+    z-index: 0;
+  }
 }
