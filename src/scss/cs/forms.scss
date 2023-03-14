@@ -48,6 +48,11 @@ input, textarea {
   }
 }
 
+// Make sure font isn't clipped in input boxes - FIXME might have unintended effects for multiline inputs or something?
+input {
+  line-height: 50px !important;
+}
+
 .basic-multi-select {
   .select__control.select__control--is-focused {
     box-shadow: 0 0 0 3px $focus-blue;

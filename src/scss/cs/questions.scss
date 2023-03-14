@@ -64,3 +64,12 @@
   background-color: $cs-cultured;
   margin-top: 1rem;
 }
+
+// FIXME ADA design of numeric questions needs seeing to
+.feedback-zone {
+  &.nq-feedback {
+    .feedback-box {
+      right: 90px;
+    }
+  }
+}
