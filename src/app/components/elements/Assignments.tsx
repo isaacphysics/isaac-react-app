@@ -141,7 +141,7 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             }
             {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
             <Button className={"text-nowrap mt-2 d-none d-md-block d-lg-none"} size={"sm"} outline tag={Link} to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
-                View {siteSpecific("assignments", "quizzes")}
+                View quiz
             </Button>
         </Col>
         <Col className={"ml-auto text-right d-lg-block d-md-none d-block"}>

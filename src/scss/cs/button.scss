@@ -15,7 +15,6 @@
   }
   &:active {
     color: $text-color !important;
-    text-decoration: none !important;
     border-color: $active-color !important;
     background-color: $active-color !important;
     box-shadow: none !important;
@@ -47,7 +46,6 @@
   }
   &:active {
     color: $active-color !important;
-    text-decoration: none !important;
     border-color: $active-color !important;
     background-color: transparent !important;
     box-shadow: none !important;
@@ -135,7 +133,6 @@
     }
     &:active {
       color: $light-active-dark-pink;
-      text-decoration: none;
     }
     &:focus-visible {
       outline: 2px solid $focus-blue !important;

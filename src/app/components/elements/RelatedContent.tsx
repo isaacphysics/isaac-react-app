@@ -68,7 +68,7 @@ function getURLForContent(content: ContentSummaryDTO) {
     return `/${documentTypePathPrefix[content.type as DOCUMENT_TYPE]}/${content.id}`
 }
 
-function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
+function renderQuestionsCS(allQuestions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
     const halfWayIndex = Math.ceil(allQuestions.length / 2) - 1;
     const firstColQuestions = allQuestions.filter((q, i) => i <= halfWayIndex);
     const secondColQuestions = allQuestions.filter((q, i) => i > halfWayIndex);
@@ -78,16 +78,17 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
         <div className="w-100 d-flex">
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
                 <Row className="related-questions related-title">
-                    <Col className={"col-auto"}>
-                        <h5 className="my-2">Related questions</h5>
+                    <Col xs={12} sm={"auto"}>
+                        <img className={"related-q-icon mt-n2 ml-2 mr-3"} src={"/assets/cs/icons/question-not-started.svg"}/>
+                        <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
-                    {showConceptGameboardButton && <Col className={"ml-auto col-auto vertical-center text-right"}>
+                    {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ml-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
                         <ConceptGameboardButton conceptId={conceptId}/>
                     </Col>}
                 </Row>
                 <hr/>
                 {/* Large devices - multi column */}
-                <div className="d-none d-lg-flex">
+                <div className="d-none d-lg-flex text-left">
                     <ListGroup className="w-50">
                         {firstColQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
@@ -96,7 +97,7 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
                     </ListGroup>
                 </div>
                 {/* Small devices - single column */}
-                <div className="d-lg-none">
+                <div className="d-lg-none text-left">
                     <ListGroup>
                         {allQuestions.map(contentSummary => renderItem(contentSummary))}
                     </ListGroup>
@@ -106,7 +107,7 @@ function renderQuestions(allQuestions: ContentSummaryDTO[], renderItem: RenderIt
     </div>
 }
 
-function renderConceptsAndQuestions(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
+function renderConceptsAndQuestionsPhy(concepts: ContentSummaryDTO[], questions: ContentSummaryDTO[], renderItem: RenderItemFunction, conceptId: string, showConceptGameboardButton: boolean) {
     if (concepts.length == 0 && questions.length == 0) return null;
     return <div className="d-flex align-items-stretch flex-wrap no-print">
         <div className="w-100 w-lg-50 d-flex">
@@ -196,8 +197,8 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
 
     return siteSpecific(
         // Physics
-        renderConceptsAndQuestions(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
+        renderConceptsAndQuestionsPhy(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
         // Computer Science
-        renderQuestions(questions, makeListGroupItem, conceptId, showConceptGameboardButton)
+        renderQuestionsCS(questions, makeListGroupItem, conceptId, showConceptGameboardButton)
     );
 }

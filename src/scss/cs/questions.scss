@@ -29,7 +29,9 @@
 .validation-response-panel {
   text-align: left;
   &.correct {
-    background: $cyan-300;
+    background: $cyan-600;
+    color: $cs-black;
+    border-top: none;
   }
 }
 
@@ -71,5 +73,13 @@
     .feedback-box {
       right: 90px;
     }
+  }
+}
+
+.related-questions {
+  .related-q-icon {
+    display: inline-block;
+    height: auto;
+    width: 2rem;
   }
 }
