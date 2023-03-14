@@ -280,11 +280,19 @@
 .selector-tabs {
   z-index: 0;
   position: relative;
-  button {
+  button.btn-secondary {
     background: none !important;
     z-index: 2;
     &:hover, &:active {
       background: none !important;
+    }
+    &:hover ~ .glider {
+      background-color: $light-hover-dark-pink !important;
+      border-color: $light-hover-dark-pink !important;
+    }
+    &:active ~ .glider {
+      background-color: $light-active-dark-pink !important;
+      border-color: $light-active-dark-pink !important;
     }
   }
   button:not(:first-of-type) {
