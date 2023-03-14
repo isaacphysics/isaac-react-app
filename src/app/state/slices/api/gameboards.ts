@@ -97,10 +97,17 @@ export const assignGameboard = createAsyncThunk(
             const failedIds = assigmentStatuses.filter(a => isDefined(a.errorMessage));
             // Handle user feedback depending on whether some groups failed to assign or not
             if (failedIds.length === 0) {
-                const successMessage = successfulIds.length > 1 ? "All assignments have been saved successfully." : "This assignment has been saved successfully."
                 appDispatch(showSuccessToast(
-                    `Assignment${successfulIds.length > 1 ? "s" : ""} saved`,
-                    successMessage
+                    siteSpecific(
+                        `Assignment${successfulIds.length > 1 ? "s" : ""} saved`,
+                        "Quiz assigned"
+                    ),
+                    siteSpecific(
+                        successfulIds.length > 1
+                            ? "All assignments have been saved successfully."
+                            : "This assignment has been saved successfully.",
+                        "Quiz assigned successfully."
+                    )
                 ));
             } else {
                 // Show each group assignment error in a separate toast
@@ -114,9 +121,17 @@ export const assignGameboard = createAsyncThunk(
                 if (failedIds.length === assigmentStatuses.length) {
                     return rejectWithValue(null);
                 } else {
-                    const partialSuccessMessage = successfulIds.length > 1 ? "Some assignments were saved successfully." : `Assignment to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`
+                    const partialSuccessMessage = siteSpecific(
+                        successfulIds.length > 1
+                            ? "Some assignments were saved successfully."
+                            : `Assignment to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`,
+                        "The quiz was assigned to some groups successfully."
+                    );
                     appDispatch(showSuccessToast(
-                        `Assignment${successfulIds.length > 1 ? "s" : ""} saved`,
+                        siteSpecific(
+                            `Assignment${successfulIds.length > 1 ? "s" : ""} saved`,
+                            "Quiz assigned"
+                        ),
                         partialSuccessMessage
                     ));
                 }
