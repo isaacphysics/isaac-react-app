@@ -49,11 +49,11 @@ export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
 export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
     "UA-122616705-1",
-    "UA-137475074-1"
+    "UA-260507153-1"
 );
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
     "G-VE7RLWEL60",
-    "G-H95WP5C8DR"
+    "G-F6BZK5SYVN"
 );
 
 export const SOCIAL_LINKS = siteSpecific(
