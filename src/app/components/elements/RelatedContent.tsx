@@ -79,7 +79,7 @@ function renderQuestionsCS(allQuestions: ContentSummaryDTO[], renderItem: Render
             <div className="flex-fill simple-card my-3 p-3 text-wrap">
                 <Row className="related-questions related-title">
                     <Col xs={12} sm={"auto"}>
-                        <img className={"related-q-icon mt-n2 mx-2"} src={"/assets/cs/icons/question-not-started.svg"}/>
+                        <img className={"related-q-icon mt-n2 ml-2 mr-3"} src={"/assets/cs/icons/question-not-started.svg"}/>
                         <h3 className="d-inline-block mt-2">Related questions</h3>
                     </Col>
                     {showConceptGameboardButton && <Col xs={12} sm={"auto"} className={"ml-md-auto mt-2 mt-md-0 vertical-center justify-content-start"}>
