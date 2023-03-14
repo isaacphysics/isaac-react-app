@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Button, Col, Container, Row} from "reactstrap";
+import {Col, Container, Row} from "reactstrap";
 import {Tabs} from "../elements/Tabs";
 import {PageFragment} from "../elements/PageFragment";
 import {EXAM_BOARD, EXAM_BOARDS_CS_A_LEVEL, EXAM_BOARDS_CS_GCSE, STAGE} from "../../services";
@@ -29,26 +29,35 @@ export const ExamSpecifications = () => {
         [STAGE.GCSE]: "Discover our free GCSE computer science topics and questions. We cover AQA, Edexcel, Eduqas, OCR, and WJEC. Learn or revise for your exams with us today."
     })[stage];
 
-    return <Container>
-        <TitleAndBreadcrumb currentPageTitle={`${stage === STAGE.A_LEVEL ? "A Level" : "GCSE"} exam specifications`} />
-        <MetaDescription description={metaDescription} />
-        <Row>
-            <Col xs={12} md={6} className={"text-center"}>
-                <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.A_LEVEL)} outline={stage !== STAGE.A_LEVEL}>A Level specifications</Button>
-            </Col>
-            <Col xs={12} md={6} className={"text-center mt-3 mt-md-0"}>
-                <Button className={"w-100 w-md-auto"} onClick={() => setStage(STAGE.GCSE)} outline={stage !== STAGE.GCSE}>GCSE specifications</Button>
-            </Col>
-        </Row>
-        <hr/>
-        <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
+    const tabs = {
+        ["A Level specifications"]: <Tabs style="tabs" className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
             {Object.assign({}, ...stageExamBoards.map(examBoard => ({
                 [examBoard.toUpperCase()]: <Row>
                     <Col lg={{size: 8, offset: 2}}>
-                        <PageFragment fragmentId={`${stage}_specification_${examBoard}`}/>
+                        <PageFragment fragmentId={`${STAGE.A_LEVEL}_specification_${examBoard}`}/>
                     </Col>
                 </Row>
             })))}
+        </Tabs>,
+        ["GCSE specifications"]: <Tabs style="tabs" className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
+            {Object.assign({}, ...stageExamBoards.map(examBoard => ({
+                [examBoard.toUpperCase()]: <Row>
+                    <Col lg={{size: 8, offset: 2}}>
+                        <PageFragment fragmentId={`${STAGE.GCSE}_specification_${examBoard}`}/>
+                    </Col>
+                </Row>
+            })))}
+        </Tabs>
+    };
+
+    return <Container>
+        <TitleAndBreadcrumb currentPageTitle={"Exam specifications"} />
+        <MetaDescription description={metaDescription} />
+        <Tabs activeTabOverride={[STAGE.A_LEVEL, STAGE.GCSE].indexOf(stage) + 1}
+              onActiveTabChange={(aT) => setStage(([STAGE.A_LEVEL, STAGE.GCSE].at(aT - 1) ?? STAGE.A_LEVEL) as STAGE.A_LEVEL | STAGE.GCSE)}
+              style={"buttons"} tabContentClass={"mt-3"} className={"mt-3"}
+        >
+            {tabs}
         </Tabs>
     </Container>;
 }
