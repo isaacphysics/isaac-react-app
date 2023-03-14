@@ -2,8 +2,8 @@
 import React from "react";
 import {Container, Col, Row, ListGroup, ListGroupItem} from "reactstrap";
 import {ListGroupFooter} from "../../elements/list-groups/ListGroupFooter";
-import {SocialLinksRow} from "../../elements/list-groups/SocialLinksRow";
 import {Link} from "react-router-dom";
+import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
 
 export const FooterCS = () => (
     <footer>
