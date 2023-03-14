@@ -15,7 +15,11 @@ const calloutStyle = siteSpecific({
             marginLeft: -2,
             marginRight: 18
         },
-        colour: "t-grey"
+        colour: {
+            regular: "t-grey",
+            testData: "t-grey",
+            sampleRun: "t-grey"
+        }
     },{
         width: "50",
         height: "50",
@@ -24,11 +28,15 @@ const calloutStyle = siteSpecific({
             marginTop: -13,
             marginRight: -15
         },
-        colour: "hi-teal-25"
+        colour: {
+            regular: "hi-cyan-25",
+            testData: "hi-yellow-25",
+            sampleRun: "hi-pink-25"
+        }
     });
 
 export const IsaacCallout = ({doc}: {doc: ContentDTO}) =>
-    <Row className={classNames("isaac-callout", calloutStyle.colour)}>
+    <Row className={classNames("isaac-callout", calloutStyle.colour[(doc.subtitle || "regular") as "regular" | "testData" | "sampleRun"])}>
         <Col>
             <img className={siteSpecific("float-left", "float-right")} style={calloutStyle.style} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
             <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children} />
