@@ -69,7 +69,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
-        return <div className={`pattern-01 ${doc.subjectId || ""}`}>
+        return <div className={`${doc.subjectId || ""}`}>
             <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container>
                     {/*High contrast option*/}
