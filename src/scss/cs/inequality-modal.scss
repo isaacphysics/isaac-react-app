@@ -24,8 +24,26 @@
         }
     }
     .sub-menu-tabs {
-        li.inactive .katex {
-            color: $cs-jet !important;
+        li.inactive {
+            svg.v-hexagon {
+                stroke: $inequality-primary !important;
+                fill: $inequality-stroke !important;
+            }
+            .katex {
+                color: $cs-jet !important;
+            }
+            &:hover svg.v-hexagon {
+                stroke-width: 8px !important;
+            }
+        }
+        li.active {
+            svg.v-hexagon {
+                stroke: $inequality-item-colour !important;
+                fill: $inequality-stroke !important;
+            }
+            .katex {
+                color: $inequality-item-colour !important;
+            }
         }
     }
     .inequality-ui {
