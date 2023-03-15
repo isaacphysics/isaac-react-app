@@ -32,6 +32,7 @@
         &.button {
             background-color: $inequality-primary;
             &.confirm {
+                right: 10px;
                 background-image: url('/assets/cs/icons/inequality-confirm-cs.svg');
             }
             &.centre {
