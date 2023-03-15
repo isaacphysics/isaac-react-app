@@ -32,7 +32,7 @@ export const WhySignUpTabs = ({user}: {user: Immutable<PotentialUser> | null}) =
                     <li>Save time while our website does the marking</li>
                     <li>Track your students’ progress and identify new areas to focus on</li>
                 </ul>
-                <Button tag={Link} to="/teachers" color="primary">Learn about Teacher accounts</Button>
+                <Button tag={Link} to="/support/teacher/general" color="primary">Learn about Teacher accounts</Button>
             </>,
             Students: <>
                 <h2 className={"mb-4"}>Benefits for Students:</h2>
