@@ -99,14 +99,14 @@ small {
 }
 code {
   line-height: inherit;
-  font-size: 0.94rem;
-  font-family: "azaret-mono-regular", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1rem;
+  font-family: "ubuntu-mono-regular", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   color: $dark-pink-300;
 }
 
 pre {
-  font-size: 0.777rem;
-  font-family: "azaret-mono-regular", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1rem;
+  font-family: "ubuntu-mono-regular", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   background: white;
   padding: 0.888rem;
   border: solid 1px $cs-light-gray;
