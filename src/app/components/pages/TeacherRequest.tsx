@@ -120,7 +120,7 @@ export const TeacherRequest = () => {
                                         You already have a teacher account
                                     </span>
                                     <p className="mt-3">
-                                        Go to the <Link to="/teachers">Teacher tools page</Link> to start using your
+                                        Go to the <Link to="/support/teacher/general">Teacher FAQ page</Link> to learn about your
                                         new account features.
                                     </p>
                                 </Col>

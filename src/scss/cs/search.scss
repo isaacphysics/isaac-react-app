@@ -6,7 +6,7 @@
   #header-search {
     min-width: calc(100% - 18px - 30px);
     flex: auto !important;
-    height: 100%;
+    min-height: 100%;
     border-radius: 24px 0 0 24px;
     border: none;
   }

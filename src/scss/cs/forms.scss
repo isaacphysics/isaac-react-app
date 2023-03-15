@@ -49,8 +49,10 @@ input, textarea {
 }
 
 // Make sure font isn't clipped in input boxes - FIXME might have unintended effects for multiline inputs or something?
-input[type=text]:not(.select__input) {
-  line-height: 50px !important;
+input[type=text], input[type=search] {
+  &:not(.select__input) {
+    line-height: 50px !important;
+  }
 }
 
 .basic-multi-select {

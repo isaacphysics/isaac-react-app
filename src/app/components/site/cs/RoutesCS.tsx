@@ -17,8 +17,10 @@ import {ExamSpecifications} from "../../pages/ExamSpecifications";
 let key = 0;
 export const RoutesCS = [
     // Student and teacher
-    <TrackedRoute key={key++} exact path="/students" component={Students} />,
-    <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
+    // <TrackedRoute key={key++} exact path="/students" component={Students} />,
+    // <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,
+    <Redirect key={key++} exact from="/students" to="/support/student/general" />,
+    <Redirect key={key++} exact from="/teachers" to="/support/teacher/general" />,
 
     // Assignments
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
