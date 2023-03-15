@@ -30,6 +30,13 @@ $theme-colors: (
     "secondary": $secondary // Secondary gets overridden by the subject colour when a parent includes a subject class.
 );
 
+// Inequality colours
+$inequality-primary: $primary;
+$inequality-stroke: darken($inequality-primary, 10%);
+$inequality-background: darken($inequality-primary, 20%);
+$inequality-item-colour: white;
+$inequality-item-font-colour: black;
+
 // Grid Customisation
 $container-max-widths: (
     md: 942px

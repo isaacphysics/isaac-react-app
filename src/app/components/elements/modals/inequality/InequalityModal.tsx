@@ -37,20 +37,26 @@ const MenuItem = (props: MenuItemProps) => {
         className={classNames(props.menu.className, "menu-item")} 
         style={{fontSize: props.menu.fontSize}}
     >
-        <VHexagon/><Markup encoding={"latex"}>{`$${props.menu.label}$`}</Markup>
+        <VShape/><Markup encoding={"latex"}>{`$${props.menu.label}$`}</Markup>
     </li>;
 };
 const buildIndexedMenuItem = (props: MenuItemProps, i: number) => <MenuItem key={i} {...props}/>;
 
-export const VHexagon = () =>
+const VHexagon = () =>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 173.5 200" className="v-hexagon" xmlSpace="preserve" enableBackground={"new 0 0 173.5 200"}>
         <polygon points="0.7,50 0.7,150 87.3,200 173.9,150 173.9,50 87.3,0 " />
     </svg>;
+const VCircle = () =>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 200 200" className="v-hexagon" xmlSpace="preserve" enableBackground={"new 0 0 200 200"}>
+        <circle r={100} cx={100} cy={100} />
+    </svg>;
+const VShape = siteSpecific(VHexagon, VCircle);
 
-export const TabTriangle = () =>
+const TabTriangle = () =>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 136 23" className="tab-triangle" xmlSpace="preserve" enableBackground={"new 0 0 76 23"}>
           <polygon points="0,0 136,0 68,23"/>
     </svg>;
+const TabShape = siteSpecific(TabTriangle, () => null);
 
 type InequalityMenuTabType = "numbers" | "letters" | "basicFunctions" | "mathsOtherFunctions" | "maths" | "logic" | "elements" | "particles" | "states" | "operations" | null;
 type InequalityMenuSubMenuTabType = "upperCaseLetters" | "lowerCaseLetters" | "trigFunctions" | "hypFunctions" | "logFunctions" | "derivatives" | "lowerCaseGreekLetters" | "upperCaseGreekLetters" | null;
@@ -65,7 +71,7 @@ const InequalityMenuTab = ({menu, latexTitle, subMenu, className, isSubMenu = fa
     const active = activeMenu === menu && (isSubMenu ? activeSubMenu === subMenu : true);
 
     return <li className={classNames(active ? "active" : "inactive", className)} onClick={navigate} onKeyUp={navigate}>
-        {isSubMenu ? <VHexagon/> : <TabTriangle/>}<Markup encoding={"latex"}>{`$${latexTitle}$`}</Markup>
+        {isSubMenu ? <VShape/> : <TabShape/>}<Markup encoding={"latex"}>{`$${latexTitle}$`}</Markup>
     </li>;
 };
 
@@ -79,7 +85,7 @@ const InequalityMenuNumber = ({n, update}: {n: number, update: () => void}) => {
         onTouchEnd={update}
         onKeyUp={update}
     >
-        <VHexagon/><Markup encoding={"latex"}>{`$${n.toString()}$`}</Markup>
+        <VShape/><Markup encoding={"latex"}>{`$${n.toString()}$`}</Markup>
     </div>
 };
 
@@ -204,7 +210,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                                  onTouchEnd={flipNumberInputValueSign}
                                  onKeyUp={flipNumberInputValueSign}
                             >
-                                <VHexagon/><Markup encoding={"latex"}>{"$\\pm$"}</Markup>
+                                <VShape/><Markup encoding={"latex"}>{"$\\pm$"}</Markup>
                             </div>
                         </div>
                     </div>
@@ -213,7 +219,7 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                              data-item={isDefined(numberInputValue) ? JSON.stringify({ type: "Num", properties: { significand: `${numberInputValue}`} }) : null}
                         >
                             {/* The `span` with a `katex` class is for some reason required for the empty hexagon to have correct layout */}
-                            <VHexagon/>{isDefined(numberInputValue) ? <Markup encoding={"latex"} className={"d-block"}>{`$${numberInputValue}$`}</Markup> : <span className={"katex"}/>}
+                            <VShape/>{isDefined(numberInputValue) ? <Markup encoding={"latex"} className={"d-block"}>{`$${numberInputValue}$`}</Markup> : <span className={"katex"}/>}
                         </div>
                         {isDefined(numberInputValue) && <div className="clear-number" role="button" tabIndex={0} onClick={clearNumberInputValue} onKeyUp={clearNumberInputValue}/>}
                     </div>

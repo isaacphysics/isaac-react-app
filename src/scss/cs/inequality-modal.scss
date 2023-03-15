@@ -1,50 +1,68 @@
 @import "../common/inequality-modal.scss";
 
+#moving-menu-item {
+    padding-top: 4px !important;
+}
 #inequality-modal {
+    // Fix slight misalignment of text inside circles
+    svg.v-hexagon {
+        top: auto !important;
+    }
+    .menu-tabs > ul > li {
+        padding-top: 8px !important;
+        padding-bottom: 11px !important;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        &.active .katex {
+            color: $cs-black !important;
+        }
+        &.inactive {
+            background-color: $inequality-background;
+            .katex {
+                color: $cs-jet !important;
+            }
+        }
+    }
+    .sub-menu-tabs {
+        li.inactive .katex {
+            color: $cs-jet !important;
+        }
+    }
     .inequality-ui {
         &.button {
+            background-color: $inequality-primary;
             &.confirm {
-                background-image: url('/assets/inequality-confirm-cs.svg');
+                background-image: url('/assets/cs/icons/inequality-confirm-cs.svg');
             }
             &.centre {
-                background-image: url('/assets/inequality-centre-cs.svg');
+                background-image: url('/assets/cs/icons/inequality-centre-cs.svg');
             }
             &.help {
-                background-image: url('/assets/inequality-help-cs.svg');
+                background-image: url('/assets/cs/icons/inequality-help-cs.svg');
             }
             &.show-question {
-                background-image: url('/assets/inequality-togglequestion-cs.svg');
+                background-image: url('/assets/cs/icons/inequality-togglequestion-cs.svg');
+            }
+            &.trash {
+                background-image: url('/assets/cs/icons/inequality-trash-cs.svg');
+            }
+            &.reset {
+                background-image: url('/assets/cs/icons/inequality-reset-cs.svg');
             }
         }
-
+        .clear-number {
+            background: url('/assets/cs/icons/inequality-clear-cs.svg') !important;
+        }
+        div.top-menu.numbers {
+            > div.input-box .menu-item svg.v-hexagon {
+                left: -5px !important;
+            }
+            div.keypad-box .key .katex {
+                line-height: 48px !important;
+            }
+        }
         &.katex-preview {
-            border: 1px solid darken(theme-color('primary'), 10%);
-        }
-
-        &.menu-bar {
-            background: theme-color('primary');
-
-            div.top-menu {
-                &.numbers {
-                    & > div {
-                        &.input-box {
-                            .menu-item {
-                                svg.v-hexagon {
-                                    stroke: darken(theme-color('primary'), 10%);
-                                }
-                            }
-                        }
-
-                        &.keypad-box {
-                            .key {
-                                svg.v-hexagon {
-                                    stroke: darken(theme-color('primary'), 10%);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            border: 1px solid $inequality-item-colour;
         }
     }
 }

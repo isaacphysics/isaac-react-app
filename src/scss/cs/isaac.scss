@@ -183,6 +183,14 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
     "light-grey" : $cs-light-gray,
     "cultured-grey" : $cs-cultured,
 );
+
+// Inequality colours
+$inequality-primary: $cs-light-gray;
+$inequality-stroke: transparent;
+$inequality-background: $cs-list-outline-gray;
+$inequality-item-colour: $primary;
+$inequality-item-font-colour: $cs-white;
+
 $spacer: 1rem !default;
 $spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
     6: ($spacer * 6.25) // 100px-ish
