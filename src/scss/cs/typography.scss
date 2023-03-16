@@ -132,7 +132,13 @@ div.isaac-nav-link {
 }
 
 a {
+  // FIXME this breaks tables with links
   overflow-wrap: anywhere;
+  &.a-link {
+    @extend .btn-link;
+    &:focus {
+      border: none;
+      outline: none;
+    }
+  }
 }
-
-// FIXME ADA pre and code fonts and style need thinking about

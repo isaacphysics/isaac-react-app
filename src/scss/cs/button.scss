@@ -124,24 +124,26 @@
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    color: $dark-pink-300;
-    overflow: hidden;  // To stop margin collapse from hiding the focus outline
-    text-decoration: underline;
-    &:hover {
-      color: $light-hover-dark-pink;
-      text-decoration: none;
-    }
-    &:active {
-      color: $light-active-dark-pink;
-    }
-    &:focus-visible {
-      outline: 2px solid $focus-blue !important;
-      border-radius: 0 !important;
-      z-index: 10;
-    }
-    &.disabled, &:disabled {
-      color: $cs-silver;
-    }
+  }
+}
+
+.btn-link {
+  color: $dark-pink-300;
+  text-decoration: underline;
+  &:hover {
+    color: $light-hover-dark-pink;
+    text-decoration: none;
+  }
+  &:active {
+    color: $light-active-dark-pink;
+  }
+  &:focus-visible {
+    outline: 2px solid $focus-blue !important;
+    border-radius: 0 !important;
+    z-index: 10;
+  }
+  &.disabled, &:disabled {
+    color: $cs-silver;
   }
 }
 
