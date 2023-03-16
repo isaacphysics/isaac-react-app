@@ -27,6 +27,7 @@ import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
+import classNames from "classnames";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -80,7 +81,7 @@ export const GoogleSignInButton = () => {
         dispatch(handleProviderLoginRedirect("GOOGLE"));
     };
 
-    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithGoogle}>
+    return <Button className={"position-relative google-button"} block outline color="primary" onClick={logInWithGoogle}>
         <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Google
     </Button>
 }
@@ -262,7 +263,7 @@ export const LogIn = () => {
                                         passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                                         errorMessage={errorMessage} displayLabels={true} />
 
-                                    <Row className="mb-4">
+                                    <Row className={classNames("mb-4", {"mt-2": isAda})}>
                                         <Col className={"col-5 mt-1"}>
                                             <CustomInput
                                                 id="login-remember-me"
@@ -301,15 +302,13 @@ export const LogIn = () => {
                                     </Row>
 
                                     <hr className="text-center mb-4"/>
-                                    <h3 className="text-center">Log in with:</h3>
-                                    {
-                                        isAda &&
-                                            <Row className="mb-2 justify-content-center">
-                                                <Col sm={9}>
-                                                    <RaspberryPiSignInButton/>
-                                                </Col>
-                                            </Row>
-                                    }
+                                    <h3 className="text-left mb-3">Log in with:</h3>
+                                    {isAda &&
+                                        <Row className="mb-2 justify-content-center">
+                                            <Col sm={9}>
+                                                <RaspberryPiSignInButton/>
+                                            </Col>
+                                        </Row>}
                                     <Row className="mb-3 justify-content-center">
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
