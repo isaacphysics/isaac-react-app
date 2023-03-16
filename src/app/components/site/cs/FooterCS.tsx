@@ -35,7 +35,7 @@ export const FooterCS = () => (
                     <Row className="justify-content-between">
                         <Col xs={{size: 12}} md={{size: 6}} className="footer-bottom-info">
                             <p>
-                                All teaching materials on this site are available under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" className="d-inline">CC BY-NC-SA 4.0</a> license, except where otherwise stated.
+                                All teaching materials on this site are available under a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0" className="d-inline link-light">CC BY-NC-SA 4.0</a> license, except where otherwise stated.
                             </p>
                         </Col>
                         <Col xs={{size: 12}} md={{size: 5}} lg={{size: 4}} xl={{size: 3}} xxl={{size: 2}}>
