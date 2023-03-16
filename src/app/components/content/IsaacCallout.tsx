@@ -15,17 +15,17 @@ const calloutStyle = siteSpecific({
             marginLeft: -2,
             marginRight: 18
         },
-        colour: {
-            regular: "t-grey",
-            testData: "t-grey",
-            sampleRun: "t-grey"
-        }
+        colour: "t-grey"
     },{
         width: "50",
         height: "50",
-        src: "/assets/cs/callout-icon-puzzlebulb.svg",
+        src: {
+            regular: "/assets/cs/icons/regular-callout.svg",
+            testData: "/assets/cs/icons/test-callout.svg",
+            sampleRun: "/assets/cs/icons/run-callout.svg",
+        },
         style: {
-            marginTop: -13,
+            marginTop: -15,
             marginRight: -15
         },
         colour: {
@@ -35,10 +35,20 @@ const calloutStyle = siteSpecific({
         }
     });
 
-export const IsaacCallout = ({doc}: {doc: ContentDTO}) =>
-    <Row className={classNames("isaac-callout", calloutStyle.colour[(doc.subtitle || "regular") as "regular" | "testData" | "sampleRun"])}>
+const DEFAULT_CALLOUT_STYLE = "regular" as const;
+export const IsaacCallout = ({doc}: {doc: ContentDTO}) => {
+    const colourClass = typeof calloutStyle.colour === "string"
+        ? calloutStyle.colour
+        : calloutStyle.colour[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as "regular" | "testData" | "sampleRun"];
+    const iconSrc = typeof calloutStyle.src === "string"
+        ? calloutStyle.src
+        : calloutStyle.src[(doc.subtitle || DEFAULT_CALLOUT_STYLE) as "regular" | "testData" | "sampleRun"];
+    return <Row
+        className={classNames("isaac-callout", colourClass)}>
         <Col>
-            <img className={siteSpecific("float-left", "float-right")} style={calloutStyle.style} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
-            <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children} />
+            <img className={siteSpecific("float-left", "float-right")} style={calloutStyle.style}
+                 width={calloutStyle.width} height={calloutStyle.height} src={iconSrc}/>
+            <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children}/>
         </Col>
     </Row>;
+}
