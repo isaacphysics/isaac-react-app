@@ -337,7 +337,7 @@ a:not(.btn):not(.nav-link) {
       @extend .btn-link;
     }
   }
-  overflow-wrap: anywhere;
+  word-wrap: break-word;
   text-decoration: underline;
   &:focus {
     border: none;
