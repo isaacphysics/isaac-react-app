@@ -15,15 +15,22 @@ interface CountryInputProps {
 }
 
 export const CountryInput = ({userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: CountryInputProps) => {
-    const [countryOptions, setCountryOptions] = useState<Record<string, string>>({});
+    const [allCountryOptions, setAllCountryOptions] = useState<Record<string, string>>({});
+    const [priorityCountryOptions, setPriorityCountryOptions] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        async function fetchCountryOptions() {
+        async function fetchAllCountryOptions() {
             const data = await api.countries.getCountries();
-            setCountryOptions(data.data);
+            setAllCountryOptions(data.data);
         }
 
-        fetchCountryOptions()
+        async function fetchPriorityCountryOptions() {
+            const data = await api.countries.getPriorityCountries();
+            setPriorityCountryOptions(data.data);
+        }
+
+        fetchAllCountryOptions()
+        fetchPriorityCountryOptions()
     }, [])
 
     return <RS.FormGroup className="my-1">
@@ -38,9 +45,16 @@ export const CountryInput = ({userToUpdate, setUserToUpdate, submissionAttempted
                 setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {countryCode: e.target.value} : {countryCode: null}))
             }
         >
+            {
+                Object.entries(priorityCountryOptions).map(
+                    ([countryCode, countryDisplayName]) => {
+                        return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>
+                    }
+                )
+            }
             <option />
             {
-                Object.entries(countryOptions).map(
+                Object.entries(allCountryOptions).map(
                     ([countryCode, countryDisplayName]) => {
                         return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>
                     }

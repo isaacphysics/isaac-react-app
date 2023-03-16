@@ -326,6 +326,9 @@ export const api = {
     countries: {
         getCountries: (): AxiosPromise<Record<string, string>> => {
             return endpoint.get(`/countries`);
+        },
+        getPriorityCountries: (): AxiosPromise<Record<string, string>> => {
+            return endpoint.get(`/countries/priority`);
         }
     },
     contactForm: {
