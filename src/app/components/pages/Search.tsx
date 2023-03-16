@@ -25,7 +25,7 @@ import {UserContextPicker} from "../elements/inputs/UserContextPicker";
 import {CSSObjectWithLabel, GroupBase, StylesConfig} from "react-select";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
-import {AdaHeaderSearch} from "../elements/SearchInputs";
+import {SearchPageSearch} from "../elements/SearchInputs";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 interface Item<T> {
@@ -100,7 +100,6 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
     const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
 
-    // FIXME ADA reinstate how this looked on physics form old isaac-react-app
     return (
         <Container id="search-page">
             <Row>
@@ -110,19 +109,19 @@ export const Search = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col>
-                    <AdaHeaderSearch className={"border-secondary"} initialValue={urlQuery ?? ""} />
+                    <SearchPageSearch className={siteSpecific("", "border-secondary")} initialValue={urlQuery ?? ""} />
                 </Col>
             </Row>
             <Row>
                 <Col className="py-4">
                     <RS.Card>
                         <RS.CardHeader className="search-header">
-                            <RS.Col sm={12} md={5} lg={4} xl={3}>
+                            <RS.Col sm={12} md={5} lg={siteSpecific(5, 4)} xl={siteSpecific(5, 3)}>
                                 <h3>
                                     <span className="d-none d-sm-inline-block">Search&nbsp;</span>Results {urlQuery != "" ? shortcutAndFilteredSearchResults ? <RS.Badge color="primary">{shortcutAndFilteredSearchResults.length}</RS.Badge> : <IsaacSpinner /> : null}
                                 </h3>
                             </RS.Col>
-                            <RS.Col sm={12} md={7} lg={8} xl={9}>
+                            <RS.Col sm={12} md={7} lg={siteSpecific(7, 8)} xl={siteSpecific(7, 9)}>
                                 <RS.Form inline className="search-filters">
                                     <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
                                         {`Filter${siteSpecific("","s")}:`}
@@ -132,9 +131,8 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         placeholder="No page type filter"
                                         value={filtersState}
                                         options={
-                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
-                                                DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]
-                                                .filter(v => isAda || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
+                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.GENERIC]
+                                                .concat(siteSpecific([], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
                                                 .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"

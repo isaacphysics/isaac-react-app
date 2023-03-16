@@ -52,6 +52,17 @@ export const MainSearchInput = withSearch(({inputProps, setSearchText, searchTex
     </>
 });
 
+export const PhySimpleSearch = withSearch(({inputProps, setSearchText, searchText}) => {
+    function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
+        setSearchText(e.target.value);
+    }
+    return <Input
+        className='search--filter-input mt-4'
+        {...inputProps}
+        value={searchText} onChange={setSearchTextAsValue}
+    />;
+});
+
 export const AdaHomepageSearch = withSearch(({inputProps, setSearchText, searchText}) => {
     function setSearchTextAsValue(e: ChangeEvent<HTMLInputElement>) {
         setSearchText(e.target.value);
@@ -89,3 +100,5 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
         </InputGroup>
     </>;
 });
+
+export const SearchPageSearch = siteSpecific(PhySimpleSearch, AdaHeaderSearch);
