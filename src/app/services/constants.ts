@@ -63,11 +63,10 @@ export const SOCIAL_LINKS = siteSpecific(
         facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
     },
     {
-        // FIXME ADA: update these - also we don't have an instagram logo
-        youtube: {name: "YouTube", href: "https://www.youtube.com/c/RaspberryPiFoundation"},
-        twitter: {name: "Twitter", href: "https://twitter.com/RaspberryPi_org"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/RaspberryPiFoundation"},
-        instagram: {name: "Instagram", href: "https://www.instagram.com/raspberrypifoundation"}
+        twitter: {name: "Twitter", href: "https://twitter.com/RaspberryPi_org"},
+        instagram: {name: "Instagram", href: "https://www.instagram.com/raspberrypifoundation"},
+        youtube: {name: "YouTube", href: "https://www.youtube.com/c/RaspberryPiFoundation"}
     }
 );
 

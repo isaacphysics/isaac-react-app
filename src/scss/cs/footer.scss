@@ -9,7 +9,10 @@ footer {
 
 .footer-logo {
   width: 4rem;
-  height: auto;
+}
+
+.footer-org-logo {
+  max-height: 2rem !important;
 }
 
 .footer-links {
@@ -37,5 +40,10 @@ footer {
 
 .footer-link {
   padding-top: 0 !important;
+}
+
+.footer-social-logo {
+  min-height: 2.5rem !important;
+  max-height: 4rem !important;
 }
 

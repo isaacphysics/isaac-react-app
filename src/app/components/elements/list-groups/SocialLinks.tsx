@@ -34,7 +34,7 @@ export const SocialLinksRow = () => {
                             <Col key={name}>
                                 <ExternalLink href={href}>
                                     <img src={getSocialIconForSite(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
-                                         className='img-fluid'/>
+                                         className='img-fluid footer-social-logo'/>
                                 </ExternalLink>
                             </Col>
                         )}
