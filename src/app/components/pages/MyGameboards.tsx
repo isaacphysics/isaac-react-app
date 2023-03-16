@@ -38,6 +38,8 @@ import {Link} from "react-router-dom";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
 import {BoardCard} from "../elements/cards/BoardCard";
+import {PageFragment} from "../elements/PageFragment";
+import {RenderNothing} from "../elements/RenderNothing";
 
 interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -357,6 +359,7 @@ export const MyGameboards = () => {
 
     return <Container fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My gameboards", "My quizzes")} help={pageHelp} />
+        {isAda && <PageFragment fragmentId={"quizzes_help"} ifNotFound={RenderNothing} />}
         {boards && boards.totalResults == 0 ?
             <>
                 <h3 className="text-center mt-4">You have no {siteSpecific("gameboards", "quizzes")} to view.</h3>

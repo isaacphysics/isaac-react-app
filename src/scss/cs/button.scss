@@ -325,7 +325,11 @@ div.isaac-nav-link {
   }
 }
 
-a:not(.btn) {
+.nav-link {
+  color: $cs-jet;
+}
+
+a:not(.btn):not(.nav-link) {
   // FIXME this breaks tables with links
   &:not(.link-light):not(.footer-link):not(.a-link) {
     color: $cs-jet;

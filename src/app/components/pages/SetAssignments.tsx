@@ -63,6 +63,8 @@ import {BoardAssignee, BoardOrder, Boards} from "../../../IsaacAppTypes";
 import {BoardCard} from "../elements/cards/BoardCard";
 import classNames from "classnames";
 import {StyledSelect} from "../elements/inputs/StyledSelect";
+import {PageFragment} from "../elements/PageFragment";
+import {RenderNothing} from "../elements/RenderNothing";
 
 interface AssignGroupProps {
     groups: UserGroupDTO[];
@@ -525,7 +527,6 @@ export const SetAssignments = () => {
     };
 
     return <Container fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
-
         <SetAssignmentsModal
             isOpen={isModalOpen}
             toggle={() => setIsModalOpen(false)}
@@ -536,6 +537,7 @@ export const SetAssignments = () => {
         />
 
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("Set assignments", "Set quizzes")} help={pageHelp} modalId="set_assignments_help"/>
+        {isAda && <PageFragment fragmentId={"set_quizzes_help"} ifNotFound={RenderNothing} />}
         {isPhy && <PhyAddGameboardButtons className={"mb-4"} redirectBackTo={PATHS.SET_ASSIGNMENTS}/>}
         {groups && groups.length === 0 && <Alert color="warning">
             You have not created any groups to assign work to.

@@ -52,7 +52,7 @@ import {
     getAssignmentCSVDownloadLink,
     getAssignmentStartDate,
     getQuizAssignmentCSVDownloadLink,
-    hasAssignmentStarted,
+    hasAssignmentStarted, isAda,
     isDefined,
     isFound,
     isPhy,
@@ -69,6 +69,8 @@ import {Tabs} from "../elements/Tabs";
 import {formatMark, ICON, passMark, ResultsTable} from "../elements/quiz/QuizProgressCommon";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
+import {PageFragment} from "../elements/PageFragment";
+import {RenderNothing} from "../elements/RenderNothing";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -598,6 +600,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 help={pageHelp}
                 modalId="assignment_progress_help"
             />
+            {isAda && <PageFragment fragmentId={"markbook_help"} ifNotFound={RenderNothing} />}
             <Row className="align-items-center d-none d-md-flex">
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>

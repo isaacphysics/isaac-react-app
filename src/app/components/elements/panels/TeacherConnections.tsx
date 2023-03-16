@@ -15,8 +15,18 @@ import {
     useAppSelector
 } from "../../../state";
 import classnames from "classnames";
-import {extractTeacherName, isLoggedIn, isPhy, isStudent, MEMBERSHIP_STATUS, siteSpecific} from "../../../services";
+import {
+    extractTeacherName,
+    isAda,
+    isLoggedIn,
+    isPhy,
+    isStudent,
+    MEMBERSHIP_STATUS,
+    siteSpecific
+} from "../../../services";
 import classNames from "classnames";
+import {PageFragment} from "../PageFragment";
+import {RenderNothing} from "../RenderNothing";
 
 
 interface TeacherConnectionsProps {
@@ -57,6 +67,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     return <RS.CardBody>
         <RS.Container>
+            {isAda && <PageFragment fragmentId={"teacher_connections_help"} ifNotFound={RenderNothing} />}
             <h3>
                 <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">

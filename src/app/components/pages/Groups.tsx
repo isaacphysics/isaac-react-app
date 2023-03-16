@@ -40,6 +40,8 @@ import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSp
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
+import {PageFragment} from "../elements/PageFragment";
+import {RenderNothing} from "../elements/RenderNothing";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -415,6 +417,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
+        {isAda && <PageFragment fragmentId={"groups_help"} ifNotFound={RenderNothing} />}
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
                 <Col lg={4}>
