@@ -19,7 +19,7 @@ export const PrintButton = ({questionPage}: PrintProps ) => {
                 aria-label="Print page"
             />
             {questionPrintOpen && <div className="question-actions-link-box">
-                <div className="question-actions-link">
+                <div className="question-actions-link text-nowrap">
                     <Button
                         size={"sm"}
                         color={"link"}

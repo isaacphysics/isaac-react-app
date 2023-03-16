@@ -76,7 +76,7 @@ header {
   z-index: 20;
 
   a:not(.navbar-brand), .nav-link {
-    text-decoration: none;
+    text-decoration: none !important;
     color: $cs-white;
     position: relative;
     text-underline-offset: 6px;
@@ -87,6 +87,7 @@ header {
       text-decoration: underline 3px $cyan-300 !important;
     }
     &:focus-visible {
+      outline: none !important;
       &::after {
         content: ' ';
         position: absolute;

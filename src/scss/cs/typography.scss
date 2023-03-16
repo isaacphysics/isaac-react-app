@@ -131,8 +131,26 @@ div.isaac-nav-link {
   }
 }
 
-a {
+a:not(.btn) {
+  // FIXME this breaks tables with links
+  &:not(.link-light):not(.footer-link):not(.a-link) {
+    color: $cs-jet;
+    &:hover {
+      @extend .btn-link;
+    }
+  }
   overflow-wrap: anywhere;
+  text-decoration: underline;
+  &:focus {
+    border: none;
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid $focus-blue;
+    border-radius: 0 !important;
+    z-index: 10;
+  }
+  &.a-link {
+    @extend .btn-link;
+  }
 }
-
-// FIXME ADA pre and code fonts and style need thinking about
