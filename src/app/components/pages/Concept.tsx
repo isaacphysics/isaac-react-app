@@ -21,6 +21,7 @@ import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDepreca
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {MetaDescription} from "../elements/MetaDescription";
 import {ReportButton} from "../elements/ReportButton";
+import classNames from "classnames";
 
 interface ConceptPageProps {
     conceptIdOverride?: string;
@@ -36,7 +37,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-        return <div className={doc.subjectId || ""}>
+        return <div className={classNames(doc.subjectId)}>
             <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container>
                     <TitleAndBreadcrumb

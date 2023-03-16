@@ -71,16 +71,6 @@
   border: 0.2rem solid $focus-blue;
 }
 
-.footer-link:focus {
-  box-shadow: 0 0 0 2pt white;
-  border-radius: 3px;
-  outline: none !important;
-}
-
-.footer-top a:focus {
-  outline: 0.2rem solid white;
-}
-
 // Close modal button
 .close:not(:disabled):not(.disabled):focus {
   box-shadow: none;

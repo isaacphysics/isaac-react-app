@@ -370,7 +370,6 @@ p small {
     }
 }
 
-
 body {
     color: $black;
     display: -ms-flexbox;
@@ -383,141 +382,12 @@ body {
     background-color: $cs-cultured;
 }
 
-.pattern-01 {
-    background-image: url('/assets/pattern_sm.svg');
-    background-position: left top;
-    background-repeat: repeat;
-    @include respond-above(md) {
-        background-image: none;
-    }
-    > .container {
-        @include respond-above(md) {
-            background-image: url('/assets/pattern01a.svg');
-            background-position: left top;
-            background-repeat: repeat-y;
-        }
-    }
-}
-
-.pattern-02 {
-    position: relative;
-
-    &:after,
-    &:before {
-        @include pseudo-element;
-        background-image: url('/assets/pattern01.svg');
-        background-position: 0 0;
-        background-repeat: no-repeat;
-        display: none;
-        width: 600px;
-        height: 600px;
-        z-index: 0;
-    }
-
-    &:after {
-        @include respond-above(sm) {
-            display: block;
-            right: -9%;
-            top: 250px;
-        }
-    }
-
-    &:before {
-        @include respond-above(sm) {
-            display: block;
-            left: -9%;
-            top: 800px;
-        }
-    }
-}
-
-.pattern-03 {
-    background-image: url('/assets/pattern04.svg');
-    background-position: 0 63%;
-    background-repeat: repeat-x;
-
-    @include respond-above(sm) {
-        background-image: url('/assets/pattern03.svg');
-        background-position: left 0;
-        background-repeat: no-repeat;
-    }
-    @include respond-above(md) {
-        background-image: url('/assets/pattern03.svg');
-        background-position: left 0;
-        background-repeat: no-repeat;
-    }
-}
-
-.pattern-03-reverse {
-    background-image: url('/assets/pattern01.svg');
-    background-position: right top;
-    background-repeat: repeat-y;
-
-    @include respond-above(sm) {
-        background-image: url('/assets/pattern01.svg');
-        background-position: right 0;
-        background-repeat: no-repeat;
-    }
-    @include respond-above(md) {
-        background-image: url('/assets/pattern01.svg');
-        background-position: right 8px;
-        background-repeat: no-repeat;
-    }
-}
-
-.pattern-04 {
-    background-image: url('/assets/pattern04.svg');
-    background-position: center 164px;
-    background-repeat: repeat-x;
-
-    @include respond-above(md) {
-        background-image: url('/assets/pattern04a.svg');
-        background-position: right 187px;
-        background-repeat: no-repeat;
-    }
-}
-
-.pattern-05 {
-    background-image: url('/assets/pattern05.svg');
-    background-position: left top;
-    background-repeat: repeat-x;
-}
-
-.pattern-06 {
-    background-image: url('/assets/pattern06.svg');
-    background-position: 96.5% 65%;
+// Not used yet, might be nice to add in the future
+.pattern-1 {
+    background-image: url('/assets/cs/decor/dots-circle.svg');
+    background-position: -100px 100px;
+    background-size: 1000px;
     background-repeat: no-repeat;
-    margin: auto -15px;
-    padding: 0 15px;
-    @include respond-above(sm) {
-        background-position: 96.5% 87%;
-        margin: 0;
-        padding: 0;
-    }
-}
-.pattern-06-inverted {
-    background-image: url('/assets/pattern06-inverted.svg');
-    background-position: 96.5% bottom;
-    background-repeat: no-repeat;
-}
-.pattern-07 {
-    background-image: url('/assets/pattern06.svg');
-    background-position: 0 24px;
-    background-repeat: no-repeat;
-    margin: auto -15px;
-    padding: 0 15px;
-    @include respond-above(sm) {
-        background-position: 0.3rem 1.6rem;
-        margin: 0;
-        padding: 0;
-    }
-}
-.pattern-08 {
-    @include respond-above(md) {
-        background-image: url('/assets/pattern04a.svg');
-        background-position: right 39px;
-        background-repeat: no-repeat;
-    }
 }
 
 .pattern-ada-dots {

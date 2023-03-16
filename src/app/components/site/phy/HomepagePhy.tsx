@@ -91,7 +91,7 @@ export const HomepagePhy = () => {
             <section id="news">
                 <Container>
                     <h2 className="h-title mb-4 mt-4 pt-2 mt-sm-5 pt-sm-0">News and features</h2>
-                    <Row className="eventList pt-1 pattern-03-reverse">
+                    <Row className="eventList pt-1">
                         <Col>
                             <NewsCarousel items={news} showTitle className={"mx-sm-n4"} />
                         </Col>

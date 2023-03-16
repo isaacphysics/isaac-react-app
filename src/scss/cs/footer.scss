@@ -24,6 +24,10 @@ footer {
     display: inline !important;
     color: $cs-white;
     text-decoration: underline;
+    &:focus {
+      border: none;
+      outline: none;
+    }
   }
 }
 

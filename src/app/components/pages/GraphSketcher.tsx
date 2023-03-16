@@ -78,7 +78,7 @@ const GraphSketcherPage = () => {
         }
     }, [currentAttempt]);
 
-    return <div className="pattern-01">
+    return <div>
         <Container>
             <Row>
                 <Col>

@@ -202,7 +202,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
-    return <div className="pattern-01">
+    return <div>
         <Container>
             <Row>
                 <Col>

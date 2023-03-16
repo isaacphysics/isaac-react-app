@@ -1,5 +1,15 @@
 @import "../common/footer";
 
+.footer-link:focus {
+  box-shadow: 0 0 0 2pt white;
+  border-radius: 3px;
+  outline: none !important;
+}
+
+.footer-top a:focus {
+  outline: 0.2rem solid white;
+}
+
 .footer-logo {
   margin-top: -0.55px;
 }

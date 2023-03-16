@@ -93,7 +93,7 @@ export const TeacherTools = () => {
                     </RS.Row>
                 </div>
 
-                <div className="pattern-06 pt-4 pb-5">
+                <div className="pt-4 pb-5">
                     <RS.Row>
                         <RS.ListGroup className="mb-4 d-block d-md-flex flex-row align-items-stretch link-list bg-transparent">
                             <RS.ListGroupItem className="bg-transparent">
