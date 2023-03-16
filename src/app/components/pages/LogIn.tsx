@@ -81,7 +81,7 @@ export const GoogleSignInButton = () => {
     };
 
     return <Button className={"position-relative"} block outline color="primary" onClick={logInWithGoogle}>
-        <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Log in with Google
+        <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Google
     </Button>
 }
 
@@ -94,7 +94,7 @@ export const RaspberryPiSignInButton = () => {
     };
 
     return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
-        <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>Log in with Raspberry Pi
+        <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>Raspberry Pi Foundation
     </Button>
 }
 
@@ -301,6 +301,7 @@ export const LogIn = () => {
                                     </Row>
 
                                     <hr className="text-center mb-4"/>
+                                    <h3 className="text-center">Log in with:</h3>
                                     {
                                         isAda &&
                                             <Row className="mb-2 justify-content-center">
