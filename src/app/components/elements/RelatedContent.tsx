@@ -173,7 +173,7 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         const audienceViews = filterAudienceViewsByProperties(determineAudienceViews(contentSummary.audience), AUDIENCE_DISPLAY_FIELDS);
         return <ListGroupItem key={getURLForContent(contentSummary)} className="w-100 mr-lg-3">
             <Link
-                className={classNames({"btn-link btn": isAda})}
+                className={classNames({"btn-link btn text-left": isAda})}
                 to={getURLForContent(contentSummary)}
                 onClick={() => {
                     dispatch(logAction(getEventDetails(contentSummary, parentPage)))
