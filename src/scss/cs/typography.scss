@@ -48,6 +48,7 @@ $sizes: [
 .font-weight-bold {
   // FIXME this is nasty (using semi-bold for bold) but some of the shared SCSS uses font-weight-bold
   font-family: $secondary-font-semi-bold, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-weight: $font-weight-normal;
 }
 
 .font-weight-semi-bold {
