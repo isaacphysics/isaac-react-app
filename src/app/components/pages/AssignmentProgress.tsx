@@ -605,7 +605,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 <Col className="text-right">
                     <Label className="pr-2">Sort groups:</Label>
                     <UncontrolledButtonDropdown size="sm">
-                        <DropdownToggle color="tertiary" className="border" caret>
+                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
                             {sortOrder}
                         </DropdownToggle>
                         <DropdownMenu>
