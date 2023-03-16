@@ -42,18 +42,17 @@
 <style
    type="text/css"
    id="style37">
-	.st0{fill:#ffb53f;}
-	.st1{fill:none;stroke:#1D1D1B;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st0{fill:#870C5A;}
+	.st1{fill:none;stroke:#ffffff;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
-<g
-   id="hexagon">
-	<polyline
+<g id="hexagon">
+	<circle
    class="st0"
-   points="8,90 60,120 112,90 112,30 60,0 8,30  "
+   r="60" cx="60" cy="60"
    id="polyline39" />
 </g>
 
 <path
-   style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+   style="fill:none;stroke:#ffffff;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
    d="M 26.996217,64.228901 48.846222,86.078879 93.003783,41.921307"
    id="path72" /></svg>

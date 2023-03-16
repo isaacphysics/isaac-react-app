@@ -210,7 +210,6 @@ export const IsaacApp = () => {
                         */}
 
                         {/* Builder pages */}
-                        <TrackedRoute exact path="/equality" component={Equality} />
                         <TrackedRoute exact path="/markdown" ifUser={isStaff} component={MarkdownBuilder} />
                         <TrackedRoute exact path="/free_text" ifUser={isStaff} component={FreeTextBuilder} />
 

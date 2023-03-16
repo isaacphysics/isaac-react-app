@@ -80,23 +80,24 @@ interface SearchInputProps {
 }
 // HOC pattern for making different flavour search bars
 export function withSearch(Component: React.FC<SearchInputProps>) {
-    const SearchComponent = ({className, inline}: {className?: string, inline?: boolean}) => {
-        const [searchText, setSearchText] = useState("");
+    const SearchComponent = ({className, inline, onSearch, initialValue}: {className?: string; inline?: boolean; onSearch?: (searchText: string) => void; initialValue?: string}) => {
+        const [searchText, setSearchText] = useState(initialValue ?? "");
         const searchInputRef = useRef<HTMLInputElement>(null);
 
         const history = useHistory();
         function doSearch(e: FormEvent<HTMLFormElement>) {
             e.preventDefault();
-            if (searchText == "") {
+            if (searchText === "") {
                 if (searchInputRef.current) searchInputRef.current.focus();
             } else {
+                onSearch?.(searchText);
                 pushSearchToHistory(history, searchText, []);
             }
         }
 
         // Clear this search field on location (i.e. search query) change - user should use the main search bar
         const location = useLocation();
-        useEffect(() => { if (location.pathname === "/search") { setSearchText(""); }}, [location]);
+        useEffect(() => { if (location.pathname === "/search") { setSearchText(initialValue ?? ""); }}, [location]);
 
         return <Form inline={inline} onSubmit={doSearch} className={className}>
             <FormGroup className='search--main-group'>

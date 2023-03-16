@@ -100,6 +100,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
     const gotResults = shortcutAndFilteredSearchResults && shortcutAndFilteredSearchResults.length > 0;
 
+    // FIXME ADA reinstate how this looked on physics form old isaac-react-app
     return (
         <Container id="search-page">
             <Row>
@@ -109,7 +110,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
             </Row>
             <Row>
                 <Col>
-                    <AdaHeaderSearch className={"border-secondary"}/>
+                    <AdaHeaderSearch className={"border-secondary"} initialValue={urlQuery ?? ""} />
                 </Col>
             </Row>
             <Row>

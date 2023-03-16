@@ -4,15 +4,15 @@ import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {ComingSoon} from "../../pages/ComingSoon";
 import {Topic} from "../../pages/Topic";
-import {Students} from "../../pages/Students";
-import {TeacherTools} from "../../pages/TeacherTools";
 import {Redirect} from "react-router";
-import {isEventLeaderOrStaff, isTutorOrAbove} from "../../../services";
+import {isEventLeaderOrStaff, isStaff, isTutorOrAbove} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
 import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {Glossary} from "../../pages/Glossary";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
+import Equality from "../../pages/Equality";
+import {News} from "../../pages/News";
 
 let key = 0;
 export const RoutesCS = [
@@ -27,9 +27,13 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
 
+    // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
     <TrackedRoute key={key++} exact path="/exam_specifications" component={ExamSpecifications} />,
+
+    // News
+    <TrackedRoute key={key++} exact path="/news" component={News} />,
 
     // Books:
     <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
@@ -48,4 +52,5 @@ export const RoutesCS = [
     <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
 
     <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
+    <TrackedRoute exact path="/equality" ifUser={isStaff} component={Equality} />,
 ];

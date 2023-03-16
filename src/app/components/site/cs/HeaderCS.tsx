@@ -22,6 +22,11 @@ export const HeaderCS = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+    const closeWholeNavbar = () => {
+        setIsOpen(false);
+        setIsSearchOpen(false);
+    };
+
     return <header className="light" data-testid={"header"}>
         <Navbar expand="nav" className={"px-0 px-nav-3 pb-0 pb-nav-2"}>
             <NavbarBrand href="/" className="header-logo ml-3 mb-2 mb-nav-0">
@@ -37,7 +42,7 @@ export const HeaderCS = () => {
 
             <MenuOpenContext.Provider value={{menuOpen: isOpen, setMenuOpen: setIsOpen}}>
                 <Collapse className={"search-collapse p-3 p-nav-0 mr-nav-2 border-nav-0"} isOpen={isSearchOpen} navbar>
-                    <AdaHeaderSearch className={"ml-nav-2 d-nav-inline-block d-block"} />
+                    <AdaHeaderSearch className={"ml-nav-2 d-nav-inline-block d-block"} onSearch={closeWholeNavbar} />
                 </Collapse>
                 <Collapse isOpen={isOpen} navbar>
                     <Nav navbar className={"w-100"}>

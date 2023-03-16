@@ -3,13 +3,13 @@
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 120 120" style="enable-background:new 0 0 120 120;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#ffb53f;}
-	.st1{fill:none;stroke:#000000;stroke-width:6;stroke-linecap:round;stroke-miterlimit:10;}
+	.st0{fill:#870C5A;}
+	.st1{fill:none;stroke:#ffffff;stroke-width:6;stroke-linecap:round;stroke-miterlimit:10;}
 </style>
 <g id="hexagon">
-	<polygon class="st0" points="8,30 8,90 60,120 112,90 112,30 60,0 	"/>
+	<circle class="st0" r="50" cx="60" cy="60"/>
 </g>
-<g id="icon">
+<g id="icon" fill="white">
 	<line class="st1" x1="60" y1="97.5" x2="60" y2="22.5"/>
 	<g>
 		<g>

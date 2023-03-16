@@ -63,13 +63,13 @@ export const HomepageCS = () => {
                         cards: [{
                             title: "GCSE computer science",
                             subtitle: "Our GCSE computer science topics cover the secondary school phase of learning for students aged 14 to 16.",
-                            clickUrl: "/topics?stage=gcse",
+                            clickUrl: "/topics#gcse",
                             buttonText: "View GCSE resources",
                             imageClassName: "backslash-1"
                         }, {
                             title: "A level computer science",
                             subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 19.",
-                            clickUrl: "/topics?stage=a_level",
+                            clickUrl: "/topics#a_level",
                             buttonText: "View A level resources",
                             imageClassName: "backslash-2"
                         }]
@@ -100,8 +100,7 @@ export const HomepageCS = () => {
                         {news.slice(0, 4).map(n => <NewsCard newsItem={n} showTitle />)}
                     </CardDeck>
                     <div className={"mt-4 mt-lg-5 w-100 text-center"}>
-                        {/* FIXME ADA link this to a general news page? Also fix link CSS design */}
-                        <Button href={"/"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
+                        <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
                     </div>
                 </Container>
             </section>}

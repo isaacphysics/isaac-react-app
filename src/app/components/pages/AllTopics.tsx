@@ -1,56 +1,20 @@
-import React, {useEffect, useState} from "react";
-import {Link, useHistory, useLocation} from "react-router-dom";
+import React from "react";
+import {Link} from "react-router-dom";
 import {Badge, Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Tag} from "../../../IsaacAppTypes";
 import {
-    history,
-    KEY,
-    persistence,
     STAGE,
-    STAGE_NULL_OPTIONS,
     TAG_ID,
     tags,
-    useQueryParams,
-    useUserContext
+    useHashState
 } from "../../services";
 import {PageFragment} from "../elements/PageFragment";
-import {Redirect} from "react-router";
 import {RenderNothing} from "../elements/RenderNothing";
 import {MetaDescription} from "../elements/MetaDescription";
 import classNames from "classnames";
-import queryString from "query-string";
 import {Tabs} from "../elements/Tabs";
-
-export function AllTopicsWithoutAStage() {
-    const history = useHistory();
-    const mostRecentAllTopicsPath = persistence.load(KEY.MOST_RECENT_ALL_TOPICS_PATH);
-    const queryParams = useQueryParams(true);
-    const userContext = useUserContext();
-
-    // We will try our best to make links to /topics go to the expected place
-    let stage: string;
-    // Almost all cases use the most recent all topics path stored in local storage
-    if (mostRecentAllTopicsPath) {
-        stage = mostRecentAllTopicsPath;
-    // If they are using the old link which used the query param we use that
-    } else if (queryParams && queryParams.stage && !STAGE_NULL_OPTIONS.has(queryParams.stage as STAGE)) {
-        stage = queryParams.stage;
-    // The viewing context's stage seems a sensible next option
-    } else if (userContext.stage && !STAGE_NULL_OPTIONS.has(userContext.stage)) {
-        stage = userContext.stage;
-    // Default to A Level
-    } else {
-        stage = STAGE.A_LEVEL;
-    }
-
-    useEffect(() => {
-        // The redirect component doesn't seem to work.
-        // Perhaps it is fighting against useUserContext()'s history.replace() - will need to investigate further
-        history.push(`/topics/${stage}`);
-    })
-    return <Redirect to={`/topics/${stage}`} />;
-}
+import {TypeGuard} from "@reduxjs/toolkit/dist/tsHelpers";
 
 const renderTopic = (topic: Tag) => {
     if (!topic.hidden) {
@@ -104,12 +68,9 @@ export const AllTopics = () => {
     const subcategoryTags = tags.allSubcategoryTags;
 
     //const existingLocation = useLocation();
-    const {stage: view, setStage: setTransientStage} = useUserContext();
-    const initialStage = ([STAGE.A_LEVEL, STAGE.GCSE, STAGE.ALL] as any[]).includes(view)
-        ? view as STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL
-        : STAGE.ALL;
-    const [stage, setStage] = useState<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>(initialStage);
-
+    //const {stage: view, setStage: setTransientStage} = useUserContext();
+    const checkStage = ((a: any) => [STAGE.ALL, STAGE.A_LEVEL, STAGE.GCSE].includes(a)) as TypeGuard<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>;
+    const [stage, setStage] = useHashState<STAGE.A_LEVEL | STAGE.GCSE | STAGE.ALL>(STAGE.ALL, checkStage);
     // TODO update users transient user context so they see the correct topics etc. when clicking through?
     // useEffect(() => {
     //     setTransientStage(stage);

@@ -13,7 +13,7 @@
   height: 72px;
   #homepage-search {
     padding-left: $border-radius * 6;
-    height: 100%;
+    min-height: 100%;
     max-width: unset !important;
     border-radius: ($border-radius * 10);
     border: 2px solid $cs-black;
