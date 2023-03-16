@@ -26,7 +26,7 @@ export const HomepageCS = () => {
                         <Col lg={6} xl={5} className={"my-auto mw-640"}>
                             <h1 className={"font-size-1-75 font-size-md-2 font-size-xxl-2-5"}>
                                 <span className={"text-pink"}>/</span><br/>
-                                Welcome to Ada Computer Science, <span className={"font-weight-regular"}>the free online platform for students and teachers around the world.</span>
+                                Welcome to Ada Computer Science, <span className={"font-weight-regular"}>the free online platform for teachers and students around the world.</span>
                             </h1>
                             <p className={"font-size-1 font-size-md-1-25 py-3"}>
                                 Developed by the Raspberry Pi Foundation and the University of Cambridge.
