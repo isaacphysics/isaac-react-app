@@ -27,18 +27,17 @@ export const SocialLinksRow = () => {
                             </ListGroupItem>
                         )}
                     </ListGroup>,
-
                     // CS
-                    <Row className='mt-3 pb-5 py-lg-3 d-md-flex'>
+                    <div className='mt-1 text-nowrap'>
                         {Object.entries(SOCIAL_LINKS).map(([_, {name, href}]) =>
-                            <Col key={name}>
+                            <div className={"mr-3 d-inline-block"} key={name}>
                                 <ExternalLink href={href}>
                                     <img src={getSocialIconForSite(name.toLowerCase())} alt={`${SITE_TITLE} on ${name}`}
                                          className='img-fluid footer-social-logo'/>
                                 </ExternalLink>
-                            </Col>
+                            </div>
                         )}
-                    </Row>
+                    </div>
                 )
             }
         </div>

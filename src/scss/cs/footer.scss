@@ -18,7 +18,10 @@ footer {
 .footer-links {
   color: $cs-white;
   padding-top: 0;
-  a {
+  a.footer-link {
+    @extend .my-2;
+    overflow-wrap: normal;
+    display: inline !important;
     color: $cs-white;
     text-decoration: underline;
   }
@@ -42,8 +45,13 @@ footer {
   padding-top: 0 !important;
 }
 
-.footer-social-logo {
-  min-height: 2.5rem !important;
-  max-height: 4rem !important;
+.footer-links-social {
+  display: block;
+  @extend .mt-4;
+  @extend .mt-lg-0;
+  .footer-social-logo {
+    height: 48px !important;
+  }
 }
+
 

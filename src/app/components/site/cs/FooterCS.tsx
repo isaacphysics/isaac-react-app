@@ -1,6 +1,5 @@
-/* eslint-disable react/jsx-no-target-blank */
 import React from "react";
-import {Container, Col, Row, ListGroup, ListGroupItem} from "reactstrap";
+import {Container, Col, Row} from "reactstrap";
 import {ListGroupFooter} from "../../elements/list-groups/ListGroupFooter";
 import {Link} from "react-router-dom";
 import {SocialLinksRow} from "../../elements/list-groups/SocialLinks";
@@ -9,22 +8,22 @@ export const FooterCS = () => (
     <footer>
         <div className="footer-top d-print-none">
             <Container fluid className="py-5">
-                <Row className="justify-content-between">
-                    <Col xs={{size: 2}} lg={{size: 1}}>
+                <Row className="justify-content-start">
+                    <Col xs={"auto"} className={"mr-5 mb-4 mb-md-0"}>
                         <Link to="/">
                             <img
                                 src="/assets/logos/ada_logo_stamp_aqua.svg"
-                                className="footer-logo mb-4"
+                                className="footer-logo"
                                 alt="Ada Computer Science homepage"
                             />
                         </Link>
                     </Col>
-                    <Col xs={{size: 12}} md={{size: 10}} lg={{size: 3}}>
+                    <Col xs={12} md={8} lg={"auto"}>
                         <ListGroupFooter />
                     </Col>
-                    <Col xs={{size: 10}} md={{size: 5, offset: 0}} lg={{size: 4, offset: 2}} xl={{size: 3, offset: 5}} className="col-xxl-2">
+                    <div className={"float-right ml-lg-auto ml-3"}>
                         <SocialLinksRow />
-                    </Col>
+                    </div>
                 </Row>
             </Container>
         </div>
