@@ -359,6 +359,6 @@ a:not(.btn):not(.nav-link) {
   }
 }
 
-button.google-button.btn {
-  @include ada-button-outline($cs-black, $light-hover-dark-pink, $light-active-dark-pink);
+.google-button.google-button.google-button.google-button {
+  @include ada-button-outline($cs-black, $cs-jet, lighten($cs-jet, 20%));
 }
