@@ -537,6 +537,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     gender?: Gender;
     registrationDate?: Date;
     schoolId?: string;
+    countryCode?: string;
     role?: UserRole;
     schoolOther?: string;
     registeredContexts?: UserContext[];

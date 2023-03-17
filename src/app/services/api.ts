@@ -323,6 +323,14 @@ export const api = {
             return endpoint.get(`/schools/?urn=${encodeURIComponent(urn)}`);
         }
     },
+    countries: {
+        getCountries: (): AxiosPromise<Record<string, string>> => {
+            return endpoint.get(`/countries`);
+        },
+        getPriorityCountries: (): AxiosPromise<Record<string, string>> => {
+            return endpoint.get(`/countries/priority`);
+        }
+    },
     contactForm: {
         send: (params: {firstName: string; lastName: string; emailAddress: string; subject: string; message: string }): AxiosPromise => {
             return endpoint.post(`/contact/`, params, {});

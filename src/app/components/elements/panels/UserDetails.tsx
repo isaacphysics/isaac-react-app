@@ -18,6 +18,7 @@ import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTy
 import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
+import {CountryInput} from "../inputs/CountryInput";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -122,6 +123,15 @@ export const UserDetails = (props: UserDetailsProps) => {
                                  required={isAda}/>
                 </FormGroup>
             </Col>
+            {
+                isAda &&
+                <Col md={6}>
+                    <FormGroup>
+                        <CountryInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                                     required={false}/>
+                    </FormGroup>
+                </Col>
+            }
         </Row>
         <Row>
             <Col md={6}>
