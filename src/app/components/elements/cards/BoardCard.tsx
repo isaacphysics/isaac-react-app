@@ -125,18 +125,18 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
-                ? <span title={"Number of groups assigned"}>
+                ? <div title={"Number of groups assigned"}>
                     {isDefined(assignees)
                         ? <span className={assignees.length >= 100 ? "font-size-1" : "font-size-1-25"}>{assignees.length}</span>
                         : <Spinner size="sm" />
-                    }<br/><small>groups</small>
+                    }<br/><small>group{assignees.length !== 1 ? "s" : ""}</small>
                     {isDefined(assignees) &&
                         <UncontrolledTooltip placement={"top"} target={"#" + hexagonId}>{assignees.length === 0 ?
                             "No groups have been assigned to this quiz."
                             : ("Quiz assigned to: " + assignees.map(g => g.groupName).join(", "))}
                         </UncontrolledTooltip>
                     }
-                </span>
+                </div>
                 : <>{board.percentageCompleted}%</>
             }
         </foreignObject>
