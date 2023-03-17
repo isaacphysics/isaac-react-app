@@ -1,6 +1,6 @@
 import React, {MouseEvent, useEffect, useState} from "react";
 import {isaacApi, logAction, useAppDispatch} from "../../state";
-import {AssignmentDTO} from "../../../IsaacApiTypes";
+import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Col, Container, Input, Label, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {
@@ -8,7 +8,7 @@ import {
     filterAssignmentsByStatus,
     getDistinctAssignmentGroups,
     getDistinctAssignmentSetters,
-    ifKeyIsEnter, isAda,
+    ifKeyIsEnter, isAda, isTutorOrAbove,
     siteSpecific
 } from "../../services";
 import {Assignments} from "../elements/Assignments";
@@ -17,7 +17,7 @@ import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 
-export const MyAssignments = () => {
+export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     useEffect(() => {dispatch(logAction({type: "VIEW_MY_ASSIGNMENTS"}))}, [dispatch]);
 
@@ -37,7 +37,7 @@ export const MyAssignments = () => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="My assignments" help={pageHelp} modalId="my_assignments_help" />
-        {isAda && <PageFragment fragmentId={"assignments_help"} ifNotFound={<div className={"mt-5"}/>} />}
+        {isAda && <PageFragment fragmentId={`assignments_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />}
         <Card className={siteSpecific("my-5", "my-assignments-card")}>
             <CardBody className={siteSpecific("pt-0", "pt-2")}>
                 <ShowLoadingQuery
