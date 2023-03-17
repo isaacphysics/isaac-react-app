@@ -17,7 +17,7 @@ import {siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
-    "https://staging.isaaccomputerscience.org"
+    "https://www.staging.non-prod.isaaccomputerscience.org"
 );
 
 // eslint-disable-next-line no-undef
