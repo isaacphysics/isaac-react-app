@@ -55,6 +55,13 @@ $gray-194: #0f0f0f;
 
 $gray-blue: #636c73;
 
+// Assignment progress colours
+$default-name-fill: #888;
+$perfect-fill: $green;
+$passed-fill: #2C2C2C;
+$in-progress-fill: #555;
+$failed-fill: $red;
+
 // Shadows
 $shadow-3: rgba(0, 0, 0, 0.3);
 $shadow-25: rgba(0, 0, 0, 0.25);

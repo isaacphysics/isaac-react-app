@@ -498,7 +498,6 @@ const QuizDetails = ({quizAssignment}: { quizAssignment: QuizAssignmentDTO }) =>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={getQuizAssignmentCSVDownloadLink(quizAssignment.id)} onClick={openAssignmentDownloadLink}>Download CSV</Button>
                 <span className="d-none d-md-inline">or</span>
                 <Button className="d-none d-md-inline" color="link" tag="a" href={`/test/assignment/${quizAssignment.id}/feedback`} onClick={openSingleAssignment}>View individual assignment</Button>
-
             </div>
         </div>
         {isExpanded && <QuizProgressLoader key={quizAssignment.quizId} quizAssignment={quizAssignment} />}
@@ -561,12 +560,12 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
             <div className="group-name"><span className="icon-group"/><span data-testid={"group-name"}>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> {siteSpecific("Assignment", "Quiz")}{assignmentCount != 1 && siteSpecific("s", "zes")}<span className="d-none d-md-inline"> set</span></div>
-            <div className="d-none d-md-inline-block"><a href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
+            <div className="d-none d-md-inline-block"><a className={"download-csv-link"} href={getGroupProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>
                 (Download Group {siteSpecific("Assignments", "Quizzes")} CSV)
             </a></div>
             {pageSettings.isTeacher && isPhy && <div className="d-none d-md-inline-block"><a href={getGroupQuizProgressCSVDownloadLink(group.id as number)} target="_blank" rel="noopener" onClick={openDownloadLink}>(Download Group Test CSV)</a></div>}
             <Button color="link" className="px-2" tabIndex={0} onClick={() => setExpanded(!isExpanded)}>
-                <img src="/assets/icon-expand-arrow.png" alt="" className="accordion-arrow" />
+                <img src={siteSpecific("/assets/icon-expand-arrow.png", "/assets/chevron-up.svg")} alt="" className="accordion-arrow" />
                 <span className="sr-only">{isExpanded ? "Hide" : "Show"}{` ${group.groupName} assignments`}</span>
             </Button>
         </div>

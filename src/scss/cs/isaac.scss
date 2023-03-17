@@ -191,6 +191,13 @@ $inequality-background: $cs-list-outline-gray;
 $inequality-item-colour: $primary;
 $inequality-item-font-colour: $cs-white;
 
+// Assignment progress colours
+$default-name-fill: $cs-jet;
+$perfect-fill: #358539;
+$passed-fill: $cs-jet;
+$in-progress-fill: #FE8E15;
+$failed-fill: #C2423F;
+
 $spacer: 1rem !default;
 $spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
     6: ($spacer * 6.25) // 100px-ish

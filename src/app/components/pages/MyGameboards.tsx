@@ -156,7 +156,7 @@ const PhyTable = (props: GameboardsTableProps) => {
                             </th>
                             <th colSpan={2}>
                                 <div className="text-right align-middle">
-                                    <Button disabled={selectedBoards.length == 0} className="btn-sm" onClick={confirmDeleteMultipleBoards}>
+                                    <Button disabled={selectedBoards.length == 0} size="sm" color="link" onClick={confirmDeleteMultipleBoards}>
                                         {`Delete (${selectedBoards.length})`}
                                     </Button>
                                 </div>
@@ -258,7 +258,7 @@ const CSTable = (props: GameboardsTableProps) => {
                 <th>Share</th>
                 <th>
                     {selectedBoards.length
-                        ? <Button className="btn-sm btn-link" onClick={confirmDeleteMultipleBoards}>
+                        ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
                             Delete ({selectedBoards.length})
                         </Button>
                         : "Delete"

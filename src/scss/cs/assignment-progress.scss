@@ -1,7 +1,14 @@
 @import "../common/assignment-progress";
 
 .assignment-progress-group .group-name {
+  @extend .py-2;
+  padding-left: 13px;
   background: $yellow-300;
+  .icon-group {
+    width: 2rem;
+    height: 1.75rem;
+    background-size: contain;
+  }
 }
 
 .assignment-progress-gameboard .gameboard-header:not(.text-muted) > *:first-child:before {
@@ -25,8 +32,13 @@
   color: black;
 }
 
-.gameboard-links a {
+.gameboard-links a, .download-csv-link {
+  @extend .btn;
+  @extend .btn-link;
   @extend .font-weight-regular;
   font-size: 0.9rem;
-  color: #0F0F0F !important;
+}
+
+.accordion-arrow {
+  @extend .mx-2;
 }
