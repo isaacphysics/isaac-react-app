@@ -10,6 +10,13 @@ $link-text-bottom-padding: 4px;
   .nav-item {
     padding-left: 10px;
     padding-right: 10px;
+    &:first-of-type {
+      padding-left: 0 !important;
+    }
+    &:last-of-type {
+      padding-right: 0 !important;
+    }
+
     box-sizing: content-box;
     border-bottom: solid $nav-bottom-line $cs-silver;
 

@@ -110,9 +110,7 @@ export const Tabs = (props: TabsProps) => {
 
     return <div className={classNames({"mt-4": isDefined(expandButton)}, outerClasses)} ref={updateExpandRef}>
         {expandButton}
-        <div
-            className={classNames(className, innerClasses, "position-relative")}
-        >
+        <div className={classNames(className, innerClasses, "position-relative")}>
             {style === "tabs"
                 ? <TabNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</TabNavbar>
                 : <ButtonNavbar activeTab={activeTab} changeTab={changeTab} {...props}>{children}</ButtonNavbar>
