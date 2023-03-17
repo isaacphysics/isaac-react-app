@@ -123,12 +123,15 @@ export const UserDetails = (props: UserDetailsProps) => {
                                  required={isAda}/>
                 </FormGroup>
             </Col>
-            <Col md={6}>
-                <FormGroup>
-                    <CountryInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={false}/>
-                </FormGroup>
-            </Col>
+            {
+                isAda &&
+                <Col md={6}>
+                    <FormGroup>
+                        <CountryInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                                     required={false}/>
+                    </FormGroup>
+                </Col>
+            }
         </Row>
         <Row>
             <Col md={6}>
