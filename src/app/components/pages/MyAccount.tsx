@@ -47,7 +47,7 @@ import {
     isDefined,
     isDobOldEnoughForSite,
     isStaff,
-    SITE_TITLE,
+    SITE_TITLE, siteSpecific,
     validateEmail,
     validateEmailPreferences,
     validatePassword
@@ -272,7 +272,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                     <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})}>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
                             <NavLink
-                                className={"mx-2"} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                             >
                                 Profile
@@ -280,7 +280,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         </NavItem>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}>
                             <NavLink
-                                className={"mx-2"} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
                                 <span className="d-none d-xl-block">Account security</span>
@@ -289,7 +289,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         </NavItem>
                         <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}>
                             <NavLink
-                                className={"mx-2"}
+                                className={siteSpecific("mx-2", "px-2")}
                                 tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)}
                                 onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
@@ -300,7 +300,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         </NavItem>
                         {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}>
                             <NavLink
-                                className={"mx-2"} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                             >
                                 <span className="d-none d-lg-block">Email preferences</span>
@@ -309,7 +309,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
                         </NavItem>}
                         {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.betafeatures})}>
                             <NavLink
-                                className={"mx-2"} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.betafeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.betafeatures))}
                             >
                                 <span className="d-none d-lg-block">Beta features</span>

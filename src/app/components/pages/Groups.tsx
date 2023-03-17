@@ -450,7 +450,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                 {tabs.map((tab, index) => {
                                     return <NavItem key={index} className={classNames({"mx-2": isPhy, "active": tab.active()})}>
                                         <NavLink
-                                            className={classNames("text-center", {"mx-2": isAda})} tabIndex={0}
+                                            className={classNames("text-center", {"px-2": isAda})} tabIndex={0}
                                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                                         >
                                             {tab.name}
