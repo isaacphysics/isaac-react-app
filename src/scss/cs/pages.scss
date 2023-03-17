@@ -53,3 +53,16 @@
   border: none;
   border-radius: 0;
 }
+
+#progress-questions {
+  .content-summary-link {
+    border-left: 1px solid $cs-list-outline-gray;
+    border-right: 1px solid $cs-list-outline-gray;
+    &:first-of-type {
+      border-top: 1px solid $cs-list-outline-gray;
+    }
+    &:last-of-type {
+      border-bottom: 1px solid $cs-list-outline-gray;
+    }
+  }
+}
