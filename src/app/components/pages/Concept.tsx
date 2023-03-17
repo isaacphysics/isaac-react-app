@@ -5,7 +5,7 @@ import {Col, Container, Row} from "reactstrap";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
-import {DOCUMENT_TYPE, isAda, isPhy, siteSpecific, useNavigation} from "../../services";
+import {DOCUMENT_TYPE, isAda, isPhy, useNavigation} from "../../services";
 import {DocumentSubject, GameboardContext} from "../../../IsaacAppTypes";
 import {RelatedContent} from "../elements/RelatedContent";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
@@ -65,7 +65,7 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     </div>
 
                     <Row className="concept-content-container">
-                        <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
+                        <Col className={classNames("py-4", {"mw-760": isAda})}>
 
                             <SupersededDeprecatedWarningBanner doc={doc} />
 

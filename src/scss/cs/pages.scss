@@ -1,5 +1,11 @@
 @import "../common/pages";
 
+// Better way of meeting NOMENA content width standards
+.mw-760 {
+  @extend .mx-auto;
+  max-width: 760px !important;
+}
+
 .title-help {
   color: $dark-pink-300;
   text-decoration: underline;

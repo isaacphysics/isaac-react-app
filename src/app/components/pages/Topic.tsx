@@ -8,6 +8,7 @@ import {
     atLeastOne,
     examBoardLabelMap,
     getRelatedDocs,
+    isAda,
     NOT_FOUND, PATHS,
     stageLabelMap,
     TAG_ID,
@@ -39,7 +40,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
             <CanonicalHrefElement />
             <Row>
-                <Col md={{size: 8, offset: 2}} className="py-3">
+                <Col className={"py-3 mw-760"}>
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
@@ -63,7 +64,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             </Row>
 
             {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="mb-3">
-                <Col md={{size: 8, offset: 2}} className="py-0">
+                <Col className={"py-0 mw-760"}>
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
                             <CardTitle>Gameboards</CardTitle>
@@ -84,7 +85,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             </Row>}
 
             <Row className="mt-3 mb-5">
-                <Col md={{size: 8, offset: 2}} className="pb-3">
+                <Col className={"pb-3 mw-760"}>
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="primary" outline size="lg" block>

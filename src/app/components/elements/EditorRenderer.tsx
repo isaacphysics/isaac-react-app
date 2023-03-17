@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Col, Row} from "reactstrap";
-import {DOCUMENT_TYPE, EDITOR_ORIGIN, SITE_TITLE, siteSpecific} from "../../services";
+import {DOCUMENT_TYPE, EDITOR_ORIGIN, isAda, SITE_TITLE} from "../../services";
 import {FigureNumberingContext} from "../../../IsaacAppTypes";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {IsaacContent} from "../content/IsaacContent";
 import {Provider} from "react-redux";
 import {fetchGlossaryTerms, store, useAppDispatch} from "../../state";
 import {StaticRouter} from "react-router";
+import classNames from "classnames";
 
 function getType(doc: any) {
     if (!doc) {
@@ -57,7 +58,7 @@ function EditorListener() {
     const colClasses = type === "question" ? "question-panel" : "";
 
     return doc ? <Row className={`${type}-content-container`}>
-            <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className={`py-4 ${colClasses}`}>
+            <Col className={classNames("py-4", colClasses, {"mw-760": isAda})}>
                 <FigureNumberingContext.Provider value={{}}>
                     <WithFigureNumbering doc={doc}>
                         <IsaacContent doc={doc}/>
