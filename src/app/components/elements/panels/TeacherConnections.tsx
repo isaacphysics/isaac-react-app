@@ -20,7 +20,7 @@ import {
     isAda,
     isLoggedIn,
     isPhy,
-    isStudent,
+    isStudent, isTutorOrAbove,
     MEMBERSHIP_STATUS,
     siteSpecific
 } from "../../../services";
@@ -67,7 +67,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     return <RS.CardBody>
         <RS.Container>
-            {isAda && <PageFragment fragmentId={"teacher_connections_help"} ifNotFound={RenderNothing} />}
+            {isAda && <PageFragment fragmentId={`teacher_connections_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />}
             <h3>
                 <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
