@@ -359,6 +359,6 @@ a:not(.btn):not(.nav-link) {
   }
 }
 
-.google-button.google-button.google-button.google-button {
+.google-button:not(.linked-account-button) {
   @include ada-button-outline($cs-black, $cs-jet, lighten($cs-jet, 20%));
 }
