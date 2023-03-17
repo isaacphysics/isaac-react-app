@@ -483,7 +483,7 @@ export const SetAssignments = () => {
     }, [setBoardView]);
 
     // Whether to let the user schedule assignments for the future
-    const allowScheduling = isStaff(user) || (userPreferences?.BETA_FEATURE?.SCHEDULE_ASSIGNMENTS ?? false);
+    const allowScheduling = siteSpecific(isStaff(user) || (userPreferences?.BETA_FEATURE?.SCHEDULE_ASSIGNMENTS ?? false), true);
 
     // Logic for set assignments modal.
     // hashAnchor acts as a buffer for a modal that needs to be opened. If it is set, the next time we get boards from
@@ -547,8 +547,8 @@ export const SetAssignments = () => {
             ? <h3 className="text-center mt-4 mb-5">
                 You have no {siteSpecific("gameboards", "quizzes")} to assign; {siteSpecific(
                     "use one of the options above to find one.",
-                    <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
-                        create a quiz here.
+                    <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} size="sm" color="secondary">
+                        Create a quiz
                     </Button>
                 )}
             </h3>
