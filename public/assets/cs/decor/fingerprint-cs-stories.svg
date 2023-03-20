@@ -26,42 +26,42 @@
 			<path d="M715.404 -221.493C904.513 25.0096 610.525 189.461 861.713 541.068C1042.49 794.11 381.317 898.611 119.137 739.982C-143.042 581.352 7.38007 287.035 39.207 -22.3433C77.6602 -395.985 540.55 -449.413 715.404 -221.493Z" stroke="black" stroke-width="3.1" stroke-miterlimit="10"/>
 			<path d="M736.722 -264.35C942.094 3.3512 622.823 181.945 895.612 563.79C1091.94 838.593 373.903 952.081 89.177 779.809C-195.549 607.538 -32.1911 287.91 2.37295 -48.074C44.1331 -453.848 546.83 -511.87 736.722 -264.35Z" fill="url(#paint1_radial_69_5015)"/>
 		</g>
-		<circle cx="697.981" cy="424.287" r="35.9598" fill="white"/>
-		<g opacity="0.75">
-			<mask id="mask0_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="661" y="388" width="73" height="73">
-				<ellipse cx="697.353" cy="424.287" rx="36.3429" ry="35.9598" fill="#D9D9D9"/>
-			</mask>
-			<g mask="url(#mask0_69_5015)">
-				<rect x="656.972" y="387.528" width="79.9544" height="73.5179" fill="url(#pattern0)"/>
-			</g>
-		</g>
-		<circle cx="359.707" cy="69.0341" r="29.5" fill="white"/>
-		<g opacity="0.75">
-			<mask id="mask1_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="330" y="39" width="61" height="60">
-				<ellipse cx="360.518" cy="69.1574" rx="29.9389" ry="29.6233" fill="#D9D9D9"/>
-			</mask>
-			<g mask="url(#mask1_69_5015)">
-				<rect x="327.547" y="39.5341" width="66.7031" height="59" fill="url(#pattern1)"/>
-			</g>
-		</g>
-		<circle cx="357.105" cy="377.467" r="32.0258" fill="white"/>
-		<g opacity="0.75">
-			<mask id="mask2_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="324" y="345" width="66" height="65">
-				<ellipse cx="357.257" cy="377.37" rx="32.4655" ry="32.1233" fill="#D9D9D9"/>
-			</mask>
-			<g mask="url(#mask2_69_5015)">
-				<rect x="317.065" y="345.158" width="80.8719" height="64.743" fill="url(#pattern2)"/>
-			</g>
-		</g>
-		<circle cx="527.602" cy="192.769" r="38.5222" fill="white"/>
-		<g opacity="0.75">
-			<mask id="mask3_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="489" y="154" width="78" height="78">
-				<ellipse cx="527.951" cy="192.819" rx="38.9325" ry="38.5222" fill="#D9D9D9"/>
-			</mask>
-			<g mask="url(#mask3_69_5015)">
-				<rect x="489.019" y="154.297" width="77.8651" height="77.0443" fill="url(#pattern3)"/>
-			</g>
-		</g>
+<!--		<circle cx="697.981" cy="424.287" r="35.9598" fill="white"/>-->
+<!--		<g opacity="0.75">-->
+<!--			<mask id="mask0_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="661" y="388" width="73" height="73">-->
+<!--				<ellipse cx="697.353" cy="424.287" rx="36.3429" ry="35.9598" fill="#D9D9D9"/>-->
+<!--			</mask>-->
+<!--			<g mask="url(#mask0_69_5015)">-->
+<!--				<rect x="656.972" y="387.528" width="79.9544" height="73.5179" fill="url(#pattern0)"/>-->
+<!--			</g>-->
+<!--		</g>-->
+<!--		<circle cx="359.707" cy="69.0341" r="29.5" fill="white"/>-->
+<!--		<g opacity="0.75">-->
+<!--			<mask id="mask1_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="330" y="39" width="61" height="60">-->
+<!--				<ellipse cx="360.518" cy="69.1574" rx="29.9389" ry="29.6233" fill="#D9D9D9"/>-->
+<!--			</mask>-->
+<!--			<g mask="url(#mask1_69_5015)">-->
+<!--				<rect x="327.547" y="39.5341" width="66.7031" height="59" fill="url(#pattern1)"/>-->
+<!--			</g>-->
+<!--		</g>-->
+<!--		<circle cx="357.105" cy="377.467" r="32.0258" fill="white"/>-->
+<!--		<g opacity="0.75">-->
+<!--			<mask id="mask2_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="324" y="345" width="66" height="65">-->
+<!--				<ellipse cx="357.257" cy="377.37" rx="32.4655" ry="32.1233" fill="#D9D9D9"/>-->
+<!--			</mask>-->
+<!--			<g mask="url(#mask2_69_5015)">-->
+<!--				<rect x="317.065" y="345.158" width="80.8719" height="64.743" fill="url(#pattern2)"/>-->
+<!--			</g>-->
+<!--		</g>-->
+<!--		<circle cx="527.602" cy="192.769" r="38.5222" fill="white"/>-->
+<!--		<g opacity="0.75">-->
+<!--			<mask id="mask3_69_5015" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="489" y="154" width="78" height="78">-->
+<!--				<ellipse cx="527.951" cy="192.819" rx="38.9325" ry="38.5222" fill="#D9D9D9"/>-->
+<!--			</mask>-->
+<!--			<g mask="url(#mask3_69_5015)">-->
+<!--				<rect x="489.019" y="154.297" width="77.8651" height="77.0443" fill="url(#pattern3)"/>-->
+<!--			</g>-->
+<!--		</g>-->
 	</g>
 	<defs>
 		<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
