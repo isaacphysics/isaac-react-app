@@ -526,7 +526,7 @@ export const SetAssignments = () => {
         groupsByGameboard, openAssignModal
     };
 
-    return <Container fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})}>
+    return <Container> {/* fluid={siteSpecific(false, true)} className={classNames({"px-lg-5 px-xl-6": isAda})} */}
         <SetAssignmentsModal
             isOpen={isModalOpen}
             toggle={() => setIsModalOpen(false)}
