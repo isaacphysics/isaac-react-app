@@ -6,7 +6,6 @@ import {
     determineAudienceViews,
     examBoardLabelMap,
     filterAudienceViewsByProperties,
-    findAudienceRecordsMatchingPartial,
     generateQuestionTitle,
     isAda,
     siteSpecific,
@@ -118,9 +117,8 @@ const GameboardBuilderRow = (
         </td>
         {isAda && <td className={classNames(cellClasses, "w-15")}>
             {filteredAudienceViews.map((audienceView, i, collection) => <>
-                {findAudienceRecordsMatchingPartial(question.audience, audienceView)
-                    .map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => tagIcon(examBoardLabelMap[examBoard])))
-                }
+                {/* FIXME ADA was `findAudienceRecordsMatchingPartial(question.audience, audienceView).map(...)` but it seemed to be broken */}
+                {question.audience?.map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => tagIcon(examBoardLabelMap[examBoard])))}
                 {/* When this becomes more common we should solve separation via a new row and merge other columns */}
                 {i + 1 < collection.length && <hr className="text-center" />}
             </>)}
