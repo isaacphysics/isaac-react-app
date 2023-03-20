@@ -22,8 +22,8 @@
 }
 
 .accordion .accordion-header {
-  button, button:hover {
-    color: black;
+  span, button, button:hover {
+    color: black !important;
   }
 }
 
