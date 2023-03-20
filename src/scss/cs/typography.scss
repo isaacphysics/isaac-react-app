@@ -43,6 +43,7 @@ $sizes: [
 
 .font-weight-regular {
   font-family: $secondary-font, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;
+  font-weight: $font-weight-normal !important;
 }
 
 .font-weight-bold {
