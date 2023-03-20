@@ -20,7 +20,7 @@ import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes
 import {
     adminUserGetRequest,
     AdminUserGetState,
-    AppState,
+    AppState, errorSlice,
     ErrorState,
     getChosenUserAuthSettings,
     resetPassword,
@@ -236,6 +236,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
+            dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(
                 userToUpdate,
                 editingOtherUser ? {} : newPreferences,

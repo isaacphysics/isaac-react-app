@@ -1,4 +1,12 @@
-import {AppState, closeActiveModal, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../../state";
+import {
+    AppState,
+    closeActiveModal,
+    errorSlice,
+    selectors,
+    updateCurrentUser,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailPreferences";
@@ -56,6 +64,7 @@ const RequiredAccountInfoBody = () => {
         setSubmissionAttempted(true);
 
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
+            dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
             dispatch(closeActiveModal());
         }

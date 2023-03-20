@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
+import {errorSlice, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
 import ReactGA4 from "react-ga4";
@@ -90,6 +90,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOldEnoughForSite && consentGivenOrNotRequired) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
+            dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             ReactGA.event({

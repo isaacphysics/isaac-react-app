@@ -44,6 +44,7 @@ export const errorSlice = createSlice({
     reducers: {
         apiServerError: (_) => ({type: "serverError"}),
         apiGoneAway: (_) => ({type: "goneAwayError"}),
+        clearError: (_) => null
     },
     extraReducers: (builder) => {
         const generalMatcher = (action: any): action is {type: string, errorMessage: string} => [
