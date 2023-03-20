@@ -25,7 +25,7 @@ const GameboardSuccessfullyCreated = () =>
 const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
-    return <Row>
+    return <Row className={"my-3"}>
         <Col className="mb-1">
             <Button
                 tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block

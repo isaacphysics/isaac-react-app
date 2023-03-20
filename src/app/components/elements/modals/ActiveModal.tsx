@@ -3,7 +3,7 @@ import * as RS from "reactstrap";
 import * as AppTypes from "../../../../IsaacAppTypes";
 import {closeActiveModal, useAppDispatch} from "../../../state";
 import classNames from "classnames";
-import {isAda, isDefined, isPhy} from "../../../services";
+import {isAda, isPhy, siteSpecific} from "../../../services";
 
 interface ActiveModalProps {
     activeModal?: AppTypes.ActiveModal | null;
@@ -21,6 +21,7 @@ export const ActiveModal = ({activeModal}: ActiveModalProps) => {
         {activeModal && <React.Fragment>
             {<RS.ModalHeader
                 data-testid={"modal-header"}
+                tag={siteSpecific(undefined, "h2")}
                 className={classNames({"h-title mb-4": !!activeModal.title, "position-absolute": !activeModal.title, "pb-5": isPhy && !!activeModal.title})}
                 style={activeModal.title ? {} : {top: 0, width: "100%", height: 0, zIndex: 1}}
                 close={
