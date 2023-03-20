@@ -17,7 +17,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {isAda, useCurrentQuestionAttempt} from "../../services";
+import {isAda, siteSpecific, useCurrentQuestionAttempt} from "../../services";
 import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
@@ -151,7 +151,10 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                     <span className={"feedback incorrect"}><b>!</b></span>
                                 </div>}
                                 {!readonly && <InputGroupAddon addonType="append">
-                                    <Button type="button" className={classNames("numeric-help", {"py-0": isAda})} size="sm" id={helpTooltipId}>?</Button>
+                                    {siteSpecific(
+                                        <Button type="button" className={classNames("numeric-help", {"py-0": isAda})} size="sm" id={helpTooltipId}>?</Button>,
+                                        <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                                    )}
                                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
                                         3.7<br />

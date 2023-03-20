@@ -82,6 +82,11 @@ $secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
 $secondary-font-medium: 'exo_2medium', sans-serif;
 $tertiary-font: 'arconrounded-regular', sans-serif;
 
+$question-line-height: 1.6;
+$question-padding: 3rem;
+$question-font-size: 1.25rem;
+$question-font-weight: 600;
+
 // ISAAC
 // Node module imports
 @import "~bootstrap/scss/bootstrap";

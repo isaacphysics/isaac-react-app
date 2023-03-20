@@ -77,7 +77,7 @@ export const HomepageCS = () => {
                 </Container>
             </section>
 
-            <section id="computer-science-stories">
+            <section id="computer-science-stories"> {/* FIXME ADA might want this hidden until more stories are added/the people in the background image are changed to reflect the new stories */}
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
                         <Col xs={12} md={6} id={"cs-stories-text"}>

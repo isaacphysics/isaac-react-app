@@ -171,6 +171,7 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
     // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
     "primary": $primary,
     "secondary": $secondary,
+    "warning": $yellow-300,
     "dark-primary": $dark-primary,
     "dark-secondary": $dark-secondary,
 
@@ -220,6 +221,11 @@ $secondary-font-semi-bold: 'poppins-semibold', sans-serif;
 $secondary-font-italic: 'poppins-italic', sans-serif;
 $secondary-font-medium: $secondary-font;
 $tertiary-font: 'poppins-light', sans-serif;
+
+$question-line-height: 1.5rem;
+$question-padding: 1.6rem;
+$question-font-size: 1rem;
+$question-font-weight: 400;
 
 $text-muted: $cs-dark-silver;
 

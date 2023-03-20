@@ -429,12 +429,12 @@ const CSFilter = ({selections, setSelections, stages, setStages, difficulties, s
             <Row className={"mt-4"}>
                 <Col>
                     {previousBoard && <Button size="sm" color="secondary" outline onClick={previousBoard}>
-                        <span className="d-md-inline d-none">Undo Shuffle</span> &#9100;
+                        <span className="d-md-inline d-none">Undo Shuffle</span> <span className={"font-size-1-25 d-inline-block"}>&#9100;</span>
                     </Button>}
                 </Col>
                 <Col className="text-right">
                     <Button size="sm" color="secondary" outline onClick={refresh}>
-                        <span className="d-md-inline d-none">Shuffle Questions</span> ⟳
+                        <span className="d-md-inline d-none">Shuffle Questions</span> <span className={"font-size-1-25 d-inline-block"}>⟳</span>
                     </Button>
                 </Col>
             </Row>

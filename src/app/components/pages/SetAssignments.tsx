@@ -545,9 +545,10 @@ export const SetAssignments = () => {
         </Alert>}
         {boards && boards.totalResults === 0
             ? <h3 className="text-center mt-4 mb-5">
-                You have no {siteSpecific("gameboards", "quizzes")} to assign; {siteSpecific(
-                    "use one of the options above to find one.",
-                    <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} size="sm" color="secondary">
+                You have no {siteSpecific("gameboards", "quizzes")} to assign
+                {siteSpecific(
+                    "; use one of the options above to find one.",
+                    <Button className={"ml-3"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} size="sm" color="secondary">
                         Create a quiz
                     </Button>
                 )}

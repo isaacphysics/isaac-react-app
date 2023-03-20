@@ -4,15 +4,15 @@
     background-color: white;
     box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
     margin: auto auto 2rem auto;
-    padding: 3rem;
+    padding: $question-padding;
     @include media-breakpoint-down(sm) {
       padding: 1rem;
     }
 
     font-family: $secondary-font;
-    font-size: 1.25rem;
-    line-height: 1.6;
-    font-weight: 600;
+    font-size: $question-font-size; // 1.25rem;
+    line-height: $question-line-height; // 1.6rem;
+    font-weight: $question-font-weight;
   }
 }
 
@@ -26,9 +26,9 @@
 
   .question-content {
     font-family: $secondary-font;
-    font-size: 1.25rem;
+    font-size:  $question-font-size;
     font-weight: 400;
-    line-height: 1.6;
+    line-height: $question-line-height;
   }
 
   .custom-control-label {

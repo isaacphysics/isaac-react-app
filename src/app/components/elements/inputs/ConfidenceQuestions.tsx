@@ -156,19 +156,17 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
     const disabled = state === "initial" && disableInitialState === true;
 
     return <div className={classNames("quick-question-options", {"quick-question-secondary": isAda && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isAda, "quick-question-muted": disabled && isPhy})}>
-        {state === "initial" && <Row>
-            <Col md="9">
-                <h4 className={classNames({"text-muted": disabled && isAda})}>{confidenceVariables?.title}</h4>
-            </Col>
-            <Col md="auto" className="ml-auto text-center not-mobile">
-                <Button outline={isPhy} color="primary" className={classNames("confidence-help")} size="sm"
+        {state === "initial" && <div className={"d-flex"}>
+            <h4 className={classNames({"text-muted": disabled && isAda})}>{confidenceVariables?.title}</h4>
+            <div className="ml-2 mt-n1 not-mobile">
+                <Button outline={isPhy} color="primary" className={"confidence-help"} size="sm"
                         onClick={() => dispatch(confidenceInformationModal())}>
                     {
                         isPhy && <i>i</i>
                     }
                 </Button>
-            </Col>
-        </Row>}
+            </div>
+        </div>}
         <Row className="mb-3">
             <Col className={classNames({"text-muted": disabled && isAda})}>
                 {confidenceStateVariables.question}

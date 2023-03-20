@@ -9,7 +9,7 @@ import {
     jsonHelper,
     sanitiseInequalityState,
     parsePseudoSymbolicAvailableSymbols,
-    useCurrentQuestionAttempt, isAda
+    useCurrentQuestionAttempt, isAda, siteSpecific
 } from "../../services";
 import {Inequality, makeInequality} from "inequality";
 import {parseMathsExpression, ParsingError} from "inequality-grammar";
@@ -220,7 +220,10 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
                               placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
-                        <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>
+                        {siteSpecific(
+                            <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
+                            <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                        )}
                         <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />

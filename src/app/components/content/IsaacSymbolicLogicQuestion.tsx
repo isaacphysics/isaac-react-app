@@ -8,7 +8,7 @@ import {
     isDefined,
     isStaff,
     jsonHelper,
-    sanitiseInequalityState,
+    sanitiseInequalityState, siteSpecific,
     useCurrentQuestionAttempt,
     useUserContext
 } from "../../services";
@@ -229,7 +229,10 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                     <Input type="text" onChange={updateEquation} value={textInput}
                            placeholder="or type your expression here"/>
                     <InputGroupAddon addonType="append">
-                        <Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId}>?</Button>
+                        {siteSpecific(
+                            <Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId}>?</Button>,
+                            <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                        )}
                         <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />
