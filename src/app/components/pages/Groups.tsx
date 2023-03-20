@@ -173,11 +173,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
             const updatedGroup = {...group, groupName: newGroupName};
             updateGroup({updatedGroup});
         } else {
-            createNewGroup(newGroupName).then(success => {
-                if (success) {
-                    setNewGroupName("");
-                }
-            });
+            createNewGroup(newGroupName);
         }
     }
 
