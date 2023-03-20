@@ -144,7 +144,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </h3>
                         <p>
                             You can invite students to share their {siteSpecific("Isaac", "Ada")} data with you through the {" "}
-                            <Link to="/groups">group management page</Link>.
+                            <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
                         </p>
                     </RS.Col>
                     <RS.Col lg={5}>
