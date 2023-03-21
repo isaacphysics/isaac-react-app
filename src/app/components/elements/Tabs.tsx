@@ -35,7 +35,7 @@ const TabNavbar = ({singleLine, children, tabTitleClass, activeTab, changeTab}: 
         {Object.keys(children).map((tabTitle, mapIndex) => {
             const tabIndex = mapIndex + 1;
             const linkClasses = callOrString(tabTitleClass, tabTitle, tabIndex);
-            return <NavItem key={tabTitle} className={classNames("text-center", {"active": activeTab === tabIndex})}>
+            return <NavItem key={tabTitle} className={classNames({"active": activeTab === tabIndex, "text-center": isAda})}>
                 <NavLink
                     tag="button" type="button" className={linkClasses} name={tabTitle.replace(" ", "_")}
                     tabIndex={0} onClick={() => changeTab(tabIndex)}

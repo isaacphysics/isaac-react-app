@@ -58,7 +58,7 @@ const GameboardBuilderRow = (
         AUDIENCE_DISPLAY_FIELDS
     );
 
-    const cellClasses = siteSpecific("text-center align-middle", "text-left align-middle");
+    const cellClasses = "text-left align-middle";
     const isSelected = question.id !== undefined && selectedQuestions.has(question.id);
     const isDisabled = !isSelected && selectedQuestions.size >= 10; // disable if we have 10 questions already FIXME this should be defined as a constant somewhere
     const label = (!isSelected ? "Select question" : "Deselect question") + (isDisabled ? " (disabled, you have selected the maximum number of questions)" : "");

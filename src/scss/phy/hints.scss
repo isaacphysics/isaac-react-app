@@ -9,11 +9,15 @@
 
   // Note: Colours are practically always overridden by subjects.scss.
   // The following rule sets the default to be physics purple.
-  .hint-tab-title {
-    color: $phy_physics !important;
+  li {
+    .hint-tab-title {
+      color: $phy_physics !important;
+    }
     &.active {
-      color: white !important;
-      background-color: $phy_physics !important;
+      .hint-tab-title {
+        color: white !important;
+        background-color: $phy_physics !important;
+      }
     }
   }
 }

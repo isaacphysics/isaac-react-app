@@ -457,7 +457,7 @@
 
                         .tab-triangle {
                             fill: $inequality-primary;
-                            background: $inequality-primary;
+                            background: transparent;
                         }
                     }
 
@@ -469,7 +469,7 @@
                         top: 36px;
                         overflow: visible;
                         fill: black;
-                        background: black;
+                        background: transparent;
                     }
                 }
             }
