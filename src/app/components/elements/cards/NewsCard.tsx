@@ -66,10 +66,10 @@ export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
             />
         </a>}
         {showTitle && <>
-            <CardTitle className={"news-card-title px-4 mt-5"}>
+            <CardTitle className={classNames("news-card-title px-4", {"mt-5": !image, "mt-3": image})}>
                 <h4>{title}</h4>
             </CardTitle>
-            <CardBody className={"px-4 pb-2"}>
+            <CardBody className={"px-4 py-2"}>
                 <p>{value}</p>
             </CardBody>
         </>}
