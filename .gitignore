@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/.yarn
+.yarnrc.yml
 /.pnp
 .pnp.js
 bundle-stats-*.json

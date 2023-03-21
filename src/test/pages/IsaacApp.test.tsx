@@ -10,7 +10,7 @@ import {mockNewsPods} from "../../mocks/data";
 
 const myIsaacLinks = siteSpecific(
     ["/account", "/my_gameboards", "/assignments", "/progress", "/tests"],
-    ["/assignments", "/my_gameboards", "/progress", "/tests", "/student_rewards"]
+    ["/assignments", "/my_gameboards", "/progress", "/tests"]
 );
 const tutorLinks = siteSpecific(
     ["/tutor_features", "/groups", "/set_assignments", "/assignment_progress"],

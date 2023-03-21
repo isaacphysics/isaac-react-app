@@ -25,7 +25,6 @@ export const NavigationBarCS = () => {
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
             <LinkItem to="/progress">My progress</LinkItem>
             <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
-            <LinkItem to="/student_rewards">Student rewards</LinkItem>
         </NavigationSection>
 
         {isTutorOrAbove(user) && <NavigationSection title="Teachers">
