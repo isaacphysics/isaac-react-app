@@ -36,6 +36,10 @@ if (document.location.hostname === "localhost") {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
 export const isTest = document.location.hostname.startsWith("test.");
+export const isStaging = document.location.hostname.startsWith("staging.");
+
+// Helper function for selecting between values based on whether the site in live, test, staging or dev
+export const envSpecific = <L, T, S, D>(live: L, test: T, staging: S, dev: D) => process.env.NODE_ENV === 'production' ? live : (isStaging ? staging : (isTest ? test : dev));
 
 export const API_PATH: string = apiPath;
 
@@ -52,7 +56,7 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
     "UA-260507153-1"
 );
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
-    "G-VE7RLWEL60",
+    envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
     "G-F6BZK5SYVN"
 );
 

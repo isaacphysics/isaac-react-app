@@ -9,9 +9,7 @@ export const isPhy = SITE_SUBJECT === SITE.PHY;
 export const isAda = SITE_SUBJECT === SITE.ADA;
 
 // Picks between two arguments based on whether the site is Physics or Ada
-export function siteSpecific<P, C>(phy: P, ada: C) {
-    return isPhy ? phy : ada;
-}
+export const siteSpecific = <P, C>(phy: P, ada: C) => isPhy ? phy : ada;
 
 export const SITE_TITLE = siteSpecific("Isaac Physics", "Ada Computer Science");
 export const SITE_TITLE_SHORT = siteSpecific("Isaac", "Ada");
