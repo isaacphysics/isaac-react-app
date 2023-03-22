@@ -158,11 +158,10 @@
     &.outline {
       @include ada-icon-button-base(48px, 48px, true);
       background-position: 48% 50%;
-      // FIXME ADA replace with correct grey shade
       &:active {
-        background-color: white !important;
+        background-color: $cs-white !important;
       }
-      background-color: white !important;
+      background-color: $cs-white !important;
       background-image: url("/assets/cs/icons/share-pink.svg");
     }
     margin-right: 7.5px;

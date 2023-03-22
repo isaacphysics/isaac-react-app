@@ -96,7 +96,6 @@ export const AllTopics = () => {
     const firstColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) <= charToCutAt});
     const secondColTags = subcategoryTags.filter(function (subcategory) {return subcategory.title.charAt(0) > charToCutAt});
 
-    {/* FIXME ADA this is different to what Dan F provided, since the formats of the topic/exam spec pages have changed */}
     const metaDescription = ({
         [STAGE.ALL]: "Discover our free computer science topics and questions. Learn or revise for your exams with us today.",
         [STAGE.A_LEVEL]: "Discover our free A level computer science topics and questions. We cover AQA, CIE, OCR, Eduqas, and WJEC. Learn or revise for your exams with us today.",

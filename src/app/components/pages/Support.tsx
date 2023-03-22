@@ -83,7 +83,6 @@ const support: {student: SupportCategories; teacher: SupportCategories, tutor?: 
                 code: {category: "code", title: "Code and pseudocode", icon: "faq"},
             }
         }
-        // FIXME ADA ask if we can migrate tutor support over from Isaac Physics
     }
 );
 
