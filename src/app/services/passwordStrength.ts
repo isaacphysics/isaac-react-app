@@ -37,7 +37,8 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
         // Fail fast on empty input or if library not loaded!
         return null;
     }
-    const isaacTerms = ["Isaac Computer Science", "Isaac", "IsaacComputerScience", "isaaccomputerscience.org",
+    const isaacTerms = [
+        "Isaac Computer Science", "Isaac", "IsaacComputerScience", "isaaccomputerscience.org",
         "Isaac Computer", "Isaac CS", "IsaacCS", "ICS",
         "Ada Computer Science", "Ada", "AdaComputerScience", "adacomputerscience.org",
         "Ada Computer", "Ada CS", "AdaCS", "ACS",
@@ -49,7 +50,8 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
         "Quantum", "Relativity", "Pi", "Newton", "Apple", "Hexagon",
         "Cambridge", "University", "Raspberry Pi", "Raspberry",
         "A Level", "ALevel", "A-Level", "Homework", "Classroom", "School", "College", "Lesson", "Revision",
-        "http", "https", "https://"];
+        "http", "https", "https://"
+    ];
     if (additionalTerms) {
         isaacTerms.push(...additionalTerms);
     }

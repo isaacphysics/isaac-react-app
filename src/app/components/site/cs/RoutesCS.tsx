@@ -2,13 +2,10 @@ import React from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
 import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
-import {ComingSoon} from "../../pages/ComingSoon";
 import {Topic} from "../../pages/Topic";
 import {Redirect} from "react-router";
-import {isEventLeaderOrStaff, isStaff, isTutorOrAbove} from "../../../services";
+import {isStaff, isTutorOrAbove} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
-import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {Glossary} from "../../pages/Glossary";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import Equality from "../../pages/Equality";
@@ -35,9 +32,9 @@ export const RoutesCS = [
     // News
     <TrackedRoute key={key++} exact path="/news" component={News} />,
 
-    // Books:
-    <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
-    <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
+    // Books: FIXME ADA are we going to include these?
+    // <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
+    // <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
 
     // Glossary:
     <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
@@ -46,11 +43,11 @@ export const RoutesCS = [
     <StaticPageRoute key={key++} exact path="/about" pageId="about_us" />,
     <StaticPageRoute key={key++} exact path="/safeguarding" pageId="events_safeguarding" />,
     <StaticPageRoute key={key++} exact path="/teaching_order" pageId="teaching_order" />,
-    <StaticPageRoute key={key++} exact path="/student_rewards" pageId="student_rewards_programme" />,
-    <StaticPageRoute key={key++} exact path="/teachcomputing" pageId="teach_computing" />,
+    // <StaticPageRoute key={key++} exact path="/student_rewards" pageId="student_rewards_programme" />,
+    // <StaticPageRoute key={key++} exact path="/teachcomputing" pageId="teach_computing" />,
 
-    <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
+    // <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
 
-    <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
+    // <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
     <TrackedRoute exact path="/equality" ifUser={isStaff} component={Equality} />,
 ];

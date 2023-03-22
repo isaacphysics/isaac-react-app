@@ -46,7 +46,8 @@ const ContentEmails = (props: ContentEmailsProps) => {
         })
     }, [emailSubject, plaintextTemplate, htmlTemplate, overrideEnvelopeFrom]);
 
-    const mailgunAddress = siteSpecific("no-reply@mail.isaacphysics.org", "no-reply@mail.isaaccomputerscience.org");
+    // FIXME ADA need to discuss the change to this
+    const mailgunAddress = siteSpecific("no-reply@mail.isaacphysics.org", "no-reply@mail.adacomputerscience.org");
 
     return <RS.Container id="admin-emails-page">
         <TitleAndBreadcrumb currentPageTitle="Content email sending" />
