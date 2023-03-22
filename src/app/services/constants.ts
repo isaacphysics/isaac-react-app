@@ -45,7 +45,7 @@ export const API_PATH: string = apiPath;
 
 export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.isaacphysics.org",
-    "https://editor.ada.isaacphysics.org", // FIXME ADA revert once ada is not hidden
+    "https://editor.adacomputerscience.org"
 );
 
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
