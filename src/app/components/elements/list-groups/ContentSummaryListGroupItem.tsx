@@ -48,7 +48,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
         .filter((t, i) => !isAda || i !== 0); // CS always has Computer Science at the top level
 
-    // FIXME ADA "correct" never actually exists on questions here...
+    // FIXME "correct" never actually exists on questions here...
     const questionIconLabel = item.correct ? "Completed question icon" : "Question icon";
     const questionIcon = siteSpecific(
         item.correct ?

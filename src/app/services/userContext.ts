@@ -349,7 +349,7 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
     return filteredViews;
 }
 
-/// FIXME ADA I have no idea what this does and why but I have deprecated it for now
+// FIXME I have no idea what this does and why but I have deprecated it for now (i.e. it is no longer used on CS)
 export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['audience'], partialViewingContext: Partial<ViewingContext>) {
     return audience?.filter((audienceRecord) => {
         return Object.entries(partialViewingContext).every(([key, value]) => audienceRecord[key as keyof AudienceContext]?.[0] === value);

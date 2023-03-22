@@ -17,7 +17,7 @@ const miniSquare = {width: difficultyIconWidth, height: difficultyIconWidth};
 
 interface DifficultyIconShapeProps {difficultyCategory: string; difficultyCategoryLevel: number; active: boolean}
 function SingleDifficultyIconShape({difficultyCategory, difficultyCategoryLevel, active}: DifficultyIconShapeProps) {
-    // FIXME ADA the calculations here need refactoring, had to rush them to get it done
+    // FIXME the calculations here need refactoring, had to rush them to get it done
     return <g transform={`translate(${(difficultyCategoryLevel - 1) * (difficultyIconWidth + 2 * difficultyIconXPadding) + siteSpecific(0, 1)}, ${yPadding + (difficultyCategory === "P" && isPhy ? 0 : 2)})`}>
         {difficultyCategory === "P" ?
             siteSpecific(

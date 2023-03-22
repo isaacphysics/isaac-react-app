@@ -8,7 +8,7 @@ import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
 
-// FIXME ADA consider removing? /!\
+// FIXME consider removing? /!\
 
 // TODO do we need a version of this for CS tutors?
 export const TeacherTools = () => {
