@@ -20,7 +20,7 @@ $cs-list-outline-gray: #EBEBEB;
 $cs-cultured: #F5F5F5;
 $cs-white: #ffffff;
 
-// FIXME ADA the 100-700 scale is upside-down...
+// FIXME the 100-700 scale is upside-down... needs fixing
 
 // Dark pinks
 $dark-pink-100: #510937;
@@ -231,7 +231,7 @@ $text-muted: $cs-dark-silver;
 
 
 // Colour Overrides
-// FIXME ADA: I don't think overriding base Bootstrap colour definitions is the right way to go about this.
+// FIXME overriding base Bootstrap colour definitions is not the right way to go about this.
 //  These are shared with and redefined by Physics.
 $purple: $dark-pink-300; // Something to do with links
 
@@ -255,10 +255,10 @@ $gray-110: $cs-light-gray;
 $gray-118: $cs-light-gray;
 $gray-120: $cs-silver;
 $gray-136: $cs-dark-silver;
-$gray-160: #666; // FIXME ADA no palette replacement for this one that is close enough
+$gray-160: #666; // FIXME no palette replacement for this one that is close enough
 $gray-194: $cs-jet;
 
-$gray-blue: #636c73; // FIXME ADA we don't use breadcrumbs yet
+$gray-blue: #636c73; // FIXME BEWARE this is used in breadcrumb colours, but we don't use breadcrumbs on Ada yet
 
 // Shadows
 $shadow-08: rgba(0, 0, 0, 0.08); // Used in various places
@@ -370,18 +370,6 @@ p small {
 
 // Double class to give this more specificity
 .katex.katex { font-size: 1.1em; }
-
-// FIXME ADA do this in a better way?
-.nomensa-padding {
-    @media (max-width: 767.99px) {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-    }
-    @media (min-width: 768px) {
-        padding-left: 100px !important;
-        padding-right: 100px !important;
-    }
-}
 
 body {
     color: $black;

@@ -24,7 +24,7 @@ interface GenericPageComponentProps {
 // Used to decide whether a page should have huge gutters or not. Generic pages do by default, as most are textual,
 // but pages such as "Computer Science Stories" are entirely composed of cards and shouldn't have their container
 // width restricted as much
-// FIXME ADA this should be decided at a content level (if possible)
+// FIXME this should be decided at a content level (if possible)
 const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
     "computer_science_stories": true
 };

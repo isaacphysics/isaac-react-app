@@ -1,7 +1,7 @@
 version: "2"
 services:
   build:
-    image: docker.isaacscience.org/isaac-cs-builder # FIXME ADA needs changing?
+    image: docker.isaacscience.org/isaac-cs-builder
     build:
       context: .
       dockerfile: Dockerfile-Builder
