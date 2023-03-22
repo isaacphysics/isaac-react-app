@@ -17,7 +17,7 @@ export const WarningBanner = () => {
         Cookies.set(WARNING_COOKIE, "1", {expires: 30 /* days*/});
     }
 
-    const inDateRange = new Date("2022-01-09") <= new Date() && new Date() <= new Date("2023-01-14");
+    const inDateRange = new Date("2023-03-20") <= new Date() && new Date() <= new Date("2023-04-05");
 
     return inDateRange ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="warning" className="mb-0">
@@ -25,12 +25,9 @@ export const WarningBanner = () => {
                 <RS.Row style={{alignItems: "center", textAlign: "center"}}>
                     <RS.Col xs={12} md={12}>
                         <span>
-                            {`Isaac ${SITE_SUBJECT_TITLE} may be unavailable on 13 January due to maintenance work. `}
-                            <a href="/pages/2023-jan-datacentre-maintenance">
-                                {"Find out more "}
-                                <span className="sr-only">{"about the planned maintenance "}</span>
-                                {"here"}
-                            </a>.
+                            Isaac Computer Science will be temporarily unavailable as we make some exciting updates to the platform. <br />
+                            The site is expected to be down from 4pm on 27 March 2023. Follow us on Twitter, Facebook or Instagram for updates. <br />
+                            We can’t wait for you to see it!
                         </span>
                     </RS.Col>
                 </RS.Row>

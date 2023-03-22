@@ -13,7 +13,7 @@ export const HomepagePhy = () => {
     const deviceSize = useDeviceSize();
 
     return <>
-        <WarningBanner/>
+        {/*<WarningBanner/>*/}
         <div id="homepage" className="pb-5 px-2 px-sm-5 mx-md-5 px-lg-0">
             <section id="call-to-action" className="homepageHero">
                 <Container className="pt-4">
