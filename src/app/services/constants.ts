@@ -57,7 +57,7 @@ export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
 );
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
     envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
-    "G-F6BZK5SYVN"
+    envSpecific("G-HQ3BM12YB3", "G-EQPHX0WKJ7", "G-W7YJPSQTKP", "G-1Q8QGL0D5J"),
 );
 
 export const SOCIAL_LINKS = siteSpecific(
