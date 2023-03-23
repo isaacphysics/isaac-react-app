@@ -5,20 +5,20 @@ import classNames from "classnames";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose, outline, className}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean; outline?: boolean; className?: string}) => {
     const [showShareLink, setShowShareLink] = useState(false);
-    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const user = useAppSelector(selectors.user.orNull);
     const shareLink = useRef<HTMLInputElement>(null);
-    const csUrlOrigin = segueEnvironment !== "DEV" ? "https://isaaccs.org" : window.location.origin;
     let shortenedLinkUrl = linkUrl;
-    if (isAda && segueEnvironment !== "DEV") {
-        shortenedLinkUrl = shortenedLinkUrl.replace('/questions/', '/q/');
-        shortenedLinkUrl = shortenedLinkUrl.replace('/concepts/', '/c/');
-        shortenedLinkUrl = shortenedLinkUrl.replace('/pages/', '/p/');
-        shortenedLinkUrl = shortenedLinkUrl.replace('/gameboards/', '/g/');
-        shortenedLinkUrl = shortenedLinkUrl.replace('/assignments/', '/a/');
-    }
+    // FIXME reintroduce share URL shortening?
+    // const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
+    // if (isAda && segueEnvironment !== "DEV") {
+    //     shortenedLinkUrl = shortenedLinkUrl.replace('/questions/', '/q/');
+    //     shortenedLinkUrl = shortenedLinkUrl.replace('/concepts/', '/c/');
+    //     shortenedLinkUrl = shortenedLinkUrl.replace('/pages/', '/p/');
+    //     shortenedLinkUrl = shortenedLinkUrl.replace('/gameboards/', '/g/');
+    //     shortenedLinkUrl = shortenedLinkUrl.replace('/assignments/', '/a/');
+    // }
 
-    const shareUrl = siteSpecific(window.location.origin, csUrlOrigin) + shortenedLinkUrl;
+    const shareUrl = window.location.origin + shortenedLinkUrl;
 
     function toggleShareLink() {
         setShowShareLink(!showShareLink);
