@@ -39,7 +39,7 @@ export const isTest = document.location.hostname.startsWith("test.");
 export const isStaging = document.location.hostname.startsWith("staging.");
 
 // Helper function for selecting between values based on whether the site in live, test, staging or dev
-export const envSpecific = <L, T, S, D>(live: L, test: T, staging: S, dev: D) => process.env.NODE_ENV === 'production' ? live : (isStaging ? staging : (isTest ? test : dev));
+export const envSpecific = <L, T, S, D>(live: L, test: T, staging: S, dev: D) => isTest ? test : (process.env.NODE_ENV === 'production' ? live : (isStaging ? staging : dev));
 
 export const API_PATH: string = apiPath;
 
