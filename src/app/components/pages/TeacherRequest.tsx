@@ -188,7 +188,7 @@ export const TeacherRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="school-input" className="form-required">School</Label>
+                                                <Label htmlFor="school-input" className={siteSpecific("form-required", "")}>School</Label>
                                                 <Input disabled id="school-input" type="text" name="school"
                                                     defaultValue={school} invalid={isPhy && typeof school == "undefined"}
                                                     onChange={e => setSchool(e.target.value)} required/>
