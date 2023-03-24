@@ -147,7 +147,7 @@ export const TeacherRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a teacher account on ${SITE_TITLE}, please fill in this form. `}
+                                        {`To request a teacher account on ${SITE_TITLE}, please ${siteSpecific("fill in", "submit")} this form. `}
                                         {siteSpecific(
                                             "You must use the email address that was assigned to you by your school, " +
                                             "and the name of your school should be shown in the 'School' field. ",
