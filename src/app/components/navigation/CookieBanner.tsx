@@ -30,14 +30,12 @@ export const CookieBanner = () => {
                     </h3>
                 </RS.Col>
                 <RS.Col xs={12} sm={10} md={8}>
-                    <small>Use of this website and the information entered is being recorded. This data is used to support research
-                    into online learning at the University of Cambridge. Cookies are used to support this functionality.
-                    Full details are in the <Link to="/privacy">privacy policy</Link> and <Link to="/cookies">cookie policy</Link>.
-                    Do you agree to participate in this research?</small>
+                    <small>We use cookies to ensure you get the best experience on our website.<br/>
+                    View our <Link to="/privacy">privacy policy</Link> and <Link to="/cookies">cookie policy</Link> for details.</small>
                 </RS.Col>
                 <RS.Col xs={12} md={3} className="text-center">
                     <RS.Button color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button" onClick={clickDismiss}>
-                        I Agree
+                        Accept
                     </RS.Button>
                 </RS.Col>
             </RS.Row>
