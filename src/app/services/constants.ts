@@ -41,7 +41,7 @@ export const API_PATH: string = apiPath;
 
 export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.isaacphysics.org",
-    "https://content-editor.non-prod.isaaccomputerscience.org",
+    "https://editor.isaaccomputerscience.org",
 );
 
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
