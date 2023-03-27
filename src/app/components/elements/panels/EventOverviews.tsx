@@ -32,9 +32,10 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
         <div className="clearfix">
-            {isCS && <div className="mb-3 float-left">
+            {/* temporary removal during handover to STEM */}
+            {/* {isCS && <div className="mb-3 float-left">
                 <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
-            </div>}
+            </div>} */}
             <div className="float-right mb-4">
                 <RS.Label>
                     <RS.Input type="select" value={overviewFilter} onChange={e => {setOverviewFilter(e.target.value as EventOverviewFilter)}}>
