@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {selectors, useAppSelector} from "../../../state";
-import {Collapse, Input, Nav, Navbar, NavbarBrand, NavbarToggler} from "reactstrap";
+import {Collapse, Nav, Navbar, NavbarBrand, NavbarToggler} from "reactstrap";
 import {
     isAdmin,
     isAdminOrEventManager,
@@ -54,6 +54,7 @@ export const HeaderCS = () => {
                             {/* <LinkItem to="/pages/workbooks_2020">Workbooks</LinkItem> Hidden for Ada launch */}
                             <LinkItem to="/glossary">Glossary</LinkItem>
                             <LinkItem to="/pages/computer_science_stories">CS stories</LinkItem>
+                            <LinkItem to={"/exam_specifications"}>Exam specifications</LinkItem>
                         </NavigationSection>
 
                         {isTutorOrAbove(user) && <NavigationSection title="Teach">
@@ -64,7 +65,6 @@ export const HeaderCS = () => {
                                 {/*<LinkItem to="/set_tests">Manage tests</LinkItem>*/}
                                 <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             </>}
-                            <LinkItem to={"/exam_specifications"}>Exam specifications</LinkItem>
                         </NavigationSection>}
 
                         {isLoggedIn(user) && <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
