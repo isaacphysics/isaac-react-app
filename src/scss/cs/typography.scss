@@ -90,7 +90,7 @@ strong, b {
 i, em {
   @extend .font-style-italic;
 }
-p, small {
+p, small, .alert {
   @extend .font-weight-regular;
   .btn-link {
     font-size: unset;
