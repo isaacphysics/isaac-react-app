@@ -1,6 +1,6 @@
 import React from "react";
 import {rest, RestHandler} from "msw";
-import {API_PATH} from "../../app/services";
+import {API_PATH, PATHS, siteSpecific} from "../../app/services";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MyAssignments} from "../../app/components/pages/MyAssignments";
@@ -8,12 +8,24 @@ import {mockMyAssignments, mockUser} from "../../mocks/data";
 import {augmentErrorMessage, dayMonthYearStringToDate, DDMMYYYY_REGEX, renderTestEnvironment, DAYS_AGO} from "../utils";
 import produce from "immer";
 
+const TAB_TITLE = siteSpecific({
+    TO_DO: "Assignments To Do tab",
+    OLDER: "Older Assignments tab",
+    COMPLETED: "Completed Assignments tab"
+}, {
+    TO_DO: "Quizzes To Do tab",
+    OLDER: "Older quizzes tab",
+    COMPLETED: "Completed quizzes tab"
+});
+
+const FILTER_LABEL_TEXT = siteSpecific("Filter assignments by name", "Filter quizzes by name");
+
 describe("MyAssignments", () => {
 
     const renderMyAssignments = (extraEndpoints?: RestHandler<any>[]) => {
         renderTestEnvironment({
             PageComponent: MyAssignments,
-            initalRouteEntries: ["/assignments"],
+            initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints
         });
     };
@@ -26,9 +38,9 @@ describe("MyAssignments", () => {
 
     it('should render with "To Do" tab open first', async () => {
         renderMyAssignments();
-        const toDoTab = await screen.findByTitle("Assignments To Do tab");
-        const olderTab = await screen.findByTitle("Older Assignments tab");
-        const completedTab = await screen.findByTitle("Completed Assignments tab");
+        const toDoTab = await screen.findByTitle(TAB_TITLE.TO_DO);
+        const olderTab = await screen.findByTitle(TAB_TITLE.OLDER);
+        const completedTab = await screen.findByTitle(TAB_TITLE.COMPLETED);
         expect(toDoTab.parentElement?.classList).toContain("active");
         expect(olderTab.parentElement?.classList).not.toContain("active");
         expect(completedTab.parentElement?.classList).not.toContain("active");
@@ -36,7 +48,7 @@ describe("MyAssignments", () => {
 
     it('should allow users to filter assignments on gameboard title', async () => {
         renderMyAssignments();
-        const filter = await screen.findByPlaceholderText("Filter assignments by name");
+        const filter = await siteSpecific(() => screen.findByPlaceholderText(FILTER_LABEL_TEXT), () => screen.findByLabelText(FILTER_LABEL_TEXT))();
         await userEvent.type(filter, "Test Gameboard 3");
         // Only one assignment should be shown
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);
@@ -48,9 +60,9 @@ describe("MyAssignments", () => {
 
     it('should open "Older" tab when tab is clicked, and tab should contain no assignments', async () => {
         renderMyAssignments();
-        const toDoTab = await screen.findByTitle("Assignments To Do tab");
-        const olderTab = await screen.findByTitle("Older Assignments tab");
-        const completedTab = await screen.findByTitle("Completed Assignments tab");
+        const toDoTab = await screen.findByTitle(TAB_TITLE.TO_DO);
+        const olderTab = await screen.findByTitle(TAB_TITLE.OLDER);
+        const completedTab = await screen.findByTitle(TAB_TITLE.COMPLETED);
         await userEvent.click(olderTab);
         await waitFor(() => {
             expect(toDoTab.parentElement?.classList).not.toContain("active");
@@ -80,7 +92,7 @@ describe("MyAssignments", () => {
         // Wait for the 3 "To Do" assignments to show up
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(3);
         // Click across to the "Older Assignments" tab
-        const olderTab = await screen.getByTitle("Older Assignments tab");
+        const olderTab = await screen.getByTitle(TAB_TITLE.OLDER);
         await userEvent.click(olderTab);
         // Wait for the one old assignment that we expect
         expect(await screen.findAllByTestId("my-assignment")).toHaveLength(1);

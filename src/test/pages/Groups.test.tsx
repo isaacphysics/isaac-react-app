@@ -75,7 +75,7 @@ describe("Groups", () => {
 
     (["TUTOR", "TEACHER"] as const).forEach(role => it(`displays all active groups on load if the user is a ${role.toLowerCase()}, and all archived groups when Archived tab is clicked`, async () => {
         renderTestEnvironment({role});
-        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
         // switchGroupsTab checks that the mock active groups we expect to be there are in fact there
         await switchGroupsTab("active", mockActiveGroups);
         // Now check archived tab, should contain all archived groups
@@ -112,7 +112,7 @@ describe("Groups", () => {
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, authTokenHandler),
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
         // Implicitly expecting that opening the "Manage Groups" page shows you the create new group form first
         const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
@@ -156,7 +156,7 @@ describe("Groups", () => {
                     }),
                 ]
             });
-            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
             const groups = await switchGroupsTab(activeOrArchived, mockGroups);
             // Find delete button corresponding to group we want to delete
             const groupToDeleteElement = groups.find(e => within(e).getByTestId("select-group").textContent === groupToDelete.groupName) as HTMLElement;
@@ -197,7 +197,7 @@ describe("Groups", () => {
                     }),
                 ]
             });
-            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
             const groups = await switchGroupsTab(activeOrArchived, mockGroups);
             const groupNames = groups.map(e => within(e).getByTestId("select-group").textContent);
             const groupToRenameElement = groups.find(e => within(e).getByTestId("select-group").textContent === groupToRename.groupName) as HTMLElement;
@@ -261,7 +261,7 @@ describe("Groups", () => {
                         rest.get(API_PATH + "/groups", getGroups)
                     ]
                 });
-                await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+                await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
                 // Try to flick to the archived tab first, to test whether the cache updates work correctly
                 if (shouldTryToShowArchivedTabFirst) {
                     await switchGroupsTab("archived", mockArchivedGroups);
@@ -328,7 +328,7 @@ describe("Groups", () => {
                     rest.post(API_PATH + `/groups/${mockGroup.id}/manager`, existingGroupManagerHandler)
                 ]
             });
-            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
             const groups = await switchGroupsTab(activeOrArchived, [mockGroup]);
             const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
             await userEvent.click(selectGroupButton);
@@ -350,7 +350,7 @@ describe("Groups", () => {
                     rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup]))
                 ]
             });
-            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+            await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
             const groups = await switchGroupsTab(activeOrArchived, [mockGroup]);
             const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
             await userEvent.click(selectGroupButton);
@@ -385,7 +385,7 @@ describe("Groups", () => {
                 })
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
         const groups = await switchGroupsTab("active", [mockGroup]);
         const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
         await userEvent.click(selectGroupButton);
@@ -425,7 +425,7 @@ describe("Groups", () => {
                 ]))
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
         const groups = await switchGroupsTab("active", [mockGroup]);
         const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
         await userEvent.click(selectGroupButton);
@@ -459,7 +459,7 @@ describe("Groups", () => {
                 rest.post(API_PATH + `/groups/${mockNewGroup.id}/manager`, newGroupManagerHandler)
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
         const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
         const createButton = await screen.findByRole("button", {name: "Create"});
@@ -488,7 +488,7 @@ describe("Groups", () => {
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M"))
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
         const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
         const createButton = await screen.findByRole("button", {name: "Create"});
@@ -524,7 +524,7 @@ describe("Groups", () => {
                 rest.delete(API_PATH + "/groups/:groupId/manager/:userId", removeSelfAsManagerHandler)
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
+        await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
         const groups = await switchGroupsTab("active", [mockGroup]);
 
         // Select group of interest

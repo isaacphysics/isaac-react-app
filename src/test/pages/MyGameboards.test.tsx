@@ -4,13 +4,14 @@ import {mockGameboards} from "../../mocks/data";
 import {MyGameboards} from "../../app/components/pages/MyGameboards";
 import userEvent from "@testing-library/user-event";
 import {renderTestEnvironment} from "../utils";
+import {PATHS} from "../../app/services";
 
 describe("MyGameboards", () => {
 
     const renderMyGameboards = () => {
         renderTestEnvironment({
             PageComponent: MyGameboards,
-            initalRouteEntries: ["/assignments"]
+            initalRouteEntries: [PATHS.MY_GAMEBOARDS]
         });
     };
 

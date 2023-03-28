@@ -1,8 +1,8 @@
 import {renderTestEnvironment} from "../utils";
 import {screen, waitFor} from "@testing-library/react";
-import {history, TEACHER_REQUEST_ROUTE} from "../../app/services";
+import {history, isAda, isPhy, PATHS, siteSpecific, TEACHER_REQUEST_ROUTE} from "../../app/services";
 
-const tutorOnlyRoutes = ["/set_assignments", "/groups"];
+const tutorOnlyRoutes = [PATHS.SET_ASSIGNMENTS, "/groups"];
 describe("Visiting a tutor-only page", () => {
 
     it('should redirect anonymous users to login', async () => {
@@ -63,10 +63,22 @@ describe("Visiting a tutor-only page", () => {
     });
 });
 
-const teacherOnlyRoutes = ["/set_tests"];
+const teacherOnlyRoutes = [siteSpecific("/set_tests", PATHS.SET_ASSIGNMENTS)];
 describe("Visiting a teacher-only page", () => {
 
-    it('should show "Access denied" page to tutors', async () => {
+    isAda && it('should show "Teacher upgrade" page to students', async () => {
+        renderTestEnvironment({role: "STUDENT"});
+        // Wait for main content to be loaded
+        await screen.findByTestId("main");
+        for (const route of teacherOnlyRoutes) {
+            history.replace(route);
+            await screen.findByText("Mock page: teacher_accounts");
+            expect(history.location.pathname).toEqual("/pages/teacher_accounts");
+        }
+    });
+
+    // Cannot test a teacher-but-not-tutor page on Ada since there are no such pages
+    isPhy && it('should show "Access denied" page to tutors', async () => {
         renderTestEnvironment({role: "TUTOR"});
         // Wait for main content to be loaded
         await screen.findByTestId("main");

@@ -80,7 +80,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
 };
 
 export type NavBarMenus = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
-export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string}} = {
+export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string | null}} = {
     [SITE.PHY]: {
         "My Isaac": "My Isaac",
         Teach: "Teach",
@@ -90,11 +90,11 @@ export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string
         Admin: "Admin"
     },
     [SITE.ADA]: {
-        "My Isaac": "My Isaac",
-        Teach: "Teachers",
+        "My Isaac": "My Ada",
+        Teach: "Teach",
         Learn: "Learn",
-        Events: "Events",
-        Help: "Help and support",
+        Events: null,
+        Help: "Help",
         Admin: "Admin"
     }
 };
@@ -102,7 +102,9 @@ export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
 export const followHeaderNavLink = async (menu: NavBarMenus, linkName: string) => {
     const header = await screen.findByTestId("header");
-    const navLink = await within(header).findByRole("link",  {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu]});
+    const menuTitle = NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu];
+    if (!menuTitle) fail(`No navigation menu with title ${menu} exists on this site.`);
+    const navLink = await within(header).findByRole("link",  {name: menuTitle});
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title

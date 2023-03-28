@@ -4792,3 +4792,22 @@ export const mockFragment = (pageId: string) => ({
     ],
     published: true
 });
+
+export const mockPage = (pageId: string) => ({
+   "id": pageId,
+   "title": `Mock page: ${pageId}`,
+   "type": "page",
+   "encoding": "markdown",
+   "canonicalSourceFile": `content/mocks/${pageId}.json`,
+   "children": [
+       {
+           "type": "content",
+           "encoding": "markdown",
+           "children": [],
+           "value": "On this page, we have a mock.",
+           "tags": []
+       },
+   ],
+   "published": true,
+   "tags": []
+});
