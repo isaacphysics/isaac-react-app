@@ -143,7 +143,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
     </svg>;
 
     return boardView == BoardViews.table ?
-        <tr className={siteSpecific("board-card", "")} data-testid={"my-gameboard-table-row"}>
+        <tr className={siteSpecific("board-card", "")} data-testid={"gameboard-table-row"}>
             <td className={siteSpecific("", "align-middle text-center")}>
                 {siteSpecific(
                     phyHexagon,
@@ -209,7 +209,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
         </tr>
         :
         siteSpecific(
-            <Card className="board-card card-neat" data-testid={"my-gameboard-card"}>
+            <Card className="board-card card-neat" data-testid={"gameboard-card"}>
                 <CardBody className="pb-4 pt-4">
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
                     {phyHexagon}
@@ -261,7 +261,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <Button className={"mb-1"} block color="tertiary" onClick={toggleAssignModal}>Assign / Unassign</Button>
                 </CardFooter>}
             </Card>,
-            <Card className={"board-card"} data-testid={"my-gameboard-card"}>
+            <Card className={"board-card"} data-testid={"gameboard-card"}>
                 <CardBody className="pb-4 pt-4">
                     <Row className={"mb-2"}>
                         <Col>

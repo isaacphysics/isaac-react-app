@@ -29,9 +29,9 @@ describe("MyAssignments", () => {
         const toDoTab = await screen.findByTitle("Assignments To Do tab");
         const olderTab = await screen.findByTitle("Older Assignments tab");
         const completedTab = await screen.findByTitle("Completed Assignments tab");
-        expect(toDoTab.classList).toContain("active");
-        expect(olderTab.classList).not.toContain("active");
-        expect(completedTab.classList).not.toContain("active");
+        expect(toDoTab.parentElement?.classList).toContain("active");
+        expect(olderTab.parentElement?.classList).not.toContain("active");
+        expect(completedTab.parentElement?.classList).not.toContain("active");
     });
 
     it('should allow users to filter assignments on gameboard title', async () => {
@@ -53,9 +53,9 @@ describe("MyAssignments", () => {
         const completedTab = await screen.findByTitle("Completed Assignments tab");
         await userEvent.click(olderTab);
         await waitFor(() => {
-            expect(toDoTab.classList).not.toContain("active");
-            expect(olderTab.classList).toContain("active");
-            expect(completedTab.classList).not.toContain("active");
+            expect(toDoTab.parentElement?.classList).not.toContain("active");
+            expect(olderTab.parentElement?.classList).toContain("active");
+            expect(completedTab.parentElement?.classList).not.toContain("active");
         }, {onTimeout: augmentErrorMessage("Tabs did not change to the correct state fast enough")});
         expect(screen.queryAllByTestId("my-assignment")).toHaveLength(0);
     });
