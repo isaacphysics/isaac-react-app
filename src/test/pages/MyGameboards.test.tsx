@@ -25,7 +25,7 @@ describe("MyGameboards", () => {
 
     it('should show all of my gameboards in table view', async () => {
         renderMyGameboards();
-        const gameboardRows = await screen.findAllByTestId("my-gameboard-table-row");
+        const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
     });
 
@@ -35,7 +35,7 @@ describe("MyGameboards", () => {
         const viewDropdown = await screen.findByLabelText("Display in");
         await userEvent.selectOptions(viewDropdown, "Card View");
         // Make sure that 6 gameboards in the response ---> 6 gameboards displayed
-        const gameboardCards = await screen.findAllByTestId("my-gameboard-card");
+        const gameboardCards = await screen.findAllByTestId("gameboard-card");
         expect(gameboardCards).toHaveLength(6);
     });
 });

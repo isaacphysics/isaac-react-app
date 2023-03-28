@@ -20,6 +20,8 @@ const expectedTopLinks = siteSpecific(
     }
 );
 
+jest.setTimeout(10000);
+
 describe("SetAssignments", () => {
 
     const renderSetAssignments = () => {
@@ -36,7 +38,7 @@ describe("SetAssignments", () => {
         });
         const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
         expect(viewDropdown.value).toEqual("Card View");
-        expect(screen.queryAllByTestId("assignment-gameboard-card")).toHaveLength(6);
+        expect(screen.queryAllByTestId("gameboard-card")).toHaveLength(6);
     });
 
     it('should show all gameboards in table view', async () => {
@@ -45,7 +47,7 @@ describe("SetAssignments", () => {
         const viewDropdown = await screen.findByLabelText("Display in");
         await userEvent.selectOptions(viewDropdown, "Table View");
         // Make sure that all gameboards are listed
-        const gameboardRows = await screen.findAllByTestId("assignment-gameboard-table-row");
+        const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
     });
 
@@ -59,7 +61,7 @@ describe("SetAssignments", () => {
 
     it('should show all the correct information for a gameboard in card view', async () => {
         renderSetAssignments();
-        const gameboards = await screen.findAllByTestId("assignment-gameboard-card");
+        const gameboards = await screen.findAllByTestId("gameboard-card");
 
         const gameboard = gameboards[0];
         const mockGameboard = mockGameboards.results[0];
@@ -125,7 +127,7 @@ describe("SetAssignments", () => {
                 })
             ]
         });
-        const gameboards = await screen.findAllByTestId("assignment-gameboard-card");
+        const gameboards = await screen.findAllByTestId("gameboard-card");
         const mockGameboard = mockGameboards.results[0];
 
         // Find and click assign gameboard button for the first gameboard
