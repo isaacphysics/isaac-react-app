@@ -6,6 +6,7 @@ import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state"
 import IsaacCodeSnippet from "./IsaacCodeSnippet";
 import {Alert, Button} from "reactstrap";
 import {Loading} from "../handlers/IsaacSpinner";
+import {Link} from "react-router-dom";
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
@@ -112,7 +113,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
     return iframeState === "timeout"
         ? <>
             <IsaacCodeSnippet doc={doc} />
-            <Alert color={"warning"}>Sorry! The {SITE_TITLE_SHORT} code editor doesn't seem to be working at the moment. Please <Button color={"link"}>report this to us</Button> and try again later.</Alert>
+            <Alert color={"warning"}>Sorry! The {SITE_TITLE_SHORT} code editor doesn't seem to be working at the moment. Please <Button tag={Link} to={"/contact?subject=Code%20editor%20issue"} color={"link"}>report this to us</Button> and try again later.</Alert>
         </>
         : <>
             {iframeState !== "initialised" && <Loading className={"my-4"}/>}
