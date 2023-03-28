@@ -6,7 +6,7 @@ import plaintext from 'highlight.js/lib/languages/plaintext'
 import sql from 'highlight.js/lib/languages/sql'
 import java from 'highlight.js/lib/languages/java'
 import {LanguageFn} from "highlight.js";
-import vba from "highlightjs-vba";
+const vba = require("highlightjs-vba");
 
 const importHljsCore = import("highlight.js/lib/core");
 
