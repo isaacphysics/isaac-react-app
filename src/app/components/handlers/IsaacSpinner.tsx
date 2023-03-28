@@ -21,7 +21,8 @@ export const IsaacSpinner = ({size = "md", className, color = "primary", inline 
         : <div role="status" className="pb-1">{contents}</div>;
 };
 
-export const Loading = ({noText}: {noText?: boolean}) => <div className="w-100 text-center pb-2">
-    {!noText && <h2 aria-hidden="true" className="pt-5">Loading...</h2>}
-    <IsaacSpinner />
-</div>;
+export const Loading = ({noText, className}: {noText?: boolean; className?: string}) =>
+    <div className={classNames(className, "w-100 text-center pb-2")}>
+        {!noText && <h2 aria-hidden="true" className="pt-5">Loading...</h2>}
+        <IsaacSpinner />
+    </div>;
