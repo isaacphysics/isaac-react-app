@@ -6,7 +6,7 @@ import {
     mockGameboards,
     mockGroups,
     mockMyAssignments,
-    mockNewsPods,
+    mockNewsPods, mockPage,
     mockQuizAssignments,
     mockSetAssignments,
     mockUser,
@@ -154,6 +154,13 @@ export const handlers = [
         return res(
             ctx.status(200),
             ctx.json(mockFragment(fragmentId as string))
+        );
+    }),
+    rest.get(API_PATH + "/pages/:pageId", (req, res, ctx) => {
+        const {pageId} = req.params;
+        return res(
+            ctx.status(200),
+            ctx.json(mockPage(pageId as string))
         );
     }),
     rest.get(API_PATH + "/glossary/terms", (req, res, ctx) => {

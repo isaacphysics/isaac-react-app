@@ -68,7 +68,7 @@ export const HeaderCS = () => {
                         </NavigationSection>}
 
                         {isLoggedIn(user) && <NavigationSection title={<>My Ada {<MenuBadge count={assignmentsCount/* + quizzesCount*/} message="incomplete assignments" />}</>}>
-                            <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
+                            <LinkItem to={PATHS.MY_ASSIGNMENTS}>My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
                             <LinkItem to={PATHS.MY_GAMEBOARDS}>My quizzes</LinkItem>
                             <LinkItem to="/progress">My progress</LinkItem>
                             <LinkItem to="/account">My account</LinkItem>

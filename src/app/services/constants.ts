@@ -1125,6 +1125,7 @@ export const FEATURED_NEWS_TAG = "featured";
 export const PATHS = siteSpecific({
     ASSIGNMENT_PROGRESS: "/assignment_progress",
     MY_GAMEBOARDS: "/my_gameboards",
+    MY_ASSIGNMENTS: "/assignments",
     QUESTION_FINDER: "/gameboards/new",
     GAMEBOARD: "/gameboards",
     SET_ASSIGNMENTS: "/set_assignments",
@@ -1133,6 +1134,7 @@ export const PATHS = siteSpecific({
 }, {
     ASSIGNMENT_PROGRESS: "/my_markbook",
     MY_GAMEBOARDS: "/quizzes",
+    MY_ASSIGNMENTS: "/assignments",
     QUESTION_FINDER: "/quizzes/new",
     GAMEBOARD: "/quizzes/view",
     SET_ASSIGNMENTS: "/quizzes/set",

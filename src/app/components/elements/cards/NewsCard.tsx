@@ -56,7 +56,7 @@ const PhysicsNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
 
 export const AdaNewsCard = ({newsItem, showTitle}: NewsCardProps) => {
     const {title, value, image, url} = newsItem;
-    return <Card className={classNames("news-card border-0 pb-3 my-3 my-xl-0")}>
+    return <Card data-testid={"news-pod"} className={classNames("news-card border-0 pb-3 my-3 my-xl-0")}>
         {image && <a href={url} className={"w-100"}>
             <CardImg
                 className={"news-card-image"}

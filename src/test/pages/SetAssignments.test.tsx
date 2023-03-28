@@ -4,21 +4,14 @@ import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment} from "../utils";
-import {API_PATH, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
+import {API_PATH, isAda, isPhy, PATHS, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
 import {rest} from "msw";
 
-const expectedTopLinks = siteSpecific(
-    {
-        "our books": null,
-        "our Boards for Lessons": "/pages/pre_made_gameboards",
-        "create a gameboard": "/gameboard_builder"
-    },
-    { // FIXME ADA there are no more buttons here, so this test needs adapting
-        "Pre-made gameboards": "/pages/gameboards",
-        "Topics list": "/topics",
-        "Create gameboard": "/gameboard_builder"
-    }
-);
+const expectedPhysicsTopLinks = {
+    "our books": null,
+    "our Boards for Lessons": "/pages/pre_made_gameboards",
+    "create a gameboard": PATHS.GAMEBOARD_BUILDER
+};
 
 jest.setTimeout(10000);
 
@@ -27,33 +20,47 @@ describe("SetAssignments", () => {
     const renderSetAssignments = () => {
         renderTestEnvironment({
             PageComponent: SetAssignments,
-            initalRouteEntries: ["/assignments"]
+            initalRouteEntries: [PATHS.SET_ASSIGNMENTS]
         });
     };
 
-    it('should start in card view, with 6 gameboards shown', async () => {
+    it('should show 6 gameboards in card view (and start in this view on Phy)', async () => {
         renderSetAssignments();
-        await waitFor(() => {
-            expect(screen.queryByText("Loading...")).toBeNull();
-        });
-        const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
-        expect(viewDropdown.value).toEqual("Card View");
+        if (isPhy) {
+            await waitFor(() => {
+                expect(screen.queryByText("Loading...")).toBeNull();
+            });
+            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
+            expect(viewDropdown.value).toEqual("Card View");
+        } else {
+            // Change view to "Card View"
+            const viewDropdown = await screen.findByLabelText("Display in");
+            await userEvent.selectOptions(viewDropdown, "Card View");
+        }
         expect(screen.queryAllByTestId("gameboard-card")).toHaveLength(6);
     });
 
-    it('should show all gameboards in table view', async () => {
+    it('should show all gameboards in table view (and start in this view on CS)', async () => {
         renderSetAssignments();
-        // Change view to "Table View"
-        const viewDropdown = await screen.findByLabelText("Display in");
-        await userEvent.selectOptions(viewDropdown, "Table View");
+        if (isAda) {
+            await waitFor(() => {
+                expect(screen.queryByText("Loading...")).toBeNull();
+            });
+            const viewDropdown: HTMLInputElement = await screen.findByLabelText("Display in");
+            expect(viewDropdown.value).toEqual("Table View");
+        } else {
+            // Change view to "Table View"
+            const viewDropdown = await screen.findByLabelText("Display in");
+            await userEvent.selectOptions(viewDropdown, "Table View");
+        }
         // Make sure that all gameboards are listed
         const gameboardRows = await screen.findAllByTestId("gameboard-table-row");
         expect(gameboardRows).toHaveLength(mockGameboards.totalResults);
     });
 
-    it('should have links to gameboards/relevant info to setting assignments at the top of the page', async () => {
+    isPhy && it('should have links to gameboards/relevant info to setting assignments at the top of the page (Phy only)', async () => {
         renderSetAssignments();
-        for (const [title, href] of Object.entries(expectedTopLinks)) {
+        for (const [title, href] of Object.entries(expectedPhysicsTopLinks)) {
             const button = await screen.findByRole("link", {name: title});
             expect(button.getAttribute("href")).toBe(href);
         }
@@ -61,6 +68,11 @@ describe("SetAssignments", () => {
 
     it('should show all the correct information for a gameboard in card view', async () => {
         renderSetAssignments();
+        if (!isPhy) {
+            // Change view to "Card View"
+            const viewDropdown = await screen.findByLabelText("Display in");
+            await userEvent.selectOptions(viewDropdown, "Card View");
+        }
         const gameboards = await screen.findAllByTestId("gameboard-card");
 
         const gameboard = gameboards[0];
@@ -68,11 +80,11 @@ describe("SetAssignments", () => {
 
         // Check that group count is correct
         const assignmentsToGameboard = mockSetAssignments.filter(a => a.gameboardId === mockGameboard.id);
-        const groupsAssignedHexagon = await within(gameboard).findByTitle("Groups assigned");
-        expect(groupsAssignedHexagon.textContent).toEqual(`${assignmentsToGameboard.length} group${assignmentsToGameboard.length === 1 ? "" : "s"}`);
+        const groupsAssignedHexagon = await within(gameboard).findByTitle("Number of groups assigned");
+        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual(`${assignmentsToGameboard.length}group${assignmentsToGameboard.length === 1 ? "" : "s"}`);
 
         // Check that created date is present and in the expected format
-        const dateText = within(gameboard).getByText("Created:").textContent?.replace(/Created:\s?/, "");
+        const dateText = within(gameboard).getByTestId("created-date").textContent?.replace(/Created:\s?/, "");
         expect(dateText).toMatch(DDMMYYYY_REGEX);
         expect(mockGameboard.creationDate - (dayMonthYearStringToDate(dateText)?.valueOf() ?? 0)).toBeLessThanOrEqual(ONE_DAY_IN_MS);
 
@@ -114,7 +126,7 @@ describe("SetAssignments", () => {
         let requestAssignment: {gameboardId: string, scheduledStartDate?: any, dueDate?: any, notes?: string};
         renderTestEnvironment({
             PageComponent: SetAssignments,
-            initalRouteEntries: ["/assignments"],
+            initalRouteEntries: [PATHS.MY_ASSIGNMENTS],
             extraEndpoints: [
                 rest.post(API_PATH + "/assignments/assign_bulk", async (req, res, ctx) => {
                     const json = await req.json();
@@ -127,6 +139,11 @@ describe("SetAssignments", () => {
                 })
             ]
         });
+        if (!isPhy) {
+            // Change view to "Card View"
+            const viewDropdown = await screen.findByLabelText("Display in");
+            await userEvent.selectOptions(viewDropdown, "Card View");
+        }
         const gameboards = await screen.findAllByTestId("gameboard-card");
         const mockGameboard = mockGameboards.results[0];
 
@@ -187,14 +204,14 @@ describe("SetAssignments", () => {
 
         // Close modal
         const closeButtons = within(modal).getAllByRole("button", {name: "Close"});
-        expect(closeButtons).toHaveLength(2); // One at the top, one at the bottom
+        expect(closeButtons).toHaveLength(siteSpecific(2, 1)); // One at the top (and one at the bottom on Phy)
         await userEvent.click(closeButtons[0]);
         await waitFor(() => {
             expect(modal).not.toBeInTheDocument();
         });
 
         // Make sure the gameboard number of groups assigned is updated
-        const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Groups assigned");
-        expect(groupsAssignedHexagon.textContent).toEqual("2 groups");
+        const groupsAssignedHexagon = await within(gameboards[0]).findByTitle("Number of groups assigned");
+        expect(groupsAssignedHexagon.textContent?.replace(" ", "")).toEqual("2groups");
     });
 });

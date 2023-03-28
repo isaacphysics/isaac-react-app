@@ -5,6 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
 import {Link} from "react-router-dom";
 import {LinkCard} from "../elements/cards/LinkCard";
+import {PATHS} from "../../services";
 
 export const Students = () => {
     const user = useAppSelector(selectors.user.orNull);
@@ -39,7 +40,7 @@ export const Students = () => {
                             <RS.ListGroupItem className="bg-transparent">
                                 <LinkCard
                                     title="Assignments" imageSource="/assets/card04.png"
-                                    linkDestination="/assignments" linkText="View your assignments"
+                                    linkDestination={PATHS.MY_ASSIGNMENTS} linkText="View your assignments"
                                 >
                                     View the current status of your assignments.
                                 </LinkCard>

@@ -47,7 +47,7 @@ interface HexagonGroupsButtonProps {
 const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: HexagonGroupsButtonProps) =>
     <button onClick={toggleAssignModal} id={id} className="board-subject-hexagon-container">
         {generateGameboardSubjectHexagons(boardSubjects)}
-        <span className="groups-assigned" title={"Groups assigned"}>
+        <span className="groups-assigned" title={"Number of groups assigned"}>
                 <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
             group{(!assignees || assignees.length != 1) && "s"}
             {isDefined(assignees) &&
@@ -169,9 +169,9 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     </tbody>
                 </table>}
             </td>
-            <td className={basicCellClasses}>{formatBoardOwner(user, board)}</td>
-            <td className={basicCellClasses}>{formatDate(board.creationDate)}</td>
-            <td className={basicCellClasses}>{formatDate(board.lastVisited)}</td>
+            <td className={basicCellClasses} data-testid={"owner"}>{formatBoardOwner(user, board)}</td>
+            <td className={basicCellClasses} data-testid={"created-date"}>{formatDate(board.creationDate)}</td>
+            <td className={basicCellClasses} data-testid={"last-visited"}>{formatDate(board.lastVisited)}</td>
             {isSetAssignments && <td className={"align-middle text-center"}>
                 <Button color={siteSpecific("tertiary", "secondary")} size="sm" style={siteSpecific({fontSize: 15}, undefined)} onClick={toggleAssignModal}>
                     {siteSpecific(<>Assign&nbsp;/ Unassign</>, "Manage")}
@@ -214,8 +214,8 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <button className="close" onClick={confirmDeleteBoard} aria-label="Delete gameboard">×</button>
                     {phyHexagon}
                     <aside>
-                        <CardSubtitle>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
-                        <CardSubtitle>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
+                        <CardSubtitle data-testid={"created-date"}>Created: <strong>{formatDate(board.creationDate)}</strong></CardSubtitle>
+                        <CardSubtitle data-testid={"last-visited"}>Last visited: <strong>{formatDate(board.lastVisited)}</strong></CardSubtitle>
                         <table className="w-100">
                             <thead>
                             <tr>
@@ -250,7 +250,7 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                     <Row className="mt-1 mb-2">
                         <Col>
                             <CardTitle><Link to={boardLink}>{board.title}</Link></CardTitle>
-                            <CardSubtitle>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
+                            <CardSubtitle data-testid={"owner"}>By: <strong>{formatBoardOwner(user, board)}</strong></CardSubtitle>
                         </Col>
                         <Col className="card-share-link col-auto">
                             <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose />
@@ -267,13 +267,13 @@ export const BoardCard = ({user, board, boardView, assignees, toggleAssignModal,
                         <Col>
                             <div className={"float-left mr-3 mb-2"}>{csCircle}</div>
                             <h4><Link className={"d-inline"} to={boardLink}>{board.title}</Link></h4>
-                            <span>By: {formatBoardOwner(user, board)}</span>
+                            <span data-testid={"owner"}>By: {formatBoardOwner(user, board)}</span>
                         </Col>
                     </Row>
                     <Row className={isSetAssignments ? "mb-5 pb-3" : "mb-0"}>
                         <Col>
-                            <b>Created</b>: {formatDate(board.creationDate)}<br/>
-                            <b>Last visited</b>: {formatDate(board.lastVisited)}<br/>
+                            <span data-testid={"created-date"}><b>Created</b>: {formatDate(board.creationDate)}</span><br/>
+                            <span data-testid={"last-visited"}><b>Last visited</b>: {formatDate(board.lastVisited)}</span><br/>
                             <b>Stages and difficulties</b>: {boardStagesAndDifficulties.map(([stage,difficulties], i) =>
                                 `${stageLabelMap[stage]} (${sortBy(difficulties, d => indexOf(Object.keys(difficultyShortLabelMap), d)).map(d => difficultyShortLabelMap[d]).join(", ")})`
                             ).join(", ") || "-"}<br/>
