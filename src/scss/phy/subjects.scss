@@ -93,11 +93,15 @@
     );
   }
 
-  .hint-tab-title {
-    color: $color !important;
+  li {
+    .hint-tab-title {
+      color: $color !important;
+    }
     &.active {
-      color: white !important;
-      background-color: $color !important;
+      .hint-tab-title {
+        color: white !important;
+        background-color: $color !important;
+      }
     }
   }
 

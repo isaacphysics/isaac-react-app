@@ -84,39 +84,11 @@
   }
 }
 
-.modal-body {
-  .basic-multi-select {
-    .select__control.select__control--is-focused {
-      border-color: $primary;
-      box-shadow: 0 0 0 0.2rem $shadow-08;
-    }
-
-    .select__menu {
-      z-index: 2;
-      .select__option.select__option--is-focused {
-        background-color: $primary;
-      }
-    }
-  }
-}
-
 .responsive {
   overflow: auto;
   display: block;
-  max-height: 60vh;
   .table.table-bordered {
-    thead {
-      @include table-sticky();
-    }
     tr {
-      &.disabled {
-        background-color: lightgrey;
-      }
-
-      &.selected {
-        background-color: lightyellow;
-      }
-
       td {
         .custom-control-label {
           &:before, &:after {

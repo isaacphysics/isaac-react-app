@@ -10,13 +10,14 @@ import {
     mutationSucceeded,
 } from "../../../state";
 import {sortBy} from "lodash";
-import {history, isTeacherOrAbove} from "../../../services";
+import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";
 import {RegisteredUserDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {AppGroup} from "../../../../IsaacAppTypes";
 import {ShowLoadingQuery} from "../../handlers/ShowLoadingQuery";
 import {Loading} from "../../handlers/IsaacSpinner";
+import classNames from "classnames";
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -64,7 +65,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
             defaultErrorTitle={"Error fetching group joining token"}
             thenRender={token => <>
                 <Jumbotron>
-                    <h2>Option 1: Share link</h2>
+                    <h2 className={classNames({"font-size-1-5": isAda})}>Option 1: Share link</h2>
                     <p>Share the following link with your students to have them join your group:</p>
                     <span className="text-center h4 overflow-auto user-select-all d-block border bg-light p-1" data-testid={"share-link"}>
                         {location.origin}/account?authToken={token?.token}
@@ -72,7 +73,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                 </Jumbotron>
 
                 <Jumbotron>
-                    <h2>Option 2: Share code</h2>
+                    <h2 className={classNames({"font-size-1-5": isAda})}>Option 2: Share code</h2>
                     <p>Ask your students to enter the following code into the Teacher Connections tab on their &lsquo;My account&rsquo; page:</p>
                     <h3 className="text-center user-select-all d-block border bg-light p-1" data-testid={"share-code"}>{token?.token}</h3>
                 </Jumbotron>
@@ -90,24 +91,24 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
     buttons: [
         <Row key={0}>
             {/* Only teachers are allowed to add additional managers to a group. */}
-            {isTeacherOrAbove(user) && <Col>
-                <Button block color="secondary" onClick={() => {
+            {isTeacherOrAbove(user) && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                     store.dispatch(showGroupManagersModal({group, user}));
                 }}>
                     {firstTime ? "Add group managers" : "Edit group managers"}
                 </Button>
             </Col>}
-            <Col>
-                <Button block color="secondary" onClick={() => {
+            <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap mb-3": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
-                    history.push("/set_assignments");
+                    history.push(PATHS.SET_ASSIGNMENTS);
                 }}>
-                    Set an assignment
+                    Set {siteSpecific("an assignment", "a quiz")}
                 </Button>
             </Col>
-            <Col>
-                <Button block color="secondary" onClick={() => {
+            <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+                <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
                 }}>
                     Create another group
@@ -184,7 +185,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         <h2>Selected group: {group.groupName}</h2>
 
         <p>
-            Sharing this group lets other teachers add and remove students, set new assignments and view assignment progress.
+            Sharing this group lets other teachers add and remove students, set new {siteSpecific("assignments", "quizzes")} and view assignment progress.
             It will not automatically let additional teachers see detailed mark data unless students give access to the new teacher.
         </p>
 
@@ -227,14 +228,16 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             <tbody>
                 {additionalManagers && additionalManagers.map(manager =>
                     <tr key={manager.email} data-testid={"group-manager"}>
-                        <td><span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})</td>
+                        <td className={"align-middle"}>
+                            <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})
+                        </td>
                         {userIsOwner && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => promoteManager(manager)}>
+                            <Button outline={isAda} className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => promoteManager(manager)}>
                                 Make owner
                             </Button>
                         </td>}
                         {(userIsOwner || user?.id === manager.id) && <td className={"text-center"}>
-                            <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => userIsOwner ?
+                            <Button className="d-none d-sm-inline" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => userIsOwner ?
                                 removeManager(manager) : removeSelf(manager)}>
                             Remove
                         </Button></td>}
@@ -243,7 +246,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             </tbody>
         </Table>
 
-        {userIsOwner && <Alert className={"px-2 py-2 mb-2"} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
+        {userIsOwner && <Alert className={classNames("px-2 py-2 mb-2", {"my-3": isAda})} color={group.additionalManagerPrivileges ? "danger" : "warning"}>
             <CustomInput
                 id="additional-manager-privileges-check"
                 checked={group.additionalManagerPrivileges}
@@ -266,16 +269,16 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
         </Alert>}
 
         {userIsOwner && <>
-            <h4>Add additional managers</h4>
-            <p>Enter the email of another Isaac teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
+            <h4 className={classNames({"mt-2": isAda})}>Add additional managers</h4>
+            <p>Enter the email of another {siteSpecific("Isaac", "Ada")} teacher account below to add them as a group manager. Note that this will share their email address with the students.</p>
             <Form onSubmit={addManager}>
                 <Input type="text" value={newManagerEmail} placeholder="Enter email address here" onChange={event => setNewManagerEmail(event.target.value)}/>
                 <p>
-                    <small><strong>Remember:</strong> Students may need to reuse the <a
+                    <small><strong>Remember:</strong> Students may need to reuse the <a className={classNames("pointer-cursor", {"btn-link": isAda})}
                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}>group link</a> to approve access to their data for any new teachers.
                     </small>
                 </p>
-                <Button block onClick={addManager}>Add group manager</Button>
+                <Button block onClick={addManager} disabled={!isDefined(newManagerEmail) || newManagerEmail === ""}>Add group manager</Button>
             </Form>
         </>}
     </div>;

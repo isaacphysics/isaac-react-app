@@ -8,7 +8,7 @@ import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {
-    isCS,
+    isAda,
     isDefined,
     Item,
     NOT_FOUND,
@@ -18,8 +18,8 @@ import {
     useUrlHashValue
 } from "../../services";
 import {NOT_FOUND_TYPE, Tag} from '../../../IsaacAppTypes';
-import Select from "react-select";
 import {MetaDescription} from "../elements/MetaDescription";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 /*
     This hook waits for `waitingFor` to be populated, returning:
@@ -188,12 +188,12 @@ export const Glossary = () => {
         }
     });
 
-    const metaDescriptionCS = "Confused about an A level or GCSE Computer Science term? Look it up in our glossary.";
+    const metaDescriptionCS = "Confused about a computer science term? Look it up in our glossary. Get GCSE and A level support today!";
 
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
-            {isCS && <MetaDescription description={metaDescriptionCS} />}
+            {isAda && <MetaDescription description={metaDescriptionCS} />}
 
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">
@@ -215,7 +215,7 @@ export const Glossary = () => {
                         </Col>
                         <Col className="mt-3 mt-md-0">
                             <Label for='topic-select' className='sr-only'>Topic</Label>
-                            <Select inputId="topic-select"
+                            <StyledSelect inputId="topic-select"
                                 options={ topics.map(e => ({ value: e.id, label: e.title})) }
                                 name="topic-select"
                                 classNamePrefix="select"

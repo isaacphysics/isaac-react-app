@@ -1,12 +1,7 @@
 @import "../common/header";
 
 header {
-  z-index: 20;
-  background-image: url('/assets/Line.svg');
-  @include respond-above(sm) {
-    background-image: url('/assets/Line-alt.svg');
-    background-size: 100% 60%;
-  }
+  background-color: $cs-black;
 }
 
 div.header-progress {
@@ -16,4 +11,131 @@ div.header-progress {
 
 .header-links {
   margin-top: .7rem;
+}
+
+.navbar {
+  .navbar-toggler {
+    padding: 0.25rem;
+    &:focus-visible {
+      border-color: $cyan-300;
+      border-radius: 0;
+    }
+    &:focus:not(:focus-visible) {
+      border: none !important;
+    }
+    .navbar-toggler-icon {
+      background-image: url('/assets/cs/icons/hamburger.svg');
+    }
+    &.open {
+      .navbar-toggler-icon {
+        background-image: url('/assets/cs/icons/close.svg');
+      }
+    }
+  }
+  .search-collapse {
+    @include media-breakpoint-up(nav) {
+      border: none !important;
+      order: 100; // place the search bar at the far right of the header
+      flex-basis: 0; // ensure that the search bar has no right flex margin
+      flex-grow: 1;
+      > * {
+        flex-grow: 1;
+      }
+      max-width: 240px !important;
+      justify-content: flex-end;
+    }
+    border-top: solid $cs-jet 2px;
+    border-bottom: solid $cs-jet 2px;
+  }
+  .search-toggler {
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1;
+    background: none;
+    &:focus-visible {
+      box-sizing: content-box;
+      border: 0.2rem solid $cyan-300;
+      border-radius: 0;
+    }
+    &:focus:not(:focus-visible) {
+      border: none !important;
+    }
+    .search-toggler-icon {
+      display: inline-block;
+      width: 1.25em;
+      height: 1.25em;
+      vertical-align: middle;
+      background-image: url('/assets/cs/icons/search-white.svg');
+    }
+  }
+}
+
+
+header {
+  position: relative;
+  z-index: 20;
+
+  a:not(.navbar-brand), .nav-link {
+    text-decoration: none !important;
+    color: $cs-white;
+    position: relative;
+    text-underline-offset: 6px;
+    &:hover, &:active, &.open {
+      outline: none !important;
+      box-shadow: none !important;
+      color: $cs-white;
+      text-decoration: underline 3px $cyan-300 !important;
+    }
+    &:focus-visible {
+      outline: none !important;
+      &::after {
+        content: ' ';
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border: $cyan-300 solid 2px;
+      }
+    }
+
+    .cs-caret {
+      margin-top: 6px;
+      margin-right: 4px;
+      display: inline-block;
+      height: 9px;
+      width: 15px;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-image: url('/assets/chevron_down_white.svg');
+      &.open {
+        background-image: url('/assets/chevron_up_white.svg');
+      }
+    }
+  }
+
+  .nav-section {
+    border-radius: 0;
+    .dropdown-item {
+      color: $cs-white !important;
+      &:hover, &:active, &:focus {
+        background: unset;
+        outline: unset;
+      }
+    }
+    @include media-breakpoint-up(nav) {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    background: $cs-jet;
+  }
+
+  .navbar-separator {
+    width: 100%;
+    border-top: solid $cs-jet 2px;
+  }
+}
+
+.banner {
+  background-color: $cs-white;
 }

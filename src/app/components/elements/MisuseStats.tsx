@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {MisuseStatisticDTO} from "../../../IsaacApiTypes";
 import {isaacApi} from "../../state";
 import {Button, Table} from "reactstrap";
-import Select from "react-select";
 import {selectOnChange} from "../../services";
+import {StyledSelect} from "./inputs/StyledSelect";
 
 const EventMisuseTable = ({topMisuses}: {topMisuses: MisuseStatisticDTO[]}) => {
     const [resetMisuseMonitor] = isaacApi.endpoints.resetMisuseMonitor.useMutation();
@@ -33,7 +33,7 @@ export const MisuseStats = () => {
     const eventLabels = misuseStats ? Object.keys(misuseStats) : [];
     return <>
         <p>Select a misuse event type:</p>
-        <Select
+        <StyledSelect
             options={eventLabels.map(el => ({value: el, label: el.replace("Handler", "")}))}
             onChange={selectOnChange(setOpenEventTable, true)}
         />

@@ -3,7 +3,16 @@ import React, {useCallback, useEffect, useMemo, useState} from "react";
 import countBy from "lodash/countBy";
 import sortBy from "lodash/sortBy";
 import intersection from "lodash/intersection";
-import {determineAudienceViews, difficultiesOrdered, isCS, isFound, isPhy, stagesOrdered} from "./";
+import {
+    determineAudienceViews,
+    difficultiesOrdered,
+    isAda,
+    isFound,
+    isPhy,
+    PATHS,
+    siteSpecific,
+    stagesOrdered
+} from "./";
 import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
@@ -16,9 +25,9 @@ export enum BoardCompletions {
 
 export function formatBoardOwner(user: RegisteredUserDTO, board: GameboardDTO) {
     if (board.tags && board.tags.includes("ISAAC_BOARD")) {
-        return "Isaac";
+        return siteSpecific("Isaac", "Ada");
     }
-    if (user.id == board.ownerUserId) {
+    if (user && (user.id == board.ownerUserId)) {
         return "Me";
     }
     return "Someone else";
@@ -34,7 +43,7 @@ export function boardCompletionSelection(board: GameboardDTO, boardCompletion: B
     } else return boardCompletion == BoardCompletions.any;
 }
 
-const createGameabordLink = (gameboardId: string) => `/gameboards#${gameboardId}`;
+const createGameabordLink = (gameboardId: string) => `${PATHS.GAMEBOARD}#${gameboardId}`;
 
 const createGameboardHistory = (title: string, gameboardId: string) => {
     return [
@@ -93,7 +102,7 @@ export const showWildcard = (board: GameboardDTO) => {
 };
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {
-    if (isCS) {
+    if (isAda) {
         return ["compsci"];
     }
     const subjects = ["physics", "maths", "chemistry", "biology"];
@@ -161,12 +170,14 @@ export enum BoardViews {
     "card" = "Card View"
 }
 
-export enum BoardCreators {
-    "all" = "All",
-    "isaac" = "Isaac",
-    "me" = "Me",
-    "someoneElse" = "Someone else"
-}
+// Reusable pattern for site-specific "enums"
+export const BoardCreators = {
+    "all": "All",
+    "isaac": siteSpecific("Isaac", "Ada"),
+    "me": "Me",
+    "someoneElse": "Someone else"
+} as const;
+export type BoardCreators = typeof BoardCreators[keyof (typeof BoardCreators)];
 
 export enum BoardSubjects {
     "all" = "All",

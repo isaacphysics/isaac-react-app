@@ -3,3 +3,19 @@
 .content-summary-item {
   min-height: 88px;
 }
+
+.list-group-links li a {
+  padding-right: 38px;
+  &:after {
+    @include pseudo-element;
+    background-image: url('/assets/chevron_right.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-y: center;
+    height: 100%;
+    right: 10px;
+    top: 0;
+    bottom: 0;
+    width: 9px;
+  }
+}

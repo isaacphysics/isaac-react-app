@@ -3,8 +3,9 @@ import {Button, UncontrolledTooltip} from "reactstrap";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     filterAudienceViewsByProperties,
+    isAda,
     isPhy,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE,
     STAGE,
     stageLabelMap,
     useUserContext
@@ -20,7 +21,7 @@ import {
 import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
-import classnames from "classnames";
+import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 
@@ -32,11 +33,11 @@ function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
     const filteredViews = filterAudienceViewsByProperties(viewsToUse, AUDIENCE_DISPLAY_FIELDS);
 
     return <div className="h-subtitle pt-sm-0 mb-sm-0 d-sm-flex">
-        {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={"d-flex d-sm-block"}>
-            {view.stage && view.stage !== STAGE.ALL && <div className="text-center align-self-center">
+        {filteredViews.map((view, i) => <div key={`${view.stage} ${view.difficulty} ${view.examBoard}`} className={classNames("d-flex d-sm-block", {"ml-sm-2": i > 0})}>
+            {view.stage && view.stage !== STAGE.ALL && <div className={classNames("text-center align-self-center", {"font-weight-regular": isAda})}>
                 {stageLabelMap[view.stage]}
             </div>}
-            {view.difficulty && <div className={"ml-2 ml-sm-0" + classnames({"mr-2": i > 0})}>
+            {view.difficulty && <div className={"ml-2 ml-sm-0 text-center"}>
                 <DifficultyIcons difficulty={view.difficulty} />
             </div>}
         </div>)}
@@ -61,7 +62,7 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
 
     useEffect(() => {dispatch(mainContentIdSlice.actions.set("main-heading"));}, []);
     useEffect(() => {
-        document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
+        document.title = currentPageTitle + " — " + SITE_TITLE;
         const element = headerRef.current;
         if (element && (window as any).followedAtLeastOneSoftLink && !openModal) {
             element.focus();

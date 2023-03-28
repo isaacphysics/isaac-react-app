@@ -3,6 +3,7 @@ import {AppState, getAdminSiteStats, useAppDispatch, useAppSelector} from "../..
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ShowLoading} from "../handlers/ShowLoading";
+import {siteSpecific} from "../../services";
 
 function asPercentage(value: number | undefined, total: number)  {
     return value !== undefined ? Math.round(100 * value / total) : 0;
@@ -36,7 +37,7 @@ export const AdminStats = () => {
     }
 
     return <RS.Container id="admin-stats-page">
-        <TitleAndBreadcrumb currentPageTitle="Isaac statistics" breadcrumbTitleOverride="Admin statistics" />
+        <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} statistics`} breadcrumbTitleOverride="Admin statistics" />
 
         <ShowLoading until={adminStats}>
             {adminStats && <React.Fragment>

@@ -23,10 +23,11 @@ import {
     Label,
     Row
 } from "reactstrap";
-import {history, isCS, SITE_SUBJECT_TITLE} from "../../services";
+import {history, isAda, SITE_TITLE, siteSpecific} from "../../services";
 import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
+import classNames from "classnames";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -80,8 +81,21 @@ export const GoogleSignInButton = () => {
         dispatch(handleProviderLoginRedirect("GOOGLE"));
     };
 
-    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithGoogle}>
-        <img id={"google-button-logo"} src={"/assets/google-logo.svg"} alt={"Google logo"}/> Log in with Google
+    return <Button className={"position-relative google-button"} block outline color="primary" onClick={logInWithGoogle}>
+        <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Google
+    </Button>
+}
+
+// Button prompting the user to sign in via Raspberry Pi Accounts
+export const RaspberryPiSignInButton = () => {
+    const dispatch = useAppDispatch();
+
+    const logInWithRaspberryPi = () => {
+        dispatch(handleProviderLoginRedirect("RASPBERRYPI"));
+    };
+
+    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
+        <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>Raspberry Pi Foundation
     </Button>
 }
 
@@ -209,7 +223,7 @@ export const LogIn = () => {
     const subHeadingRef = useRef<HTMLHeadingElement>(null);
 
     useEffect( () => {
-        document.title = "Login — Isaac " + SITE_SUBJECT_TITLE;
+        document.title = "Login — " + SITE_TITLE;
         if (!(window as any).followedAtLeastOneSoftLink) {
             return;
         }
@@ -226,10 +240,10 @@ export const LogIn = () => {
         return logInAttempted ? <Loading/> : <Redirect to="/"/>;
     }
 
-    const metaDescriptionCS = "Log in to your account. Access free GCSE and A level Computer Science resources. Use our materials to learn and revise for your exams.";
+    const metaDescriptionCS = "Log in to your Ada Computer Science account to access hundreds of computer science topics and questions.";
 
-    return <Container id="login-page" className="my-4">
-        {isCS && <MetaDescription description={metaDescriptionCS} />}
+    return <Container id="login-page" className="my-4 mb-5">
+        {isAda && <MetaDescription description={metaDescriptionCS} />}
         <Row>
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card>
@@ -249,7 +263,7 @@ export const LogIn = () => {
                                         passwordResetAttempted={passwordResetAttempted} validPassword={isValidPassword}
                                         errorMessage={errorMessage} displayLabels={true} />
 
-                                    <Row className="mb-4">
+                                    <Row className={classNames("mb-4", {"mt-2": isAda})}>
                                         <Col className={"col-5 mt-1"}>
                                             <CustomInput
                                                 id="login-remember-me"
@@ -287,9 +301,15 @@ export const LogIn = () => {
                                         </Col>
                                     </Row>
 
-                                    <hr className="text-center"/>
-
-                                    <Row className="my-4 justify-content-center">
+                                    <hr className="text-center mb-4"/>
+                                    <h3 className="text-left mb-3">Log in with:</h3>
+                                    {isAda &&
+                                        <Row className="mb-2 justify-content-center">
+                                            <Col sm={9}>
+                                                <RaspberryPiSignInButton/>
+                                            </Col>
+                                        </Row>}
+                                    <Row className="mb-3 justify-content-center">
                                         <Col sm={9}>
                                             <GoogleSignInButton/>
                                         </Col>

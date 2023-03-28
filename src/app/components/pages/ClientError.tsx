@@ -4,7 +4,7 @@ import {Col, Container, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import ReactGA from "react-ga";
 import ReactGA4 from "react-ga4";
-import {WEBMASTER_EMAIL} from "../../services";
+import {siteSpecific, WEBMASTER_EMAIL} from "../../services";
 import {FallbackProps} from "react-error-boundary";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {Loading} from "../handlers/IsaacSpinner";
@@ -52,7 +52,7 @@ export const ClientError = ({resetErrorBoundary, error}: FallbackProps) => {
     return <Container>
         <div>
             <TitleAndBreadcrumb currentPageTitle="Error" />
-            <h3 className="my-4"><small>{"We're sorry, but an error has occurred in the Isaac app!"}</small></h3>
+            <h3 className="my-4"><small>{`We're sorry, but an error has occurred in the ${siteSpecific("Isaac", "Ada")} app!`}</small></h3>
             <h3>
                 <small>
                     {"You may want to "}

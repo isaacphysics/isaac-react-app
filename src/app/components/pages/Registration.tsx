@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
+import {errorSlice, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../state";
 import {Link} from "react-router-dom";
 import ReactGA from "react-ga";
 import ReactGA4 from "react-ga4";
@@ -21,7 +21,7 @@ import {
 import {PasswordFeedback} from "../../../IsaacAppTypes";
 import {
     FIRST_LOGIN_STATE,
-    isCS,
+    isAda,
     isDefined, isDobOldEnoughForSite,
     isDobOverTen,
     isDobOverThirteen,
@@ -30,7 +30,7 @@ import {
     loadZxcvbnIfNotPresent,
     passwordDebounce,
     persistence,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE, SITE_TITLE_SHORT,
     siteSpecific,
     validateEmail,
     validateName,
@@ -79,7 +79,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
     const confirmedOverTen = dob10To12CheckboxChecked || isDobOverTen(registrationUser.dateOfBirth) || confirmedOverThirteen;
     const confirmedTenToTwelve = confirmedOverTen && !confirmedOverThirteen;
     const confirmedOldEnoughForSite = siteSpecific(confirmedOverTen, confirmedOverThirteen);
-    const consentGivenOrNotRequired = isCS || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
+    const consentGivenOrNotRequired = isAda || (confirmedTenToTwelve === parentalConsentCheckboxChecked);
     const dobTooYoung = isDefined(registrationUser.dateOfBirth) && !isDobOldEnoughForSite(registrationUser.dateOfBirth);
 
     // Form's submission method
@@ -90,6 +90,7 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         if (familyNameIsValid && givenNameIsValid && passwordIsValid && emailIsValid && confirmedOldEnoughForSite && consentGivenOrNotRequired) {
             persistence.session.save(KEY.FIRST_LOGIN, FIRST_LOGIN_STATE.FIRST_LOGIN);
             Object.assign(registrationUser, {loggedIn: false});
+            dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(registrationUser, {}, undefined, null, (Object.assign(registrationUser, {loggedIn: true})), true));
             // FIXME - the below ought to be in an action, but we don't know that the update actually registration:
             ReactGA.event({
@@ -116,13 +117,13 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
         return <Redirect to="/" />;
     }
 
-    const metaDescriptionCS =  "Sign up for a free account and get powerful GCSE and A Level Computer Science resources and questions. For classwork, homework, and revision.";
+    const metaDescriptionCS = "Sign up for an Ada Computer Science account to access hundreds of computer science topics and questions.";
 
     // Render
     return <Container id="registration-page" className="mb-5">
 
         <TitleAndBreadcrumb currentPageTitle="Registration" className="mb-4" />
-        {isCS && <MetaDescription description={metaDescriptionCS} />}
+        {isAda && <MetaDescription description={metaDescriptionCS} />}
 
         <Card>
             <CardBody>
@@ -131,7 +132,8 @@ export const Registration = withRouter(({location}:  RouteComponentProps<{}, {},
                     <small className="text-muted">
                         Sign up to {" "}
                         <Link to="/">
-                            Isaac <span className="d-none d-md-inline">{SITE_SUBJECT_TITLE}</span>
+                            <span className="d-inline d-md-none">{SITE_TITLE_SHORT}</span>
+                            <span className="d-none d-md-inline">{SITE_TITLE}</span>
                         </Link>
                     </small>
                 </CardTitle>

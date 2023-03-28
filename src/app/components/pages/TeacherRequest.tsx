@@ -23,11 +23,11 @@ import {
     Row
 } from "reactstrap";
 import {
-    api,
+    api, isAda,
     isPhy,
     isTeacherOrAbove,
     schoolNameWithPostcode,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE, siteSpecific,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
@@ -52,25 +52,23 @@ export const TeacherRequest = () => {
     const [verificationDetails, setVerificationDetails] = useState<string>();
     const [messageSent, setMessageSent] = useState(false);
     const [emailVerified, setEmailVerified] = useState(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
-    const [allowedDomain, setAllowedDomain] = useState<boolean>();
+    const allowedDomain = isAda || !nonSchoolDomains.some(domain => emailAddress.toLowerCase().includes(domain));
 
     const urn = user?.loggedIn && user.schoolId || "";
     const subject = "Teacher Account Request";
+    const teacherVerificationMethodMessage = siteSpecific(
+        "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails,
+        ""
+    );
+
     const message = "Hello,\n\n" +
-        "Please could you convert my Isaac account into a teacher account.\n\n" +
+        `Please could you convert my ${siteSpecific("Isaac", "Ada")} account into a teacher account.` + "\n\n" +
         "My school is: " + school + "\n" +
-        "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: " + verificationDetails + "\n\n\n" +
+        teacherVerificationMethodMessage + "\n\n\n" +
         "Any other information: " + otherInformation + "\n\n" +
         "Thanks, \n\n" + firstName + " " + lastName;
     const isValidEmail = validateEmail(emailAddress);
 
-    function isEmailDomainAllowed(email: string) {
-        for (let domain in nonSchoolDomains) {
-            if (email.includes(nonSchoolDomains[domain])) {
-                setAllowedDomain(false)
-            }
-        }
-    }
 
     function fetchSchool(urn: string) {
         if (urn !== "") {
@@ -90,7 +88,6 @@ export const TeacherRequest = () => {
         setEmailAddress(user?.loggedIn && user.email || "");
         setEmailVerified(user?.loggedIn && (user.emailVerificationStatus === "VERIFIED"));
         fetchSchool(urn);
-        isEmailDomainAllowed(emailAddress);
     }, [user]);
 
     // Direct private tutors and parents towards the tutor account request page
@@ -99,10 +96,14 @@ export const TeacherRequest = () => {
         {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
         form. If you are a private tutor or parent, you can
         {" "}<Link to="/tutor_account_request">
-            request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+            request an {SITE_TITLE} Tutor account
         </Link>.
     </p>;
 
+    const invalidDetails = siteSpecific(
+        !emailVerified || typeof school == "undefined" || !allowedDomain,
+        !emailVerified
+    );
 
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Teacher Account request" />
@@ -120,7 +121,7 @@ export const TeacherRequest = () => {
                                         You already have a teacher account
                                     </span>
                                     <p className="mt-3">
-                                        Go to the <Link to="/teachers">Teacher tools page</Link> to start using your
+                                        Go to the <Link to="/support/teacher/general">Teacher FAQ page</Link> to learn about your
                                         new account features.
                                     </p>
                                 </Col>
@@ -146,10 +147,13 @@ export const TeacherRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a teacher account on Isaac ${SITE_SUBJECT_TITLE}, please fill in this form. `}
-                                        {"You must use the email address that was assigned to you by your school, and the "}
-                                        {"name of your school should be shown in the 'School' field. If any of the "}
-                                        {"information is incorrect or missing, you can amend it on your "}
+                                        {`To request a teacher account on ${SITE_TITLE}, please ${siteSpecific("fill in", "submit")} this form. `}
+                                        {siteSpecific(
+                                            "You must use the email address that was assigned to you by your school, " +
+                                            "and the name of your school should be shown in the 'School' field. ",
+                                            "You must use a verified email address and your full name. "
+                                        )}
+                                        {"If any of the information is incorrect or missing, you can amend it on your "}
                                         <Link to="/account">My account</Link>{" page."}
                                         {isPhy && noSchool}
                                     </p>
@@ -175,7 +179,7 @@ export const TeacherRequest = () => {
                                         <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
-                                                <Input disabled invalid={!isValidEmail || !emailVerified || allowedDomain == false} id="email-input"
+                                                <Input disabled invalid={!isValidEmail || !emailVerified || !allowedDomain} id="email-input"
                                                     type="email" name="email"
                                                     defaultValue={user?.loggedIn ? user.email : ""}
                                                     onChange={e => setEmailAddress(e.target.value)}
@@ -184,22 +188,22 @@ export const TeacherRequest = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup>
-                                                <Label htmlFor="school-input" className="form-required">School</Label>
+                                                <Label htmlFor="school-input" className={siteSpecific("form-required", "")}>School</Label>
                                                 <Input disabled id="school-input" type="text" name="school"
-                                                    defaultValue={school} invalid={typeof school == "undefined"}
+                                                    defaultValue={school} invalid={isPhy && typeof school == "undefined"}
                                                     onChange={e => setSchool(e.target.value)} required/>
                                             </FormGroup>
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col size={12} md={6}>
+                                        {isPhy && <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="user-verification-input" className="form-required">URL of a page on your school website which shows your name and email address, or your school phone number</Label>
                                                 <Input id="user-verification-input" type="text" name="user-verification"
                                                     onChange={e => setVerificationDetails(e.target.value)} required/>
                                             </FormGroup>
-                                        </Col>
-                                        <Col size={12} md={6}>
+                                        </Col>}
+                                        <Col size={12} md={siteSpecific(6, 12)}>
                                             <FormGroup>
                                                 <Label htmlFor="other-info-input">Any other information</Label>
                                                 <Input id="other-info-input" type="textarea" name="other-info"
@@ -218,20 +222,20 @@ export const TeacherRequest = () => {
                                         </Col>
                                     </Row>
                                     }
-                                    {typeof school == "undefined" &&
+                                    {isPhy && typeof school == "undefined" &&
                                     <Row>
                                         <Col>
                                             <small className="text-danger text-left">You have not provided your school —
                                                 please add your school on your <Link to="/account">My Account</Link> page.
                                                 If you are a private tutor or parent, you can{" "}
                                                 <Link to="/tutor_account_request">
-                                                    request an Isaac {SITE_SUBJECT_TITLE} Tutor account
+                                                    request an {SITE_TITLE} Tutor account
                                                 </Link>.
                                             </small>
                                         </Col>
                                     </Row>
                                     }
-                                    {allowedDomain == false &&
+                                    {!allowedDomain &&
                                     <Row>
                                         <Col>
                                             <small className="text-danger text-left">You have not used your school
@@ -252,7 +256,7 @@ export const TeacherRequest = () => {
                                             </span>
                                         </Col>
                                         <Col size={12} md={6} className="text-right">
-                                            <Input type="submit" value="Submit" disabled={!emailVerified || typeof school == "undefined" || allowedDomain == false} className="btn btn-block btn-secondary border-0" />
+                                            <Input type="submit" value="Submit" disabled={invalidDetails} className="btn btn-block btn-secondary border-0" />
                                         </Col>
                                     </Row>
                                 </CardFooter>

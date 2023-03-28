@@ -1,4 +1,4 @@
-import {ListGroup, ListGroupItem} from "reactstrap";
+import {Col, ListGroup, ListGroupItem, Row} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
 import React, {useContext} from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
@@ -25,13 +25,17 @@ interface HintsProps {
 }
 export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
     return <div>
-        <ListGroup className="question-hints mb-1 pt-3 mt-3 no-print">
-            {hints?.map((hint, index) => <ListGroupItem key={index} className="pl-0 py-1">
-                <IsaacHintModal questionPartId={questionPartId} hintIndex={index}
-                                label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
-                                body={hint} scrollable />
-            </ListGroupItem>)}
-        </ListGroup>
+        <Row className="question-hints mt-2 mb-3 no-print justify-content-xs-center justify-content-lg-start">
+            {
+                hints?.map((hint, index) =>
+                    <Col key={index} xs={{size: 3}} lg={{size: 2}}>
+                            <IsaacHintModal questionPartId={questionPartId} hintIndex={index}
+                                        label={`Hint ${index + 1}`} title={hint.title || `Hint ${index + 1}`}
+                                        body={hint} scrollable />
+                    </Col>
+                )
+            }
+        </Row>
         <PrintOnlyHints hints={hints} />
     </div>;
 };

@@ -37,7 +37,6 @@
 }
 
 .assignment-progress-group .group-name {
-  background: $primary;
   align-self: stretch;
   display: flex;
   font-weight: bold;
@@ -89,10 +88,8 @@
 // GENERIC
 $status-opacity: 0.5;
 $total-status-opacity: 0.5;
-$default-name-fill: #888;
 
 // COMPLETED
-$perfect-fill: $green;
 $completed-bg-img: linear-gradient(to right, rgba($perfect-fill, $status-opacity), rgba($perfect-fill, $status-opacity));
 $completed-total-bg-img: linear-gradient(to right, rgba($perfect-fill, $total-status-opacity), rgba($perfect-fill, $total-status-opacity));
 $completed-cb-bg-img: linear-gradient(
@@ -100,7 +97,6 @@ $completed-cb-bg-img: linear-gradient(
 $completed-bg-size: 100%;
 
 // PASSED
-$passed-fill: #2C2C2C;
 $passed-bg-img: linear-gradient(to right, rgba($passed-fill, $status-opacity), rgba($passed-fill, $status-opacity));
 $passed-total-bg-img: linear-gradient(to right, rgba($passed-fill, $total-status-opacity), rgba($passed-fill, $total-status-opacity));
 $passed-cb-bg-img: linear-gradient(
@@ -111,7 +107,6 @@ $passed-cb-bg-img: linear-gradient(
 $passed-bg-size: 50%;
 
 // IN-PROGRESS
-$in-progress-fill: #555;
 $in-progress-bg-img: linear-gradient(to right, rgba($in-progress-fill, $status-opacity * 0.5), rgba($in-progress-fill, $status-opacity * 0.5));
 $in-progress-total-bg-img: linear-gradient(to right, rgba($in-progress-fill, $total-status-opacity * 0.5), rgba($in-progress-fill, $total-status-opacity * 0.5));
 $in-progress-cb-bg-img: linear-gradient(
@@ -122,7 +117,6 @@ $in-progress-cb-bg-img: linear-gradient(
 $in-progress-bg-size: 100%;
 
 // FAILED
-$failed-fill: $red;
 $failed-bg-img: linear-gradient(to right, rgba($failed-fill, $status-opacity), rgba($failed-fill, $status-opacity));
 $failed-total-bg-img: linear-gradient(to right, rgba($failed-fill, $total-status-opacity), rgba($failed-fill, $total-status-opacity));
 $failed-cb-bg-img:
@@ -279,9 +273,6 @@ $failed-bg-size: 25%;
   display: inline-block;
   padding: 0.5rem 1rem;
   font-weight: bold;
-}
-.assignment-progress-gameboard .gameboard-header:not(.text-muted) > *:first-child:before {
-  background: $primary !important;
 }
 .assignment-progress-gameboard .gameboard-title span {
   padding-left: 0.75rem;

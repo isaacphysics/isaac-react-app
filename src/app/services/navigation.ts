@@ -11,7 +11,7 @@ import {
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
     makeAttemptAtTopicHistory,
-    NOT_FOUND,
+    NOT_FOUND, PATHS, siteSpecific,
     TAG_ID,
     useQueryParams,
     useUserContext
@@ -22,7 +22,7 @@ import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
 
 export interface LinkInfo {title: string; to?: string; replace?: boolean}
-export type CollectionType = "Gameboard" | "Topic" | "Master Mathematics";
+export type CollectionType = "Gameboard" | "Quiz" | "Topic" | "Master Mathematics";
 export interface PageNavigation {
     collectionType?: CollectionType;
     breadcrumbHistory: LinkInfo[];
@@ -66,7 +66,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
         return {
             collectionType: "Master Mathematics",
             breadcrumbHistory: gameboardHistory,
-            backToCollection: currentGameboard ? {title: "Return to Top 10 Questions", to: `/gameboards#${currentGameboard.id}`} : undefined,
+            backToCollection: currentGameboard ? {title: "Return to Top 10 Questions", to: `${PATHS.GAMEBOARD}#${currentGameboard.id}`} : undefined,
             nextItem: !previousQuestion ? determineNextGameboardItem(currentGameboard, currentDocId) : undefined,
             previousItem: previousQuestion ? {title: "Return to Previous Question", to: `/questions/${previousQuestion}`} : undefined,
             search: queryString.stringify(previousQuestion ? {board, modifiedQuestionHistory} : {board}),
@@ -79,7 +79,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
             determineGameboardHistory(currentGameboard) :
             [];
         return {
-            collectionType: "Gameboard",
+            collectionType: siteSpecific("Gameboard", "Quiz"),
             breadcrumbHistory: gameboardHistory,
             backToCollection: gameboardHistory.slice(-1)[0],
             nextItem: determineNextGameboardItem(currentGameboard, currentDocId),

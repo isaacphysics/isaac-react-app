@@ -5,6 +5,22 @@
     text-shadow: 0 0 4px $gray-103, 0 0 5px $gray-103, 0 0 10px $gray-103, 0 0 10px $gray-103, 0 0 20px $gray-103;
   }
 
+  section#call-to-action {
+    background-color: $cs-black;
+    color: $cs-white;
+    .mw-640 {
+      max-width: 640px;
+    }
+    .spacer {
+      @include media-breakpoint-between(xl, xxl) {
+        max-width: 80px;
+      }
+      @include media-breakpoint-up(xxl) {
+        max-width: 160px;
+      }
+    }
+  }
+
   img#homepageHeroImg {
     left: 50%;
     transform: translateX(-50%);
@@ -17,98 +33,82 @@
     opacity: 0.6;
   }
 
-  //#homepageButtons {
-  //  @include media-breakpoint-only(sm) {
-  //    padding-top: 100px;
-  //    padding-right: 35px;
-  //    width: calc(100% + 20px);
-  //    background-image: linear-gradient(0, rgba(248,248,248,1) 50%, rgba(0,0,0,0) 100%);
-  //  }
-  //}
-
-  section#why-sign-up {
-    //h1 {padding-bottom: 2rem;}
-    //.card {
-    //  box-shadow: 0 2px 30px 0 $shadow-25;
-    //}
-    //img {
-    //  //border: 1px solid $gray-107;
-    //  box-shadow: 0 2px 30px 0 $shadow-25;
-    //}
+  section#benefits-for-teachers-and-students {
+    background-color: $cs-white;
   }
 
-  section#headline-content {
-    //background-color: $primary;
-    //background-image: url(/assets/pattern01.svg);
-    //background-repeat: repeat-x;
-    //background-size: 100%;
-    //background-blend-mode: soft-light;
-    pre {
-      background-color: rgba(white, 0.1);
-      box-shadow: 0 2px 30px 0 $shadow-08;
-    }
-    // TODO FEATURED_QUESTION_UPDATE remove the .multichoice-question rule on next featured question change
-    .multichoice-question > ul li {
-      margin-left: -1.5rem !important;
-    }
+  section#what-resources {
+    background-color: $cs-cultured;
+  }
 
-    .question-component {
-      background: white;
-      margin-left: 0.5rem;
-      margin-right: 0.5rem;
-      .validation-response-panel.correct {
-        background: rgba($primary, 0.95);
-        color: black;
-        border-bottom: none;
-      }
-      @include  media-breakpoint-up(md) {
-        img {
-          max-width: 50%;
-          padding: 0;
+  section#computer-science-stories {
+    .container {
+      position: relative;
+      .row {
+        @include media-breakpoint-down(sm) {
+          padding-bottom: 40vw !important;
+        }
+        #cs-stories-text {
+          background: radial-gradient(rgba(255, 255, 255, .9) 0, rgba(255, 255, 255, .8) 60%, transparent 80%, transparent 100%);
+
         }
       }
-      .figure-caption {
-        display: none; // TODO FEATURED_QUESTION_UPDATE this might not be appropriate for other questions
+      &:before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        // Hand-tuned background positioning to make this particular SVG look nice on different screen sizes
+        background-image: url(/assets/cs/decor/fingerprint-cs-stories.svg);
+        background-repeat: no-repeat;
+        background-position-x: 100%;
+        background-position-y: 40%;
+        background-size: auto 120%;
+        @include media-breakpoint-down(md) {
+          left: 11vw;
+        }
+        @include media-breakpoint-down(sm) {
+          left: 0;
+          width: 100%;
+          background-position-x: 100%;
+          background-position-y: 150%;
+          background-size: 100% 80%;
+        }
       }
     }
+    background-color: $cs-white;
+    position: relative;
+  }
 
-    .computer-scientist-of-the-month {
-      @include media-breakpoint-up(md) {
-        .profile-image {
-          margin-right: 1.5rem;
-          float: left;
-        }
-        .featured-profile {
-          height: auto;
-          width: auto;
-          float: none;
-        }
-      }
-      @include media-breakpoint-down(sm) {
-        .profile-image {
-          max-width: 100%;
-          height: auto;
-        }
-      }
-      .profile-image {
-        width: auto;
-      }
-      .profile-titles {
-        @extend .mt-4;
-      }
-      .profile-title {
-        @extend .h5;
-      }
-      .profile-subtitle {
-        @extend .font-weight-bold;
-      }
-      .profile-description {
-        font-size: inherit;
-        color: inherit;
-      }
-      .profile-title, .profile-subtitle, .profile-description {
-        @extend .text-left
+  section#news {
+    background-color: $cs-cultured;
+
+    @include media-breakpoint-only(lg) {
+      .card-deck .news-card:nth-child(4) {
+        display: none !important;
       }
     }
   }
+
+  section#search {
+    background-color: $dark-pink-300;
+  }
+}
+
+.ada-pink {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg at 50% 50%, #FF4DC9FF 0deg, rgba(0, 0, 0, 0) 273.75deg, rgba(0, 0, 0, 0) 360deg);
+  transform: matrix(1, 0, 0, -1, 0, 0);
+}
+
+.ada-blue {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg at 50% 50%, #0AFFE7FF 0deg, rgba(10, 255, 231, 0) 273.75deg, rgba(10, 255, 231, 0) 360deg);
+  transform: rotate(-180deg);
 }

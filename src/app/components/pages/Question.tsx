@@ -10,9 +10,9 @@ import {
     DOCUMENT_TYPE,
     fastTrackProgressEnabledBoards,
     generateQuestionTitle,
+    isAda,
     isPhy,
     isStudent,
-    siteSpecific,
     TAG_ID,
     tags,
     useNavigation
@@ -33,6 +33,7 @@ import {IntendedAudienceWarningBanner} from "../navigation/IntendedAudienceWarni
 import {SupersededDeprecatedWarningBanner} from "../navigation/SupersededDeprecatedWarningBanner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";
 import {ReportButton} from "../elements/ReportButton";
+import classNames from "classnames";
 
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
@@ -69,7 +70,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
 
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
-        return <div className={`pattern-01 ${doc.subjectId || ""}`}>
+        return <div className={`${doc.subjectId || ""}`}>
             <GameboardContext.Provider value={navigation.currentGameboard}>
                 <Container>
                     {/*High contrast option*/}
@@ -82,7 +83,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                         {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                     </TitleAndBreadcrumb>
                     <CanonicalHrefElement />
-                    <div className="no-print d-flex align-items-center mt-3">
+                    <div className="no-print d-flex flex-wrap align-items-center mt-3">
                         <EditContentButton doc={doc} />
                         <div className="question-actions ml-auto">
                             <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
@@ -95,7 +96,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                         </div>
                     </div>
                     <Row className="question-content-container">
-                        <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4 question-panel">
+                        <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
 
                             <SupersededDeprecatedWarningBanner doc={doc} />
 

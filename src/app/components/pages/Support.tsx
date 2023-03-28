@@ -4,7 +4,7 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, isDefined, isCS, siteSpecific} from "../../services";
+import {history, isAda, isDefined, siteSpecific} from "../../services";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -122,15 +122,15 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
     }
 
     const metaDescriptionMap = {
-        "student": "Got a question about our GCSE and A Level Computer Science online learning programme? Read our student FAQs.",
-        "teacher": "Got a question about our GCSE and A Level Computer Science online learning programme? Read our teacher FAQs."
+        "student": "Got a question about Ada Computer Science? Read our student FAQs. Get GCSE and A level support today!",
+        "teacher": "Got a question about Ada Computer Science? Read our teacher FAQs. Get GCSE and A level support today!"
     };
 
     return <Container>
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {isCS && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
+                {isAda && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>

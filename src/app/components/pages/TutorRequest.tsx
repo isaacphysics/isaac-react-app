@@ -26,7 +26,7 @@ import {
     isPhy,
     isTutorOrAbove,
     selectOnChange,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE, siteSpecific,
     tags,
     validateEmail,
     WEBMASTER_EMAIL
@@ -34,7 +34,7 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
-import Select from "react-select";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
@@ -54,7 +54,7 @@ export const TutorRequest = () => {
 
     const subject = "Tutor Account Request";
     const message = "Hello,\n\n" +
-        "Please could you convert my Isaac account into a tutor account.\n\n" +
+        `Please could you convert my ${siteSpecific("Isaac", "Ada")} account into a tutor account.` + "\n\n" +
         (subjects.length > 0 ? ("I would like to teach subjects: " + subjects.join(", ") + "\n\n") : "") +
         (reason ? "I would like to upgrade because: " + reason + "\n\n" : "") +
         "Thanks, \n\n" + firstName + " " + lastName;
@@ -79,10 +79,10 @@ export const TutorRequest = () => {
                         {isTutorOrAbove(user) &&
                             <Row>
                                 <Col className="text-center pt-3">
-                                    <span className="h3">
+                                    <span className="h3 mb-3 d-inline-block">
                                         You already have a tutor or teacher account
                                     </span>
-                                    {isPhy && <p className="mt-3">
+                                    {isPhy && <p className="mb-2">
                                         Go to the <Link to="/tutor_features">Tutor features page</Link> to start using your
                                         new account features.
                                     </p>}
@@ -109,7 +109,7 @@ export const TutorRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a tutor account on Isaac ${SITE_SUBJECT_TITLE}, please fill in this form. `}
+                                        {`To request a tutor account on ${SITE_TITLE}, please fill in this form. `}
                                         {"You must have verified your account email address. If any of the "}
                                         {"information is incorrect or missing, you can amend it on your "}
                                         <Link to="/account">My account</Link>{" page."}
@@ -146,7 +146,7 @@ export const TutorRequest = () => {
                                         {isPhy && <Col size={12} md={6}>
                                             <FormGroup>
                                                 <Label htmlFor="subject-input">Subjects</Label>
-                                                <Select
+                                                <StyledSelect
                                                     inputId="subject-input"
                                                     placeholder="All"
                                                     isClearable

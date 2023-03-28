@@ -7,9 +7,9 @@ MARKDOWN_RENDERER.renderer.rules.link_open = function(tokens: Remarkable.LinkOpe
     const localLink = href.startsWith(window.location.origin) || href.startsWith("/") || href.startsWith("mailto:") || href.startsWith("#");
     const title = tokens[idx].title ? (' title="' + utils.escapeHtml(utils.replaceEntities(tokens[idx].title || "")) + '"') : '';
     if (localLink) {
-        return `<a href="${href}" ${title}>`;
+        return `<a class="a-link" href="${href}" ${title}>`;
     } else {
-        return `<a href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
+        return `<a class="a-link" href="${href}" ${title} target="_blank" rel="noopener nofollow">`;
     }
 };
 export const renderRemarkableMarkdown = (markdown: string) => MARKDOWN_RENDERER.render(markdown);

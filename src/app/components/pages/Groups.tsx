@@ -36,9 +36,12 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
+import classNames from "classnames";
+import {PageFragment} from "../elements/PageFragment";
+import {RenderNothing} from "../elements/RenderNothing";
 
 enum SortOrder {
     Alphabetical = "Alphabetical",
@@ -98,9 +101,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
 
     return <div className="p-2 member-info-item d-flex justify-content-between" data-testid={"member-info"}>
         <div className="pt-1 d-flex flex-fill">
-            <div>
-                <span className="icon-group-table-person mt-2" />
-            </div>
+            <span className="d-inline-block icon-group-table-person" />
             <div>
                 {member.authorisedFullAccess ?
                     <Link to={`/progress/${member.groupMembershipInformation.userId}`}
@@ -172,11 +173,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
             const updatedGroup = {...group, groupName: newGroupName};
             updateGroup({updatedGroup});
         } else {
-            createNewGroup(newGroupName).then(success => {
-                if (success) {
-                    setNewGroupName("");
-                }
-            });
+            createNewGroup(newGroupName);
         }
     }
 
@@ -206,38 +203,36 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
 
     return <Card>
         <CardBody>
-            <Row className="mt-2">
-                <Col xs={5} sm={6} md={group ? 3 : 12} lg={group ? 3 : 12}><h4>{group ? "Edit group" : "Create group"}</h4></Col>
-                {group && <Col xs={7} sm={6} md={9} lg={9} className="text-right">
+            <h4 className={"mb-2"}>{group ? "Edit group" : "Create group"}</h4>
+            {isAda && <hr/>}
+            {group && <Row className="mt-2 justify-content-end">
+                {isTeacherOrAbove(user) && <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
                     {/* Only teachers and above can add group managers */}
-                    {isTeacherOrAbove(user) && <>
-                        <Button className="d-none d-sm-inline" size="sm" color="tertiary" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                            {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
-                        </Button>
-                        <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;</span>
-                        <span className="d-inline-block d-md-none">&nbsp;</span>
-                    </>}
+                    <Button outline={isAda} className="w-100 w-md-auto d-inline-block text-nowrap" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                        {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
+                    </Button>
+                </Col>}
+                <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
                     <Button
-                        size="sm" className={isCS ? "text-white" : "" + " d-none d-sm-inline"}
+                        size="sm" className={"w-100 w-md-auto d-inline-block text-nowrap"}
                         color={siteSpecific("primary", "secondary")}
                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                     >
                         Invite users
                     </Button>
-                    {isStaff(user) && usersInGroup.length > 0 &&
-                        <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;
-                            <Button
-                                size="sm" className={isCS ? "text-white" : ""}
-                                color={siteSpecific("primary", "secondary")}
-                                onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
-                            >
-                                Email users
-                            </Button>
-                        </span>}
+                </Col>
+                {isStaff(user) && usersInGroup.length > 0 && <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
+                    <Button
+                        size="sm" className={"w-100 w-md-auto d-inline-block text-nowrap"}
+                        color={siteSpecific("primary", "secondary")}
+                        onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
+                    >
+                        Email users
+                    </Button>
                 </Col>}
-            </Row>
+            </Row>}
             <Form inline onSubmit={saveUpdatedGroup} className="pt-3">
-                <InputGroup className="w-100">
+                <InputGroup className="w-100 separate-input-group">
                     <Input
                         innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
                         onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
@@ -245,7 +240,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                         <Button
                             color={siteSpecific("secondary", "primary")}
-                            className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
+                            className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                             onClick={saveUpdatedGroup}
                         >
                             {group ? "Update" : "Create"}
@@ -261,7 +256,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
             {group && <React.Fragment>
                 {(isUserGroupOwner || group.additionalManagerPrivileges) && <Row>
                     <Col>
-                        <Button block color="tertiary" onClick={toggleArchived}>
+                        <Button block outline={isAda} color={siteSpecific("tertiary", "secondary")} onClick={toggleArchived}>
                             {group.archived ? "Unarchive this group" : "Archive this group"}
                         </Button>
                     </Col>
@@ -310,15 +305,15 @@ const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorPr
         });
     }
     return <Row className={className}>
-        <Col size={12} className="mt-2">
-            <h6>Create New Group</h6>
+        <Col size={12} className={siteSpecific("mt-2", "")}>
+            <h6 className={siteSpecific("", "font-weight-semi-bold")}>Create New Group</h6>
         </Col>
         <Col size={12} className="mb-2">
             <Input length={50} placeholder="Enter the name of your group here" value={newGroupName}
                 onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name"/>
         </Col>
-        <Col size={12}>
-            <Button block color="primary" onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
+        <Col size={12} className={siteSpecific("", "mt-2")}>
+            <Button block color="primary" outline={isAda} onClick={saveUpdatedGroup} disabled={newGroupName == ""}>
                 Create group
             </Button>
         </Col>
@@ -418,17 +413,40 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Manage groups" className="mb-4" help={pageHelp} modalId="groups_help" />
+        {isAda && <PageFragment fragmentId={"groups_help"} ifNotFound={RenderNothing} />}
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={"Error fetching groups"}>
             <Row className="mb-5">
-                <Col md={4}>
+                <Col lg={4}>
                     <Card>
-                        <CardBody className="mt-2">
-                            <Nav tabs className="d-flex flex-wrap">
+                        <CardBody>
+                            <MobileGroupCreatorComponent className="d-block d-lg-none" createNewGroup={createNewGroup}/>
+                            <div className="d-none d-lg-block mb-3">
+                                <Button block color="primary" outline onClick={() => {
+                                    setSelectedGroupId(undefined);
+                                    if (groupNameInputRef.current) {
+                                        groupNameInputRef.current.focus();
+                                    }
+                                }}>Create new group</Button>
+                            </div>
+                            <hr/>
+                            <div className="text-left mt-3">
+                                <strong className={"mr-2"}>Groups:</strong>
+                                <UncontrolledButtonDropdown size="sm">
+                                    <DropdownToggle color={siteSpecific("tertiary", "secondary")} caret size={"sm"}>
+                                        {sortOrder}
+                                    </DropdownToggle>
+                                    <DropdownMenu>
+                                        {Object.values(SortOrder).map(item =>
+                                            <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </UncontrolledButtonDropdown>
+                            </div>
+                            <Nav tabs className={classNames("d-flex flex-wrap guaranteed-single-line mt-3", {"mb-3": isPhy})}>
                                 {tabs.map((tab, index) => {
-                                    const classes = tab.active() ? "active" : "";
-                                    return <NavItem key={index} className="mx-2">
+                                    return <NavItem key={index} className={classNames({"mx-2": isPhy, "active": tab.active()})}>
                                         <NavLink
-                                            className={`text-center ${classes}`} tabIndex={0}
+                                            className={classNames("text-center", {"px-2": isAda})} tabIndex={0}
                                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
                                         >
                                             {tab.name}
@@ -436,37 +454,9 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                     </NavItem>;
                                 })}
                             </Nav>
-                            <Row className="align-items-center pt-4 pb-3 d-none d-md-flex">
-                                <Col>
-                                    <strong>Groups:</strong>
-                                </Col>
-                                <Col className="text-right">
-                                    <UncontrolledButtonDropdown size="sm">
-                                        <DropdownToggle color="tertiary" caret>
-                                            {sortOrder}
-                                        </DropdownToggle>
-                                        <DropdownMenu>
-                                            {Object.values(SortOrder).map(item =>
-                                                <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
-                                            )}
-                                        </DropdownMenu>
-                                    </UncontrolledButtonDropdown>
-                                </Col>
-                            </Row>
-                            <MobileGroupCreatorComponent className="d-block d-md-none" createNewGroup={createNewGroup}/>
-                            <Row className="d-none d-md-block mb-3">
-                                <Col>
-                                    <Button block color="primary" outline onClick={() => {
-                                        setSelectedGroupId(undefined);
-                                        if (groupNameInputRef.current) {
-                                            groupNameInputRef.current.focus();
-                                        }
-                                    }}>Create new group</Button>
-                                </Col>
-                            </Row>
-                            <Row className="mt-3 mt-md-0">
-                                <Col>
-                                    {sortedGroups && sortedGroups.map((g: AppGroup) =>
+                            <div className="mt-3 mt-lg-0">
+                                {sortedGroups && sortedGroups.length > 0
+                                    ? sortedGroups.map((g: AppGroup) =>
                                         <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                             <div className="d-flex justify-content-between align-items-center">
                                                 <Button color="link text-left" data-testid={"select-group"} className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
@@ -479,17 +469,17 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                                     ×
                                                 </button>
                                             </div>
-                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-md-none py-2">
+                                            {selectedGroup && selectedGroup.id === g.id && <div className="d-lg-none py-2">
                                                 <GroupEditor user={user} group={selectedGroup} createNewGroup={createNewGroup}/>
                                             </div>}
-                                        </div>
-                                    )}
-                                </Col>
-                            </Row>
+                                        </div>)
+                                    : <div className={"group-item p-2"}>No {showArchived ? "archived" : "active"} groups</div>
+                                }
+                            </div>
                         </CardBody>
                     </Card>
                 </Col>
-                <Col md={8} className="d-none d-md-block" data-testid={"group-editor"}>
+                <Col lg={8} className="d-none d-lg-block" data-testid={"group-editor"}>
                     <GroupEditor group={selectedGroup} groupNameInputRef={groupNameInputRef} user={user} createNewGroup={createNewGroup} />
                 </Col>
             </Row>

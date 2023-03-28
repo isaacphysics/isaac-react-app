@@ -1,0 +1,83 @@
+@import "../common/forms";
+
+.search--main-group {
+  #header-search {
+    border-bottom-left-radius: 0;
+    border: 2px solid $cs-light-gray;
+  }
+}
+
+#homepage-search-group {
+  width: calc(100% + 30px);
+  height: 72px;
+  #homepage-search {
+    padding-left: $border-radius * 6;
+    min-height: 100%;
+    max-width: unset !important;
+    border-radius: ($border-radius * 10);
+    border: 2px solid $cs-black;
+    z-index: 3;
+  }
+  .long-search-button {
+    z-index: 2 !important;
+    border-radius: 0 ($border-radius * 10) ($border-radius * 10) 0 !important;
+    &:hover {
+      background-color: $cs-black !important;
+    }
+    &:active {
+      box-shadow: 0 2px 10px #9C9C9C;
+    }
+    background-color: black !important;
+    width: 100px;
+    left: -30px;
+    //height: 40px;
+    svg {
+      height: 100%;
+      position: absolute;
+      right: 7px;
+      top: 0;
+    }
+  }
+}
+
+input, textarea {
+  &.form-control {
+    @include placeholder($text-muted);
+    border: solid 1px $cs-black;
+  }
+}
+
+// Make sure font isn't clipped in input boxes - FIXME might have unintended effects for multiline inputs or something?
+input[type=text], input[type=search] {
+  &:not(.select__input) {
+    line-height: 50px !important;
+  }
+}
+
+.basic-multi-select {
+  .select__control.select__control--is-focused {
+    box-shadow: 0 0 0 3px $focus-blue;
+  }
+  .select__control, .select__control:hover {
+    border-color: $cs-jet;
+  }
+
+  .select__menu {
+    .select__option {
+      color: $cs-black;
+      &.select__option--is-focused {
+        background-color: $cyan-700;
+      }
+      &.select__option--is-selected {
+        background-color: $cyan-600;
+      }
+      &:active {
+        background-color: $cyan-600;
+      }
+    }
+  }
+}
+
+.custom-control {
+  z-index: 0;
+}

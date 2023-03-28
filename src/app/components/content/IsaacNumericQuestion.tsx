@@ -17,7 +17,7 @@ import {
     Row,
     UncontrolledTooltip
 } from "reactstrap";
-import {useCurrentQuestionAttempt} from "../../services";
+import {isAda, siteSpecific, useCurrentQuestionAttempt} from "../../services";
 import {v4 as uuid_v4} from 'uuid';
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {Markup} from "../elements/markup";
@@ -143,7 +143,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                     <div className="numeric-value w-100 w-sm-50 w-md-100 w-lg-50">
                         <Label className="w-100">
                             Value <br />
-                            <InputGroup className={"feedback-zone nq-feedback"}>
+                            <InputGroup className={"feedback-zone nq-feedback separate-input-group"}>
                                 <Input type="text" value={currentAttemptValue || ""} invalid={currentAttemptValueWrong}
                                        onChange={updateValue} readOnly={readonly}
                                 />
@@ -151,7 +151,10 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                                     <span className={"feedback incorrect"}><b>!</b></span>
                                 </div>}
                                 {!readonly && <InputGroupAddon addonType="append">
-                                    <Button type="button" className="numeric-help" size="sm" id={helpTooltipId}>?</Button>
+                                    {siteSpecific(
+                                        <Button type="button" className={classNames("numeric-help", {"py-0": isAda})} size="sm" id={helpTooltipId}>?</Button>,
+                                        <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                                    )}
                                     <UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                                         Here are some examples of numbers you can write:<br /><br />
                                         3.7<br />

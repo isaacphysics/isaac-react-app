@@ -3,7 +3,7 @@ import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
 import {isaacApi, selectors, useAppSelector} from "../../../state";
-import {isDefined, SITE_SUBJECT_TITLE} from "../../../services";
+import {isDefined, SITE_TITLE} from "../../../services";
 import QRCode from 'qrcode';
 
 interface UserMFAProps {
@@ -24,7 +24,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
 
     const authenticatorURL: string | null = useMemo(() => {
         if (totpSharedSecret && totpSharedSecret.sharedSecret) {
-            let issuer = encodeURIComponent(`Isaac ${SITE_SUBJECT_TITLE}`);
+            let issuer = encodeURIComponent(SITE_TITLE);
             if (segueEnvironment === "DEV") {
                 issuer += encodeURIComponent(` (${window.location.host})`);
             }

@@ -5,7 +5,7 @@ import {
     audienceStyle,
     DOCUMENT_TYPE,
     documentTypePathPrefix,
-    isCS,
+    isAda,
     isIntendedAudience,
     makeIntendedAudienceComparator,
     notRelevantMessage,
@@ -21,11 +21,11 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
     const userContext = useUserContext();
     const user = useAppSelector(selectors.user.orNull);
 
-    return <RS.ListGroup className="mt-3 link-list list-group-links">
+    return <RS.ListGroup className="mt-4 link-list list-group-links">
         {items
             // For CS we want relevant sections to appear first
             .sort((itemA, itemB) => {
-                if (!isCS) {return 0;}
+                if (!isAda) {return 0;}
                 return makeIntendedAudienceComparator(user, userContext)(itemA, itemB);
             })
 
@@ -45,7 +45,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     tag={Link} to={{pathname: `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`, search}}
                     block color="link" className={"d-flex align-items-stretch " + classNames({"de-emphasised": item.deEmphasised})}
                 >
-                    <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(stringifyAudience(item.audience, userContext))]: isCS})}>
+                    <div className={"stage-label badge-primary d-flex align-items-center justify-content-center " + classNames({[audienceStyle(stringifyAudience(item.audience, userContext))]: isAda})}>
                         {stringifyAudience(item.audience, userContext)}
                     </div>
                     <div className="title pl-3 d-flex">

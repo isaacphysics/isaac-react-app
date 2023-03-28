@@ -3,7 +3,7 @@ import React, {Dispatch, SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {AppState, useAppSelector} from "../../../state";
-import {SITE_SUBJECT_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
+import {isPhy, SITE_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
 
 // Extended useState hook for email preferences, enforcing a default of {ASSIGNMENTS: true}
 export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
@@ -32,7 +32,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
         ),
         news: siteSpecific(
             "New content and website feature updates, as well as interesting news about Isaac.",
-            "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
+            "Be the first to know about new topics and platform features."
         ),
         events: siteSpecific(
             "Information about new virtual or real world physics events.",
@@ -48,7 +48,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     }
 
     return <CardBody className="pb-0">
-        <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.
+        <p>Get important information about the {SITE_TITLE} programme delivered to your inbox.
             These settings can be changed at any time.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">
@@ -86,7 +86,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                             />
                         </td>
                     </tr>
-                    <tr>
+                    {isPhy && <tr>
                         <td className="form-required">Events</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.events}
@@ -98,13 +98,13 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                                 submissionAttempted={submissionAttempted}
                             />
                         </td>
-                    </tr>
+                    </tr>}
                 </tbody>
             </Table>
             <hr />
             <div>
                 <small>
-                    <b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher.
+                    <b>Frequency</b>: expect one email per term for News{siteSpecific(" and a monthly bulletin for Events", "")}. Assignment notifications will be sent as needed by your teacher.
                 </small>
             </div>
             {errorMessage && <h4 role="alert" className="text-danger text-center">

@@ -1,5 +1,5 @@
 import React from "react";
-import {isCS, siteSpecific} from "../../services";
+import {isAda, siteSpecific} from "../../services";
 import classNames from "classnames";
 
 export interface IsaacSpinnerProps {
@@ -13,7 +13,7 @@ export interface IsaacSpinnerProps {
 // TODO: investigate and improve accessibility of both CS and default spinners. (The "Loading..." is copied from Bootstrap).
 export const IsaacSpinner = ({size = "md", className, color = "primary", inline = false, displayText = "Loading..."} : IsaacSpinnerProps) => {
     const contents = <>
-        <img style={siteSpecific({width: "auto", height: "5.5rem"}, {})} className={classNames(`isaac-spinner-${size}`, className)} alt="" src={isCS ? "/assets/isaac-cs-typer-css.svg" : "/assets/isaac-phy-apple-grow.svg"}/>
+        <img style={siteSpecific({width: "auto", height: "5.5rem"}, {})} className={classNames(`isaac-spinner-${size}`, className)} alt="" src={siteSpecific("/assets/isaac-phy-apple-grow.svg", "/assets/cs/icons/loading-spinner-placeholder.svg")}/>
         <span className="sr-only">{displayText}</span>
     </>;
     return inline
@@ -21,7 +21,8 @@ export const IsaacSpinner = ({size = "md", className, color = "primary", inline 
         : <div role="status" className="pb-1">{contents}</div>;
 };
 
-export const Loading = ({noText}: {noText?: boolean}) => <div className="w-100 text-center pb-2">
-    {!noText && <h2 aria-hidden="true" className="pt-5">Loading...</h2>}
-    <IsaacSpinner />
-</div>;
+export const Loading = ({noText, className}: {noText?: boolean; className?: string}) =>
+    <div className={classNames(className, "w-100 text-center pb-2")}>
+        {!noText && <h2 aria-hidden="true" className="pt-5">Loading...</h2>}
+        <IsaacSpinner />
+    </div>;

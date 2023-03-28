@@ -17,7 +17,7 @@ import {siteSpecific} from "./";
 
 export const STAGING_URL = siteSpecific(
     "https://staging.isaacphysics.org",
-    "https://staging.isaaccomputerscience.org"
+    "https://staging.adacomputerscience.org"
 );
 
 // eslint-disable-next-line no-undef
@@ -36,12 +36,16 @@ if (document.location.hostname === "localhost") {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
 export const isTest = document.location.hostname.startsWith("test.");
+export const isStaging = document.location.hostname.startsWith("staging.");
+
+// Helper function for selecting between values based on whether the site in live, test, staging or dev
+export const envSpecific = <L, T, S, D>(live: L, test: T, staging: S, dev: D) => isTest ? test : (process.env.NODE_ENV === 'production' ? live : (isStaging ? staging : dev));
 
 export const API_PATH: string = apiPath;
 
 export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.isaacphysics.org",
-    "https://editor.isaaccomputerscience.org",
+    "https://editor.adacomputerscience.org"
 );
 
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
@@ -49,11 +53,11 @@ export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
 export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
     "UA-122616705-1",
-    "UA-137475074-1"
+    "UA-260507153-1"
 );
 export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
-    "G-VE7RLWEL60",
-    "G-H95WP5C8DR"
+    envSpecific("G-MM4SM6FNCF", "G-VXBDM5GDNG", "G-5VLS1Q1FCZ", "G-2YDE0QV3TK"),
+    envSpecific("G-HQ3BM12YB3", "G-EQPHX0WKJ7", "G-W7YJPSQTKP", "G-1Q8QGL0D5J"),
 );
 
 export const SOCIAL_LINKS = siteSpecific(
@@ -63,17 +67,17 @@ export const SOCIAL_LINKS = siteSpecific(
         facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
     },
     {
-        youtube: {name: "YouTube", href: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"},
-        twitter: {name: "Twitter", href: "https://twitter.com/isaaccompsci"},
-        facebook: {name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience"},
-        instagram: {name: "Instagram", href: "https://www.instagram.com/isaaccompsci"}
+        facebook: {name: "Facebook", href: "https://www.facebook.com/RaspberryPiFoundation"},
+        twitter: {name: "Twitter", href: "https://twitter.com/RaspberryPi_org"},
+        instagram: {name: "Instagram", href: "https://www.instagram.com/raspberrypifoundation"},
+        youtube: {name: "YouTube", href: "https://www.youtube.com/c/RaspberryPiFoundation"}
     }
 );
 
 // Change to "http://localhost:3000" if you want to run a local version of the code editor
 export const CODE_EDITOR_BASE_URL = "https://editor.isaaccode.org";
 
-export const API_REQUEST_FAILURE_MESSAGE = "There may be an error connecting to the Isaac platform.";
+export const API_REQUEST_FAILURE_MESSAGE = `There may be an error connecting to the ${siteSpecific("Isaac", "Ada")} platform.`;
 export const QUESTION_ATTEMPT_THROTTLED_MESSAGE = "You have made too many attempts at this question. Please try again later!";
 
 export const NOT_FOUND: NOT_FOUND_TYPE = 404;
@@ -472,6 +476,8 @@ export enum PROGRAMMING_LANGUAGE {
     ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
+    JAVA = "JAVA",
+    VBA = "VBA",
     NONE = "NONE",
 }
 
@@ -484,6 +490,8 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
+    [PROGRAMMING_LANGUAGE.JAVA]: "Java",
+    [PROGRAMMING_LANGUAGE.VBA]: "Visual Basic",
 };
 
 // EXAM BOARDS
@@ -571,8 +579,8 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_3: "Challenge\u00A0(C3)",
 }
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
-    practice_1: `Practice (P1) \u2B22\u2B21${siteSpecific("\u2B21", "")}`,
-    practice_2: `Practice (P2) \u2B22\u2B22${siteSpecific("\u2B21", "")}`,
+    practice_1: `Practice (P1) ${siteSpecific("\u2B22\u2B21\u2B21", "\u25CF\u25CB")}`,
+    practice_2: `Practice (P2) ${siteSpecific("\u2B22\u2B22\u2B21", "\u25CF\u25CF")}`,
     practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
     challenge_1: `Challenge (C1) \u25A0\u25A1${siteSpecific("\u25A1", "")}`,
     challenge_2: `Challenge (C2) \u25A0\u25A0${siteSpecific("\u25A1", "")}`,
@@ -621,98 +629,114 @@ export const fastTrackProgressEnabledBoards = [
 ];
 
 export enum TAG_ID {
-    // CS ----
+    // Ada ----
     // Categories
     computerScience = "computer_science",
 
     // Strands
-    computerNetworks = "computer_networks",
-    computerSystems = "computer_systems",
-    cyberSecurity = "cyber_security",
-    dataAndInformation = "data_and_information",
+    artificialIntelligence = "artificial_intelligence",
     dataStructuresAndAlgorithms = "data_structures_and_algorithms",
-    gcseToALevel = "gcse_to_a_level",
+    computerSystems = "computer_systems",
+    creatingMedia = "creating_media",
+    dataAndInformation = "data_and_information",
+    designAndDevelopment = "design_and_development",
+    effectiveUseOfTools = "effective_use_of_tools",
     impactsOfDigitalTechnology = "impacts_of_digital_tech",
-    machineLearningAi = "machine_learning_ai",
-    mathsForCs = "maths_for_cs",
-    programmingFundamentals = "programming_fundamentals",
-    programmingParadigms = "programming_paradigms",
-    softwareEngineering = "software_engineering",
+    computerNetworks = "computer_networks",
+    programming = "programming",
+    cyberSecurity = "cyber_security",
     theoryOfComputation = "theory_of_computation",
 
-    // Computer networks topics
-    networking = "networking",
-    networkHardware = "network_hardware",
-    communication = "communication",
-    theInternet = "the_internet",
-    webTechnologies = "web_technologies",
-    // Computer systems topics
+    // Artificial intelligence topics
+
+    // Algorithms and data structures topics
+    complexity = "complexity",
+    computationalThinking = "computational_thinking",
+    dataStructures = "data_structures",
+    pathfinding = "pathfinding",
+    searching = "searching",
+    sorting = "sorting",
+
+    // Computing systems topics
     booleanLogic = "boolean_logic",
-    architecture = "architecture",
+    compression = "compression",
     memoryAndStorage = "memory_and_storage",
-    hardware = "hardware",
-    software = "software",
     operatingSystems = "operating_systems",
-    translators = "translators",
     programmingLanguages = "programming_languages",
-    // Cyber security
-    security = "security",
-    socialEngineering = "social_engineering",
-    maliciousCode = "malicious_code",
-    // Data and information topics
     numberRepresentation = "number_representation",
     textRepresentation = "text_representation",
+    architecture = "architecture",
+    translators = "translators",
+
+    // Creating media topics
     imageRepresentation = "image_representation",
     soundRepresentation = "sound_representation",
-    compression = "compression",
-    encryption = "encryption",
+
+    // Data and information topics
+    bigData = "big_data",
     databases = "databases",
     fileOrganisation = "file_organisation",
     sql = "sql",
-    bigData = "big_data",
-    // Data structures and algorithms topics
-    searching = "searching",
-    sorting = "sorting",
-    pathfinding = "pathfinding",
-    complexity = "complexity",
-    dataStructures = "data_structures",
-    // GCSE to A level transition topics
-    gcseBooleanLogic = "gcse_boolean_logic",
-    gcseProgrammingConcepts = "gcse_programming_concepts",
-    gcseNetworking = "gcse_networking",
-    gcseSystems = "gcse_systems",
-    // Impacts of digital technology
-    legislation = "legislation",
+
+    // Design and development topics
+    programDesign = "program_design",
+    softwareEngineeringPrinciples = "software_engineering_principles",
+    testing = "testing",
+
+    // Effective use of tools topics
+    hardware = "hardware",
+    software = "software",
+
+    // Impacts of technology topics
     impactsOfTech = "impacts_of_tech",
-    // Maths for CS
-    numberSystems = "number_systems",
-    mathsFunctions = "functions",
-    // Machine learning and ai
-    graphsForAi = "graphs_for_ai",
-    neuralNetworks = "neural_networks",
-    machineLearning = "machine_learning",
-    backpropagationAndRegression = "regression",
-    // Programming fundamentals topics
-    programmingConcepts = "programming_concepts",
-    subroutines = "subroutines",
+    legislation = "legislation",
+
+    // Networks topics
+    communication = "communication",
+    networking = "networking",
+    theInternet = "the_internet",
+    webTechnologies = "web_technologies",
+
+    // Programming topics
+    eventDrivenProgramming = "event_driven_programming",
     files = "files",
+    functionalProgramming = "functional_programming",
+    objectOrientedProgramming = "object_oriented_programming",
+    proceduralProgramming = "procedural_programming",
+    programmingConcepts = "programming_concepts",
     recursion = "recursion",
     stringHandling = "string_handling",
-    ide = "ide",
-    // Programming paradigms topics
-    objectOrientedProgramming = "object_oriented_programming",
-    functionalProgramming = "functional_programming",
-    eventDrivenProgramming = "event_driven_programming",
-    declarativeProgramming = "declarative_programming",
-    proceduralProgramming = "procedural_programming",
-    // Software engineering
-    softwareEngineeringPrinciples = "software_engineering_principles",
-    programDesign = "program_design",
-    testing = "testing",
-    softwareProject = "software_project",
-    //Theory of computation
-    computationalThinking = "computational_thinking",
-    modelsOfComputation = "models_of_computation",
+    subroutines = "subroutines",
+
+    // Safety and security topics
+    encryption = "encryption",
+    maliciousCode = "malicious_code",
+    security = "security",
+    socialEngineering = "social_engineering",
+
+    // Models of computation topics
+    machinesWithMemory = "machines_with_memory",
+    mathsForCs = "maths_for_cs",
+
+    // Old tags ------
+    // programmingParadigms = "programming_paradigms",
+    // programmingFundamentals = "programming_fundamentals",
+    // theoryOfComputation = "theory_of_computation",
+    // declarativeProgramming = "declarative_programming",
+    // networkHardware = "network_hardware",
+    // ide = "ide",
+    // gcseToALevel = "gcse_to_a_level",
+    // gcseBooleanLogic = "gcse_boolean_logic",
+    // gcseProgrammingConcepts = "gcse_programming_concepts",
+    // gcseNetworking = "gcse_networking",
+    // gcseSystems = "gcse_systems",
+    // numberSystems = "number_systems",
+    // mathsFunctions = "functions",
+    // graphsForAi = "graphs_for_ai",
+    // neuralNetworks = "neural_networks",
+    // machineLearning = "machine_learning",
+    // backpropagationAndRegression = "regression",
+
 
     // PHY ----
 
@@ -1075,14 +1099,13 @@ export const doughnutColours = siteSpecific(
         "#fea100"
     ],
     [
-        "#feae42",
-        "#000000",
-        "#e51f6f",
-        "#ef67ac",
-        "#bf6707",
-        "#0f8294",
-        "#aaaaaa",
-        "#dbdbdb"
+        "#870D5A",
+        "#333333",
+        "#0AFFE7",
+        "#B9B9B9",
+        "#FF4DC9",
+        "#FFE672",
+        "#EBEBEB"
     ]
 );
 
@@ -1099,7 +1122,23 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
 
-export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+export const PATHS = siteSpecific({
+    ASSIGNMENT_PROGRESS: "/assignment_progress",
+    MY_GAMEBOARDS: "/my_gameboards",
+    QUESTION_FINDER: "/gameboards/new",
+    GAMEBOARD: "/gameboards",
+    SET_ASSIGNMENTS: "/set_assignments",
+    GAMEBOARD_BUILDER: "/gameboard_builder",
+    ADD_GAMEBOARD: "/add_gameboard",
+}, {
+    ASSIGNMENT_PROGRESS: "/my_markbook",
+    MY_GAMEBOARDS: "/quizzes",
+    QUESTION_FINDER: "/quizzes/new",
+    GAMEBOARD: "/quizzes/view",
+    SET_ASSIGNMENTS: "/quizzes/set",
+    GAMEBOARD_BUILDER: "/quizzes/builder",
+    ADD_GAMEBOARD: "/quizzes/add",
+});
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";

@@ -9,13 +9,14 @@ import {
     jsonHelper,
     sanitiseInequalityState,
     parsePseudoSymbolicAvailableSymbols,
-    useCurrentQuestionAttempt
+    useCurrentQuestionAttempt, isAda, siteSpecific
 } from "../../services";
 import {Inequality, makeInequality} from "inequality";
 import {parseMathsExpression, ParsingError} from "inequality-grammar";
 import _flattenDeep from 'lodash/flatMapDeep';
 import {v4 as uuid_v4} from "uuid";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
+import classNames from "classnames";
 
 const InequalityModal = lazy(() => import("../elements/modals/inequality/InequalityModal"));
 
@@ -215,11 +216,14 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             />}
             {!readonly && <div className="eqn-editor-input">
                 <div ref={hiddenEditorRef} className="equation-editor-text-entry" style={{height: 0, overflow: "hidden", visibility: "hidden"}} />
-                <RS.InputGroup className="my-2">
+                <RS.InputGroup className="my-2 separate-input-group">
                     <RS.Input type="text" onChange={updateEquation} value={textInput}
                               placeholder="Type your formula here"/>
                     <RS.InputGroupAddon addonType="append">
-                        <RS.Button type="button" className="eqn-editor-help" id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>
+                        {siteSpecific(
+                            <RS.Button type="button" className={classNames("eqn-editor-help", {"py-0": isAda})} id={helpTooltipId} tag="a" href="/solving_problems#symbolic_text">?</RS.Button>,
+                            <span id={helpTooltipId} className="icon-help-q my-auto"/>
+                        )}
                         <RS.UncontrolledTooltip placement="top" autohide={false} target={helpTooltipId}>
                             Here are some examples of expressions you can type:<br />
                             <br />

@@ -1,0 +1,14 @@
+@import "../common/my-account";
+
+.revoke-teacher {
+  color: #669933;
+  font-weight: 600;
+}
+.reconnect-teacher {
+  color: #999;
+  font-weight: 600;
+
+  &:hover {
+    color: #666;
+  }
+}

@@ -4,62 +4,20 @@
     background-color: white;
     box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.08);
     margin: auto auto 2rem auto;
-    padding: 3rem;
+    padding: $question-padding;
     @include media-breakpoint-down(sm) {
       padding: 1rem;
     }
 
     font-family: $secondary-font;
-    font-size: 1.25rem;
-    line-height: 1.6;
-    font-weight: 600;
+    font-size: $question-font-size; // 1.25rem;
+    line-height: $question-line-height; // 1.6rem;
+    font-weight: $question-font-weight;
   }
 }
 
 .unit-dropdown button {
   min-width: auto;
-}
-
-button {
-  -webkit-appearance: none;
-  border: none;
-  outline: none !important;
-}
-
-.question-actions {
-
-  &.question-actions-leftmost {
-    margin-left: auto;
-  }
-
-  .question-actions-icon {
-    float: right;
-    height: 3rem;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .question-actions-link-box {
-    float:right;
-    border: 1px solid gray;
-    height: 3.6rem;
-    border-right: none;
-    padding-right: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-right: -1.9rem;
-    background: white;
-
-    .question-actions-link {
-      padding-left: 3px;
-      padding-right: 3px;
-      margin-left: 1rem;
-      font-style: italic;
-    }
-  }
 }
 
 .question-component {
@@ -68,9 +26,9 @@ button {
 
   .question-content {
     font-family: $secondary-font;
-    font-size: 1.25rem;
+    font-size:  $question-font-size;
     font-weight: 400;
-    line-height: 1.6;
+    line-height: $question-line-height;
   }
 
   .custom-control-label {
@@ -110,11 +68,8 @@ button {
 
 .symbolic-question, .equality-page {
   .eqn-editor-preview {
-    border: solid 1px $black;
     padding: 0.15em 0.6em;
-    font-size: 1.5rem;
     cursor: default;
-
     &.empty {
       color: $gray-500;
     }
@@ -386,6 +341,15 @@ button {
       z-index: 3;
       right: 75px;
     }
+  }
+}
+
+.question-actions {
+  &.question-actions-leftmost {
+    margin-left: auto;
+  }
+  .question-actions-icon {
+    float: right;
   }
 }
 

@@ -12,9 +12,9 @@ bundle-stats-*.json
 # production
 /build
 /build-physics
-/build-cs
+/build-ada
 /build-phy-renderer
-/build-cs-renderer
+/build-ada-renderer
 
 # misc
 .DS_Store

@@ -9,14 +9,14 @@ import {
     store
 } from "../../../state";
 import * as RS from "reactstrap";
-import {extractTeacherName} from "../../../services";
+import {extractTeacherName, siteSpecific} from "../../../services";
 
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal())},
         title: "Sharing your data",
         body: <React.Fragment>
-            <p>Are you sure you would like to give the following Isaac users access to your data?</p>
+            <p>Are you sure you would like to give the following {siteSpecific("Isaac", "Ada")} users access to your data?</p>
             <RS.Table bordered>
                 <tbody>
                     {usersToGrantAccess.map((member) => (<tr key={member.id}>

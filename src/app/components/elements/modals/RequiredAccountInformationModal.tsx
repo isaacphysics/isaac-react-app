@@ -1,18 +1,26 @@
-import {AppState, closeActiveModal, selectors, updateCurrentUser, useAppDispatch, useAppSelector} from "../../../state";
+import {
+    AppState,
+    closeActiveModal,
+    errorSlice,
+    selectors,
+    updateCurrentUser,
+    useAppDispatch,
+    useAppSelector
+} from "../../../state";
 import React, {useState} from "react";
 import * as RS from "reactstrap";
 import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
-    isCS,
+    isAda,
     isDefined,
     isLoggedIn,
     isMobile,
     isPhy,
     isTutor,
     isTutorOrAbove,
-    SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE,
+    SITE_TITLE, TEACHER_REQUEST_ROUTE,
     UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
@@ -56,6 +64,7 @@ const RequiredAccountInfoBody = () => {
         setSubmissionAttempted(true);
 
         if (user && isLoggedIn(user) && allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts)) {
+            dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(userToUpdate, userPreferencesToUpdate, userContexts, null, user, false));
             dispatch(closeActiveModal());
         }
@@ -63,7 +72,7 @@ const RequiredAccountInfoBody = () => {
 
     const allUserFieldsAreValid =
         (isPhy && validateUserContexts(initialUserContexts)) ||
-        (isCS && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
+        (isAda && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -81,8 +90,8 @@ const RequiredAccountInfoBody = () => {
             </div>}
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {((isCS && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
-                    {isCS && !validateUserGender(initialUserValue) && <div className="mb-3">
+                {((isAda && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
+                    {isAda && !validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -97,7 +106,7 @@ const RequiredAccountInfoBody = () => {
                         />
                     </div>}
                 </RS.Col>}
-                {isCS && !validateUserSchool(initialUserValue) && <RS.Col>
+                {isAda && !validateUserSchool(initialUserValue) && <RS.Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -106,7 +115,7 @@ const RequiredAccountInfoBody = () => {
                 </RS.Col>}
             </RS.Row>
             <div className="text-muted small pb-2">
-                Providing a few extra pieces of information helps us understand the usage of Isaac {SITE_SUBJECT_TITLE} across the UK and beyond.
+                Providing a few extra pieces of information helps us understand the usage of {SITE_TITLE} across the UK and beyond.
                 Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
             </div>
         </RS.CardBody>}

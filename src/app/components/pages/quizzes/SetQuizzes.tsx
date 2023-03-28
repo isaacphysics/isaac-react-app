@@ -108,7 +108,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }
 
     const pageHelp = <span>
-        Use this page to manage and set tests to your groups. You can assign any test the Isaac team have built.
+        Use this page to manage and set tests to your groups. You can assign any test the {siteSpecific("Isaac", "Ada")} team have built.
         <br />
         Students in the group will be emailed when you set a new test.
     </span>;

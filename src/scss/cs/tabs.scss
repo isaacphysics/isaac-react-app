@@ -1,0 +1,98 @@
+
+$nav-bottom-line: 2px;
+$link-text-bottom-padding: 4px;
+
+.nav-tabs {
+  padding-bottom: 0.444rem;
+  box-sizing: border-box;
+  align-items: stretch;
+  border-bottom: none;
+  .nav-item {
+    padding-left: 10px;
+    padding-right: 10px;
+    &:first-of-type {
+      padding-left: 0 !important;
+    }
+    &:last-of-type {
+      padding-right: 0 !important;
+    }
+
+    box-sizing: content-box;
+    border-bottom: solid $nav-bottom-line $cs-silver;
+
+    &:hover {
+      .nav-link {
+        border-bottom-width: #{$nav-bottom-line * 2};
+        padding-bottom: $link-text-bottom-padding;
+      }
+    }
+
+    &.active {
+      .nav-link {
+        color: $dark-pink-300;
+        cursor: default;
+        border-bottom-width: #{$nav-bottom-line * 2};
+        border-bottom-color: $dark-pink-300;
+        padding-bottom: $link-text-bottom-padding;
+      }
+    }
+
+    .nav-link {
+      border-radius: 0 !important;
+      transform: translateY(#{$nav-bottom-line - 0.1});
+      @extend .font-size-1-25;
+      @extend .font-weight-regular;
+      transition-property: border-bottom-color, color;
+      transition-duration: 0.15s;
+      transition-timing-function: ease-out;
+      box-sizing: content-box;
+
+      border-bottom-style: solid;
+      border-bottom-width: $nav-bottom-line;
+      border-bottom-color: $cs-silver;
+      padding: 0 0 #{$link-text-bottom-padding + $nav-bottom-line};
+
+      position: relative;
+      text-decoration: none;
+      vertical-align: bottom;
+      cursor: pointer;
+      background: none !important;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      margin-top: #{1.5 * $link-text-bottom-padding};
+      margin-bottom: 0;
+      box-shadow: none !important;
+      &:focus-visible {
+        &:after {
+          display: block;
+          content: " ";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          outline: $focus-blue solid 2px !important;
+        }
+      }
+    }
+  }
+
+  // An idea for extending the bottom border to the right of the container
+  &.guaranteed-single-line {
+    justify-content: left;
+    &:after {
+      position: relative;
+      content: " ";
+      display: list-item;
+      flex-grow: 1;
+      border-bottom-style: solid;
+      border-bottom-width: $nav-bottom-line;
+      border-bottom-color: $cs-silver;
+      padding-bottom: #{$link-text-bottom-padding + $nav-bottom-line};
+    }
+  }
+  &:not(.guaranteed-single-line) {
+    justify-content: center;
+  }
+}

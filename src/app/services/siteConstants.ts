@@ -1,20 +1,19 @@
-export enum SITE {PHY = "physics", CS = "cs"}
+export enum SITE {PHY = "physics", ADA = "ada"}
 // eslint-disable-next-line no-undef
 export const SITE_SUBJECT = ISAAC_SITE as SITE;
 
 // Boolean representing if the current site is Isaac Physics
 export const isPhy = SITE_SUBJECT === SITE.PHY;
 
-// Boolean representing if the current site is Isaac CS
-export const isCS = SITE_SUBJECT === SITE.CS;
+// Boolean representing if the current site is Ada CS
+export const isAda = SITE_SUBJECT === SITE.ADA;
 
-// Picks between two arguments based on whether the site is Physics or CS
-export function siteSpecific<P, C>(phy: P, cs: C) {
-    return isPhy ? phy : cs;
-}
+// Picks between two arguments based on whether the site is Physics or Ada
+export const siteSpecific = <P, C>(phy: P, ada: C) => isPhy ? phy : ada;
 
-export const SITE_SUBJECT_TITLE = siteSpecific("Physics", "Computer Science");
+export const SITE_TITLE = siteSpecific("Isaac Physics", "Ada Computer Science");
+export const SITE_TITLE_SHORT = siteSpecific("Isaac", "Ada");
 
-export const WEBMASTER_EMAIL = siteSpecific("webmaster@isaacphysics.org", "webmaster@isaaccomputerscience.org");
+export const WEBMASTER_EMAIL = siteSpecific("webmaster@isaacphysics.org", "webmaster@adacomputerscience.org");
 
 export const TEACHER_REQUEST_ROUTE = siteSpecific("/pages/contact_us_teacher", "/pages/teacher_accounts");

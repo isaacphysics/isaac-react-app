@@ -8,7 +8,7 @@ import {
     examBoardBooleanNotationMap,
     examBoardLabelMap,
     history,
-    isCS,
+    isAda,
     isDefined,
     isLoggedIn,
     isPhy,
@@ -25,15 +25,17 @@ import {
 } from "./";
 import {AudienceContext, ContentBaseDTO, ContentDTO, UserRole, Stage, UserContext} from "../../IsaacApiTypes";
 import {useLocation, useParams} from "react-router-dom";
-import {AppState, useAppSelector} from "../state";
+import {AppState, transientUserContextSlice, useAppDispatch, useAppSelector} from "../state";
 import {GameboardContext, PotentialUser, ViewingContext} from "../../IsaacAppTypes";
 import queryString from "query-string";
 import {useContext, useEffect} from "react";
 import {Immutable} from "immer";
 
 export interface UseUserContextReturnType {
-    examBoard: EXAM_BOARD;
     stage: STAGE;
+    setStage: (stage: STAGE) => void;
+    examBoard: EXAM_BOARD;
+    setExamBoard: (stage: EXAM_BOARD) => void;
     showOtherContent?: boolean;
     preferredProgrammingLanguage?: PROGRAMMING_LANGUAGE;
     preferredBooleanNotation?: BOOLEAN_NOTATION;
@@ -41,9 +43,10 @@ export interface UseUserContextReturnType {
 }
 
 const urlMessage = "URL query parameters";
-const gameboardMessage = "gameboard settings"
+const gameboardMessage = `${siteSpecific("gameboard", "quiz")} settings`;
 
 export function useUserContext(): UseUserContextReturnType {
+    const dispatch = useAppDispatch();
     const existingLocation = useLocation();
     const queryParams = useQueryParams(true);
 
@@ -52,6 +55,9 @@ export function useUserContext(): UseUserContextReturnType {
         useAppSelector((state: AppState) => state?.userPreferences) || {};
 
     const transientUserContext = useAppSelector((state: AppState) => state?.transientUserContext) || {};
+
+    const setStage = (stage: STAGE) => dispatch(transientUserContextSlice?.actions.setStage(stage));
+    const setExamBoard = (examBoard: EXAM_BOARD) => dispatch(transientUserContextSlice?.actions.setExamBoard(examBoard));
 
     const explanation: UseUserContextReturnType["explanation"] = {};
 
@@ -149,7 +155,7 @@ export function useUserContext(): UseUserContextReturnType {
                     search: queryString.stringify({
                         ...queryParams,
                         stage,
-                        examBoard: isCS ? examBoard : undefined,
+                        examBoard: isAda ? examBoard : undefined,
                     }, {encode: false})
                 });
             } catch (e) {
@@ -161,7 +167,7 @@ export function useUserContext(): UseUserContextReturnType {
     }, [stage, examBoard, queryParams.stage, queryParams.examBoard]);
 
     return {
-        stage, examBoard, explanation,
+        stage, setStage, examBoard, setExamBoard, explanation,
         showOtherContent, preferredProgrammingLanguage, preferredBooleanNotation
     };
 }
@@ -222,7 +228,7 @@ const _STAGE_ITEM_OPTIONS = [ /* best not to export - use getFiltered */
     {label: "A Level", value: STAGE.A_LEVEL},
     {label: "Further A", value: STAGE.FURTHER_A},
     {label: "University", value: STAGE.UNIVERSITY},
-    {label: "All Stages", value: STAGE.ALL},
+    {label: "All stages", value: STAGE.ALL},
 ];
 interface StageFilterOptions {
     byUser?: Immutable<PotentialUser> | null;
@@ -254,7 +260,7 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
             // - physics
             (isPhy && !filter.byUserContexts.map(uc => uc.stage).includes(i.value)) ||
             // - computer science
-            (isCS && !(
+            (isAda && !(
                 // stage already has a null option selected
                 filter.byUserContexts.some(uc => uc.stage === i.value && EXAM_BOARD_NULL_OPTIONS.has(uc.examBoard as EXAM_BOARD)) ||
                 // every exam board has been recorded for the stage
@@ -343,6 +349,7 @@ export function filterAudienceViewsByProperties(views: ViewingContext[], propert
     return filteredViews;
 }
 
+// FIXME I have no idea what this does and why but I have deprecated it for now (i.e. it is no longer used on CS)
 export function findAudienceRecordsMatchingPartial(audience: ContentBaseDTO['audience'], partialViewingContext: Partial<ViewingContext>) {
     return audience?.filter((audienceRecord) => {
         return Object.entries(partialViewingContext).every(([key, value]) => audienceRecord[key as keyof AudienceContext]?.[0] === value);
@@ -409,7 +416,7 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
     if (!STAGE_NULL_OPTIONS.has(userContext.stage)) {
         message.push(stageLabelMap[userContext.stage]);
     }
-    if (isCS && !EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
+    if (isAda && !EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
         message.push(examBoardLabelMap[userContext.examBoard]);
     }
     if (message.length === 0) { // should never happen...
@@ -445,7 +452,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     // If common, could find substrings and report ranges i.e, GCSE to University
 
     // CS would like to show All stages instead of GCSE & A Level - that will work until we have more stages
-    if (isCS && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
+    if (isAda && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
         stagesToView = [STAGE.ALL];
     }
 

@@ -79,4 +79,6 @@ declare module "inequality-grammar" {
   export type ParsingError = { error: { offset: number, token: { value: string } }, message: string, stack: string };
 }
 
+declare module "highlightjs-vba";
+
 type Nullable<T> = T | null | undefined

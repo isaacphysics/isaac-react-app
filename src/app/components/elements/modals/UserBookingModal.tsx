@@ -3,7 +3,7 @@ import {UserSummaryForAdminUsersDTO} from "../../../../IsaacApiTypes";
 import {AdditionalInformation, AugmentedEvent} from "../../../../IsaacAppTypes";
 import {bookUserOnEvent, closeActiveModal, showToast, store, useAppDispatch} from "../../../state";
 import * as RS from "reactstrap";
-import {atLeastOne, formatBookingModalConfirmMessage, zeroOrLess} from "../../../services";
+import {atLeastOne, formatBookingModalConfirmMessage, siteSpecific, zeroOrLess} from "../../../services";
 import {EventBookingForm} from "../EventBookingForm";
 import {FAILURE_TOAST} from "../../navigation/Toasts";
 
@@ -47,7 +47,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                         <small>
                             Warning, by booking a user on this event, it may eventually lead to their personal {" "}
                             information being shared with a third party. You must therefore confirm how this booking {" "}
-                            has been authorised. The data owner is always the Isaac user being booked on to the event.
+                            has been authorised. The data owner is always the {siteSpecific("Isaac", "Ada")} user being booked on to the event.
                         </small>
                     </p>
 

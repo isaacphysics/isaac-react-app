@@ -1,0 +1,25 @@
+{
+  "short_name": "Ada CS",
+  "name": "Ada Computer Science",
+  "icons": [
+    {
+      "src": "assets/favicon/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/favicon/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/favicon/favicon-196x196.png",
+      "sizes": "196x196",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/?utm_source=manifest",
+  "display": "minimal-ui",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

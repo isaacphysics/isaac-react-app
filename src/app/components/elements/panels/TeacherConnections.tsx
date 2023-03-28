@@ -15,7 +15,18 @@ import {
     useAppSelector
 } from "../../../state";
 import classnames from "classnames";
-import {extractTeacherName, isLoggedIn, isStudent, MEMBERSHIP_STATUS} from "../../../services";
+import {
+    extractTeacherName,
+    isAda,
+    isLoggedIn,
+    isPhy,
+    isStudent, isTutorOrAbove,
+    MEMBERSHIP_STATUS,
+    siteSpecific
+} from "../../../services";
+import classNames from "classnames";
+import {PageFragment} from "../PageFragment";
+import {RenderNothing} from "../RenderNothing";
 
 
 interface TeacherConnectionsProps {
@@ -56,10 +67,11 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
     return <RS.CardBody>
         <RS.Container>
+            {isAda && <PageFragment fragmentId={`teacher_connections_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={RenderNothing} />}
             <h3>
                 <span>Teacher connections<span id="teacher-connections-title" className="icon-help" /></span>
                 <RS.UncontrolledTooltip placement="bottom" target="teacher-connections-title">
-                    The teachers that you are connected to can view your Isaac assignment progress.
+                    The teachers that you are connected to can view your {siteSpecific("Isaac", "Ada")} assignment progress.
                 </RS.UncontrolledTooltip>
             </h3>
 
@@ -68,13 +80,13 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                     <p>Enter the code given by your teacher to create a teacher connection and join a group.</p>
                     {/* TODO Need to handle nested form complaint */}
                     <RS.Form onSubmit={processToken}>
-                        <RS.InputGroup>
+                        <RS.InputGroup className={"separate-input-group"}>
                             <RS.Input
                                 type="text" placeholder="Enter your code in here" value={authToken || undefined}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                             />
                             <RS.InputGroupAddon addonType="append">
-                                <RS.Button onClick={processToken} className="p-0 border-dark" color="secondary" disabled={editingOtherUser}>
+                                <RS.Button onClick={processToken} className={classNames("py-0", {"px-0 border-dark": isPhy})} color="secondary" disabled={editingOtherUser}>
                                     Connect
                                 </RS.Button>
                             </RS.InputGroupAddon>
@@ -84,7 +96,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
 
                 <RS.Col lg={5} className="mt-4 mt-lg-0">
                     <div className="connect-list">
-                        <h3><span className="icon-person-active" />Teacher connections</h3>
+                        <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} />Teacher connections</h3>
                         <div className="connect-list-inner">
                             <ul className="teachers-connected list-unstyled">
                                 {activeAuthorisations && activeAuthorisations.map((teacherAuthorisation) =>
@@ -126,18 +138,18 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         <h3>
                             <span>Your student connections<span id="student-connections-title" className="icon-help" /></span>
                             <RS.UncontrolledTooltip placement="bottom" target="student-connections-title">
-                                These are the students who have shared their Isaac data with you.
+                                These are the students who have shared their {siteSpecific("Isaac", "Ada")} data with you.
                                 These students are also able to view your name and email address on their Teacher connections page.
                             </RS.UncontrolledTooltip>
                         </h3>
                         <p>
-                            You can invite students to share their Isaac data with you through the {" "}
-                            <Link to="/groups">group management page</Link>.
+                            You can invite students to share their {siteSpecific("Isaac", "Ada")} data with you through the {" "}
+                            <Link to="/groups">{siteSpecific("group management page", "Manage groups")}</Link>{siteSpecific(".", " page.")}
                         </p>
                     </RS.Col>
                     <RS.Col lg={5}>
                         <div className="connect-list">
-                            <h3><span className="icon-person-active" /> Student connections </h3>
+                            <h3><span className={siteSpecific("icon-person-active", "icon-group-white")} /> Student connections </h3>
 
                             <div className="connect-list-inner">
                                 <ul className="teachers-connected list-unstyled">
@@ -187,7 +199,7 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
                         </span>
                         <RS.UncontrolledTooltip placement="bottom" target="group-memberships-title">
                             These are the groups you are currently a member of.
-                            Groups on Isaac let teachers set assignments to multiple students in one go.
+                            Groups on {siteSpecific("Isaac", "Ada")} let teachers set assignments to multiple students in one go.
                         </RS.UncontrolledTooltip>
                     </h3>
                     <p>

@@ -1,5 +1,275 @@
 @import "../common/typography";
 
+p {
+  &.p-small {
+    font-size: 0.8125em;
+    line-height: 1.69;
+  }
+}
+
+.btn {
+  &.btn-sm {
+    &.a-alt {
+      color: $purple;
+      font-family: $secondary-font-medium;
+      text-decoration: underline;
+    }
+  }
+}
+
+blockquote {
+  &.blockquote {
+    border-left: 0.25rem solid $gray-107;
+    padding: 0.5rem 1rem;
+  }
+}
+
+small {
+  line-height: 1.69;
+  border-top: 1px solid $black;
+}
+
+hr {
+  display: block;
+  border-bottom: 1px solid $black;
+  position: relative;
+
+  &::before {
+    @include pseudo-element;
+    border-bottom: 5px solid $black;
+    bottom: -3px;
+    left: 0;
+    max-width: 158px;
+    right: 0;
+    width: 32%;
+
+    @include respond-above(sm) {
+      max-width: 380px;
+    }
+  }
+
+  &.text-center {
+    &::before {
+      margin: auto;
+    }
+  }
+}
+
+pre {
+  background: white;
+  padding: 1rem;
+  font-weight: 400;
+  border: solid 1px #00000021;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+
+  code {
+    box-shadow: none;
+    background: unset;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+code {
+  display: inline-block;
+  color: unset;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.08);
+  background: #fff;
+  margin: 0 -0.05rem;
+  padding: 0 0.05rem;
+}
+
 ul {
+  list-style-position: outside;
   list-style-image: url('/assets/phy/hexagon-bullet.svg');
 }
+
+// NOMENSA typography for headings
+
+h1 {
+  font-family: $secondary-font-bold;
+  font-size: 2.375rem;
+  line-height: 1.14;
+  @include respond-above(sm) {
+    font-size: 2.875rem;
+  }
+
+  &.h-m {
+    font-size: 2.625rem;
+    line-height: 1.26;
+  }
+
+  &.h-s {
+    font-size: 2.375rem;
+    line-height: 1.26;
+  }
+  &.h-secondary {
+    font-family: $secondary-font-semi-bold;
+  }
+}
+
+h2 {
+  font-family: $secondary-font-semi-bold;
+  font-size: 2.125rem;
+  font-weight: 600;
+
+  &.h-s {
+    font-family: $secondary-font-medium;
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  &.h-m {
+    font-family: $secondary-font-medium;
+    font-size: 1.625rem;
+    margin: 0;
+  }
+}
+
+h3 {
+  font-family: $secondary-font-medium;
+  font-size: 1.625rem;
+  font-weight: 500;
+  line-height: 1.54;
+}
+
+h4 {
+  font-family: $secondary-font-semi-bold;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.h-question {
+  align-items: center;
+  font-size: 1.25rem;
+  line-height: 1.6;
+
+  > span {
+    display: inline-block;
+    font-size: 2.375rem;
+    font-weight: 700;
+    line-height: 1.26;
+  }
+}
+
+.h-question-mark {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  padding-top: 62px;
+  position: relative;
+  margin-left: 0;
+  @include respond-above(md) {
+    padding-top: 0;
+    padding-left: 62px;
+    margin-left: -62px;
+  }
+
+  > span {
+    border: 2px solid $black;
+    border-radius: 50%;
+    display: inline-block;
+    font-family: $tertiary-font;
+    font-size: 2.375rem;
+    font-weight: 700;
+    height: 42px;
+    line-height: 1.26;
+    position: absolute;
+    left: 0;
+    top: 14px;
+    text-align: center;
+    width: 42px;
+
+    @include respond-above(sm) {
+      top: 5px;
+    }
+  }
+}
+
+.h-title {
+  font-family: $secondary-font-semi-bold;
+  font-size: 2.125rem;
+  line-height: 1.47;
+  padding-bottom: 1.25rem;
+  position: relative;
+
+  &::after {
+    @include pseudo-element;
+    border-bottom: 1px solid $black;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+  }
+
+  &::before {
+    @include pseudo-element;
+    border-bottom: 5px solid $black;
+    bottom: -4px;
+    left: 0;
+    max-width: 158px;
+    right: 0;
+    width: 32%;
+
+    @include respond-above(sm) {
+      max-width: 380px;
+    }
+  }
+
+  &.text-center {
+    &::before {
+      margin: auto;
+    }
+  }
+
+  &.text-right {
+    &::before {
+      margin-left: auto;
+    }
+  }
+}
+
+a {
+  color: $gray-194;
+  display: inline-block;
+  text-decoration: underline;
+
+  &:hover {
+    color: $gray-194;
+    text-decoration: none;
+  }
+
+  &.a-alt {
+    color: $purple;
+  }
+
+  &.lrg-text {
+    font-size: 1.125rem;
+  }
+
+  &.x-lrg-text {
+    font-size: 1.25rem;
+
+    @include respond-above(sm) {
+      font-size: 1.625rem;
+    }
+  }
+
+  &.next-link {
+    padding-right: 1.2rem;
+    background-image: url('/assets/chevron_right.svg');
+    background-repeat: no-repeat;
+    background-position: center right;
+    clear: right;
+    text-decoration: none;
+  }
+  &.previous-link {
+    padding-left: 1.2rem;
+    background-image: url('/assets/chevron_left.svg');
+    background-repeat: no-repeat;
+    background-position: center left;
+    clear: left;
+    text-decoration: none;
+  }
+}
+

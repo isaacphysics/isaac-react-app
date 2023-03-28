@@ -8,7 +8,7 @@ import {
     difficultyLabelMap,
     doughnutColours,
     getFilteredStageOptions,
-    isCS,
+    isAda,
     isPhy,
     Item,
     selectOnChange,
@@ -19,8 +19,9 @@ import {
     TAG_ID,
     tags
 } from "../../../services";
-import Select, {SingleValue} from "react-select";
+import {SingleValue} from "react-select";
 import {Difficulty} from "../../../../IsaacApiTypes";
+import {StyledSelect} from "../inputs/StyledSelect";
 
 interface QuestionProgressChartsProps {
     subId: string;
@@ -136,10 +137,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         }
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
 
-    const noCharts = siteSpecific(3, 2);
+    const numberOfCharts = siteSpecific(3, 2);
 
     return <RS.Row>
-        {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
+        {isPhy && <RS.Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 Questions by {topTagLevel}
             </div>
@@ -149,10 +150,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>}
-        {isCS && <RS.Col md={3}/>}
-        <RS.Col xl={12/noCharts} md={4} className="mt-4 d-flex flex-column">
+        {isAda && <RS.Col md={3}/>}
+        <RS.Col xl={12/numberOfCharts} md={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
-                <Select
+                <StyledSelect
                     inputId={`${subId}-subcategory-select`}
                     name="subcategory"
                     className="d-inline-block text-left pr-2 w-50"
@@ -161,7 +162,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     options={tags.getSpecifiedTags(searchTagLevel, tags.allTagIds).map((tag) => {return {value: tag.id, label: tag.title}})}
                     onChange={(e: SingleValue<{ value: TAG_ID; label: string; }>) => setSearchChoice((e as {value: TAG_ID; label: string}).value)}
                 />
-                questions
+                <span className={siteSpecific("", "d-inline-block ml-2")}>questions</span>
             </div>
             <div className="d-flex flex-grow-1">
                 <div id={`${subId}-topicChart`} className="text-center-width doughnut-binding  align-self-center">
@@ -169,10 +170,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>
-        {isCS && <RS.Col md={3}/>}
-        {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
+        {isAda && <RS.Col md={3}/>}
+        {isPhy && <RS.Col xl={12/numberOfCharts} md={12/numberOfCharts} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
-                <Select
+                <StyledSelect
                     inputId={`${subId}-stage-select`}
                     name="stage"
                     className="d-inline-block text-left pr-2 w-50"
