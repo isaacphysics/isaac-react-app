@@ -66,6 +66,7 @@ declare module '*.module.sass' {
 // TODO check if correctly versioned types have been added
 declare module "bootstrap";
 declare module "math-random-seed";
+declare module "highlightjs-vba";
 
 declare var MathJax: any;
 declare var ISAAC_SITE: string;
