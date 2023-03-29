@@ -1,4 +1,4 @@
-import {assignGameboard, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {assignGameboard, isaacApi, selectors, setAssignBoardPath, useAppDispatch, useAppSelector} from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import {groupBy, mapValues, range, sortBy} from "lodash";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -24,8 +24,8 @@ import {
 import {
     BoardLimit,
     formatBoardOwner,
-    getAssignmentStartDate,
-    isDefined,
+    getAssignmentStartDate, isAda,
+    isDefined, isPhy,
     isStaff,
     Item,
     itemise,
@@ -37,6 +37,7 @@ import {
 } from "../../services";
 import {AssignmentScheduleContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
 import {calculateHexagonProportions, Hexagon} from "../elements/svg/Hexagon";
+import {Circle} from "../elements/svg/Circle";
 import classNames from "classnames";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {GameboardViewerInner} from "./Gameboard";
@@ -68,7 +69,7 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
                 <Button color="link" size="sm" onClick={() => openAssignmentModal(assignment)}>
                     Copy
                 </Button>
-                {(assignmentOwnedByMe || assignment.additionalManagerPrivileges) && <Button color="link" size="sm" onClick={deleteAssignment}>
+                {(assignmentOwnedByMe || assignment.additionalManagerPrivileges) && <Button className={siteSpecific("", "ml-3")} color="link" size="sm" onClick={deleteAssignment}>
                     Delete
                 </Button>}
             </div>
@@ -78,9 +79,9 @@ const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
             {assignmentStartDate && <div>Start date: <strong>{new Date(assignmentStartDate).toDateString()}</strong>{assignmentStartDate > TODAY().valueOf() && <span className={"text-muted"}> (not started)</span>}</div>}
             {assignment.dueDate && <div>Due date: <strong>{new Date(assignment.dueDate).toDateString()}</strong></div>}
             {assignment.gameboard && <div>Assigned by: <strong>{assignmentOwnedByMe ? "Me" : "Someone else"}</strong></div>}
-            {assignment.gameboard && <div>Gameboard created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
+            {assignment.gameboard && <div>{siteSpecific("Gameboard", "Quiz")} created by: <strong>{formatBoardOwner(user, assignment.gameboard)}</strong></div>}
             {assignment.listingDate <= TODAY() && <div>
-                <a color="link" target={"_blank"} rel={"noreferrer noopener"} href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`}>
+                <a color="link" className="a-alt" target={"_blank"} rel={"noreferrer noopener"} href={`${PATHS.ASSIGNMENT_PROGRESS}/${assignment.id}`}>
                     View assignment progress <span className={"sr-only"}>(opens in new tab)</span>
                 </a>
             </div>}
@@ -96,6 +97,10 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
     useEffect(() => {
         if (collapsed) setOpen(false);
     }, [collapsed]);
+    const dateAssignmentCountTitle = siteSpecific(
+        <>{assignments[0].listingDate.toDateString().split(" ")[0]} - {assignments.length} assignment{assignments.length > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}</>,
+        <>{assignments[0].listingDate.toDateString().split(" ")[0]} - {assignments.length} quiz{assignments.length > 1 ? "zes" : ""}{viewBy === "startDate" ? " assigned" : " due"}</>,
+    );
     return <>
         <div tabIndex={0} role={"button"} aria-label={(open ? "Collapse" : "Expand") + ` list for day ${date}`} onKeyPress={(e) => {
             if (e.key === "Enter") {
@@ -106,20 +111,30 @@ const DateAssignmentList = ({date, assignments}: {date: number; assignments: Val
             setOpen(o => !o);
             setCollapsed(false);
         }} className={"hexagon-date"}>
-            <svg height={dateHexagon.quarterHeight * 4} width={"100%"}>
-                <Hexagon className={"fill-secondary"} {...dateHexagon}/>
+            <svg height={dateHexagon.quarterHeight * 4} width={"100%"} className={"overflow-visible"}>
+                {siteSpecific(
+                    <Hexagon className={"fill-secondary"} {...dateHexagon}/>,
+                    <Circle
+                        radius={dateHexagon.halfWidth}
+                        offsetY={dateHexagon.quarterHeight * 2 - dateHexagon.halfWidth}
+                        properties={{
+                            stroke: open ? undefined : {colour: "var(--secondary)", width: 3},
+                            fill: open ? "var(--secondary)" : "white",
+                        }}
+                    />
+                )}
                 {<foreignObject height={dateHexagon.quarterHeight * 4} width={"100%"} y={11} x={dateHexagon.halfWidth * 2.5 + 12}>
                     <p className={classNames("date-assignment-count", {"text-muted": !open})}>
-                        {assignments[0].listingDate.toDateString().split(" ")[0]} - {assignments.length} assignment{assignments.length > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}
+                        {dateAssignmentCountTitle}
                     </p>
                 </foreignObject>}
                 <svg x={2.5 * dateHexagon.halfWidth - (open ? 7 : 3)} y={dateHexagon.quarterHeight * 2 - (open ? 3 : 6.5)}>
                     <polygon className={classNames("date-toggle-arrow fill-secondary", {"open": open})} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
                              transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}/>
                 </svg>
-                {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={2} x={0}>
+                {<foreignObject height={dateHexagon.quarterHeight * 4} width={dateHexagon.halfWidth * 2} y={siteSpecific(2, 8)} x={0}>
                     <div className={"position-relative w-100"}>
-                        <h3 className={"position-absolute text-white"} style={{left: "50%", transform: "translate(-50%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h3>
+                        <h3 className={classNames("position-absolute", {"text-white": isPhy || open, "text-secondary": isAda && !open})} style={{left: "50%", transform: "translate(-50%)"}} >{`${date < 10 ? "0" : ""}${date}`}</h3>
                     </div>
                 </foreignObject>}
             </svg>
@@ -153,15 +168,18 @@ const MonthAssignmentList = ({month, datesAndAssignments}: {month: number, dates
             setCollapsed(false);
         }}>
             <div className={"h-100 text-center position-relative"} style={{width: dateHexagon.halfWidth * 2, paddingTop: 3}}>
-                <svg height={monthHexagon.quarterHeight * 4} width={monthHexagon.halfWidth * 2}>
-                    <Hexagon className={"fill-secondary"} {...monthHexagon}/>
-                    <svg x={monthHexagon.halfWidth - (open ? 7.4 : 3)} y={monthHexagon.quarterHeight * 2 - (open ? 4 : 6.5)}>
+                <svg height={siteSpecific(monthHexagon.quarterHeight * 4, monthHexagon.halfWidth * 2)} width={monthHexagon.halfWidth * 2}>
+                    {siteSpecific(
+                        <Hexagon className={"fill-secondary"} {...monthHexagon}/>,
+                        <Circle className={"fill-secondary"} radius={monthHexagon.halfWidth} />
+                    )}
+                    <svg x={monthHexagon.halfWidth - (open ? 7.4 : 3)} y={siteSpecific(monthHexagon.quarterHeight * 2, monthHexagon.halfWidth) - (open ? 4 : siteSpecific(6.5, 7))}>
                         <polygon fill={"#ffffff"} points="0 1.75 1.783 0 8.75 7 1.783 14 0 12.25 5.25 7"
                                  transform={open ? "rotate(90 7 7.5)" : "rotate(0 7 7.5)"}/>
                     </svg>
                 </svg>
             </div>
-            <h4>{`${MONTH_NAMES[month]}`}</h4>
+            <h4 className={siteSpecific("", "pt-1 pl-2")}>{`${MONTH_NAMES[month]}`}</h4>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
             <span className={"pt-1 month-assignment-count"}>{assignmentCount} assignment{assignmentCount > 1 ? "s" : ""}{viewBy === "startDate" ? " set" : " due"}</span>
         </div>
@@ -244,11 +262,11 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
 
     return <Modal isOpen={showAssignmentModal} toggle={toggleAssignModal}>
         <ModalHeader close={
-            <button className="close" onClick={toggleAssignModal}>
+            <button className={classNames("text-nowrap", {"btn-link bg-transparent": isAda, "close": isPhy})} onClick={toggleAssignModal}>
                 Close
             </button>
         }>
-            Set new assignment
+            {siteSpecific("Set new assignment", <h3>Set new assignment</h3>)}
         </ModalHeader>
         <ModalBody>
             <Label className="w-100 pb-2">Group{isStaff(user) ? "(s)" : ""}:
@@ -259,11 +277,11 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                         options={sortBy(groups, group => group.groupName && group.groupName.toLowerCase()).map(g => itemise(g.id as number, g.groupName))}
                 />
             </Label>
-            <Label className="w-100 pb-2">Gameboard:
+            <Label className="w-100 pb-2">{siteSpecific("Gameboard", "Quiz")}:
                 <StyledSelect inputId="gameboard-to-assign" isClearable placeholder="None"
                         value={selectedGameboard}
                         onChange={selectOnChange(setSelectedGameboard, false)}
-                        options={gameboards.map(g => itemise(g.id ?? "", g.title ?? "No gameboard title"))}
+                        options={gameboards.map(g => itemise(g.id ?? "", g.title ?? `No ${siteSpecific("gameboard", "quiz")} title`))}
                 />
                 {alreadyAssignedGroupNames && alreadyAssignedGroupNames.length > 0 && <Alert color={"warning"} className={"my-1"}>
                     This {siteSpecific("gameboard", "quiz")} is already assigned to group{alreadyAssignedGroupNames.length > 1 ? "s" : ""}: {alreadyAssignedGroupNames.join(", ")}. You must delete the previous assignment{alreadyAssignedGroupNames.length > 1 ? "s" : ""} to set it again.
@@ -304,9 +322,9 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
                 Assign to group{selectedGroups.length > 1 ? "s" : ""}
             </Button>
         </ModalBody>
-        <ModalFooter>
+        {isPhy && <ModalFooter>
             <Button block color="tertiary" onClick={toggleAssignModal}>Close</Button>
-        </ModalFooter>
+        </ModalFooter>}
     </Modal>;
 }
 
@@ -515,10 +533,13 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle="Assignment Schedule" help={pageHelp}/>
-        <h4 className="mt-4 mb-3">
-            Assign a {siteSpecific("gameboard", "quiz")} from...
-        </h4>
-        <PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>
+        {isAda && gameboards && gameboards.totalResults > 0 && <h4>
+            You have <strong>{gameboards.totalResults}</strong> quiz{gameboards.totalResults > 1 && "zes"} ready to assign...{" "}
+            <Button className={"font-size-1-25"} tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(PATHS.SET_ASSIGNMENTS)} color="link">
+                create another quiz?
+            </Button>
+        </h4>}
+        {isPhy && <PhyAddGameboardButtons className="mb-4" redirectBackTo="/assignment_schedule"/>}
         <ShowLoadingQuery
             defaultErrorTitle="Error loading assignments and/or gameboards"
             query={combineQueries(assignmentsSetByMeQuery, gameboardsQuery, discardResults)}
@@ -526,7 +547,11 @@ export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
             <AssignmentScheduleContext.Provider value={{boardsById, groupsById, groupFilter, boardIdsByGroupId, groups: groups ?? [], gameboards: gameboards?.boards ?? [], openAssignmentModal, collapsed, setCollapsed, viewBy}}>
                 <div className="px-md-4 pl-2 pr-2 timeline-column mb-4 pt-2">
                     {!isStaff(user) && <Alert className="mt-2" color="info">
-                        The Assignment Schedule page is an alternate way to manage your assignments, focusing on the start and due dates of the assignments, rather than the assigned gameboard.
+                        The Assignment Schedule page is an alternate way to manage your {siteSpecific("assignments", "assigned quizzes")},
+                        {siteSpecific(
+                            "focusing on the start and due dates of the assignments, rather than the assigned gameboard.",
+                            "focusing on the start and due dates, rather than which quiz was assigned."
+                        )}
                         <br/>
                         It is a work in progress, and we would love to <a target="_blank" href="/contact?subject=Assignment%20Schedule%20Feedback">hear your feedback</a>!
                     </Alert>}

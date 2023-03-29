@@ -10,6 +10,7 @@ import {Glossary} from "../../pages/Glossary";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import Equality from "../../pages/Equality";
 import {News} from "../../pages/News";
+import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
 
 let key = 0;
 export const RoutesCS = [
@@ -23,6 +24,8 @@ export const RoutesCS = [
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
     <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
+
+    <TrackedRoute exact path="/assignment_schedule" ifUser={isStaff} component={AssignmentSchedule} />,
 
     // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,

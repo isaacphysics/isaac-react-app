@@ -40,8 +40,10 @@
     position: relative;
     z-index: 4;
   }
-  .month-label:hover, .hexagon-date:hover, .month-label:focus, .hexagon-date:focus {
+  .month-label:focus, .hexagon-date:focus {
     outline: none;
+  }
+  .month-label:hover, .hexagon-date:hover, .month-label:focus-visible, .hexagon-date:focus-visible {
     background: linear-gradient(
                     to left,
                     transparent 0,
@@ -52,8 +54,12 @@
       opacity: 1 !important;
       color: black !important;
     }
+    .date-assignment-count {
+      text-decoration: underline !important;
+    }
+    text-decoration: underline !important;
   }
-  .month-label:focus, .hexagon-date:focus {
+  .month-label:focus-visible, .hexagon-date:focus-visible {
     .date-assignment-count, .month-assignment-count {
       font-weight: bold;
     }
