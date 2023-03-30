@@ -19,11 +19,16 @@ $sizes: [
   [0.5 , 0.75]
 ];
 
+$code_font_scale_ratio: 1.16;
+
 @each $size in $sizes {
   $selector-size: str-replace(#{list.nth($size, 1)}, ".", "-");
   .font-size-#{$selector-size} {
     font-size: #{list.nth($size, 1)}rem !important;
     line-height: #{list.nth($size, 2)}rem;
+    code {
+      font-size: #{list.nth($size, 1) * $code_font_scale_ratio}rem #{if(list.nth($size, 1) != 1, "!important", "")};
+    }
   }
   // Also generate responsive font size classes (.font-size-md-1-25 for example)
   $i: 1;
@@ -34,6 +39,9 @@ $sizes: [
         #{str-repeat(".font-size-#{$name}-#{$selector-size}", $i)} {
           font-size: #{list.nth($size, 1)}rem !important;
           line-height: #{list.nth($size, 2)}rem;
+          code {
+            font-size: #{list.nth($size, 1) * $code_font_scale_ratio}rem #{if(list.nth($size, 1) != 1, "!important", "")};
+          }
         }
       }
       $i: $i + 1;
@@ -116,6 +124,7 @@ pre {
   padding: 0.888rem;
   border: solid 1px $cs-light-gray;
   code {
+    font-size: 1rem !important;
     color: unset;
   }
 }
