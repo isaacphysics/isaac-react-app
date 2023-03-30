@@ -34,8 +34,8 @@ rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 
-git clone -b $VERSION_TO_DEPLOY --depth 1 https://github.com/isaacphysics/the-analytical-engine.git
-cd the-analytical-engine
+git clone -b $VERSION_TO_DEPLOY --depth 1 https://github.com/isaacphysics/isaac-react-app.git
+cd isaac-react-app
 
 APP_COMMIT_SHA=$(git rev-parse $VERSION_TO_DEPLOY)
 
@@ -90,7 +90,7 @@ fi
 
 
 cd ..
-rm -rf the-analytical-engine
+rm -rf isaac-react-app
 
 git clone -b $SEGUE_VERSION --depth 1 https://github.com/isaacphysics/isaac-api.git
 cd isaac-api
