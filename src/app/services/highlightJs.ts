@@ -5,15 +5,15 @@ import csharp from 'highlight.js/lib/languages/csharp'
 import plaintext from 'highlight.js/lib/languages/plaintext'
 import sql from 'highlight.js/lib/languages/sql'
 import java from 'highlight.js/lib/languages/java'
+import vbnet from 'highlight.js/lib/languages/vbnet'
 import {LanguageFn} from "highlight.js";
-import vba from "highlightjs-vba";
 
 const importHljsCore = import("highlight.js/lib/core");
 
 function registerLanguages() {
     importHljsCore.then(({default: hljs}) => {
         hljs.registerLanguage('java', java);
-        hljs.registerLanguage('vba', vba);
+        hljs.registerLanguage('vba', vbnet);
         hljs.registerLanguage('javascript', javascript);
         hljs.registerLanguage('python', python);
         hljs.registerLanguage('php', php);

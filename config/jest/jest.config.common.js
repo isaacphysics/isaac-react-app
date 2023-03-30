@@ -21,7 +21,7 @@ module.exports = {
         '^.+\\.[jt]sx?$': "<rootDir>config/jest/tsTransform.js",
     },
     "transformIgnorePatterns": [
-        "[/\\\\]node_modules[/\\\\](?!highlightjs-vba).+\\.(js|jsx|ts|tsx)$",
+        "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
         "^.+\\.module\\.(css|sass|scss)$"
     ],
     "moduleNameMapper": {
