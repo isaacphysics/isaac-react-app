@@ -182,7 +182,7 @@ export const userBookedReservedOrOnWaitingList = (user: Immutable<PotentialUser>
 }
 
 export const ifEventIsReservationsOnlyThenUserIsTeacherOrUserIsReserved = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
-    return event.isReservationOnly ? isTeacherOrAbove(user) : event.userBookingStatus === "RESERVED";
+    return event.isReservationOnly ? (isTeacherOrAbove(user) || event.userBookingStatus === "RESERVED") : true;
 }
 
 export const userCanMakeEventBooking = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
