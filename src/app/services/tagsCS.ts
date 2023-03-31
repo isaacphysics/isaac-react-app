@@ -52,7 +52,7 @@ export class CsTagService extends AbstractBaseTagService {
         // Data and information topics
         {id: TAG_ID.bigData, title: "Big Data", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.databases, title: "Databases", parent: TAG_ID.dataAndInformation},
-        {id: TAG_ID.fileOrganisation, title: "File organisation", parent: TAG_ID.dataAndInformation},
+        {id: TAG_ID.fileOrganisation, title: "File organisation", parent: TAG_ID.dataAndInformation, stageOverride: GCSE_HIDDEN},
         {id: TAG_ID.sql, title: "SQL", parent: TAG_ID.dataAndInformation},
 
         // Design and development topics
