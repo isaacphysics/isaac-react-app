@@ -289,7 +289,7 @@ describe("Teachers can make event bookings when conditions are met", () => {
         event.isReservationOnly = true;
 
         // Act
-        const canMakeEventBooking = userCanMakeEventBooking(studentUser, event);
+        const canMakeEventBooking = userCanMakeEventBooking(teacherUser, event);
 
         // Assert
         expect(canMakeEventBooking).toEqual(true);
