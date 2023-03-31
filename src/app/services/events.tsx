@@ -200,7 +200,7 @@ export const userCanBeAddedToEventWaitingList = (user: Immutable<PotentialUser> 
     return !userCanMakeEventBooking(user, event) &&
         event.isNotClosed &&
         !event.hasExpired &&
-        ifEventIsReservationsOnlyThenUserIsTeacherOrUserIsReserved(user, event) &&
+        !event.isReservationOnly &&
         !userBookedReservedOrOnWaitingList(user, event) &&
         userSatisfiesStudentOnlyRestrictionForEvent(user, event)
 }
