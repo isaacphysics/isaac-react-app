@@ -7,11 +7,23 @@ import {
     getEventBookingsForGroup,
     isaacApi,
     reserveUsersOnEvent,
-    store,
+    store, submitMessage,
     useAppDispatch,
     useAppSelector
 } from "../../../state";
-import {Button, Col, CustomInput, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Row, Table} from "reactstrap";
+import {
+    Button,
+    Col,
+    CustomInput,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Input,
+    Label,
+    Row,
+    Table
+} from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
@@ -49,6 +61,11 @@ const ReservationsModal = () => {
     const [checkAllCancelReservationsCheckbox, setCheckAllCancelReservationsCheckbox] = useState<boolean>();
     const [groupDropdownOpen, setGroupDropdownOpen] = useState(false);
     const [unbookedUsersById, setUnbookedUsersById] = useState<{[id: number]: AppGroupMembership}>({});
+
+    // Group booking contact form state
+    const [groupSupervisorContactName, setGroupSupervisorContactName] = useState<string>(`${user?.givenName}${user?.familyName ? " " + user?.familyName : ""}`);
+    const [groupSupervisorContactEmail, setGroupSupervisorContactEmail] = useState<string>(user?.email ?? "");
+    const [additionalBookingNotes, setAdditionalBookingNotes] = useState<string>();
 
     useEffect(() => {
         setUnbookedUsersById(unbookedUsers.reduce((acc: {[id: number]: AppGroupMembership}, u) => ({...acc, [u.id as number]: u}), {}));
@@ -181,6 +198,20 @@ const ReservationsModal = () => {
         if (selectedEvent && selectedEvent.id && selectedGroup && selectedGroup.id) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
             dispatch(reserveUsersOnEvent(selectedEvent.id, reservableIds, selectedGroup.id));
+            // Send contact form with details of the group booking
+            const subject = `Event group booking: ${selectedEvent.id}:${selectedGroup.id}`;
+            const message = `
+            Event: ${selectedEvent.title} (id: ${selectedEvent.id})
+            Group id: ${selectedGroup.id}
+            Students reserved: ${reservableIds.join(", ")}
+            
+            Main supervisor contact: ${groupSupervisorContactName}, ${groupSupervisorContactEmail}
+            
+            Additional booking information
+            ---
+            ${additionalBookingNotes}
+            `;
+            dispatch(submitMessage({firstName: user?.givenName ?? "[Unknown]", lastName: user?.familyName ?? "[Teacher]", emailAddress: user?.email ?? "[Unknown]", subject, message}));
         }
         setCheckAllCheckbox(false);
     };
@@ -349,6 +380,43 @@ const ReservationsModal = () => {
                                     })}
                                 </tbody>
                             </Table>
+
+                            {/* Contact details for main supervisor */}
+                            <div className={"mt-2 mb-3"}>
+                                <h4>Contact details for main group supervisor</h4>
+                                <p>Change these if a teacher other than yourself is going to be supervising the students at this event.</p>
+                                <Row>
+                                    <Col md={6}>
+                                        <Label htmlFor="contact-name" className="form-required">
+                                            Contact name
+                                        </Label>
+                                        <Input
+                                            id="contact-name" name="contact-name" type="text" value={groupSupervisorContactName}
+                                            onChange={event => setGroupSupervisorContactName(event.target.value)}
+                                        />
+                                    </Col>
+                                    <Col md={6}>
+                                        <Label htmlFor="contact-email" className="form-required">
+                                            Contact email
+                                        </Label>
+                                        <Input
+                                            id="contact-email" name="contact-email" type="text" value={groupSupervisorContactEmail}
+                                            onChange={event => setGroupSupervisorContactEmail(event.target.value)}
+                                        />
+                                    </Col>
+                                </Row>
+                            </div>
+
+                            {/* Additional booking information for teachers */}
+                            <div className={"mt-2 mb-3"}>
+                                <h4>Additional booking information</h4>
+                                <p>
+                                    Add additional information about the group booking, for example contact details of
+                                    other group supervisors. Please be aware that there is a maximum of students that
+                                    are allowed to be supervised by a single teacher.
+                                </p>
+                                <Input type={"textarea"} value={additionalBookingNotes} onChange={e => setAdditionalBookingNotes(e.target.value)} />
+                            </div>
 
                             <Row className="toolbar">
                                 <Col>
