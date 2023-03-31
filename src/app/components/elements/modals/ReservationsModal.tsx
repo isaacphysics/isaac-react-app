@@ -247,6 +247,8 @@ const ReservationsModal = () => {
         return true;
     };
 
+    const allowedToReserve = Object.values(userCheckboxes).some(v => v) && !isReservationLimitReached() && groupSupervisorContactName && groupSupervisorContactEmail;
+
     return <React.Fragment>
         <div id="reservation-modal">
             {!selectedEvent?.allowGroupReservations && <p>This event does not allow group reservations.</p>}
@@ -394,6 +396,7 @@ const ReservationsModal = () => {
                                         <Input
                                             id="contact-name" name="contact-name" type="text" value={groupSupervisorContactName}
                                             onChange={event => setGroupSupervisorContactName(event.target.value)}
+                                            invalid={!groupSupervisorContactName}
                                         />
                                     </Col>
                                     <Col md={6}>
@@ -403,6 +406,7 @@ const ReservationsModal = () => {
                                         <Input
                                             id="contact-email" name="contact-email" type="text" value={groupSupervisorContactEmail}
                                             onChange={event => setGroupSupervisorContactEmail(event.target.value)}
+                                            invalid={!groupSupervisorContactEmail || !groupSupervisorContactEmail.includes('@')}
                                         />
                                     </Col>
                                 </Row>
@@ -425,7 +429,7 @@ const ReservationsModal = () => {
                                         You can only reserve a maximum of {selectedEvent && selectedEvent.groupReservationLimit} group members onto this event.
                                     </p>}
                                     <div className="text-center">
-                                        <Button color="primary" disabled={!Object.values(userCheckboxes).some(v => v) || isReservationLimitReached()} onClick={requestReservations}>
+                                        <Button color="primary" disabled={!allowedToReserve} onClick={requestReservations}>
                                             Reserve places
                                         </Button>
                                     </div>
