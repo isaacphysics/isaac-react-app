@@ -7,7 +7,8 @@ import {
     getEventBookingsForGroup,
     isaacApi,
     reserveUsersOnEvent,
-    store, submitMessage,
+    store,
+    submitMessage,
     useAppDispatch,
     useAppSelector
 } from "../../../state";
