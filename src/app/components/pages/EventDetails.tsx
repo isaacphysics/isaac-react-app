@@ -43,7 +43,8 @@ import {
     zeroOrLess,
     isAdminOrEventManager,
     isEventLeader,
-    isPhy
+    isPhy,
+    userBookedReservedOrOnWaitingList
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -328,6 +329,9 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
 
                                 {/* Options for logged-in users */}
                                 {isLoggedIn(user) && !event.hasExpired && <React.Fragment>
+                                    {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
+                                        Places on this event can only be reserved by teachers. Please ask your teacher to reserve a place for you.
+                                    </Alert>}
                                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
                                     <Button onClick={() => {
                                         setBookingFormOpen(true)
