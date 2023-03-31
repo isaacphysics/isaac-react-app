@@ -14,7 +14,7 @@ import {
     HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
-    isTeacherOrAbove,
+    isTeacherOrAbove, PATHS,
     safePercentage,
     siteSpecific
 } from "../../services";
@@ -105,7 +105,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
         <TitleAndBreadcrumb currentPageTitle={pageTitle} disallowLaTeX />
         <Card className="mt-4">
             <CardBody>
-                <Tabs>{{
+                <Tabs tabContentClass="mt-3">{{
                     "Question activity": <div>
                         <Row>
                             <Col>
@@ -223,8 +223,8 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             verb="set"
                             count={achievements && achievements.TEACHER_ASSIGNMENTS_SET}
                             item="assignment"
-                            createMoreText="Set assignments"
-                            createMoreLink="/set_assignments"
+                            createMoreText={siteSpecific("Set assignments", "Set quizzes")}
+                            createMoreLink={PATHS.SET_ASSIGNMENTS}
                             iconClassName="assignment-badge"/>
 
                         <TeacherAchievement
@@ -232,7 +232,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             count={achievements && achievements.TEACHER_GAMEBOARDS_CREATED}
                             item="gameboard"
                             createMoreText="Board builder"
-                            createMoreLink="/gameboard_builder"
+                            createMoreLink={PATHS.GAMEBOARD_BUILDER}
                             iconClassName="gameboard-badge"/>
 
                         <TeacherAchievement

@@ -3,7 +3,7 @@ import {requestEmailVerification, selectors, useAppDispatch, useAppSelector} fro
 import {Link} from "react-router-dom";
 import * as RS from 'reactstrap';
 import {Button} from 'reactstrap';
-import {WEBMASTER_EMAIL} from "../../services";
+import {isPhy, siteSpecific, WEBMASTER_EMAIL} from "../../services";
 
 export const EmailVerificationBanner = () => {
     const dispatch = useAppDispatch();
@@ -23,7 +23,9 @@ export const EmailVerificationBanner = () => {
             <RS.Row style={{alignItems: "center"}}>
                 <RS.Col xs={12} sm={2} md={1}>
                     <h3 className="text-center">
-                        <span role="presentation" aria-labelledby="email-verification-heading">ℹ</span>
+                        <span role="presentation" aria-labelledby="email-verification-heading">
+                            {siteSpecific("ℹ", <img className={"mt-n1 mt-sm-1"} src={"/assets/cs/icons/info.svg"} style={{height: "1.5rem"}}/>)}
+                        </span>
                         <span id="email-verification-heading" className="d-inline-block d-sm-none">&nbsp;Email Verification</span>
                     </h3>
                 </RS.Col>
@@ -37,7 +39,7 @@ export const EmailVerificationBanner = () => {
                     </RS.Col>
                     <RS.Col xs={12} md={3} className="text-center">
                         <RS.Button
-                            color="primary" outline className="mt-3 mb-2 d-block d-md-inline-block banner-button"
+                            color={siteSpecific("primary", "secondary")} outline={isPhy} className="mt-3 mb-2 d-block d-md-inline-block banner-button"
                             onClick={() => setHidden(true)} id="email-verification-snooze"
                         >
                             Snooze
@@ -47,7 +49,7 @@ export const EmailVerificationBanner = () => {
                 {(status == "DELIVERY_FAILED") &&
                     <RS.Col xs={12} sm={10} md={11}>
                         <small>One or more email(s) sent to your email
-                            address failed. This means you won&apos;t receive emails from Isaac, and may prevent you
+                            address failed. This means you won&apos;t receive emails from {siteSpecific("Isaac", "Ada")}, and may prevent you
                             regaining access to your account. <br/>To start receiving emails again, update your email
                             address on your <Link to="/account">My account</Link> page. If you believe this is in
                             error, please <a href={`mailto:${WEBMASTER_EMAIL}`}>email us</a>.

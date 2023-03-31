@@ -16,7 +16,7 @@ import {
     determineFastTrackPrimaryAction,
     determineFastTrackSecondaryAction,
     fastTrackProgressEnabledBoards,
-    isCS,
+    isAda,
     isLoggedIn,
     isPhy,
     QUESTION_TYPES,
@@ -113,7 +113,7 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                 }
             }
         }}>
-            <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": isCS && ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
+            <div className={classNames("question-component p-md-5", doc.type, {"parsons-layout": isAda && ["isaacParsonsQuestion", "isaacReorderQuestion"].includes(doc.type as string)})}>
                 <Suspense fallback={<Loading/>}>
                     <QuestionComponent questionId={doc.id as string} doc={doc} validationResponse={validationResponse} />
                 </Suspense>
@@ -124,8 +124,23 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                     </small>
                 </div>}
 
+                {isAda &&
+                    <div className="mt-4">
+                        <hr className="border-silver-grey" />
+                    </div>
+                }
+
+                {/* CS Hint Reminder */}
+                {isAda && (!validationResponse || !correct || canSubmit) && <RS.Row>
+                    <RS.Col xl={{size: 10}} >
+                        {doc.hints && <p className="no-print mb-0">
+                            <small>{"Don't forget to use the hints if you need help."}</small>
+                        </p>}
+                    </RS.Col>
+                </RS.Row>}
+
                 {/* CS Hints */}
-                {isCS && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
+                {isAda && <IsaacLinkHints questionPartId={doc.id as string} hints={doc.hints} />}
 
                 {/* Validation Response */}
                 {showQuestionFeedback && validationResponse && !canSubmit && <div className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : ""}`}>
@@ -169,15 +184,6 @@ export const IsaacQuestion = withRouter(({doc, location}: {doc: ApiTypes.Questio
                             }
                         </div>
                 }
-
-                {/* CS Hint Reminder */}
-                {isCS && (!validationResponse || !correct || canSubmit) && <RS.Row>
-                    <RS.Col xl={{size: 10, offset: 1}} >
-                        {doc.hints && <p className="no-print text-center pt-2 mb-0">
-                            <small>{"Don't forget to use the hints above if you need help."}</small>
-                        </p>}
-                    </RS.Col>
-                </RS.Row>}
 
                 {/* Physics Hints */}
                 {isPhy && <div className={correct ? "mt-5" : ""}>

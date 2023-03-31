@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import * as RS from 'reactstrap';
 import {Alert} from 'reactstrap';
 import Cookies from 'js-cookie';
-import {SITE_SUBJECT_TITLE} from "../../services";
 
 const WARNING_COOKIE = "warningBannerDismissed";
 
@@ -17,7 +16,7 @@ export const WarningBanner = () => {
         Cookies.set(WARNING_COOKIE, "1", {expires: 30 /* days*/});
     }
 
-    const inDateRange = new Date("2023-03-20") <= new Date() && new Date() <= new Date("2023-04-05");
+    const inDateRange = new Date("2023-03-20") <= new Date() && new Date() <= new Date("2023-03-28");
 
     return inDateRange ? <div className="banner d-print-none" id="downtime-banner">
         <Alert color="warning" className="mb-0">

@@ -1,0 +1,10 @@
+@import "../common/breadcrumbs";
+
+.breadcrumb-item + .breadcrumb-item::before {
+  position: relative;
+  height: 0.888rem !important;
+  left: 3px !important;
+  top: 4px !important;
+  margin: 0 !important;
+  width: 21px !important;
+}

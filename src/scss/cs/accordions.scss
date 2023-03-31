@@ -1,14 +1,33 @@
+
+.stage-label-gcse, .stage-label-alevel, .stage-label-all {
+  color: black;
+  font-weight: 600;
+  text-wrap: none;
+}
+
 .stage-label-gcse {
   background-color: $gcse-colour;
-  color: white;
 }
 
 .stage-label-alevel {
   background-color: $a-level-colour;
-  color: white;
 }
 
 .stage-label-all {
   background-color: $all-stages-colour;
-  color: white;
+}
+
+.accordion-icon-report {
+  background-image: url(/assets/cs/icons/flag-black.svg);
+}
+
+.accordion .accordion-header {
+  span, button, button:hover {
+    color: black !important;
+  }
+}
+
+.accordion {
+  background: $cs-white;
+  border-top: 1px solid $cs-cultured;
 }

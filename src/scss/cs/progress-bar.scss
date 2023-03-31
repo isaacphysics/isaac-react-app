@@ -1,0 +1,12 @@
+@import "../common/progress-bar";
+
+.progress-bar-outer {
+  overflow: hidden;
+  border-radius: 15px;
+}
+.progress-bar-outer {
+  background: $cs-silver;
+  .progress-bar-inner {
+    background: $yellow-300;
+  }
+}

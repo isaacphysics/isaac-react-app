@@ -7,25 +7,70 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isTutorOrAbove} from "../../../services";
+import {isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
 import {SolvingPhysProblems} from "../../pages/books/SolvingPhysProblems";
 import {Concepts} from "../../pages/Concepts";
-import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {MathsBookGcse} from "../../pages/books/maths_book_gcse";
 import {PhysBookYrNine} from "../../pages/books/phys_book_yr9";
 import {StepUpPhys} from "../../pages/books/step_up_phys";
 import {LinkingConcepts} from "../../pages/books/linking_concepts";
+import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
+import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
+import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
+import {QuizTeacherFeedback} from "../../pages/quizzes/QuizTeacherFeedback";
+import {QuizPreview} from "../../pages/quizzes/QuizPreview";
+import {QuizDoFreeAttempt} from "../../pages/quizzes/QuizDoFreeAttempt";
+import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
+import {Events} from "../../pages/Events";
+import {RedirectToEvent} from "../../navigation/RedirectToEvent";
+import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
+import Equality from "../../pages/Equality";
+
+const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 
 let key = 0;
 export const RoutesPhy = [
     // Assignments
-    <TrackedRoute key={key++} exact path="/assignment_progress" ifUser={isTutorOrAbove} component={AssignmentProgress} />,
     <TrackedRoute key={key++} exact path="/assignment_progress/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
+    <TrackedRoute exact path="/assignment_schedule" ifUser={isTutorOrAbove} component={AssignmentSchedule} />, // Currently in beta, not yet advertised or listed on navigation menus
+
+    // Teacher test pages
+    <TrackedRoute exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />,
+    <Redirect from="/set_quizzes" to="/set_tests" />,
+    // Student test pages
+    <TrackedRoute exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
+    <Redirect from="/quizzes" to="/tests" />,
+
+    // Quiz (test) pages
+    <TrackedRoute exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,
+    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />,
+    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacherOrAbove} component={QuizTeacherFeedback} />,
+    // Tutors can preview tests iff the test is student only
+    <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTutorOrAbove} component={QuizPreview} />,
+    <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />,
+    <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
+    <TrackedRoute exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
+    // The order of these redirects matters to prevent substring replacement
+    <Redirect from="/quiz/assignment/:quizAssignmentId/feedback"   to="/test/assignment/:quizAssignmentId/feedback" />,
+    <Redirect from="/quiz/assignment/:quizAssignmentId/page/:page" to="/test/assignment/:quizAssignmentId/page/:page" />,
+    <Redirect from="/quiz/assignment/:quizAssignmentId"            to="/test/assignment/:quizAssignmentId" />,
+    <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId/:page" to="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" />,
+    <Redirect from="/quiz/attempt/feedback/:quizAssignmentId/:studentId" to="/test/attempt/feedback/:quizAssignmentId/:studentId" />,
+    <Redirect from="/quiz/attempt/:quizAttemptId/feedback/:page"   to="/test/attempt/:quizAttemptId/feedback/:page" />,
+    <Redirect from="/quiz/attempt/:quizAttemptId/feedback"         to="/test/attempt/:quizAttemptId/feedback" />,
+    <Redirect from="/quiz/preview/:quizId/page/:page"              to="/test/preview/:quizId/page/:page" />,
+    <Redirect from="/quiz/preview/:quizId"                         to="/test/preview/:quizId" />,
+    <Redirect from="/quiz/attempt/:quizId/page/:page"              to="/test/attempt/:quizId/page/:page" />,
+    <Redirect from="/quiz/attempt/:quizId"                         to="/test/attempt/:quizId" />,
 
     // Books
     <TrackedRoute key={key++} exact path="/books/physics_skills_19" component={PhysicsSkills19}/>,
@@ -72,8 +117,8 @@ export const RoutesPhy = [
     // Legacy Routes
     <Redirect key={key++} exact from="/mission" to="/about" />,
     <Redirect key={key++} exact from="/boards" to="/my_gameboards" />,
-    <Redirect key={key++} exact from="/game_builder" to="/gameboard_builder" />,
-    <Redirect key={key++} exact from="/board/:id" to="/gameboards#:id" />,
+    <Redirect key={key++} exact from="/game_builder" to={PATHS.GAMEBOARD_BUILDER} />,
+    <Redirect key={key++} exact from="/board/:id" to={`${PATHS.GAMEBOARD}#:id`} />,
     <Redirect key={key++} exact from="/gcsebook" to="/books/phys_book_gcse" />,
     <Redirect key={key++} exact from="/physics_skills_14" to="/books/physics_skills_14" />,
     <Redirect key={key++} exact from="/book" to="/books/physics_skills_14" />,
@@ -91,4 +136,11 @@ export const RoutesPhy = [
     // Teacher Pages
     <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_gcse" pageId="fragments/teacher_mentoring_gcse_page_frag" />,
     <StaticPageRoute key={key++} exact ifUser={isTutorOrAbove} path="/teachermentoring_alevel" pageId="fragments/teacher_mentoring_alevel_page_frag" />,
+
+    // Events
+    <TrackedRoute exact path='/events' component={Events}/>,
+    <TrackedRoute exact path='/events/:eventId' component={EventDetails}/>,
+    <TrackedRoute exact path='/eventbooking/:eventId' ifUser={isLoggedIn} component={RedirectToEvent} />,
+
+    <TrackedRoute exact path="/equality" component={Equality} />,
 ];

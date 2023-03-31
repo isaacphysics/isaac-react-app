@@ -4,6 +4,7 @@ import {IsaacContent} from "./IsaacContent";
 import {ContentDTO} from "../../../IsaacApiTypes";
 import {logAction, useAppDispatch} from "../../state";
 import {ConfidenceContext} from "../../../IsaacAppTypes";
+import {siteSpecific} from "../../services";
 
 interface HintModalProps {
     label: string;
@@ -38,7 +39,7 @@ export const IsaacHintModal = (props: HintModalProps) => {
         }
     };
 
-    const closeButton = <button className="close" onClick={toggle}>Close</button>;
+    const closeButton = <button className={siteSpecific("close", "btn-link bg-transparent")} onClick={toggle}>Close</button>;
 
     return <div>
         <Button color="link" size="sm" className="a-alt" onClick={toggle}>
@@ -49,7 +50,7 @@ export const IsaacHintModal = (props: HintModalProps) => {
             <ModalHeader close={closeButton}>
                 {title}
             </ModalHeader>
-            <ModalBody>
+            <ModalBody className={"mx-3 mb-3"}>
                 <IsaacContent doc={body} />
             </ModalBody>
         </Modal>

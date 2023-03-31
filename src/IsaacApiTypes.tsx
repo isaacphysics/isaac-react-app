@@ -9,12 +9,13 @@ import {Immutable} from "immer";
 export interface IsaacCardDTO extends ContentDTO {
     image?: ImageDTO;
     clickUrl?: string;
+    buttonText?: string;
     disabled?: boolean;
     verticalContent?: boolean;
 }
 
 export interface IsaacCardDeckDTO extends ContentDTO {
-    cards?: IsaacCardDTO[];
+    cards?: (IsaacCardDTO & { imageClassName?: string; buttonText?: string })[];
 }
 
 export interface ChemicalFormulaDTO extends ChoiceDTO {
@@ -536,6 +537,7 @@ export interface RegisteredUserDTO extends AbstractSegueUserDTO {
     gender?: Gender;
     registrationDate?: Date;
     schoolId?: string;
+    countryCode?: string;
     role?: UserRole;
     schoolOther?: string;
     registeredContexts?: UserContext[];
@@ -732,7 +734,7 @@ export type GroupMembershipStatus = "ACTIVE" | "INACTIVE" | "DELETED";
 
 export type Gender = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | "UNKNOWN";
 
-export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE";
+export type AuthenticationProvider = "GOOGLE" | "FACEBOOK" | "TWITTER" | "RAVEN" | "TEST" | "SEGUE" | "RASPBERRYPI";
 
 export type GameboardItemState = "PERFECT" | "PASSED" | "IN_PROGRESS" | "NOT_ATTEMPTED" | "FAILED";
 

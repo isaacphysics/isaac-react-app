@@ -1,5 +1,5 @@
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {ifKeyIsEnter, Item} from "../../../services";
+import {ifKeyIsEnter, Item, siteSpecific} from "../../../services";
 import React from "react";
 import {generateSquareProportions, Rectangle} from "./Rectangle";
 import {Container} from "reactstrap";
@@ -54,7 +54,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                             >
                                 <title>
-                                    {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                    {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("gameboard", "quiz")} filter`}
                                 </title>
                             </Hexagon>
                             {[1, 0, -1].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>
@@ -89,7 +89,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
                             tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                         >
                             <title>
-                                {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                {`${isSelected ? "Remove" : "Add"} difficulty ${difficultyOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("gameboard", "quiz")} filter`}
                             </title>
                         </Rectangle>
                         {[0, 1, 2].slice(0, getDifficultyLevel(difficultyOption.value)).map((n) =>

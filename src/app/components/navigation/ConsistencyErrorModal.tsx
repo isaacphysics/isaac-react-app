@@ -1,11 +1,11 @@
 import React from "react";
 import * as RS from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../services";
+import {SITE_TITLE} from "../../services";
 
 export const ConsistencyErrorModal = ({consistencyError}: {consistencyError: boolean}) => {
     return <RS.Modal id="user-consistency-error" isOpen={consistencyError} size={"lg"}>
         <RS.ModalHeader className="h-title pb-5 mb-4">
-            {`Your Isaac ${SITE_SUBJECT_TITLE} session has changed`}
+            {`Your ${SITE_TITLE} session has changed`}
         </RS.ModalHeader>
         <RS.ModalBody className="px-0 mx-4">
             <h3>This browser window / tab is out of sync.</h3>

@@ -1,7 +1,7 @@
 import React from "react";
 import {DisplaySettings} from "../../../../IsaacAppTypes";
 import {CardBody, CustomInput, UncontrolledTooltip} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services";
+import {SITE_TITLE} from "../../../services";
 interface UserBetaFeaturesProps {
     displaySettings: DisplaySettings;
     setDisplaySettings: (ds: DisplaySettings | ((oldDs?: DisplaySettings) => DisplaySettings)) => void;
@@ -10,7 +10,7 @@ interface UserBetaFeaturesProps {
 export const UserBetaFeatures = ({displaySettings, setDisplaySettings}: UserBetaFeaturesProps) => {
     return <CardBody>
         <p>
-            Here you can opt-in to beta features of the Isaac {SITE_SUBJECT_TITLE} platform.
+            Here you can opt-in to beta features of the {SITE_TITLE} platform.
         </p>
         <CustomInput type={"checkbox"} checked={displaySettings.HIDE_QUESTION_ATTEMPTS ?? false}
                      onChange={e => setDisplaySettings(

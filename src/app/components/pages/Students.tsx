@@ -33,7 +33,7 @@ export const Students = () => {
         <RS.Row>
             <RS.Col>
                 <h2 className="h-secondary h-m">Pick up where you left off</h2>
-                <div className="pattern-07 pb-5">
+                <div className="pb-5">
                     <RS.Row>
                         <RS.ListGroup className="mt-md-4 mb-3 d-block d-md-flex flex-wrap flex-row link-list align-items-stretch">
                             <RS.ListGroupItem className="bg-transparent">

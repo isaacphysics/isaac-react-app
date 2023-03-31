@@ -4,7 +4,7 @@ import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE, siteSpecific} from "../../services";
+import {DOCUMENT_TYPE, isAda} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -14,11 +14,20 @@ import {ShareLink} from "../elements/ShareLink";
 import {PrintButton} from "../elements/PrintButton";
 import {WithFigureNumbering} from "../elements/WithFigureNumbering";
 import {MetaDescription} from "../elements/MetaDescription";
+import classNames from "classnames";
 
 interface GenericPageComponentProps {
     pageIdOverride?: string;
     match: {params: {pageId: string}};
 }
+
+// Used to decide whether a page should have huge gutters or not. Generic pages do by default, as most are textual,
+// but pages such as "Computer Science Stories" are entirely composed of cards and shouldn't have their container
+// width restricted as much
+// FIXME this should be decided at a content level (if possible)
+const CS_FULL_WIDTH_OVERRIDE: {[pageId: string]: boolean | undefined} = {
+    "computer_science_stories": true
+};
 
 export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPageComponentProps) => {
     const pageId = pageIdOverride || params.pageId;
@@ -44,7 +53,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 </div>
 
                 <Row className="generic-content-container">
-                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
+                    <Col className={classNames("py-4", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

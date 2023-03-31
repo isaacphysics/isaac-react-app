@@ -1,0 +1,17 @@
+@import "../common/forms";
+
+.basic-multi-select {
+  .select__control.select__control--is-focused {
+    box-shadow: 0 0 0 0.2rem $focus-blue;
+  }
+  .select__control, .select__control:hover {
+    border-color: $black;
+  }
+
+  .select__menu {
+    z-index: 2;
+    .select__option.select__option--is-focused {
+      background-color: $primary;
+    }
+  }
+}

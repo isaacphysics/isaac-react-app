@@ -1,13 +1,48 @@
 @import "../common/filter";
 
+#filter-panel {
+  max-width: 892px !important;
+  position: relative;
+  z-index: 1;
+  border-radius: 0;
+  border: none;
+  .card-body {
+    background-color: $cs-white;
+  }
+  .card-footer {
+    border-radius: 0 !important;
+    background: $dark-pink-300;
+  }
+  &:before {
+    position: absolute;
+    z-index: -1;
+    content: " ";
+    width: calc(100% + 400px);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-size: 100% 100%;
+    background-image: url("/assets/cs/decor/dots-circle-bg.svg");
+    height: 100%;
+  }
+}
+
+#gameboard-generator {
+  .list-group-links {
+    .list-group-item:first-of-type {
+      border-top: $cs-list-outline-gray solid 1px !important;
+    }
+  }
+}
+
 $shapes: hex, square, octagon, diamond;
 
 svg {
   @each $shape in $shapes {
     .#{$shape} {
       &:not(.active) {
-        fill: white;
-        stroke: $gray-160;
+        fill: $cs-silver;
+        stroke: none;
       }
 
       &.mini:not(.active) {
@@ -25,13 +60,15 @@ svg {
       }
 
       &.active.difficulty.practice {
-        fill: $cs-mustard;
-        stroke: $cs-mustard;
+        fill: $yellow-300;
+        stroke: $cs-black;
+        stroke-width: 1px;
       }
 
       &.active.difficulty.challenge {
-        fill: $cs-hot-pink;
-        stroke: $cs-hot-pink;
+        fill: $cyan-300;
+        stroke: $cs-black;
+        stroke-width: 1px;
       }
 
       &:focus {
@@ -41,5 +78,12 @@ svg {
       }
     }
   }
-
 }
+
+.difficulty-icon-title {
+  color: $cs-black;
+  &.active {
+    color: $cs-black;
+  }
+}
+

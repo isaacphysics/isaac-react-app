@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from "react";
 import {
     allRequiredInformationIsPresent,
-    isCS,
+    isAda,
     isTutor,
     PROGRAMMING_LANGUAGE,
     programmingLanguagesMap, TEACHER_REQUEST_ROUTE,
@@ -18,6 +18,7 @@ import {UserAuthenticationSettingsDTO, UserContext} from "../../../../IsaacApiTy
 import {Link} from "react-router-dom";
 import {UserContextAccountInput} from "../inputs/UserContextAccountInput";
 import {BooleanNotationInput} from "../inputs/BooleanNotationInput";
+import {CountryInput} from "../inputs/CountryInput";
 
 interface UserDetailsProps {
     userToUpdate: ValidationUser;
@@ -119,15 +120,24 @@ export const UserDetails = (props: UserDetailsProps) => {
             <Col md={6}>
                 <FormGroup>
                     <GenderInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isCS}/>
+                                 required={isAda}/>
                 </FormGroup>
             </Col>
+            {
+                isAda &&
+                <Col md={6}>
+                    <FormGroup>
+                        <CountryInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
+                                     required={false}/>
+                    </FormGroup>
+                </Col>
+            }
         </Row>
         <Row>
             <Col md={6}>
                 <FormGroup>
                     <SchoolInput userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate} submissionAttempted={submissionAttempted}
-                                 required={isCS && !isTutor(userToUpdate)}/>
+                                 required={isAda && !isTutor(userToUpdate)}/>
                 </FormGroup>
             </Col>
             <Col md={6}>
@@ -138,11 +148,11 @@ export const UserDetails = (props: UserDetailsProps) => {
                 />
             </Col>
         </Row>
-        {isCS && <Row>
+        {isAda && <Row>
             <Col md={6}>
                 <FormGroup>
                     <Label className="d-inline-block pr-2" htmlFor="programming-language-select">
-                        Default programming language
+                        Preferred programming language
                     </Label>
                     <Input
                         type="select" name="select" id="programming-language-select"
@@ -152,10 +162,12 @@ export const UserDetails = (props: UserDetailsProps) => {
                             setProgrammingLanguage(event.target.value ? {...newProgrammingLanguage, [event.target.value]: true} : newProgrammingLanguage);
                         }}
                     >
-                        <option/>
+                        <option />
                         <option value={PROGRAMMING_LANGUAGE.PSEUDOCODE}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PSEUDOCODE]}</option>
                         <option value={PROGRAMMING_LANGUAGE.PYTHON}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.PYTHON]}</option>
                         <option value={PROGRAMMING_LANGUAGE.CSHARP}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.CSHARP]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.VBA}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.VBA]}</option>
+                        <option value={PROGRAMMING_LANGUAGE.JAVA}>{programmingLanguagesMap[PROGRAMMING_LANGUAGE.JAVA]}</option>
                     </Input>
                 </FormGroup>
             </Col>

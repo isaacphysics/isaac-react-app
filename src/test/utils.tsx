@@ -89,7 +89,7 @@ export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string
         Help: "Help",
         Admin: "Admin"
     },
-    [SITE.CS]: {
+    [SITE.ADA]: {
         "My Isaac": "My Isaac",
         Teach: "Teachers",
         Learn: "Learn",

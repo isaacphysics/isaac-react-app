@@ -8,7 +8,7 @@ import {
     atLeastOne,
     examBoardLabelMap,
     getRelatedDocs,
-    NOT_FOUND,
+    NOT_FOUND, PATHS,
     stageLabelMap,
     TAG_ID,
     useUserContext
@@ -39,7 +39,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             <TitleAndBreadcrumb intermediateCrumbs={[ALL_TOPICS_CRUMB]} currentPageTitle={topicPage.title as string}/>
             <CanonicalHrefElement />
             <Row>
-                <Col md={{size: 8, offset: 2}} className="py-3">
+                <Col className={"py-3 mw-760"}>
                     <div className="d-flex justify-content-end">
                         <UserContextPicker />
                     </div>
@@ -63,7 +63,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             </Row>
 
             {linkedRelevantGameboards && linkedRelevantGameboards.length > 0 && <Row className="mb-3">
-                <Col md={{size: 8, offset: 2}} className="py-0">
+                <Col className={"py-0 mw-760"}>
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
                             <CardTitle>Gameboards</CardTitle>
@@ -71,11 +71,11 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
-                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`/gameboards#${gameboard.id}`}>Preview</Link> | <Link to={`/add_gameboard/${gameboard.id}`}>Assign</Link>
+                                        <strong>{gameboard.title || '-'}</strong> &mdash; <Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>Preview</Link> | <Link to={`${PATHS.ADD_GAMEBOARD}/${gameboard.id}`}>Assign</Link>
                                     </li>
                                 }
                                 {(!user?.loggedIn || user?.role === "STUDENT") &&
-                                    <li><strong><Link to={`/gameboards#${gameboard.id}`}>{gameboard.title || '-'}</Link></strong></li>
+                                    <li><strong><Link to={`${PATHS.GAMEBOARD}#${gameboard.id}`}>{gameboard.title || '-'}</Link></strong></li>
                                 }
                             </div>)}</ul>
                         </CardBody>
@@ -84,7 +84,7 @@ export const Topic = withRouter(({match: {params: {topicName}}}: {match: {params
             </Row>}
 
             <Row className="mt-3 mb-5">
-                <Col md={{size: 8, offset: 2}} className="pb-3">
+                <Col className={"pb-3 mw-760"}>
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="primary" outline size="lg" block>

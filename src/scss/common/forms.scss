@@ -121,7 +121,7 @@ textarea {
 }
 
 button {
-  &.search-main {
+  &.search-button {
     height: 36px;
     min-width: auto;
     position: absolute;
@@ -207,20 +207,4 @@ input[type=date]::-webkit-outer-spin-button {
 
 select.form-control {
   height: calc(1.5em + 0.75rem + 2px);
-}
-
-.basic-multi-select {
-  .select__control.select__control--is-focused {
-    box-shadow: 0 0 0 0.2rem $focus-blue;
-  }
-  .select__control, .select__control:hover {
-    border-color: $black;
-  }
-
-  .select__menu {
-    z-index: 2;
-    .select__option.select__option--is-focused {
-      background-color: $primary;
-    }
-  }
 }

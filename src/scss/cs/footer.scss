@@ -1,0 +1,61 @@
+@import "../common/footer";
+
+
+footer {
+  .container-fluid {
+    width: 90%
+  }
+}
+
+.footer-logo {
+  width: 4rem;
+}
+
+.footer-org-logo {
+  max-height: 2rem !important;
+}
+
+.footer-links {
+  color: $cs-white;
+  padding-top: 0;
+  a.footer-link {
+    @extend .my-2;
+    overflow-wrap: normal;
+    display: inline !important;
+    color: $cs-white;
+    text-decoration: underline;
+    &:focus {
+      border: none;
+      outline: none;
+    }
+  }
+}
+
+.footer-bottom {
+  background-color: $cs-black;
+  color: $cs-white;
+  .footer-bottom-info {
+    p {
+      color: $cs-white;
+    }
+  }
+}
+
+.footer-rule {
+  border-top: 2px solid $cs-jet;
+}
+
+.footer-link {
+  padding-top: 0 !important;
+}
+
+.footer-links-social {
+  display: block;
+  @extend .mt-4;
+  @extend .mt-lg-0;
+  .footer-social-logo {
+    height: 48px !important;
+  }
+}
+
+

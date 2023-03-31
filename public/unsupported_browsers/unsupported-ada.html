@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+    <title>Ada Computer Science</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='shortcut icon' href='data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAFQCAABUAgAAAAAAAAAAAAACAgHXAgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgHXAgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/09PT//Gxsb/pqal/6Kiov9SUlL/Hh4d/+Hh4f/Hx8f/JSUk/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/05OTv/+/v7/XFxc/wICAf8CAgH/k5OS/9vb2/+urq3/HBwb/1dXV/8FBQT/AgIB/wICAf8CAgH/AgIB/wICAf+/v77/8vLy/wUFBP8CAgH/AgIB/woKCf/7+/v/R0dH/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/3Nzc/9vb2/8CAgH/AgIB/wICAf82NjX/6Ojo/8bGxv8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/729vP/m5ub/AgIB/wICAf8CAgH/cHBw/3BwcP/19fX/RUVF/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf9+fn7//v7+/x0dHP8CAgH/AgIB/7a2tf8oKCf/tLSz/6enpv8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/DQ0M/87Ozv+cnJv/CQkI/0hISP+7u7r/AgIB/5KSkf/w8PD/BQUE/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8LCwr/Z2dn/5eXlv97e3v/EBAP/wICAf8kJCP/RUVF/wkJCP8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgHYAgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgH/AgIB/wICAf8CAgHXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==' />
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #panel {
+            background-color: #000000;
+            border: 3px solid #c2c6c9;
+            border-radius: 1.5rem;
+            margin: 10%;
+            padding: 25px;
+            max-width: 80%;
+            min-width: 40%;
+        }
+
+        @media (max-width: 450px) {
+            h1 {
+                margin-top: 25%;
+                font-size: 2rem !important;
+            }
+            #logo {
+                max-width: 100% !important;
+            }
+            #slash {
+                display: none;
+            }
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: bold;
+        }
+
+        h2 {
+            font-weight: 300;
+        }
+
+        h3 {
+            font-weight: 200;
+        }
+
+        a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        #logo {
+            max-width: 200px;
+            max-height: 15%;
+            float: right;
+            margin: 0 0 20px 20px;
+        }
+        #slash {
+            color: #ff4dc9;
+        }
+    </style>
+</head>
+<body>
+    <div id="panel">
+        <img id="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAV4AAACECAMAAADvJ7PVAAABj1BMVEUAAAB7//P////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////k//3///////////////////////////////////////////////80/+v///8o/+qC//FW/+9f//Bk//Bl//B6//GA//SA//MK/+f///8AAAAABwYADw0Iy7gAAwMK9+AEaV8DRT8FhXkJ5M8COjQBIyABFRMJ6tQBHBkJ89wI18MHrZwGpZUGkIIDW1MK/eUJ28YHvasEZVsDTEUK/uYJ7tgIz7wHsqEFeW0CMCwCKycJ38oDVU0IxLIEcGUGn5AK+uMGm4wGmIoFi34CNC8GlYcDUkoX/+kHtqUFf3NP6Gb2AAAAU3RSTlMAPqoV8X285ohhDvj0EUMhme4F+qSNOvzgd+MyHnBVLtjMNAzcwYVZGQdRkuvIxCmdZF1Mt7SnJa6CegnVYNBpsT9IoTdscxv0dvsiyLepp0cuFSM8SqMAABFaSURBVHja7Z0JVxpXFMenIIiyySYqKiCILCoKLrjEfWm6t0w17nsT12g0NkmXNG0/eN/C25iBMmlT6WT+5+TkrZOT39x3333LqCRJU199+nvxgfT7p19+J+la335afFB99o2kY009FF3G93NJv/qq+OD6QtKvHtx4gflK+tXvxYeXjr1DsQ70iaRbFetABl5eBl4Db52oWAcy8PIy8Bp460TFOpCBl5eB92PE2yjLsk2qMxXrQAZeXgZeA2+dqFgHMvDyMvDqDq85qQUv66RVHyFeb5O1QZbtkYlxSXJZgZpp1epkb3+wfybQo8DrzY2gTrasJLXCTuaacHx8eOfjckk+W6oP/k1IxTJ2UjXnFvG2RkhNMDCVhn931kLj48M7HJSZeoc5vO4IV+PI83hzPq5qMGfgraRuGcvuQH95GF4nsWoPbmBneNNBsZOBt4I6EaDGFQDHvAx5MrwmlB6bT0mpVpSm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" alt="">
+        <h1><span id="slash">/<br></span>Unsupported Browser</h1>
+        <p id="message">Ada Computer Science does not support Internet Explorer or older versions of Safari.<br>
+            Microsoft recommends using <a href="https://www.microsoft.com/edge/">Edge</a> instead of Internet Explorer.<br>
+            We also support other modern browsers, such as
+            <a href="https://www.google.com/chrome/">Chrome</a>,
+            <a href="https://www.mozilla.org/firefox/new/">Firefox</a>, and
+            <a href="https://www.apple.com/safari/">Safari 11 or later</a>.
+        </p>
+        <p>
+            Try updating your device, or <a href="mailto:webmaster@adacomputerscience.org" target="_blank">get in touch</a>.
+        </p>
+    </div>
+    <script src="/unsupported_ada.js" type="text/javascript"></script>
+</body>
+</html>

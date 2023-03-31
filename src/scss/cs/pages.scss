@@ -1,0 +1,74 @@
+@import "../common/pages";
+
+// Better way of meeting NOMENA content width standards
+.mw-760 {
+  @extend .mx-auto;
+  max-width: 760px !important;
+}
+
+.title-help {
+  color: $dark-pink-300;
+  text-decoration: underline;
+}
+
+// All topics page
+#topics-bg {
+  background-image: url("/assets/cs/decor/dots-circle-bg.svg");
+  background-repeat: no-repeat;
+  background-position: 50% 30%;
+  background-size: 150%;
+  @include media-breakpoint-down(md) {
+    background-position: 50% 50%;
+    background-size: 200%;
+  }
+  @include media-breakpoint-down(sm) {
+    background-position: -13% 200px;
+    background-size: 400%;
+  }
+}
+
+// Gameboard filter page
+#gameboard-generator {
+  z-index: 0;
+  #gameboard-section {
+    background: $cs-white;
+    #gameboard-title-section {}
+  }
+}
+
+// My quizzes page
+.my-gameboard-table {
+  thead {
+    background-color: rgba(0, 0, 0, 0.06);
+    tr, th, td {
+      background-color: transparent !important;
+    }
+    th {
+      border-bottom: solid 1px $cs-dark-silver !important;
+    }
+  }
+  tr, td, th {
+    background-color: $cs-white;
+    border: solid 1px $cs-dark-silver;
+  }
+}
+
+// My assignments
+.my-assignments-card {
+  @extend .mb-5;
+  border: none;
+  border-radius: 0;
+}
+
+#progress-questions {
+  .content-summary-link {
+    border-left: 1px solid $cs-list-outline-gray;
+    border-right: 1px solid $cs-list-outline-gray;
+    &:first-of-type {
+      border-top: 1px solid $cs-list-outline-gray;
+    }
+    &:last-of-type {
+      border-bottom: 1px solid $cs-list-outline-gray;
+    }
+  }
+}

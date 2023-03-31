@@ -202,7 +202,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
 
     const previewText = currentAttemptValue && currentAttemptValue.result && currentAttemptValue.result.tex;
 
-    return <div className="pattern-01">
+    return <div>
         <Container>
             <Row>
                 <Col>
@@ -234,7 +234,10 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
                             <Input className="py-4" type="text" onChange={updateEquation} value={textInput}
                                 placeholder="Type your expression here"/>
                             <InputGroupAddon addonType="append">
-                                <Button type="button" className="eqn-editor-help pt-2" id='inequality-help' size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>
+                                {siteSpecific(
+                                    <Button type="button" className="eqn-editor-help pt-2" id="inequality-help" size="sm" tag="a" href="/solving_problems#symbolic_text">?</Button>,
+                                    <span id={"inequality-help"} className="icon-help-q my-auto"/>
+                                )}
                                 {editorMode === 'maths' && <UncontrolledTooltip placement="top" autohide={false} target='inequality-help'>
                                     Here are some examples of expressions you can type:<br />
                                     <br />

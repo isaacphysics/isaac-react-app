@@ -1,10 +1,84 @@
 @import "../common/questions";
 
-.validation-response-panel {
-  text-align: left;
+.question-actions-link-box {
+  $x-translation: 24px;
+  margin-left: -$x-translation;
+  float: left;
+  z-index: -1;
+  transform: translateX(7.5px + $x-translation);
+  height: 48px; // height of an icon button, should be a variable probably
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 3px solid $secondary;
+  padding-left: 15px;
+  padding-right: 32px;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  .question-actions-link {
+    margin-top: 2px; // Just to vertically center the links nicely
+    color: $secondary;
+    .btn {
+      margin-left: 7px;
+      margin-right: 7px;
+    }
+  }
 }
 
+// Validation response
+.validation-response-panel {
+  text-align: left;
+  &.correct {
+    background: $cyan-600;
+    color: $cs-black;
+    border-top: none;
+  }
+}
+
+// Quick questions
 .quick-question-title {
   display: flex;
   justify-content: center;
+}
+
+// Cloze questions
+.cloze-item {
+  background: $yellow-300;
+  color: $cs-black;
+}
+
+.cloze-drop-zone {
+  &.border {
+    border-style: dashed !important; // necessary because Bootstrap has no border style utilities
+  }
+}
+
+// Symbolic questions
+.symbolic-question,
+.equality-page {
+  .eqn-editor-preview {
+    border: solid 1px $cs-black;
+  }
+}
+
+// Confidence questions
+.quick-q-alert {
+  background-color: $cs-cultured;
+  margin-top: 1rem;
+}
+
+.feedback-zone {
+  &.nq-feedback {
+    .feedback-box {
+      right: 90px;
+    }
+  }
+}
+
+.related-questions {
+  .related-q-icon {
+    display: inline-block;
+    height: auto;
+    width: 2rem;
+  }
 }

@@ -2,7 +2,7 @@ import React from "react";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
 import {IsaacSpinner} from "./IsaacSpinner";
-import {isDefined, isFound, NO_CONTENT, NOT_FOUND, SITE_SUBJECT_TITLE, WEBMASTER_EMAIL} from "../../services";
+import {isDefined, isFound, NO_CONTENT, NOT_FOUND, SITE_TITLE, WEBMASTER_EMAIL} from "../../services";
 import {getRTKQueryErrorMessage} from "../../state";
 import {Alert} from "reactstrap";
 import {NOT_FOUND_TYPE} from "../../../IsaacAppTypes";
@@ -20,8 +20,8 @@ export const DefaultQueryError = ({error, title}: {error?: FetchBaseQueryError |
         <br/>
         You may want to refresh the page, or <a href={`mailto:${WEBMASTER_EMAIL}`}>email</a> us if
         this continues to happen.
-        Please include in your email the name and email associated with this
-        Isaac {SITE_SUBJECT_TITLE} account, alongside the details of the error given above.
+        Please include in your email the name and email associated with this{" "}
+        {SITE_TITLE} account, alongside the details of the error given above.
     </Alert>;
 };
 

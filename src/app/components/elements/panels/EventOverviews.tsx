@@ -5,7 +5,7 @@ import * as RS from "reactstrap";
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {Link} from "react-router-dom";
 import {DateString} from "../DateString";
-import {atLeastOne, isCS, isEventLeader, sortOnPredicateAndReverse, zeroOrLess} from "../../../services";
+import {atLeastOne, isAda, isEventLeader, sortOnPredicateAndReverse, zeroOrLess} from "../../../services";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 
 export enum EventOverviewFilter {
@@ -32,7 +32,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
             As an event leader, you are only able to see the details of events which you manage.
         </div>}
         <div className="clearfix">
-            {isCS && <div className="mb-3 float-left">
+            {isAda && <div className="mb-3 float-left">
                 <RS.Button color="primary" size="sm" tag={Link} to="/events_toolkit">Events toolkit</RS.Button>
             </div>}
             <div className="float-right mb-4">

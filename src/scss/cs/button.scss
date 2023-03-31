@@ -1,66 +1,369 @@
 @import "../common/button";
+
+@mixin ada-button($text-color, $color, $hover-color, $active-color) {
+  background-color: $color;
+  border: 3px solid $color;
+  box-shadow: none;
+  color: $text-color;
+  overflow: hidden;  // To stop margin collapse from hiding the focus outline
+  text-decoration: none;
+  &:hover {
+    color: $text-color;
+    border-color: $hover-color;
+    background-color: $hover-color;
+    text-decoration: underline;
+  }
+  &:active {
+    color: $text-color !important;
+    border-color: $active-color !important;
+    background-color: $active-color !important;
+    box-shadow: none !important;
+  }
+  &:focus:not(.disabled) {
+    box-shadow: none;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 3px $focus-blue !important;
+  }
+  &.disabled, &:disabled {
+    color: $cs-jet;
+    background-color: $cs-silver;
+    border-color: $cs-silver;
+  }
+}
+
+@mixin ada-button-outline($color, $hover-color, $active-color) {
+  background-color: transparent;
+  border: 3px solid $color;
+  box-shadow: none;
+  color: $color;
+  overflow: hidden;  // To stop margin collapse from hiding the focus outline
+  text-decoration: none;
+  &:hover {
+    color: $hover-color;
+    text-decoration: underline;
+    background-color: transparent;
+  }
+  &:active {
+    color: $active-color !important;
+    border-color: $active-color !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+  &:focus:not(.disabled) {
+    box-shadow: none;
+  }
+  &:focus-visible {
+    box-shadow: 0 0 0 3px $focus-blue !important;
+  }
+  &.disabled, &:disabled {
+    color: $cs-jet;
+    border-color: $cs-silver;
+  }
+}
+
+@mixin ada-icon-button-base($width, $height, $outlined: false) {
+  // Factored out so buttons of this style can be created at any size
+  @extend .btn;
+
+  @if $outlined {
+    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
+  } @else {
+    @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
+    background-color: $dark-pink-300;
+  }
+
+  padding: 0 !important;
+  min-width: unset !important;
+  width: $width !important;
+  height: $height !important;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
 .btn, input.btn {
-  //Button Secondary
-  &.btn-secondary {
-    color: $black;
+  border-radius: 50px;
+  border-width: 3px;
+
+  font-size: 1.111rem;
+  &:not(.btn-sm):not(.btn-link) {
+    padding: 0.5rem 2.1rem;
   }
-  &.btn-negative {
-    background-color: $highlight-mustard-50;
-    color: black;
+  @extend .font-weight-semi-bold;
+  &.btn-sm {
+    padding: 0.2rem 0.7rem;
   }
-  &.btn-neutral {
-    background-color: $highlight-teal-50;
-    color: black;
+  min-width: 25px !important;
+
+  // Primary buttons (for dark background)
+  &.btn-dark-primary {
+    @include ada-button($cs-black, $pink-300, $dark-hover-pink, $dark-active-pink);
   }
-  &.btn-positive {
-    background-color: $highlight-navy-50;
-    color: black;
+
+  // Secondary buttons (for dark background)
+  // Secondary Button components are expected to use the 'outline' prop!
+  &.btn-outline-dark-secondary {
+    @include ada-button-outline($pink-300, $dark-hover-pink, $dark-active-pink);
   }
-  &.btn-negative-answer {
-    background-color: $highlight-mustard;
-    color: white;
+
+  // Primary buttons (light background)
+  &.btn-primary, &.btn-secondary {
+    @include ada-button($cs-white, $dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
-  &.btn-neutral-answer {
-    background-color: $highlight-teal;
-    color: white;
+
+  // Secondary buttons (for light background)
+  // Secondary Button components are expected to use the 'outline' prop!
+  &.btn-outline-secondary, &.btn-outline-primary {
+    @include ada-button-outline($dark-pink-300, $light-hover-dark-pink, $light-active-dark-pink);
   }
-  &.btn-positive-answer {
-    background-color: $highlight-navy;
-    color: white;
-  }
-  &.btn-secondary:not(:disabled):not(.disabled):active {
-    background-color: $cs-reddish;
-    border: 1px solid transparent;
-    color: $black;
-    text-decoration: underline;
-  }
-  &.hide-answer {
-    background-color: $highlight-navy !important;
-    border: 1px solid transparent !important;
-    color: $white !important;
-  }
-  &.hide-answer:not(:disabled):not(.disabled):active {
-    text-decoration: underline;
-  }
-  &.confidence-help {
-    min-width: 20px !important;
+
+  &.btn-link {
+    margin: 0;
+    padding: 0;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
 }
 
-.alert-hide {
-  background-color: $highlight-navy-25;
+.btn-link {
+  color: $dark-pink-300;
+  text-decoration: underline;
+  &:hover {
+    color: $light-hover-dark-pink;
+    text-decoration: none;
+  }
+  &:active {
+    color: $light-active-dark-pink;
+  }
+  &:focus-visible {
+    outline: 2px solid $focus-blue !important;
+    border-radius: 0 !important;
+    z-index: 10;
+  }
+  &.disabled, &:disabled {
+    color: $cs-silver;
+  }
 }
 
-.quick-question-options {
-  background: white;
-  border: 2px solid $highlight-navy;
+.share-link-icon {
+  position: relative;
+  button {
+    &:not(.outline) {
+      @include ada-icon-button-base(48px, 48px, false);
+      background-position: 48% 50%;
+      background-image: url("/assets/cs/icons/share.svg");
+    }
+    &.outline {
+      @include ada-icon-button-base(48px, 48px, true);
+      background-position: 48% 50%;
+      &:active {
+        background-color: $cs-white !important;
+      }
+      background-color: $cs-white !important;
+      background-image: url("/assets/cs/icons/share-pink.svg");
+    }
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+    position: relative;
+    z-index: 2;
+  }
+  .share-link {
+    z-index: 1;
+    top: 3px;
+    font-family: $secondary-font !important;
+    display: none;
+    position: absolute;
+    border: 1px solid gray;
+    transform: translate(calc(30px - 100%));
+    height: 42px;
+    width: 70%;
+
+    input {
+      z-index: 1;
+      padding-right: 40px;
+      padding-left: 10px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      user-select: all;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      -ms-user-select: all;
+      width: 100%;
+      height: 100%;
+    }
+
+    &.double-height {
+      height: auto;
+      padding-bottom: 10px;
+      background: #fff;
+      text-align: center;
+      input {
+        height: 42px;
+        margin-bottom: 8px;
+      }
+    }
+  }
 }
 
-.quick-question-secondary {
-  background: $highlight-teal-25 !important;
-  border: none !important;
+.print-icon {
+  position: relative;
+  z-index: 1;
+  &:not(.outline) {
+    @include ada-icon-button-base(48px, 48px, false);
+  }
+  &.outline {
+    @include ada-icon-button-base(48px, 48px, true);
+  }
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+  background-image: url("/assets/cs/icons/print.svg");
 }
 
-.quick-question-muted {
-  border-color: grey !important;
+.report-icon {
+  &:not(.outline) {
+    @include ada-icon-button-base(48px, 48px, false);
+  }
+  &.outline {
+    @include ada-icon-button-base(48px, 48px, true);
+  }
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+  background-image: url("/assets/cs/icons/flag.svg");
+}
+
+.bin-icon {
+  &:not(.outline) {
+    @include ada-icon-button-base(48px, 48px, false);
+    background-image: url("/assets/cs/icons/bin.svg");
+  }
+  &.outline {
+    @include ada-icon-button-base(48px, 48px, true);
+    background-image: url("/assets/cs/icons/bin-pink.svg");
+  }
+  margin-right: 7.5px;
+  margin-left: 7.5px;
+}
+
+.btn.plus-button {
+  position: relative;
+  &::after {
+    background-image: none !important;
+  }
+  .plus-icon {
+    @extend .ml-2;
+    height: 24px;
+  }
+}
+
+.btn.confidence-help {
+  @include ada-icon-button-base(2rem, 2rem, false);
+  background-image: url("/assets/cs/icons/info-white.svg");
+}
+
+// Used to visually separate the button from the input in an input group (see groups page for example)
+.separate-input-group {
+  input {
+    border-radius: 0.25rem !important;
+  }
+  .input-group-append {
+    margin-left: 1rem !important;
+    button {
+      border-radius: 50px !important;
+    }
+  }
+}
+
+.selector-tabs {
+  z-index: 0;
+  position: relative;
+  button.btn-secondary {
+    background: none !important;
+    z-index: 2;
+    &:hover, &:active {
+      background: none !important;
+    }
+    &:hover ~ .glider {
+      background-color: $light-hover-dark-pink !important;
+      border-color: $light-hover-dark-pink !important;
+    }
+    &:active ~ .glider {
+      background-color: $light-active-dark-pink !important;
+      border-color: $light-active-dark-pink !important;
+    }
+  }
+  button:not(:first-of-type) {
+    border-left: none !important;
+  }
+  button:not(:last-of-type) {
+    border-right: none !important;
+  }
+  button:last-of-type {
+    border-top-right-radius: 50px !important;
+    border-bottom-right-radius: 50px !important;
+  }
+  .glider {
+    @extend .btn;
+    @extend .btn-secondary;
+    transition-property: transform, width;
+    position: absolute;
+    height: 100%;
+    z-index: 0;
+  }
+}
+
+// --- Styling of links ---
+// This is really hard to do in general...
+
+div.isaac-nav-link {
+  display: inline-block;
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.nav-link {
+  color: $cs-jet;
+}
+
+a:not(.btn):not(.nav-link) {
+  // FIXME this breaks tables with links
+  &:not(.link-light):not(.footer-link):not(.a-link) {
+    color: $cs-jet;
+    &:hover {
+      @extend .btn-link;
+    }
+  }
+  word-wrap: break-word;
+  text-decoration: underline;
+  &:focus {
+    border: none;
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid $focus-blue;
+    border-radius: 0 !important;
+    z-index: 10;
+  }
+  &.a-link {
+    @extend .btn-link;
+  }
+}
+
+.content-value {
+  a {
+    color: $dark-pink-300 !important;
+  }
+}
+
+.content-summary-link {
+  * {
+    text-decoration: none !important;
+  }
+}
+
+.google-button:not(.linked-account-button) {
+  @include ada-button-outline($cs-black, $cs-jet, lighten($cs-jet, 20%));
 }

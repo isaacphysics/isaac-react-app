@@ -19,7 +19,7 @@ import {
     EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
-    isCS,
+    isAda,
     isTeacherOrAbove,
     stageExistsForSite
 } from "../../services";
@@ -65,12 +65,13 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
         Follow the links below to find out more about our FREE events.
     </span>;
 
+    // FIXME this is the old meta description from Isaac CS
     const metaDescriptionCS = "A level and GCSE Computer Science live online training. Free teacher CPD. Revision and extension workshops for students.";
 
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {isCS && <MetaDescription description={metaDescriptionCS} />}
+            {isAda && <MetaDescription description={metaDescriptionCS} />}
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">

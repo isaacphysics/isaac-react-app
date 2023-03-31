@@ -1,79 +1,270 @@
-// NOMENSA variables.scss
-//Custom Colours
-$cs-mustard: #ffb53f;
-$cs-hot-pink: #ff3369;
-$cs-reddish: #d7335f; // Used as an active colour on secondary buttons
-$focus-blue: #3E59A3; // Used as focus indicator colour on inputs
+// Ada brand and visual identity colours (see Brand Book)
+// Stage colours - OLD
+// $gcse-colour: #C40E50;
+// $gcse-colour-50: #E186A7;
+// $gcse-colour-25: #F0C3D3;
+// $all-stages-colour: #9148BC;
+// $all-stages-colour-50: #C8A3DD;
+// $all-stages-colour-25: #E3D1EE;
+// $a-level-colour: #2146AD;
+// $a-level-colour-50: #90A2D6;
+// $a-level-colour-25: #C7D1EA;
 
-// Colour Overrides
-$purple: #9148bc;
-$cyan: #0f8294;
-$green: #208838;
+// Greyscale
+$cs-black: #000000;
+$cs-jet: #333333;
+$cs-dark-silver: #B9B9B9;
+$cs-silver: #C2C2C2;
+$cs-light-gray: #D6D6D6;
+$cs-list-outline-gray: #EBEBEB;
+$cs-cultured: #F5F5F5;
+$cs-white: #ffffff;
+
+// FIXME the 100-700 scale is upside-down... needs fixing
+
+// Dark pinks
+$dark-pink-100: #510937;
+$dark-pink-200: #6C0A48;
+$dark-pink-300: #870C5A; // theme colour
+$dark-pink-400: #9E2372;
+$dark-pink-500: #D94BAA; // black text this and below
+$dark-pink-600: #F07DD2;
+$dark-pink-700: #FFD2F0;
+
+// Pinks
+$pink-100: #A8007A;
+$pink-200: #E11EA2; // black text this and below
+$pink-300: #FF4DC9; // theme colour
+$pink-400: #FF73DC;
+$pink-500: #FFA0F2;
+$pink-600: #FFC4FA;
+$pink-700: #FFF0FF;
+
+// Cyans - all black text
+$cyan-100: #00A8A6;
+$cyan-200: #00D2C0;
+$cyan-300: #05FFE7; // theme colour
+$cyan-400: #8CFFFA;
+$cyan-500: #AFFFFF;
+$cyan-600: #D0FFFF;
+$cyan-700: #EBFFFF;
+
+// Yellows - all black text
+$yellow-100: #DCAA3C;
+$yellow-200: #F5C254;
+$yellow-300: #FFE672; // theme colour
+$yellow-400: #FFF596;
+$yellow-500: #FFFAC3;
+$yellow-600: #FFFFE6;
+$yellow-700: #FFFFF5;
+
+//Text Colour
+$highlight-text-light: $cs-white;
+$highlight-text-dark: $cs-black;
+
+// Content highlight classes, doubled up for specificity
+.hi-dark-pink.hi-dark-pink {
+    background-color: $dark-pink-100;
+    color: $highlight-text-light;
+    tr, td, th {
+        background-color: $dark-pink-100;
+        color: $highlight-text-light;
+    }
+}
+.hi-dark-pink-50.hi-dark-pink-50 {
+    background-color: $dark-pink-400;
+    color: $highlight-text-light;
+    tr, td, th {
+        background-color: $dark-pink-400;
+        color: $highlight-text-light;
+    }
+}
+.hi-dark-pink-25.hi-dark-pink-25 {
+    background-color: $dark-pink-400;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $dark-pink-400;
+        color: $highlight-text-dark;
+    }
+}
+.hi-cyan.hi-cyan {
+    background-color: $cyan-100;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $cyan-100;
+        color: $highlight-text-dark;
+    }
+}
+.hi-cyan-50.hi-cyan-50 {
+    background-color: $cyan-400;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $cyan-400;
+        color: $highlight-text-dark;
+    }
+}
+.hi-cyan-25.hi-cyan-25 {
+    background-color: $cyan-600;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $cyan-100;
+        color: $highlight-text-dark;
+    }
+}
+.hi-pink.hi-pink {
+    background-color: $pink-100;
+    color: $highlight-text-light;
+    tr, td, th {
+        background-color: $pink-100;
+        color: $highlight-text-light;
+    }
+}
+.hi-pink-50.hi-pink-50 {
+    background-color: $pink-400;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $pink-400;
+        color: $highlight-text-dark;
+    }
+}
+.hi-pink-25.hi-pink-25 {
+    background-color: $pink-600;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $pink-600;
+        color: $highlight-text-dark;
+    }
+}
+.hi-yellow.hi-yellow {
+    background-color: $yellow-100;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $yellow-100;
+        color: $highlight-text-dark;
+    }
+}
+.hi-yellow-50.hi-yellow-50 {
+    background-color: $yellow-400;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $yellow-400;
+        color: $highlight-text-dark;
+    }
+}
+.hi-yellow-25.hi-yellow-25 {
+    background-color: $yellow-600;
+    color: $highlight-text-dark;
+    tr, td, th {
+        background-color: $yellow-600;
+        color: $highlight-text-dark;
+    }
+}
+
+$primary: $dark-pink-300;
+$secondary: $dark-pink-300;
+$dark-primary: $pink-300;
+$dark-secondary: $pink-300;
+$tertiary: $cyan-300;
 
 // Theme
-$primary: $cs-mustard;
-$secondary: $cs-hot-pink;
-$theme-colors: (
+$theme-colors: ( // Special Bootstrap variable that is used to generate colour classes (e.g. text-pink)
+    // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
     "primary": $primary,
-    "secondary": $secondary
+    "secondary": $secondary,
+    "warning": $yellow-300,
+    "dark-primary": $dark-primary,
+    "dark-secondary": $dark-secondary,
+
+    "turquoise-blue": $cyan-300,
+    "pink" : $pink-300,
+    "dark-pink" : $dark-pink-300,
+    "yellow" : $yellow-300,
+    "jet-grey" : $cs-jet,
+    "silver-grey" : $cs-silver,
+    "light-grey" : $cs-light-gray,
+    "cultured-grey" : $cs-cultured,
 );
 
-// Stage colours
-$gcse-colour: #C40E50;
-$gcse-colour-50: #E186A7;
-$gcse-colour-25: #F0C3D3;
-$all-stages-colour: #9148BC;
-$all-stages-colour-50: #C8A3DD;
-$all-stages-colour-25: #E3D1EE;
-$a-level-colour: #2146AD;
-$a-level-colour-50: #90A2D6;
-$a-level-colour-25: #C7D1EA;
+// Inequality colours
+$inequality-primary: $cs-light-gray;
+$inequality-stroke: transparent;
+$inequality-background: $cs-list-outline-gray;
+$inequality-item-colour: $primary;
+$inequality-item-font-colour: $cs-white;
 
-// Highlighting colours
-$highlight-pink: #E72C62;
-$highlight-pink-50: #F395B0;
-$highlight-pink-25: #F9CAD8;
-$highlight-navy: #07174F;
-$highlight-navy-50: #838BA7;
-$highlight-navy-25: #C1C5D3;
-$highlight-teal: #0F8294;
-$highlight-teal-50: #87C0C9;
-$highlight-teal-25: #C3E0E4;
-$highlight-mustard: #E09220;
-$highlight-mustard-50: #EFC88F;
-$highlight-mustard-25: #F7E4C7;
+// Assignment progress colours
+$default-name-fill: $cs-jet;
+$perfect-fill: #358539;
+$passed-fill: $cs-jet;
+$in-progress-fill: #FE8E15;
+$failed-fill: #C2423F;
 
-//Greys
-$gray-103: #f8f8f8;
-$gray-107: #ececec;
-$gray-110: #e7e7e7;
-$gray-118: #d2d2d2;
-$gray-120: #c9cad1;
-$gray-136: #a3a3a3;
-$gray-142: #949494;
-$gray-160: #666;
-$gray-194: #0f0f0f;
-
-$gray-blue: #636c73;
-
-// Shadows
-$shadow-3: rgba(0, 0, 0, 0.3);
-$shadow-25: rgba(0, 0, 0, 0.25);
-$shadow-08: rgba(0, 0, 0, 0.08);
-$shadow-black: rgb(0, 0, 0);
-
-// Button sizing
-$input-btn-padding-y-lg: 0.5rem;
-$input-btn-padding-x-lg: 3rem;
-$border-radius-lg: 0.25rem;
+$spacer: 1rem !default;
+$spacers: ( // Special Bootstrap variable that is used to generate spacing classes (e.g. pd-md-6)
+    6: ($spacer * 6.25) // 100px-ish
+);
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    nav: 1256px,
+    xxl: 1400px
+);
 
 // fonts
-$primary-font: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-$secondary-font: 'exo_2regular', sans-serif;
-$secondary-font-bold: 'exo_2bold', sans-serif;
-$secondary-font-semi-bold: 'exo_2semi_bold', sans-serif;
-$secondary-font-medium: 'exo_2medium', sans-serif;
-$tertiary-font: 'arconrounded-regular', sans-serif;
+$primary-font: "poppins-regular", sans-serif;
+$secondary-font: 'poppins-regular', sans-serif;
+$secondary-font-bold: 'poppins-bold', sans-serif;
+$secondary-font-semi-bold: 'poppins-semibold', sans-serif;
+$secondary-font-italic: 'poppins-italic', sans-serif;
+$secondary-font-medium: $secondary-font;
+$tertiary-font: 'poppins-light', sans-serif;
+
+$question-line-height: 1.5rem;
+$question-padding: 3rem;
+$question-font-size: 1rem;
+$question-font-weight: 400;
+
+$text-muted: $cs-dark-silver;
+
+
+// Colour Overrides
+// FIXME overriding base Bootstrap colour definitions is not the right way to go about this.
+//  These are shared with and redefined by Physics.
+$purple: $dark-pink-300; // Something to do with links
+
+// Stage colours
+// Used for staged accordion sections - we currently do not distinguish by colours
+$gcse-colour: $pink-400;
+$all-stages-colour: $yellow-400;
+$a-level-colour: $cyan-400;
+
+// Button/input colours
+$light-hover-dark-pink: $dark-pink-200;
+$light-active-dark-pink: $dark-pink-100;
+$dark-hover-pink: $pink-200;
+$dark-active-pink: $pink-100;
+$focus-blue: $cyan-100; // focus indicator colour
+
+// Greys - All used in various places, mainly for borders
+$gray-103: $cs-cultured;
+$gray-107: $cs-list-outline-gray;
+$gray-110: $cs-light-gray;
+$gray-118: $cs-light-gray;
+$gray-120: $cs-silver;
+$gray-136: $cs-dark-silver;
+$gray-160: #666; // FIXME no palette replacement for this one that is close enough
+$gray-194: $cs-jet;
+
+$gray-blue: #636c73; // FIXME BEWARE this is used in breadcrumb colours, but we don't use breadcrumbs on Ada yet
+
+// Shadows
+$shadow-08: rgba(0, 0, 0, 0.08); // Used in various places
+$shadow-25: rgba(0, 0, 0, 0.25); // Used by forms
+$shadow-3: rgba(0, 0, 0, 0.3); // Used by buttons
+$shadow-black: rgb(0, 0, 0); // Used by buttons
 
 // ISAAC
 // Node module imports
@@ -92,25 +283,25 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "../common/animations";
 
 // Atoms
-@import "../common/fonts";
-@import "../common/typography";
-@import "../common/headings";
+@import "fonts";
+@import "typography";
 @import "../common/modals";
 @import "questions";
-@import "../common/forms";
+@import "forms";
 @import "../common/elements";
-@import "../common/breadcrumbs";
+@import "breadcrumbs";
 @import "../common/media";
-@import "../common/tabs";
+@import "table";
+@import "tabs";
 @import "../common/accordions";
-@import "../common/cards";
-@import "../common/list-groups";
+@import "cards";
+@import "list-groups";
 @import "inequality-modal";
 @import "../common/carousel";
-@import "../common/icons";
-@import "../common/boards";
+@import "icons";
+@import "boards";
 @import "../common/focus";
-@import "../common/progress-bar";
+@import "progress-bar";
 @import "../common/anvil";
 @import "../common/filter";
 @import "../common/reservation-modal";
@@ -120,25 +311,24 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 @import "logo";
 @import "featured-profile";
 @import "../common/code";
-@import "question-finder";
 
 // Navigation
 @import "header";
+@import "search";
 @import "../common/navigation-bar";
-@import "../common/footer";
+@import "footer";
 
 // Pages
-@import "../common/pages";
+@import "pages";
 @import "homepage";
-@import "../common/login";
+@import "login";
 @import "../common/registration";
 @import "../common/assignments";
-@import "../common/my-account";
+@import "my-account";
 @import "../common/topic";
-@import "../common/search";
 @import "../common/my-progress";
 @import "../common/gameboard";
-@import "../common/assignment-progress";
+@import "assignment-progress";
 @import "../common/books";
 @import "../common/groups";
 @import "../common/events";
@@ -154,9 +344,6 @@ $tertiary-font: 'arconrounded-regular', sans-serif;
 
 // Difficulty icons
 @import "filter";
-
-// Highlights
-@import "highlight";
 
 a.disabled {
     color: $gray-600;
@@ -175,163 +362,40 @@ p small {
 
 .bg-light-grey {
     > div {
-        background: rgba(#f7f7f7, 0.9);
+        background: $cs-cultured;
         position: relative;
         z-index: 1;
     }
 }
 
-// Double class to give this more specifity
+// Double class to give this more specificity
 .katex.katex { font-size: 1.1em; }
-
 
 body {
     color: $black;
-    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    line-height: 1.625;
     display: -ms-flexbox;
     -ms-flex-direction: column;
     flex-direction: column;
+    background-color: $cs-cultured;
 }
 
 .content-body {
-    background-color: rgba($gray-107, 0.4);
-}
-.pattern-01 {
-    background-image: url('/assets/pattern_sm.svg');
-    background-position: left top;
-    background-repeat: repeat;
-    @include respond-above(md) {
-        background-image: none;
-    }
-    > .container {
-        @include respond-above(md) {
-            background-image: url('/assets/pattern01a.svg');
-            background-position: left top;
-            background-repeat: repeat-y;
-        }
-    }
+    background-color: $cs-cultured;
 }
 
-.pattern-02 {
-    position: relative;
-
-    &:after,
-    &:before {
-        @include pseudo-element;
-        background-image: url('/assets/pattern01.svg');
-        background-position: 0 0;
-        background-repeat: no-repeat;
-        display: none;
-        width: 600px;
-        height: 600px;
-        z-index: 0;
-    }
-
-    &:after {
-        @include respond-above(sm) {
-            display: block;
-            right: -9%;
-            top: 250px;
-        }
-    }
-
-    &:before {
-        @include respond-above(sm) {
-            display: block;
-            left: -9%;
-            top: 800px;
-        }
-    }
-}
-
-.pattern-03 {
-    background-image: url('/assets/pattern04.svg');
-    background-position: 0 63%;
-    background-repeat: repeat-x;
-
-    @include respond-above(sm) {
-        background-image: url('/assets/pattern03.svg');
-        background-position: left 0;
-        background-repeat: no-repeat;
-    }
-    @include respond-above(md) {
-        background-image: url('/assets/pattern03.svg');
-        background-position: left 0;
-        background-repeat: no-repeat;
-    }
-}
-
-.pattern-03-reverse {
-    background-image: url('/assets/pattern01.svg');
-    background-position: right top;
-    background-repeat: repeat-y;
-
-    @include respond-above(sm) {
-        background-image: url('/assets/pattern01.svg');
-        background-position: right 0;
-        background-repeat: no-repeat;
-    }
-    @include respond-above(md) {
-        background-image: url('/assets/pattern01.svg');
-        background-position: right 8px;
-        background-repeat: no-repeat;
-    }
-}
-
-.pattern-04 {
-    background-image: url('/assets/pattern04.svg');
-    background-position: center 164px;
-    background-repeat: repeat-x;
-
-    @include respond-above(md) {
-        background-image: url('/assets/pattern04a.svg');
-        background-position: right 187px;
-        background-repeat: no-repeat;
-    }
-}
-
-.pattern-05 {
-    background-image: url('/assets/pattern05.svg');
-    background-position: left top;
-    background-repeat: repeat-x;
-}
-
-.pattern-06 {
-    background-image: url('/assets/pattern06.svg');
-    background-position: 96.5% 65%;
-    background-repeat: no-repeat;
-    margin: auto -15px;
-    padding: 0 15px;
-    @include respond-above(sm) {
-        background-position: 96.5% 87%;
-        margin: 0;
-        padding: 0;
-    }
-}
-.pattern-06-inverted {
-    background-image: url('/assets/pattern06-inverted.svg');
-    background-position: 96.5% bottom;
+// Not used yet, might be nice to add in the future
+.pattern-1 {
+    background-image: url('/assets/cs/decor/dots-circle.svg');
+    background-position: -100px 100px;
+    background-size: 1000px;
     background-repeat: no-repeat;
 }
-.pattern-07 {
-    background-image: url('/assets/pattern06.svg');
-    background-position: 0 24px;
+
+.pattern-ada-dots {
+    background-image: url('/assets/cs/decor/dots-circle-bg.svg');
+    background-position: 0% 160%;
+    background-size: 300%;
     background-repeat: no-repeat;
-    margin: auto -15px;
-    padding: 0 15px;
-    @include respond-above(sm) {
-        background-position: 0.3rem 1.6rem;
-        margin: 0;
-        padding: 0;
-    }
-}
-.pattern-08 {
-    @include respond-above(md) {
-        background-image: url('/assets/pattern04a.svg');
-        background-position: right 39px;
-        background-repeat: no-repeat;
-    }
 }
 
 .isaac-spinner-sm {

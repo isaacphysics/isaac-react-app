@@ -3,10 +3,12 @@ import {getMyProgress, selectors, useAppDispatch, useAppSelector} from "../../st
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {PageFragment} from "../elements/PageFragment";
-import {isTeacherOrAbove} from "../../services";
+import {isTeacherOrAbove, PATHS, siteSpecific} from "../../services";
 import {Link} from "react-router-dom";
 import {ActionCard} from "../elements/cards/ActionCard";
 import {LinkCard} from "../elements/cards/LinkCard";
+
+// FIXME consider removing? /!\
 
 // TODO do we need a version of this for CS tutors?
 export const TeacherTools = () => {
@@ -72,7 +74,7 @@ export const TeacherTools = () => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Set an assignment" linkDestination="/set_assignments" linkText="Set assignments"
+                                    title="Set a quiz" linkDestination={PATHS.SET_ASSIGNMENTS} linkText={"Set quizzes"}
                                     amountText={achievementText("set", (achievementsSelector && achievementsSelector.TEACHER_ASSIGNMENTS_SET) || 0, "assignment")}
                                 >
                                     Set more assignments from the set assignments page.
@@ -81,7 +83,7 @@ export const TeacherTools = () => {
 
                             <RS.ListGroupItem className="px-3 pt-0 pb-4 bg-transparent">
                                 <ActionCard
-                                    title="Create a gameboard" linkDestination="/gameboard_builder" linkText="Create gameboards"
+                                    title="Create a gameboard" linkDestination={PATHS.GAMEBOARD_BUILDER} linkText="Create gameboards"
                                     amountText={achievementText("created", (achievementsSelector && achievementsSelector.TEACHER_GAMEBOARDS_CREATED) || 0, "gameboard")}
                                 >
                                     Create custom gameboards to set as assignments to your groups.
@@ -91,7 +93,7 @@ export const TeacherTools = () => {
                     </RS.Row>
                 </div>
 
-                <div className="pattern-06 pt-4 pb-5">
+                <div className="pt-4 pb-5">
                     <RS.Row>
                         <RS.ListGroup className="mb-4 d-block d-md-flex flex-row align-items-stretch link-list bg-transparent">
                             <RS.ListGroupItem className="bg-transparent">
@@ -108,7 +110,7 @@ export const TeacherTools = () => {
                                     title="CPD events" imageSource="/assets/card02.png"
                                     linkDestination="/events" linkText="View our events"
                                 >
-                                    Receive guidance on how to use isaaccomputerscience.org by attending our professional development events.
+                                    Receive guidance on how to use adacomputerscience.org by attending our professional development events.
                                 </LinkCard>
                             </RS.ListGroupItem>
 

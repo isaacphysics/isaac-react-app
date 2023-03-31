@@ -2,19 +2,17 @@
   position: relative;
   height: 30px;
   width: 100%;
-  background: $gray-110;
 
-  span {
+  div {
     vertical-align: middle;
     color: $gray-194;
     font-weight: bold;
-    overflow: hidden;
+    overflow: visible;
     white-space: nowrap;
   }
 
   .progress-bar-inner, .progress-bar-secondary {
     position: absolute;
-    background: $primary;
     height: 100%;
     //transition: width .2s ease-in;
   }

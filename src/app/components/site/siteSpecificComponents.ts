@@ -5,16 +5,20 @@ import {RoutesCS} from "./cs/RoutesCS";
 import {HomepagePhy} from "./phy/HomepagePhy";
 import {HeaderPhy} from "./phy/HeaderPhy";
 import {RoutesPhy} from "./phy/RoutesPhy";
+import {FooterPhy} from "./phy/FooterPhy";
+import {FooterCS} from "./cs/FooterCS";
 
 export default siteSpecific(
     {
         Homepage: HomepagePhy,
         Header: HeaderPhy,
-        Routes: RoutesPhy,
+        Footer: FooterPhy,
+        Routes: RoutesPhy
     },
     {
         Homepage: HomepageCS,
         Header: HeaderCS,
-        Routes: RoutesCS,
+        Footer: FooterCS,
+        Routes: RoutesCS
     }
 );

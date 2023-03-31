@@ -12,7 +12,7 @@ export const passwordStrengthText: {[score: number]: string} = {
 
 const zxcvbnSrc = siteSpecific(
     'https://cdn.isaacphysics.org',
-    'https://cdn.isaaccomputerscience.org'
+    'https://cdn.adacomputerscience.org'
 ) + "/vendor/dropbox/zxcvbn-isaac.js";
 
 
@@ -37,8 +37,12 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
         // Fail fast on empty input or if library not loaded!
         return null;
     }
-    const isaacTerms = ["Isaac Computer Science", "Isaac", "IsaacComputerScience", "isaaccomputerscience.org",
+    const isaacTerms = [
+        "Isaac Computer Science", "Isaac", "IsaacComputerScience", "isaaccomputerscience.org",
         "Isaac Computer", "Isaac CS", "IsaacCS", "ICS",
+        "Ada Computer Science", "Ada", "AdaComputerScience", "adacomputerscience.org",
+        "Ada Computer", "Ada CS", "AdaCS", "ACS",
+        "Ada Lovelace", "AdaLovelace", "Charles Babbage",  "CharlesBabbage", "Lovelace", "Babbage",
         "ComputerScience", "Computer Science", "Computer", "Science", "CompSci", "Computing",
         "Isaac Physics", "Isaac Chemistry", "Isaac Maths", "IsaacPhysics", "IsaacChemistry", "IsaacMaths",
         "Physics", "Chemistry", "Maths", "Biology", "Phy", "Phys", "Math", "Mathematics", "Physical",
@@ -46,7 +50,8 @@ function calculatePasswordStrength(password: string, additionalTerms?: string[])
         "Quantum", "Relativity", "Pi", "Newton", "Apple", "Hexagon",
         "Cambridge", "University", "Raspberry Pi", "Raspberry",
         "A Level", "ALevel", "A-Level", "Homework", "Classroom", "School", "College", "Lesson", "Revision",
-        "http", "https", "https://"];
+        "http", "https", "https://"
+    ];
     if (additionalTerms) {
         isaacTerms.push(...additionalTerms);
     }

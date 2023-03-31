@@ -7,7 +7,7 @@ if (["localhost:8000", "localhost:8004"].includes(document.location.host)  || do
     id = TAG_ID.chemistry;
 } else if (document.location.host == "localhost:8002" || document.location.host.includes("isaacbiology")) {
     id = TAG_ID.biology;
-} else if (document.location.host == "localhost:8003" || document.location.host.includes("isaaccomputerscience")) {
+} else if (document.location.host == "localhost:8003" || document.location.host.includes("adacomputerscience")) {
     id = "computer_science";
 } else {
     id = "unknown";

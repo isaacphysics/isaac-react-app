@@ -2,8 +2,15 @@ import React, {useEffect} from "react";
 import {Button, Col, CustomInput, Form, Row} from "reactstrap";
 import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
-import {EmailPasswordInputs, GoogleSignInButton, PasswordResetButton, TFAInput, useLoginLogic} from "../../pages/LogIn";
-import {isCS, KEY, persistence, siteSpecific} from "../../../services";
+import {
+    EmailPasswordInputs,
+    GoogleSignInButton,
+    PasswordResetButton,
+    RaspberryPiSignInButton,
+    TFAInput,
+    useLoginLogic
+} from "../../pages/LogIn";
+import {isAda, KEY, persistence, siteSpecific} from "../../../services";
 import classNames from "classnames";
 
 const LoginOrSignUpBody = () => {
@@ -30,10 +37,10 @@ const LoginOrSignUpBody = () => {
     }
 
     return <Row id={"login-page"}>
-        <Col lg={6} className={classNames("content-body", {"pattern-06-inverted": isCS})}>
+        <Col lg={6} className={classNames("content-body", {"pattern-ada-dots": isAda})}>
             {siteSpecific(
                 <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
-                <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />
+                <img src={"/assets/logos/ada_logo_3-stack_aqua.svg"} className={"mt-5 mb-4 pb-2 ml-3"} style={{width: "60%"}} alt={"Ada Computer Science Logo"} />
             )}
             <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
@@ -90,7 +97,7 @@ const LoginOrSignUpBody = () => {
                         </Button>
 
                         <hr className="text-center hr-or" />
-
+                        {isAda && <RaspberryPiSignInButton />}
                         <GoogleSignInButton/>
                     </>}
             </Form>

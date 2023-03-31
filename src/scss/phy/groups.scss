@@ -1,0 +1,11 @@
+@import "../common/groups";
+
+.member-info-item {
+  .icon-group-table-person {
+    @extend .mt-2;
+    width: 14px;
+  }
+  + .member-info-item {
+    border-top: $gray-107 solid 1px;
+  }
+}

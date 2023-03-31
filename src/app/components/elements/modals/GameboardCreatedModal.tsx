@@ -4,11 +4,12 @@ import {Link} from "react-router-dom";
 import {Button, Col, Label, Row} from "reactstrap";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
 import {SerializedError} from "@reduxjs/toolkit";
+import {PATHS, siteSpecific} from "../../../services";
 
 const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
     <Row className="mb-2">
         <Label className="mx-3">
-            Your gameboard was not successfully created.
+            Your {siteSpecific("gameboard", "quiz")} was not successfully created.
             <br/>
             {errorMessage}
         </Label>
@@ -17,17 +18,17 @@ const GameboardNotFound = ({errorMessage}: {errorMessage: string}) =>
 const GameboardSuccessfullyCreated = () =>
     <Row className="mb-2">
         <Label className="mx-3">
-            Your gameboard has been created. You can now set it as an assignment, create another board or view all of your boards.
+            Your {siteSpecific("gameboard", "quiz")} has been created. You can now set it as an assignment, create another {siteSpecific("board", "quiz")} or view all of your {siteSpecific("boards", "quizzes")}.
         </Label>
     </Row>;
 
 const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId: string | undefined, resetBuilder: () => void}) => {
     const dispatch = useAppDispatch();
     const closeModal = () => dispatch(closeActiveModal());
-    return <Row>
+    return <Row className={"my-3"}>
         <Col className="mb-1">
             <Button
-                tag={Link} to={`/add_gameboard/${gameboardId}`} color="secondary" block
+                tag={Link} to={`${PATHS.ADD_GAMEBOARD}/${gameboardId}`} color="secondary" block
                 disabled={!gameboardId} onClick={closeModal}
             >
                 Set as assignment
@@ -38,15 +39,15 @@ const GameboardCreatedModalButtons = ({gameboardId, resetBuilder}: {gameboardId:
                 color="primary" outline
                 onClick={() => {resetBuilder(); closeModal();}}
             >
-                Create another board
+                Create another {siteSpecific("board", "quiz")}
             </Button>
         </Col>
         <Col className="mb-1">
             <Button
-                tag={Link} to={`/set_assignments`} color="primary" outline
+                tag={Link} to={PATHS.SET_ASSIGNMENTS} color="primary" outline
                 onClick={closeModal}
             >
-                View all of your boards
+                View all of your {siteSpecific("boards", "quizzes")}
             </Button>
         </Col>
     </Row>

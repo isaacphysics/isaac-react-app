@@ -3,31 +3,6 @@ small {
   border: 0 !important;
 }
 
-pre {
-  background: white;
-  padding: 1rem;
-  font-weight: 400;
-  border: solid 1px #00000021;
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.875rem;
-
-  code {
-    box-shadow: none;
-    background: unset;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-code {
-  display: inline-block;
-  color: unset;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.08);
-  background: #fff;
-  margin: 0 -0.05rem;
-  padding: 0 0.05rem;
-}
-
 .text-muted {
   a {
     color: $text-muted !important;
@@ -35,8 +10,6 @@ code {
 }
 
 ul {
-  list-style-position: outside;
-  list-style-image: url('/assets/hexagon-bullet.svg');
   &.no-bullet {
     list-style-type: none;
     list-style-image: none;
@@ -45,14 +18,8 @@ ul {
 
 // NOMENSA typography.scss
 // REPLACE ./assets WITH /assets
-p {
-  &.p-small {
-    font-size: 0.8125em;
-    line-height: 1.69;
-  }
-}
 
-a, div.isaac-nav-link {
+div.isaac-nav-link {
   color: $gray-194;
   display: inline-block;
   text-decoration: underline;
@@ -93,54 +60,6 @@ a, div.isaac-nav-link {
     background-position: center left;
     clear: left;
     text-decoration: none;
-  }
-}
-
-.btn {
-  &.btn-sm {
-    &.a-alt {
-      color: $purple;
-      font-family: $secondary-font-medium;
-      text-decoration: underline;
-    }
-  }
-}
-
-blockquote {
-  &.blockquote {
-    border-left: 0.25rem solid $gray-107;
-    padding: 0.5rem 1rem;
-  }
-}
-
-small {
-  line-height: 1.69;
-  border-top: 1px solid $black;
-}
-
-hr {
-  display: block;
-  border-bottom: 1px solid $black;
-  position: relative;
-
-  &::before {
-    @include pseudo-element;
-    border-bottom: 5px solid $black;
-    bottom: -3px;
-    left: 0;
-    max-width: 158px;
-    right: 0;
-    width: 32%;
-
-    @include respond-above(sm) {
-      max-width: 380px;
-    }
-  }
-
-  &.text-center {
-    &::before {
-      margin: auto;
-    }
   }
 }
 

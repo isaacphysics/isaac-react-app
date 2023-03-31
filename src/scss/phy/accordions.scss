@@ -1,5 +1,10 @@
 @import "../common/accordions";
 
 .accordion {
+  box-shadow: 0 2px 30px 0 $shadow-08;
   background: white;
+  border-top: 1px solid $shadow-08;//$gray-120;
+  .accordion-header {
+    background: rgba(white, 1);
+  }
 }

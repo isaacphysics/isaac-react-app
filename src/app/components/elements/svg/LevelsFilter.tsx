@@ -1,7 +1,7 @@
 import React from "react";
-import Select from "react-select";
-import {ifKeyIsEnter, Item, selectOnChange} from "../../../services";
+import {ifKeyIsEnter, Item, selectOnChange, siteSpecific} from "../../../services";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
+import {StyledSelect} from "../inputs/StyledSelect";
 
 interface LevelsSummaryProps {
     levelOptions: Item<number>[];
@@ -75,7 +75,7 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
                                 tabIndex={0} onClick={selectValue} onKeyPress={ifKeyIsEnter(selectValue)}
                             >
                                 <title>
-                                    {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your gameboard filter`}
+                                    {`${isSelected ? "Remove" : "Add"} level ${levelOption.label} ${isSelected ? "from" : "to"} your ${siteSpecific("gameboard", "quiz")} filter`}
                                 </title>
                             </Hexagon>
                         </g>
@@ -87,5 +87,5 @@ export function LevelsFilterHexagonal({levelOptions, levels, setLevels}: LevelsF
 }
 
 export function LevelsFilterSelect({levelOptions, levels, setLevels, id}: LevelsFilterProps) {
-    return <Select id={id} onChange={selectOnChange(setLevels, false)} isMulti value={levels} options={levelOptions} />
+    return <StyledSelect id={id} onChange={selectOnChange(setLevels, false)} isMulti value={levels} options={levelOptions} />
 }

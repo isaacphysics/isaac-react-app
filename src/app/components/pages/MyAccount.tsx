@@ -1,6 +1,7 @@
 import React, {lazy, Suspense, useEffect, useMemo, useState} from 'react';
 import {connect} from "react-redux";
 import classnames from "classnames";
+import classNames from "classnames";
 import {
     Card,
     CardFooter,
@@ -19,7 +20,7 @@ import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes
 import {
     adminUserGetRequest,
     AdminUserGetState,
-    AppState,
+    AppState, errorSlice,
     ErrorState,
     getChosenUserAuthSettings,
     resetPassword,
@@ -42,10 +43,11 @@ import {
     allRequiredInformationIsPresent,
     history,
     ifKeyIsEnter,
+    isAda,
     isDefined,
     isDobOldEnoughForSite,
     isStaff,
-    SITE_SUBJECT_TITLE,
+    SITE_TITLE, siteSpecific,
     validateEmail,
     validateEmailPreferences,
     validatePassword
@@ -234,6 +236,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
             (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
+            dispatch(errorSlice.actions.clearError());
             dispatch(updateCurrentUser(
                 userToUpdate,
                 editingOtherUser ? {} : newPreferences,
@@ -259,7 +262,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         <TitleAndBreadcrumb currentPageTitle={pageTitle} className="mb-4" />
         <h3 className="d-md-none text-center text-muted m-3">
             <small>
-                {`Update your Isaac ${SITE_SUBJECT_TITLE} account, or `}
+                {`Update your ${SITE_TITLE} account, or `}
                 <Link to="/logout" className="text-secondary">Log out</Link>
             </small>
         </h3>
@@ -267,47 +270,47 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         <ShowLoading until={editingOtherUser ? userToUpdate.loggedIn && userToUpdate.email : userToUpdate}>
             {user.loggedIn && userToUpdate.loggedIn && // We can guarantee user and myUser are logged in from the route requirements
                 <Card>
-                    <Nav tabs className="my-4 flex-wrap">
-                        <NavItem>
+                    <Nav tabs className={classNames("my-4 flex-wrap", {"mx-4": isAda})}>
+                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.account})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.account})} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.account)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.account))}
                             >
                                 Profile
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.passwordreset})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.passwordreset})} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.passwordreset)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.passwordreset))}
                             >
-                                <span className="d-none d-lg-block">Account security</span>
-                                <span className="d-block d-lg-none">Security</span>
+                                <span className="d-none d-xl-block">Account security</span>
+                                <span className="d-block d-xl-none">Security</span>
                             </NavLink>
                         </NavItem>
-                        <NavItem>
+                        <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.teacherconnections})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.teacherconnections})}
+                                className={siteSpecific("mx-2", "px-2")}
                                 tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.teacherconnections)}
                                 onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.teacherconnections))}
                             >
-                                <span className="d-none d-lg-block d-md-block">Teacher connections</span>
-                                <span className="d-block d-md-none">Connections</span>
+                                <span className="d-none d-lg-block d-lg-block">Teacher connections</span>
+                                <span className="d-block d-lg-none">Connections</span>
                             </NavLink>
                         </NavItem>
-                        {!editingOtherUser && <NavItem>
+                        {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.emailpreferences})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.emailpreferences})} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.emailpreferences)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.emailpreferences))}
                             >
                                 <span className="d-none d-lg-block">Email preferences</span>
                                 <span className="d-block d-lg-none">Emails</span>
                             </NavLink>
                         </NavItem>}
-                        {!editingOtherUser && <NavItem>
+                        {!editingOtherUser && <NavItem className={classnames({active: activeTab === ACCOUNT_TAB.betafeatures})}>
                             <NavLink
-                                className={classnames({"mx-2": true, active: activeTab === ACCOUNT_TAB.betafeatures})} tabIndex={0}
+                                className={siteSpecific("mx-2", "px-2")} tabIndex={0}
                                 onClick={() => setActiveTab(ACCOUNT_TAB.betafeatures)} onKeyDown={ifKeyIsEnter(() => setActiveTab(ACCOUNT_TAB.betafeatures))}
                             >
                                 <span className="d-none d-lg-block">Beta features</span>

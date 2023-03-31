@@ -6,7 +6,15 @@ import {
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
-import {below, extractTeacherName, isDefined, isTeacherOrAbove, siteSpecific, useDeviceSize} from "../../../services";
+import {
+    below,
+    extractTeacherName,
+    isAda,
+    isDefined,
+    isTeacherOrAbove,
+    siteSpecific,
+    useDeviceSize
+} from "../../../services";
 import {Spacer} from "../Spacer";
 import {formatDate} from "../DateString";
 import {Link} from "react-router-dom";
@@ -20,6 +28,7 @@ import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChil
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {EditContentButton} from "../EditContentButton";
 import {Markup} from "../markup";
+import classNames from "classnames";
 
 type PageLinkCreator = (page?: number) => string;
 
@@ -147,7 +156,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 
     return section ?
         <Row className="question-content-container">
-            <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4 question-panel">
+            <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
                 <UserContextPicker className="no-print text-right"/>
                 <Row>
                     {rubric && renderRubric && <Col className="text-right">

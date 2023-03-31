@@ -1,8 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
-import {CODE_EDITOR_BASE_URL, useIFrameMessages} from "../../services";
+import {CODE_EDITOR_BASE_URL, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
 import {v4 as uuid_v4} from "uuid";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
+import IsaacCodeSnippet from "./IsaacCodeSnippet";
+import {Alert, Button} from "reactstrap";
+import {Loading} from "../handlers/IsaacSpinner";
+import {Link} from "react-router-dom";
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 
@@ -11,10 +15,10 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const uid = useRef((doc?.id || "") + uuid_v4().slice(0, 8));
     const {receivedData, sendMessage} = useIFrameMessages(uid.current, iframeRef);
-    const [loaded, setLoaded] = useState<boolean>(false);
+    const [iframeState, setIframeState] = useState<"loading" | "loaded" | "initialised" | "timeout">("loading");
+    const [initDelay, setInitDelay] = useState<number>(50);
 
     function sendQuestion() {
-        setLoaded(true);
         sendMessage({
             type: "initialise",
             code: doc.code,
@@ -25,13 +29,33 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         });
     }
 
+    useEffect(() => {
+        if (iframeState !== "loaded") return;
+        // If the iframe has not confirmed initialisation after ~5-7 seconds, give up and display the code in a normal code block
+        if (initDelay > 5000) {
+            setIframeState("timeout");
+            console.error("Loading code editor iframe failed... displaying code in a normal code block instead");
+            return;
+        }
+        const timeout = setTimeout(() => {
+            sendQuestion();
+            setInitDelay(d => d * 2);
+        }, initDelay);
+        return () => clearTimeout(timeout);
+    }, [iframeState, initDelay]);
+
     const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
     const [iFrameHeight, setIFrameHeight] = useState(100);
 
     useEffect(() => {
-        if (!loaded || undefined === receivedData) return;
+        if (!iframeState || undefined === receivedData) return;
 
         switch (receivedData.type) {
+            case "confirmInitialised":
+                // This is the first message sent by the iframe, and is used to confirm that the iframe had received
+                // the initialisation message
+                setIframeState("initialised");
+                break;
             case "log":
             case "checkerFail":
             case "setupFail":
@@ -86,13 +110,22 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         }
     }, [receivedData, segueEnvironment]);
 
-    return <iframe title={"Code Sandbox"} src={CODE_EDITOR_BASE_URL + "/#" + uid.current} ref={iframeRef} onLoad={sendQuestion} className={"isaac-code-iframe w-100 mb-1"} style={
-        {
-            resize: "none",
-            height: iFrameHeight,
-            border: "none",
-            overflow: "hidden",
-            backgroundColor: "transparent"
-        }
-    } scrolling="no" allowTransparency={true} frameBorder={0} allow={"clipboard-read; clipboard-write"}/>;
+    return iframeState === "timeout"
+        ? <>
+            <IsaacCodeSnippet doc={doc} />
+            <Alert color={"warning"}>Sorry! The {SITE_TITLE_SHORT} code editor doesn't seem to be working at the moment. Please <Button tag={Link} to={"/contact?subject=Code%20editor%20issue"} color={"link"}>report this to us</Button> and try again later.</Alert>
+        </>
+        : <>
+            {iframeState !== "initialised" && <Loading className={"my-4"}/>}
+            <iframe title={"Code Sandbox"} src={CODE_EDITOR_BASE_URL + "/#" + uid.current} ref={iframeRef} onLoad={() => setIframeState("loaded")} className={"isaac-code-iframe w-100 mb-1"} style={
+                {
+                    resize: "none",
+                    height: iFrameHeight,
+                    border: "none",
+                    overflow: "hidden",
+                    backgroundColor: "transparent",
+                    display: iframeState !== "initialised" ? "none" : "block",
+                }
+            } scrolling="no" allowTransparency={true} frameBorder={0} allow={"clipboard-read; clipboard-write"}/>
+        </>;
 }

@@ -6,9 +6,8 @@ import {
     determineAudienceViews,
     examBoardLabelMap,
     filterAudienceViewsByProperties,
-    findAudienceRecordsMatchingPartial,
     generateQuestionTitle,
-    isCS,
+    isAda,
     siteSpecific,
     stageLabelMap,
     TAG_ID,
@@ -17,13 +16,15 @@ import {
 import React from "react";
 import {AudienceContext} from "../../../IsaacApiTypes";
 import {closeActiveModal, openActiveModal, useAppDispatch} from "../../state";
-import {DraggableProvided} from "react-beautiful-dnd";
+import {DraggableProvided, DraggableStateSnapshot} from "react-beautiful-dnd";
 import {Question} from "../pages/Question";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
+import classNames from "classnames";
 
 interface GameboardBuilderRowInterface {
     provided?: DraggableProvided;
+    snapshot?: DraggableStateSnapshot;
     question: ContentSummary;
     selectedQuestions: Map<string, ContentSummary>;
     setSelectedQuestions: (m: Map<string, ContentSummary>) => void;
@@ -33,7 +34,7 @@ interface GameboardBuilderRowInterface {
 }
 
 const GameboardBuilderRow = (
-    {provided, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
+    {provided, snapshot, question, selectedQuestions, setSelectedQuestions, questionOrder, setQuestionOrder, creationContext}: GameboardBuilderRowInterface
 ) => {
     const dispatch = useAppDispatch();
 
@@ -42,7 +43,7 @@ const GameboardBuilderRow = (
         return tag && tag.title;
     };
     const tagIcon = (tag: string) => {
-        return <span key={tag} className="badge badge-pill badge-warning mx-1">{tag}</span>
+        return <span key={tag} className={classNames("badge badge-pill mx-1", siteSpecific("badge-warning", "badge-primary"))}>{tag}</span>
     };
 
     const openQuestionModal = (urlQuestionId: string) => {
@@ -57,18 +58,26 @@ const GameboardBuilderRow = (
         AUDIENCE_DISPLAY_FIELDS
     );
 
+    const cellClasses = "text-left align-middle";
+    const isSelected = question.id !== undefined && selectedQuestions.has(question.id);
+    const isDisabled = !isSelected && selectedQuestions.size >= 10; // disable if we have 10 questions already FIXME this should be defined as a constant somewhere
+    const label = (!isSelected ? "Select question" : "Deselect question") + (isDisabled ? " (disabled, you have selected the maximum number of questions)" : "");
+
     return <tr
         key={question.id} ref={provided && provided.innerRef}
-        className={classnames({selected: question.id && selectedQuestions.has(question.id)})}
+        className={classnames({selected: isSelected})}
         {...(provided && provided.draggableProps)} {...(provided && provided.dragHandleProps)}
     >
-        <td className="text-center align-middle w-5">
+        <td className="w-5 text-center align-middle">
             <RS.CustomInput
                 type="checkbox"
                 id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
-                aria-label="Select question"
+                aria-label={label}
+                title={label}
                 color="secondary"
-                checked={question.id !== undefined && selectedQuestions.has(question.id)}
+                className={!provided ? "isaac-checkbox mr-n2 ml-1" : undefined}
+                checked={isSelected}
+                disabled={isDisabled}
                 onChange={() => {
                     if (question.id) {
                         const newSelectedQuestions = new Map(selectedQuestions);
@@ -86,9 +95,9 @@ const GameboardBuilderRow = (
                 }}
             />
         </td>
-        <td className="w-40">
+        <td className={classNames(cellClasses, siteSpecific("w-40", "w-30"))}>
             {provided && <img src="/assets/drag_indicator.svg" alt="Drag to reorder" className="mr-1 grab-cursor" />}
-            <a className="mr-2" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
+            <a className="mr-2 text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title="Preview question in new tab">
                 {generateQuestionTitle(question)}
             </a>
             <input
@@ -96,30 +105,27 @@ const GameboardBuilderRow = (
                 className="pointer-cursor align-middle new-tab" onClick={() => {question.id && openQuestionModal(question.id)}}
             />
         </td>
-        <td className="w-25">
+        <td className={classNames(cellClasses, siteSpecific("w-25", "w-20"))}>
             {topicTag()}
         </td>
-        <td className="w-15">
+        <td className={classNames(cellClasses, "w-15")}>
             {filteredAudienceViews.map(v => v.stage).map(stage => <div key={stage}>
                 {stage && <span>{stageLabelMap[stage]}</span>}
             </div>)}
         </td>
-        <td className={siteSpecific("w-15","w-10")}>
+        <td className={classNames(cellClasses, "w-15")}>
             {filteredAudienceViews.map(v => v.difficulty).map((difficulty, i) => <div key={`${difficulty} ${i}`}>
                 {difficulty && <DifficultyIcons difficulty={difficulty} />}
             </div>)}
         </td>
-        {isCS && <td className="w-5">
+        {isAda && <td className={classNames(cellClasses, "w-15")}>
             {filteredAudienceViews.map((audienceView, i, collection) => <>
-                {findAudienceRecordsMatchingPartial(question.audience, audienceView)
-                    .map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => <div key={examBoard}>
-                        {examBoard && <span>{tagIcon(examBoardLabelMap[examBoard])}</span>}
-                    </div>))
-                }
+                {/* was `findAudienceRecordsMatchingPartial(question.audience, audienceView).map(...)` but it seemed to be broken */}
+                {question.audience?.map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => tagIcon(examBoardLabelMap[examBoard])))}
                 {/* When this becomes more common we should solve separation via a new row and merge other columns */}
                 {i + 1 < collection.length && <hr className="text-center" />}
             </>)}
         </td>}
-    </tr>
+    </tr>;
 };
 export default GameboardBuilderRow;

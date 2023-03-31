@@ -22,7 +22,7 @@ export * from "./history";
 export * from "./katex-a11y";
 export * from "./clozeQuestionKeyboardCoordinateGetter";
 export * from "./easterEggs/phyLogoAsciiArt";
-export * from "./easterEggs/csLogoAsciiArt";
+export * from "./easterEggs/adaLogoAsciiArt";
 export * from "./user";
 export * from "./validation";
 export * from "./tagsAbstract";

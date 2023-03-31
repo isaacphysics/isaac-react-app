@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {selectors, useAppSelector} from "../../../state";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isCS, useUserContext} from "../../../services";
+import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isAda, useUserContext} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 import {Immutable} from "immer";
@@ -256,7 +256,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
                 let macrosToUse;
-                if (isCS) {
+                if (isAda) {
                     macrosToUse = booleanNotation === BOOLEAN_NOTATION.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
                 } else {
                     macrosToUse = KatexBaseMacros;

@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import {SortOrder} from "../../services";
 
-interface SortableTableHeaderProps {
+type SortableTableHeaderProps = React.ThHTMLAttributes<HTMLTableHeaderCellElement> & {
     className: string;
     title: string;
     updateState: (order: string) => void;
     enabled: boolean;
-}
+};
 
-export const SortableTableHeader = ({className, title, updateState, enabled}: SortableTableHeaderProps) => {
+export const SortableTableHeader = ({className, title, updateState, enabled, ...rest}: SortableTableHeaderProps) => {
     const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
     const sortOrders = [SortOrder.NONE, SortOrder.ASC, SortOrder.DESC];
 
@@ -19,6 +19,7 @@ export const SortableTableHeader = ({className, title, updateState, enabled}: So
             setCurrentOrderIndex(newIndex);
             updateState(sortOrders[newIndex]);
         }}
+        {...rest}
     >
         {title}
         <div className="float-right">

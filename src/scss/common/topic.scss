@@ -15,7 +15,8 @@
     align-items: center;
     border: none;
     text-align: left;
-    text-decoration: none;
+    text-decoration: none !important;
+    color: black !important;
 
     .title {
       padding-right: 30px;

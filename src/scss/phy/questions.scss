@@ -1,5 +1,33 @@
 @import "../common/questions";
 
+.question-actions {
+  .question-actions-icon {
+    height: 3rem;
+    &:focus {
+      outline: none;
+    }
+  }
+  .question-actions-link-box {
+    float:right;
+    border: 1px solid gray;
+    height: 3.6rem;
+    border-right: none;
+    padding-right: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: -1.9rem;
+    background: white;
+
+    .question-actions-link {
+      padding-left: 3px;
+      padding-right: 3px;
+      margin-left: 1rem;
+      font-style: italic;
+    }
+  }
+}
+
 .question-panel > .content-chunk > .content-value,
 .question-component .question-content {
   font-family: $primary-font;
@@ -70,5 +98,13 @@
     .question-content, .content-value, .btn {
       font-size: 1rem !important;
     }
+  }
+}
+
+.symbolic-question,
+.equality-page {
+  .eqn-editor-preview {
+    font-size: 1.5rem;
+    border: solid 1px $black;
   }
 }

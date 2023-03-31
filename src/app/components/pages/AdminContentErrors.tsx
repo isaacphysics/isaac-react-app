@@ -5,7 +5,7 @@ import {Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {EDITOR_URL, selectOnChange} from "../../services";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import Select from "react-select";
+import {StyledSelect} from "../elements/inputs/StyledSelect";
 
 const contentErrorDetailsListItem = (errorDetailsListItem: string, index: number) => {
     return <li key={index}>{errorDetailsListItem}</li>
@@ -73,7 +73,7 @@ export const AdminContentErrors = () => {
                     </Col>
                     <Col lg={6} className="mb-2">
                         <Label htmlFor="published-filter-select">Filter by published status</Label>
-                        <Select
+                        <StyledSelect
                             inputId="published-filter-select"
                             isMulti
                             placeholder="None"

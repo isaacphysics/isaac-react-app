@@ -1,175 +1,116 @@
 import React, {useEffect} from "react";
-import {useAppSelector, selectors, isaacApi} from "../../../state";
+import {isaacApi, selectors, useAppSelector} from "../../../state";
 import {Link} from "react-router-dom";
-import {Badge, Button, Col, Container, Row} from "reactstrap";
-import {isCS, SITE_SUBJECT_TITLE} from "../../../services";
+import {Button, CardDeck, Col, Container, Row} from "reactstrap";
+import {SITE_TITLE} from "../../../services";
 import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {NewsCarousel} from "../../elements/NewsCarousel";
-import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
-import {EventsCarousel} from "../../elements/EventsCarousel";
-import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
-import classNames from "classnames";
 import {WarningBanner} from "../../navigation/WarningBanner";
-
-interface ShowMeButtonsProps {
-    className?: string
-}
+import {AdaHero1x1, AdaHero2x1} from "../../elements/svg/AdaHero";
+import {IsaacCardDeck} from "../../content/IsaacCardDeck";
+import {NewsCard} from "../../elements/cards/NewsCard";
+import {AdaHomepageSearch} from "../../elements/SearchInputs";
+import {MetaDescription} from "../../elements/MetaDescription";
 
 export const HomepageCS = () => {
-    useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
+    useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
 
-    const featuredNewsItem = (news && user?.loggedIn) ? news[0] : undefined;
-    const carouselNewsItems = news ? (user?.loggedIn ? news.slice(1) : news) : [];
-
-    const ShowMeButtons = ({className} : ShowMeButtonsProps) => <Container id="homepageButtons" className={`${className} ${!user?.loggedIn ? "pt-0 px-lg-0" : ""}`}>
-        <h3>Show me</h3>
-        <Row>
-            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-                <Button size="lg" tag={Link} to={"/topics/gcse"} color="secondary" block>
-                    GCSE resources
-                </Button>
-            </Col>
-            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-                <Button size="lg" tag={Link} to={"/topics/a_level"} color="secondary" block>
-                    A Level resources
-                </Button>
-            </Col>
-            <Col xs={12} lg={user?.loggedIn ? 12 : 4} className="py-1">
-                <Button size="lg" tag={Link} to={"/events"} color="secondary" block>
-                    Events
-                </Button>
-            </Col>
-        </Row>
-    </Container>;
-
     return <>
-        <WarningBanner/>
+        {/*<WarningBanner/>*/}
+        <MetaDescription description={"Ada Computer Science is a free online computer science programme for students and teachers. Learn by using our computer science topics and questions!"}/>
         <div id="homepage">
             <section id="call-to-action" className="homepageHero">
-                <Container className="pt-4 z1">
-                    {user?.loggedIn ? <>
-                            <Row className="pt-4">
-                                <Col md="12" lg="5" className={"pt-lg-4"}>
-                                    <Container className={"mb-4"}>
-                                        <h1 id="homepageName">Welcome {user.givenName}</h1>
-                                    </Container>
-                                    <ShowMeButtons className={"pt-xl-2"}/>
-                                    {/*<img id="homepageHeroImg" className="img-fluid" alt="Three Computer Science students studying with two laptops, one with code on the screen" src="/assets/ics_hero.svg" />*/}
-                                </Col>
-                                <Col data-testid={"featured-news-item"} md="12" lg="7" className="d-none d-lg-block">
-                                    <FeaturedNewsItem item={featuredNewsItem} />
-                                </Col>
-                            </Row>
-                        </>
-                        :
-                        <Row>
-                            <Col lg="5" className="order-first pb-3">
-                                <Row>
-                                    <Col>
-                                        <h1>
-                                            Computer science learning
-                                        </h1>
-                                        <p className="mt-4">
-                                            Welcome to Isaac Computer Science, the free online platform for students and
-                                            teachers.
-                                        </p>
-                                        <ul>
-                                            <li>Use it in the <strong>classroom</strong></li>
-                                            <li>Use it for <strong>homework</strong></li>
-                                            <li>Use it for <strong>revision</strong></li>
-                                        </ul>
-
-                                        <p className="mr-lg-n1">
-                                            {"We also offer free "}
-                                            <Link to="/events?types=teacher">teacher CPD events</Link>{" and "}
-                                            <Link to="/events?types=student">student workshops</Link>.<br />
-                                            {"Isaac Computer Science is proud to be part of the Department for Education's "}
-                                            <Link to="/teachcomputing">National Centre for Computing Education</Link>.
-                                        </p>
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <Col lg="7" className="order-last order-lg-1 px-lg-5 align-self-center text-center pattern-03">
-                                <iframe
-                                    title="Isaac Computer Science introduction video" width="640" height="345"
-                                    className="mw-100 pt-lg-4"
-                                    src="https://www.youtube-nocookie.com/embed/ci6_Du_NHZA?enablejsapi=1&rel=0&fs=1&modestbranding=1&origin=home"
-                                    frameBorder="0" allowFullScreen
-                                />
-                            </Col>
-                            <Col className="order-lg-last pb-5 pb-lg-3">
-                                <ShowMeButtons />
-                            </Col>
-                        </Row>}
+                <Container className="py-lg-6 pt-3 pb-5 z1 px-lg-6 px-4" fluid>
+                    <Row className={"justify-content-center homepage-hero-logged-out"}>
+                        <Col lg={6} xl={5} className={"my-auto mw-640"}>
+                            <h1 className={"font-size-1-75 font-size-md-2 font-size-xxl-2-5"}>
+                                <span className={"text-pink"}>/</span><br/>
+                                Welcome to Ada Computer Science, <span className={"font-weight-regular"}>the free online platform for teachers and students around the world.</span>
+                            </h1>
+                            <p className={"font-size-1 font-size-md-1-25 py-3"}>
+                                Developed by the Raspberry Pi Foundation and the University of Cambridge.
+                            </p>
+                            <Button tag={Link} to={user?.loggedIn ? "/topics" : "/register"} color="dark-primary">{user?.loggedIn ? "Browse topics" : "Get started"}</Button>
+                        </Col>
+                        <Col xl={2} className={"spacer d-none d-xl-block"}/>
+                        <Col lg={6} xl={5} className={"mw-640 mb-1 mb-sm-3 mb-lg-0"}>
+                            <AdaHero1x1 className={"d-lg-block d-none"}/>
+                            <AdaHero2x1 className={"mt-5 mt-lg-0 d-lg-none d-block"}/>
+                        </Col>
+                    </Row>
                 </Container>
             </section>
 
-            {!user?.loggedIn && <Container>
-                <hr/>
-            </Container>}
+            <section id="benefits-for-teachers-and-students">
+                <Container className={"py-lg-6 py-5"}>
+                    <Row>
+                        <Col lg={6} className={"px-5 my-auto my-lg-0"}>
+                            <img className={"d-none d-lg-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-3x4.png"} />
+                            <img className={"d-lg-none d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-4x3.png"} />
+                        </Col>
+                        <Col lg={6} className={"order-first order-lg-last pb-5 pb-md-0"}>
+                            <WhySignUpTabs user={user}/>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
 
-            {!user?.loggedIn && <section id="why-sign-up" className="row sign-up-tabs">
-                <Container>
-                    <Col className="pb-5 pt-4 pattern-04">
-                        <h2 className="text-center mb-5">Why sign up?</h2>
-                        <WhySignUpTabs/>
-                    </Col>
+            <section id="what-resources">
+                <Container className={"py-lg-6 py-5"}>
+                    <h2 className={"mb-5 mb-lg-6"}>What are you looking for?</h2>
+                    <IsaacCardDeck doc={{
+                        cards: [{
+                            title: "GCSE computer science",
+                            subtitle: "Our GCSE computer science topics cover the secondary school phase of learning for students aged 14 to 16.",
+                            clickUrl: "/topics#gcse",
+                            buttonText: "View GCSE resources",
+                            imageClassName: "backslash-1"
+                        }, {
+                            title: "A level computer science",
+                            subtitle: "Our A level computer science topics cover the advanced secondary school phase of learning for students aged 16 to 19.",
+                            clickUrl: "/topics#a_level",
+                            buttonText: "View A level resources",
+                            imageClassName: "backslash-2"
+                        }]
+                    }} className={"homepage-cards"} />
+                </Container>
+            </section>
+
+            <section id="computer-science-stories">
+                <Container className={"py-lg-6 py-5"}>
+                    <Row>
+                        <Col xs={12} md={6} id={"cs-stories-text"}>
+                            <h2 className={"mb-4"}>Computer Science Stories</h2>
+                            <p className={"mb-4"}>
+                                Ada Lovelace was a true pioneer who is a celebrated figure in the history of computer science.
+                                Inspiring professionals, passionate educators, and young graduates are shaping the field of computer science today.
+                                We share some of their stories.
+                            </p>
+                            <Button tag={Link} to="/pages/computer_science_stories" color="primary">Discover stories</Button>
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
+
+            {news && news.length > 0 && <section id="news">
+                <Container className={"py-lg-6 py-5"}>
+                    <h2 className={"mb-4 mb-lg-5"}>News</h2>
+                    <CardDeck className={"justify-content-center"}>
+                        {news.slice(0, 4).map(n => <NewsCard newsItem={n} showTitle />)}
+                    </CardDeck>
+                    <div className={"mt-4 mt-lg-5 w-100 text-center"}>
+                        <Button href={"/news"} color={"link"}><h4 className={"mb-0"}>See more news</h4></Button>
+                    </div>
                 </Container>
             </section>}
 
-            <section id="news">
-                <Container className={classNames("pt-4 pb-5", {"mt-lg-n5 pt-lg-0": user?.loggedIn ?? false})}>
-                    <div data-testid={"news-carousel"} className="eventList pt-5 pattern-03-reverse">
-                        <h2 className="h-title mb-4">News</h2>
-                        {user?.loggedIn && <div className={"d-block d-lg-none mb-4 mb-lg-0"}>
-                            <FeaturedNewsItem item={featuredNewsItem} />
-                        </div>}
-                        <NewsCarousel items={carouselNewsItems} />
-                    </div>
+            <section id="search">
+                <Container className={"py-lg-6 py-5 text-center"}>
+                    <h3 className={"text-white mb-4"}>Ready to get started?</h3>
+                    <AdaHomepageSearch className={"d-block"} />
                 </Container>
             </section>
-
-            <section id="headline-content" className="row bg-primary pattern-05">
-                <Container>
-                    <Col className="py-5 pb-md-0">
-                        <FeaturedContentTabs/>
-                    </Col>
-                </Container>
-            </section>
-
-            <section id="events">
-                <Container className="pt-4 pb-5">
-                    <div className="eventList pt-5 pattern-03">
-                        <h2 className="h-title text-center mb-4">Events</h2>
-                        <p className="pt-4 pb-2 event-description text-center col-md-8 offset-md-2">
-                            {"We offer free online events for students and teachers. Visit our "}
-                            <Link to="/events">
-                                Events page
-                            </Link>
-                            {" to see what’s happening, and sign up today!"}
-                        </p>
-                        <EventsCarousel/>
-                        <Link to="/events">
-                            See all Events
-                        </Link>
-                    </div>
-                </Container>
-            </section>
-
-            {!user?.loggedIn && <section className="row">
-                <Container>
-                    <Col className="py-4 px-5 mb-5 d-flex align-items-center flex-column flex-md-row border border-dark">
-                        <h3 className="text-center text-md-left mr-md-4 mr-lg-0 mb-3 mb-md-0">
-                            Sign up to track your progress
-                        </h3>
-                        <Button tag={Link} size="lg" className="ml-md-auto mr-md-3 mr-lg-5 btn-xl" to={"/register"}>
-                            Sign up
-                        </Button>
-                    </Col>
-                </Container>
-            </section>}
         </div>
     </>;
 };

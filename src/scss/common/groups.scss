@@ -12,15 +12,6 @@
   }
 }
 
-.member-info-item {
-  .icon-group-table-person {
-    width: 14px;
-  }
-  + .member-info-item {
-    border-top: $gray-107 solid 1px;
-  }
-}
-
 .not-authorised {
   -webkit-filter: grayscale(100%);
   -webkit-filter: grayscale(1);
