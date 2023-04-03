@@ -7,7 +7,7 @@ import {
     useAppDispatch,
     useAppSelector
 } from "../../../state";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import * as RS from "reactstrap";
 import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailPreferences";
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
@@ -17,10 +17,11 @@ import {
     isDefined,
     isLoggedIn,
     isMobile,
-    isPhy,
     isTutor,
     isTutorOrAbove,
-    SITE_TITLE, TEACHER_REQUEST_ROUTE,
+    SITE_TITLE,
+    siteSpecific,
+    TEACHER_REQUEST_ROUTE,
     UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
@@ -54,6 +55,19 @@ const RequiredAccountInfoBody = () => {
     const [booleanNotation, setBooleanNotation] = useState<BooleanNotation | undefined>();
     const [displaySettings, setDisplaySettings] = useState<DisplaySettings>({...userPreferences?.DISPLAY_SETTING});
 
+    // If the base user or user preferences objects change outside of this modal, reinitialise the local state. This
+    // shouldn't really happen, but it solves a race condition between this modal rendering and the user object being
+    // stored in Redux (see notificationManager.ts).
+    useEffect(() => {
+        setUserToUpdate({...user, password: null});
+        const newUserContexts = user?.loggedIn && isDefined(user.registeredContexts) ? [...user.registeredContexts] : [];
+        setUserContexts(newUserContexts.length ? newUserContexts : [{}]);
+    }, [user]);
+    useEffect(() => {
+        setEmailPreferences({...userPreferences?.EMAIL_PREFERENCE});
+        setDisplaySettings({...userPreferences?.DISPLAY_SETTING});
+    }, [userPreferences]);
+
     const userPreferencesToUpdate = {
         EMAIL_PREFERENCE: emailPreferences, BOOLEAN_NOTATION: booleanNotation, DISPLAY_SETTING: displaySettings
     };
@@ -70,9 +84,10 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid =
-        (isPhy && validateUserContexts(initialUserContexts)) ||
-        (isAda && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
+    const allUserFieldsAreValid = siteSpecific(
+        validateUserContexts(initialUserContexts),
+        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts),
+    );
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
