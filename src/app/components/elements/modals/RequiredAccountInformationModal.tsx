@@ -87,7 +87,7 @@ const RequiredAccountInfoBody = () => {
     const allUserFieldsAreValid = siteSpecific(
         validateUserContexts(initialUserContexts),
         validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts),
-    )
+    );
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
