@@ -19,8 +19,9 @@ import {
     isMobile,
     isTutor,
     isTutorOrAbove,
-    lazySiteSpecific,
-    SITE_TITLE, TEACHER_REQUEST_ROUTE,
+    SITE_TITLE,
+    siteSpecific,
+    TEACHER_REQUEST_ROUTE,
     UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
@@ -83,10 +84,11 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid = lazySiteSpecific(
-        () => validateUserContexts(initialUserContexts),
-        () => validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts)
-    );
+    const allUserFieldsAreValid = siteSpecific(
+        validateUserContexts(initialUserContexts),
+        validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts),
+    )
+
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
             <div className="text-right text-muted required-before">
