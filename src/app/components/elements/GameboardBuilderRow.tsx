@@ -60,8 +60,6 @@ const GameboardBuilderRow = (
 
     const cellClasses = "text-left align-middle";
     const isSelected = question.id !== undefined && selectedQuestions.has(question.id);
-    const isDisabled = !isSelected && selectedQuestions.size >= 10; // disable if we have 10 questions already FIXME this should be defined as a constant somewhere
-    const label = (!isSelected ? "Select question" : "Deselect question") + (isDisabled ? " (disabled, you have selected the maximum number of questions)" : "");
 
     return <tr
         key={question.id} ref={provided && provided.innerRef}
@@ -72,12 +70,11 @@ const GameboardBuilderRow = (
             <RS.CustomInput
                 type="checkbox"
                 id={`${provided ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
-                aria-label={label}
-                title={label}
+                aria-label={!isSelected ? "Select question" : "Deselect question"}
+                title={!isSelected ? "Select question" : "Deselect question"}
                 color="secondary"
                 className={!provided ? "isaac-checkbox mr-n2 ml-1" : undefined}
                 checked={isSelected}
-                disabled={isDisabled}
                 onChange={() => {
                     if (question.id) {
                         const newSelectedQuestions = new Map(selectedQuestions);
