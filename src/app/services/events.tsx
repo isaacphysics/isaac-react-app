@@ -1,4 +1,14 @@
-import {apiHelper, atLeastOne, isTeacherOrAbove, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
+import {
+    apiHelper,
+    atLeastOne,
+    isDefined,
+    isTeacherOrAbove,
+    siteSpecific,
+    STAGE,
+    STAGES_CS,
+    STAGES_PHY,
+    zeroOrLess
+} from "./";
 import {IsaacEventPageDTO} from "../../IsaacApiTypes";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
@@ -48,6 +58,7 @@ export const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     augmentedEvent.isNotClosed = !["CLOSED", "CANCELLED"].includes(event.eventStatus as string);
     augmentedEvent.isCancelled = event.eventStatus === "CANCELLED";
     augmentedEvent.isWaitingListOnly = event.eventStatus === "WAITING_LIST_ONLY";
+    augmentedEvent.isReservationOnly = event.eventStatus === "RESERVATION_ONLY";
 
     // we have to fix the event image url.
     if(augmentedEvent.eventThumbnail && augmentedEvent.eventThumbnail.src) {
@@ -166,12 +177,21 @@ export const userIsTeacherAtAStudentEvent = (user: Immutable<PotentialUser> | nu
     return event.isAStudentEvent && isTeacherOrAbove(user);
 }
 
+export const userBookedReservedOrOnWaitingList = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
+    return isDefined(event.userBookingStatus) && ["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus);
+}
+
+export const ifEventIsReservationsOnlyThenUserIsTeacherOrUserIsReserved = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
+    return event.isReservationOnly ? (isTeacherOrAbove(user) || event.userBookingStatus === "RESERVED") : true;
+}
+
 export const userCanMakeEventBooking = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {
     return event.isNotClosed &&
         event.isWithinBookingDeadline &&
         !event.isWaitingListOnly &&
         event.userBookingStatus !== "CONFIRMED" &&
         userSatisfiesStudentOnlyRestrictionForEvent(user, event) &&
+        ifEventIsReservationsOnlyThenUserIsTeacherOrUserIsReserved(user, event) &&
         (atLeastOne(event.placesAvailable) || userIsTeacherAtAStudentEvent(user, event) ||
             event.userBookingStatus === "RESERVED");
 }
@@ -180,8 +200,8 @@ export const userCanBeAddedToEventWaitingList = (user: Immutable<PotentialUser> 
     return !userCanMakeEventBooking(user, event) &&
         event.isNotClosed &&
         !event.hasExpired &&
-        (event.userBookingStatus === undefined ||
-            !["WAITING_LIST", "CONFIRMED", "RESERVED"].includes(event.userBookingStatus)) &&
+        !event.isReservationOnly &&
+        !userBookedReservedOrOnWaitingList(user, event) &&
         userSatisfiesStudentOnlyRestrictionForEvent(user, event)
 }
 
