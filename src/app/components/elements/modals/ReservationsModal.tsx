@@ -28,7 +28,7 @@ import {
 import {ShowLoading} from "../../handlers/ShowLoading";
 import {ActiveModal, AppGroup, AppGroupMembership} from "../../../../IsaacAppTypes";
 import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
-import {bookingStatusMap, isLoggedIn, NOT_FOUND} from "../../../services";
+import {api, bookingStatusMap, isLoggedIn, NOT_FOUND, schoolNameWithPostcode} from "../../../services";
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
@@ -67,6 +67,7 @@ const ReservationsModal = () => {
     const [groupSupervisorContactName, setGroupSupervisorContactName] = useState<string>(`${user?.givenName}${user?.familyName ? " " + user?.familyName : ""}`);
     const [groupSupervisorContactEmail, setGroupSupervisorContactEmail] = useState<string>(user?.email ?? "");
     const [additionalBookingNotes, setAdditionalBookingNotes] = useState<string>();
+    const [school, setSchool] = useState<string>();
 
     useEffect(() => {
         setUnbookedUsersById(unbookedUsers.reduce((acc: {[id: number]: AppGroupMembership}, u) => ({...acc, [u.id as number]: u}), {}));
@@ -195,6 +196,16 @@ const ReservationsModal = () => {
         setCancelReservationCheckboxes(checkboxes);
     };
 
+    useEffect(function fetchUsersSchool() {
+        if (user?.schoolId && user?.schoolId !== "") {
+            api.schools.getByUrn(user?.schoolId).then(({data}) => {
+                setSchool(schoolNameWithPostcode(data[0]));
+            });
+        } else if (user?.schoolOther) {
+            setSchool(user.schoolOther);
+        }
+    }, [user]);
+
     const requestReservations = () => {
         if (selectedEvent && selectedEvent.id && selectedGroup && selectedGroup.id) {
             const reservableIds = Object.entries(userCheckboxes).filter(c => c[1]).map(c => parseInt(c[0]));
@@ -205,6 +216,7 @@ const ReservationsModal = () => {
             Event: ${selectedEvent.title} (id: ${selectedEvent.id})
             Group id: ${selectedGroup.id}
             Students reserved: ${reservableIds.join(", ")}
+            School: ${school}
             
             Main supervisor contact: ${groupSupervisorContactName}, ${groupSupervisorContactEmail}
             
