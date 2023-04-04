@@ -416,9 +416,10 @@ const ReservationsModal = () => {
                             <div className={"mt-2 mb-3"}>
                                 <h4>Additional booking information</h4>
                                 <p>
-                                    Add additional information about the group booking, for example contact details of
-                                    other group supervisors. Please be aware that there is a maximum of students that
-                                    are allowed to be supervised by a single teacher.
+                                    Add additional information about the group booking, for example contact details of other group supervisors.{" "}
+                                    Please be aware that the students will remain the responsibility of the accompanying teachers.{" "}
+                                    Please make sure that you have enough staff for the number of students you are bringing.{" "}
+                                    We recommend at least 2 members of staff per group.
                                 </p>
                                 <Input type={"textarea"} value={additionalBookingNotes} onChange={e => setAdditionalBookingNotes(e.target.value)} />
                             </div>
