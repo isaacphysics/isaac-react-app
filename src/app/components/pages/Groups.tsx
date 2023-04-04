@@ -444,7 +444,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                             </div>
                             <Nav tabs className={classNames("d-flex flex-wrap guaranteed-single-line mt-3", {"mb-3": isPhy})}>
                                 {tabs.map((tab, index) => {
-                                    return <NavItem key={index} className={classNames({"mx-2": isPhy, "active": tab.active()})}>
+                                    return <NavItem key={index} className={classNames({"px-2": isPhy, "active": tab.active()})}>
                                         <NavLink
                                             className={classNames("text-center", {"px-2": isAda})} tabIndex={0}
                                             onClick={tab.activate} onKeyDown={ifKeyIsEnter(tab.activate)}
