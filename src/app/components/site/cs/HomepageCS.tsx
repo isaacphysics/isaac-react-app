@@ -46,8 +46,14 @@ export const HomepageCS = () => {
                 <Container className={"py-lg-6 py-5"}>
                     <Row>
                         <Col lg={6} className={"px-5 my-auto my-lg-0"}>
-                            <img className={"d-none d-lg-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-3x4.png"} />
-                            <img className={"d-lg-none d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-4x3.png"} />
+                            <picture>
+                                <source srcSet="/assets/cs/decor/benefits-for-homepage-3x4.webp" type="image/webp"/>
+                                <img className={"d-none d-lg-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-3x4.png"} alt="" />
+                            </picture>
+                            <picture>
+                                <source srcSet="/assets/cs/decor/benefits-for-homepage-4x3.webp" type="image/webp"/>
+                                <img className={"d-lg-none d-block w-100"} src={"/assets/cs/decor/benefits-for-homepage-4x3.png"} alt="" />
+                            </picture>
                         </Col>
                         <Col lg={6} className={"order-first order-lg-last pb-5 pb-md-0"}>
                             <WhySignUpTabs user={user}/>
