@@ -145,13 +145,6 @@ module.exports = (env) => {
                 chunks: "all",
             },
             runtimeChunk: true,
-            minimizer: [
-                new TerserPlugin({
-                    terserOptions: {
-                        safari10: true,
-                    },
-                }),
-            ],
         },
 
         devtool : "source-map",
