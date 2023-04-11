@@ -1,12 +1,14 @@
 import {rest} from "msw";
 import {
     buildMockUserSummary,
+    mockAssignedQuiz,
     mockAssignmentsGroup2,
-    mockAssignmentsGroup6, mockFragment,
+    mockAssignmentsGroup6, mockAvailableQuiz, mockFragment,
     mockGameboards,
     mockGroups,
     mockMyAssignments,
     mockNewsPods,
+    mockPage,
     mockQuizAssignments,
     mockSetAssignments,
     mockUser,
@@ -154,6 +156,25 @@ export const handlers = [
         return res(
             ctx.status(200),
             ctx.json(mockFragment(fragmentId as string))
+        );
+    }),
+    rest.get(API_PATH + "/pages/:pageId", (req, res, ctx) => {
+        const {pageId} = req.params;
+        return res(
+            ctx.status(200),
+            ctx.json(mockPage(pageId as string))
+        );
+    }),
+    rest.get(API_PATH + "/quiz/assigned", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json(mockAssignedQuiz)
+        );
+    }),
+    rest.get(API_PATH + "/quiz/available/0", (req, res, ctx) => {
+        return res(
+            ctx.status(200),
+            ctx.json(mockAvailableQuiz)
         );
     }),
     rest.get(API_PATH + "/glossary/terms", (req, res, ctx) => {
