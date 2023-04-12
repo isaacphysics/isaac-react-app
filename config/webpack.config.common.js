@@ -50,9 +50,6 @@ module.exports = (env) => {
         resolve: {
             modules: [path.resolve(__dirname), 'node_modules'],
             extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs'],
-            alias: {
-                'p5': 'p5/lib/p5.min.js'
-            },
             fallback: { "querystring": require.resolve("querystring-es3") }
         },
 
