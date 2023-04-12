@@ -14,7 +14,8 @@ import {
 } from "./constants";
 import {GREEK_LETTERS_MAP, isDefined, sanitiseInequalityState} from "../../../../services";
 import React from "react";
-import {isEqual, uniqWith} from "lodash";
+import isEqual from "lodash/isEqual";
+import uniqWith from "lodash/uniqWith";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 
 // This file contains helper functions used specifically in the Inequality modal

@@ -11,7 +11,7 @@ import {
 } from "../../../state";
 import React, {useState} from "react";
 import {isDefined, Item, selectOnChange} from "../../../services";
-import {range} from "lodash";
+import range from "lodash/range";
 import {currentYear, DateInput} from "../inputs/DateInput";
 import * as RS from "reactstrap";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";

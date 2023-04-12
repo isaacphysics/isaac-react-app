@@ -4,7 +4,7 @@ import {
     KeyboardCoordinateGetter,
 } from '@dnd-kit/core';
 import {CLOZE_DROP_ZONE_ID_PREFIX, CLOZE_ITEM_SECTION_ID} from "./constants";
-import {sortBy} from "lodash";
+import sortBy from "lodash/sortBy";
 import {isDefined} from "./miscUtils";
 
 // Adapted from https://github.com/clauderic/dnd-kit/blob/5811986e7544a5e80039870a015e38df805eaad1/packages/sortable/src/sensors/keyboard/sortableKeyboardCoordinates.ts

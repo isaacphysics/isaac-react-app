@@ -5,7 +5,7 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
 import {history, isAda, isDefined, siteSpecific} from "../../services";
-import {fromPairs} from "lodash";
+import fromPairs from "lodash/fromPairs";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
 import {MetaDescription} from "../elements/MetaDescription";

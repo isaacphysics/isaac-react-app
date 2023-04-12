@@ -16,7 +16,7 @@ import {showErrorToast, unlinkUserFromGameboard, useAppDispatch} from "../../../
 import {GameboardDTO, RegisteredUserDTO} from "../../../../IsaacApiTypes";
 import {Circle} from "../svg/Circle";
 import classNames from "classnames";
-import {sortBy} from "lodash";
+import sortBy from "lodash/sortBy";
 import {formatDate} from "../DateString";
 import {ShareLink} from "../ShareLink";
 import {

@@ -3,7 +3,7 @@ import {AppState, getEmailTemplate, sendAdminEmailWithIds, useAppDispatch, useAp
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
-import {debounce} from 'lodash';
+import debounce from 'lodash/debounce';
 import {isEventManager} from "../../services";
 
 interface AdminEmailsProps {

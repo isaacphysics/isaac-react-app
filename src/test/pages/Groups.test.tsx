@@ -11,7 +11,8 @@ import {
     buildMockUserSummaryWithGroupMembership
 } from "../../mocks/data";
 import {API_PATH, isDefined, siteSpecific} from "../../app/services";
-import {difference, isEqual} from "lodash";
+import difference from "lodash/difference";
+import isEqual from "lodash/isEqual";
 import userEvent from "@testing-library/user-event";
 import {ResponseResolver, rest} from "msw";
 import {
