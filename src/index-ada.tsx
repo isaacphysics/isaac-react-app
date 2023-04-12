@@ -5,11 +5,10 @@ import ReactDOM from 'react-dom';
 import {Provider} from "react-redux";
 import {store} from "./app/state";
 import {IsaacApp} from './app/components/navigation/IsaacApp';
-import {printAsciiArtLogoToConsoleAda, highlightJsService} from "./app/services";
+import {printAsciiArtLogoToConsoleAda} from "./app/services";
 import {Helmet} from "react-helmet";
 
 printAsciiArtLogoToConsoleAda();
-highlightJsService.registerLanguages();
 
 ReactDOM.render(
     <React.StrictMode>
