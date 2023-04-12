@@ -15,6 +15,7 @@
     "axios": "^0.26.0",
     "axios-mock-adapter": "^1.20.0",
     "billboard.js": "^1.12.11",
+    "core-js": "^3.30.0",
     "dayjs": "^1.10.7",
     "he": "^1.2.0",
     "highlight.js": "^11.5.1",
@@ -50,8 +51,7 @@
     "reactstrap": "^8.10.1",
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
-    "remarkable": "^2.0.1",
-    "string.prototype.matchall": "^4.0.6"
+    "remarkable": "^2.0.1"
   },
   "scripts": {
     "build-phy": "webpack --env prod --config config/webpack.config.physics.js",
