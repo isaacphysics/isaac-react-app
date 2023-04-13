@@ -1,5 +1,5 @@
 import {determineAudienceViews, difficultiesOrdered, SortOrder, tags} from "./";
-import {orderBy} from "lodash";
+import orderBy from "lodash/orderBy";
 import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
 import {ContentSummary, Tag} from "../../IsaacAppTypes";
 

@@ -5,7 +5,7 @@ export * from "./demoTools";
 export * from "./device";
 export * from "./dates";
 export * from "./polyfills";
-export * from "./highlightJs";
+// export * from "./highlightJs";  // This is unnecessary and breaks bundle splitting!
 export * from "./json";
 export * from "./progress";
 export * from "./select";

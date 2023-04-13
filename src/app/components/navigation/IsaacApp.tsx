@@ -79,7 +79,6 @@ import {GameboardFilter} from "../pages/GameboardFilter";
 
 const ContentEmails = lazy(() => import('../pages/ContentEmails'));
 const MyProgress = lazy(() => import('../pages/MyProgress'));
-const Equality = lazy(() => import('../pages/Equality'));
 const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 
 export const IsaacApp = () => {

@@ -1,6 +1,6 @@
 import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react';
 import {Button, Input, InputGroup, InputProps} from "reactstrap";
-import {range} from 'lodash';
+import range from 'lodash/range';
 
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {

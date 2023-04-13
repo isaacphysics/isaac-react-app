@@ -7,7 +7,7 @@ import {PreUniMaths} from "../../pages/books/pre_uni_maths";
 import {Chemistry16} from "../../pages/books/chemistry_16";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Redirect} from "react-router";
-import {isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
+import {isLoggedIn, isTeacherOrAbove, isTutorOrAbove, PATHS} from "../../../services";
 import {TeacherFeatures} from "../../pages/TeacherFeatures";
 import {TutorFeatures} from "../../pages/TutorFeatures";
 import {QuantumMechanicsPrimer} from "../../pages/books/QuantumMechanicsPrimer";
@@ -28,8 +28,8 @@ import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
 import {Events} from "../../pages/Events";
 import {RedirectToEvent} from "../../navigation/RedirectToEvent";
 import {AssignmentSchedule} from "../../pages/AssignmentSchedule";
-import Equality from "../../pages/Equality";
 
+const Equality = lazy(() => import('../../pages/Equality'));
 const EventDetails = lazy(() => import('../../pages/EventDetails'));
 const GraphSketcherPage = lazy(() => import("../../pages/GraphSketcher"));
 

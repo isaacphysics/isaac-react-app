@@ -2,7 +2,8 @@ import {CodeSnippetDTO, ContentDTO} from "../../../IsaacApiTypes";
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "reactstrap";
 import hljs from 'highlight.js/lib/core';
-import {highlightJsService, isAda} from "../../services";
+import {highlightJsService} from "../../services/highlightJs";
+import {isAda} from "../../services";
 import {ScrollShadows} from "../elements/ScrollShadows";
 import classNames from "classnames";
 import {useExpandContent} from "../elements/markup/portals/Tables";
@@ -12,6 +13,8 @@ import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state"
 interface IsaacCodeProps {
     doc: CodeSnippetDTO;
 }
+
+highlightJsService.registerLanguages();
 
 const IsaacCodeSnippet = ({doc}: IsaacCodeProps) => {
     const dispatch = useAppDispatch();

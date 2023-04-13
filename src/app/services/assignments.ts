@@ -1,5 +1,5 @@
 import {AssignmentDTO} from "../../IsaacApiTypes";
-import {orderBy} from "lodash";
+import orderBy from "lodash/orderBy";
 import {EnhancedAssignment} from "../../IsaacAppTypes";
 import {API_PATH, extractTeacherName} from "./";
 

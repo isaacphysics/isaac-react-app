@@ -41,7 +41,7 @@ import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../element
 import {GroupBase} from "react-select";
 import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
-import {debounce} from "lodash";
+import debounce from "lodash/debounce";
 import {History} from "history";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {CanonicalHrefElement} from "../navigation/CanonicalHrefElement";

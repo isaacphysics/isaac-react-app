@@ -33,7 +33,7 @@ import {
     mutationSucceeded
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {sortBy} from "lodash";
+import sortBy from "lodash/sortBy";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ifKeyIsEnter, isAda, isDefined, isPhy, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";

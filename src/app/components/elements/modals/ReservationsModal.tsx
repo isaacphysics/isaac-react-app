@@ -32,7 +32,7 @@ import {api, bookingStatusMap, isLoggedIn, NOT_FOUND, schoolNameWithPostcode} fr
 import _orderBy from "lodash/orderBy";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
-import {sortBy} from "lodash";
+import sortBy from "lodash/sortBy";
 
 const ReservationsModal = () => {
     const dispatch = useAppDispatch();

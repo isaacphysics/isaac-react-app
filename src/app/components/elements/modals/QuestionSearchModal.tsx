@@ -9,7 +9,8 @@ import {
 } from "../../../state";
 import * as RS from "reactstrap";
 import {SortableTableHeader} from "../SortableTableHeader";
-import {debounce, isEqual} from "lodash";
+import debounce from "lodash/debounce";
+import isEqual from "lodash/isEqual"
 import {MultiValue} from "react-select";
 import {
     tags,

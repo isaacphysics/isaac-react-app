@@ -10,7 +10,7 @@ import {
     QuizSummaryDTO,
     RegisteredUserDTO
 } from "../../IsaacApiTypes";
-import {partition} from "lodash";
+import partition from "lodash/partition";
 
 export function extractQuestions(doc: ContentDTO | undefined): QuestionDTO[] {
     const qs: QuestionDTO[] = [];

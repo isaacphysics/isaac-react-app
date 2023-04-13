@@ -1,12 +1,13 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {lazy, useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
 import {CODE_EDITOR_BASE_URL, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
 import {v4 as uuid_v4} from "uuid";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
-import IsaacCodeSnippet from "./IsaacCodeSnippet";
 import {Alert, Button} from "reactstrap";
 import {Loading} from "../handlers/IsaacSpinner";
 import {Link} from "react-router-dom";
+
+const IsaacCodeSnippet = lazy(() => import("./IsaacCodeSnippet"));
 
 interface IsaacInteractiveCodeProps {doc: InteractiveCodeSnippetDTO}
 

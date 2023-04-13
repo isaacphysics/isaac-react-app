@@ -2,11 +2,10 @@ import React from "react";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {IsaacApp} from "../../app/components/navigation/IsaacApp";
-import {reverse, zip} from "lodash";
-import {UserRole, USER_ROLES} from "../../IsaacApiTypes";
-import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "../utils";
-import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isAda, SITE_SUBJECT, PATHS} from "../../app/services";
-import {mockNewsPods} from "../../mocks/data";
+import zip from "lodash/zip";
+import {USER_ROLES, UserRole} from "../../IsaacApiTypes";
+import {NAV_BAR_MENU_TITLE, NavBarMenus, renderTestEnvironment} from "../utils";
+import {history, isPhy, PATHS, SITE_SUBJECT, siteSpecific} from "../../app/services";
 
 const myIsaacLinks = siteSpecific(
     ["/account", PATHS.MY_GAMEBOARDS, PATHS.MY_ASSIGNMENTS, "/progress", "/tests"],

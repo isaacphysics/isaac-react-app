@@ -3,7 +3,7 @@ import AsyncCreatableSelect from "react-select/async-creatable";
 import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api, schoolNameWithPostcode, validateUserSchool} from "../../../services";
-import {throttle} from "lodash";
+import throttle from "lodash/throttle";
 import classNames from "classnames";
 import {Immutable} from "immer";
 

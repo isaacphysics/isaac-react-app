@@ -1,6 +1,6 @@
 import {AssignmentDTO} from "../../../IsaacApiTypes";
 import React, {MouseEvent, useMemo} from "react";
-import {Button, Col, Row, Spinner, UncontrolledTooltip} from "reactstrap";
+import {Button, Col, Row} from "reactstrap";
 import {Link} from "react-router-dom";
 import {
     determineGameboardStagesAndDifficulties,
@@ -8,16 +8,15 @@ import {
     difficultyShortLabelMap,
     extractTeacherName,
     generateGameboardSubjectHexagons,
-    isDefined, PATHS, siteSpecific,
+    isDefined,
+    PATHS,
+    siteSpecific,
     stageLabelMap,
     TAG_ID,
     tags
 } from "../../services";
 import {formatDate} from "./DateString";
 import {Circle} from "./svg/Circle";
-import classNames from "classnames";
-import {sortBy} from "lodash";
-import indexOf from "lodash/indexOf";
 
 const midnightOf = (date: Date | number) => {
     const d = new Date(date);
