@@ -56,7 +56,7 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
     await waitFor(() => {
         expect(managerHandler).toHaveBeenCalledTimes(1);
     });
-    await expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
+    expect(managerHandler).toHaveBeenRequestedWith(async (req) => {
         const {email} = await req.json();
         return email === newManager.email;
     });
@@ -73,7 +73,9 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
 
 describe("Groups", () => {
 
-    (["TUTOR", "TEACHER"] as const).forEach(role => it(`displays all active groups on load if the user is a ${role.toLowerCase()}, and all archived groups when Archived tab is clicked`, async () => {
+    const roles = ["TUTOR", "TEACHER"] as const;
+
+    it.each(roles)(`displays all active groups on load if the user is a %s, and all archived groups when Archived tab is clicked`, async (role) => {
         renderTestEnvironment({role});
         await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
         // switchGroupsTab checks that the mock active groups we expect to be there are in fact there
@@ -81,17 +83,15 @@ describe("Groups", () => {
         // Now check archived tab, should contain all archived groups
         const archivedTabLink = screen.getByText("Archived");
         await userEvent.click(archivedTabLink);
-        await waitFor(() => {
-            const archivedGroups = screen.queryAllByTestId("group-item");
-            const maybeArchivedGroupNames = archivedGroups.map(g => within(g).getByTestId("select-group").textContent);
-            const archivedGroupNames = maybeArchivedGroupNames.filter(isDefined);
+        const archivedGroups = await screen.findAllByTestId("group-item");
+        const maybeArchivedGroupNames = archivedGroups.map(g => within(g).getByTestId("select-group").textContent);
+        const archivedGroupNames = maybeArchivedGroupNames.filter(isDefined);
             // Expect all group names to be defined
-            expect(archivedGroupNames).toHaveLength(maybeArchivedGroupNames.length);
+        expect(archivedGroupNames).toHaveLength(maybeArchivedGroupNames.length);
             // Expect all active mock groups to be displayed
-            expect(difference(archivedGroupNames, mockArchivedGroups.map(g => g.groupName))).toHaveLength(0);
+        expect(difference(archivedGroupNames, mockArchivedGroups.map(g => g.groupName))).toHaveLength(0)
         });
-    }));
-
+    
     it('allows you to create a new group', async () => {
         const mockToken = "E990S1";
         const mockNewGroup = {
@@ -122,20 +122,18 @@ describe("Groups", () => {
         await waitFor(() => {
             expect(newGroupHandler).toHaveBeenCalledTimes(1);
         });
-        await expect(newGroupHandler).toHaveBeenRequestedWith(async (req) => {
+        expect(newGroupHandler).toHaveBeenRequestedWith(async (req) => {
             const body = await req.json();
             return "groupName" in body && body.groupName === mockNewGroup.groupName;
         });
         const modal = await screen.findByTestId("active-modal");
         // Expect that the auth token GET request is made exactly once
-        await waitFor(() => {
-            expect(modal).toHaveModalTitle("Group Created");
-            expect(authTokenHandler).toHaveBeenCalledTimes(1);
-        });
+        expect(modal).toHaveModalTitle("Group Created");
+        expect(authTokenHandler).toHaveBeenCalledTimes(1); 
         // Expect the share link and share code to be shown on the modal
         const link = await within(modal).findByTestId("share-link");
         const code = await within(modal).findByTestId("share-code");
-        expect(link).toHaveTextContent(`\/account?authToken=${mockToken}`);
+        expect(link).toHaveTextContent(`/account?authToken=${mockToken}`);
         expect(code.textContent).toEqual(mockToken);
     });
 
@@ -206,10 +204,8 @@ describe("Groups", () => {
             await userEvent.click(within(groupToRenameElement).getByTestId("select-group"));
             // Wait for "Edit group" panel to be open
             const groupEditor = await screen.findByTestId("group-editor");
-            await waitFor(async () => {
-                await within(groupEditor).findByText("Edit group");
-            });
-            // Rename the group and click update
+            await waitFor(() => within(groupEditor).getByText("Edit group"));
+             // Rename the group and click update
             const groupNameInput = await within(groupEditor).findByPlaceholderText(/Group [Nn]ame/);
             await userEvent.clear(groupNameInput);
             await userEvent.type(groupNameInput, newGroupName);
@@ -284,7 +280,7 @@ describe("Groups", () => {
                     expect(newGroupNames).toHaveLength(groups.length - 1);
                 });
                 // Assert that the request was what we expected
-                await expect(updateGroup).toHaveBeenRequestedWith(async (req) => {
+                expect(updateGroup).toHaveBeenRequestedWith(async (req) => {
                     const {groupId} = req.params;
                     const updatedGroup = await req.json();
                     // Request is correct if and only if the archived status has changed for the group that we expect
@@ -304,10 +300,10 @@ describe("Groups", () => {
                 // Ensure that in any case (whether we switched to the archived tab before doing anything or not), only
                 // two GET requests to the /groups endpoint were made, one for each tab
                 expect(getGroups).toHaveBeenCalledTimes(2);
-                await expect(getGroups).toHaveBeenRequestedWith((req) => {
+                expect(getGroups).toHaveBeenRequestedWith((req) => {
                     return req.url.searchParams.get("archived_groups_only") === "true";
                 });
-                await expect(getGroups).toHaveBeenRequestedWith((req) => {
+                expect(getGroups).toHaveBeenRequestedWith((req) => {
                     return req.url.searchParams.get("archived_groups_only") === "false";
                 });
             });
@@ -400,7 +396,7 @@ describe("Groups", () => {
         // this because the document gets removed from underneath it before it can fade out, so we need to test this button
         // in a way that doesn't show the popup in the first place.
         resetPasswordButton1.click();
-        waitFor(() => {
+        await waitFor(() => {
             expect(passwordResetSuccessfullySent).toBeTruthy();
         });
         // Second button should be disabled
@@ -429,7 +425,7 @@ describe("Groups", () => {
         const groups = await switchGroupsTab("active", [mockGroup]);
         const selectGroupButton = within(groups.find(g => within(g).getByTestId("select-group").textContent === mockGroup.groupName) as HTMLElement).getByTestId("select-group");
         await userEvent.click(selectGroupButton);
-        const groupEditor = await screen.findByTestId("group-editor");
+        const groupEditor = screen.getByTestId("group-editor")
         // Expect that both members are shown
         const memberInfos = await within(groupEditor).findAllByTestId("member-info");
         expect(memberInfos).toHaveLength(2);
@@ -468,7 +464,7 @@ describe("Groups", () => {
         // Expect the "add group managers" button to be shown on the modal
         const addGroupManagersButton = await within(firstModal).findByRole("button", {name: "Add group managers"});
         await userEvent.click(addGroupManagersButton);
-        await testAddAdditionalManagerInModal(newGroupManagerHandler, mockNewManager);
+        await waitFor(()=>testAddAdditionalManagerInModal(newGroupManagerHandler, mockNewManager));
     });
 
     it("does not allow tutors to add new group managers in the modal after creating a new group", async () => {
@@ -491,12 +487,12 @@ describe("Groups", () => {
         await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Manage groups"));
         const newGroupInput = await screen.findByPlaceholderText(/Group [Nn]ame/);
         await userEvent.type(newGroupInput, mockNewGroup.groupName);
-        const createButton = await screen.findByRole("button", {name: "Create"});
+        const createButton = screen.getByRole("button", {name: "Create"});
         await userEvent.click(createButton);
-        const firstModal = await screen.findByTestId("active-modal");
+        await waitFor(()=>{const firstModal = screen.getByTestId("active-modal");
         // Expect the "add group managers" button NOT to be shown on the modal
         expect(firstModal).toHaveModalTitle("Group Created");
-        expect(within(firstModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
+        expect(within(firstModal).queryByRole("button", {name: "Add group managers"})).toBeNull()});
     });
 
     it("only allows additional group managers to remove themselves as group managers", async () => {
