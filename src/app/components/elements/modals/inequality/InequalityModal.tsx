@@ -515,7 +515,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             >Hide Question</div>
         </div>}
 
-        <div className="orientation-warning">The {siteSpecific("Isaac", "Ada")} Equation Editor may only be used in landscape mode. Please rotate your device.</div>
+        <div className="orientation-warning">Our equation editor works best in landscape mode.</div>
 
         <InequalityMenu
             menuItems={menuItems}
