@@ -33,6 +33,7 @@ describe("userConsistencyCheckerMiddleware", () => {
 
     afterAll(() => {
         jest.clearAllMocks();
+        jest.clearAllTimers();
     })
 
     it("sets the current user after a successful login and starts consistency checking", async () => {

@@ -19,7 +19,7 @@ export const middleware: Middleware[] = [
 ];
 const defaultMiddlewareOptions = {
     serializableCheck: process.env.NODE_ENV !== 'test',
-    immutableCheck: { warnAfter: 120 },
+    immutableCheck: false,
 }
 
 export const store = configureStore({
