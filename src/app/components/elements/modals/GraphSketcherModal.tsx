@@ -4,7 +4,7 @@ import {
     GraphSketcherState,
     LineType,
     makeGraphSketcher
-} from "isaac-graph-sketcher/dist/src/GraphSketcher";
+} from "isaac-graph-sketcher";
 import {isDefined} from "../../../services";
 import debounce from "lodash/debounce";
 import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
