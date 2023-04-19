@@ -48,42 +48,42 @@
             &#graph-sketcher-ui-bezier-button {
                 top: 20px;
                 right: 260px;
-                background-image: url('/assets/hex-button-polynomial.png');
+                background-image: url('/assets/graph-sketcher-polynomial.svg');
 
                 &:hover,
                 &.active {
-                    background-image: url('/assets/hex-button-polynomial-hover.png');
+                    background-image: url('/assets/graph-sketcher-polynomial-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-linear-button {
                 top: 20px;
                 right: 350px;
-                background-image: url('/assets/hex-button-straight.png');
+                background-image: url('/assets/graph-sketcher-straight.svg');
 
                 &:hover,
                 &.active {
-                    background-image: url('/assets/hex-button-straight-hover.png');
+                    background-image: url('/assets/graph-sketcher-straight-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-undo-button {
                 bottom: 20px;
                 left: 20px;
-                background-image: url('/assets/hex-button-undo.png');
+                background-image: url('/assets/hex-undo.svg');
 
                 &:hover {
-                    background-image: url('/assets/hex-button-undo-hover.png');
+                    background-image: url('/assets/hex-undo-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-redo-button {
                 bottom: 20px;
                 left: 110px;
-                background-image: url('/assets/hex-button-redo.png');
+                background-image: url('/assets/hex-redo.svg');
 
                 &:hover {
-                    background-image: url('/assets/hex-button-redo-hover.png');
+                    background-image: url('/assets/hex-redo-active.svg');
                 }
             }
 
