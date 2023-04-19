@@ -73,7 +73,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
 
     const _updateEquation = (pycode: string) => {
         // const pycode = e.target.value;
-        setTextInput(pycode);
+        setTextInput(pycode); // TODO should transform "factorial(x)" -> "(x)!"
         setInputState({...inputState, pythonExpression: pycode, userInput: textInput});
 
         // Parse that thing
