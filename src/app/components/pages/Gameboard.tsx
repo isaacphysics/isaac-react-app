@@ -168,7 +168,7 @@ export const Gameboard = withRouter(({ location }) => {
         <TitleAndBreadcrumb breadcrumbTitleOverride="Gameboard" currentPageTitle={`${siteSpecific("Gameboard", "Quiz")} not found`} />
         <h3 className="my-4">
             <small>
-                {`We're sorry, we were not able to find a ${siteSpecific("Gameboard", "Quiz")} with the id `}<code>{gameboardId}</code>{"."}
+                {`We're sorry, we were not able to find a ${siteSpecific("gameboard", "quiz")} with the id `}<code>{gameboardId}</code>{"."}
             </small>
             {isPhy && <div className="mt-4 text-center">
                 <Button tag={Link} to={PATHS.QUESTION_FINDER} color="primary" outline className="btn-lg">
