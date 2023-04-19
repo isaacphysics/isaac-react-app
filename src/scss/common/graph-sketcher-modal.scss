@@ -40,7 +40,7 @@
 
             &#graph-sketcher-ui-trash-button {
                 top: 20px;
-                right: 0;
+                right: 20px;
                 opacity: 0.5;
                 background-image: url('/assets/inequality-trash-phy.svg');
             }
@@ -94,16 +94,43 @@
             }
         }
 
-        .dropdown {
+        div#graph-sketcher-ui-color-select-hexagons {
             position: absolute;
-
-            &#graph-sketcher-ui-color-select {
-                top: 20px;
-                right: 120px;
-                width: 120px;
-                height: 30px;
-                border: 1px solid black;
-                background: white;
+            text-align: center;
+            top: 20px;
+            right: 125px;
+            width: 120px;
+            height: 120px;
+            .hover-text {
+                display: none;
+            }
+            &:hover .hover-text {
+                display: block;
+            }
+            svg {
+                width: 96px;
+                height: 96px;
+                #blue-hex-colour {
+                    fill: rgb(93,165,218);
+                    &.active {
+                        stroke: darken(rgb(93,165,218), 15%);
+                        stroke-width: 5px;
+                    }
+                }
+                #orange-hex-colour {
+                    fill: rgb(250,164,58);
+                    &.active {
+                        stroke: darken(rgb(250, 164, 58), 15%);
+                        stroke-width: 5px;
+                    }
+                }
+                #green-hex-colour {
+                    fill: rgb(96,189,104);
+                    &.active {
+                        stroke: darken(rgb(96,189,104), 15%);
+                        stroke-width: 5px;
+                    }
+                }
             }
         }
     }
