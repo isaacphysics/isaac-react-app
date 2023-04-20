@@ -18,8 +18,7 @@ export const middleware: Middleware[] = [
     notificationCheckerMiddleware
 ];
 const defaultMiddlewareOptions = {
-    serializableCheck: process.env.NODE_ENV !== 'test',
-    immutableCheck: false,
+    serializableCheck: process.env.NODE_ENV !== 'test'
 }
 
 export const store = configureStore({
