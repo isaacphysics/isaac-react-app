@@ -163,11 +163,11 @@ def deploy_live(ctx):
         print("What is the previous app version? (i.e. v1.2.3)")
         previous_app_version = ask_to_run_command(
             "docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-")
-    ctx['old_app'] = previous_app_version
+    ctx['old_app'] = previous_app_version.rstrip()
 
     print("What is the previous api version? (i.e. v1.2.3)")
     previous_api_version = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {app_name_prefix}{previous_app_version}")
-    ctx['old_api'] = previous_api_version
+    ctx['old_api'] = previous_api_version.rstrip()
 
     front_end_only_release = 'y' == input("Is this a front-end-only release? [y/n] ").lower()
     if not front_end_only_release:
