@@ -171,7 +171,7 @@ def deploy_live(ctx):
     while previous_app_version == "":
         print("What is the previous app version? (i.e. v1.2.3)")
         previous_app_version = ask_to_run_command(
-            "docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-",
+            "docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-"
         ).rstrip()
     ctx['old_app'] = previous_app_version
 
