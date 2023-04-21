@@ -16,11 +16,11 @@ import {
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";
 
-export const anonymiseIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T) => T) => (nonanonymousData: T) =>
-    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData) : nonanonymousData;
+export const anonymiseIfNeededWith = <T, R>(anonymisationCallback: (nonanonymousData: T, options?: R) => T, options?: R) => (nonanonymousData: T): T =>
+    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData, options) : nonanonymousData;
 
-export const anonymiseListIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T) => T) => (nonanonymousData: T[]) =>
-    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? nonanonymousData.map(anonymisationCallback) : nonanonymousData;
+export const anonymiseListIfNeededWith = <T, R>(anonymisationCallback: (nonanonymousData: T, options?: R) => T, options?: R) => (nonanonymousData: T[]): T[] =>
+    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? nonanonymousData.map(d => anonymisationCallback(d, options)) : nonanonymousData;
 
 export const anonymisationFunctions = {
     progressState: produce<AppAssignmentProgress[]>((progress) => {
@@ -47,11 +47,11 @@ export const anonymisationFunctions = {
             email: "hidden@test.demo"
         };
     },
-    appGroup: (appGroup: AppGroup): AppGroup => ({
+    appGroup: (appGroup: AppGroup, {anonymiseGroupNames} = {anonymiseGroupNames: false}): AppGroup => ({
         ...appGroup,
         ownerSummary: appGroup?.ownerSummary && anonymisationFunctions.userSummary("Group", "Manager 1")(appGroup.ownerSummary),
         additionalManagers: appGroup?.additionalManagers?.map((us, i) => anonymisationFunctions.userSummary("Group", `Manager ${i + 2}`)(us)),
-        groupName: `Demo Group ${appGroup?.id}`,
+        groupName: anonymiseGroupNames ? `Demo Group ${appGroup?.id}` : appGroup.groupName,
         members: appGroup?.members?.map(anonymisationFunctions.userSummary())
     }),
     assignments: (quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null) => {
@@ -95,8 +95,8 @@ export const anonymisationFunctions = {
         activeAuthorisations?.map((a, i) => anonymisationFunctions.userSummary("Demo", `Teacher ${i + 1}`)(a)),
     otherUserAuthorisations: (otherUserAuthorisations: UserSummaryDTO[]): UserSummaryDTO[] =>
         otherUserAuthorisations?.map(anonymisationFunctions.userSummary()),
-    groupMembershipDetail: (groupMembership: GroupMembershipDetailDTO): GroupMembershipDetailDTO => ({
+    groupMembershipDetail: (groupMembership: GroupMembershipDetailDTO, {anonymiseGroupNames} = {anonymiseGroupNames: false}): GroupMembershipDetailDTO => ({
         ...groupMembership,
-        group: anonymisationFunctions.appGroup(groupMembership.group) ?? {},
+        group: anonymisationFunctions.appGroup(groupMembership.group, {anonymiseGroupNames}) ?? {},
     })
 }
