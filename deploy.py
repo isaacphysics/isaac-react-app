@@ -240,6 +240,7 @@ if __name__ == '__main__':
             deploy_live(context)
             context['env'] = 'etl'
             deploy_etl(context)
+            context['env'] = 'live'
             write_changelog()
         elif context['env'] == 'etl':
             deploy_etl(context)
