@@ -56,11 +56,11 @@ type TitleAndBreadcrumbProps = BreadcrumbTrailProps & PageTitleProps & {
 };
 export const TitleAndBreadcrumb = ({modalId, children, breadcrumbTitleOverride, currentPageTitle, subTitle, disallowLaTeX, className, audienceViews, help, collectionType, intermediateCrumbs}: TitleAndBreadcrumbProps) => {
     return <div className={classNames(className, {"pt-4 pt-md-5": isAda})}>
-        {isPhy && <BreadcrumbTrail
+        <BreadcrumbTrail
             currentPageTitle={breadcrumbTitleOverride ?? currentPageTitle}
             intermediateCrumbs={intermediateCrumbs}
             collectionType={collectionType}
-        />}
+        />
         {children}
         <PageTitle
             modalId={modalId} subTitle={subTitle}
