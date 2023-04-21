@@ -55,7 +55,7 @@ def validate_args(args):
     return args
 
 
-def ask_to_run_command(command, print_output=False):
+def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None):
     if not EXEC:
         return input(f"{command}\n")
 
@@ -70,15 +70,23 @@ def ask_to_run_command(command, print_output=False):
         print("Skipping command...")
         return
     if response in ["y", "yes"]:
-        try:
-            output = subprocess.check_output(command, shell=True, universal_newlines=True)
-            if print_output:
-                print(output)
+        process = subprocess.run(command, shell=True, universal_newlines=True, stdout=subprocess.PIPE)
+        output = process.stdout
+
+        if print_output:
+            print(output)
+
+        if process.returncode == 0:
             return output
-        except subprocess.CalledProcessError as e:
-            print(e)
+        elif expected_nonzero_exit_codes and process.returncode in expected_nonzero_exit_codes:
+            print(f"Command returned non-zero exit code {process.returncode} - this may not indicate an error (e.g. "
+                  f"in the case of grep or git diff), but you should check subsequent commands carefully.")
+            return output
+        else:
+            print(f"Command returned unexpected exit code {process.returncode}.")
             print("! There was an unexpected error, please clean up after yourself !")
             response = input(f"Continue, or Abort?: [c/a] ")
+
             while response.lower() not in ["c", "continue", "a", "abort"]:
                 response = input("Please respond with one of:\n - Continue (or c)\n - Abort (or a)\n")
             if response in ["a", "abort"]:
@@ -86,6 +94,7 @@ def ask_to_run_command(command, print_output=False):
             if response in ["c", "continue"]:
                 print("Continuing...")
                 return
+
 
 def build_docker_image_for_version(ctx):
     print("\n# BUILD THE APP AND API")
@@ -102,7 +111,7 @@ def ask_for_old_api(ctx):
 def update_config(ctx):
     ask_for_old_api(ctx)
     print("# Config diff from previous release (please make sure that the template is updated):")
-    ask_to_run_command(f"cd /local/src/isaac-api && git diff {ctx['old_api']} {ctx['api']} -- config-templates/linux-local-dev-segue-config.properties", print_output=True)
+    ask_to_run_command(f"cd /local/src/isaac-api && git diff {ctx['old_api']} {ctx['api']} -- config-templates/linux-local-dev-segue-config.properties")
     print("# If necessary, update config:")
     ask_to_run_command(f"sudo nano /local/data/isaac-config/{ctx['site']}/segue-config.{ctx['env']}.properties")
     print("# Remember to also update isaac-3 so that it remains in-sync! \n")
@@ -111,9 +120,9 @@ def update_config(ctx):
 def run_db_migrations(ctx):
     ask_for_old_api(ctx)
     print("# New migrations from last release (please make sure that these have been updated):")
-    ask_to_run_command(f"cd /local/src/isaac-api && git diff --names-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations", print_output=True)
+    ask_to_run_command(f"cd /local/src/isaac-api && git diff --name-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations")
     print("# Print migration SQL to terminal (to copy)?")
-    ask_to_run_command(f"cd /local/src/isaac-api && git diff --names-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations | xargs cat", print_output=True)
+    ask_to_run_command(f"cd /local/src/isaac-api && git diff --name-only {ctx['old_api']} {ctx['api']} -- src/main/resources/db_scripts/migrations | xargs cat")
     print("# If there are any DB migrations, run them (in a transaction with a BEGIN; ROLLBACK; or COMMIT;):")
     ask_to_run_command(f"docker exec -it {ctx['site']}-pg-{ctx['env']} psql -U rutherford")
 
@@ -126,9 +135,9 @@ def write_changelog():
 def bring_down_any_existing_containers(ctx):
     app_name_prefix = ctx['site'] + '-app-' + ctx['env'] + '-'
     print(f"# Find running {ctx['site']} {ctx['env']} versions:")
-    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-")
+    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-", expected_nonzero_exit_codes=[1])
     print(f"# Bring them down using:")
-    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -- bash -c './compose {ctx['site']} {ctx['env']} $0 down -v'")
+    ask_to_run_command("docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}- | xargs -- bash -c './compose {ctx['site']} {ctx['env']} $0 down -v'", expected_nonzero_exit_codes=[1])
 
 
 def bring_up_the_new_containers(ctx):
@@ -162,19 +171,22 @@ def deploy_live(ctx):
     while previous_app_version == "":
         print("What is the previous app version? (i.e. v1.2.3)")
         previous_app_version = ask_to_run_command(
-            "docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-").rstrip()
+            "docker ps --format '{{.Names}}' | " + f"grep {app_name_prefix} | cut -c{len(app_name_prefix) + 1}-",
+        ).rstrip()
     ctx['old_app'] = previous_app_version
 
     print("What is the previous api version? (i.e. v1.2.3)")
-    previous_api_version = ask_to_run_command(f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {app_name_prefix}{previous_app_version}").rstrip()
+    previous_api_version = ask_to_run_command(
+        f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {app_name_prefix}{previous_app_version}",
+    ).rstrip()
     ctx['old_api'] = previous_api_version
 
     front_end_only_release = 'y' == input("Is this a front-end-only release? [y/n] ").lower()
     if not front_end_only_release:
         print("# List possibly-unused live apis:")
-        ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version}")
+        ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version}", expected_nonzero_exit_codes=[1])
         print("# Bring down and remove the penultimate live api(s), if that is sensible, using something like:")
-        ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version} | xargs -- bash -c 'docker stop $0 && docker rm $0'")
+        ask_to_run_command(f"docker ps --format '{{{{ .Names }}}}' --filter name={ctx['site']}-api-live-* | grep -v {previous_api_version} | xargs -- bash -c 'docker stop $0 && docker rm $0'", expected_nonzero_exit_codes=[1])
 
         update_config(ctx)
         run_db_migrations(ctx)
