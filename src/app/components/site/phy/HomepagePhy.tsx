@@ -8,9 +8,13 @@ import {WarningBanner} from "../../navigation/WarningBanner";
 
 export const HomepagePhy = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
-    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "physics"});
+    const [fetchNews, {data: news}] = isaacApi.endpoints.getNewsPodList.useLazyQuery();
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
+
+    useEffect(() => {
+        fetchNews({subject: "physics"});
+    }, [user]);
 
     return <>
         {/*<WarningBanner/>*/}

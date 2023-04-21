@@ -14,7 +14,11 @@ import {MetaDescription} from "../../elements/MetaDescription";
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
-    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
+    const [fetchNews, {data: news}] = isaacApi.endpoints.getNewsPodList.useLazyQuery();
+
+    useEffect(() => {
+        fetchNews({subject: "news", orderDecending: true});
+    }, [user]);
 
     return <>
         {/*<WarningBanner/>*/}

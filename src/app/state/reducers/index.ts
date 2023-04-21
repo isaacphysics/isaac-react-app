@@ -147,7 +147,7 @@ export const rootReducer = (state: AppState, action: AnyAction) => {
     if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS
         || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS
         || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        isaacApi.util.resetApiState();
+        // Reset the state to undefined to clear the store
         return appReducer(undefined, action);
     }
     return appReducer(state, action);
