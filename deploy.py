@@ -74,7 +74,7 @@ def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: 
         output = process.stdout
 
         if print_output:
-            print(output)
+            print(f"{output if len(output) else '(No output)'}")
 
         if process.returncode == 0:
             return output
