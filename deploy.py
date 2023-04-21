@@ -177,7 +177,7 @@ def deploy_live(ctx):
 
     print("What is the previous api version? (i.e. v1.2.3)")
     previous_api_version = ask_to_run_command(
-        f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {app_name_prefix}{previous_app_version}",
+        f"docker inspect --format '{{{{ index .Config.Labels \"apiVersion\"}}}}' {app_name_prefix}{previous_app_version}"
     ).rstrip()
     ctx['old_api'] = previous_api_version
 
