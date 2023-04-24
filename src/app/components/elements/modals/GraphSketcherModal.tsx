@@ -9,6 +9,8 @@ import {isDefined} from "../../../services";
 import debounce from "lodash/debounce";
 import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
 import {Markup} from "../markup";
+import {closeActiveModal, openActiveModal, store, useAppDispatch} from "../../../state";
+import {PageFragment} from "../PageFragment";
 
 interface GraphSketcherModalProps {
     close: () => void;
@@ -23,6 +25,15 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
+
+    // Help modal logic
+    const dispatch = useAppDispatch();
+    const showHelpModal = () => dispatch(openActiveModal({
+        closeAction: () => { store.dispatch(closeActiveModal()) },
+        size: "xl",
+        title: "Quick Help",
+        body: <PageFragment fragmentId={`graph_sketcher_help_modal`}/>
+    }));
 
     // This is debounced here because the graph sketcher upstream calls this
     // on every redraw, which happens on every mouse event.
@@ -99,10 +110,11 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
         <div className="graph-sketcher-ui">
             <div className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">redo</div>
             <div className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">undo</div>
-            <div className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">poly</div>
-            <div className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">straight</div>
+            <div className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">polynomial curve</div>
+            <div className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">straight line</div>
             <div className={ [ 'button', isTrashActive() ? 'active' : '' ].join(' ') } role="button" tabIndex={0} id="graph-sketcher-ui-trash-button">trash</div>
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">submit</div>
+            <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">Help</div>
 
             {/* eslint-disable-next-line jsx-a11y/no-onchange */}
             <select className="dropdown" id="graph-sketcher-ui-color-select" value={drawingColorName} onChange={(e: ChangeEvent<HTMLSelectElement>) => setDrawingColorName(e.target.value)}>
