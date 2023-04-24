@@ -4810,7 +4810,7 @@ export const mockPage = (pageId: string) => ({
     published: true
   });
 
-  export const mockAssignedQuiz = [{
+export const mockAssignedQuiz = [{
     id: 1,
     quizId: "example_quiz_1",
     quizSummary: {
@@ -4826,19 +4826,21 @@ export const mockPage = (pageId: string) => ({
     creationDate: 888888888888 as unknown as Date,
     dueDate: 999999999999 as unknown as Date,
     quizFeedbackMode: "NONE"
-    }];
+}];
 
-    export const mockAvailableQuiz = { 
-        results: [
-            {   id: "example_quiz_1",
-                title: "Example Quiz 1",
-                type: "isaacQuiz",
-                level: "2",
-                tags: [],
-                url: "/isaac-api/api/quiz/example_quiz_1",
-                visibleToStudents: false
-            },
-            {   id: "example_quiz_2",
+export const mockAvailableQuiz = { 
+    results: [
+        {
+            id: "example_quiz_1",
+            title: "Example Quiz 1",
+            type: "isaacQuiz",
+            level: "2",
+            tags: [],
+            url: "/isaac-api/api/quiz/example_quiz_1",
+            visibleToStudents: false
+        },
+        {   
+            id: "example_quiz_2",
             title: "Example Quiz 2",
             type: "isaacQuiz",
             level: "1",
@@ -4846,6 +4848,6 @@ export const mockPage = (pageId: string) => ({
             url: "/isaac-api/api/quiz/example_quiz_2",
             visibleToStudents: false
         },
-        ], 
-        totalResults: 2
-    };  
+    ],
+    totalResults: 2
+};  

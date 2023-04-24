@@ -89,7 +89,7 @@ describe("Groups", () => {
             // Expect all group names to be defined
         expect(archivedGroupNames).toHaveLength(maybeArchivedGroupNames.length);
             // Expect all active mock groups to be displayed
-        expect(difference(archivedGroupNames, mockArchivedGroups.map(g => g.groupName))).toHaveLength(0)
+        expect(difference(archivedGroupNames, mockArchivedGroups.map(g => g.groupName))).toHaveLength(0);
         });
     
     it('allows you to create a new group', async () => {

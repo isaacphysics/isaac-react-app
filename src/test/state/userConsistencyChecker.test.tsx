@@ -100,7 +100,6 @@ describe("userConsistencyCheckerMiddleware", () => {
     });
 
     it("does not start consistency checking if setting the current user fails", async () => {
-        console.info("error is intended here")
         spySetUserId.mockImplementation(() => false);
 
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);
