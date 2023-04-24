@@ -41,7 +41,7 @@ export const FooterCS = () => (
                             <Row className="align-items-center">
                                 <Col>
                                     <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener">
-                                        <img src="/assets/logos/ada_cambridge_icon.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
+                                        <img src="/assets/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='img-fluid footer-org-logo' />
                                     </a>
                                 </Col>
                                 <Col>
