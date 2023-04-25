@@ -1,5 +1,5 @@
 import {renderTestEnvironment} from "../utils";
-import {screen, waitFor} from "@testing-library/react";
+import {screen, waitFor, within} from "@testing-library/react";
 import {history, isAda, isPhy, PATHS, siteSpecific, TEACHER_REQUEST_ROUTE} from "../../app/services";
 
 const tutorOnlyRoutes = [PATHS.SET_ASSIGNMENTS, "/groups"];
@@ -72,7 +72,8 @@ describe("Visiting a teacher-only page", () => {
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {
             history.replace(route);
-            await screen.findByText("Mock page: teacher_accounts");
+            const titleElement = await screen.findByTestId("main-heading");
+            await within(titleElement).findByText("Mock page: teacher_accounts");
             expect(history.location.pathname).toEqual("/pages/teacher_accounts");
         }
     });
@@ -84,7 +85,8 @@ describe("Visiting a teacher-only page", () => {
         await screen.findByTestId("main");
         for (const route of teacherOnlyRoutes) {
             history.replace(route);
-            await screen.findByText("Access denied");
+            const titleElement = await screen.findByTestId("main-heading");
+            await within(titleElement).findByText("Access denied");
             expect(history.location.pathname).toEqual(route);
         }
     });
