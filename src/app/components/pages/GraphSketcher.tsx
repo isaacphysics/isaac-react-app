@@ -8,7 +8,7 @@ import {
     GraphSketcherState,
     LineType,
     makeGraphSketcher
-} from 'isaac-graph-sketcher/dist/src/GraphSketcher';
+} from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
 import {isStaff} from "../../services";
 
