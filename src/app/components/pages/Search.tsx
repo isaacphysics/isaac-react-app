@@ -59,7 +59,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
     let initialFilters = urlFilters;
     if (isAda && urlFilters.length === 0) {
-        initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
+        initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
     }
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
 
@@ -131,8 +131,8 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         placeholder="No page type filter"
                                         value={filtersState}
                                         options={
-                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.GENERIC]
-                                                .concat(siteSpecific([], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
+                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC]
+                                                .concat(siteSpecific([DOCUMENT_TYPE.EVENT], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
                                                 .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
