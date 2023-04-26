@@ -42,8 +42,13 @@ function deitemise(item: Item<DOCUMENT_TYPE>) {
 
 
 const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUMENT_TYPE>>> = {
-    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: siteSpecific("rgba(254, 161, 0, 0.9)", "rgba(255, 181, 63, 0.9)")}),
-    multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
+    multiValue: (styles: CSSObjectWithLabel) => ({
+        ...styles,
+        backgroundColor: siteSpecific("rgba(254, 161, 0, 0.9)", "rgba(135, 12, 90, 0.9)"),
+        color: siteSpecific("black", "white"),
+
+    }),
+    multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: siteSpecific("black", "white")}),
 };
 
 // Interacting with the page's filters change the query parameters.
