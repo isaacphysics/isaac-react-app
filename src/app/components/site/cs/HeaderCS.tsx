@@ -62,7 +62,7 @@ export const HeaderCS = () => {
                             <LinkItem to={PATHS.SET_ASSIGNMENTS}>Set quizzes</LinkItem>
                             <LinkItem to={PATHS.ASSIGNMENT_PROGRESS}>Markbook</LinkItem>
                             {isTeacherOrAbove(user) && <>
-                                {/*<LinkItem to="/set_tests">Manage tests</LinkItem>*/}
+                                <LinkItem to="/set_tests">Manage tests</LinkItem>
                                 <LinkItem to="/teaching_order">Suggested teaching order</LinkItem>
                             </>}
                         </NavigationSection>}
@@ -72,7 +72,7 @@ export const HeaderCS = () => {
                             <LinkItem to={PATHS.MY_GAMEBOARDS}>My quizzes</LinkItem>
                             <LinkItem to="/progress">My progress</LinkItem>
                             <LinkItem to="/account">My account</LinkItem>
-                            {/*<LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>*/}
+                            <LinkItem to="/tests">My tests {<MenuBadge count={quizzesCount} message="incomplete tests" />}</LinkItem>
                             {/*<LinkItem to="/student_rewards">Student rewards</LinkItem>*/}
                         </NavigationSection>}
 

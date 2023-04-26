@@ -4,11 +4,18 @@ import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
 import {Topic} from "../../pages/Topic";
 import {Redirect} from "react-router";
-import {isStaff, isTutorOrAbove} from "../../../services";
+import {isLoggedIn, isStaff, isTeacherOrAbove, isTutorOrAbove} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Glossary} from "../../pages/Glossary";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
 import {News} from "../../pages/News";
+import {SetQuizzes} from "../../pages/quizzes/SetQuizzes";
+import {MyQuizzes} from "../../pages/quizzes/MyQuizzes";
+import {QuizDoAssignment} from "../../pages/quizzes/QuizDoAssignment";
+import {QuizAttemptFeedback} from "../../pages/quizzes/QuizAttemptFeedback";
+import {QuizTeacherFeedback} from "../../pages/quizzes/QuizTeacherFeedback";
+import {QuizPreview} from "../../pages/quizzes/QuizPreview";
+import {QuizDoFreeAttempt} from "../../pages/quizzes/QuizDoFreeAttempt";
 
 const Equality = lazy(() => import('../../pages/Equality'));
 
@@ -24,6 +31,25 @@ export const RoutesCS = [
     <Redirect key={key++} from="/assignment_progress" to="/my_markbook" />,
     <TrackedRoute key={key++} exact path="/my_markbook/:assignmentId" ifUser={isTutorOrAbove} component={SingleAssignmentProgress} />,
     <Redirect key={key++} from="/assignment_progress/:assignmentId" to="/my_markbook/:assignmentId" />,
+
+    // Teacher test pages
+    <TrackedRoute exact path="/set_tests" ifUser={isTeacherOrAbove} component={SetQuizzes} />,
+    // Student test pages
+    <TrackedRoute exact path="/tests" ifUser={isLoggedIn} component={MyQuizzes} />,
+
+    // Quiz (test) pages
+    <TrackedRoute exact path="/test/assignment/:quizAssignmentId" ifUser={isLoggedIn} component={QuizDoAssignment} />,
+    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/page/:page" ifUser={isLoggedIn} component={QuizDoAssignment} />,
+    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/attempt/:quizAttemptId/feedback/:page" ifUser={isLoggedIn} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/attempt/feedback/:quizAssignmentId/:studentId/:page" ifUser={isTeacherOrAbove} component={QuizAttemptFeedback} />,
+    <TrackedRoute exact path="/test/assignment/:quizAssignmentId/feedback" ifUser={isTeacherOrAbove} component={QuizTeacherFeedback} />,
+    // Tutors can preview tests iff the test is student only
+    <TrackedRoute exact path="/test/preview/:quizId" ifUser={isTutorOrAbove} component={QuizPreview} />,
+    <TrackedRoute exact path="/test/preview/:quizId/page/:page" ifUser={isTutorOrAbove} component={QuizPreview} />,
+    <TrackedRoute exact path="/test/attempt/:quizId" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
+    <TrackedRoute exact path="/test/attempt/:quizId/page/:page" ifUser={isLoggedIn} component={QuizDoFreeAttempt} />,
 
     // Topics and content
     <TrackedRoute key={key++} exact path="/topics" component={AllTopics} />,
