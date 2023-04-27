@@ -16,7 +16,7 @@ export const FooterPhy = () => (
         <div className="footer-top d-print-none">
             <Container>
                 <Row className="px-3 px-sm-0 pb-3 pb-md-4">
-                    <Col md="4" lg="3" className="logo-col">
+                    <Col md="4" className="logo-col">
                         <div className="d-flex flex-row">
                             <Link to="/">
                                 <img
@@ -26,20 +26,20 @@ export const FooterPhy = () => (
                                 />
                             </Link>
                         </div>
-                        <div className="footer-links logo-text pt-3">
-                            A&nbsp;<ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
-                                <strong>Department for Education</strong>
-                            </ExternalLink> project at the {' '}
-                            <ExternalLink href="https://www.cam.ac.uk">
-                                <strong>University&nbsp;of&nbsp;Cambridge</strong>
-                            </ExternalLink>,
-                            <br />supported by {' '}
+                        <div className="footer-links logo-text pt-3 mt-1">
+                            <a href="https://www.cam.ac.uk/" target="_blank" rel="noopener" className="mt-2 mb-3">
+                                <img src="/assets/logos/university_of_cambridge.svg" alt='University of Cambridge website' className='footer-org-logo' />
+                            </a>
+                            Funded by&nbsp;<ExternalLink href="https://www.gov.uk/government/organisations/department-for-education">
+                            <strong>Department for Education</strong>
+                            </ExternalLink>.
+                            <br />Supported by {' '}
                             <ExternalLink href="https://www.ogdentrust.com/">
                                 <strong>The&nbsp;Ogden&nbsp;Trust</strong>
                             </ExternalLink>.
                         </div>
                     </Col>
-                    <Col md={{size: 7, offset: 1}} lg={{size: 5, offset: 1}} className="pt-5 mt-4 mt-md-0">
+                    <Col md={{size: 7, offset: 1}} lg={{size: 5, offset: 0}} className="pt-5 mt-4 mt-md-0">
                         <ListGroupFooter />
                     </Col>
                     <Col md="5" lg="3" className="pt-5 mt-4 mt-lg-0">

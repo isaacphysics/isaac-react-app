@@ -50,5 +50,5 @@ export const RoutesCS = [
     // <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
 
     // <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
-    <TrackedRoute exact path="/equality" ifUser={isStaff} component={Equality} />,
+    <TrackedRoute key={key++} exact path="/equality" ifUser={isStaff} component={Equality} />,
 ];
