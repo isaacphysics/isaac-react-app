@@ -57,10 +57,7 @@ export const errorSlice = createSlice({
             ACTION_TYPE.USER_PREFERENCES_RESPONSE_FAILURE
         ].includes(action.type);
 
-        builder.addCase(
-            ACTION_TYPE.USER_CONSISTENCY_ERROR,
-            () => ({type: "consistencyError"})
-        ).addMatcher(
+        builder.addMatcher(
             generalMatcher,
             (_, action) => ({type: "generalError", generalError: action.errorMessage})
         );
