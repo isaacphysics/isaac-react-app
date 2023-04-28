@@ -104,26 +104,23 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     const redo = () => modalSketch?.redo();
 
-    const isTrashActive = () => {
-        return modalSketch?.isTrashActive;
-    }
-
-    const hexagonSize = 80;
+    const hexagonSize = 74;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
     return <div id='graph-sketcher-modal' style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
-            <div className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">redo</div>
-            <div className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">undo</div>
-            <div className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">polynomial curve</div>
-            <div className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">straight line</div>
-            <div className={ [ 'button', isTrashActive() ? 'active' : '' ].join(' ') } role="button" tabIndex={0} id="graph-sketcher-ui-trash-button">trash</div>
-            <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">submit</div>
+            <button title="Redo last change" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">Redo</button>
+            <button title="Undo last change" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">Undo</button>
+            <div title="Draw polynomial curve" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">Polynomial curve</div>
+            <div title="Draw straight line" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } role="button" onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">Straight line</div>
+            <button title="Delete selected curve" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">Delete selected curve</button>
+            <button title="Delete all curves" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">Delete all curves</button>
+            <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">Submit</div>
             <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">Help</div>
 
             <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} aria-readonly />
             <div id="graph-sketcher-ui-color-select-hexagons">
-                <svg>
+                <svg width={90} height={90}>
                     <Hexagon
                         {...colourHexagon} id={"blue-hex-colour"}
                         transform={`translate(${hexagonSize/4 + 3 + 5}, 5)`}
@@ -143,7 +140,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                         onClick={() => setDrawingColorName("Green")}
                     />
                 </svg>
-                <h5 className={"hover-text"}>Line colour</h5>
+                <p className={"hover-text"}>Line colour</p>
             </div>
             {props.question?.value &&
                 <Markup trusted-markup-encoding={props.question.encoding}>
