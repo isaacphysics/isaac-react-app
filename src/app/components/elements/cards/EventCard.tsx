@@ -7,7 +7,8 @@ import {DateString} from "../DateString";
 import {formatEventCardDate, isPhy} from "../../../services";
 
 export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
-    const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled} = event;
+    const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled, userBookingStatus}
+        = event;
 
     const isVirtualEvent = event.tags?.includes("virtual");
     const isTeacherEvent = event.tags?.includes("teacher");
@@ -30,10 +31,15 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
         <RS.CardBody className="d-flex flex-column">
             {title && <RS.CardTitle tag="h3">
                 {title}
-                {isCancelled
-                    ? <>{"  "}<RS.Badge color={"danger"}>Cancelled</RS.Badge></>
-                    : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{"  "}<RS.Badge>Full</RS.Badge></>
-                }
+                <div>
+                    {userBookingStatus === "CONFIRMED" && <>{" "}<RS.Badge color="success" outline>Booked</RS.Badge></>}
+                    {userBookingStatus === "WAITING_LIST" && <>{" "}<RS.Badge color="warning" outline>On waiting list</RS.Badge></>}
+                    {userBookingStatus === "RESERVED" && <>{" "}<RS.Badge color="warning" outline>Reserved</RS.Badge></>}
+                    {isCancelled
+                        ? <>{" "}<RS.Badge color="danger">Cancelled</RS.Badge></>
+                        : eventStatus !== "WAITING_LIST_ONLY" && numberOfPlaces == 0 && <>{" "}<RS.Badge>Full</RS.Badge></>
+                    }
+                </div>
             </RS.CardTitle>}
             {subtitle && <RS.CardText className='m-0 my-auto card-date-time'>{subtitle}</RS.CardText>}
             <RS.CardText className="m-0 my-auto card-date-time">

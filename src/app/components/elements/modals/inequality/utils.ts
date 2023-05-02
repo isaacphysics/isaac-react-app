@@ -14,7 +14,8 @@ import {
 } from "./constants";
 import {GREEK_LETTERS_MAP, isDefined, sanitiseInequalityState} from "../../../../services";
 import React from "react";
-import {isEqual, uniqWith} from "lodash";
+import isEqual from "lodash/isEqual";
+import uniqWith from "lodash/uniqWith";
 import {Inequality, makeInequality, WidgetSpec} from "inequality";
 
 // This file contains helper functions used specifically in the Inequality modal
@@ -308,7 +309,6 @@ export function generateChemicalStatesMenuItems() {
         {type: 'StateSymbol', properties: { state: 'liquid' }, menu: { label: '\\text{(l)}', texLabel: true, className: 'chemical-state liquid' }},
         {type: 'StateSymbol', properties: { state: 'aqueous' }, menu: { label: '\\text{(aq)}', texLabel: true, className: 'chemical-state aqueous' }},
         {type: 'StateSymbol', properties: { state: 'solid' }, menu: { label: '\\text{(s)}', texLabel: true, className: 'chemical-state solid' }},
-        {type: 'StateSymbol', properties: { state: 'metal' }, menu: { label: '\\text{(m)}', texLabel: true, className: 'chemical-state metal' }},
     ]
 }
 

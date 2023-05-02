@@ -19,7 +19,7 @@ import {
 } from "./constants";
 import {closeActiveModal, openActiveModal, store, useAppDispatch} from "../../../../state";
 import {PageFragment} from "../../PageFragment";
-import {uniq} from "lodash";
+import uniq from "lodash/uniq";
 import {
     generateChemicalElementMenuItem,
     generateMenuItems,
@@ -34,7 +34,7 @@ import {
 const MenuItem = (props: MenuItemProps) => {
     return <li
         data-item={JSON.stringify(props)} // TODO Come up with a better way than this.
-        className={classNames(props.menu.className, "menu-item")} 
+        className={classNames(props.menu.className, "menu-item")}
         style={{fontSize: props.menu.fontSize}}
     >
         <VShape/><Markup encoding={"latex"}>{`$${props.menu.label}$`}</Markup>
@@ -306,7 +306,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
 
     const [showQuestionReminder, setShowQuestionReminder] = useState<boolean>(true);
     const onQuestionReminderClick = () => setShowQuestionReminder(prev => !prev);
-    
+
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const disableLetters = availableSymbols?.includes("_no_alphabet") ?? false;
 
@@ -515,7 +515,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             >Hide Question</div>
         </div>}
 
-        <div className="orientation-warning">The {siteSpecific("Isaac", "Ada")} Equation Editor may only be used in landscape mode. Please rotate your device.</div>
+        <div className="orientation-warning">Our equation editor works best in landscape mode.</div>
 
         <InequalityMenu
             menuItems={menuItems}

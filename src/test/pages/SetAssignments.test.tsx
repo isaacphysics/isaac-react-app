@@ -36,6 +36,9 @@ describe("SetAssignments", () => {
             // Change view to "Card View"
             const viewDropdown = await screen.findByLabelText("Display in");
             await userEvent.selectOptions(viewDropdown, "Card View");
+            await waitFor(() => {
+                expect(screen.queryByText("Loading...")).toBeNull();
+            });
         }
         expect(screen.queryAllByTestId("gameboard-card")).toHaveLength(6);
     });

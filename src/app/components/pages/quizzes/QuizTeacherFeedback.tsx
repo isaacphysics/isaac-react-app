@@ -25,7 +25,7 @@ import {formatDate} from "../../elements/DateString";
 import {Spacer} from "../../elements/Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {currentYear, DateInput} from "../../elements/inputs/DateInput";
-import {range} from "lodash";
+import range from "lodash/range";
 import {ResultsTable} from "../../elements/quiz/QuizProgressCommon";
 import {
     Alert,

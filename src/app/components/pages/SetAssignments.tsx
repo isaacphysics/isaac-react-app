@@ -29,7 +29,8 @@ import {
     useAppSelector
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {range, sortBy} from "lodash";
+import range from "lodash/range";
+import sortBy from "lodash/sortBy";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {currentYear, DateInput} from "../elements/inputs/DateInput";
 import {

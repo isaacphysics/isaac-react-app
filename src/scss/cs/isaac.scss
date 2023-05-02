@@ -171,7 +171,7 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
     // Primary and secondary are the same - we use other properties (outline) to distinguish primary/secondary buttons
     "primary": $primary,
     "secondary": $secondary,
-    "warning": $yellow-300,
+    "warning": $yellow-500,
     "dark-primary": $dark-primary,
     "dark-secondary": $dark-secondary,
 
@@ -184,6 +184,11 @@ $theme-colors: ( // Special Bootstrap variable that is used to generate colour c
     "light-grey" : $cs-light-gray,
     "cultured-grey" : $cs-cultured,
 );
+
+// Override Bootstrap warning alert text colour - it doesn't look like we can set it in the theme
+.alert-warning {
+    color: $cs-black !important;
+}
 
 // Inequality colours
 $inequality-primary: $cs-light-gray;

@@ -42,8 +42,13 @@ function deitemise(item: Item<DOCUMENT_TYPE>) {
 
 
 const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUMENT_TYPE>>> = {
-    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: siteSpecific("rgba(254, 161, 0, 0.9)", "rgba(255, 181, 63, 0.9)")}),
-    multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
+    multiValue: (styles: CSSObjectWithLabel) => ({
+        ...styles,
+        backgroundColor: siteSpecific("rgba(254, 161, 0, 0.9)", "rgba(135, 12, 90, 0.9)"),
+        color: siteSpecific("black", "white"),
+
+    }),
+    multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: siteSpecific("black", "white")}),
 };
 
 // Interacting with the page's filters change the query parameters.
@@ -59,7 +64,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
 
     let initialFilters = urlFilters;
     if (isAda && urlFilters.length === 0) {
-        initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
+        initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
     }
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
 
@@ -131,8 +136,8 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         placeholder="No page type filter"
                                         value={filtersState}
                                         options={
-                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.GENERIC]
-                                                .concat(siteSpecific([], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
+                                            [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.GENERIC]
+                                                .concat(siteSpecific([DOCUMENT_TYPE.EVENT], [DOCUMENT_TYPE.TOPIC_SUMMARY]))
                                                 .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"

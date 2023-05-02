@@ -5,7 +5,7 @@ export * from "./demoTools";
 export * from "./device";
 export * from "./dates";
 export * from "./polyfills";
-export * from "./highlightJs";
+// export * from "./highlightJs";  // Importing this here breaks bundle splitting and is not needed to avoid circular deps!
 export * from "./json";
 export * from "./progress";
 export * from "./select";
@@ -20,7 +20,7 @@ export * from "./history";
 
 // Dependencies in /services
 export * from "./katex-a11y";
-export * from "./clozeQuestionKeyboardCoordinateGetter";
+// export * from "./clozeQuestionKeyboardCoordinateGetter";  // Importing this here breaks bundle splitting and is not needed to avoid circular deps!
 export * from "./easterEggs/phyLogoAsciiArt";
 export * from "./easterEggs/adaLogoAsciiArt";
 export * from "./user";

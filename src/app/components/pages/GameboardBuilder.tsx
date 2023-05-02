@@ -259,7 +259,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                         <Button
                                                             className="plus-button"
                                                             color="primary" outline
-                                                            disabled={selectedQuestions.size >= 10}
                                                             onClick={() => {
                                                                 logEvent(eventLog, "OPEN_SEARCH_MODAL", {});
                                                                 dispatch(openActiveModal({

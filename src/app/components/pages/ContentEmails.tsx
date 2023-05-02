@@ -3,7 +3,7 @@ import {sendProvidedEmailWithUserIds, useAppDispatch} from "../../state";
 import * as RS from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
-import {debounce} from 'lodash';
+import debounce from 'lodash/debounce';
 import {convert} from 'html-to-text';
 import {siteSpecific} from "../../services";
 import {EmailTemplateDTO} from "../../../IsaacApiTypes";

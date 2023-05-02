@@ -30,7 +30,8 @@ import {
     Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
-import {orderBy, sortBy} from "lodash";
+import orderBy from "lodash/orderBy";
+import sortBy from "lodash/sortBy";
 import {
     AppAssignmentProgress,
     AppGroup,

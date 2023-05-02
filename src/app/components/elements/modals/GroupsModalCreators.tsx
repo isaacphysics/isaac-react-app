@@ -9,7 +9,7 @@ import {
     useAppDispatch,
     mutationSucceeded,
 } from "../../../state";
-import {sortBy} from "lodash";
+import sortBy from "lodash/sortBy";
 import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
 import {Jumbotron, Row, Col, Form, Input, Table, CustomInput, Alert} from "reactstrap";
 import {Button} from "reactstrap";

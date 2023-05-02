@@ -137,6 +137,29 @@ beforeEach(() => {
         // Assert
         expect(canBook).toEqual(false)
     })
+
+    it("Returns false for a reservations-only event", () => {
+        // Arrange
+        event.isReservationOnly = true;
+
+        // Act
+        const canMakeEventBooking = userCanMakeEventBooking(studentUser, event);
+
+        // Assert
+        expect(canMakeEventBooking).toEqual(false);
+    })
+
+    it("Returns true for a reservations-only event, if the user is already reserved", () => {
+        // Arrange
+        event.isReservationOnly = true;
+        event.userBookingStatus = 'RESERVED';
+
+        // Act
+        const canMakeEventBooking = userCanMakeEventBooking(studentUser, event);
+
+        // Assert
+        expect(canMakeEventBooking).toEqual(true);
+    })
 }));
 
 describe("Teachers can make event bookings when conditions are met", () => {
@@ -260,6 +283,17 @@ describe("Teachers can make event bookings when conditions are met", () => {
         // Assert
         expect(canBook).toEqual(false)
     })
+
+    it("Returns true for a reservations-only event", () => {
+        // Arrange
+        event.isReservationOnly = true;
+
+        // Act
+        const canMakeEventBooking = userCanMakeEventBooking(teacherUser, event);
+
+        // Assert
+        expect(canMakeEventBooking).toEqual(true);
+    })
 })
 
 describe("Teachers can make event reservations when conditions are met", () => {
@@ -313,6 +347,17 @@ describe("Teachers can make event reservations when conditions are met", () => {
 
         // Assert
         expect(canReserve).toEqual(false)
+    })
+
+    it("Returns true for a reservation-only event", () => {
+        // Arrange
+        event.isReservationOnly = true;
+
+        // Act
+        const canReserve = userCanReserveEventSpaces(teacherUser, event);
+
+        // Assert
+        expect(canReserve).toEqual(true);
     })
 
     it("Returns false for a student user", () => {

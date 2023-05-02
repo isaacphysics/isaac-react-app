@@ -107,6 +107,7 @@ export interface IsaacEventPageDTO extends ContentDTO {
     eventStatus?: EventStatus;
     placesAvailable?: number;
     endDate?: Date;
+    userBookingStatus?: BookingStatus;
 }
 
 export interface IsaacFastTrackQuestionPageDTO extends IsaacQuestionPageDTO {
@@ -729,7 +730,7 @@ export interface MisuseStatisticDTO {
 
 export type GameboardCreationMethod = "FILTER" | "BUILDER";
 
-export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY";
+export type EventStatus = "OPEN" | "FULLY_BOOKED" | "CANCELLED" | "CLOSED" | "WAITING_LIST_ONLY" | "RESERVATION_ONLY";
 
 export type FastTrackConceptState = "ft_top_ten" | "ft_upper" | "ft_lower";
 

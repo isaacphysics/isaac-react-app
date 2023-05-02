@@ -17,7 +17,6 @@
         z-index: 255;
 
         .button {
-            background: yellow;
             display: block;
             position: absolute;
             width: 90px;
@@ -27,7 +26,7 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position-y: center;
-            text-indent: -1000px;
+            text-indent: -100vw;
             overflow: hidden;
 
             &.visible {
@@ -40,7 +39,7 @@
 
             &#graph-sketcher-ui-trash-button {
                 top: 20px;
-                right: 0;
+                right: 20px;
                 opacity: 0.5;
                 background-image: url('/assets/inequality-trash-phy.svg');
             }
@@ -48,42 +47,42 @@
             &#graph-sketcher-ui-bezier-button {
                 top: 20px;
                 right: 260px;
-                background-image: url('/assets/hex-button-polynomial.png');
+                background-image: url('/assets/graph-sketcher-polynomial.svg');
 
                 &:hover,
                 &.active {
-                    background-image: url('/assets/hex-button-polynomial-hover.png');
+                    background-image: url('/assets/graph-sketcher-polynomial-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-linear-button {
                 top: 20px;
                 right: 350px;
-                background-image: url('/assets/hex-button-straight.png');
+                background-image: url('/assets/graph-sketcher-straight.svg');
 
                 &:hover,
                 &.active {
-                    background-image: url('/assets/hex-button-straight-hover.png');
+                    background-image: url('/assets/graph-sketcher-straight-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-undo-button {
                 bottom: 20px;
                 left: 20px;
-                background-image: url('/assets/hex-button-undo.png');
+                background-image: url('/assets/hex-undo.svg');
 
                 &:hover {
-                    background-image: url('/assets/hex-button-undo-hover.png');
+                    background-image: url('/assets/hex-undo-active.svg');
                 }
             }
 
             &#graph-sketcher-ui-redo-button {
                 bottom: 20px;
                 left: 110px;
-                background-image: url('/assets/hex-button-redo.png');
+                background-image: url('/assets/hex-redo.svg');
 
                 &:hover {
-                    background-image: url('/assets/hex-button-redo-hover.png');
+                    background-image: url('/assets/hex-redo-active.svg');
                 }
             }
 
@@ -92,18 +91,51 @@
                 right: 20px;
                 background-image: url('/assets/inequality-confirm-phy.svg');
             }
+
+            &#graph-sketcher-ui-help-button {
+                bottom: 120px;
+                right: 20px;
+                background-image: url('/assets/inequality-help-phy.svg');
+            }
         }
 
-        .dropdown {
+        div#graph-sketcher-ui-color-select-hexagons {
             position: absolute;
-
-            &#graph-sketcher-ui-color-select {
-                top: 20px;
-                right: 120px;
-                width: 120px;
-                height: 30px;
-                border: 1px solid black;
-                background: white;
+            text-align: center;
+            top: 20px;
+            right: 125px;
+            width: 120px;
+            height: 120px;
+            .hover-text {
+                display: none;
+            }
+            &:hover .hover-text {
+                display: block;
+            }
+            svg {
+                width: 96px;
+                height: 96px;
+                #blue-hex-colour {
+                    fill: rgb(93,165,218);
+                    &.active {
+                        stroke: darken(rgb(93,165,218), 15%);
+                        stroke-width: 5px;
+                    }
+                }
+                #orange-hex-colour {
+                    fill: rgb(250,164,58);
+                    &.active {
+                        stroke: darken(rgb(250, 164, 58), 15%);
+                        stroke-width: 5px;
+                    }
+                }
+                #green-hex-colour {
+                    fill: rgb(96,189,104);
+                    &.active {
+                        stroke: darken(rgb(96,189,104), 15%);
+                        stroke-width: 5px;
+                    }
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {lazy} from "react";
 import {TrackedRoute} from "../../navigation/TrackedRoute";
 import {AllTopics} from "../../pages/AllTopics";
 import StaticPageRoute from "../../navigation/StaticPageRoute";
@@ -8,8 +8,9 @@ import {isStaff, isTutorOrAbove} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
 import {Glossary} from "../../pages/Glossary";
 import {ExamSpecifications} from "../../pages/ExamSpecifications";
-import Equality from "../../pages/Equality";
 import {News} from "../../pages/News";
+
+const Equality = lazy(() => import('../../pages/Equality'));
 
 let key = 0;
 export const RoutesCS = [
@@ -49,5 +50,5 @@ export const RoutesCS = [
     // <StaticPageRoute key={key++} exact ifUser={isEventLeaderOrStaff} path="/events_toolkit" pageId="fragments/event_leader_event_toolkit_fragment" />,
 
     // <TrackedRoute key={key++} exact path="/coming_soon" component={ComingSoon} />,
-    <TrackedRoute exact path="/equality" ifUser={isStaff} component={Equality} />,
+    <TrackedRoute key={key++} exact path="/equality" ifUser={isStaff} component={Equality} />,
 ];

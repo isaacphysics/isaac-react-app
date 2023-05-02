@@ -1,6 +1,9 @@
 import {assignGameboard, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
-import {groupBy, mapValues, range, sortBy} from "lodash";
+import groupBy from "lodash/groupBy";
+import mapValues from "lodash/mapValues";
+import range from "lodash/range";
+import sortBy from "lodash/sortBy";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import React, {ChangeEvent, useCallback, useContext, useEffect, useMemo, useRef, useState, Fragment} from "react";
 import {

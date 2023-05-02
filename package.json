@@ -1,6 +1,6 @@
 {
   "name": "isaac-react-app",
-  "version": "3.0.4-SNAPSHOT",
+  "version": "3.0.10-SNAPSHOT",
   "private": true,
   "engines": {
     "node": ">=18",
@@ -15,7 +15,7 @@
     "axios": "^0.26.0",
     "axios-mock-adapter": "^1.20.0",
     "billboard.js": "^1.12.11",
-    "core-js": "^3.19.3",
+    "core-js": "^3.30.0",
     "dayjs": "^1.10.7",
     "he": "^1.2.0",
     "highlight.js": "^11.5.1",
@@ -25,7 +25,7 @@
     "immer": "^9.0.15",
     "inequality": "1.0.1",
     "inequality-grammar": "1.0.0",
-    "isaac-graph-sketcher": "0.9.6",
+    "isaac-graph-sketcher": "0.10.1",
     "js-cookie": "^3.0.1",
     "katex": "^0.16.2",
     "leaflet": "^1.7.1",
@@ -51,29 +51,28 @@
     "reactstrap": "^8.10.1",
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
-    "remarkable": "^2.0.1",
-    "string.prototype.matchall": "^4.0.6"
+    "remarkable": "^2.0.1"
   },
   "scripts": {
     "build-phy": "webpack --env prod --config config/webpack.config.physics.js",
-    "build-cs": "webpack --env prod --config config/webpack.config.cs.js",
+    "build-ada": "webpack --env prod --config config/webpack.config.ada.js",
     "build-phy-dev": "webpack --config config/webpack.config.physics.js",
-    "build-cs-dev": "webpack --config config/webpack.config.cs.js",
+    "build-ada-dev": "webpack --config config/webpack.config.ada.js",
     "start-phy": "webpack-dev-server --hot --port 8004 --history-api-fallback --config config/webpack.config.physics.js --allowed-hosts=true",
-    "start-cs": "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.cs.js --allowed-hosts=true",
-    "test": "yarn run test-phy && yarn run test-cs",
+    "start-ada": "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.ada.js --allowed-hosts=true",
+    "test": "yarn run test-phy && yarn run test-ada",
     "test-phy": "jest --config config/jest/jest.config.physics.js",
-    "test-cs": "jest --config config/jest/jest.config.cs.js",
+    "test-ada": "jest --config config/jest/jest.config.ada.js",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "build-stats-phy": "webpack --env prod --config config/webpack.config.physics.js --profile --json > bundle-stats-phy.json",
     "analyse-bundle-phy": "webpack-bundle-analyzer bundle-stats-phy.json build-physics",
-    "build-stats-cs": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats-cs.json",
-    "analyse-bundle-cs": "webpack-bundle-analyzer bundle-stats-cs.json build-cs",
-    "build-cs-renderer": "webpack --env prod --config config/webpack.config.cs.renderer.js",
-    "start-cs-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --allowed-hosts=true",
+    "build-stats-ada": "webpack --env prod --config config/webpack.config.ada.js --profile --json > bundle-stats-ada.json",
+    "analyse-bundle-ada": "webpack-bundle-analyzer bundle-stats-ada.json build-ada",
+    "build-ada-renderer": "webpack --env prod --config config/webpack.config.ada.renderer.js",
+    "start-ada-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.ada.renderer.js --allowed-hosts=true",
     "build-phy-renderer": "webpack --env prod --config config/webpack.config.phy.renderer.js",
     "start-phy-renderer": "webpack-dev-server --hot --port 3002 --history-api-fallback --config config/webpack.config.phy.renderer.js --allowed-hosts=true",
-    "build-renderer": "yarn run build-cs-renderer && yarn run build-phy-renderer"
+    "build-renderer": "yarn run build-ada-renderer && yarn run build-phy-renderer"
   },
   "eslintConfig": {
     "extends": [

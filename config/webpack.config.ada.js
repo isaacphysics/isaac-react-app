@@ -12,7 +12,7 @@ module.exports = env => {
 
     let configCS = {
         entry: {
-            'ada-cs': [resolve('src/index-ada')],
+            'isaac-ada': [resolve('src/index-ada')],
         },
 
         output: {

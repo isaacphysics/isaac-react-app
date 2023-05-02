@@ -665,10 +665,10 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     isStudentOnly?: boolean;
     isRecurring?: boolean;
     isWaitingListOnly?: boolean;
+    isReservationOnly?: boolean;
     isNotClosed?: boolean;
     isCancelled?: boolean;
     field?: "physics" | "maths";
-    userBookingStatus?: ApiTypes.BookingStatus;
 }
 
 export interface EventOverview {

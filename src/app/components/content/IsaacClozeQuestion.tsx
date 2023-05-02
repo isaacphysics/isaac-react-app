@@ -10,10 +10,10 @@ import {
 import {
     CLOZE_DROP_ZONE_ID_PREFIX,
     CLOZE_ITEM_SECTION_ID,
-    customKeyboardCoordinates,
     isDefined,
     useCurrentQuestionAttempt
 } from "../../services";
+import {customKeyboardCoordinates} from "../../services/clozeQuestionKeyboardCoordinateGetter";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {
     Announcements,
