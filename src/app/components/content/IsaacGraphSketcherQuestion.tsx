@@ -42,6 +42,8 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
+        // TODO do not update the current attempt until the modal is closed! Otherwise the user is likely to hit the
+        //  attempt limit before they have finished drawing.
         dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(newState)});
     };
 
