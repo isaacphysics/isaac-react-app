@@ -1,11 +1,10 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {
     GraphSketcher,
     GraphSketcherState,
     LineType,
     makeGraphSketcher
 } from "isaac-graph-sketcher";
-import {isDefined} from "../../../services";
 import debounce from "lodash/debounce";
 import {IsaacGraphSketcherQuestionDTO} from "../../../../IsaacApiTypes";
 import {Markup} from "../markup";
@@ -13,6 +12,7 @@ import {calculateHexagonProportions, Hexagon} from "../svg/Hexagon";
 import classNames from "classnames";
 import {closeActiveModal, openActiveModal, store, useAppDispatch} from "../../../state";
 import {PageFragment} from "../PageFragment";
+import {isDefined} from "../../../services";
 
 interface GraphSketcherModalProps {
     close: () => void;
@@ -23,10 +23,11 @@ interface GraphSketcherModalProps {
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const { onGraphSketcherStateChange, close, initialState } = props;
-    const [ , setGraphSketcherElement] = useState<HTMLElement>();
-    const [modalSketch, setModalSketch] = useState<GraphSketcher|undefined|null>();
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
+
+    const [modalSketch, setModalSketch] = useState<GraphSketcher | undefined | null>();
+    const graphSketcherContainer = useRef<HTMLDivElement>(null);
 
     // Help modal logic
     const dispatch = useAppDispatch();
@@ -41,44 +42,38 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     // on every redraw, which happens on every mouse event.
     const updateGraphSketcherState = useCallback(debounce((newState: GraphSketcherState) => {
         onGraphSketcherStateChange(newState);
-    }, 250), []);
-    
-    useEffect(() => {
-        if (isDefined(modalSketch)) return;
+    }, 250, {trailing: true}), []);
 
-        const e = document.getElementById('graph-sketcher-modal') as HTMLElement
-        const { sketch } = makeGraphSketcher(e, window.innerWidth, window.innerHeight, { previewMode: false });
+    // Setup and teardown of the graph sketcher p5 instance
+    useEffect(() => {
+        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
             sketch.updateGraphSketcherState = updateGraphSketcherState;
             setModalSketch(sketch);
         }
-        setGraphSketcherElement(e);
+
+        return () => {
+            modalSketch?.teardown();
+            setModalSketch(null);
+            if (graphSketcherContainer.current) {
+                for (const canvas of graphSketcherContainer.current.getElementsByTagName('canvas')) {
+                    graphSketcherContainer.current.removeChild(canvas);
+                }
+            }
+            p.remove();
+        }
     }, []);
 
     useEffect(() => {
         if (isDefined(modalSketch)) {
-            modalSketch.state.curves = modalSketch.state.curves || initialState?.curves || [];
-            modalSketch.reDraw();
+            modalSketch.state = {
+                ...modalSketch.state,
+                curves: initialState?.curves ?? modalSketch.state.curves ?? []
+            };
         }
-    }, [modalSketch, initialState]);
-
-    // Teardown
-    useEffect(() => {
-        if (modalSketch) {
-            return () => {
-                modalSketch?.teardown();
-                setModalSketch(null);
-                const e = document.getElementById('graph-sketcher-modal') as HTMLElement
-                if (e) {
-                    for (const canvas of e.getElementsByTagName('canvas')) {
-                        e.removeChild(canvas);
-                    }
-                }
-            }
-        }
-    }, [modalSketch]);
+    }, [initialState]);
 
     useEffect(() => {
         if (modalSketch) {
@@ -111,7 +106,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     const hexagonSize = 80;
     const colourHexagon = calculateHexagonProportions(hexagonSize/4, 3);
 
-    return <div id='graph-sketcher-modal' style={{border: '5px solid black'}}>
+    return <div id='graph-sketcher-modal' ref={graphSketcherContainer} style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
             <div className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">redo</div>
             <div className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } role="button" onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">undo</div>
@@ -121,7 +116,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">submit</div>
             <div className="button" role="button" onClick={showHelpModal} onKeyUp={showHelpModal} tabIndex={0} id="graph-sketcher-ui-help-button">Help</div>
 
-            <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} aria-readonly />
+            <input className={"d-none"} id="graph-sketcher-ui-color-select" value={drawingColorName} readOnly />
             <div id="graph-sketcher-ui-color-select-hexagons">
                 <svg>
                     <Hexagon
