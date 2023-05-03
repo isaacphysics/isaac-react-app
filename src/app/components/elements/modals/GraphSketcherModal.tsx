@@ -19,10 +19,11 @@ interface GraphSketcherModalProps {
     initialState?: GraphSketcherState;
     onGraphSketcherStateChange: (state: GraphSketcherState) => void;
     question?: IsaacGraphSketcherQuestionDTO;
+    allowMultiValuedFunctions?: boolean;
 }
 
 const GraphSketcherModal = (props: GraphSketcherModalProps) => {
-    const { onGraphSketcherStateChange, close, initialState } = props;
+    const { onGraphSketcherStateChange, close, initialState, allowMultiValuedFunctions } = props;
     const [drawingColorName, setDrawingColorName] = useState("Blue");
     const [lineType, setLineType] = useState(LineType.BEZIER);
 
@@ -46,7 +47,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
 
     // Setup and teardown of the graph sketcher p5 instance
     useEffect(() => {
-        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves });
+        const { sketch, p } = makeGraphSketcher(graphSketcherContainer.current ?? undefined, window.innerWidth, window.innerHeight, { previewMode: false, initialCurves: initialState?.curves, allowMultiValuedFunctions });
 
         if (sketch) {
             sketch.selectedLineType = LineType.BEZIER;
