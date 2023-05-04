@@ -95,6 +95,7 @@ const GraphSketcherPage = () => {
                             close={closeModal}
                             onGraphSketcherStateChange={onGraphSketcherStateChange}
                             initialState={initialState}
+                            allowMultiValuedFunctions={isStaff(user)}
                         />}
                     </div>
                     {/* TODO af599 This needs checking, not sure why graphSpec is a {[key: number]: string} instead of a string[] */}

@@ -5379,10 +5379,10 @@ is-wsl@^2.2.0:
   dependencies:
     is-docker "^2.0.0"
 
-isaac-graph-sketcher@0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.10.1.tgz#2c4898cf398a9ab31c88f9aae7a74d99301d40ea"
-  integrity sha512-dRsY/N7aRLZRP8yCIH8ZSventI2O2WGNWDidGZpnuQo9oqQedsZjIeWRDLh1rVtUwGaSwXd7VtwsQQBvqynnqg==
+isaac-graph-sketcher@0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/isaac-graph-sketcher/-/isaac-graph-sketcher-0.12.0.tgz#59b233c1dfa26d89a72f29e7daf1c9a3e4563398"
+  integrity sha512-uNIeihUx17c+neiQq5Ld2hlcjt8P8Kfk/wHb5RPQg+7Efx8gvxes0/4L/e690iWsDqV7BwpMmEJwjxeuWtW1yQ==
 
 isarray@0.0.1:
   version "0.0.1"
