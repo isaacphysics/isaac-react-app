@@ -1,4 +1,3 @@
-import React from "react";
 import {rest, RestHandler} from "msw";
 import {API_PATH} from "../../app/services";
 import {screen, waitFor, within} from "@testing-library/react";

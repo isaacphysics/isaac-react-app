@@ -4792,3 +4792,62 @@ export const mockFragment = (pageId: string) => ({
     ],
     published: true
 });
+
+export const mockPage = (pageId: string) => ({
+    id: pageId,
+    type: "page",
+    canonicalSourceFile: `content/mocks/${pageId}.json`,
+    encoding: "markdown",
+    title: `Mock page: ${pageId}`,
+    children: [
+      {
+        type: "content",
+        value: "Here is some mock content for you!",
+        encoding: "markdown",
+        published: true
+      }
+    ],
+    published: true
+  });
+
+export const mockAssignedQuiz = [{
+    id: 1,
+    quizId: "example_quiz_1",
+    quizSummary: {
+        id: "example_quiz_1",
+        title: "Example Quiz 1",
+        type: "isaacQuiz",
+        level: 2,
+        tags: [],
+        url: "/isaac-api/api/quiz/example_quiz_1",
+        visibleToStudents: false},
+    groupId: 1,
+    ownerUserId: mockUser.id,
+    creationDate: 888888888888 as unknown as Date,
+    dueDate: 999999999999 as unknown as Date,
+    quizFeedbackMode: "NONE"
+}];
+
+export const mockAvailableQuiz = { 
+    results: [
+        {
+            id: "example_quiz_1",
+            title: "Example Quiz 1",
+            type: "isaacQuiz",
+            level: "2",
+            tags: [],
+            url: "/isaac-api/api/quiz/example_quiz_1",
+            visibleToStudents: false
+        },
+        {   
+            id: "example_quiz_2",
+            title: "Example Quiz 2",
+            type: "isaacQuiz",
+            level: "1",
+            tags: [],
+            url: "/isaac-api/api/quiz/example_quiz_2",
+            visibleToStudents: false
+        },
+    ],
+    totalResults: 2
+};  

@@ -1,10 +1,10 @@
 import {ACTION_TYPE} from "../../app/services";
-import {setUserId, getUserId, userConsistencyCheckerMiddleware} from "../../app/state";
+import {userConsistencyCheckerMiddleware} from "../../app/state";
 import * as CurrentUser from "../../app/state/middleware/userConsistencyCheckerCurrentUser";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
 
-jest.spyOn(CurrentUser, "setUserId");
-jest.spyOn(CurrentUser, "getUserId");
+const spySetUserId = jest.spyOn(CurrentUser, "setUserId");
+const spyGetUserId = jest.spyOn(CurrentUser, "getUserId");
 
 let fakeDispatch: Dispatch, fakeGetState, fakeStore: MiddlewareAPI, fakeNext: Dispatch<AnyAction>;
 
@@ -25,25 +25,26 @@ describe("userConsistencyCheckerMiddleware", () => {
         fakeNext = jest.fn();
         jest.useFakeTimers();
 
-        // @ts-ignore
-        setUserId.mockImplementation(() => true);
+     
+        spySetUserId.mockImplementation(() => true);
 
         jest.clearAllMocks();
     });
 
     afterAll(() => {
         jest.clearAllMocks();
+        jest.clearAllTimers();
     })
 
     it("sets the current user after a successful login and starts consistency checking", async () => {
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);
 
         expect(fakeNext).toBeCalledWith(loginAction);
-        expect(setUserId).toBeCalledWith(USER_ID1);
+        expect(spySetUserId).toBeCalledWith(USER_ID1);
 
         jest.runOnlyPendingTimers();
 
-        expect(getUserId).toBeCalled();
+        expect(spyGetUserId).toBeCalled();
     });
 
     it("clears the current user after logout and stops consistency checking", async () => {
@@ -52,8 +53,8 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         expect(fakeNext).toBeCalledWith(loginAction);
         expect(fakeNext).toBeCalledWith(logoutAction);
-        expect(setUserId).toBeCalledWith(USER_ID1);
-        expect(setUserId).toBeCalledWith(undefined);
+        expect(spySetUserId).toBeCalledWith(USER_ID1);
+        expect(spySetUserId).toBeCalledWith(undefined);
 
         jest.runAllTimers();
 
@@ -68,16 +69,15 @@ describe("userConsistencyCheckerMiddleware", () => {
         expect(fakeNext).toBeCalledWith(checkForUserFailureAction);
 
         // If we ask the back-end for the current user and that fails, we should clear any user information in local storage
-        expect(setUserId).toBeCalledWith(undefined);
+        expect(spySetUserId).toBeCalledWith(undefined);
     })
 
     it("causes a consistency error if the user changes", async () => {
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);
         expect(fakeNext).toBeCalledWith(loginAction);
-        expect(setUserId).toBeCalledWith(USER_ID1);
+        expect(spySetUserId).toBeCalledWith(USER_ID1);
 
-        // @ts-ignore
-        getUserId.mockImplementation(() => USER_ID2);
+        spyGetUserId.mockImplementation(() => USER_ID2);
 
         jest.runAllTimers();
 
@@ -87,12 +87,12 @@ describe("userConsistencyCheckerMiddleware", () => {
     it("clears the current user and stops checking if there is a consistency error", async () => {
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);
         expect(fakeNext).toBeCalledWith(loginAction);
-        expect(setUserId).toBeCalledWith(USER_ID1);
+        expect(spySetUserId).toBeCalledWith(USER_ID1);
 
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(userConsistencyErrorAction);
 
         expect(fakeNext).toBeCalledWith(userConsistencyErrorAction);
-        expect(setUserId).toBeCalledWith(undefined);
+        expect(spySetUserId).toBeCalledWith(undefined);
 
         jest.runAllTimers();
 
@@ -100,16 +100,15 @@ describe("userConsistencyCheckerMiddleware", () => {
     });
 
     it("does not start consistency checking if setting the current user fails", async () => {
-        // @ts-ignore
-        setUserId.mockImplementation(() => false);
+        spySetUserId.mockImplementation(() => false);
 
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);
 
         expect(fakeNext).toBeCalledWith(loginAction);
-        expect(setUserId).toBeCalledWith(USER_ID1);
-
+        expect(spySetUserId).toBeCalledWith(USER_ID1);
+        
         jest.runAllTimers();
 
-        expect(getUserId).not.toHaveBeenCalled();
+        expect(spyGetUserId).not.toHaveBeenCalled();
     });
 });

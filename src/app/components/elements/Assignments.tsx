@@ -68,7 +68,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     <strong>{topics.length === 1 ? "Topic" : "Topics"}:</strong>{" "}
                     {topics.join(", ")}
                 </p>}
-                {boardStagesAndDifficulties.length > 0 && <p className="mb-0">
+                {boardStagesAndDifficulties.length > 0 && <div className="mb-0">
                     <table className="w-100">
                         <thead>
                         <tr>
@@ -91,7 +91,7 @@ export const AssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                         </tr>)}
                         </tbody>
                     </table>
-                </p>}
+                </div>}
                 {isDefined(assignment.notes) && <p><strong>Notes:</strong> {assignment.notes}</p>}
             </Col>
             <Col xs={5} md={2} className="mt-sm-2 text-right">
