@@ -3,6 +3,7 @@ import {
     API_PATH,
     EventStageFilter,
     EventTypeFilter,
+    IMAGE_PATH,
     securePadCredentials,
     securePadPasswordReset,
     TAG_ID
@@ -65,7 +66,7 @@ export const apiHelper = {
         if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1)) {
             return path;
         } else {
-            return API_PATH + "/images/" + path;
+            return `${IMAGE_PATH}/${path}`;
         }
     }
 };
