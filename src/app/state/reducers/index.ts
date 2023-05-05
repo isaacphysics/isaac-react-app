@@ -1,5 +1,4 @@
-import {AnyAction, combineReducers} from "redux";
-import {ACTION_TYPE} from "../../services";
+import {combineReducers} from "redux";
 import {
     currentEvent,
     eventBookings,
@@ -56,7 +55,7 @@ import {
     gameboardsSlice
 } from "../index";
 
-const appReducer = combineReducers({
+export const rootReducer = combineReducers({
     // User
     user,
     userAuthSettings,
@@ -141,14 +140,4 @@ const appReducer = combineReducers({
     [isaacApi.reducerPath]: isaacApi.reducer
 });
 
-export type AppState = ReturnType<typeof appReducer> | undefined;
-
-export const rootReducer = (state: AppState, action: AnyAction) => {
-    if (action.type === ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS
-        || action.type === ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS
-        || action.type === ACTION_TYPE.USER_CONSISTENCY_ERROR) {
-        isaacApi.util.resetApiState();
-        return appReducer(undefined, action);
-    }
-    return appReducer(state, action);
-};
+export type AppState = ReturnType<typeof rootReducer> | undefined;

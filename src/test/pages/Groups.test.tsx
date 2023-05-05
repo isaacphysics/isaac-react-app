@@ -41,6 +41,15 @@ const switchGroupsTab = async (activeOrArchived: "active" | "archived", expected
     return groups;
 };
 
+const closeActiveModal = async (modal: HTMLElement) => {
+    // Close the modal
+    const closeButton = within(modal).getByRole("button", {name: "Close"});
+    await userEvent.click(closeButton);
+    await waitFor(() => {
+        expect(modal).not.toBeInTheDocument();
+    });
+};
+
 // Reusable test for adding a manager in the additional manager modal
 const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver, newManager: any) => {
     let groupManagersModal: HTMLElement | undefined;
@@ -70,6 +79,7 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
         const removeButton = within(managerElements[0]).getByRole("button", {name: "Remove"});
         expect(removeButton).toBeVisible();
     });
+    await closeActiveModal(groupManagersModal);
 };
 
 describe("Groups", () => {
@@ -138,6 +148,7 @@ describe("Groups", () => {
         const code = await within(modal).findByTestId("share-code");
         expect(link).toHaveTextContent(`\/account?authToken=${mockToken}`);
         expect(code.textContent).toEqual(mockToken);
+        await closeActiveModal(modal);
     });
 
     (["active", "archived"] as const).forEach((activeOrArchived) => {
@@ -498,6 +509,7 @@ describe("Groups", () => {
         // Expect the "add group managers" button NOT to be shown on the modal
         expect(firstModal).toHaveModalTitle("Group Created");
         expect(within(firstModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
+        await closeActiveModal(firstModal);
     });
 
     it("only allows additional group managers to remove themselves as group managers", async () => {

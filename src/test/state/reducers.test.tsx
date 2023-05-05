@@ -42,20 +42,21 @@ describe("root reducer", () => {
         });
     });
 
-    it("resets to the initial state on log out regardless of previous state", () => {
-        const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
-        actualInitialState.user = {loggedIn: false};
-        const previousStates = [
-            {'questions': q([{id: 'a_toboggan'}])},
-            {'questions': null},
-            undefined
-        ];
-        previousStates.map((previousState) => {
-            // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
-            const actualNextState = removeRTKProperties(rootReducer(previousState, {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}));
-            expect(actualNextState).toEqual(actualInitialState);
-        });
-    });
+    // FIXME make a similar test to make sure that logging out causes a refresh of the page (clearing the state)
+    // it("resets to the initial state on log out regardless of previous state", () => {
+    //     const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
+    //     actualInitialState.user = {loggedIn: false};
+    //     const previousStates = [
+    //         {'questions': q([{id: 'a_toboggan'}])},
+    //         {'questions': null},
+    //         undefined
+    //     ];
+    //     previousStates.map((previousState) => {
+    //         // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
+    //         const actualNextState = removeRTKProperties(rootReducer(previousState, {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}));
+    //         expect(actualNextState).toEqual(actualInitialState);
+    //     });
+    // });
 });
 
 describe("user reducer", () => {
