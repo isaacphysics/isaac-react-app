@@ -52,22 +52,27 @@ export interface PageTitleProps {
     className?: string;
     audienceViews?: ViewingContext[];
     modalId?: string;
+    preview?: boolean;
 }
-export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId}: PageTitleProps) => {
+export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, className, audienceViews, modalId, preview}: PageTitleProps) => {
     const dispatch = useAppDispatch();
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
     const showModal = modalId && isPhy;
 
-    useEffect(() => {dispatch(mainContentIdSlice.actions.set("main-heading"));}, []);
     useEffect(() => {
+        if (preview) return; // Don't set the main content ID if we're in preview mode
+        dispatch(mainContentIdSlice.actions.set("main-heading"));
+    }, []);
+    useEffect(() => {
+        if (preview) return; // Don't set the document title if we're in preview mode
         document.title = currentPageTitle + " — " + SITE_TITLE;
         const element = headerRef.current;
         if (element && (window as any).followedAtLeastOneSoftLink && !openModal) {
             element.focus();
         }
-    }, [currentPageTitle]);
+    }, [currentPageTitle, preview]);
 
     interface HelpModalProps {
         modalId: string;

@@ -38,6 +38,7 @@ import classNames from "classnames";
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
+    preview?: boolean;
 }
 
 
@@ -52,7 +53,7 @@ function getTags(docTags?: string[]) {
         .map(tag => ({title: tag.title}));
 }
 
-export const Question = withRouter(({questionIdOverride, match, location}: QuestionPageProps) => {
+export const Question = withRouter(({questionIdOverride, match, location, preview}: QuestionPageProps) => {
     const questionId = questionIdOverride || match.params.questionId;
     const doc = useAppSelector(selectors.doc.get);
     const user = useAppSelector(selectors.user.orNull);
@@ -79,10 +80,11 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                         intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
                         collectionType={navigation.collectionType}
                         audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
+                        preview={preview}
                     >
                         {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
                     </TitleAndBreadcrumb>
-                    <CanonicalHrefElement />
+                    {!preview && <CanonicalHrefElement />}
                     <div className="no-print d-flex flex-wrap align-items-center mt-3">
                         <EditContentButton doc={doc} />
                         <div className="question-actions ml-auto">
