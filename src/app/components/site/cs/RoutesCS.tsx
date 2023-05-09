@@ -10,8 +10,6 @@ import {AssignmentProgress} from "../../pages/AssignmentProgress";
 import {Redirect} from "react-router";
 import {isEventLeaderOrStaff, isTutorOrAbove, STAGE} from "../../../services";
 import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {Workbook20AQA} from "../../pages/books/Workbook20AQA";
-import {Workbook20OCR} from "../../pages/books/Workbook20OCR";
 import {Glossary} from "../../pages/Glossary";
 
 let key = 0;
@@ -39,10 +37,6 @@ export const RoutesCS = [
     <TrackedRoute key={key++} exact path="/topics/gcse" component={AllTopics} componentProps={{stage: STAGE.GCSE}} />,
     <TrackedRoute key={key++} exact path="/topics/a_level" component={AllTopics} componentProps={{stage: STAGE.A_LEVEL}} />,
     <TrackedRoute key={key++} exact path="/topics/:topicName" component={Topic} />,
-
-    // Books:
-    <TrackedRoute key={key++} exact path="/books/workbook_20_aqa" component={Workbook20AQA}/>,
-    <TrackedRoute key={key++} exact path="/books/workbook_20_ocr" component={Workbook20OCR}/>,
 
     // Glossary:
     <TrackedRoute key={key++} exact path="/glossary" component={Glossary} />,
