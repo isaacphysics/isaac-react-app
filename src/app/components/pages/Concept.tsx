@@ -37,59 +37,57 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-        return <div className={classNames(doc.subjectId)}>
-            <GameboardContext.Provider value={navigation.currentGameboard}>
-                <Container>
-                    <TitleAndBreadcrumb
-                        intermediateCrumbs={navigation.breadcrumbHistory}
-                        currentPageTitle={doc.title as string}
-                        collectionType={navigation.collectionType}
-                        subTitle={doc.subtitle as string}
-                    />
-                    <MetaDescription description={doc.summary} />
-                    <CanonicalHrefElement />
-                    <div className="no-print d-flex align-items-center">
-                        <EditContentButton doc={doc} />
-                        <div className="mt-3 mr-sm-1 ml-auto">
-                            <UserContextPicker className="no-print text-right" />
-                        </div>
-                        <div className="question-actions">
-                            <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
-                        </div>
-                        <div className="question-actions not-mobile">
-                            <PrintButton />
-                        </div>
-                        <div className="question-actions">
-                            <ReportButton pageId={conceptId}/>
-                        </div>
+        return <GameboardContext.Provider value={navigation.currentGameboard}>
+            <Container className={classNames(doc.subjectId)}>
+                <TitleAndBreadcrumb
+                    intermediateCrumbs={navigation.breadcrumbHistory}
+                    currentPageTitle={doc.title as string}
+                    collectionType={navigation.collectionType}
+                    subTitle={doc.subtitle as string}
+                />
+                <MetaDescription description={doc.summary} />
+                <CanonicalHrefElement />
+                <div className="no-print d-flex align-items-center">
+                    <EditContentButton doc={doc} />
+                    <div className="mt-3 mr-sm-1 ml-auto">
+                        <UserContextPicker className="no-print text-right" />
                     </div>
+                    <div className="question-actions">
+                        <ShareLink linkUrl={`/concepts/${conceptId}${search || ""}`} />
+                    </div>
+                    <div className="question-actions not-mobile">
+                        <PrintButton />
+                    </div>
+                    <div className="question-actions">
+                        <ReportButton pageId={conceptId}/>
+                    </div>
+                </div>
 
-                    <Row className="concept-content-container">
-                        <Col className={classNames("py-4", {"mw-760": isAda})}>
+                <Row className="concept-content-container">
+                    <Col className={classNames("py-4", {"mw-760": isAda})}>
 
-                            <SupersededDeprecatedWarningBanner doc={doc} />
+                        <SupersededDeprecatedWarningBanner doc={doc} />
 
-                            <IntendedAudienceWarningBanner doc={doc} />
+                        <IntendedAudienceWarningBanner doc={doc} />
 
-                            <WithFigureNumbering doc={doc}>
-                                <IsaacContent doc={doc} />
-                            </WithFigureNumbering>
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc} />
+                        </WithFigureNumbering>
 
-                            {doc.attribution && <p className="text-muted">
-                                <Markup trusted-markup-encoding={"markdown"}>
-                                    {doc.attribution}
-                                </Markup>
-                            </p>}
+                        {doc.attribution && <p className="text-muted">
+                            <Markup trusted-markup-encoding={"markdown"}>
+                                {doc.attribution}
+                            </Markup>
+                        </p>}
 
-                            {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                        {isAda && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
 
-                            <NavigationLinks navigation={navigation} />
+                        <NavigationLinks navigation={navigation} />
 
-                            {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
-                        </Col>
-                    </Row>
-                </Container>
-            </GameboardContext.Provider>
-        </div>
+                        {isPhy && doc.relatedContent && <RelatedContent conceptId={conceptId} content={doc.relatedContent} parentPage={doc} />}
+                    </Col>
+                </Row>
+            </Container>
+        </GameboardContext.Provider>
     }}/>;
 });
