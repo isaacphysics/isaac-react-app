@@ -66,6 +66,22 @@ def get_versions_from_github():
         'api': requests.get('https://api.github.com/repos/isaacphysics/isaac-api/tags').json()[0]['name'],
     }
 
+def get_build_results_from_github(repo, branch):
+    conclusion = 'unknown'
+    link = None
+    try:
+        if repo == 'api':
+            result = requests.get(f"https://api.github.com/repos/isaacphysics/isaac-api/actions/workflows/maven.yml/runs?branch={branch}").json()['workflow_runs'][0]
+            conclusion = result['conclusion']
+            link = result['html_url']
+        elif repo == 'app':
+            result = requests.get(f"https://api.github.com/repos/isaacphysics/isaac-react-app/actions/workflows/node.js.yml/runs?branch={branch}").json()['workflow_runs'][0]
+            conclusion = result['conclusion']
+            link = result['html_url']
+    except Exception as e:
+        print(f"Failed to fetch build results from GitHub: {e}")
+    return conclusion, link
+
 def increment_version(update_type):
     def repl_matcher(match):
         if update_type != 'none':
@@ -107,9 +123,15 @@ def check_app_and_api_are_clean(update_description):
             branch = subprocess.run("git rev-parse --abbrev-ref HEAD", **subprocess_options[service_name]).stdout.strip()
             if branch != 'master':
                 prompt_user(f'The {service_name} repo is not on the "master" branch.')
+
+            build_conclusion, build_link = get_build_results_from_github(service_name, branch)
+            if build_conclusion != 'success':
+                prompt_user(f'The last remote build for branch "{branch}" of {service_name} finished with status "{build_conclusion}"!: {build_link}')
+
             diff_with_remote = subprocess.run("git diff origin/master --name-only", **subprocess_options[service_name]).stdout.strip()
             if len(diff_with_remote) > 0:
                 prompt_user(f'The {service_name} repo does not have the latest changes from the remote branch (i.e. you are not on master or you need to `git pull`).')
+
             status = subprocess.run("git status --short", **subprocess_options[service_name]).stdout.strip()
             if len(status) > 0:
                 prompt_user(f'The {service_name} repo is reporting the following uncommitted changes or untracked files:\n{status}')
