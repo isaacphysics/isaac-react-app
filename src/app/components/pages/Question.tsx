@@ -71,64 +71,63 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
 
         const isFastTrack = doc && doc.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION;
 
-        return <div className={`${doc.subjectId || ""}`}>
-            <GameboardContext.Provider value={navigation.currentGameboard}>
-                <Container>
-                    {/*High contrast option*/}
-                    <TitleAndBreadcrumb
-                        currentPageTitle={generateQuestionTitle(doc)}
-                        intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
-                        collectionType={navigation.collectionType}
-                        audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
-                        preview={preview}
-                    >
-                        {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
-                    </TitleAndBreadcrumb>
-                    {!preview && <CanonicalHrefElement />}
-                    <div className="no-print d-flex flex-wrap align-items-center mt-3">
-                        <EditContentButton doc={doc} />
-                        <div className="question-actions ml-auto">
-                            <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
-                        </div>
-                        <div className="question-actions not-mobile">
-                            <PrintButton questionPage />
-                        </div>
-                        <div className="question-actions">
-                            <ReportButton pageId={questionId}/>
-                        </div>
+        return <GameboardContext.Provider value={navigation.currentGameboard}>
+            <Container className={`${doc.subjectId || ""}`}>
+                {/*High contrast option*/}
+                <TitleAndBreadcrumb
+                      currentPageTitle={generateQuestionTitle(doc)}
+                      intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
+                      collectionType={navigation.collectionType}
+                      audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
+                      preview={preview}
+                  >
+                    {isFastTrack && fastTrackProgressEnabledBoards.includes(gameboardId || "") && <FastTrackProgress doc={doc} search={location.search} />}
+                </TitleAndBreadcrumb>
+                {!preview && <CanonicalHrefElement />}
+                <div className="no-print d-flex flex-wrap align-items-center mt-3">
+                    <EditContentButton doc={doc} />
+                    <div className="question-actions ml-auto">
+                        <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
                     </div>
-                    <Row className="question-content-container">
-                        <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
+                    </div>
+                    <div className="question-actions not-mobile">
+                        <PrintButton questionPage />
+                    </div>
+                    <div className="question-actions">
+                        <ReportButton pageId={questionId}/>
+                    </div>
+                </div>
+                <Row className="question-content-container">
+                    <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
 
-                            <SupersededDeprecatedWarningBanner doc={doc} />
+                        <SupersededDeprecatedWarningBanner doc={doc} />
 
-                            <IntendedAudienceWarningBanner doc={doc} />
+                        <IntendedAudienceWarningBanner doc={doc} />
 
-                            <WithFigureNumbering doc={doc}>
-                                <IsaacContent doc={doc}/>
-                            </WithFigureNumbering>
+                        <WithFigureNumbering doc={doc}>
+                            <IsaacContent doc={doc}/>
+                        </WithFigureNumbering>
 
-                            {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
-                                This question {" "}
-                                <RS.Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
-                                    has been replaced
-                                </RS.Button>.<br />
-                                However, if you were assigned this version, you should complete it.
-                            </div>}
+                        {doc.supersededBy && isStudent(user) && <div className="alert alert-warning">
+                            This question {" "}
+                            <RS.Button color="link" className="align-baseline" onClick={() => dispatch(goToSupersededByQuestion(doc))}>
+                                has been replaced
+                            </RS.Button>.<br />
+                            However, if you were assigned this version, you should complete it.
+                        </div>}
 
-                            {doc.attribution && <p className="text-muted">
-                                <Markup trusted-markup-encoding={"markdown"}>
-                                    {doc.attribution}
-                                </Markup>
-                            </p>}
+                        {doc.attribution && <p className="text-muted">
+                            <Markup trusted-markup-encoding={"markdown"}>
+                                {doc.attribution}
+                            </Markup>
+                        </p>}
 
-                            <NavigationLinks navigation={navigation}/>
+                        <NavigationLinks navigation={navigation}/>
 
-                            {doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-                        </Col>
-                    </Row>
-                </Container>
-            </GameboardContext.Provider>
-        </div>}
+                        {doc.relatedContent && !isFastTrack && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+                    </Col>
+                </Row>
+            </Container>
+        </GameboardContext.Provider>}
     } />;
 });
