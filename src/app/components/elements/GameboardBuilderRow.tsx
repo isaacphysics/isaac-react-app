@@ -49,7 +49,7 @@ const GameboardBuilderRow = (
     const openQuestionModal = (urlQuestionId: string) => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal())}, size: "xl",
-            title: "Question preview", body: <Question questionIdOverride={urlQuestionId} />
+            title: "Question preview", body: <Question questionIdOverride={urlQuestionId} preview />
         }))
     };
 

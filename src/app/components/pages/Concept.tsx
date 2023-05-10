@@ -27,8 +27,9 @@ interface ConceptPageProps {
     conceptIdOverride?: string;
     match: {params: {conceptId: string}};
     location: {search: string};
+    preview?: boolean;
 }
-export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride}: ConceptPageProps) => {
+export const Concept = withRouter(({match: {params}, location: {search}, conceptIdOverride, preview}: ConceptPageProps) => {
     const dispatch = useAppDispatch();
     const conceptId = conceptIdOverride || params.conceptId;
     useEffect(() => {dispatch(fetchDoc(DOCUMENT_TYPE.CONCEPT, conceptId));}, [conceptId]);
@@ -44,9 +45,12 @@ export const Concept = withRouter(({match: {params}, location: {search}, concept
                     currentPageTitle={doc.title as string}
                     collectionType={navigation.collectionType}
                     subTitle={doc.subtitle as string}
+                    preview={preview}
                 />
-                <MetaDescription description={doc.summary} />
-                <CanonicalHrefElement />
+                {!preview && <>
+                    <MetaDescription description={doc.summary} />
+                    <CanonicalHrefElement />
+                </>}
                 <div className="no-print d-flex align-items-center">
                     <EditContentButton doc={doc} />
                     <div className="mt-3 mr-sm-1 ml-auto">
