@@ -109,12 +109,10 @@ def ask_for_old_api(ctx):
 
 
 def update_config(ctx):
-    ask_for_old_api(ctx)
-    print("# Config diff from previous release (please make sure that the template is updated):")
-    ask_to_run_command(f"cd /local/src/isaac-api && git diff {ctx['old_api']} {ctx['api']} -- config-templates/linux-local-dev-segue-config.properties")
-    print("# If necessary, update config:")
-    ask_to_run_command(f"sudo nano /local/data/isaac-config/{ctx['site']}/segue-config.{ctx['env']}.properties")
-    print("# Remember to also update isaac-3 so that it remains in-sync! \n")
+    print(f"# Update configuration files")
+    ask_to_run_command(f"cd /local/data/isaac-sops-config && git pull")
+    print(f"# Decrypt configuration files")
+    ask_to_run_command(f"./deploy.sh {ctx['env']} /local/data/isaac-sops-config-decrypted")
 
 
 def run_db_migrations(ctx):
