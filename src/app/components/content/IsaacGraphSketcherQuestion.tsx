@@ -2,18 +2,25 @@ import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
-import {useCurrentQuestionAttempt} from "../../services";
+import {isStaff, useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
+import {selectors, useAppSelector} from "../../state";
 
 const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacGraphSketcherQuestionDTO>) => {
+
+    const user = useAppSelector(selectors.user.orNull);
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<GraphChoiceDTO>(questionId);
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
+    const [previewSketch, setPreviewSketch] = useState<GraphSketcher | null>();
+    // IMPORTANT - initial state will be defined on the first render if it exists, because currentAttempt is loaded in
+    // with the question page data.
+    // ! If this becomes no longer true ! then we will need a useEffect with [initialState] dependency to set the initial
+    // state once the currentAttempt is loaded in.
     const initialState: GraphSketcherState | undefined = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : undefined;
-    const previewRef = useRef(null);
+    const previewRef = useRef<HTMLDivElement>(null);
 
     function openModal() {
         !readonly && setModalVisible(true);
@@ -38,23 +45,28 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     }, []);
 
     const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
+        // TODO do not update the current attempt until the modal is closed! Otherwise the user is likely to hit the
+        //  attempt limit before they have finished drawing.
         dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(newState)});
-        if (previewSketch) {
-            previewSketch.state = newState;
-            previewSketch.state.curves = previewSketch.state.curves || [];
-        }
     };
 
     useEffect(() => {
-        if (previewSketch) return;
-        if (makeGraphSketcher && previewRef.current) {
-            const { sketch } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true });
-            if (sketch) {
-                sketch.selectedLineType = LineType.BEZIER;
-                setPreviewSketch(sketch);
-            }
+        const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves });
+        if (sketch) {
+            sketch.selectedLineType = LineType.BEZIER;
+            setPreviewSketch(sketch);
         }
-    }, [previewRef, previewSketch]);
+        return () => {
+            previewSketch?.teardown();
+            setPreviewSketch(null);
+            if (previewRef.current) {
+                for (const canvas of previewRef.current.getElementsByTagName('canvas')) {
+                    previewRef.current.removeChild(canvas);
+                }
+            }
+            p.remove();
+        }
+    }, []);
 
     useEffect(() => {
         // Set the state of the preview box whenever currentAttempt changes
@@ -82,6 +94,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             onGraphSketcherStateChange={onGraphSketcherStateChange}
             initialState={initialState}
             question={doc}
+            allowMultiValuedFunctions={isStaff(user)}
         />}
     </div>
 };

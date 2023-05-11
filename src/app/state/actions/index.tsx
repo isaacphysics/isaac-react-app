@@ -1524,6 +1524,11 @@ export const changePage = (path: string) => {
     history.push(path);
 };
 
+// Hard redirect (refreshes page)
+export const redirectTo = (path: string) => {
+    window.location.href = window.location.origin + path;
+};
+
 export const registerPageChange = (path: string) => {
     store.dispatch(routerPageChange(path));
 };

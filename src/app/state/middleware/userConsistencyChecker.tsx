@@ -1,7 +1,7 @@
 import {Dispatch, Middleware, MiddlewareAPI} from "redux";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ACTION_TYPE, isDefined} from "../../services";
-import {changePage, getUserId, logAction, setUserId} from "../index";
+import {redirectTo, getUserId, logAction, setUserId} from "../index";
 
 let timeoutHandle: number | undefined;
 
@@ -51,13 +51,18 @@ function clearCurrentUser() {
     setUserId(undefined);
 }
 
+// This is where we handle clearing the store on logout and when the user is logged out elsewhere. We do this by
+// hard redirecting to the homepage (or the session expired page) which will cause the Redux store to be cleared.
 export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI) => (next: Dispatch) => action => {
-    let userLoggedOut = false;
+    let redirect: string | undefined;
     switch (action.type) {
         case ACTION_TYPE.USER_CONSISTENCY_ERROR:
+            redirect = "/consistency-error";
+            clearCurrentUser();
+            break;
         case ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS:
         case ACTION_TYPE.USER_LOG_OUT_EVERYWHERE_RESPONSE_SUCCESS:
-            userLoggedOut = true;
+            redirect = "/";
             clearCurrentUser();
             break;
         case ACTION_TYPE.CURRENT_USER_RESPONSE_FAILURE:
@@ -74,10 +79,11 @@ export const userConsistencyCheckerMiddleware: Middleware = (api: MiddlewareAPI)
 
     const result = next(action);
 
-    if (userLoggedOut) {
+    if (redirect) {
         // Redirect after action has been processed so that the notificationManager sees a logged-out user when deciding
         // whether to show the "required fields" modal and recording that in local storage.
-        changePage("/");
+        // TODO this might not be the case anymore since this is now a hard redirect now.
+        redirectTo(redirect);
     }
 
     return result;
