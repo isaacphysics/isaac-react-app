@@ -25,7 +25,7 @@ import {
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    PROGRAMMING_LANGUAGE,
+    PROGRAMMING_LANGUAGE, SortOrder,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -556,6 +556,22 @@ export enum BoardOrder {
     "-completion" = "-completion"
 }
 
+export enum AssignmentOrderType {
+    Title = "Title",
+    StartDate = "Start date",
+    DueDate = "Due date"
+}
+export type AssignmentOrderSpec = {type: AssignmentOrderType; order: SortOrder};
+
+export const AssignmentOrder = {
+    titleAscending: {type: AssignmentOrderType.Title, order: SortOrder.ASC},
+    titleDescending: {type: AssignmentOrderType.Title, order: SortOrder.DESC},
+    startDateAscending: {type: AssignmentOrderType.StartDate, order: SortOrder.ASC},
+    startDateDescending: {type: AssignmentOrderType.StartDate, order: SortOrder.DESC},
+    dueDateAscending: {type: AssignmentOrderType.DueDate, order: SortOrder.ASC},
+    dueDateDescending: {type: AssignmentOrderType.DueDate, order: SortOrder.DESC},
+};
+
 export type NumberOfBoards = number | "ALL";
 
 export interface Boards {
@@ -619,7 +635,7 @@ export const ClozeDropRegionContext = React.createContext<{
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
-export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false});
+export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false, assignmentOrder: AssignmentOrder.startDateDescending});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
@@ -888,6 +904,7 @@ export interface PageSettings {
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
     isTeacher: boolean;
+    assignmentOrder?: AssignmentOrderSpec;
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;

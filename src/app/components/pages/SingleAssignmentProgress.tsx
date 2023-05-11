@@ -55,7 +55,7 @@ export const SingleAssignmentProgress = ({user}: {user: RegisteredUserDTO}) => {
         <Container>
             <TitleAndBreadcrumb
                 intermediateCrumbs={[ASSIGNMENT_PROGRESS_CRUMB]}
-                currentPageTitle={`Assignment Progress${assignment?.gameboard?.title && (": " + assignment?.gameboard?.title)}`}
+                currentPageTitle={`Assignment Progress${(assignment?.gameboard?.title && (": " + assignment?.gameboard?.title)) ?? ""}`}
                 className="mb-4"
             />
         </Container>
