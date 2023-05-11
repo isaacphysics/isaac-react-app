@@ -335,7 +335,7 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading assignment progress failed"
             }),
-            transformResponse: anonymiseIfNeededWith<AppAssignmentProgress[], void>(anonymisationFunctions.progressState)
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.progressState)
         }),
 
         assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
@@ -400,7 +400,7 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading groups failed"
             }),
-            transformResponse: anonymiseListIfNeededWith(anonymisationFunctions.appGroup, {anonymiseGroupNames: persistence.load(KEY.ANONYMISE_GROUPS) === "YES"}),
+            transformResponse: anonymiseListIfNeededWith(anonymisationFunctions.appGroup),
             keepUnusedDataFor: 60
         }),
 
@@ -422,7 +422,7 @@ const isaacApi = createApi({
                 },
                 errorTitle: "Group creation failed"
             }),
-            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup, {anonymiseGroupNames: persistence.load(KEY.ANONYMISE_GROUPS) === "YES"})
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
 
         deleteGroup: build.mutation<void, number>({
@@ -492,7 +492,7 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading group memberships failed"
             }),
-            transformResponse: anonymiseListIfNeededWith<GroupMembershipDetailDTO, {anonymiseGroupNames: boolean}>(anonymisationFunctions.groupMembershipDetail, {anonymiseGroupNames: persistence.load(KEY.ANONYMISE_GROUPS) === "YES"})
+            transformResponse: anonymiseListIfNeededWith<GroupMembershipDetailDTO>(anonymisationFunctions.groupMembershipDetail)
         }),
 
         changeMyMembershipStatus: build.mutation<void, {groupId: number, newStatus: MEMBERSHIP_STATUS}>({
@@ -529,7 +529,7 @@ const isaacApi = createApi({
                 errorTitle: "Loading group members failed"
             }),
             keepUnusedDataFor: 0,
-            transformResponse: anonymiseListIfNeededWith<UserSummaryWithGroupMembershipDTO, number>(anonymisationFunctions.userSummary())
+            transformResponse: anonymiseListIfNeededWith<UserSummaryWithGroupMembershipDTO>(anonymisationFunctions.userSummary())
         }),
 
         deleteGroupMember: build.mutation<void, {groupId: number, userId: number}>({
@@ -583,7 +583,7 @@ const isaacApi = createApi({
                 },
                 errorTitle: "Group manager addition failed"
             }),
-            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup, {anonymiseGroupNames: persistence.load(KEY.ANONYMISE_GROUPS) === "YES"})
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
 
         deleteGroupManager: build.mutation<void, {groupId: number, managerUserId: number}>({

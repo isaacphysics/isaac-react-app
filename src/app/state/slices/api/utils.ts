@@ -16,11 +16,17 @@ import {
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";
 
-export const anonymiseIfNeededWith = <T, R>(anonymisationCallback: (nonanonymousData: T, options?: R) => T, options?: R) => (nonanonymousData: T): T =>
-    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData, options) : nonanonymousData;
+interface AnonymisationOptions {
+    anonymiseGroupNames?: boolean;
+    indexOverride?: number;
+}
+const getAnonymisationOptions = (): AnonymisationOptions => ({anonymiseGroupNames: persistence.load(KEY.ANONYMISE_USERS) === "YES"});
 
-export const anonymiseListIfNeededWith = <T, R>(anonymisationCallback: (nonanonymousData: T, options?: R) => T, options?: R) => (nonanonymousData: T[]): T[] =>
-    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? nonanonymousData.map(d => anonymisationCallback(d, options)) : nonanonymousData;
+export const anonymiseIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T, options?: AnonymisationOptions) => T) => (nonanonymousData: T): T =>
+    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData, getAnonymisationOptions()) : nonanonymousData;
+
+export const anonymiseListIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T, options?: AnonymisationOptions) => T) => (nonanonymousData: T[]): T[] =>
+    persistence.load(KEY.ANONYMISE_USERS) === "YES" ? nonanonymousData.map(d => anonymisationCallback(d, getAnonymisationOptions())) : nonanonymousData;
 
 export const anonymisationFunctions = {
     progressState: produce<AppAssignmentProgress[]>((progress) => {
@@ -39,20 +45,20 @@ export const anonymisationFunctions = {
             }
         });
     }),
-    userSummary: (overrideGivenName?: string, overrideFamilyName?: string) => function userSummary<T extends UserSummaryWithEmailAddressDTO>(userSummary: T, index?: number): T {
+    userSummary: (overrideGivenName?: string, overrideFamilyName?: string) => function userSummary<T extends UserSummaryWithEmailAddressDTO>(userSummary: T, anonymisationOptions?: AnonymisationOptions): T {
         return {
             ...userSummary,
             familyName: overrideFamilyName ?? "",
-            givenName: overrideGivenName ?? ("Test Student" + (index ? ` ${index + 1}` : "")),
+            givenName: overrideGivenName ?? ("Test Student" + (anonymisationOptions?.indexOverride ? ` ${anonymisationOptions.indexOverride + 1}` : "")),
             email: "hidden@test.demo"
         };
     },
-    appGroup: (appGroup: AppGroup, {anonymiseGroupNames} = {anonymiseGroupNames: false}): AppGroup => ({
+    appGroup: (appGroup: AppGroup, anonymisationOptions?: AnonymisationOptions): AppGroup => ({
         ...appGroup,
         ownerSummary: appGroup?.ownerSummary && anonymisationFunctions.userSummary("Group", "Manager 1")(appGroup.ownerSummary),
         additionalManagers: appGroup?.additionalManagers?.map((us, i) => anonymisationFunctions.userSummary("Group", `Manager ${i + 2}`)(us)),
-        groupName: anonymiseGroupNames ? `Demo Group ${appGroup?.id}` : appGroup.groupName,
-        members: appGroup?.members?.map(anonymisationFunctions.userSummary())
+        groupName: anonymisationOptions?.anonymiseGroupNames ? `Demo Group ${appGroup?.id}` : appGroup.groupName,
+        members: appGroup?.members?.map((a, i) => anonymisationFunctions.userSummary()(a, {indexOverride: i})),
     }),
     assignments: (quizAssignments: QuizAssignmentDTO[] | NOT_FOUND_TYPE | null) => {
         if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
@@ -76,7 +82,7 @@ export const anonymisationFunctions = {
                 ...assignmentState.assignment,
                 userFeedback: assignmentState.assignment.userFeedback?.map((uf, i) => ({
                     ...uf,
-                    user: uf.user && anonymisationFunctions.userSummary()(uf.user, i)
+                    user: uf.user && anonymisationFunctions.userSummary()(uf.user, {indexOverride: i})
                 })),
             },
         };
@@ -92,11 +98,11 @@ export const anonymisationFunctions = {
         userDetails: userProgress?.userDetails && anonymisationFunctions.userSummary()(userProgress?.userDetails)
     },
     activeAuthorisations: (activeAuthorisations: UserSummaryWithEmailAddressDTO[]): UserSummaryWithEmailAddressDTO[] =>
-        activeAuthorisations?.map((a, i) => anonymisationFunctions.userSummary("Demo", `Teacher ${i + 1}`)(a)),
+        activeAuthorisations?.map((a, i) => anonymisationFunctions.userSummary("Demo", `Teacher ${i + 1}`)(a, {indexOverride: i})),
     otherUserAuthorisations: (otherUserAuthorisations: UserSummaryDTO[]): UserSummaryDTO[] =>
-        otherUserAuthorisations?.map(anonymisationFunctions.userSummary()),
-    groupMembershipDetail: (groupMembership: GroupMembershipDetailDTO, {anonymiseGroupNames} = {anonymiseGroupNames: false}): GroupMembershipDetailDTO => ({
+        otherUserAuthorisations?.map((a, i) => anonymisationFunctions.userSummary()(a, {indexOverride: i})),
+    groupMembershipDetail: (groupMembership: GroupMembershipDetailDTO, anonymisationOptions?: AnonymisationOptions): GroupMembershipDetailDTO => ({
         ...groupMembership,
-        group: anonymisationFunctions.appGroup(groupMembership.group, {anonymiseGroupNames}) ?? {},
+        group: anonymisationFunctions.appGroup(groupMembership.group, anonymisationOptions) ?? {},
     })
 }
