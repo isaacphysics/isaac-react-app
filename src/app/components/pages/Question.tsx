@@ -89,7 +89,6 @@ export const Question = withRouter(({questionIdOverride, match, location, previe
                     <div className="question-actions ml-auto">
                         <ShareLink linkUrl={`/questions/${questionId}${location.search || ""}`} clickAwayClose />
                     </div>
-                    </div>
                     <div className="question-actions not-mobile">
                         <PrintButton questionPage />
                     </div>
