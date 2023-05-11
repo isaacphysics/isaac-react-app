@@ -8,6 +8,7 @@ export enum KEY {
     LOGIN_OR_SIGN_UP_MODAL_SHOWN_TIME = "loginOrSignUpModalShownTime",
     LAST_NOTIFICATION_TIME = "lastNotificationTime",
     ANONYMISE_USERS = "anonymiseUsers",
+    ANONYMISE_GROUPS = "anonymiseGroups",
     MOST_RECENT_ALL_TOPICS_PATH = "mostRecentAllTopicsPath",
     FIRST_ANON_QUESTION = "firstAnonQuestion",
     ASSIGN_BOARD_PATH = "assignBoardPath",

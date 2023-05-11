@@ -459,7 +459,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                     ? sortedGroups.map((g: AppGroup) =>
                                         <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                             <div className="d-flex justify-content-between align-items-center">
-                                                <Button color="link text-left" data-testid={"select-group"} className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
+                                                <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link text-left" data-testid={"select-group"} className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
                                                     {g.groupName}
                                                 </Button>
                                                 <button

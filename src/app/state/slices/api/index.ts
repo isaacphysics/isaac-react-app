@@ -335,7 +335,7 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading assignment progress failed"
             }),
-            transformResponse: anonymiseIfNeededWith<AppAssignmentProgress[]>(anonymisationFunctions.progressState)
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.progressState)
         }),
 
         assignGameboard: build.mutation<AssignmentFeedbackDTO[], AssignmentDTO[]>({
@@ -400,7 +400,7 @@ const isaacApi = createApi({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading groups failed"
             }),
-            transformResponse: anonymiseListIfNeededWith<AppGroup>(anonymisationFunctions.appGroup),
+            transformResponse: anonymiseListIfNeededWith(anonymisationFunctions.appGroup),
             keepUnusedDataFor: 60
         }),
 
@@ -422,7 +422,7 @@ const isaacApi = createApi({
                 },
                 errorTitle: "Group creation failed"
             }),
-            transformResponse: anonymiseIfNeededWith<AppGroup>(anonymisationFunctions.appGroup)
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
 
         deleteGroup: build.mutation<void, number>({
@@ -583,7 +583,7 @@ const isaacApi = createApi({
                 },
                 errorTitle: "Group manager addition failed"
             }),
-            transformResponse: anonymiseIfNeededWith<AppGroup>(anonymisationFunctions.appGroup)
+            transformResponse: anonymiseIfNeededWith(anonymisationFunctions.appGroup)
         }),
 
         deleteGroupManager: build.mutation<void, {groupId: number, managerUserId: number}>({
