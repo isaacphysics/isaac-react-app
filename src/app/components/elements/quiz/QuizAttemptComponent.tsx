@@ -160,7 +160,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
                 <UserContextPicker className="no-print text-right"/>
                 <Row>
                     {rubric && renderRubric && <Col className="text-right">
-                        <Button color="tertiary" outline className="mb-4"
+                        <Button color="tertiary" outline className="mb-4 bg-light"
                             alt="Show instructions" title="Show instructions in a modal"
                             onClick={() => {rubric && openQuestionModal(attempt)}}>
                             Show instructions
