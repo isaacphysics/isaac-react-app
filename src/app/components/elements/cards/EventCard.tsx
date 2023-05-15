@@ -56,11 +56,6 @@ export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: bo
                     View details
                     <span className='sr-only'> of the event: {title} {" - "} <DateString>{date}</DateString></span>
                 </Link>
-                {isPhy && <div className="event-card-icons">
-                    {isTeacherEvent && <img src="/assets/phy/key_stage_sprite.svg#teacher-hat" alt="Teacher event" title="Teacher event"/>}
-                    {isStudentEvent && <img src="/assets/phy/teacher_features_sprite.svg#groups" alt="Student event" title="Student event"/>}
-                    {isVirtualEvent && <img src="/assets/phy/computer.svg" alt="Virtual event" title="Virtual event"/>}
-                </div>}
             </RS.CardText>
         </RS.CardBody>
     </RS.Card>

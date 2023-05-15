@@ -5,18 +5,7 @@ import {Col, Row} from "reactstrap";
 import classNames from "classnames";
 import {siteSpecific} from "../../services";
 
-const calloutStyle = siteSpecific({
-        width: "43",
-        height: "43",
-        // SVG taken from https://www.svgrepo.com/svg/914/speech-bubble, no attribution needed
-        src: "/assets/phy/callout-speech-bubble.svg",
-        style: {
-            marginTop: -7,
-            marginLeft: -2,
-            marginRight: 18
-        },
-        colour: "t-grey"
-    },{
+const calloutStyle = {
         width: "50",
         height: "50",
         src: "/assets/cs/callout-icon-puzzlebulb.svg",
@@ -25,7 +14,7 @@ const calloutStyle = siteSpecific({
             marginRight: -15
         },
         colour: "hi-teal-25"
-    });
+    };
 
 export const IsaacCallout = ({doc}: {doc: ContentDTO}) =>
     <Row className={classNames("isaac-callout", calloutStyle.colour)}>

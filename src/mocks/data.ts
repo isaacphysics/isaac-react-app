@@ -4704,7 +4704,7 @@ export const mockNewsPods = {
                 type: "image",
                 children: [],
                 published: false,
-                src: "/assets/phy/events/teacher.jpg",
+                src: "/assets/events/teacher.svg",
                 altText: "Image of students problem solving together."
             },
             url: "/pages/pre_made_gameboards#gcse_example",
