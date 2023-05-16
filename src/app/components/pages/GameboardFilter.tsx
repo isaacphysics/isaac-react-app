@@ -160,6 +160,10 @@ function generateCSBoardName(selections: Item<TAG_ID>[][]) {
     return "Computer Science";
 }
 
+function stripSoftHyphens(input: string): string {
+    return input.replace(/\u00AD/g, "");
+}
+
 // Shared props that both PHY and CS question filters use
 interface FilterProps {
     selections : Item<TAG_ID>[][];
@@ -516,7 +520,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     // Title changing states and logic
     const [customBoardTitle, setCustomBoardTitle] = useState<string>();
     const [pendingCustomBoardTitle, setPendingCustomBoardTitle] = useState<string>();
-    const defaultBoardTitle = siteSpecific(generatePhyBoardName, generateCSBoardName)(selections);
+    const defaultBoardTitle = stripSoftHyphens(siteSpecific(generatePhyBoardName, generateCSBoardName)(selections));
     const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
