@@ -371,3 +371,14 @@
 //  border: 2px solid red;
 //  content: '';
 //}
+
+.coordinate-question {
+  .coordinate-input {
+    display: block;
+    font-size: 25px;
+    input {
+      max-width: 100px;
+      display: inline-block;
+    }
+  }
+}
