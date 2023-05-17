@@ -110,7 +110,7 @@ def ask_for_old_api(ctx):
 
 def update_config(ctx):
     print(f"# Update configuration files")
-    ask_to_run_command(f"cd /local/data/isaac-sops-config && git pull")
+    ask_to_run_command(f"cd /local/src/isaac-sops-config && git pull")
     print(f"# Decrypt configuration files")
     ask_to_run_command(f"./deploy.sh {ctx['env']} /local/data/isaac-sops-config-decrypted")
 
