@@ -80,7 +80,7 @@ services:
     external_links:
       - $ES_CONTAINER_NAME:elasticsearch
     environment:
-      - SEGUE_CONFIG_LOCATION=/local/data/config/$ENV/$SITE/segue-config.yaml
+      - SEGUE_CONFIG_LOCATION=/local/data/config/$ENV/$SITE/segue-config.dec.yaml
       - JAVA_OPTIONS=-Dlog.path=/isaac-logs -Dsegue.version=$API_VERSION
     volumes:
       - /local/data/m2:/root/.m2:rw
