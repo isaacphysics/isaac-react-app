@@ -31,10 +31,7 @@ const LoginOrSignUpBody = () => {
 
     return <Row id={"login-page"}>
         <Col lg={6} className={classNames("content-body", {"pattern-06-inverted": isCS})}>
-            {siteSpecific(
-                <img src={"/assets/phy/logo.svg"} alt={"Isaac Physics Logo"} />,
-                <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />
-            )}
+            <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />
             <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
                     Log in or sign up<br/>
