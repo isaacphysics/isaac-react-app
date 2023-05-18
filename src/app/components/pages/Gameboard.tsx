@@ -59,16 +59,16 @@ const GameboardItemComponent = ({gameboard, question}: {gameboard: GameboardDTO,
         case "PERFECT":
             itemClasses += " bg-success";
             message = "perfect!"
-            iconHref = siteSpecific("/assets/tick-rp-hex.svg#icon", "/assets/tick-rp.svg");
+            iconHref = "/assets/tick-rp.svg"
             break;
         case "PASSED":
         case "IN_PROGRESS":
             message = "in progress"
-            iconHref = siteSpecific("/assets/incomplete-hex.svg#icon", "/assets/incomplete.svg");
+            iconHref = "/assets/incomplete.svg"
             break;
         case "FAILED":
             message = "try again!"
-            iconHref = siteSpecific("/assets/cross-rp-hex.svg#icon", "/assets/cross-rp.svg");
+            iconHref = "/assets/cross-rp.svg"
             break;
     }
 
