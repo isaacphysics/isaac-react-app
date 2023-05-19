@@ -12,6 +12,7 @@ import {
     isAda,
     isDefined,
     isTeacherOrAbove,
+    QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP,
     siteSpecific,
     useDeviceSize
 } from "../../../services";
@@ -26,10 +27,8 @@ import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
 import {
     closeActiveModal,
     openActiveModal,
-    selectors,
     showQuizSettingModal,
     useAppDispatch,
-    useAppSelector
 } from "../../../state";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {UserContextPicker} from "../inputs/UserContextPicker";
@@ -122,13 +121,18 @@ function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
             </div>
         </>;
     } else if (isDefined(assignment)) {
-        return <p className="d-flex">
-            <span>
-                Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
-                {isDefined(attempt.completedDate) && <><br />Completed:&nbsp;{formatDate(attempt.completedDate)}</>}
-            </span>
-            {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
-        </p>;
+        return <>
+            <p className="d-flex">
+                <span>
+                    Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
+                    {isDefined(attempt.completedDate) && <><br />Completed:&nbsp;{formatDate(attempt.completedDate)}</>}
+                </span>
+                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
+            </p>
+            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && <p>
+                Please be aware that your <b>test answers will be visible to your teacher(s)</b> after you submit this test.
+            </p>}
+        </>;
     } else {
         return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>
     }
