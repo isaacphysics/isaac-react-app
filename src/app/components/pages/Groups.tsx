@@ -16,7 +16,7 @@ import {
     Nav,
     NavItem,
     NavLink,
-    Row,
+    Row, Table,
     UncontrolledButtonDropdown,
     UncontrolledTooltip
 } from "reactstrap"
@@ -200,81 +200,119 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
     const bigGroup = group && group.members && group.members.length > 100;
 
     const usersInGroup = groupUserIds(group);
+    const additionalManagers = useMemo(() => group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [], [group]);
+
+    const canArchive = group && (isUserGroupOwner || group.additionalManagerPrivileges);
+    const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
 
     return <Card>
         <CardBody>
-            <h4 className={"mb-2"}>{group ? "Edit group" : "Create group"}</h4>
+            <h4 className={"mb-2"}>{group ? "Manage group" : "Create group"}</h4>
             {isAda && <hr/>}
-            {group && <Row className="mt-2 justify-content-end">
-                {isTeacherOrAbove(user) && <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
-                    {/* Only teachers and above can add group managers */}
-                    <Button outline={isAda} className="w-100 w-md-auto d-inline-block text-nowrap" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => dispatch(showGroupManagersModal({group, user}))}>
-                        {isUserGroupOwner ? "Add / remove" : "View all"}<span className="d-none d-xl-inline">{" "}group</span>{" "}managers
-                    </Button>
-                </Col>}
-                <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
-                    <Button
-                        size="sm" className={"w-100 w-md-auto d-inline-block text-nowrap"}
-                        color={siteSpecific("primary", "secondary")}
-                        onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
-                    >
-                        Invite users
-                    </Button>
+            <Row>
+                <Col xs={12} sm={canArchive ? 8 : 12}>
+                    <Form inline onSubmit={saveUpdatedGroup}>
+                        <InputGroup className="w-100 separate-input-group">
+                            <Input
+                                innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
+                                onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
+                            />
+                            {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
+                                <Button
+                                    color={siteSpecific("secondary", "primary")}
+                                    className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
+                                    onClick={saveUpdatedGroup}
+                                    size="sm"
+                                >
+                                    {group ? "Update" : "Create"}
+                                </Button>
+                            </InputGroupAddon>}
+                        </InputGroup>
+                    </Form>
                 </Col>
-                {isStaff(user) && usersInGroup.length > 0 && <Col xs={12} md={"auto"} className={"my-1 pl-md-0"}>
-                    <Button
-                        size="sm" className={"w-100 w-md-auto d-inline-block text-nowrap"}
-                        color={siteSpecific("primary", "secondary")}
-                        onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
-                    >
-                        Email users
+                {canArchive && <Col xs={12} sm={4} className={"mt-2 mt-sm-0"}>
+                    <Button title={group?.archived ? "Unarchive this group" : "Archive this group"} block size="sm" outline={isAda} color={siteSpecific("tertiary", "secondary")} onClick={toggleArchived}>
+                        {group?.archived ? "Unarchive" : "Archive"}
                     </Button>
                 </Col>}
-            </Row>}
-            <Form inline onSubmit={saveUpdatedGroup} className="pt-3">
-                <InputGroup className="w-100 separate-input-group">
-                    <Input
-                        innerRef={groupNameInputRef} length={50} placeholder="Group name" value={newGroupName}
-                        onChange={e => setNewGroupName(e.target.value)} aria-label="Group Name" disabled={isDefined(group) && !(isUserGroupOwner || group.additionalManagerPrivileges)}
-                    />
-                    {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
-                        <Button
-                            color={siteSpecific("secondary", "primary")}
-                            className={classNames("py-0", {"px-0 border-dark": isPhy})} disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
-                            onClick={saveUpdatedGroup}
-                        >
-                            {group ? "Update" : "Create"}
-                        </Button>
-                    </InputGroupAddon>}
-                </InputGroup>
-            </Form>
+            </Row>
             <Row className="pt-1 mb-3">
                 <Col className="text-right text-muted">
                     *Group name is shared with students
                 </Col>
             </Row>
-            {group && <React.Fragment>
-                {(isUserGroupOwner || group.additionalManagerPrivileges) && <Row>
-                    <Col>
-                        <Button block outline={isAda} color={siteSpecific("tertiary", "secondary")} onClick={toggleArchived}>
-                            {group.archived ? "Unarchive this group" : "Archive this group"}
-                        </Button>
+            {group && <>
+                <Row className={siteSpecific("mb-2", "mb-3")}>
+                    <Col xs={12} sm={"auto"}>
+                        <h4 className={isAda ? "py-1" : ""}>Group managers</h4>
                     </Col>
-                </Row>}
-                <Row className="mt-4">
+                    {isTeacherOrAbove(user) && <Col xs={12} sm={"auto"} className={"mt-1 mt-sm-0 ml-auto"}>
+                        {/* Only teachers and above can add group managers */}
+                        <Button outline={isAda} className="w-100 w-sm-auto d-inline-block text-nowrap" size="sm" color={siteSpecific("tertiary", "secondary")} onClick={() => dispatch(showGroupManagersModal({group, user}))}>
+                            {isUserGroupOwner
+                                ? <>Add / remove<span className="d-none d-xl-inline">{" "}group managers</span></>
+                                : <>More info<span className="d-none d-sm-inline">rmation</span></>
+                            }
+                        </Button>
+                    </Col>}
+                </Row>
+
+                {additionalManagers.length == 0 &&
+                    <p>There are no additional group managers for this group.</p>}
+                {additionalManagers.length == 1 && user && additionalManagers[0].id == user.id &&
+                    <p>You are the only additional manager for this group.</p>}
+                {!(additionalManagers.length == 0 || (additionalManagers.length == 1 && user && additionalManagers[0].id == user.id)) &&
+                    <p>The {additionalManagers.length} user(s) below have permission to manage this group.</p>}
+
+                {additionalManagers && <Table className={classNames("group-table", {"mt-1": isAda})}>
+                    <tbody>
+                    {additionalManagers.map((manager, i) =>
+                        <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
+                            <td className={classNames("align-middle", {"border-top-0": i === 0, "border-0 p-2 bg-transparent": isAda})}>
+                                <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})
+                            </td>
+                        </tr>
+                    )}
+                    </tbody>
+                </Table>}
+            </>}
+            {group && <>
+                <hr/>
+                <Row className="mt-2 mb-1">
                     <Col>
                         <ShowLoading until={group.members}>
                             {group.members && <div>
-                                <Row>
-                                    <Col>
-                                        {group.members.length} users in this group {" "}
-                                        {bigGroup && !isExpanded &&
-                                            <ButtonDropdown className="float-right" toggle={() => setExpanded(true)}>
-                                                <DropdownToggle caret>Show</DropdownToggle>
-                                            </ButtonDropdown>
-                                        }
+                                <Row className={siteSpecific("mb-2", "mb-3")}>
+                                    <Col xs={12} sm={"auto"}>
+                                        <h4 className={isAda ? "py-1" : ""}>Group members</h4>
                                     </Col>
+                                    <Col xs={canEmailUsers ? 6 : 12} sm={"auto"} className={classNames("ml-auto", {"pr-1": canEmailUsers})}>
+                                        <Button
+                                            size="sm" className={"d-inline-block text-nowrap w-100 w-sm-auto"}
+                                            color={siteSpecific("primary", "secondary")}
+                                            onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
+                                        >
+                                            Invite users
+                                        </Button>
+                                    </Col>
+                                    {isStaff(user) && usersInGroup.length > 0 && <Col xs={6} sm={"auto"} className={"pl-1"}>
+                                        <Button
+                                            size="sm" className={"d-inline-block text-nowrap w-100 w-sm-auto"}
+                                            color={siteSpecific("primary", "secondary")}
+                                            onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
+                                        >
+                                            Email users
+                                        </Button>
+                                    </Col>}
                                 </Row>
+                                <div>
+                                    There are {group.members.length} users in this group {" "}
+                                    {bigGroup && !isExpanded &&
+                                        <ButtonDropdown className="float-right" toggle={() => setExpanded(true)}>
+                                            <DropdownToggle caret>Show</DropdownToggle>
+                                        </ButtonDropdown>
+                                    }
+                                </div>
                                 <div>
                                     {(!bigGroup || isExpanded) && group.members.map((member: AppGroupMembership) => (
                                         <MemberInfo
@@ -289,7 +327,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                         </ShowLoading>
                     </Col>
                 </Row>
-            </React.Fragment>}
+            </>}
         </CardBody>
     </Card>;
 };
