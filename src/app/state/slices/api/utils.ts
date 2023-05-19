@@ -20,7 +20,7 @@ interface AnonymisationOptions {
     anonymiseGroupNames?: boolean;
     indexOverride?: number;
 }
-const getAnonymisationOptions = (): AnonymisationOptions => ({anonymiseGroupNames: persistence.load(KEY.ANONYMISE_USERS) === "YES"});
+const getAnonymisationOptions = (): AnonymisationOptions => ({anonymiseGroupNames: persistence.load(KEY.ANONYMISE_GROUPS) === "YES"});
 
 export const anonymiseIfNeededWith = <T>(anonymisationCallback: (nonanonymousData: T, options?: AnonymisationOptions) => T) => (nonanonymousData: T): T =>
     persistence.load(KEY.ANONYMISE_USERS) === "YES" ? anonymisationCallback(nonanonymousData, getAnonymisationOptions()) : nonanonymousData;
