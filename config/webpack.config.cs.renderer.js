@@ -12,7 +12,7 @@ module.exports = env => {
         },
 
         output: {
-            path: resolve(`build-renderer`),
+            path: resolve(`build-cs-renderer`),
         }
     };
 

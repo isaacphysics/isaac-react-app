@@ -16,7 +16,7 @@ module.exports = env => {
         },
 
         output: {
-            path: resolve(`build`),
+            path: resolve(`build-cs`),
         },
 
         plugins: [

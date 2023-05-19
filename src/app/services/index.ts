@@ -21,7 +21,6 @@ export * from "./history";
 // Dependencies in /services
 export * from "./katex-a11y";
 export * from "./clozeQuestionKeyboardCoordinateGetter";
-export * from "./easterEggs/phyLogoAsciiArt";
 export * from "./easterEggs/csLogoAsciiArt";
 export * from "./user";
 export * from "./validation";

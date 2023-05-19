@@ -55,14 +55,14 @@
     "string.prototype.matchall": "^4.0.6"
   },
   "scripts": {
-    "build": "webpack --env prod --config config/webpack.config.cs.js",
+    "build-cs": "webpack --env prod --config config/webpack.config.cs.js",
     "build-dev": "webpack --config config/webpack.config.cs.js",
     "start": "webpack-dev-server --hot --port 8003 --history-api-fallback --config config/webpack.config.cs.js --allowed-hosts=true",
     "test": "jest --config config/jest/jest.config.cs.js",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
     "build-stats": "webpack --env prod --config config/webpack.config.cs.js --profile --json > bundle-stats.json",
-    "analyse-bundle": "webpack-bundle-analyzer bundle-stats.json build",
-    "build-renderer": "webpack --env prod --config config/webpack.config.cs.renderer.js",
+    "analyse-bundle": "webpack-bundle-analyzer bundle-stats.json build-cs",
+    "build-cs-renderer": "webpack --env prod --config config/webpack.config.cs.renderer.js",
     "start-renderer": "webpack-dev-server --hot --port 3001 --history-api-fallback --config config/webpack.config.cs.renderer.js --allowed-hosts=true"
   },
   "eslintConfig": {
