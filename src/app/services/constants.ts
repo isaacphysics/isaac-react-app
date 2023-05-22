@@ -35,6 +35,13 @@ if (document.location.hostname === "localhost") {
 } else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
+let imagePath = `${apiPath}/images`;
+if (apiPath.indexOf(`/api/${API_VERSION}/api`) > -1) {
+    // If the API contains a version number, use a special Nginx
+    // route to allow better caching:
+    imagePath = apiPath.replace(`/api/${API_VERSION}/api`, '/images');
+}
+
 export const isTest = document.location.hostname.startsWith("test.");
 export const isStaging = document.location.hostname.startsWith("staging.");
 
@@ -42,6 +49,7 @@ export const isStaging = document.location.hostname.startsWith("staging.");
 export const envSpecific = <L, T, S, D>(live: L, test: T, staging: S, dev: D) => isTest ? test : (process.env.NODE_ENV === 'production' ? live : (isStaging ? staging : dev));
 
 export const API_PATH: string = apiPath;
+export const IMAGE_PATH: string = imagePath;
 
 export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.isaacphysics.org",
