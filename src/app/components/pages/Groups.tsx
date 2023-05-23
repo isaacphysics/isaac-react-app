@@ -200,7 +200,10 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
     const bigGroup = group && group.members && group.members.length > 100;
 
     const usersInGroup = groupUserIds(group);
-    const additionalManagers = useMemo(() => group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [], [group]);
+    const additionalManagers = useMemo(() => {
+        const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
+        return group?.ownerSummary ? [group.ownerSummary, ...additionalManagers] : additionalManagers;
+    }, [group]);
 
     const canArchive = group && (isUserGroupOwner || group.additionalManagerPrivileges);
     const canEmailUsers = isStaff(user) && usersInGroup.length > 0;
@@ -269,7 +272,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     {additionalManagers.map((manager, i) =>
                         <tr key={manager.email} data-testid={"group-manager"} className={classNames({"border-0 bg-transparent": isAda})}>
                             <td className={classNames("align-middle", {"border-top-0": i === 0, "border-0 p-2 bg-transparent": isAda})}>
-                                <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>(you)</span>} ({manager.email})
+                                <span className="icon-group-table-person" />{manager.givenName} {manager.familyName} {manager.id === group.ownerId && "(group owner)"} {user.id === manager.id && "(you)"}
                             </td>
                         </tr>
                     )}
