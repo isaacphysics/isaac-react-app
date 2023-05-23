@@ -11,9 +11,9 @@ import {Immutable} from "immer";
 const CoordinateInput = ({value, onChange, readonly, remove}: {value: Immutable<CoordinateItemDTO>, onChange: (value: Immutable<CoordinateItemDTO>) => void, readonly?: boolean, remove?: () => void}) => {
     return <span className="coordinate-input">
         (
-        <Input type="text" placeholder="x" value={value.x} onChange={event => onChange({...value, x: event.target.value})} readOnly={readonly} />
+        <Input type="text" placeholder="x" value={value.x ?? ""} onChange={event => onChange({...value, x: event.target.value === "" ? undefined : event.target.value})} readOnly={readonly} />
         <span className="coordinate-input-separator">,&nbsp;</span>
-        <Input type="text" placeholder="y" value={value.y} onChange={event => onChange({...value, y: event.target.value})} readOnly={readonly} />
+        <Input type="text" placeholder="y" value={value.y ?? ""} onChange={event => onChange({...value, y: event.target.value === "" ? undefined : event.target.value})} readOnly={readonly} />
         )
         {remove && <Button className="ml-3" size="sm" onClick={remove}>Delete</Button>}
     </span>;
@@ -24,8 +24,6 @@ const DEFAULT_COORDINATE_ITEM = {type: "coordinateItem", x: undefined, y: undefi
 const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<IsaacCoordinateQuestionDTO>) => {
 
     const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<CoordinateChoiceDTO>(questionId);
-
-    console.log(currentAttempt);
 
     const updateItem = useCallback((index: number, value: Immutable<CoordinateItemDTO>) => {
         const items = [...(currentAttempt?.items ?? [])].map(item => isDefined(item) ? item : {...DEFAULT_COORDINATE_ITEM});
