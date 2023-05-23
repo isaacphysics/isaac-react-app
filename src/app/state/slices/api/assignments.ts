@@ -32,7 +32,7 @@ export const useGroupAssignmentSummary = (groupId?: number) => {
 
 // This looks a bit odd, but it means that we can use the same sort function for both gameboard and quiz assignments
 type SortFuncInputType = {creationDate?: Date, dueDate?: Date, scheduledStartDate?: Date, gameboard?: GameboardDTO, quiz?: IsaacQuizDTO};
-const sortAssignments = (as: SortFuncInputType[] | undefined, sortOrder: AssignmentOrderSpec) => {
+const sortAssignments = (as: SortFuncInputType[] | undefined, sortOrder?: AssignmentOrderSpec) => {
     let sortedAs;
     switch (sortOrder?.type) {
         case AssignmentOrderType.DueDate:
