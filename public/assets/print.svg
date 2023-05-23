@@ -1,22 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 83.717 612 708.283" enable-background="new 0 83.717 612 708.283" xml:space="preserve">
-<polygon stroke="#000000" stroke-miterlimit="10" points="615,613.542 308.712,789.959 3,613.542 3,260.133 308.712,83.717 
-	615,260.133 "/>
-<g>
-	<path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1508" stroke-miterlimit="2.6131" d="M206.11,603.246h151.074l63.528-67.65
-		v-91.23h-22.506v72.477h-65.216v62.607H228.615V444.365H206.11V603.246L206.11,603.246z M420.698,418.945V270.43H206.11v148.516
-		h22.52V294.213h169.592v124.732H420.698z"/>
-	<rect x="421.139" y="368.893" fill="#FFFFFF" width="50.625" height="12.463"/>
-	<polygon fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1006" stroke-miterlimit="2.6131" points="420.698,344.502 
-		481.297,344.502 481.297,516.166 420.698,516.166 420.698,444.365 420.769,444.365 420.769,505.682 421.836,505.682 443.4,505.682 
-		443.4,418.945 443.358,418.945 420.769,418.945 420.698,418.945 	"/>
-	
-		<rect x="228.615" y="344.502" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1006" stroke-miterlimit="2.6131" width="169.592" height="74.442"/>
-	<polygon fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1006" stroke-miterlimit="2.6131" points="136.703,344.502 
-		206.11,344.502 206.11,418.945 206.038,418.945 185.676,418.945 183.43,418.945 183.43,505.682 204.964,505.682 206.038,505.682 
-		206.038,444.365 206.11,444.365 206.11,516.166 136.703,516.166 	"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 83.717 612 708.283">
+   <path stroke="#000" stroke-miterlimit="10" d="M615 613.542L308.712 789.959 3 613.542V260.133L308.712 83.717 615 260.133z" />
+   <g fill="#fff">
+      <path stroke="#fff" stroke-width=".151" stroke-miterlimit="2.6131" d="M206.11 603.246h151.074l63.528-67.65v-91.23h-22.506v72.477H332.99v62.607H228.615V444.365H206.11v158.881h0zm214.588-184.301V270.43H206.11v148.516h22.52V294.213h169.592v124.732h22.476z" />
+      <path d="M421.139 368.893h50.625v12.463h-50.625z" />
+      <path d="M420.698 344.502h60.599v171.664h-60.599v-71.801h.071v61.317h1.067H443.4v-86.737h-.042-22.589-.071zm-192.083 0h169.592v74.442H228.615zm-91.912 0h69.407v74.443h-.072-20.362-2.246v86.737h21.534 1.074v-61.317h.072v71.801h-69.407z" stroke="#fff" stroke-miterlimit="2.6131" stroke-width=".101" />
+   </g>
 </svg>

@@ -1,75 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Generator: Adobe Illustrator 16.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-
-<svg
-   version="1.1"
-   id="Layer_1"
-   x="0px"
-   y="0px"
-   viewBox="0 83.717 612 708.283"
-   enable-background="new 0 83.717 612 708.283"
-   xml:space="preserve"
-   sodipodi:docname="flag.svg"
-   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><defs
-   id="defs216"><inkscape:path-effect
-     effect="bspline"
-     id="path-effect784"
-     is_visible="true"
-     lpeversion="1"
-     weight="33.333333"
-     steps="2"
-     helper_size="0"
-     apply_no_weight="true"
-     apply_with_weight="true"
-     only_selected="false" /></defs><sodipodi:namedview
-   id="namedview214"
-   pagecolor="#ffffff"
-   bordercolor="#000000"
-   borderopacity="0.25"
-   inkscape:showpageshadow="2"
-   inkscape:pageopacity="0.0"
-   inkscape:pagecheckerboard="0"
-   inkscape:deskcolor="#d1d1d1"
-   showgrid="true"
-   inkscape:zoom="0.33320014"
-   inkscape:cx="-1358.0427"
-   inkscape:cy="-106.54257"
-   inkscape:window-width="1920"
-   inkscape:window-height="999"
-   inkscape:window-x="0"
-   inkscape:window-y="341"
-   inkscape:window-maximized="0"
-   inkscape:current-layer="Layer_1"><inkscape:grid
-     type="xygrid"
-     id="grid5970" /></sodipodi:namedview>
-<polygon
-   stroke="#000000"
-   stroke-miterlimit="10"
-   points="308.712,789.959 3,613.542 3,260.133 308.712,83.717 615,260.133 615,613.542 "
-   id="polygon199"
-   sodipodi:insensitive="true" />
-
-<path
-   style="fill:none;fill-opacity:1"
-   d="m 217.58694,281.79615 c 0,0 84.03358,76.53058 172.56896,18.0072"
-   id="path786" /><g
-   id="g6813"
-   inkscape:label="flag"
-   transform="matrix(0.87958924,0,0,0.87958924,33.670457,52.322679)"
-   style="fill:none;stroke:#ffffff;stroke-width:34.1068;stroke-dasharray:none;stroke-opacity:1"><path
-     style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:34.1068;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-     d="m 221.7121,306.05648 c 0,0 45.82278,-46.86384 93.34271,-27.8254 47.51991,19.03843 39.03422,45.39934 98.43411,21.96742"
-     id="path2980" /><path
-     style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:34.1068;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-     d="m 226.96611,442.14827 c 0,0 45.80861,-47.04116 93.31383,-27.93069 47.50522,19.11048 39.02216,45.57114 98.40368,22.05056"
-     id="path2980-4" /><path
-     style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:34.1068;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-     d="M 217.52226,614.25907 V 264.10131"
-     id="path5208" /><path
-     style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:34.1068;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-     d="M 422.2123,430.44769 V 301.5781"
-     id="path5232" /></g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 83.717 612 708.283">
+   <path stroke="#000" stroke-miterlimit="10" d="M308.712 789.959L3 613.542V260.133L308.712 83.717 615 260.133v353.409z" />
+   <g fill="none" stroke="#fff" stroke-linejoin="bevel" stroke-width="30">
+      <path d="M228.686 321.527s40.305-41.221 82.103-24.475 34.334 39.933 86.582 19.322" />
+      <path d="M233.307 441.231s40.293-41.377 82.078-24.568 34.323 40.084 86.555 19.395" stroke-linecap="square" />
+      <path d="M225.001 592.618V284.623" />
+      <path d="M405.044 430.94V317.587" stroke-linecap="square" />
+   </g>
+</svg>
