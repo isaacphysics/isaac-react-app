@@ -260,10 +260,12 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     </Col>}
                 </Row>
 
-                {additionalManagers.length == 0 &&
-                    <p>There are no additional group managers for this group.</p>}
                 {additionalManagers.length == 1 && user && additionalManagers[0].id == user.id &&
-                    <p>You are the only additional manager for this group.</p>}
+                    (user.id === group.ownerId
+                        ? <p>You are the owner of this group.</p>
+                        : <p>You are the only additional manager for this group.</p>
+                    )
+                }
                 {!(additionalManagers.length == 0 || (additionalManagers.length == 1 && user && additionalManagers[0].id == user.id)) &&
                     <p>The {additionalManagers.length} user(s) below have permission to manage this group.</p>}
 
