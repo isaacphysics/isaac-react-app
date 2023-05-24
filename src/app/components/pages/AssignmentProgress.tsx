@@ -21,13 +21,12 @@ import {
 } from "../../state";
 import {
     Button,
-    Col,
     Container,
     DropdownItem,
     DropdownMenu,
     DropdownToggle,
+    InputGroup,
     Label,
-    Row,
     UncontrolledButtonDropdown
 } from "reactstrap"
 import orderBy from "lodash/orderBy";
@@ -35,6 +34,8 @@ import sortBy from "lodash/sortBy";
 import {
     AppAssignmentProgress,
     AppGroup,
+    AssignmentOrder,
+    AssignmentOrderSpec,
     AssignmentProgressPageSettingsContext,
     EnhancedAssignment,
     EnhancedAssignmentWithProgress
@@ -53,7 +54,8 @@ import {
     getAssignmentCSVDownloadLink,
     getAssignmentStartDate,
     getQuizAssignmentCSVDownloadLink,
-    hasAssignmentStarted, isAda,
+    hasAssignmentStarted,
+    isAda,
     isDefined,
     isFound,
     isPhy,
@@ -61,6 +63,7 @@ import {
     MARKBOOK_TYPE_TAB,
     PATHS,
     siteSpecific,
+    SortOrder,
     useAssignmentProgressAccessibilitySettings
 } from "../../services";
 import {downloadLinkModal} from "../elements/modals/AssignmentProgressModalCreators";
@@ -73,7 +76,7 @@ import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
 import {RenderNothing} from "../elements/RenderNothing";
 
-enum SortOrder {
+enum GroupSortOrder {
     Alphabetical = "Alphabetical",
     DateCreated = "Date Created"
 }
@@ -509,7 +512,7 @@ const GroupDetails = ({group}: {group: AppGroup}) => {
     const [activeTab, setActiveTab] = useState(MARKBOOK_TYPE_TAB.assignments);
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
-    const {groupBoardAssignments, groupQuizAssignments} = useGroupAssignments(group.id);
+    const {groupBoardAssignments, groupQuizAssignments} = useGroupAssignments(group.id, pageSettings.assignmentOrder);
     const assignments = groupBoardAssignments ?? [];
     const quizAssignments = groupQuizAssignments ?? [];
 
@@ -557,7 +560,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
     const {assignmentCount} = useGroupAssignmentSummary(group.id);
 
     return <>
-        <div onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
+        <div  onClick={() => setExpanded(!isExpanded)} className={isExpanded ? "assignment-progress-group active align-items-center" : "assignment-progress-group align-items-center"}>
             <div className="group-name"><span className="icon-group"/><span data-testid={"group-name"}>{group.groupName}</span></div>
             <div className="flex-grow-1" />
             <div className="py-2"><strong>{assignmentCount}</strong> {siteSpecific("Assignment", "Quiz")}{assignmentCount != 1 && siteSpecific("s", "zes")}<span className="d-none d-md-inline"> set</span></div>
@@ -577,9 +580,15 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     const dispatch = useAppDispatch();
     const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
-    const pageSettings = useAssignmentProgressAccessibilitySettings({user});
+    const accessibilitySettings = useAssignmentProgressAccessibilitySettings({user});
 
-    const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Alphabetical);
+    const [groupSortOrder, setGroupSortOrder] = useState<GroupSortOrder>(GroupSortOrder.Alphabetical);
+    const [assignmentOrder, setAssignmentOrder] = useState<AssignmentOrderSpec>(AssignmentOrder.startDateDescending);
+
+    const pageSettings = useMemo(() => ({
+        ...accessibilitySettings,
+        assignmentOrder,
+    }), [assignmentOrder, accessibilitySettings]);
 
     useEffect(() => {
         // Don't attempt to load tests for tutors, they cannot manage them
@@ -589,7 +598,7 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     }, [dispatch]);
 
     const pageHelp = <span>
-        {`Click on your groups to see the ${siteSpecific("assignments", "quizzes")} you have set. View your students' progress by question.`}
+        Click on your groups to see the {siteSpecific("assignments", "quizzes")} you have set. View your students&apos; progress by question.
     </span>;
 
     return <>
@@ -601,27 +610,40 @@ export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
                 modalId="assignment_progress_help"
             />
             {isAda && <PageFragment fragmentId={"markbook_help"} ifNotFound={RenderNothing} />}
-            <Row className="align-items-center d-none d-md-flex">
-                <Col className="text-right">
-                    <Label className="pr-2">Sort groups:</Label>
+            <div className="w-100 text-right">
+                <InputGroup className="d-inline text-nowrap">
+                    <Label className="pr-2 mt-1">Sort {siteSpecific("assignments", "quizzes")}:</Label>
                     <UncontrolledButtonDropdown size="sm">
                         <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
-                            {sortOrder}
+                            {assignmentOrder.type} ({assignmentOrder.order === SortOrder.ASC ? "ascending" : "descending"})
                         </DropdownToggle>
                         <DropdownMenu>
-                            {Object.values(SortOrder).map(item =>
-                                <DropdownItem key={item} onClick={() => setSortOrder(item)}>{item}</DropdownItem>
+                            {Object.values(AssignmentOrder).map(item =>
+                                <DropdownItem key={item.type + item.order} onClick={() => setAssignmentOrder(item)}>{item.type} ({item.order === SortOrder.ASC ? "ascending" : "descending"})</DropdownItem>
                             )}
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </Col>
-            </Row>
+                </InputGroup>
+                <InputGroup className="d-inline text-nowrap ml-4">
+                    <Label className="pr-2 mt-1">Sort groups:</Label>
+                    <UncontrolledButtonDropdown size="sm">
+                        <DropdownToggle color={siteSpecific("tertiary", "secondary")} className="border" caret size={siteSpecific("lg", "sm")}>
+                            {groupSortOrder}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            {Object.values(GroupSortOrder).map(item =>
+                                <DropdownItem key={item} onClick={() => setGroupSortOrder(item)}>{item}</DropdownItem>
+                            )}
+                        </DropdownMenu>
+                    </UncontrolledButtonDropdown>
+                </InputGroup>
+            </div>
         </Container>
         <ShowLoadingQuery
             query={groupsQuery}
             defaultErrorTitle={"Error fetching groups"}
             thenRender={(groups) => {
-                const sortedGroups = sortOrder === SortOrder.Alphabetical
+                const sortedGroups = groupSortOrder === GroupSortOrder.Alphabetical
                     ? sortBy(groups, g => g.groupName && g.groupName.toLowerCase())
                     : sortBy(groups, g => g.created).reverse();
                 return <div className="assignment-progress-container mb-5">
