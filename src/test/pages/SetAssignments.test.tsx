@@ -1,10 +1,9 @@
-import React from "react";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment} from "../utils";
-import {API_PATH, siteSpecific, STAGE, stageLabelMap} from "../../app/services";
+import {API_PATH, siteSpecific} from "../../app/services";
 import {rest} from "msw";
 
 const expectedTopLinks = siteSpecific(
@@ -25,7 +24,7 @@ describe("SetAssignments", () => {
     const renderSetAssignments = () => {
         renderTestEnvironment({
             PageComponent: SetAssignments,
-            initalRouteEntries: ["/assignments"]
+            initialRouteEntries: ["/assignments"]
         });
     };
 
@@ -112,7 +111,7 @@ describe("SetAssignments", () => {
         let requestAssignment: {gameboardId: string, scheduledStartDate?: any, dueDate?: any, notes?: string};
         renderTestEnvironment({
             PageComponent: SetAssignments,
-            initalRouteEntries: ["/assignments"],
+            initialRouteEntries: ["/assignments"],
             extraEndpoints: [
                 rest.post(API_PATH + "/assignments/assign_bulk", async (req, res, ctx) => {
                     const json = await req.json();

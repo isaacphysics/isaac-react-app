@@ -1,4 +1,3 @@
-import React from "react";
 import {formatPageTitle} from "../../../app/components/elements/PageTitle";
 import {formatBreadcrumbItemTitle} from "../../../app/components/elements/TitleAndBreadcrumb";
 import {Markup} from "../../../app/components/elements/markup";

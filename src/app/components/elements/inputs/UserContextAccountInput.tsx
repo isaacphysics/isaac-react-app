@@ -8,7 +8,6 @@ import {
     getFilteredStageOptions,
     isCS,
     isDefined,
-    isPhy,
     isTutorOrAbove,
     siteSpecific,
     STAGE, TEACHER_REQUEST_ROUTE
@@ -140,7 +139,7 @@ export function UserContextAccountInput({
                 </RS.UncontrolledTooltip>
             </React.Fragment>
         )}
-        <div id="user-context-selector" className={classNames({"d-flex flex-wrap": isPhy})}>
+        <div id="user-context-selector" className={classNames({"d-flex flex-wrap": false})}>
             {userContexts.map((userContext, index) => {
                 const showPlusOption = tutorOrAbove &&
                     index === userContexts.length - 1 &&

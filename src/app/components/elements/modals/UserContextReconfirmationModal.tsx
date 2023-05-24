@@ -4,7 +4,6 @@ import {
     isCS,
     isDefined,
     isLoggedIn,
-    isPhy,
     isTeacherOrAbove,
     isTutor,
     isTutorOrAbove,
@@ -54,7 +53,7 @@ const UserContextReconfimationModalBody = () => {
     const [userContexts, setUserContexts] = useState(initialUserContexts.length ? initialUserContexts : [{}]);
 
     const allFieldsAreValid = useMemo(() =>
-        validateUserContexts(userContexts) && (isPhy || validateUserSchool(userToUpdate))
+        validateUserContexts(userContexts) && validateUserSchool(userToUpdate)
     , [userContexts, userToUpdate]);
 
     const logReviewTeacherConnections = () =>

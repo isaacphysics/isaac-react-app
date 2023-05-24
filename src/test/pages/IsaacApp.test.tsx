@@ -1,45 +1,18 @@
-import React from "react";
 import {screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {IsaacApp} from "../../app/components/navigation/IsaacApp";
 import {reverse, zip} from "lodash";
 import {UserRole, USER_ROLES} from "../../IsaacApiTypes";
 import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "../utils";
-import {FEATURED_NEWS_TAG, isPhy, siteSpecific, history, isCS, SITE_SUBJECT} from "../../app/services";
+import {FEATURED_NEWS_TAG, siteSpecific, history} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
 
-const myIsaacLinks = siteSpecific(
-    ["/account", "/my_gameboards", "/assignments", "/progress", "/tests"],
-    ["/assignments", "/my_gameboards", "/progress", "/tests"]
-);
-const tutorLinks = siteSpecific(
-    ["/tutor_features", "/groups", "/set_assignments", "/assignment_progress"],
-    ["/groups", "/set_assignments", "/my_markbook"]
-);
-const teacherLinks = siteSpecific(
-    ["/teacher_features", "/groups", "/set_assignments", "/assignment_progress", "/set_tests", "/set_tests#manage"],
-    ["/groups", "/set_assignments", "/my_markbook", "/set_tests", "/teaching_order"]
-);
-const learnLinks = siteSpecific(
-    ["/11_14", "/gcse", "/alevel", "/gameboards/new", "/concepts"],
-    ["/topics/gcse", "/topics/a_level", "/gameboards/new", "/pages/workbooks_2020", "/glossary", "/pages/computer_science_journeys_gallery"]
-);
-const eventsLinks = siteSpecific(
-    ["/events", "/pages/isaac_mentor"],
-    ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"]
-);
-const loggedInEventLinks = siteSpecific(
-    ["/events?show_booked_only=true"],
-    [] as string[]
-).concat(eventsLinks);
-const teacherEventLinks = siteSpecific(
-    [] as string[],
-    ["/events?show_reservations_only=true"]
-).concat(loggedInEventLinks);
-const helpLinks = siteSpecific(
-    ["/pages/how_to_videos", "/solving_problems", "/support/student", "/support/teacher", "/contact"],
-    ["/support/teacher", "/support/student", "/contact"],
-);
+const myIsaacLinks = ["/assignments", "/my_gameboards", "/progress", "/tests"]
+const tutorLinks = ["/groups", "/set_assignments", "/my_markbook"];
+const teacherLinks = ["/groups", "/set_assignments", "/my_markbook", "/set_tests", "/teaching_order"];
+const learnLinks = ["/topics/gcse", "/topics/a_level", "/gameboards/new", "/pages/workbooks_2020", "/glossary", "/pages/computer_science_journeys_gallery"];
+const eventsLinks = ["/events?types=student", "/events?types=teacher", "/pages/event_types", "/safeguarding"];
+const teacherEventLinks = ["/events?show_reservations_only=true"].concat(eventsLinks);
+const helpLinks = ["/support/teacher", "/support/student", "/contact"];
 
 const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in NavBarMenus]: string[] | null}} = {
     ANONYMOUS: {
@@ -54,7 +27,7 @@ const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in Nav
         "My Isaac": myIsaacLinks,
         Teach: null,
         Learn: learnLinks,
-        Events: loggedInEventLinks,
+        Events: eventsLinks,
         Help: helpLinks,
         Admin: null
     },
@@ -62,8 +35,8 @@ const navigationBarLinksPerRole: {[p in (UserRole | "ANONYMOUS")]: {[menu in Nav
         "My Isaac": myIsaacLinks,
         Teach: tutorLinks,
         Learn: learnLinks,
-        Events: loggedInEventLinks,
-        Help: helpLinks.map(l => isPhy && (l === "/support/teacher") ? "/support/tutor" : l),
+        Events: eventsLinks,
+        Help: helpLinks,
         Admin: null
     },
     TEACHER: {
@@ -124,7 +97,7 @@ describe("IsaacApp", () => {
             renderTestEnvironment({role});
             for (const [menu, hrefs] of Object.entries(navigationBarLinksPerRole[role])) {
                 const header = await screen.findByTestId("header");
-                const navLink = within(header).queryByRole("link", {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu as NavBarMenus]});
+                const navLink = within(header).queryByRole("link", {name: NAV_BAR_MENU_TITLE[menu as NavBarMenus]});
                 if (hrefs === null) {
                     // Expect link to be hidden from user
                     expect(navLink).toBeNull();
@@ -146,14 +119,9 @@ describe("IsaacApp", () => {
         });
     });
 
-    // TODO implement test data and this test for CS
-    isPhy && it('should show the users number of current assignments in the navigation menu (Physics only)', async () => {
-        renderTestEnvironment();
-        const myAssignmentsBadge = await screen.findByTestId("my-assignments-badge");
-        expect(myAssignmentsBadge.textContent?.includes("4")).toBeTruthy();
-    });
-
-    isCS && it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
+    // TODO implement test data & test for "should show the users number of current assignments in the navigation menu"
+    
+    it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
         renderTestEnvironment();
         const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
         const newsCarousel = await screen.findByTestId("carousel-inner");
