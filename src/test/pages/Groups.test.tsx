@@ -41,6 +41,15 @@ const switchGroupsTab = async (activeOrArchived: "active" | "archived", expected
     return groups;
 };
 
+const closeActiveModal = async (modal: HTMLElement) => {
+    // Close the modal
+    const closeButton = within(modal).getByRole("button", {name: "Close"});
+    await userEvent.click(closeButton);
+    await waitFor(() => {
+        expect(modal).not.toBeInTheDocument();
+    });
+};
+
 // Reusable test for adding a manager in the additional manager modal
 const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver, newManager: any) => {
     let groupManagersModal: HTMLElement | undefined;
@@ -70,6 +79,7 @@ const testAddAdditionalManagerInModal = async (managerHandler: ResponseResolver,
         const removeButton = within(managerElements[0]).getByRole("button", {name: "Remove"});
         expect(removeButton).toBeVisible();
     });
+    await closeActiveModal(groupManagersModal);
 };
 
 describe("Groups", () => {
@@ -138,6 +148,7 @@ describe("Groups", () => {
         const code = await within(modal).findByTestId("share-code");
         expect(link).toHaveTextContent(`\/account?authToken=${mockToken}`);
         expect(code.textContent).toEqual(mockToken);
+        await closeActiveModal(modal);
     });
 
     (["active", "archived"] as const).forEach((activeOrArchived) => {
@@ -205,10 +216,10 @@ describe("Groups", () => {
             expect(groupToRenameElement).toBeDefined();
             // Open group editor for group to rename
             await userEvent.click(within(groupToRenameElement).getByTestId("select-group"));
-            // Wait for "Edit group" panel to be open
+            // Wait for "Manage group" panel to be open
             const groupEditor = await screen.findByTestId("group-editor");
             await waitFor(async () => {
-                await within(groupEditor).findByText("Edit group");
+                await within(groupEditor).findByText("Manage group");
             });
             // Rename the group and click update
             const groupNameInput = await within(groupEditor).findByPlaceholderText(/Group [Nn]ame/);
@@ -275,7 +286,7 @@ describe("Groups", () => {
                 // We need to look within the element marked with the "group-editor" test ID, because there are actually
                 // two GroupEditor components in the DOM at once, one is just hidden (depending on screen size).
                 const groupEditor = await screen.findByTestId("group-editor");
-                const archiveButton = await within(groupEditor).findByRole("button", {name: `${activeOrArchived === "active" ? "A" : "Una"}rchive this group`});
+                const archiveButton = await within(groupEditor).findByRole("button", {name: `${activeOrArchived === "active" ? "A" : "Una"}rchive`});
                 await userEvent.click(archiveButton);
                 // Assert that the request was called, and the modified group no longer exists in the initial list of groups
                 await waitFor(() => {
@@ -358,7 +369,7 @@ describe("Groups", () => {
             const groupEditor = await screen.findByTestId("group-editor");
             // Neither variant of the button should show
             const addManagersButton = within(groupEditor).queryByRole("button", {name: "Add / remove group managers"});
-            const viewManagersButton = within(groupEditor).queryByRole("button", {name: "View all group managers"});
+            const viewManagersButton = within(groupEditor).queryByRole("button", {name: "More information"});
             expect(addManagersButton).toBeNull();
             expect(viewManagersButton).toBeNull();
         });
@@ -498,6 +509,7 @@ describe("Groups", () => {
         // Expect the "add group managers" button NOT to be shown on the modal
         expect(firstModal).toHaveModalTitle("Group Created");
         expect(within(firstModal).queryByRole("button", {name: "Add group managers"})).toBeNull();
+        await closeActiveModal(firstModal);
     });
 
     it("only allows additional group managers to remove themselves as group managers", async () => {
@@ -533,8 +545,8 @@ describe("Groups", () => {
         await userEvent.click(selectGroupButton);
         const groupEditor = await screen.findByTestId("group-editor");
 
-        // Text on button should have changed to "View all" rather than "Add / remove"
-        const addManagersButton = within(groupEditor).getByRole("button", {name: "View all group managers"});
+        // Text on button should have changed to "More info" rather than "Add / remove"
+        const addManagersButton = within(groupEditor).getByRole("button", {name: /More info\s?rmation/});
 
         await userEvent.click(addManagersButton);
 

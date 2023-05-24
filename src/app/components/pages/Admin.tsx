@@ -14,7 +14,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
-import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
+import {AnonymisationCheckboxes} from "../elements/AnonymisationCheckboxes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {MisuseStats} from "../elements/MisuseStats";
 import classNames from "classnames";
@@ -132,7 +132,7 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                     </React.Fragment>}
 
                     <h3 className={"mt-3"}>Demonstration Mode</h3>
-                    <AnonymiseUsersCheckbox/>
+                    <AnonymisationCheckboxes/>
 
                     {isAdmin(user) && <>
                         <h3 className={"mt-3"}>Misuse statistics</h3>

@@ -27,6 +27,7 @@ import {
 import classNames from "classnames";
 import {PageFragment} from "../PageFragment";
 import {RenderNothing} from "../RenderNothing";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 
 interface TeacherConnectionsProps {
@@ -39,14 +40,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const dispatch = useAppDispatch();
     const activeAuthorisations = useAppSelector(selectors.connections.activeAuthorisations);
     const studentAuthorisations = useAppSelector(selectors.connections.otherUserAuthorisations);
-    const [getGroupMemberships, {data: groupMemberships}] = isaacApi.endpoints.getGroupMemberships.useLazyQuery();
+    const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
+    const {data: groupMemberships} = isaacApi.endpoints.getGroupMemberships.useQuery(groupQuery);
     const [changeMyMembershipStatus] = isaacApi.endpoints.changeMyMembershipStatus.useMutation();
 
     useEffect(() => {
         if (user.loggedIn && user.id) {
             dispatch(getActiveAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
             dispatch(getStudentAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
-            getGroupMemberships((editingOtherUser && userToEdit?.id) || undefined);
         }
     }, [dispatch, editingOtherUser, userToEdit?.id]);
 

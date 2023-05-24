@@ -38,13 +38,14 @@ import {
     isStaff,
     KEY,
     showNotification,
-    isTutorOrAbove, PATHS
+    isTutorOrAbove,
+    PATHS
 } from "../../services"
 import {Generic} from "../pages/Generic";
 import {ServerError} from "../pages/ServerError";
 import {AuthError} from "../pages/AuthError";
 import {SessionExpired} from "../pages/SessionExpired";
-import {ConsistencyErrorModal} from "./ConsistencyErrorModal";
+import {ConsistencyError} from "../pages/ConsistencyError";
 import {Search} from "../pages/Search";
 import {CookieBanner} from "./CookieBanner";
 import {EmailVerificationBanner} from "./EmailVerificationBanner";
@@ -84,7 +85,6 @@ const GameboardBuilder = lazy(() => import('../pages/GameboardBuilder'));
 export const IsaacApp = () => {
     // Redux state and dispatch
     const dispatch = useAppDispatch();
-    const consistencyError = useAppSelector((state: AppState) => state && state.error && state.error.type == "consistencyError" || false);
     const serverError = useAppSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useAppSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
     const segueEnvironment = useAppSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
@@ -141,6 +141,7 @@ export const IsaacApp = () => {
                         <Route exact path={serverError ? undefined : "/error"} component={ServerError} />
                         <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
                         <TrackedRoute exact path={"/auth_error"} component={AuthError} />
+                        <TrackedRoute exact path={"/consistency-error"} component={ConsistencyError} />
 
                         {/* Site specific pages */}
                         {SiteSpecific.Routes}
@@ -222,6 +223,5 @@ export const IsaacApp = () => {
             </ErrorBoundary>
         </main>
         <SiteSpecific.Footer />
-        <ConsistencyErrorModal consistencyError={consistencyError} />
     </Router>;
 };

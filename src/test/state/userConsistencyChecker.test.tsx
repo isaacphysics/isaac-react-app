@@ -1,10 +1,12 @@
 import {ACTION_TYPE} from "../../app/services";
-import {setUserId, getUserId, userConsistencyCheckerMiddleware} from "../../app/state";
+import {setUserId, getUserId, userConsistencyCheckerMiddleware, redirectTo} from "../../app/state";
 import * as CurrentUser from "../../app/state/middleware/userConsistencyCheckerCurrentUser";
+import * as Actions from "../../app/state/actions";
 import {AnyAction, Dispatch, MiddlewareAPI} from "redux";
 
 jest.spyOn(CurrentUser, "setUserId");
 jest.spyOn(CurrentUser, "getUserId");
+jest.spyOn(Actions, "redirectTo");
 
 let fakeDispatch: Dispatch, fakeGetState, fakeStore: MiddlewareAPI, fakeNext: Dispatch<AnyAction>;
 
@@ -27,13 +29,15 @@ describe("userConsistencyCheckerMiddleware", () => {
 
         // @ts-ignore
         setUserId.mockImplementation(() => true);
+        // @ts-ignore
+        redirectTo.mockImplementation(() => true);
 
         jest.clearAllMocks();
     });
 
     afterAll(() => {
         jest.clearAllMocks();
-    })
+    });
 
     it("sets the current user after a successful login and starts consistency checking", async () => {
         userConsistencyCheckerMiddleware(fakeStore)(fakeNext)(loginAction);
