@@ -3,7 +3,7 @@ import {closeActiveModal, openActiveModal, returnQuizToStudent, useAppDispatch} 
 import {Button} from "reactstrap";
 import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {isQuestion, siteSpecific} from "../../../services";
+import {isQuestion} from "../../../services";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
 export const ICON = {
