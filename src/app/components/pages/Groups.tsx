@@ -414,7 +414,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
             if (mutationSucceeded(result)) {
                 const group = result.data;
                 if (!group.id) return false;
-                dispatch(showGroupInvitationModal({group, user, firstTime: true}));
+                dispatch(showGroupInvitationModal({group, user, firstTime: true, backToCreateGroup: () => setSelectedGroupId(undefined)}));
                 setSelectedGroupId(group.id);
                 return true;
             }
