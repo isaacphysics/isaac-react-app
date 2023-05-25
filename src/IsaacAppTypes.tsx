@@ -618,10 +618,10 @@ export const ClozeDropRegionContext = React.createContext<{
 } | undefined>(undefined);
 export const MultiPartQuestionContext = React.createContext<{
     questionPartId: string,
-    singlePartCurrentAttempt: (id: string) => Immutable<ChoiceDTO> | undefined,
-    dispatchSinglePartCurrentAttempt: (id: string, attempt: Immutable<ChoiceDTO | ValidatedChoice<ChoiceDTO>>) => void,
-    getQuestionValidation: (id: string) => Immutable<QuestionValidationResponseDTO> | undefined,
-    getQuestionDoc: (id: string) => Immutable<QuestionDTO> | undefined,
+    singlePartCurrentAttempt: (id: number) => Immutable<ChoiceDTO> | undefined,
+    dispatchSinglePartCurrentAttempt: (id: number, attempt: Immutable<ChoiceDTO | ValidatedChoice<ChoiceDTO>>) => void,
+    getQuestionValidation: (id: number) => Immutable<QuestionValidationResponseDTO> | undefined,
+    getQuestionDoc: (id: number) => Immutable<QuestionDTO> | undefined,
     readonly: boolean | undefined
 } | undefined>(undefined);
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});

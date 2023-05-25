@@ -3,7 +3,7 @@ import {IsaacQuestionProps, MultiPartQuestionContext, ValidatedChoice} from "../
 import {
     ChoiceDTO,
     IsaacMultiPartQuestionDTO,
-    MultiPartChoiceDTO,
+    MultiPartAnswerDTO,
     MultiPartValidationResponseDTO
 } from "../../../IsaacApiTypes";
 import {useCurrentQuestionAttempt} from "../../services";
@@ -12,20 +12,21 @@ import {Immutable} from "immer";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 
 const IsaacMultiPartQuestion = ({doc, questionId, readonly, validationResponse}: IsaacQuestionProps<IsaacMultiPartQuestionDTO, MultiPartValidationResponseDTO>) => {
-    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<MultiPartChoiceDTO>(questionId);
+    const { currentAttempt, dispatchSetCurrentAttempt } = useCurrentQuestionAttempt<MultiPartAnswerDTO>(questionId);
     const cssFriendlyQuestionPartId = questionId?.replace(/\|/g, '-') ?? ""; // Maybe we should clean up IDs more?
 
-    const singlePartCurrentAttempt = useCallback((id: string) => {
-        return currentAttempt?.choices?.find(c => c.id === id);
+    const singlePartCurrentAttempt = useCallback((index: number) => {
+        return currentAttempt?.answers[index.toString()]; // TODO might need safer access logic
     }, [currentAttempt]);
-    const dispatchSinglePartCurrentAttempt = useCallback((id: string, attempt: Immutable<ChoiceDTO | ValidatedChoice<ChoiceDTO>>) => {
-        dispatchSetCurrentAttempt({type: "multiPartChoice", choices: [...currentAttempt?.choices?.filter(c => c.id !== id) ?? [], {...attempt, id}]});
+    const dispatchSinglePartCurrentAttempt = useCallback((index: number, attempt: Immutable<ChoiceDTO | ValidatedChoice<ChoiceDTO>>) => {
+        dispatchSetCurrentAttempt({type: "multiPartAnswer", answers: {...currentAttempt?.answers, [index]: attempt}});
     }, [currentAttempt, dispatchSetCurrentAttempt]);
-    const getQuestionValidation = useCallback((id: string) => {
-        return validationResponse?.validationResponses?.find(vr => vr.questionId === id);
+    const getQuestionValidation = useCallback((index: number) => {
+        return validationResponse?.validationResponses?.[index];
     }, [validationResponse]);
-    const getQuestionDoc = useCallback((id: string) => {
-        return doc?.parts?.find(p => p.id === id);
+    // We still need this because symbolic and numeric questions require symbols and units to be specified for each part
+    const getQuestionDoc = useCallback((index: number) => {
+        return doc?.parts?.[index];
     }, [doc]);
 
     return <div className="question-content multi-part-question" id={cssFriendlyQuestionPartId}>

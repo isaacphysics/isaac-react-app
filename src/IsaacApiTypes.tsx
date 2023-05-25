@@ -206,15 +206,17 @@ export interface IsaacSymbolicQuestionDTO extends QuestionDTO {
 }
 
 export interface IsaacMultiPartQuestionDTO extends QuestionDTO {
+    ordered?: boolean;
+    allowDuplicates?: boolean;
     parts?: QuestionDTO[];
-}
-
-export interface MultiPartChoiceDTO extends ChoiceDTO {
-    choices?: ChoiceDTO[];
 }
 
 export interface MultiPartValidationResponseDTO extends QuestionValidationResponseDTO {
     validationResponses: QuestionValidationResponseDTO[];
+}
+
+export interface MultiPartAnswerDTO extends ChoiceDTO {
+    answers: {[index: string]: ChoiceDTO};
 }
 
 export interface IsaacTopicSummaryPageDTO extends SeguePageDTO {
