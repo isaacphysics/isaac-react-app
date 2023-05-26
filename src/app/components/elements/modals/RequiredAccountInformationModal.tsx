@@ -72,7 +72,7 @@ const RequiredAccountInfoBody = () => {
                     <small>(Are you a teacher or tutor? {" "}
                         <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
                             Upgrade your account
-                        </Link>)
+                        </Link>.)
                     </small>
                 </span>
             </div>}
