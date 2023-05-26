@@ -8,7 +8,7 @@ const {merge} = require('webpack-merge');
 module.exports = env => {
     let configCSrenderer = {
         entry: {
-            'isaac-cs-renderer': [resolve('src/index-cs-renderer')],
+            'isaac-renderer': [resolve('src/index-renderer')],
         },
 
         output: {

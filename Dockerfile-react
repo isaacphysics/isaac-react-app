@@ -1,4 +1,4 @@
-ARG BUILD_TARGET="build-phy"
+ARG BUILD_TARGET="build-cs"
 
 FROM node:19.2.0-buster AS builder
 ARG BUILD_TARGET

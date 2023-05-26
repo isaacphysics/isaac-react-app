@@ -1,6 +1,6 @@
 import {screen} from "@testing-library/react";
 import {renderTestEnvironment, followHeaderNavLink} from "../utils";
-import {API_PATH, siteSpecific} from "../../app/services";
+import {API_PATH} from "../../app/services";
 import {mockActiveGroups, mockAssignmentsGroup2, mockQuizAssignments} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
 import {buildGroupHandler} from "../../mocks/handlers";
@@ -12,7 +12,7 @@ describe("AssignmentProgress", () => {
         renderTestEnvironment({
             role: "TUTOR",
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await followHeaderNavLink("Teach", "Markbook");
         const groupTitles = await screen.findAllByTestId("group-name");
         expect(groupTitles).toHaveLength(mockActiveGroups.length);
     });
@@ -39,7 +39,7 @@ describe("AssignmentProgress", () => {
                 })
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await followHeaderNavLink("Teach", "Markbook");
         // Should only be one group
         const groupTitle = await screen.findByTestId("group-name");
         // Clicking on the group title should suffice to open the accordion
@@ -79,7 +79,7 @@ describe("AssignmentProgress", () => {
                 })
             ]
         });
-        await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
+        await followHeaderNavLink("Teach", "Markbook");
         // Should only be one group
         const groupTitle = await screen.findByTestId("group-name");
         // Clicking on the group title should suffice to open the accordion

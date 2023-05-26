@@ -36,7 +36,7 @@ export const TeacherFeatures = () => {
         </Row>
         <Row className="card-deck isaac-cards-body px-3">
             <IsaacCard doc={{ clickUrl: "/groups",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#groups"},
+                image: {src: "/assets/teacher_features_sprite.svg#groups"},
                 title: "1. Create a Group",
                 disabled: isDisabled,
                 verticalContent: true,
@@ -44,7 +44,7 @@ export const TeacherFeatures = () => {
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/set_assignments",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#set-assignments"},
+                image: {src: "/assets/teacher_features_sprite.svg#set-assignments"},
                 title: "2. Set Assignments",
                 disabled: isDisabled,
                 verticalContent: true,
@@ -52,7 +52,7 @@ export const TeacherFeatures = () => {
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/assignment_progress",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#track-progress"},
+                image: {src: "/assets/teacher_features_sprite.svg#track-progress"},
                 title: "3. Assignment Progress",
                 disabled: isDisabled,
                 verticalContent: true,
@@ -67,21 +67,21 @@ export const TeacherFeatures = () => {
         </Row>
         <Row className="card-deck isaac-cards-body mt-2 px-3">
             <IsaacCard doc={{ clickUrl: "/support/teacher/general",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#teacher-forum"},
+                image: {src: "/assets/teacher_features_sprite.svg#teacher-forum"},
                 title: "Teacher FAQ",
                 verticalContent: true,
                 subtitle: "Answers to your questions and how-to guides."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/events?types=teacher",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#use-with-class"},
+                image: {src: "/assets/teacher_features_sprite.svg#use-with-class"},
                 title: "Teacher CPD",
                 verticalContent: true,
                 subtitle: "Free short courses to help you use Isaac Physics: by topic or by level of experience with Isaac."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/pages/isaac_embedded_schools",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#groups"},
+                image: {src: "/assets/teacher_features_sprite.svg#groups"},
                 title: "Teacher Ambassadors",
                 verticalContent: true,
                 subtitle: "Learn from practising teachers how they have embedded Isaac Physics."}}
@@ -95,21 +95,21 @@ export const TeacherFeatures = () => {
         </Row>
         <Row className="card-deck isaac-cards-body mb-5 mt-2 px-3">
             <IsaacCard doc={{ clickUrl: "/pages/order_books",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#skills-book-cover"},
+                image: {src: "/assets/teacher_features_sprite.svg#skills-book-cover"},
                 title: "Isaac Physics Books",
                 verticalContent: true,
                 subtitle: "Buy one of our Skills Mastery books at cost."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/pages/pre_made_gameboards",
-                image: {src: "/assets/phy/key_stage_sprite.svg#triple"},
+                image: {src: "/assets/key_stage_sprite.svg#triple"},
                 title: "Boards for Lessons",
                 verticalContent: true,
                 subtitle: isLoggedIn(user) ?  "A selection of our questions organised by topic." : "A selection of our questions organised by lesson topic."}}
                        imageClassName="teacher-features"
             />
             <IsaacCard doc={{ clickUrl: "/events?types=student",
-                image: {src: "/assets/phy/teacher_features_sprite.svg#calendar"},
+                image: {src: "/assets/teacher_features_sprite.svg#calendar"},
                 title: "Events",
                 verticalContent: true,
                 subtitle: "Browse free events for your KS4 and KS5 students."}}

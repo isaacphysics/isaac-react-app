@@ -44,26 +44,6 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             # tag event
             type=ref,event=tag
-      - name: Docker meta phy
-        id: meta-phy
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/${{ github.repository }}-phy
-          tags: |
-            # set latest tag for default branch
-            type=raw,value=latest,enable={{is_default_branch}}
-            # tag event
-            type=ref,event=tag
-      - name: Docker meta phy-renderer
-        id: meta-phy-renderer
-        uses: docker/metadata-action@v4
-        with:
-          images: ghcr.io/${{ github.repository }}-phy-renderer
-          tags: |
-            # set latest tag for default branch
-            type=raw,value=latest,enable={{is_default_branch}}
-            # tag event
-            type=ref,event=tag
       - name: Build and push cs Docker image
         uses: docker/build-push-action@v3
         with:
@@ -84,23 +64,4 @@ jobs:
             BUILD_TARGET=build-cs-renderer
           tags: ${{ steps.meta-cs-renderer.outputs.tags }}
           labels: ${{ steps.meta-cs-renderer.outputs.labels }}
-      - name: Build and push phy Docker image
-        uses: docker/build-push-action@v3
-        with:
-          file: Dockerfile-react
-          context: .
-          push: true
-          build-args: |
-            BUILD_TARGET=build-phy
-          tags: ${{ steps.meta-phy.outputs.tags }}
-          labels: ${{ steps.meta-phy.outputs.labels }}
-      - name: Build and push phy-renderer Docker image
-        uses: docker/build-push-action@v3
-        with:
-          file: Dockerfile-react
-          context: .
-          push: true
-          build-args: |
-            BUILD_TARGET=build-phy-renderer
-          tags: ${{ steps.meta-phy-renderer.outputs.tags }}
-          labels: ${{ steps.meta-phy-renderer.outputs.labels }}
+  

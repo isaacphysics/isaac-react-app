@@ -3,21 +3,20 @@ import {closeActiveModal, openActiveModal, returnQuizToStudent, useAppDispatch} 
 import {Button} from "reactstrap";
 import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {isQuestion, siteSpecific} from "../../../services";
+import {isQuestion} from "../../../services";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 
-export const ICON = siteSpecific(
-    {
-        correct: <svg style={{width: 30, height: 30}}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg>,
-        incorrect: <svg style={{width: 30, height: 30}}><use href={`/assets/cross-rp-hex.svg#icon`} xlinkHref={`/assets/cross-rp-hex.svg#icon`}/></svg>,
-        notAttempted: <svg  style={{width: 30, height: 30}}><use href={`/assets/dash-hex.svg#icon`} xlinkHref={`/assets/dash-hex.svg#icon`}/></svg>,
-    },
-    {
-        correct: <img src="/assets/tick-rp.svg" alt="Correct" style={{width: 30}} />,
-        incorrect: <img src="/assets/cross-rp.svg" alt="Incorrect" style={{width: 30}} />,
-        notAttempted: <img src="/assets/dash.svg" alt="Not attempted" style={{width: 30}} />,
-    }
-);
+export const ICON = {
+  correct: (
+    <img src="/assets/tick-rp.svg" alt="Correct" style={{ width: 30 }} />
+  ),
+  incorrect: (
+    <img src="/assets/cross-rp.svg" alt="Incorrect" style={{ width: 30 }} />
+  ),
+  notAttempted: (
+    <img src="/assets/dash.svg" alt="Not attempted" style={{ width: 30 }} />
+  ),
+};
 
 interface ResultsTableProps {
     assignment: QuizAssignmentDTO;
