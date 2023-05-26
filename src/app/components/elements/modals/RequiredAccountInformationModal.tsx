@@ -69,10 +69,10 @@ const RequiredAccountInfoBody = () => {
             </div>
             {!isTutorOrAbove(user) && <div className="text-left mb-4">
                 Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
-                    <small>Are you a teacher or tutor? {" "}
+                    <small>(Are you a teacher or tutor? {" "}
                         <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
                             Upgrade your account
-                        </Link>{".)"}
+                        </Link>)
                     </small>
                 </span>
             </div>}
