@@ -118,8 +118,7 @@ describe("IsaacApp", () => {
             }
         });
     });
-
-    // TODO implement test data & test for "should show the users number of current assignments in the navigation menu"
+    it.todo("should show the users number of current assignments in the navigation menu");
     
     it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
         renderTestEnvironment();

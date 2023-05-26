@@ -11,7 +11,6 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
-    HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
     isTeacherOrAbove,
@@ -27,7 +26,6 @@ import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
-import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
 const siteSpecificStats = siteSpecific(
@@ -73,7 +71,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
-    const achievements = useAppSelector(selectors.user.achievementsRecord);
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
 
