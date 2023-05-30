@@ -9,7 +9,6 @@ import {
     isDefined,
     isLoggedIn,
     isMobile,
-    isPhy,
     isTutor,
     isTutorOrAbove,
     SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE,
@@ -61,9 +60,7 @@ const RequiredAccountInfoBody = () => {
         }
     }
 
-    const allUserFieldsAreValid =
-        (isPhy && validateUserContexts(initialUserContexts)) ||
-        (isCS && validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts));
+    const allUserFieldsAreValid = validateUserSchool(initialUserValue) && validateUserGender(initialUserValue) && validateUserContexts(initialUserContexts);
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
@@ -75,7 +72,7 @@ const RequiredAccountInfoBody = () => {
                     <small>(Are you a teacher or tutor? {" "}
                         <Link to={TEACHER_REQUEST_ROUTE} target="_blank">
                             Upgrade your account
-                        </Link>{".)"}
+                        </Link>.)
                     </small>
                 </span>
             </div>}

@@ -12,7 +12,7 @@ describe("MyAssignments", () => {
     const renderMyAssignments = (extraEndpoints?: RestHandler<any>[]) => {
         renderTestEnvironment({
             PageComponent: MyAssignments,
-            initalRouteEntries: ["/assignments"],
+            initialRouteEntries: ["/assignments"],
             extraEndpoints
         });
     };

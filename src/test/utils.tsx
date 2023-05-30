@@ -2,7 +2,7 @@ import {UserRole} from "../IsaacApiTypes";
 import {render} from "@testing-library/react/pure";
 import {server} from "../mocks/server";
 import {rest, RestHandler} from "msw";
-import {ACTION_TYPE, API_PATH, SITE, SITE_SUBJECT} from "../app/services";
+import {ACTION_TYPE, API_PATH} from "../app/services";
 import produce from "immer";
 import {mockUser} from "../mocks/data";
 import {isaacApi, requestCurrentUser, store} from "../app/state";
@@ -22,7 +22,7 @@ interface RenderTestEnvironmentOptions {
     role?: UserRole | "ANONYMOUS";
     modifyUser?: (u: typeof mockUser) => typeof mockUser;
     PageComponent?: React.FC<any>;
-    initalRouteEntries?: string[];
+    initialRouteEntries?: string[];
     extraEndpoints?: RestHandler<any>[];
 }
 // Flexible helper function to setup different kinds of test environments. You can:
@@ -36,7 +36,7 @@ interface RenderTestEnvironmentOptions {
 // When called, the Redux store will be cleaned completely, and other the MSW server handlers will be reset to
 // defaults (those in handlers.ts).
 export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) => {
-    const {role, modifyUser, PageComponent, initalRouteEntries, extraEndpoints} = options ?? {};
+    const {role, modifyUser, PageComponent, initialRouteEntries, extraEndpoints} = options ?? {};
     store.dispatch({type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS});
     store.dispatch(isaacApi.util.resetApiState());
     server.resetHandlers();
@@ -72,7 +72,7 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
     }
     render(<Provider store={store}>
         {PageComponent
-            ? <MemoryRouter initialEntries={initalRouteEntries ?? []}>
+            ? <MemoryRouter initialEntries={initialRouteEntries ?? []}>
                 <PageComponent/>
             </MemoryRouter>
             : <IsaacApp/>}
@@ -80,29 +80,19 @@ export const renderTestEnvironment = (options?: RenderTestEnvironmentOptions) =>
 };
 
 export type NavBarMenus = "My Isaac" | "Teach" | "Learn" | "Events" | "Help" | "Admin";
-export const NAV_BAR_MENU_TITLE: {[site in SITE]: {[menu in NavBarMenus]: string}} = {
-    [SITE.PHY]: {
-        "My Isaac": "My Isaac",
-        Teach: "Teach",
-        Learn: "Learn",
-        Events: "Events",
-        Help: "Help",
-        Admin: "Admin"
-    },
-    [SITE.CS]: {
+export const NAV_BAR_MENU_TITLE: {[menu in NavBarMenus]: string} = {
         "My Isaac": "My Isaac",
         Teach: "Teachers",
         Learn: "Learn",
         Events: "Events",
         Help: "Help and support",
         Admin: "Admin"
-    }
 };
 
 // Clicks on the given navigation menu entry, allowing navigation around the app as a user would
 export const followHeaderNavLink = async (menu: NavBarMenus, linkName: string) => {
     const header = await screen.findByTestId("header");
-    const navLink = await within(header).findByRole("link",  {name: NAV_BAR_MENU_TITLE[SITE_SUBJECT][menu]});
+    const navLink = await within(header).findByRole("link",  {name: NAV_BAR_MENU_TITLE[menu]});
     await userEvent.click(navLink);
     // This isn't strictly implementation agnostic, but I cannot work out a better way of getting the menu
     // related to a given title
@@ -122,7 +112,7 @@ export const ONE_DAY_IN_MS = 86400000;
 export const DDMMYYYY_REGEX = /\d{2}\/\d{2}\/\d{4}/;
 
 export const NOW = Date.now(); // Use same "now" for all time relative calculations
-export const DAYS_AGO = (n: number, roundDownToNearestDate: boolean = false) => {
+export const DAYS_AGO = (n: number, roundDownToNearestDate = false) => {
     let d = new Date(NOW);
     d.setUTCDate(d.getUTCDate() - n);
     if (roundDownToNearestDate) d.setHours(0, 0, 0, 0);

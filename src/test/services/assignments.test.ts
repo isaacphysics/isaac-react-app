@@ -3,7 +3,7 @@ import {
     getDistinctAssignmentGroups,
     getDistinctAssignmentSetters
 } from "../../app/services";
-import {AssignmentDTO, GameboardDTO, UserSummaryDTO} from "../../IsaacApiTypes";
+import {AssignmentDTO} from "../../IsaacApiTypes";
 
 
 const assignmentA = {

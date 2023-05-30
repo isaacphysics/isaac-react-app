@@ -11,7 +11,6 @@ import {
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
-    HUMAN_QUESTION_TAGS,
     HUMAN_QUESTION_TYPES,
     isPhy,
     isTeacherOrAbove,
@@ -27,7 +26,6 @@ import {Tabs} from "../elements/Tabs";
 import {FlushableRef, QuestionProgressCharts} from "../elements/views/QuestionProgressCharts";
 import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
-import {TeacherAchievement} from "../elements/TeacherAchievement";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
 const siteSpecificStats = siteSpecific(
@@ -73,7 +71,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
     const dispatch = useAppDispatch();
     const myProgress = useAppSelector(selectors.user.progress);
     const userProgress = useAppSelector(selectors.teacher.userProgress);
-    const achievements = useAppSelector(selectors.user.achievementsRecord);
     const myAnsweredQuestionsByDate = useAppSelector(selectors.user.answeredQuestionsByDate);
     const userAnsweredQuestionsByDate = useAppSelector(selectors.teacher.userAnsweredQuestionsByDate);
 
@@ -170,29 +167,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             </Row>
                         </div>
 
-                        {isPhy && <div className="mt-4">
-                            <h4>Isaac Books</h4>
-                            Questions completed correctly, against questions attempted for each of our <a href={"/pages/order_books"}>mastery books</a>.
-                            <Row>
-                                {Object.entries(siteSpecificStats.questionCountByTag).map(([qType, total]) => {
-                                    const correct = Math.min(progress?.correctByTag?.[qType] || 0, total);
-                                    const attempted = Math.min(progress?.attemptsByTag?.[qType] || 0, total);
-                                    const correctPercentage = safePercentage(correct, total) || 0;
-                                    const attemptedPercentage = safePercentage(attempted, total) || 0;
-                                    return total > 0 && <Col key={qType} className={`${siteSpecificStats.tagColWidth} mt-2 type-progress-bar`}>
-                                        <div className={"px-2"}>
-                                            {HUMAN_QUESTION_TAGS.get(qType)} questions
-                                        </div>
-                                        <div className={"px-2"}>
-                                            <ProgressBar percentage={correctPercentage} primaryTitle={`${correct} correct out of ${total}`} secondaryPercentage={attemptedPercentage} secondaryTitle={`${attempted} attempted out of ${total}`} type={qType}>
-                                                <span aria-hidden>{`${correct} of ${total}`}</span>
-                                            </ProgressBar>
-                                        </div>
-                                    </Col>;
-                                })}
-                            </Row>
-                        </div>}
-
                         {answeredQuestionsByDate && <div className="mt-4">
                             <h4>Question attempts over time</h4>
                             <div>
@@ -209,40 +183,7 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                                 <LinkToContentSummaryList items={progress.oldestIncompleteQuestions}/>
                             </Col>}
                         </Row>
-                    </div>,
-                    ...(isPhy && viewingOwnData && isTeacherOrAbove(user) && {"Teacher Activity": <div>
-                        <TeacherAchievement
-                            verb="created"
-                            count={achievements && achievements.TEACHER_GROUPS_CREATED}
-                            item="group"
-                            createMoreText="Manage groups"
-                            createMoreLink="/groups"
-                            iconClassName="group-badge"/>
-
-                        <TeacherAchievement
-                            verb="set"
-                            count={achievements && achievements.TEACHER_ASSIGNMENTS_SET}
-                            item="assignment"
-                            createMoreText="Set assignments"
-                            createMoreLink="/set_assignments"
-                            iconClassName="assignment-badge"/>
-
-                        <TeacherAchievement
-                            verb="created"
-                            count={achievements && achievements.TEACHER_GAMEBOARDS_CREATED}
-                            item="gameboard"
-                            createMoreText="Board builder"
-                            createMoreLink="/gameboard_builder"
-                            iconClassName="gameboard-badge"/>
-
-                        <TeacherAchievement
-                            verb="visited"
-                            count={achievements && achievements.TEACHER_CPD_EVENTS_ATTENDED}
-                            item="CPD event"
-                            createMoreText="Events"
-                            createMoreLink="/events"
-                            iconClassName="cpd-badge"/>
-                    </div>}),
+                    </div>
                 }}</Tabs>
             </CardBody>
         </Card>
