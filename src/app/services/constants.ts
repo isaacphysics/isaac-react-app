@@ -905,6 +905,7 @@ export enum TAG_ID {
     dnaReplication = "dna_replication",
     transcription = "transcription",
     translation = "translation",
+    genesAndAlleles = "genes_alleles",
     // Physiology
 
     // Ecology

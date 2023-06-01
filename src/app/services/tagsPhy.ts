@@ -162,6 +162,7 @@ export class PhysicsTagService extends AbstractBaseTagService {
         {id: TAG_ID.dnaReplication, title: "DNA replication", parent: TAG_ID.genetics},
         {id: TAG_ID.transcription, title: `Trans${softHyphen}cription`, parent: TAG_ID.genetics},
         {id: TAG_ID.translation, title: `Trans${softHyphen}lation`, parent: TAG_ID.genetics},
+        {id: TAG_ID.genesAndAlleles, title: `Genes & Alleles`, parent: TAG_ID.genetics},
         // Physiology
 
         // Ecology
