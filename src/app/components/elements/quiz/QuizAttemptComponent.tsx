@@ -39,6 +39,7 @@ export interface QuizAttemptProps {
     questions: QuestionDTO[];
     sections: { [id: string]: IsaacQuizSectionDTO };
     pageLink: PageLinkCreator;
+    feedbackLink?: string;
     pageHelp: React.ReactElement;
     preview?: boolean;
     studentUser?: UserSummaryDTO;
