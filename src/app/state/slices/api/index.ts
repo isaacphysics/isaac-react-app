@@ -41,7 +41,7 @@ import {
     AppGroupMembership,
     AppGroupTokenDTO,
     BoardOrder,
-    Boards,
+    Boards, ContentErrorsResponse,
     EnhancedAssignment,
     GroupMembershipDetailDTO,
     NOT_FOUND_TYPE,
@@ -139,7 +139,7 @@ export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError
 
 // The API slice defines reducers and middleware that need adding to \state\reducers\index.ts and \state\store.ts respectively
 const isaacApi = createApi({
-    tagTypes: ["GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "AllMyAssignments", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships", "MisuseStatistics"],
+    tagTypes: ["ContentErrors", "GlossaryTerms", "Gameboard", "AllSetTests", "GroupTests", "AllGameboards", "AllMyAssignments", "SetAssignment", "AllSetAssignments", "GroupAssignments", "AssignmentProgress", "Groups", "GroupMemberships", "MyGroupMemberships", "MisuseStatistics"],
     reducerPath: "isaacApi",
     baseQuery: isaacBaseQuery,
     keepUnusedDataFor: 0,
@@ -727,6 +727,17 @@ const isaacApi = createApi({
                 onQuerySuccess: ({eventLabel}, _, {dispatch}) => {
                     dispatch(showSuccessToast("Reset successfully", `${eventLabel.replace("MisuseHandler", "")} misuse event count reset for user`));
                 },
+            })
+        }),
+
+        getContentErrors: build.query<ContentErrorsResponse, void>({
+            query: () => ({
+                url: "/admin/content_problems",
+                method: "GET",
+            }),
+            providesTags: ["ContentErrors"],
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading Content Errors Failed",
             })
         }),
     })

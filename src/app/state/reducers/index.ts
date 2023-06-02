@@ -29,7 +29,6 @@ import {
     myProgress,
     userAnsweredQuestionsByDate,
     userProgress,
-    adminContentErrors,
     adminEmailTemplate,
     adminStats,
     adminUserGet,
@@ -95,7 +94,6 @@ export const rootReducer = combineReducers({
     // Admin
     adminUserGet,
     adminUserSearch,
-    adminContentErrors,
     adminStats,
     adminEmailTemplate,
     contentVersion,
