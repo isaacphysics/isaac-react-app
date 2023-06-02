@@ -129,13 +129,13 @@ function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
                 </span>
                 {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
             </p>
-            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && <p>
-                Please be aware that for <i>tests</i> your answer to each question <b>will be visible to your teacher(s) after
+            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && <Alert color="info">
+                Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
                 you submit your test</b> so that they can provide further feedback and support if they wish to do so.
-
-                <i>Assignments</i> are different. We <b><i>do not</i> share with your teachers</b> any of your entered answers or the
+                <br />
+                Assignments are different. We do not share with your teachers any of your entered answers or the
                 number of your attempts to questions in assignments.
-            </p>}
+            </Alert>}
         </>;
     } else {
         return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>
