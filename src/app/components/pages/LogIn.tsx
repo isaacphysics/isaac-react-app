@@ -28,6 +28,8 @@ import {Redirect} from "react-router";
 import {MetaDescription} from "../elements/MetaDescription";
 import {Loading} from "../handlers/IsaacSpinner";
 import classNames from "classnames";
+import {RaspberryPiSignInButton} from "../elements/RaspberryPiSignInButton";
+import {GoogleSignInButton} from "../elements/GoogleSignInButton";
 
 /* Interconnected state and functions providing a "logging in" API - intended to be used within a component that displays
  * email and password inputs, and a button to login, all inside a Form component. You will also need a TFAInput component,
@@ -71,32 +73,6 @@ export const useLoginLogic = () => {
         setStateFunctions: {setEmail, setPassword, setRememberMe, setPasswordResetAttempted},
         loginValues: {email, totpChallengePending, errorMessage, logInAttempted, passwordResetAttempted, rememberMe, isValidEmail, isValidPassword}
     };
-}
-
-// Button prompting the user to sign in via Google
-export const GoogleSignInButton = () => {
-    const dispatch = useAppDispatch();
-
-    const logInWithGoogle = () => {
-        dispatch(handleProviderLoginRedirect("GOOGLE"));
-    };
-
-    return <Button className={"position-relative google-button"} block outline color="primary" onClick={logInWithGoogle}>
-        <img className="google-button-logo" src={"/assets/google-logo.svg"} alt={"Google logo"}/>Google
-    </Button>
-}
-
-// Button prompting the user to sign in via Raspberry Pi Accounts
-export const RaspberryPiSignInButton = () => {
-    const dispatch = useAppDispatch();
-
-    const logInWithRaspberryPi = () => {
-        dispatch(handleProviderLoginRedirect("RASPBERRYPI"));
-    };
-
-    return <Button className={"position-relative"} block outline color="primary" onClick={logInWithRaspberryPi}>
-        <img className="rpf-button-logo" src={"/assets/logos/raspberry-pi.png"} alt={"Raspberry Pi logo"}/>Raspberry Pi Foundation
-    </Button>
 }
 
 // Handles display and logic of the two-factor authentication form (usually shown after the first login step)
