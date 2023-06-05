@@ -82,7 +82,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     }, [quizAttemptId, quizAssignmentId, studentId]);
 
     const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber,
-        questions, sections, pageLink, pageHelp, studentUser, user};
+        questions, sections, pageLink, pageHelp, studentUser, user, quizAssignmentId};
 
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>

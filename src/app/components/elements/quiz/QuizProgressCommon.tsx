@@ -3,8 +3,9 @@ import {closeActiveModal, openActiveModal, returnQuizToStudent, useAppDispatch} 
 import {Button} from "reactstrap";
 import {IsaacQuizSectionDTO, Mark, QuizAssignmentDTO, QuizUserFeedbackDTO} from "../../../../IsaacApiTypes";
 import {AssignmentProgressPageSettingsContext} from "../../../../IsaacAppTypes";
-import {isQuestion, siteSpecific} from "../../../services";
+import {isDefined, isQuestion, QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP, siteSpecific} from "../../../services";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {Link} from "react-router-dom";
 
 export const ICON = siteSpecific(
     {
@@ -68,13 +69,22 @@ export function formatMark(numerator: number, denominator: number, formatAsPerce
 
 export function ResultRow({row, assignment}: ResultRowProps) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [working, setWorking] = useState(false);
+    const [returningQuizToStudent, setReturningQuizToStudent] = useState(false);
     const dispatch = useAppDispatch();
     const pageSettings = useContext(AssignmentProgressPageSettingsContext);
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
-    const returnToStudent = async () => {
+    const returnToStudent = () => {
+        const confirm = async () => {
+            try {
+                setReturningQuizToStudent(true);
+                await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
+            } finally {
+                setReturningQuizToStudent(false);
+                dispatch(closeActiveModal());
+            }
+        };
         dispatch(openActiveModal({
             closeAction: () => {
                 dispatch(closeActiveModal())
@@ -85,21 +95,11 @@ export function ResultRow({row, assignment}: ResultRowProps) {
                 <Button key={1} color="primary" outline target="_blank" onClick={() => {dispatch(closeActiveModal())}}>
                     Cancel
                 </Button>,
-                <Button key={0} color="primary" target="_blank" onClick={_returnToStudent}>
+                <Button key={0} color="primary" target="_blank" onClick={confirm}>
                     Confirm
                 </Button>,
         ]
-        }));    
-    }
-
-    const _returnToStudent = async () => {
-        try {
-            setWorking(true);
-            await dispatch(returnQuizToStudent(assignment.id as number, row.user?.id as number));
-        } finally {
-            setWorking(false);
-            dispatch(closeActiveModal());
-        }
+        }));
     };
 
     const quiz = assignment?.quiz;
@@ -111,28 +111,34 @@ export function ResultRow({row, assignment}: ResultRowProps) {
     } else if (!row.feedback?.complete) {
         message = "Not completed";
     }
-    const valid = message === undefined;
-    return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName + " " + row.user?.familyName}`}>
+    const authorisedAccessAndComplete = message === undefined;
+
+    const viewAnswersLink = `/test/attempt/feedback/${assignment?.id}/${row.user?.id}`;
+    const canViewQuizAnswers = isDefined(assignment?.creationDate) && (assignment?.creationDate?.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP);
+
+    return <tr className={`${row.user?.authorisedFullAccess ? "" : " not-authorised"}`} title={`${row.user?.givenName} ${row.user?.familyName}`}>
         <td className="student-name">
-            {valid ?
+            {authorisedAccessAndComplete ?
                 <>
-                    <Button color="link" onClick={toggle} disabled={working}>
+                    <Button className="quiz-student-menu" color="link" onClick={toggle} disabled={returningQuizToStudent}>
                         <div
-                            tabIndex={0}
-                            className="btn quiz-student-menu"
-                            data-toggle="dropdown"
-                            aria-expanded={dropdownOpen}
+                            className="quiz-student-name"
                         >
                             {row.user?.givenName}
                             <span className="d-none d-lg-inline"> {row.user?.familyName}</span>
-                            <span className="quiz-student-menu-icon">
-                            {working ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
-                        </span>
+                        </div>
+                        <div className="quiz-student-menu-icon">
+                            {returningQuizToStudent ? <IsaacSpinner size="sm" /> : <img src="/assets/menu.svg" alt="Menu" />}
                         </div>
                     </Button>
-                    {!working && dropdownOpen && <div className="py-2 px-3">
-                        <Button size="sm" onClick={returnToStudent}>Allow another attempt</Button>
-                    </div>}
+                    {!returningQuizToStudent && dropdownOpen && <>
+                        <div className="py-2 px-3">
+                            <Button size="sm" onClick={returnToStudent}>Allow another attempt</Button>
+                        </div>
+                        {canViewQuizAnswers && <div className="py-2 px-3">
+                            <Button size="sm" tag={Link} to={viewAnswersLink}>View answers</Button>
+                        </div>}
+                    </>}
                 </>
             :   <>
                     {row.user?.givenName}
@@ -140,8 +146,8 @@ export function ResultRow({row, assignment}: ResultRowProps) {
                 </>
             }
         </td>
-        {!valid && <td colSpan={sections.map(questionsInSection).flat().length + 1}>{message}</td>}
-        {valid && <>
+        {!authorisedAccessAndComplete && <td colSpan={sections.map(questionsInSection).flat().length + 1}>{message}</td>}
+        {authorisedAccessAndComplete && <>
             {sections.map(section => {
                 const mark = row.feedback?.sectionMarks?.[section.id as string];
                 const outOf = quiz?.sectionTotals?.[section.id as string];
