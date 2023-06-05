@@ -767,11 +767,12 @@ const isaacApi = createApi({
 
         // === Constant endpoints ===
 
-        getUnits: build.query<string[], void>({
+        getConstantUnits: build.query<string[], void>({
             query: () => ({
                 url: "/content/units",
                 method: "GET",
             }),
+            keepUnusedDataFor: 1800, // Half an hour in seconds
         }),
 
         getSegueVersion: build.query<string, void>({
@@ -780,6 +781,7 @@ const isaacApi = createApi({
                 method: "GET",
             }),
             transformResponse: (response: {segueVersion: string}) => response.segueVersion,
+            keepUnusedDataFor: 604800, // A week in seconds
         }),
 
         getSegueEnvironment: build.query<string, void>({
@@ -788,6 +790,7 @@ const isaacApi = createApi({
                 method: "GET",
             }),
             transformResponse: (response: {segueEnvironment: string}) => response.segueEnvironment,
+            keepUnusedDataFor: 604800, // A week in seconds
         }),
     })
 });

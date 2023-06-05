@@ -101,7 +101,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
     const userId = useAppSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
-    const {data: units} = isaacApi.endpoints.getUnits.useQuery();
+    const {data: units} = isaacApi.endpoints.getConstantUnits.useQuery();
 
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
