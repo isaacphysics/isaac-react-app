@@ -1,4 +1,12 @@
-import {isDefined, KEY, persistence, NOT_FOUND} from "../../../services";
+import {
+    isDefined,
+    KEY,
+    persistence,
+    NOT_FOUND,
+    API_PATH,
+    NO_CONTENT,
+    API_REQUEST_FAILURE_MESSAGE
+} from "../../../services";
 import produce from "immer";
 import {
     AppAssignmentProgress,
@@ -15,6 +23,103 @@ import {
     UserSummaryDTO,
     UserSummaryWithEmailAddressDTO
 } from "../../../../IsaacApiTypes";
+import {BaseQueryFn} from "@reduxjs/toolkit/query";
+import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import {fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+import {errorSlice} from "../internalAppState";
+import {SerializedError} from "@reduxjs/toolkit";
+import {Dispatch} from "redux";
+import {PromiseWithKnownReason} from "@reduxjs/toolkit/dist/query/core/buildMiddleware/types";
+import {showRTKQueryErrorToastIfNeeded, showSuccessToast} from "../../actions/popups";
+
+// This is used by default as the `baseQuery` of our API slice
+export const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
+    const baseQueryArgs: FetchBaseQueryArgs = {
+        baseUrl: API_PATH,
+        credentials: "include",
+        prepareHeaders: (headers, { getState }) => {
+            headers.set("accept", "application/json, text/plain, */*");
+            return headers;
+        }
+    }
+    let result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
+    if (result.error && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
+        if (result.error.status === 502) {
+            // A '502 Bad Gateway' response means that the API no longer exists:
+            api.dispatch(errorSlice.actions.apiGoneAway());
+        } else {
+            api.dispatch(errorSlice.actions.apiServerError());
+        }
+        // eslint-disable-next-line no-console
+        console.warn("Error from API:", result.error);
+    } else {
+        const status = result.meta?.response?.status;
+        if (!status) return result;
+        if (status >= 500) {
+            // eslint-disable-next-line no-console
+            console.warn("Uncaught error from API:", result.meta?.response);
+        } else if ([NOT_FOUND, NO_CONTENT].includes(status)) {
+            result.data = NOT_FOUND;
+        }
+    }
+    return result;
+}
+
+export const resultOrNotFound = <T>(result: T, error: FetchBaseQueryError | SerializedError | undefined) => {
+    return error && 'status' in error && error.status === NOT_FOUND ? NOT_FOUND : result;
+}
+
+interface QueryLifecycleSpec<T, R> {
+    onQueryStart?: (args: T, api: {dispatch: Dispatch<any>, getState: () => any}) => void | {resetOptimisticUpdates: (() => void)};
+    successTitle?: string;
+    successMessage?: string;
+    onQuerySuccess?: (args: T, response: R, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
+    errorTitle?: string;
+    onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
+}
+export const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, successMessage, onQuerySuccess, errorTitle, onQueryError}: QueryLifecycleSpec<T, R>) => async (arg: T, { dispatch, getState, queryFulfilled }: { dispatch: Dispatch<any>, getState: () => any, queryFulfilled: PromiseWithKnownReason<{data: R, meta: {} | undefined}, any>}) => {
+    const queryStartCallbacks = onQueryStart?.(arg, {dispatch, getState});
+    try {
+        const response = await queryFulfilled;
+        if (successTitle && successMessage) {
+            dispatch(showSuccessToast(successTitle, successMessage));
+        }
+        onQuerySuccess?.(arg, response.data, {dispatch, getState});
+    } catch (e: any) {
+        if (errorTitle) {
+            dispatch(showRTKQueryErrorToastIfNeeded(errorTitle, e));
+        }
+        onQueryError?.(arg, e.error, {dispatch, getState});
+        queryStartCallbacks?.resetOptimisticUpdates();
+    }
+};
+
+export const mutationSucceeded = <T>(response: {data: T} | {error: FetchBaseQueryError | SerializedError}): response is {data: T} => {
+    return response.hasOwnProperty("data");
+}
+
+export const extractDataFromQueryResponse = <T>(response: { data?: T } | { error: FetchBaseQueryError | SerializedError; }): T | NOT_FOUND_TYPE | undefined => {
+    if ('data' in response) {
+        return response.data;
+    } else if ('error' in response && 'status' in response.error && response.error.status === NOT_FOUND) {
+        return NOT_FOUND;
+    }
+    return undefined;
+}
+
+export const getRTKQueryErrorMessage = (e: FetchBaseQueryError | SerializedError | undefined): {status?: number | string, message: string} => {
+    if (e?.hasOwnProperty("data")) {
+        // @ts-ignore
+        return {status: e.status, message: e?.data?.errorMessage ?? API_REQUEST_FAILURE_MESSAGE}
+    }
+    if (e?.hasOwnProperty("message")) {
+        const se = e as SerializedError;
+        return {status: se.code, message: se?.message ?? API_REQUEST_FAILURE_MESSAGE}
+    }
+    return {message: API_REQUEST_FAILURE_MESSAGE}
+}
+
+// === Anonymisation utilities ===
 
 interface AnonymisationOptions {
     anonymiseGroupNames?: boolean;

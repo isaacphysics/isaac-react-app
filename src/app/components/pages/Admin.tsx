@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {
-    isaacApi,
+    useGetContentVersionQuery, useGetSegueVersionQuery, useUpdateContentVersionMutation,
 } from "../../state";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -15,16 +15,16 @@ import classNames from "classnames";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
-    const {data: segueVersion} = isaacApi.endpoints.getSegueVersion.useQuery();
+    const {data: segueVersion} = useGetSegueVersionQuery();
 
-    const liveContentVersionQuery = isaacApi.endpoints.getContentVersion.useQuery();
+    const liveContentVersionQuery = useGetContentVersionQuery();
     const {data: liveContentVersion} = liveContentVersionQuery;
 
     const [updateContentVersion, {
         isLoading: contentVersionUpdateIsLoading,
         isError: contentVersionUpdateIsError,
         isSuccess: contentVersionUpdateIsSuccess
-    }] = isaacApi.endpoints.updateContentVersion.useMutation();
+    }] = useUpdateContentVersionMutation();
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
 

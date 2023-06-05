@@ -3,11 +3,11 @@ import {NewsCard} from "../elements/cards/NewsCard";
 import React from "react";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {MetaDescription} from "../elements/MetaDescription";
-import {isaacApi} from "../../state";
+import {useGetNewsPodListQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 export const News = () => {
-    const newsQuery = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
+    const newsQuery = useGetNewsPodListQuery({subject: "news", orderDecending: true});
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={"News"} />

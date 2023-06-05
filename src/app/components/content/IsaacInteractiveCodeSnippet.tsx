@@ -2,7 +2,7 @@ import React, {lazy, useEffect, useRef, useState} from "react";
 import {InteractiveCodeSnippetDTO} from "../../../IsaacApiTypes";
 import {CODE_EDITOR_BASE_URL, SITE_TITLE_SHORT, useIFrameMessages} from "../../services";
 import {v4 as uuid_v4} from "uuid";
-import {isaacApi, logAction, useAppDispatch} from "../../state";
+import {logAction, useAppDispatch, useGetSegueEnvironmentQuery} from "../../state";
 import {Alert, Button} from "reactstrap";
 import {Loading} from "../handlers/IsaacSpinner";
 import {Link} from "react-router-dom";
@@ -45,7 +45,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         return () => clearTimeout(timeout);
     }, [iframeState, initDelay]);
 
-    const {data: segueEnvironment} = isaacApi.endpoints.getSegueEnvironment.useQuery();
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const [iFrameHeight, setIFrameHeight] = useState(100);
 
     useEffect(() => {

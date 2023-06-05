@@ -16,7 +16,8 @@ import {AssignmentDTO} from "../../../../IsaacApiTypes";
 import {
     AppDispatch,
     AppState,
-    isaacApi,
+    assignmentsApi,
+    gameboardApi,
     mutationSucceeded,
     setAssignBoardPath,
     showErrorToast,
@@ -76,7 +77,7 @@ export const assignGameboard = createAsyncThunk(
         const groupIds = groups.map(getValue);
         const assignments: AssignmentDTO[] = groupIds.map(id => ({gameboardId: boardId, groupId: id, dueDate, scheduledStartDate, notes}));
 
-        const response = await dispatch(isaacApi.endpoints.assignGameboard.initiate(assignments));
+        const response = await dispatch(assignmentsApi.endpoints.assignGameboard.initiate(assignments));
         if (mutationSucceeded(response)) {
             const groupLookUp = new Map(groups.map(toTuple));
             const assigmentStatuses = response.data;
@@ -137,7 +138,7 @@ export const assignGameboard = createAsyncThunk(
                 }
             }
             // Update all relevant cache entries
-            appDispatch(isaacApi.util.updateQueryData(
+            appDispatch(assignmentsApi.util.updateQueryData(
                 "getMySetAssignments",
                 undefined,
                 (assignmentsByMe) => assignmentsByMe.concat(newAssignments)
@@ -145,7 +146,7 @@ export const assignGameboard = createAsyncThunk(
             // FIXME if groupId doesn't correspond to a cache entry then the assignment to that group won't get cached below
             //  one fix would be to use "upsertQueryData" (or whatever it gets called) when it's released
             successfulIds.forEach(groupId => {
-                appDispatch(isaacApi.util.updateQueryData(
+                appDispatch(assignmentsApi.util.updateQueryData(
                     "getMySetAssignments",
                     groupId,
                     (assignmentsByMe) => assignmentsByMe.concat(newAssignments.filter(a => a.groupId === groupId))
@@ -174,7 +175,7 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
             return rejectWithValue(null);
         }
         try {
-            const getAssignments = dispatch(isaacApi.endpoints.getMySetAssignments.initiate(undefined));
+            const getAssignments = dispatch(assignmentsApi.endpoints.getMySetAssignments.initiate(undefined));
             const response = await getAssignments;
             getAssignments.unsubscribe();
             if (response.isSuccess) {
@@ -195,7 +196,7 @@ export const unlinkUserFromGameboard = createAsyncThunk<string, {boardId?: strin
                         return rejectWithValue(null);
                     }
                 }
-                const deleteResponse = await dispatch(isaacApi.endpoints.unlinkUserFromGameboard.initiate(boardId));
+                const deleteResponse = await dispatch(gameboardApi.endpoints.unlinkUserFromGameboard.initiate(boardId));
                 return mutationSucceeded(deleteResponse) ? boardId : rejectWithValue(null);
             } else {
                 dispatch(showErrorToast(
@@ -228,13 +229,13 @@ export const saveGameboard = createAsyncThunk<{boardId: string, boardTitle?: str
             if (boardTitle) {
                 // If the user wants a custom title, we can use the `renameAndSaveGameboard` endpoint. This is a redesign
                 //  of the `updateGameboard` endpoint.
-                const response = await dispatch(isaacApi.endpoints.renameAndLinkUserToGameboard.initiate({boardId, newTitle: boardTitle}));
+                const response = await dispatch(gameboardApi.endpoints.renameAndLinkUserToGameboard.initiate({boardId, newTitle: boardTitle}));
                 if (!mutationSucceeded(response)) {
                     return rejectWithValue(null);
                 }
             } else {
                 // If the user doesn't want a custom title, we can use the `linkUserToGameboard` endpoint
-                const response = await dispatch(isaacApi.endpoints.linkUserToGameboard.initiate(boardId));
+                const response = await dispatch(gameboardApi.endpoints.linkUserToGameboard.initiate(boardId));
                 if (!mutationSucceeded(response)) {
                     return rejectWithValue(null);
                 }

@@ -2,7 +2,7 @@ import React, {ReactElement} from "react";
 import {IsaacContent} from "../content/IsaacContent";
 import {WithFigureNumbering} from "./WithFigureNumbering";
 import {EditContentButton} from "./EditContentButton";
-import {isaacApi} from "../../state";
+import {useGetPageFragmentQuery} from "../../state";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 interface PageFragmentComponentProps {
@@ -10,7 +10,7 @@ interface PageFragmentComponentProps {
     ifNotFound?: ReactElement;
 }
 export const PageFragment = ({fragmentId, ifNotFound}: PageFragmentComponentProps) => {
-    const fragmentQuery = isaacApi.endpoints.getPageFragment.useQuery(fragmentId);
+    const fragmentQuery = useGetPageFragmentQuery(fragmentId);
 
     const notFoundComponent = ifNotFound ?? <div>
         <h2>Content not found</h2>

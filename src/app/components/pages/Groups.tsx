@@ -23,14 +23,19 @@ import {
 import {Link} from "react-router-dom";
 import {
     resetMemberPassword,
-    isaacApi,
     showGroupManagersModal,
     showGroupInvitationModal,
     showGroupEmailModal,
     showAdditionalManagerSelfRemovalModal,
     showErrorToast,
     useAppDispatch,
-    mutationSucceeded
+    mutationSucceeded,
+    useGetGroupsQuery,
+    useDeleteGroupMutation,
+    useCreateGroupMutation,
+    useDeleteGroupMemberMutation,
+    useUpdateGroupMutation,
+    useLazyGetGroupMembersQuery
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import sortBy from "lodash/sortBy";
@@ -84,7 +89,7 @@ interface MemberInfoProps {
 const MemberInfo = ({group, member, user}: MemberInfoProps) => {
     const dispatch = useAppDispatch();
     const [passwordRequestSent, setPasswordRequestSent] = useState(false);
-    const [deleteMember] = isaacApi.endpoints.deleteGroupMember.useMutation();
+    const [deleteMember] = useDeleteGroupMemberMutation();
 
     function resetPassword() {
         setPasswordRequestSent(true);
@@ -152,7 +157,7 @@ interface GroupEditorProps {
 const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCreatorProps & GroupEditorProps) => {
     const dispatch = useAppDispatch();
 
-    const [updateGroup] = isaacApi.endpoints.updateGroup.useMutation();
+    const [updateGroup] = useUpdateGroupMutation();
 
     const [isExpanded, setExpanded] = useState(false);
     const [newGroupName, setNewGroupName] = useState(group ? group.groupName : "");
@@ -366,11 +371,11 @@ const MobileGroupCreatorComponent = ({className, createNewGroup}: GroupCreatorPr
 export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
     const [showArchived, setShowArchived] = useState(false);
-    const groupQuery = isaacApi.endpoints.getGroups.useQuery(showArchived);
+    const groupQuery = useGetGroupsQuery(showArchived);
     const { currentData: groups, isLoading, isFetching } = groupQuery;
 
-    const [createGroup] = isaacApi.endpoints.createGroup.useMutation();
-    const [deleteGroup] = isaacApi.endpoints.deleteGroup.useMutation();
+    const [createGroup] = useCreateGroupMutation();
+    const [deleteGroup] = useDeleteGroupMutation();
 
     const [selectedGroupId, setSelectedGroupId] = useState<number>();
     const selectedGroup = (isLoading || isFetching) ? undefined : groups?.find(g => g.id === selectedGroupId);
@@ -439,7 +444,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     };
 
     // Get member data for selected group
-    const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
+    const [getGroupMembers] = useLazyGetGroupMembersQuery();
     useEffect(() => {
         if (selectedGroup?.id) {
             getGroupMembers(selectedGroup.id);

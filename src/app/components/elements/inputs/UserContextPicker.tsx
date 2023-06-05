@@ -13,7 +13,13 @@ import {
     useQueryParams,
     useUserContext
 } from "../../../services";
-import {isaacApi, selectors, transientUserContextSlice, useAppDispatch, useAppSelector} from "../../../state";
+import {
+    selectors,
+    transientUserContextSlice,
+    useAppDispatch,
+    useAppSelector,
+    useGetSegueEnvironmentQuery
+} from "../../../state";
 import queryString from "query-string";
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
@@ -21,7 +27,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
     const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const {data: segueEnvironment} = isaacApi.endpoints.getSegueEnvironment.useQuery();
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
 
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: [userContext.stage], includeNullOptions: true});
     const filteredStages = getFilteredStageOptions({byUser: user, includeNullOptions: true});

@@ -1,5 +1,5 @@
 import React from "react";
-import {isaacApi, selectors, useAppSelector} from "../../state";
+import {useGetSegueEnvironmentQuery} from "../../state";
 import {ExternalLink} from "./ExternalLink";
 import {EDITOR_URL} from "../../services";
 import {ContentDTO} from "../../../IsaacApiTypes";
@@ -10,7 +10,7 @@ export interface EditContentButtonProps {
 }
 
 export const EditContentButton = ({doc, className}: EditContentButtonProps) => {
-    const {data: segueEnvironment} = isaacApi.endpoints.getSegueEnvironment.useQuery();
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     if (segueEnvironment === "DEV" && doc?.canonicalSourceFile) {
         return <div className="not-mobile">
             <ExternalLink href={EDITOR_URL + doc.canonicalSourceFile} className={className || ""}>

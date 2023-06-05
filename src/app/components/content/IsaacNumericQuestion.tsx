@@ -1,5 +1,5 @@
 import React, {FormEvent, useMemo, useState} from "react";
-import {AppState, isaacApi, useAppSelector} from "../../state";
+import {AppState, useAppSelector, useGetConstantUnitsQuery} from "../../state";
 import Rand from 'rand-seed';
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
@@ -101,7 +101,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
     const userId = useAppSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
-    const {data: units} = isaacApi.endpoints.getConstantUnits.useQuery();
+    const {data: units} = useGetConstantUnitsQuery();
 
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
