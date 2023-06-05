@@ -4,7 +4,6 @@ import {
     DOCUMENT_TYPE,
     documentTypePathPrefix,
     isIntendedAudience,
-    isPhy,
     LinkInfo,
     NOT_FOUND,
     UseUserContextReturnType
@@ -23,7 +22,6 @@ const filterForQuestions = (contents: ContentSummaryDTO[]) => {
 
 export const filterAndSeparateRelatedContent = (contents: ContentSummaryDTO[], userContext: UseUserContextReturnType, user: Immutable<PotentialUser> | null) => {
     const examBoardFilteredContent = contents.filter(c =>
-        isPhy ||
         userContext.showOtherContent ||
         isIntendedAudience(c.audience, userContext, user)
     );

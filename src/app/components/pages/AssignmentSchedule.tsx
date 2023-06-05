@@ -33,7 +33,6 @@ import {
     MONTH_NAMES,
     nthHourOf,
     selectOnChange,
-    siteSpecific,
     TODAY
 } from "../../services";
 import {AssignmentScheduleContext, BoardOrder, ValidAssignmentWithListingDate} from "../../../IsaacAppTypes";
@@ -298,7 +297,7 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
             </Label>}
             <Button
                 className="mt-2 mb-2"
-                block color={siteSpecific("secondary", "primary")}
+                block color="primary"
                 onClick={assign}
                 disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500) || !isDefined(selectedGameboard) || alreadyAssignedGroupNames.length === selectedGroups.length}
             >

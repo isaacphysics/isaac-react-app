@@ -34,8 +34,6 @@ import {
     formatBoardOwner,
     generateGameboardSubjectHexagons,
     isMobile,
-    isPhy,
-    siteSpecific,
     sortIcon,
     stageLabelMap,
     useGameboards
@@ -251,9 +249,6 @@ export const MyGameboards = () => {
         {boards && boards.totalResults == 0 ?
             <>
                 <h3 className="text-center mt-4">You have no gameboards to view.</h3>
-                {isPhy && <div className="text-center mt-3 mb-5">
-                    <Button color="secondary" tag={Link} to="/gameboards/new">Create a gameboard</Button>
-                </div>}
             </>
             :
             <>
@@ -330,27 +325,6 @@ export const MyGameboards = () => {
                                                     Filter boards <Input type="text" onChange={(e) => setBoardTitleFilter(e.target.value)} placeholder="Filter boards by name"/>
                                                 </Label>
                                             </Col>
-                                            {/* TODO MT add stage selector */}
-                                            {/*{SITE_SUBJECT == SITE.PHY && <Col sm={6} lg={{size: 3, offset: 1}}>*/}
-                                            {/*    <Label className="w-100">Levels*/}
-                                            {/*        <Select inputId="levels-select"*/}
-                                            {/*            isMulti*/}
-                                            {/*            options={[*/}
-                                            {/*                {value: '1', label: '1'},*/}
-                                            {/*                {value: '2', label: '2'},*/}
-                                            {/*                {value: '3', label: '3'},*/}
-                                            {/*                {value: '4', label: '4'},*/}
-                                            {/*                {value: '5', label: '5'},*/}
-                                            {/*                {value: '6', label: '6'},*/}
-                                            {/*            ]}*/}
-                                            {/*            className="basic-multi-select"*/}
-                                            {/*            classNamePrefix="select"*/}
-                                            {/*            placeholder="None"*/}
-                                            {/*            onChange={multiSelectOnChange(setLevels)}*/}
-                                            {/*        />*/}
-                                            {/*    </Label>*/}
-                                            {/*</Col>*/}
-                                            {/*}*/}
                                             <Col sm={6} lg={{size: 2, offset: 4}}>
                                                 <Label className="w-100">
                                                     Creator <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
@@ -385,8 +359,8 @@ export const MyGameboards = () => {
                                                         <th className="text-center align-middle" style={{whiteSpace: "nowrap"}}>
                                                             Difficulties <span id={`difficulties-help`} className="icon-help mx-1" />
                                                             <RS.UncontrolledTooltip placement="bottom" target={`difficulties-help`}>
-                                                                Practice: {difficultiesOrdered.slice(0, siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
-                                                                Challenge: {difficultiesOrdered.slice(siteSpecific(3, 2)).map(d => difficultyShortLabelMap[d]).join(", ")}
+                                                                Practice: {difficultiesOrdered.slice(0, 2).map(d => difficultyShortLabelMap[d]).join(", ")}<br />
+                                                                Challenge: {difficultiesOrdered.slice(2).map(d => difficultyShortLabelMap[d]).join(", ")}
                                                             </RS.UncontrolledTooltip>
                                                         </th>
                                                         <th className="text-center align-middle">Creator</th>

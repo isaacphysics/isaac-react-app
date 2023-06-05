@@ -1,4 +1,4 @@
-import {dropZoneRegex, isDefined, isPhy, MARKDOWN_RENDERER} from "../../../services";
+import {dropZoneRegex, isDefined, MARKDOWN_RENDERER} from "../../../services";
 // @ts-ignore
 import {Remarkable, utils} from "remarkable";
 
@@ -69,12 +69,6 @@ export const regexProcessMarkdown = (markdown: string) => {
     const regexRules = {
         "[$1]($2)": /\\link{([^}]*)}{([^}]*)}/g,
     };
-    if (isPhy) {
-        Object.assign(regexRules, {
-            "[**Glossary**](/glossary)": /\*\*Glossary\*\*/g,
-            "[**Concepts**](/concepts)": /\*\*Concepts\*\*/g,
-        });
-    }
     Object.entries(regexRules).forEach(([replacement, rule]) =>
         markdown = markdown.replace(rule, replacement)
     );

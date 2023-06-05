@@ -1,21 +1,21 @@
 import React, {useEffect} from "react";
-import {useAppSelector, selectors, isaacApi} from "../../../state";
+import {useAppSelector, selectors, isaacApi} from "../../state";
 import {Link} from "react-router-dom";
-import {Badge, Button, Col, Container, Row} from "reactstrap";
-import {SITE_SUBJECT_TITLE} from "../../../services";
-import {WhySignUpTabs} from "../../elements/WhySignUpTabs";
-import {NewsCarousel} from "../../elements/NewsCarousel";
-import {FeaturedContentTabs} from "../../elements/FeaturedContentTabs";
-import {EventsCarousel} from "../../elements/EventsCarousel";
-import {FeaturedNewsItem} from "../../elements/FeaturedNewsItem";
+import {Button, Col, Container, Row} from "reactstrap";
+import {SITE_SUBJECT_TITLE} from "../../services";
+import {WhySignUpTabs} from "../elements/WhySignUpTabs";
+import {NewsCarousel} from "../elements/NewsCarousel";
+import {FeaturedContentTabs} from "../elements/FeaturedContentTabs";
+import {EventsCarousel} from "../elements/EventsCarousel";
+import {FeaturedNewsItem} from "../elements/FeaturedNewsItem";
 import classNames from "classnames";
-import {WarningBanner} from "../../navigation/WarningBanner";
+import {WarningBanner} from "../navigation/WarningBanner";
 
 interface ShowMeButtonsProps {
     className?: string
 }
 
-export const HomepageCS = () => {
+export const Homepage = () => {
     useEffect( () => {document.title = "Isaac " + SITE_SUBJECT_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
     const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});

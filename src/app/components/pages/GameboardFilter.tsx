@@ -13,21 +13,17 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
 import {
     DIFFICULTY_ICON_ITEM_OPTIONS,
-    DIFFICULTY_ITEM_OPTIONS,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
-    isCS,
     isDefined,
     isFound,
     isItemEqual,
-    isPhy,
     Item,
     NOT_FOUND,
     QUESTION_CATEGORY_ITEM_OPTIONS,
     QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER,
     selectOnChange,
-    siteSpecific,
     STAGE,
     TAG_ID,
     tags,
@@ -38,9 +34,8 @@ import {NOT_FOUND_TYPE, Tag} from "../../../IsaacAppTypes";
 import {GameboardViewer} from './Gameboard';
 import {ShowLoading} from "../handlers/ShowLoading";
 import queryString from "query-string";
-import {HierarchyFilterHexagonal, HierarchyFilterSummary, Tier} from "../elements/svg/HierarchyFilter";
+import {Tier} from "../elements/svg/HierarchyFilter";
 import Select, {GroupBase} from "react-select";
-import {DifficultyFilter} from "../elements/svg/DifficultyFilter";
 import {ContentSummaryDTO, GameboardDTO} from "../../../IsaacApiTypes";
 import {debounce} from "lodash";
 import {History} from "history";
@@ -82,28 +77,16 @@ interface QueryStringResponse {
     queryExamBoards: Item<string>[];
 }
 function processQueryString(query: string): QueryStringResponse {
-    const {subjects, fields, topics, stages, difficulties, questionCategories, concepts, examBoards} = queryString.parse(query);
+    const {topics, stages, difficulties, questionCategories, concepts, examBoards} = queryString.parse(query);
     const tagHierarchy = tags.getTagHierarchy();
 
     const stageItems = itemiseByValue(arrayFromPossibleCsv(stages as Nullable<string[] | string>), getFilteredStageOptions());
-    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), siteSpecific(DIFFICULTY_ITEM_OPTIONS, DIFFICULTY_ICON_ITEM_OPTIONS));
+    const difficultyItems = itemiseByValue(arrayFromPossibleCsv(difficulties as Nullable<string[] | string>), DIFFICULTY_ICON_ITEM_OPTIONS);
     const examBoardItems = itemiseByValue(arrayFromPossibleCsv(examBoards as Nullable<string[] | string>), getFilteredExamBoardOptions({byStages: stageItems.map(item => item.value as STAGE)}));
     const questionCategoryItems = itemiseByValue(arrayFromPossibleCsv(questionCategories as Nullable<string[] | string>), QUESTION_CATEGORY_ITEM_OPTIONS);
     const conceptItems = itemiseConcepts(arrayFromPossibleCsv(concepts as Nullable<string[] | string>))
 
     const selectionItems: Item<TAG_ID>[][] = [];
-    if (isPhy) {
-        let plausibleParentHierarchy = true;
-        [subjects, fields, topics].forEach((tier, index) => {
-            if (tier && plausibleParentHierarchy) {
-                const validTierTags = tags
-                    .getSpecifiedTags(tagHierarchy[index], (tier instanceof Array ? tier : tier.split(",")) as TAG_ID[]);
-                // Only allow another layer of specificity if only one parent is selected
-                plausibleParentHierarchy = validTierTags.length === 1;
-                selectionItems.push(validTierTags.map(itemiseTag));
-            }
-        });
-    } else {
         // On CS, the query params do not contain subject and field tag ids, so we set subject to "computer_science" and
         // populate field tags based on selected topics
         selectionItems.push([itemiseTag(tags.getById(TAG_ID.computerScience))]);
@@ -111,29 +94,11 @@ function processQueryString(query: string): QueryStringResponse {
         const fieldTags = topicTags && Array.from(new Set(topicTags.map(tag => tag.parent).filter(isDefined))).map(tagId => itemiseTag(tags.getById(tagId)));
         if (fieldTags) selectionItems.push(fieldTags);
         if (topicTags) selectionItems.push(topicTags.map(itemiseTag));
-    }
+    
 
     return {
         querySelections: selectionItems, queryStages: stageItems, queryDifficulties: difficultyItems, queryQuestionCategories: questionCategoryItems, queryConcepts: conceptItems, queryExamBoards: examBoardItems
     }
-}
-
-function generatePhyBoardName(selections: Item<TAG_ID>[][]) {
-    if (selections.length === 1) {
-        const numberOfSubjects = selections[0].length;
-        if (numberOfSubjects === 0 || numberOfSubjects === 4) {
-            return "All Subjects";
-        }
-        // Generates a name for a set of subjects, for example ["Physics", "Maths", "Biology"] ---> "Physics, Maths and Biology"
-        return selections[0].reduce((acc, t, i) => acc + t.label + (numberOfSubjects !== i + 1 ? ((numberOfSubjects - (i + 2)) > 0 ? ", " : " and ") : ""), "");
-    }
-    let selectionIndex = selections.length;
-    while(selectionIndex-- > 0) {
-        if (selections[selectionIndex].length === 1) {
-            return selections[selectionIndex][0].label;
-        }
-    }
-    return "All Subjects";
 }
 
 function generateCSBoardName(selections: Item<TAG_ID>[][]) {
@@ -145,8 +110,6 @@ function generateCSBoardName(selections: Item<TAG_ID>[][]) {
     }
     return "Computer Science";
 }
-
-// Shared props that both PHY and CS question filters use
 interface FilterProps {
     selections : Item<TAG_ID>[][];
     setSelections : React.Dispatch<React.SetStateAction<Item<TAG_ID>[][]>>;
@@ -154,68 +117,6 @@ interface FilterProps {
     setStages : React.Dispatch<React.SetStateAction<Item<string>[]>>;
     difficulties : Item<string>[];
     setDifficulties : React.Dispatch<React.SetStateAction<Item<string>[]>>;
-}
-
-interface PhysicsFilterProps extends FilterProps {
-    tiers: Tier[];
-    choices: Item<TAG_ID>[][];
-}
-const PhysicsFilter = ({tiers, choices, selections, setSelections, stages, setStages, difficulties, setDifficulties} : PhysicsFilterProps) => {
-
-    function setTierSelection(tierIndex: number) {
-        return ((values: Item<TAG_ID>[]) => {
-            const newSelections = selections.slice(0, tierIndex);
-            newSelections.push(values);
-            setSelections(newSelections);
-        }) as React.Dispatch<React.SetStateAction<Item<TAG_ID>[]>>;
-    }
-
-    return <RS.Row className="mb-sm-4">
-        <RS.Col xs={12}>
-            <div className="mb-1"><strong>Click these buttons to choose your question gameboard</strong></div>
-        </RS.Col>
-        <RS.Col lg={4}>
-            <div>
-                <RS.Label className={`mt-2 mt-lg-0`} htmlFor="stage-selector">
-                    I am interested in stage...
-                    <span id={`stage-help-tooltip`} className="icon-help ml-1" />
-                    <RS.UncontrolledTooltip target={`stage-help-tooltip`} placement="bottom">
-                        {"Find questions that are suitable for this stage of school learning."} <br />
-                        {"Further\u00A0A covers Further\u00A0Maths concepts or topics a little beyond some A\u00A0Level syllabuses."}
-                    </RS.UncontrolledTooltip>
-                </RS.Label>
-                <Select id="stage-selector" onChange={selectOnChange(setStages, false)} value={stages} options={getFilteredStageOptions()} />
-            </div>
-            {/*<div>*/}
-            {/*    <RS.Label className={`mt-2 mt-lg-3`} htmlFor="question-category-selector">*/}
-            {/*        I would like some questions from Isaac to...*/}
-            {/*    </RS.Label>*/}
-            {/*    <Select id="question-category-selector" isClearable onChange={selectOnChange(setQuestionCategories, false)} value={questionCategories} options={QUESTION_CATEGORY_ITEM_OPTIONS} />*/}
-            {/*</div>*/}
-            <div>
-                <RS.Label className={`mt-2  mt-lg-3`} htmlFor="difficulty-selector">
-                    I would like questions for...
-                    <span id={`difficulty-help-tooltip`} className="icon-help ml-1" />
-                    <RS.UncontrolledTooltip target={`difficulty-help-tooltip`} placement="bottom" >
-                        Practice questions let you directly apply one idea -<br />
-                        P1 covers revision of a previous stage or topics near the beginning of a course,<br />
-                        P3 covers later topics.<br />
-                        Challenge questions are solved by combining multiple concepts and creativity.<br />
-                        C1 can be attempted near the beginning of your course,<br />
-                        C3 require more creativity and could be attempted later in a course.
-                    </RS.UncontrolledTooltip>
-                </RS.Label>
-                <DifficultyFilter difficultyOptions={DIFFICULTY_ITEM_OPTIONS} difficulties={difficulties} setDifficulties={setDifficulties} />
-                {/*<Select id="difficulty-selector" onChange={selectOnChange(setDifficulties, false)} isClearable isMulti value={difficulties} options={DIFFICULTY_ITEM_OPTIONS} />*/}
-            </div>
-        </RS.Col>
-        <RS.Col lg={8}>
-            <RS.Label className={`mt-4 mt-lg-0`}>
-                Topics:
-            </RS.Label>
-            <HierarchyFilterHexagonal {...{tiers, choices, selections, setTierSelection}} />
-        </RS.Col>
-    </RS.Row>;
 }
 
 // Takes a list of "raw" concepts, and returns a map which takes a tag Item, and gives a GroupedOptionsType<Item<string>> containing itemised concepts which relate to that tag
@@ -376,33 +277,18 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         }
     }, [gameboard, gameboardIdAnchor]);
 
-    const [filterExpanded, setFilterExpanded] = useState(siteSpecific(deviceSize != "xs", true));
+    const [filterExpanded, setFilterExpanded] = useState(true);
     const gameboardRef = useRef<HTMLDivElement>(null);
 
     const [selections, setSelections] = useState<Item<TAG_ID>[][]>(querySelections);
 
     const choices = [tags.allSubjectTags.map(itemiseTag)];
-    let i;
-    if (isPhy) {
-        for (i = 0; i < selections.length && i < 2; i++) {
-            const selection = selections[i];
-            if (selection.length !== 1) break;
-            choices.push(tags.getChildren(selection[0].value).map(itemiseTag));
-        }
-    } else {
-        i = 2;
-    }
-
-    const tiers: Tier[] = siteSpecific([
-            {id: "subjects", name: "Subject"},
-            {id: "fields", name: "Field"},
-            {id: "topics", name: "Topic"},
-        ],
-        [
+    
+    const tiers: Tier[] = [
             {id: "subjects", name: "Category"},
             {id: "fields", name: "Strand"},
             {id: "topics", name: "Topic"},
-        ]).map(tier => ({...tier, for: "for_" + tier.id})).slice(0, i + 1);
+        ].map(tier => ({...tier, for: "for_" + tier.id})).slice(0, 3);
 
     const [stages, setStages] = useState<Item<string>[]>(
         queryStages.length > 0 ? queryStages : itemiseByValue([userContext.stage], getFilteredStageOptions()));
@@ -437,7 +323,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     // Title changing states and logic
     const [customBoardTitle, setCustomBoardTitle] = useState<string>();
     const [pendingCustomBoardTitle, setPendingCustomBoardTitle] = useState<string>();
-    const defaultBoardTitle = siteSpecific(generatePhyBoardName, generateCSBoardName)(selections);
+    const defaultBoardTitle = generateCSBoardName(selections);
     const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],
@@ -448,18 +334,14 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         if (stages.length) params.stages = toCSV(stages);
         if (difficulties.length) params.difficulties = toCSV(difficulties);
         if (concepts.length) params.concepts = toCSV(concepts);
-        if (isCS && examBoards.length) params.examBoards = toCSV(examBoards);
-        if (isPhy) {params.questionCategories = "quick_quiz,learn_and_practice";}
+        if (examBoards.length) params.examBoards = toCSV(examBoards);
         params.title = boardTitle;
 
         // Populate query parameters with the selected subjects, fields, and topics
         tiers.forEach((tier, i) => {
             if (!selections[i] || selections[i].length === 0) {
                 if (i === 0) {
-                    params[tier.id] = siteSpecific(
-                        TAG_ID.physics + "," + TAG_ID.maths + "," + TAG_ID.chemistry + "," + TAG_ID.biology,
-                        TAG_ID.computerScience
-                    );
+                    params[tier.id] = TAG_ID.computerScience;
                 }
                 return;
             }
@@ -469,10 +351,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         generateTemporaryGameboard(params).then(extractDataFromQueryResponse).then((gameboard) => {
             setGameboard(gameboard);
             // Don't add subject and strands to CS URL
-            if (isCS) {
-                if (tiers[0]?.id) delete params[tiers[0].id];
-                if (tiers[1]?.id) delete params[tiers[1].id];
-            }
+            if (tiers[0]?.id) delete params[tiers[0].id];
+            if (tiers[1]?.id) delete params[tiers[1].id];
             delete params.questionCategories;
             history.replace({search: queryString.stringify(params, {encode: false})});
         });
@@ -525,38 +405,13 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     }
 
     return <RS.Container id="gameboard-generator" className="mb-5">
-        <TitleAndBreadcrumb currentPageTitle={siteSpecific("Choose your Questions", "Question Finder")} help={pageHelp} modalId="gameboard_filter_help"/>
+        <TitleAndBreadcrumb currentPageTitle="Question Finder" help={pageHelp} modalId="gameboard_filter_help"/>
         <CanonicalHrefElement />
 
         <RS.Card id="filter-panel" className="mt-4 px-2 py-3 p-sm-4 pb-5">
             {/* Filter Summary */}
-            {isPhy && <RS.Row>
-                <RS.Col sm={8} lg={9}>
-                    <button className="bg-transparent w-100 p-0" onClick={() => setFilterExpanded(!filterExpanded)}>
-                        <RS.Row>
-                            <RS.Col lg={6} className="mt-3 mt-lg-0">
-                                <RS.Label className="d-block text-left d-sm-flex mb-0 pointer-cursor">
-                                    <span>Topics:</span>
-                                    <span><HierarchyFilterSummary {...{tiers, choices, selections}} /></span>
-                                </RS.Label>
-                            </RS.Col>
-                        </RS.Row>
-                    </button>
-                </RS.Col>
-                <RS.Col sm={4} lg={3} className={`text-center mt-3 mb-4 m-sm-0`}>
-                    {filterExpanded ?
-                        <RS.Button color={"link"} block className="filter-action" onClick={scrollToQuestions}>
-                            Scroll to questions...
-                        </RS.Button>
-                        :
-                        <RS.Button color={"link"} className="filter-action" onClick={() => setFilterExpanded(true)}>
-                            Edit question filters
-                        </RS.Button>
-                    }
-                </RS.Col>
-            </RS.Row>}
 
-            {isCS && (filterExpanded
+            {filterExpanded
                 ?
                 <RS.Row className={"mb-3"}>
                     <RS.Col>
@@ -568,13 +423,11 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                     <RS.Button size="sm" color="primary" outline onClick={() => setFilterExpanded(true)}>
                         Edit question filters ✎
                     </RS.Button>
-                </RS.Col>)}
+                </RS.Col>}
 
             {/* Filter */}
-            {filterExpanded && siteSpecific(
-                <PhysicsFilter {...filterProps} tiers={tiers} choices={choices}/>,
-                <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
-            )}
+            {filterExpanded && <CSFilter {...filterProps} examBoards={examBoards} setExamBoards={setExamBoards} concepts={concepts} setConcepts={setConcepts}/>
+            }
 
             {/* Buttons */}
             <RS.Row className={filterExpanded ? "mt-4" : ""}>
@@ -590,7 +443,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                 </RS.Col>
             </RS.Row>
             <RS.Button color="link" className="filter-go-to-questions" onClick={scrollToQuestions}>
-                {siteSpecific("Go to Questions...", "Scroll to Questions...")}
+                Scroll to Questions...
             </RS.Button>
             <RS.Button
                 color="link" id="expand-filter-button" onClick={() => setFilterExpanded(!filterExpanded)}
@@ -599,12 +452,6 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
         </RS.Card>
 
         {isFound(gameboard) && <div ref={gameboardRef} className="row mt-4 mb-3">
-            {siteSpecific(
-                // PHY
-                <RS.Col xs={12} lg={"auto"} >
-                    <h3>{defaultBoardTitle}</h3>
-                </RS.Col>,
-                // CS
                 <>
                     <RS.Col xs={12} lg={"auto"} >
                         {isEditingTitle
@@ -637,7 +484,6 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
                             </RS.Button>}
                     </RS.Col>
                 </>
-            )}
             <RS.Col xs={8} lg={"auto"} className="ml-auto text-right">
                 <RS.Button tag={Link} color="secondary"
                            to={`/add_gameboard/${gameboard.id}/${customBoardTitle ?? gameboard.title}`}

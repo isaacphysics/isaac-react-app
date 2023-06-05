@@ -8,16 +8,13 @@ import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryLi
 import {
     DOCUMENT_TYPE,
     documentDescription,
-    isCS,
     isIntendedAudience,
-    isPhy,
     parseLocationSearch,
     pushSearchToHistory,
     SEARCH_CHAR_LENGTH_LIMIT,
     searchResultIsPublic,
     selectOnChange,
     shortcuts,
-    siteSpecific,
     useUserContext
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -40,7 +37,7 @@ function deitemise(item: Item<DOCUMENT_TYPE>) {
 
 
 const selectStyle: StylesConfig<Item<DOCUMENT_TYPE>, true, GroupBase<Item<DOCUMENT_TYPE>>> = {
-    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: siteSpecific("rgba(254, 161, 0, 0.9)", "rgba(255, 181, 63, 0.9)")}),
+    multiValue: (styles: CSSObjectWithLabel) => ({...styles, backgroundColor: "rgba(255, 181, 63, 0.9)"}),
     multiValueLabel: (styles: CSSObjectWithLabel) => ({...styles, color: "black"}),
 };
 
@@ -56,7 +53,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     const [queryState, setQueryState] = useState(urlQuery);
 
     let initialFilters = urlFilters;
-    if (isCS && urlFilters.length === 0) {
+    if (urlFilters.length === 0) {
         initialFilters = [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.EVENT, DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC];
     }
     const [filtersState, setFiltersState] = useState<Item<DOCUMENT_TYPE>[]>(initialFilters.map(itemise));
@@ -93,7 +90,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
     // Process results and add shortcut responses
     const filteredSearchResults = searchResults?.results && searchResults.results
         .filter(result => searchResultIsPublic(result, user))
-        .filter(result => isPhy || isIntendedAudience(result.audience, userContext, user));
+        .filter(result => isIntendedAudience(result.audience, userContext, user));
     const shortcutResponses = (queryState ? shortcuts(queryState) : []) as ShortcutResponse[];
     const shortcutAndFilteredSearchResults = (shortcutResponses || []).concat(filteredSearchResults || []);
 
@@ -129,7 +126,7 @@ export const Search = withRouter((props: RouteComponentProps) => {
                             <RS.Col md={7} sm={12}>
                                 <RS.Form inline className="search-filters">
                                     <RS.Label htmlFor="document-filter" className="d-none d-lg-inline-block mr-1">
-                                        {`Filter${siteSpecific("","s")}:`}
+                                        Filters
                                     </RS.Label>
                                     <Select
                                         inputId="document-filter" isMulti
@@ -138,7 +135,6 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         options={
                                             [DOCUMENT_TYPE.CONCEPT, DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.EVENT,
                                                 DOCUMENT_TYPE.TOPIC_SUMMARY, DOCUMENT_TYPE.GENERIC]
-                                                .filter(v => isCS || v !== DOCUMENT_TYPE.TOPIC_SUMMARY)
                                                 .map(itemise)
                                         }
                                         className="basic-multi-select w-100 w-md-75 w-lg-50 mb-2 mb-md-0"
@@ -146,9 +142,9 @@ export const Search = withRouter((props: RouteComponentProps) => {
                                         onChange={selectOnChange(setFiltersState, false)}
                                         styles={selectStyle}
                                     />
-                                    {isCS && <RS.Label className="mt-2 mb-2 mb-md-0">
+                                    <RS.Label className="mt-2 mb-2 mb-md-0">
                                         <UserContextPicker className="text-right" />
-                                    </RS.Label>}
+                                    </RS.Label>
                                 </RS.Form>
                             </RS.Col>
                         </RS.CardHeader>

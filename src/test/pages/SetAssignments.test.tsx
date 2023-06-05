@@ -3,21 +3,14 @@ import userEvent from "@testing-library/user-event";
 import {SetAssignments} from "../../app/components/pages/SetAssignments";
 import {mockActiveGroups, mockGameboards, mockSetAssignments} from "../../mocks/data";
 import {dayMonthYearStringToDate, DDMMYYYY_REGEX, ONE_DAY_IN_MS, renderTestEnvironment} from "../utils";
-import {API_PATH, siteSpecific} from "../../app/services";
+import {API_PATH} from "../../app/services";
 import {rest} from "msw";
 
-const expectedTopLinks = siteSpecific(
-    {
-        "our books": null,
-        "our Boards for Lessons": "/pages/pre_made_gameboards",
-        "create a gameboard": "/gameboard_builder"
-    },
-    {
+const expectedTopLinks = {
         "Pre-made gameboards": "/pages/gameboards",
         "Topics list": "/topics",
         "Create gameboard": "/gameboard_builder"
-    }
-);
+    };
 
 describe("SetAssignments", () => {
 

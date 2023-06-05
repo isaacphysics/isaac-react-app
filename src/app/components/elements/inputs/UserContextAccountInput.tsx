@@ -6,10 +6,8 @@ import {
     examBoardBooleanNotationMap,
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
-    isCS,
     isDefined,
     isTutorOrAbove,
-    siteSpecific,
     STAGE, TEACHER_REQUEST_ROUTE
 } from "../../../services";
 import * as RS from "reactstrap";
@@ -43,14 +41,9 @@ function UserContextRow({
             invalid={submissionAttempted && !Object.values(STAGE).includes(userContext.stage as STAGE)}
             onChange={e => {
                 const stage = e.target.value as STAGE;
-                let examBoard;
-                if (!isCS) {
-                    setUserContext({...userContext, stage});
-                    return;
-                }
                 // Set exam board to something sensible (for CS)
                 const onlyOneAtThisStage = existingUserContexts.filter(uc => uc.stage === e.target.value).length === 1;
-                examBoard = getFilteredExamBoardOptions(
+                const examBoard = getFilteredExamBoardOptions(
                     {byStages: [stage || STAGE.ALL], byUserContexts: existingUserContexts, includeNullOptions: onlyOneAtThisStage
                 })[0]?.value || EXAM_BOARD.ALL;
                 setBooleanNotation({...EMPTY_BOOLEAN_NOTATION_RECORD, [examBoardBooleanNotationMap[examBoard]]: true});
@@ -70,7 +63,7 @@ function UserContextRow({
         </Input>
 
         {/* Exam Board Selector */}
-        {isCS && <Input
+        <Input
             className="form-control w-auto d-inline-block pl-1 pr-0 ml-sm-2 mt-1 mt-sm-0" type="select"
             aria-label="Exam Board"
             value={userContext.examBoard || ""}
@@ -92,7 +85,7 @@ function UserContextRow({
                     <option key={item.value} value={item.value}>{item.label}</option>
                 )
             }
-        </Input>}
+        </Input>
     </React.Fragment>
 }
 
@@ -113,23 +106,9 @@ export function UserContextAccountInput({
 
     return <div>
         <RS.Label htmlFor="user-context-selector" className="form-required">
-            {siteSpecific(
-                <span>{tutorOrAbove ? "I am teaching..." : "I am interested in..."}</span>,
-                <span>Show me content for:</span>
-            )}
+            <span>Show me content for:</span>
         </RS.Label>
-        {siteSpecific(
-            // Physics
-            <React.Fragment>
-                <span id={`show-me-content-${componentId}`} className="icon-help" />
-                <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
-                    {"Choose a stage here to pre-select the material that is most relevant to your interests."}<br />
-                    {"You will be able to change this preference on relevant pages."}<br />
-                    {'If you prefer to see all content by default, select "All stages".'}
-                </RS.UncontrolledTooltip>
-            </React.Fragment>,
-            // Computer science
-            <React.Fragment>
+        <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
                 <RS.UncontrolledTooltip placement={"left-start"} target={`show-me-content-${componentId}`}>
                     {tutorOrAbove ?
@@ -137,8 +116,7 @@ export function UserContextAccountInput({
                         <>Select a stage and examination board here to filter the content so that you will only see material that is relevant for the qualification you have chosen.</>
                     }
                 </RS.UncontrolledTooltip>
-            </React.Fragment>
-        )}
+        </React.Fragment>
         <div id="user-context-selector" className={classNames({"d-flex flex-wrap": false})}>
             {userContexts.map((userContext, index) => {
                 const showPlusOption = tutorOrAbove &&
@@ -168,10 +146,10 @@ export function UserContextAccountInput({
                         >
                             +
                         </button>
-                        {isCS && <span className="ml-1">add stage</span>}
+                        <span className="ml-1">add stage</span>
                     </RS.Label>}
 
-                    {isCS && index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
+                    {index === userContexts.length - 1 && (userContexts.findIndex(p => p.stage === STAGE.ALL && p.examBoard === EXAM_BOARD.ALL) === -1) && <RS.Label className="mt-2">
                         <CustomInput
                             type="checkbox" id={`hide-content-check-${componentId}`} className="d-inline-block"
                             checked={isDefined(displaySettings?.HIDE_NON_AUDIENCE_CONTENT) ? !displaySettings?.HIDE_NON_AUDIENCE_CONTENT : true}
@@ -188,7 +166,7 @@ export function UserContextAccountInput({
 
                     {!tutorOrAbove && <><br/>
                         <small>
-                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one {isCS && "exam board and "}stage.
+                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one exam board and stage.
                         </small>
                     </>}
                 </RS.FormGroup>

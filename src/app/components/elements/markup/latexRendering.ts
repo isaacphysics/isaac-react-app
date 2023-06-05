@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {selectors, useAppSelector} from "../../../state";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
-import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isCS, useUserContext} from "../../../services";
+import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, useUserContext} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/dist/contrib/mhchem.mjs';
 import {Immutable} from "immer";
@@ -255,12 +255,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
                 const latex = html.substring(index + (search.olen || 0), match.index + match[0].length - (search.clen || 0));
                 const latexUnEntitied = he.decode(latex);
                 const latexMunged = munge(latexUnEntitied);
-                let macrosToUse;
-                if (isCS) {
-                    macrosToUse = booleanNotation === BOOLEAN_NOTATION.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
-                } else {
-                    macrosToUse = KatexBaseMacros;
-                }
+                let macrosToUse = booleanNotation === BOOLEAN_NOTATION.ENG ? KatexMacrosWithEngineeringBool : KatexMacrosWithMathsBool;
                 macrosToUse = {...macrosToUse, "\\ref": (context: {consumeArgs: (n: number) => {text: string}[][]}) => {
                         const args = context.consumeArgs(1);
                         const reference = args[0].reverse().map((t: {text: string}) => t.text).join("");

@@ -66,7 +66,9 @@ import {EventManager} from "../pages/EventManager";
 import {MyGameboards} from "../pages/MyGameboards";
 import {FreeTextBuilder} from "../pages/FreeTextBuilder";
 import {MarkdownBuilder} from "../pages/MarkdownBuilder";
-import SiteSpecific from "../site/siteSpecificComponents";
+import {Homepage} from "../site/Homepage";
+import {Header} from "../site/Header";
+import {Routes} from "../site/Routes";
 import StaticPageRoute from "./StaticPageRoute";
 import {Redirect} from "react-router";
 import {UnsupportedBrowserBanner} from "./UnsupportedBrowserWarningBanner";
@@ -138,7 +140,7 @@ export const IsaacApp = () => {
 
     // Render
     return <Router history={history}>
-        <SiteSpecific.Header />
+        <Header />
         <Toasts />
         <ActiveModals />
         <CookieBanner />
@@ -154,11 +156,10 @@ export const IsaacApp = () => {
                         <Route exact path={goneAwayError ? undefined : "/error_stale"} component={SessionExpired} />
                         <TrackedRoute exact path={"/auth_error"} component={AuthError} />
 
-                        {/* Site specific pages */}
-                        {SiteSpecific.Routes}
+                        {Routes}
 
                         {/* Application pages */}
-                        <TrackedRoute exact path="/" component={SiteSpecific.Homepage} />
+                        <TrackedRoute exact path="/" component={Homepage} />
                         <Redirect exact from="/home" to="/" /> {/* historic route which might get reintroduced with the introduction of dashboards */}
                         <TrackedRoute exact path="/account" ifUser={isLoggedIn} component={MyAccount} />
                         <TrackedRoute exact path="/search" component={Search} />

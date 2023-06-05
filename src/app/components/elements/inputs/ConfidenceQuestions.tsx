@@ -3,7 +3,6 @@ import React, {useEffect, useState} from "react";
 import {closeActiveModal, logAction, openActiveModal, store, useAppDispatch} from "../../../state";
 import {ConfidenceType} from "../../../../IsaacAppTypes";
 import classNames from "classnames";
-import {isCS, isPhy, siteSpecific} from "../../../services";
 import {ChoiceDTO, ItemChoiceDTO, QuestionValidationResponseDTO} from "../../../../IsaacApiTypes";
 import {Immutable} from "immer";
 
@@ -39,9 +38,9 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
             followUp: {
                 question: "Having read the feedback, what is your level of confidence in answering this question correctly now?",
                 options: [
-                    {label: "Low", color: siteSpecific("negative", "negative-answer")},
-                    {label: "Medium", color: siteSpecific("neutral", "neutral-answer")},
-                    {label: "High", color: siteSpecific("positive", "positive-answer")}
+                    {label: "Low", color: "negative-answer"},
+                    {label: "Medium", color: "neutral-answer"},
+                    {label: "High", color: "positive-answer"}
                 ]
             }
         }
@@ -60,9 +59,9 @@ const confidenceOptions: {[option in ConfidenceType]: ConfidenceVariables} = {
             followUp: {
                 question: "Is your own answer correct?",
                 options: [
-                    {label: "No", color: siteSpecific("negative", "negative-answer")},
-                    {label: "Partly", color: siteSpecific("neutral", "neutral-answer")},
-                    {label: "Yes", color: siteSpecific("positive", "positive-answer")}
+                    {label: "No", color: "negative-answer"},
+                    {label: "Partly", color: "neutral-answer"},
+                    {label: "Yes", color: "positive-answer"}
                 ]
             }
         }
@@ -154,20 +153,20 @@ export const ConfidenceQuestions = ({state, setState, validationPending, setVali
 
     const disabled = state === "initial" && disableInitialState === true;
 
-    return <div className={classNames("quick-question-options", {"quick-question-secondary": isCS && state === "followUp", "pb-lg-3 pb-2 pt-lg-4 pt-3 px-lg-4 px-3": isPhy, "p-3": isCS, "quick-question-muted": disabled})}>
+    return <div className={classNames("quick-question-options", "p-3", {"quick-question-secondary": state === "followUp", "quick-question-muted": disabled})}>
         {state === "initial" && <Row>
             <Col md="9">
-                <h4 className={classNames({"text-muted": disabled && isCS})}>{confidenceVariables?.title}</h4>
+                <h4 className={classNames({"text-muted": disabled})}>{confidenceVariables?.title}</h4>
             </Col>
             <Col md="auto" className="ml-auto text-center not-mobile">
-                <Button outline color="primary" className={classNames("confidence-help", {"border-muted": disabled && isCS})} size="sm"
+                <Button outline color="primary" className={classNames("confidence-help", {"border-muted": disabled})} size="sm"
                         onClick={() => dispatch(confidenceInformationModal())}>
-                    <i className={classNames({"text-muted": disabled && isCS})}>i</i>
+                    <i className={classNames({"text-muted": disabled})}>i</i>
                 </Button>
             </Col>
         </Row>}
         <Row className="mb-3">
-            <Col className={classNames({"text-muted": disabled && isCS})}>
+            <Col className={classNames({"text-muted": disabled})}>
                 {confidenceStateVariables.question}
             </Col>
         </Row>

@@ -1,7 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {ListGroup, ListGroupItem} from "reactstrap";
-import {siteSpecific} from "../../../services";
 
 interface FooterLinkProps {
     linkTo: string;
@@ -17,40 +16,19 @@ const FooterLink = ({linkTo, children}: FooterLinkProps ) => {
 };
 
 let key = 0;
-const footerLinks = siteSpecific(
-    {
-        left: [
-            <FooterLink key={key++} linkTo="/about">About Us</FooterLink>,
-            <FooterLink key={key++} linkTo="/contact">Contact Us</FooterLink>,
-            <FooterLink key={key++} linkTo="/accessibility">
-                Accessibility <span className="d-none d-md-inline">Statement</span>
-            </FooterLink>,
-            <FooterLink key={key++} linkTo="/privacy">Privacy Policy</FooterLink>,
-            <FooterLink key={key++} linkTo="/terms">Terms of Use</FooterLink>,
-        ],
-        right: [
-            <FooterLink key={key++} linkTo="/why_physics">Why Physics?</FooterLink>,
-            <FooterLink key={key++} linkTo="/bios">Biographies</FooterLink>,
-            <FooterLink key={key++} linkTo="/publications">Publications</FooterLink>,
-            <FooterLink key={key++} linkTo="/extraordinary_problems">Extraordinary Problems</FooterLink>,
-            <FooterLink key={key++} linkTo="/chemistry">Isaac Chemistry</FooterLink>,
-        ]
-    },
+const footerLinks = 
     {
         left: [
             <FooterLink key={key++} linkTo="/about">About us</FooterLink>,
             <FooterLink key={key++} linkTo="/contact">Contact us</FooterLink>,
-            <FooterLink key={key++} linkTo="/accessibility">
-                Accessibility <span className="d-none d-md-inline">statement</span>
-            </FooterLink>,
+            <FooterLink key={key++} linkTo="/accessibility">Accessibility <span className="d-none d-md-inline">statement</span></FooterLink>,
         ],
         right: [
             <FooterLink key={key++} linkTo="/privacy">Privacy policy</FooterLink>,
             <FooterLink key={key++} linkTo="/terms">Terms of use</FooterLink>,
             <FooterLink key={key++} linkTo="/cookies">Cookie policy</FooterLink>,
         ]
-    }
-);
+    };
 
 export const ListGroupFooter = () => (
     <div className="footer-links">

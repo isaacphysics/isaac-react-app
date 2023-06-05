@@ -14,7 +14,7 @@ import {
     NavLink,
     UncontrolledDropdown
 } from "reactstrap";
-import {filterAssignmentsByStatus, isCS, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
+import {filterAssignmentsByStatus, isFound, partitionCompleteAndIncompleteQuizzes, isLoggedIn} from "../../services";
 import {RenderNothing} from "../elements/RenderNothing";
 import classNames from "classnames";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -84,7 +84,7 @@ export function useAssignmentsCount() {
     return {assignmentsCount, quizzesCount};
 }
 
-export const NavigationBar = ({children}: {children: React.ReactNode}) => {
+export const NavBar = ({children}: {children: React.ReactNode}) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return <MenuOpenContext.Provider value={{menuOpen, setMenuOpen}}>
@@ -93,7 +93,7 @@ export const NavigationBar = ({children}: {children: React.ReactNode}) => {
                 Menu
             </NavbarToggler>
 
-            <Collapse isOpen={menuOpen} navbar className={classNames("px-0 mx-0 mx-xl-5", {"px-xl-5": isCS})}>
+            <Collapse isOpen={menuOpen} navbar className="px-0 mx-0 mx-xl-5 px-xl-5">
                 <Nav navbar className="justify-content-between" id="main-menu">
                     {children}
                 </Nav>

@@ -36,7 +36,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {sortBy} from "lodash";
 import {AppGroup, AppGroupMembership} from "../../../IsaacAppTypes";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {ifKeyIsEnter, isCS, isDefined, isStaff, isTeacherOrAbove, siteSpecific} from "../../services";
+import {ifKeyIsEnter, isDefined, isStaff, isTeacherOrAbove} from "../../services";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
@@ -191,7 +191,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
     }
 
     function groupUserIds(group?: AppGroup) {
-        let groupUserIdList: number[] = [];
+        const groupUserIdList: number[] = [];
         group && group.members && group.members.map((member: AppGroupMembership) =>
             member.groupMembershipInformation.userId && member.authorisedFullAccess &&
             member.groupMembershipInformation.status == "ACTIVE" &&
@@ -218,8 +218,8 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                         <span className="d-inline-block d-md-none">&nbsp;</span>
                     </>}
                     <Button
-                        size="sm" className={isCS ? "text-white" : "" + " d-none d-sm-inline"}
-                        color={siteSpecific("primary", "secondary")}
+                        size="sm" className="text-white d-none d-sm-inline"
+                        color="secondary"
                         onClick={() => dispatch(showGroupInvitationModal({group, user, firstTime: false}))}
                     >
                         Invite users
@@ -227,8 +227,8 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     {isStaff(user) && usersInGroup.length > 0 &&
                         <span className="d-none d-lg-inline-block">&nbsp;or&nbsp;
                             <Button
-                                size="sm" className={isCS ? "text-white" : ""}
-                                color={siteSpecific("primary", "secondary")}
+                                size="sm" className="text-white"
+                                color="secondary"
                                 onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
                             >
                                 Email users
@@ -244,7 +244,7 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     />
                     {(!isDefined(group) || isUserGroupOwner || group.additionalManagerPrivileges) && <InputGroupAddon addonType="append">
                         <Button
-                            color={siteSpecific("secondary", "primary")}
+                            color="primary"
                             className="p-0 border-dark" disabled={newGroupName === "" || (isDefined(group) && newGroupName === group.groupName)}
                             onClick={saveUpdatedGroup}
                         >

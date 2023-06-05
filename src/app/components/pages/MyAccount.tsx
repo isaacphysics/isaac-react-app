@@ -43,7 +43,7 @@ import {
     history,
     ifKeyIsEnter,
     isDefined,
-    isDobOldEnoughForSite,
+    isDobOverThirteen,
     isStaff,
     SITE_SUBJECT_TITLE,
     validateEmail,
@@ -231,7 +231,7 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
         if (userToUpdate.loggedIn &&
             validateEmail(userToUpdate.email) &&
             allRequiredInformationIsPresent(userToUpdate, {...newPreferences, EMAIL_PREFERENCE: null}, userContextsToUpdate) &&
-            (isDobOldEnoughForSite(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
+            (isDobOverThirteen(userToUpdate.dateOfBirth) || !isDefined(userToUpdate.dateOfBirth)) &&
             (!userToUpdate.password || isNewPasswordConfirmed))
         {
             dispatch(updateCurrentUser(

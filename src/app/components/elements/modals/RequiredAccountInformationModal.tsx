@@ -5,13 +5,13 @@ import {useEmailPreferenceState, UserEmailPreference} from "../panels/UserEmailP
 import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
 import {
     allRequiredInformationIsPresent,
-    isCS,
     isDefined,
     isLoggedIn,
     isMobile,
     isTutor,
     isTutorOrAbove,
-    SITE_SUBJECT_TITLE, TEACHER_REQUEST_ROUTE,
+    SITE_SUBJECT_TITLE, 
+    TEACHER_REQUEST_ROUTE,
     UserFacingRole,
     validateEmailPreferences,
     validateUserContexts,
@@ -78,8 +78,8 @@ const RequiredAccountInfoBody = () => {
             </div>}
 
             <RS.Row className="d-flex flex-wrap my-2">
-                {((isCS && !validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
-                    {isCS && !validateUserGender(initialUserValue) && <div className="mb-3">
+                {((!validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
+                    {!validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
                             userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                             submissionAttempted={submissionAttempted} idPrefix="modal"
@@ -94,7 +94,7 @@ const RequiredAccountInfoBody = () => {
                         />
                     </div>}
                 </RS.Col>}
-                {isCS && !validateUserSchool(initialUserValue) && <RS.Col>
+                {!validateUserSchool(initialUserValue) && <RS.Col>
                     <SchoolInput
                         userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                         submissionAttempted={submissionAttempted} idPrefix="modal"

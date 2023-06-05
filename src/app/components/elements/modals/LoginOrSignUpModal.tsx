@@ -3,8 +3,7 @@ import {Button, Col, CustomInput, Form, Row} from "reactstrap";
 import {closeActiveModal, selectors, store, useAppDispatch, useAppSelector} from "../../../state";
 import {useLocation} from "react-router-dom";
 import {EmailPasswordInputs, GoogleSignInButton, PasswordResetButton, TFAInput, useLoginLogic} from "../../pages/LogIn";
-import {isCS, KEY, persistence, siteSpecific} from "../../../services";
-import classNames from "classnames";
+import {KEY, persistence} from "../../../services";
 
 const LoginOrSignUpBody = () => {
 
@@ -30,7 +29,7 @@ const LoginOrSignUpBody = () => {
     }
 
     return <Row id={"login-page"}>
-        <Col lg={6} className={classNames("content-body", {"pattern-06-inverted": isCS})}>
+        <Col lg={6} className="content-body pattern-06-inverted">
             <img src={"/assets/logo.svg"} className={"mt-5 ml-3"} style={{width: "90%"}} alt={"Isaac Computer Science Logo"} />
             <div className={"px-3 mb-4"}>
                 <h1 className={"physics-strapline h2 mb-lg-3 mt-2"}>
@@ -39,7 +38,7 @@ const LoginOrSignUpBody = () => {
                 <p>You need to be logged in to your account to <b>save your answers and progress</b>. If you don&apos;t have an account, you can <b>sign up today for free</b>.</p>
                 <br/>
                 <p>Alternatively, you can</p>
-                <Button size={"sm"} color={"primary"} style={{backgroundColor: siteSpecific("#ffffff66","#ffffff99")}} outline onClick={closeModal} block>
+                <Button size={"sm"} color={"primary"} style={{backgroundColor: "#ffffff99"}} outline onClick={closeModal} block>
                     Continue without an account
                 </Button>
             </div>

@@ -2,7 +2,7 @@ import React, {ChangeEvent, lazy, useEffect, useLayoutEffect, useRef, useState} 
 import {withRouter} from "react-router-dom";
 import {Button, Col, Container, Input, InputGroup, InputGroupAddon, Label, Row, UncontrolledTooltip} from "reactstrap";
 import queryString from "query-string";
-import {ifKeyIsEnter, isDefined, isStaff, siteSpecific, sanitiseInequalityState} from "../../services";
+import {ifKeyIsEnter, isDefined, isStaff, sanitiseInequalityState} from "../../services";
 import katex from "katex";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {RouteComponentProps} from "react-router";
@@ -24,7 +24,7 @@ const Equality = withRouter(({location}: RouteComponentProps<{}, {}, {board?: st
     const [errors, setErrors] = useState<string[]>();
     const user = useAppSelector(selectors.user.orNull);
     // Does this really need to be a state variable if it is immutable?
-    const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || siteSpecific('maths', 'logic'));
+    const [editorMode, setEditorMode] = useState<EditorMode>((queryParams.mode as EditorMode) || 'logic');
     const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
 
     /*** Text based input stuff */

@@ -7,13 +7,7 @@ import {
     difficultiesOrdered,
     difficultyLabelMap,
     doughnutColours,
-    getFilteredStageOptions,
-    isCS,
-    isPhy,
     Item,
-    selectOnChange,
-    siteSpecific,
-    specificDoughnutColours,
     STAGE,
     stageLabelMap,
     TAG_ID,
@@ -41,9 +35,7 @@ const colourPicker = (names: string[]): { [key: string]: string } => {
     let currentIndex = 0;
 
     for (let i = 0; i < names.length; i++) {
-        if (names[i] in specificDoughnutColours) {
-            selected[names[i]] = specificDoughnutColours[names[i]];
-        } else if (currentIndex < doughnutColours.length) {
+        if (currentIndex < doughnutColours.length) {
             selected[names[i]] = doughnutColours[currentIndex];
             currentIndex += 1;
         }
@@ -71,22 +63,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
 
     useEffect(() => {
         const charts: Chart[] = [];
-        if (isPhy && !isAllZero(categoryColumns)) {
-            charts.push(bb.generate({
-                data: {
-                    columns: categoryColumns,
-                    colors: colourPicker(categoryColumns.map((column) => column[0]) as string[]),
-                    type: "donut",
-                },
-                donut: {
-                    title: "By " + topTagLevel,
-                    label: {format: (value, ratio, id) => `${value}`}
-                },
-                bindto: `#${subId}-categoryChart`,
-                ...OPTIONS
-            }));
-        }
-
 
         charts.push(bb.generate({
             data: {
@@ -101,23 +77,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
             bindto: `#${subId}-topicChart`,
             ...OPTIONS
         }));
-
-        if (isPhy) {
-            charts.push(bb.generate({
-                data: {
-                    columns: difficultyColumns,
-                    colors: colourPicker(difficultyColumns?.map((column) => column[0]) as string[]),
-                    type: "donut",
-                    order: null
-                },
-                donut: {
-                    title: isAllZero(difficultyColumns) ? "No data" : "By Difficulty",
-                    label: {format: (value, ratio, id) => `${value}`}
-                },
-                bindto: `#${subId}-stageChart`,
-                ...OPTIONS
-            }));
-        }
 
         flushRef.current = () => {
             charts.forEach(chart => {
@@ -136,21 +95,10 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
         }
     }, [questionsByTag, questionsByLevel, categoryColumns, topicColumns, difficultyColumns]);
 
-    const noCharts = siteSpecific(3, 2);
 
     return <RS.Row>
-        {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
-            <div className="height-40px text-flex-align mb-2">
-                Questions by {topTagLevel}
-            </div>
-            <div className="d-flex flex-grow-1">
-                <div id={`${subId}-categoryChart`} className="text-center-width doughnut-binding align-self-center">
-                    <strong>{isAllZero(categoryColumns) ? "No data" : ""}</strong>
-                </div>
-            </div>
-        </RS.Col>}
-        {isCS && <RS.Col md={3}/>}
-        <RS.Col xl={12/noCharts} md={4} className="mt-4 d-flex flex-column">
+        <RS.Col md={3}/>
+        <RS.Col xl={6} md={4} className="mt-4 d-flex flex-column">
             <div className="height-40px text-flex-align mb-2">
                 <Select
                     inputId={`${subId}-subcategory-select`}
@@ -169,25 +117,6 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 </div>
             </div>
         </RS.Col>
-        {isCS && <RS.Col md={3}/>}
-        {isPhy && <RS.Col xl={12/noCharts} md={12/noCharts} className="mt-4 d-flex flex-column">
-            <div className="height-40px text-flex-align mb-2">
-                <Select
-                    inputId={`${subId}-stage-select`}
-                    name="stage"
-                    className="d-inline-block text-left pr-2 w-50"
-                    classNamePrefix="select"
-                    defaultValue={{value: STAGE.A_LEVEL, label: stageLabelMap[STAGE.A_LEVEL]}}
-                    options={getFilteredStageOptions()}
-                    onChange={selectOnChange(setStageChoices, false)}
-                />
-                questions
-            </div>
-            <div className="d-flex flex-grow-1">
-                <div id={`${subId}-stageChart`} className="text-center-width doughnut-binding  align-self-center">
-                    <strong>{isAllZero(difficultyColumns) ? "No data" : ""}</strong>
-                </div>
-            </div>
-        </RS.Col>}
+        <RS.Col md={3}/>
     </RS.Row>;
 };

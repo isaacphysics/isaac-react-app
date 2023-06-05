@@ -7,7 +7,7 @@ import {
 } from "../../IsaacAppTypes";
 import {UserContext, UserSummaryWithEmailAddressDTO} from "../../IsaacApiTypes";
 import {FAILURE_TOAST} from "../components/navigation/Toasts";
-import {EXAM_BOARD, isCS, isStudent, isTutor, siteSpecific, STAGE} from "./";
+import {EXAM_BOARD, isStudent, isTutor, STAGE} from "./";
 import {Immutable} from "immer";
 
 export function atLeastOne(possibleNumber?: number): boolean {return possibleNumber !== undefined && possibleNumber > 0}
@@ -37,8 +37,6 @@ const isDobOverN = (n: number, dateOfBirth?: Date) => {
 };
 
 export const isDobOverThirteen = (dateOfBirth?: Date) => isDobOverN(13, dateOfBirth);
-export const isDobOverTen = (dateOfBirth?: Date) => isDobOverN(10, dateOfBirth);
-export const isDobOldEnoughForSite = siteSpecific(isDobOverTen, isDobOverThirteen);
 
 export const MINIMUM_PASSWORD_LENGTH = 6;
 export const validatePassword = (password: string) => {
@@ -62,7 +60,7 @@ export function validateUserContexts(userContexts?: UserContext[]): boolean {
     if (userContexts.length === 0) {return false;}
     return userContexts.every(uc =>
         Object.values(STAGE).includes(uc.stage as STAGE) && //valid stage
-        (!isCS || Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD)) // valid exam board for cs
+        Object.values(EXAM_BOARD).includes(uc.examBoard as EXAM_BOARD) // valid exam board for cs
     );
 }
 
@@ -94,7 +92,7 @@ export const withinLast2Hours = withinLastNMinutes.bind(null, 120);
 
 export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, userContexts?: UserContext[]) {
     return user && userPreferences
-        && (!isCS || (validateUserSchool(user) && validateUserGender(user)
+        && ((validateUserSchool(user) && validateUserGender(user)
         && validateName(user.givenName) && validateName(user.familyName)))
         && (userPreferences.EMAIL_PREFERENCE === null || validateEmailPreferences(userPreferences.EMAIL_PREFERENCE))
         && validateUserContexts(userContexts);

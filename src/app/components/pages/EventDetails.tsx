@@ -10,7 +10,6 @@ import {
     getEvent,
     openActiveModal,
     selectors,
-    showErrorToast,
     showToast,
     useAppDispatch,
     useAppSelector
@@ -43,7 +42,6 @@ import {
     zeroOrLess,
     isAdminOrEventManager,
     isEventLeader,
-    isPhy
 } from "../../services";
 import {AdditionalInformation} from "../../../IsaacAppTypes";
 import {DateString} from "../elements/DateString";
@@ -54,7 +52,6 @@ import {IsaacContent} from "../content/IsaacContent";
 import {EditContentButton} from "../elements/EditContentButton";
 import {Map, Marker, Popup, TileLayer} from "react-leaflet";
 import * as L from "leaflet";
-import {teacherEventConfirmationModal} from "../elements/modals/TeacherEventConfirmationModal";
 
 function formatDate(date: Date | number) {
     return dayjs(date).format("YYYYMMDD[T]HHmmss");
@@ -127,16 +124,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             }
         }
 
-        function stopBookingIfStudent() {
-            setBookingFormOpen(false);
-            dispatch(showErrorToast("Event booking cancelled", "You cannot sign up to a teacher event as a student."));
-        }
-
-        function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
-            formEvent.preventDefault();
-            dispatch(openActiveModal(teacherEventConfirmationModal(submitBooking, stopBookingIfStudent)));
-        }
-
         function openAndScrollToBookingForm() {
             document.getElementById("open_booking_form_button")?.scrollIntoView({behavior: 'smooth'});
             document.getElementById("booking_form")?.scrollIntoView({behavior: 'smooth'});
@@ -154,8 +141,6 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
             shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
             iconAnchor: [12, 41]
         });
-
-        const checkTeacherStatus = isPhy && event.isATeacherEvent && !isTeacherOrAbove(user);
 
         return <Container className="events mb-5">
             <TitleAndBreadcrumb
@@ -280,7 +265,7 @@ const EventDetails = ({match: {params: {eventId}}, location: {pathname}}: EventD
                                 <Card className="mb-4">
                                     <CardBody>
                                         <h3>Event booking form</h3>
-                                        <Form onSubmit={checkTeacherStatus ? checkTeacherStatusThenSubmitBooking : submitBooking}>
+                                        <Form onSubmit={submitBooking}>
                                             <EventBookingForm
                                                 event={event} targetUser={user}
                                                 additionalInformation={additionalInformation}

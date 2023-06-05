@@ -8,18 +8,14 @@ import {
     examBoardBooleanNotationMap,
     examBoardLabelMap,
     history,
-    isCS,
     isDefined,
     isLoggedIn,
-    isPhy,
     PROGRAMMING_LANGUAGE,
     roleRequirements,
-    siteSpecific,
     STAGE,
     STAGE_NULL_OPTIONS,
     stageLabelMap,
     STAGES_CS,
-    STAGES_PHY,
     stagesOrdered,
     useQueryParams,
 } from "./";
@@ -78,9 +74,7 @@ export function useUserContext(): UseUserContextReturnType {
     // Exam Board
     let examBoard: EXAM_BOARD;
     const examBoardQueryParam = queryParams.examBoard as EXAM_BOARD | undefined
-    if (isPhy) {
-        examBoard = EXAM_BOARD.ALL;
-    } else if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.has(examBoardQueryParam)) {
+    if (examBoardQueryParam && Object.values(EXAM_BOARD).includes(examBoardQueryParam) && !EXAM_BOARD_NULL_OPTIONS.has(examBoardQueryParam)) {
         examBoard = examBoardQueryParam;
         explanation.examBoard = urlMessage;
     } else if (isDefined(transientUserContext?.examBoard)) {
@@ -142,14 +136,14 @@ export function useUserContext(): UseUserContextReturnType {
     // Replace query params
     useEffect(() => {
         const actualParams = queryString.parse(window.location.search);
-        if (stage !== actualParams.stage || (!isPhy && examBoard !== actualParams.examBoard)) {
+        if (stage !== actualParams.stage || (examBoard !== actualParams.examBoard)) {
             try {
                 history.replace({
                     ...existingLocation,
                     search: queryString.stringify({
                         ...queryParams,
                         stage,
-                        examBoard: isCS ? examBoard : undefined,
+                        examBoard: examBoard,
                     }, {encode: false})
                 });
             } catch (e) {
@@ -233,7 +227,7 @@ interface StageFilterOptions {
 export function getFilteredStageOptions(filter?: StageFilterOptions) {
     return _STAGE_ITEM_OPTIONS
         // Restrict by subject stages
-        .filter(i => siteSpecific(STAGES_PHY, STAGES_CS).has(i.value))
+        .filter(i => STAGES_CS.has(i.value))
         // Restrict by includeNullOptions flag
         .filter(i => filter?.includeNullOptions || !STAGE_NULL_OPTIONS.has(i.value))
         // Restrict by account settings
@@ -251,15 +245,12 @@ export function getFilteredStageOptions(filter?: StageFilterOptions) {
         .filter(i =>
             !filter?.byUserContexts ||
             // if options at stage are exhausted don't offer it
-            // - physics
-            (isPhy && !filter.byUserContexts.map(uc => uc.stage).includes(i.value)) ||
-            // - computer science
-            (isCS && !(
+            !(
                 // stage already has a null option selected
                 filter.byUserContexts.some(uc => uc.stage === i.value && EXAM_BOARD_NULL_OPTIONS.has(uc.examBoard as EXAM_BOARD)) ||
                 // every exam board has been recorded for the stage
                 getFilteredExamBoardOptions({byUser: filter.byUser, byStages: [i.value], byUserContexts: filter.byUserContexts}).length === 0
-            ))
+            )
         );
 }
 
@@ -325,10 +316,7 @@ export function determineAudienceViews(audience?: AudienceContext[], creationCon
         comparatorFromOrderedValues(stagesOrdered)(a.stage, b.stage));
 }
 
-export const AUDIENCE_DISPLAY_FIELDS: (keyof ViewingContext)[] = siteSpecific(
-    ["stage", "difficulty"],
-    ["stage"]
-);
+export const AUDIENCE_DISPLAY_FIELDS: (keyof ViewingContext)[] = ["stage"];
 
 export function filterAudienceViewsByProperties(views: ViewingContext[], properties: (keyof ViewingContext)[]): ViewingContext[] {
     const filteredViews: ViewingContext[] = [];
@@ -409,7 +397,7 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
     if (!STAGE_NULL_OPTIONS.has(userContext.stage)) {
         message.push(stageLabelMap[userContext.stage]);
     }
-    if (isCS && !EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
+    if (!EXAM_BOARD_NULL_OPTIONS.has(userContext.examBoard)) {
         message.push(examBoardLabelMap[userContext.examBoard]);
     }
     if (message.length === 0) { // should never happen...
@@ -445,7 +433,7 @@ export function stringifyAudience(audience: ContentDTO["audience"], userContext:
     // If common, could find substrings and report ranges i.e, GCSE to University
 
     // CS would like to show All stages instead of GCSE & A Level - that will work until we have more stages
-    if (isCS && stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
+    if (stagesToView.includes(STAGE.GCSE) && stagesToView.includes(STAGE.A_LEVEL)) {
         stagesToView = [STAGE.ALL];
     }
 

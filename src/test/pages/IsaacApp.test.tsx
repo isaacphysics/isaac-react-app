@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import {reverse, zip} from "lodash";
 import {UserRole, USER_ROLES} from "../../IsaacApiTypes";
 import {renderTestEnvironment, NavBarMenus, NAV_BAR_MENU_TITLE} from "../utils";
-import {FEATURED_NEWS_TAG, siteSpecific, history} from "../../app/services";
+import {FEATURED_NEWS_TAG, history} from "../../app/services";
 import {mockNewsPods} from "../../mocks/data";
 
 const myIsaacLinks = ["/assignments", "/my_gameboards", "/progress", "/tests"]
@@ -122,7 +122,7 @@ describe("IsaacApp", () => {
     
     it('should show featured news pods before non-featured ones, and order pods correctly based on id (CS only)', async () => {
         renderTestEnvironment();
-        const transformPodList = siteSpecific((ps: any[]) => ps, (ps: any[]) => reverse(ps));
+        const transformPodList = (ps: any[]) => reverse(ps);
         const newsCarousel = await screen.findByTestId("carousel-inner");
         const featuredNewsSection = await screen.findByTestId("featured-news-item");
         const featuredNewsPod = await within(featuredNewsSection).findByTestId("news-pod");
