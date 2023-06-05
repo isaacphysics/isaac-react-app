@@ -2,7 +2,7 @@ import React, {Ref} from 'react';
 import {Col, Row} from "reactstrap";
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {IsaacContent} from "./IsaacContent";
-import {isCS, isDefined, TAG_ID, tags} from "../../services";
+import {isDefined, TAG_ID, tags} from "../../services";
 import {Tag} from '../../../IsaacAppTypes';
 import {formatGlossaryTermId} from "../pages/Glossary";
 
@@ -14,7 +14,7 @@ interface IsaacGlossaryTermProps {
 
 const IsaacGlossaryTermComponent = ({doc, inPortal, linkToGlossary}: IsaacGlossaryTermProps, ref: Ref<any>) => {
     let _tags: Tag[] = [];
-    if (isCS && doc.tags) {
+    if (doc.tags) {
         _tags = doc.tags.map(id => tags.getById(id as TAG_ID)).filter(tag => isDefined(tag));
     }
 

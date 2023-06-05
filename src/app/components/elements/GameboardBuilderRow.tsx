@@ -8,8 +8,6 @@ import {
     filterAudienceViewsByProperties,
     findAudienceRecordsMatchingPartial,
     generateQuestionTitle,
-    isCS,
-    siteSpecific,
     stageLabelMap,
     TAG_ID,
     TAG_LEVEL
@@ -104,12 +102,12 @@ const GameboardBuilderRow = (
                 {stage && <span>{stageLabelMap[stage]}</span>}
             </div>)}
         </td>
-        <td className={siteSpecific("w-15","w-10")}>
+        <td className="w-10">
             {filteredAudienceViews.map(v => v.difficulty).map((difficulty, i) => <div key={`${difficulty} ${i}`}>
                 {difficulty && <DifficultyIcons difficulty={difficulty} />}
             </div>)}
         </td>
-        {isCS && <td className="w-5">
+        <td className="w-5">
             {filteredAudienceViews.map((audienceView, i, collection) => <>
                 {findAudienceRecordsMatchingPartial(question.audience, audienceView)
                     .map((audienceRecord) => audienceRecord.examBoard?.map((examBoard) => <div key={examBoard}>
@@ -119,7 +117,7 @@ const GameboardBuilderRow = (
                 {/* When this becomes more common we should solve separation via a new row and merge other columns */}
                 {i + 1 < collection.length && <hr className="text-center" />}
             </>)}
-        </td>}
+        </td>
     </tr>
 };
 export default GameboardBuilderRow;
