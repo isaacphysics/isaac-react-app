@@ -674,52 +674,6 @@ export const releaseAllAuthorisations = (userId: number) => async (dispatch: Dis
     }
 };
 
-// Constants
-export const requestConstantsUnits = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    // Don't request this again if it has already been fetched successfully
-    const state = getState();
-    if (state && state.constants && state.constants.units) {
-        return;
-    }
-
-    dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST});
-    try {
-        const units = await api.constants.getUnits();
-        dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: units.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE});
-    }
-};
-
-export const requestConstantsSegueVersion = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    // Don't request this again if it has already been fetched successfully
-    const state = getState();
-    if (state && state.constants && state.constants.segueVersion) {
-        return;
-    }
-    dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST});
-    try {
-        const version = await api.constants.getSegueVersion();
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS, ...version.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE});
-    }
-};
-
-export const requestConstantsSegueEnvironment = () => async (dispatch: Dispatch<Action>, getState: () => AppState) => {
-    const state = getState();
-    if (state && state.constants && state.constants.segueEnvironment) {
-        return;
-    }
-    dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_REQUEST});
-    try {
-        const environment = await api.constants.getSegueEnvironment();
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS, ...environment.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE});
-    }
-};
-
 export const requestNotifications = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.NOTIFICATIONS_REQUEST});
     try {
@@ -970,28 +924,6 @@ export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dis
         dispatch(showAxiosErrorToastIfNeeded("There was a problem generating a graph specification", e));
     }
 }
-
-// Content version
-export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
-    try {
-        const version = await api.contentVersion.getLiveVersion();
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS, ...version.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get content version", e));
-    }
-};
-
-export const setContentVersion = (version: string) => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST, version});
-    try {
-        await api.contentVersion.setLiveVersion(version);
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS, newVersion: version});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE});
-    }
-};
 
 // Search
 export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {

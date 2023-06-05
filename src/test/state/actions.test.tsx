@@ -6,7 +6,6 @@ import {
     fetchSearch,
     middleware,
     registerQuestions,
-    requestConstantsUnits,
     requestCurrentUser,
     requestEmailVerification,
     showToast
@@ -17,7 +16,6 @@ import {
     questionDTOs,
     registeredUserDTOs,
     searchResultsList,
-    unitsList,
     userAuthenticationSettings,
     userPreferencesSettings
 } from "../test-factory";
@@ -135,61 +133,6 @@ describe("registerQuestion action", () => {
         const actualActions = store.getActions();
         const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
         expect(actualIsaacActions).toEqual(expectedActions);
-    });
-});
-
-describe("requestConstantsUnits action", () => {
-    afterEach(() => {
-        axiosMock.reset();
-    });
-
-    it("dispatches CONSTANTS_UNITS_RESPONSE_SUCCESS after a successful request", async () => {
-        axiosMock.onGet(`/content/units`).replyOnce(200, unitsList);
-        const store = mockStore();
-        await store.dispatch(requestConstantsUnits() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
-    });
-
-    it("doesn't dispatch CONSTANTS_UNITS_REQUEST if already in the store", async () => {
-        const store = mockStore({constants: {units: unitsList}});
-        await store.dispatch(requestConstantsUnits() as any);
-        expect(store.getActions().length).toEqual(0);
-        expect(axiosMock.history.get.length).toBe(0);
-    });
-
-    it("dispatches USER_UPDATE_RESPONSE_FAILURE when no connection to the api", async () => {
-        axiosMock.onGet(`/content/units`).networkError();
-        const store = mockStore();
-        await store.dispatch(requestConstantsUnits() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
-    });
-
-    it("does not care if the response times-out", async () => {
-        axiosMock.onGet(`/content/units`).timeout();
-        const store = mockStore();
-        await store.dispatch(requestConstantsUnits() as any);
-        const expectedActions = [
-            {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST},
-            {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
-        ];
-        const actualActions = store.getActions();
-        const actualIsaacActions = expectActionsToStartWithMiddlewareRegistration(actualActions);
-        expect(actualIsaacActions).toEqual(expectedActions);
-        expect(axiosMock.history.get.length).toBe(1);
     });
 });
 

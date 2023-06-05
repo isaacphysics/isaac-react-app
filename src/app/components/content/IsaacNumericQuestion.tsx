@@ -1,5 +1,5 @@
-import React, {FormEvent, useEffect, useMemo, useState} from "react";
-import {AppState, requestConstantsUnits, useAppDispatch, useAppSelector} from "../../state";
+import React, {FormEvent, useMemo, useState} from "react";
+import {AppState, isaacApi, useAppSelector} from "../../state";
 import Rand from 'rand-seed';
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {IsaacNumericQuestionDTO, QuantityDTO, QuantityValidationResponseDTO} from "../../../IsaacApiTypes";
@@ -100,11 +100,9 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
     const currentAttemptValueWrong = validationResponse && validationResponse.correctValue === false;
     const currentAttemptUnitsWrong = validationResponse && validationResponse.correctUnits === false;
 
-    const dispatch = useAppDispatch();
     const userId = useAppSelector((state: AppState) => (state?.user?.loggedIn && state.user.id) || undefined);
-    const units = useAppSelector((state: AppState) => state?.constants?.units || undefined);
+    const {data: units} = isaacApi.endpoints.getUnits.useQuery();
 
-    useEffect(() => {dispatch(requestConstantsUnits());}, [dispatch]);
     const selectedUnits = selectUnits(doc, questionId, units, userId);
 
     function updateValue(event: FormEvent<HTMLInputElement>) {
