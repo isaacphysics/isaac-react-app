@@ -172,11 +172,6 @@ export const api = {
             return endpoint.post(`/notifications/${id}/${response}`)
         }
     },
-    admin: {
-        getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
-            return endpoint.get(`/admin/stats`)
-        }
-    },
     authorisations: {
         get: (): AxiosPromise<ApiTypes.UserSummaryWithEmailAddressDTO[]> => {
             return endpoint.get("authorisations");

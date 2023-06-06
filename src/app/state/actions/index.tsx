@@ -940,17 +940,6 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 };
 
 // Admin
-export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_STATS_REQUEST});
-    try {
-        const version = await api.admin.getSiteStats();
-        dispatch({type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS, stats: version.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Failed to get Admin statistics", e));
-    }
-};
-
 export const getEmailTemplate = (contentid: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_EMAIL_TEMPLATE_REQUEST});
     try {

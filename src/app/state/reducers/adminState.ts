@@ -1,18 +1,6 @@
 import {TestCaseDTO} from "../../../IsaacApiTypes";
-import {Action, AdminStatsResponse, TemplateEmail} from "../../../IsaacAppTypes";
+import {Action, TemplateEmail} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
-
-export type AdminStatsState = AdminStatsResponse | null;
-export const adminStats = (adminSiteStats: AdminStatsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.ADMIN_STATS_REQUEST:
-            return null;
-        case ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS:
-            return action.stats;
-        default:
-            return adminSiteStats;
-    }
-};
 
 export type AdminEmailTemplateState = TemplateEmail | null;
 export const adminEmailTemplate = (adminEmailTemplate: AdminEmailTemplateState = null, action: Action) => {

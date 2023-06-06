@@ -9,7 +9,7 @@ import {
 } from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
-import {ContentErrorsResponse} from "../../../../IsaacAppTypes";
+import {AdminStatsResponse, ContentErrorsResponse} from "../../../../IsaacAppTypes";
 
 export const adminApi = isaacApi.enhanceEndpoints({
     addTagTypes: ["MisuseStatistics"],
@@ -53,6 +53,15 @@ export const adminApi = isaacApi.enhanceEndpoints({
             providesTags: ["ContentErrors"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading Content Errors Failed",
+            })
+        }),
+
+        getSiteStatistics: build.query<AdminStatsResponse, void>({
+            query: () => ({
+                url: "/admin/stats",
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Loading Site Statistics Failed",
             })
         }),
 
@@ -142,4 +151,5 @@ export const {
     useAdminModifyUserRolesMutation,
     useAdminModifyUserEmailVerificationStatusMutation,
     useAdminGetUserQuery,
+    useGetSiteStatisticsQuery,
 } = adminApi;
