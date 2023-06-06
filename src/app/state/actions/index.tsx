@@ -940,21 +940,6 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 };
 
 // Admin
-export const adminUserSearchRequest = (queryParams: {}) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_REQUEST});
-    try {
-        const searchResponse = await api.admin.userSearch.get(queryParams);
-        dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_SUCCESS, users: searchResponse.data});
-        const resultElement = window.document.getElementById("admin-search-results");
-        if (resultElement) {
-            resultElement.scrollIntoView({behavior: "smooth"});
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_USER_SEARCH_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("User search failed", e));
-    }
-};
-
 export const adminUserGetRequest = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
     dispatch({type: ACTION_TYPE.ADMIN_USER_GET_REQUEST});
     try {
@@ -963,49 +948,6 @@ export const adminUserGetRequest = (userid: number | undefined) => async (dispat
     } catch (e) {
         dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE});
         dispatch(showAxiosErrorToastIfNeeded("User Get Failed", e));
-    }
-};
-
-export const adminUserDelete = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    try {
-        const confirmDeletion = window.confirm("Are you sure you want to delete this user?");
-        if (confirmDeletion) {
-            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_REQUEST});
-            await api.admin.userDelete.delete(userid);
-            dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_SUCCESS});
-            dispatch(showToast({
-                title: "User deleted",
-                body: "The selected user was successfully deleted.",
-                color: "success",
-                timeout: 5000,
-                closable: false,
-            }) as any);
-        }
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_USER_DELETE_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("User deletion failed", e));
-    }
-};
-
-export const adminModifyUserRoles = (role: UserRole, userIds: number[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_REQUEST});
-    try {
-        await api.admin.modifyUserRoles.post(role, userIds);
-        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_SUCCESS});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_ROLES_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("User role modification failed", e));
-    }
-};
-
-export const adminModifyUserEmailVerificationStatuses = (status: EmailVerificationStatus, emails: string[]) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST});
-    try {
-        await api.admin.modifyUserEmailVerificationStatuses.post(status, emails);
-        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Email verification status modification failed", e));
     }
 };
 

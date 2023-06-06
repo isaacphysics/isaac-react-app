@@ -31,7 +31,6 @@ import {
     adminEmailTemplate,
     adminStats,
     adminUserGet,
-    adminUserSearch,
     testQuestions,
     quizAssignedToMe,
     quizAssignment,
@@ -49,7 +48,8 @@ import {
     questionSearchResult,
     search,
     isaacApi,
-    gameboardsSlice
+    gameboardsSlice,
+    adminUserSearchSlice
 } from "../index";
 
 export const rootReducer = combineReducers({
@@ -89,8 +89,8 @@ export const rootReducer = combineReducers({
     userAnsweredQuestionsByDate,
 
     // Admin
+    adminUserSeach: adminUserSearchSlice.reducer,
     adminUserGet,
-    adminUserSearch,
     adminStats,
     adminEmailTemplate,
     testQuestions,

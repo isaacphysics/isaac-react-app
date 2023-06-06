@@ -1,5 +1,11 @@
 import {isaacApi} from "./baseApi";
-import {MisuseStatisticDTO} from "../../../../IsaacApiTypes";
+import {
+    AdminSearchEndpointParams,
+    EmailVerificationStatus,
+    MisuseStatisticDTO,
+    UserRole,
+    UserSummaryForAdminUsersDTO
+} from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
 import {ContentErrorsResponse} from "../../../../IsaacAppTypes";
@@ -49,6 +55,19 @@ export const adminApi = isaacApi.enhanceEndpoints({
             })
         }),
 
+        // === Admin user management ===
+
+        adminSearchUsers: build.mutation<UserSummaryForAdminUsersDTO[], AdminSearchEndpointParams>({
+            query: (params) => ({
+                url: "/admin/users",
+                method: "GET",
+                params
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "User search failed",
+            })
+        }),
+
         mergeUsers: build.mutation<void, {targetId: number, sourceId: number}>({
             query: ({targetId, sourceId}) => ({
                 url: "/admin/users/merge",
@@ -65,6 +84,40 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 }
             })
         }),
+
+        adminDeleteUser: build.mutation<void, number>({
+            query: (userId) => ({
+                url: `/admin/users/${userId}`,
+                method: "DELETE",
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "User deletion failed",
+                successTitle: "User deleted",
+                successMessage: "Selected user was deleted successfully",
+            })
+        }),
+
+        adminModifyUserRoles: build.mutation<void, {userIds: number[], role: UserRole}>({
+            query: ({userIds, role}) => ({
+                url: `/admin/users/change_role/${role}`,
+                method: "POST",
+                body: userIds,
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "User role modification failed",
+            })
+        }),
+
+        adminModifyUserEmailVerificationStatus: build.mutation<void, {emails: string[], status: EmailVerificationStatus}>({
+            query: ({emails, status}) => ({
+                url: `/admin/users/change_email_verification_status/${status}/true`,
+                method: "POST",
+                body: emails,
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Email verification status modification failed",
+            })
+        }),
     })
 });
 
@@ -73,4 +126,8 @@ export const {
     useResetMisuseMonitorMutation,
     useGetContentErrorsQuery,
     useMergeUsersMutation,
+    useAdminSearchUsersMutation,
+    useAdminDeleteUserMutation,
+    useAdminModifyUserRolesMutation,
+    useAdminModifyUserEmailVerificationStatusMutation,
 } = adminApi;

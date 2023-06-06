@@ -57,7 +57,7 @@ export const selectors = {
     },
 
     admin: {
-        userSearch: (state: AppState) => state?.adminUserSearch || null,
+        userSearch: (state: AppState) => state?.adminUserSeach,
         userSchoolLookup: (state: AppState) => state?.userSchoolLookup,
     },
 

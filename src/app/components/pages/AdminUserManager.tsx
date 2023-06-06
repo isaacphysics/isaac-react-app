@@ -1,46 +1,47 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {FormGroup} from "reactstrap";
-import {ShowLoading} from "../handlers/ShowLoading";
 import {
-    adminModifyUserEmailVerificationStatuses,
-    adminModifyUserRoles,
-    adminUserDelete,
-    adminUserSearchRequest,
     AppState,
     getUserIdSchoolLookup,
     resetPassword,
     selectors,
     useAppDispatch,
     useAppSelector,
-    useMergeUsersMutation
+    useMergeUsersMutation,
+    useAdminSearchUsersMutation,
+    useAdminDeleteUserMutation,
+    useAdminModifyUserEmailVerificationStatusMutation,
+    useAdminModifyUserRolesMutation,
 } from "../../state";
-import {EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
+import {AdminSearchEndpointParams, EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {ADMIN_CRUMB, isAdmin, isDefined, isPhy} from "../../services";
 import {Link} from "react-router-dom";
 import classNames from "classnames";
+import {ShowLoading} from "../handlers/ShowLoading";
+import produce from "immer";
 
 export const AdminUserManager = () => {
     const dispatch = useAppDispatch();
+
+    const [searchUsers, {isUninitialized: searchNotRequested}] = useAdminSearchUsersMutation();
     const searchResults = useAppSelector(selectors.admin.userSearch);
-    const [userUpdating, setUserUpdating] = useState(false);
-    const [searchRequested, setSearchRequested] = useState(false);
-    const [searchQuery, setSearchQuery] = useState({
-        familyName: null,
-        email: null,
-        role: null,
-        schoolURN: null,
-        schoolOther: null,
-        postcode: null,
+    const [searchQuery, setSearchQuery] = useState<AdminSearchEndpointParams>({
         postcodeRadius: "FIVE_MILES",
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+    const adminSearchResultsRef = useRef<HTMLDivElement>(null);
 
     const [mergeUsers] = useMergeUsersMutation();
     const [mergeTargetId, setMergeTargetId] = useState<string>("");
     const [mergeSourceId, setMergeSourceId] = useState<string>("");
+
+    const [deleteUser, {isLoading: userBeingDeleted}] = useAdminDeleteUserMutation();
+    const [modifyUserRoles, {isLoading: userRoleBeingModified}] = useAdminModifyUserRolesMutation();
+    const [modifyUserEmailVerificationStatuses, {isLoading: userVerificationStatusBeingModified}] = useAdminModifyUserEmailVerificationStatusMutation();
+    const userBeingModified = userBeingDeleted || userRoleBeingModified || userVerificationStatusBeingModified;
 
     const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup);
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
@@ -56,13 +57,16 @@ export const AdminUserManager = () => {
         }
     }, [dispatch, searchResults]);
 
-    const updateQuery = (update: {[key: string]: string | null}) => {
-        // Replace empty strings with nulls
-        const nulledUpdate: {[key: string]: string | null} = {};
-        Object.entries(update).forEach(([key, value]) => nulledUpdate[key] = value || null);
-        // Create a copy so that we trigger a re-render
-        setSearchQuery(Object.assign({}, searchQuery, nulledUpdate))
-    };
+    const setParamIfNotDefault = useCallback((param: string, value: string, defaultValue: string) => {
+        setSearchQuery(produce(queryParams => {
+            if (value === defaultValue) {
+                delete (queryParams as {[k: string]: any})[param];
+            } else {
+                (queryParams as {[k: string]: any})[param] = value;
+            }
+        }));
+    }, [setSearchQuery]);
+
     const selectAllToggle = () => {
         if (isDefined(searchResults) && searchResults.length === selectedUserIds.length) {
             setSelectedUserIds([]);
@@ -95,38 +99,35 @@ export const AdminUserManager = () => {
         }
     };
     const modifyUserRolesAndUpdateResults = async (role: UserRole) => {
-        let confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
+        const confirmed = (role === "STUDENT") || confirmUnverifiedUserPromotions();
         if (confirmed) {
-            setUserUpdating(true);
-            await dispatch(adminModifyUserRoles(role, selectedUserIds));
-            dispatch(adminUserSearchRequest(searchQuery));
+            await modifyUserRoles({role, userIds: selectedUserIds});
             setSelectedUserIds([]);
-            setUserUpdating(false);
         }
     };
 
     const modifyUserEmailVerificationStatusesAndUpdateResults = async (status: EmailVerificationStatus) => {
-        setUserUpdating(true);
         const selectedEmails = searchResults?.filter(user => user.id && selectedUserIds.includes(user.id)).map(user => user.email || '') || [];
-        await dispatch(adminModifyUserEmailVerificationStatuses(status, selectedEmails));
-        dispatch(adminUserSearchRequest(searchQuery));
+        await modifyUserEmailVerificationStatuses({status, emails: selectedEmails});
         setSelectedUserIds([]);
-        setUserUpdating(false);
     };
 
     const search = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setSearchRequested(true);
-        dispatch(adminUserSearchRequest(searchQuery));
+        adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
+        searchUsers(searchQuery);
     };
 
     const editUser = (userid: number | undefined) => {
         window.open(`/account?userId=${userid}`, '_blank');
     };
 
-    const deleteUser = async (userid: number | undefined) => {
-        await dispatch(adminUserDelete(userid));
-        dispatch(adminUserSearchRequest(searchQuery));
+    const confirmDeleteUser = (userid?: number) => {
+        if (!isDefined(userid)) return;
+        const confirmDeletion = window.confirm("Are you sure you want to delete this user?");
+        if (confirmDeletion) {
+            deleteUser(userid);
+        }
     };
 
     const attemptPasswordReset = (email: string | undefined) => {
@@ -157,21 +158,21 @@ export const AdminUserManager = () => {
                                 <RS.Label htmlFor="family-name-search">Find a user by family name:</RS.Label>
                                 <RS.Input
                                     id="family-name-search" type="text" defaultValue={searchQuery.familyName || undefined} placeholder="e.g. Wilkes"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({familyName: e.target.value})}
+                                    onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
                                 <RS.Label htmlFor="email-search">Find a user by email:</RS.Label>
                                 <RS.Input
                                     id="email-search" type="text" defaultValue={searchQuery.email || undefined} placeholder="e.g. teacher@school.org"
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({email: e.target.value})}
+                                    onChange={e => setParamIfNotDefault("email", e.target.value, "")}
                                 />
                             </RS.FormGroup>
                             <RS.FormGroup>
                                 <RS.Label htmlFor="school-other-search">Find by manually entered school:</RS.Label>
                                 <RS.Input
                                     id="school-other-search" type="text" defaultValue={searchQuery.schoolOther || undefined}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({schoolOther: e.target.value})}
+                                    onChange={e => setParamIfNotDefault("schoolOther", e.target.value, "")}
                                 />
                             </RS.FormGroup>
                         </RS.Col>
@@ -183,7 +184,7 @@ export const AdminUserManager = () => {
                                     id="role-search" type="select" defaultValue={String(searchQuery.role)}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         const role = e.target.value;
-                                        updateQuery({role: role !== "null" ? role : null})
+                                        setParamIfNotDefault("role", role === "null" ? "" : role, "");
                                     }}
                                 >
                                     <option value="null">Any role</option>
@@ -201,13 +202,13 @@ export const AdminUserManager = () => {
                                     <RS.Col md={7}>
                                         <RS.Input
                                             id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcode: e.target.value})}
+                                            onChange={e => setParamIfNotDefault("postcode", e.target.value, "")}
                                         />
                                     </RS.Col>
                                     <RS.Col md={5} className="mt-2 mt-md-0">
                                         <RS.Input
                                             id="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({postcodeRadius: e.target.value})}
+                                            onChange={e => setParamIfNotDefault("postcodeRadius", e.target.value, "")}
                                         >
                                             <option value="FIVE_MILES">5 miles</option>
                                             <option value="TEN_MILES">10 miles</option>
@@ -223,7 +224,7 @@ export const AdminUserManager = () => {
                                 <RS.Label htmlFor="school-urn-search">Find a user with school URN:</RS.Label>
                                 <RS.Input
                                     id="school-urn-search" type="text" defaultValue={searchQuery.schoolURN || undefined}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuery({schoolURN: e.target.value})}
+                                    onChange={e => setParamIfNotDefault("schoolURN", e.target.value, "")}
                                 />
                             </RS.FormGroup>
                         </RS.Col>
@@ -246,12 +247,12 @@ export const AdminUserManager = () => {
                 Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
-            <RS.CardBody id="admin-search-results">
+            <RS.CardBody innerRef={adminSearchResultsRef}>
                 {/* Action Buttons */}
                 <RS.Row className="pb-4">
                     <RS.Col>
                         <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline>Modify Role</RS.DropdownToggle>
+                            <RS.DropdownToggle caret disabled={userBeingModified} color="primary" outline>Modify Role</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Promote or demote selected users to:</RS.DropdownItem>
                                 {(promotableRoles).map(role =>
@@ -265,7 +266,7 @@ export const AdminUserManager = () => {
                             </RS.DropdownMenu>
                         </RS.UncontrolledButtonDropdown>
                         {isDefined(currentUser) && currentUser.role === 'ADMIN' && <RS.UncontrolledButtonDropdown>
-                            <RS.DropdownToggle caret disabled={userUpdating} color="primary" outline className="ml-3">Email Status</RS.DropdownToggle>
+                            <RS.DropdownToggle caret disabled={userBeingModified} color="primary" outline className="ml-3">Email Status</RS.DropdownToggle>
                             <RS.DropdownMenu>
                                 <RS.DropdownItem header>Change email verification status for users to:</RS.DropdownItem>
                                 {(verificationStatuses).map(status =>
@@ -290,12 +291,14 @@ export const AdminUserManager = () => {
                 </RS.Row>
 
                 {/* Results */}
-                {searchRequested &&
-                    <ShowLoading until={searchResults}>
-                        {isDefined(searchResults) && searchResults.length > 0 ?
-                            <div className="overflow-auto">
-                                <RS.Table bordered>
-                                    <thead>
+                {!searchNotRequested &&
+                    <ShowLoading
+                        until={searchResults}
+                        thenRender={searchResults => {
+                            return searchResults.length > 0 ?
+                                <div className="overflow-auto">
+                                    <RS.Table bordered>
+                                        <thead>
                                         <tr>
                                             <th>
                                                 <RS.Button onClick={selectAllToggle} color="link">Select</RS.Button>
@@ -309,8 +312,8 @@ export const AdminUserManager = () => {
                                             <th>Member since</th>
                                             <th>Last seen</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {searchResults.map((user) =>
                                             <tr key={user.id}>
                                                 <td className="text-center">
@@ -329,7 +332,7 @@ export const AdminUserManager = () => {
                                                     <RS.Button color="secondary btn-sm m-1" onClick={() => editUser(user.id)}>
                                                         Edit
                                                     </RS.Button>
-                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => deleteUser(user.id)}>
+                                                    <RS.Button color="secondary btn-sm m-1" onClick={() => confirmDeleteUser(user.id)}>
                                                         Delete
                                                     </RS.Button>
                                                     <RS.Button color="secondary btn-sm m-1" onClick={() => attemptPasswordReset(user.email)} disabled={user.emailVerificationStatus === "DELIVERY_FAILED"}>
@@ -345,13 +348,13 @@ export const AdminUserManager = () => {
                                                 <td><DateString>{user.lastSeen}</DateString></td>
                                             </tr>
                                         )}
-                                    </tbody>
-                                </RS.Table>
-                            </div>
-                            :
-                            <div className="text-center"><em>No results found</em></div>
+                                        </tbody>
+                                    </RS.Table>
+                                </div>
+                                :
+                                <div className="text-center"><em>No results found</em></div>;
                         }
-                    </ShowLoading>
+                    }/>
                 }
             </RS.CardBody>
         </RS.Card>

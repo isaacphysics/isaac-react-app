@@ -1,38 +1,47 @@
-import React, {useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import * as RS from "reactstrap";
 import {Accordion} from "../Accordion";
 import {
-    adminUserSearchRequest,
     AppState,
     openActiveModal,
-    selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useAdminSearchUsersMutation, selectors
 } from "../../../state";
 import {atLeastOne, formatManageBookingActionButtonMessage, NOT_FOUND, zeroOrLess} from "../../../services";
 import {DateString} from "../DateString";
 import {userBookingModal} from "../modals/UserBookingModal";
+import {AdminSearchEndpointParams} from "../../../../IsaacApiTypes";
+import produce from "immer";
 
 export const AddUsersToBooking = () => {
     const dispatch = useAppDispatch();
-    const userResults = useAppSelector(selectors.admin.userSearch) || [];
     const selectedEvent = useAppSelector((state: AppState) => (state && state.currentEvent !== NOT_FOUND) ? state.currentEvent : null);
     const userBookings = useAppSelector((state: AppState) =>
         state && state.eventBookings && state.eventBookings.map(b => b.userBooked && b.userBooked.id) as number[] || []
     );
 
-    const [searched, setSearched] = useState(false);
-    const [queryParams, setQueryParams] = useState({familyName: null, email: null, role: null});
+    const [searchUsers, {isUninitialized}] = useAdminSearchUsersMutation();
+    const userSearchResults = useAppSelector(selectors.admin.userSearch);
+    const searchRequested = !isUninitialized;
+    const [queryParams, setQueryParams] = useState<AdminSearchEndpointParams>({});
+    const adminSearchResultsRef = useRef<HTMLDivElement>(null);
 
     function userSearch(formEvent: React.FormEvent<HTMLFormElement>) {
-        if (formEvent) {formEvent.preventDefault()}
-        setSearched(true);
-        dispatch(adminUserSearchRequest(queryParams));
+        if (formEvent) formEvent.preventDefault();
+        adminSearchResultsRef.current?.scrollIntoView({behavior: "smooth"});
+        searchUsers(queryParams);
     }
 
-    function nullIfDefault(value: string, defaultValue: string) {
-        return (value !== defaultValue) ? value : null;
-    }
+    const setParamIfNotDefault = useCallback((param: string, value: string, defaultValue: string) => {
+        setQueryParams(produce(queryParams => {
+            if (value === defaultValue) {
+                delete (queryParams as {[k: string]: any})[param];
+            } else {
+                (queryParams as {[k: string]: any})[param] = value;
+            }
+        }));
+    }, [setQueryParams]);
 
     return <Accordion trustedTitle="Add users to booking" disabled={selectedEvent?.isCancelled && "You cannot add users to a cancelled event"}>
         <RS.Form onSubmit={userSearch}>
@@ -42,7 +51,7 @@ export const AddUsersToBooking = () => {
                         <RS.Label htmlFor="user-search-familyName">Find a user by family name:</RS.Label>
                         <RS.Input
                             id="user-search-familyName" type="text" placeholder="Enter user family name" value={queryParams.familyName || ""}
-                            onChange={e => setQueryParams(Object.assign({}, queryParams, {familyName: nullIfDefault(e.target.value, "")}))}
+                            onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
                         />
                     </div>
                 </RS.Col>
@@ -51,7 +60,7 @@ export const AddUsersToBooking = () => {
                         <RS.Label htmlFor="user-search-email">Find a user by email:</RS.Label>
                         <RS.Input
                             id="user-search-email" type="text" placeholder="Enter user email" value={queryParams.email || ""}
-                            onChange={e => setQueryParams(Object.assign({}, queryParams, {email: nullIfDefault(e.target.value, "")}))}
+                            onChange={e => setParamIfNotDefault("email", e.target.value, "")}
                         />
                     </div>
                 </RS.Col>
@@ -60,7 +69,7 @@ export const AddUsersToBooking = () => {
                         <RS.Label htmlFor="user-search-role">Find by user role:</RS.Label>
                         <RS.Input
                             type="select" id="user-search-role" value={queryParams.role || "NO_ROLE"}
-                            onChange={e => setQueryParams(Object.assign({}, queryParams, {role: nullIfDefault(e.target.value, "NO_ROLE")}))}
+                            onChange={e => setParamIfNotDefault("role", e.target.value, "NO_ROLE")}
                         >
                             <option value="NO_ROLE">Any Role</option>
                             <option value="TUTOR">Tutor</option>
@@ -78,9 +87,9 @@ export const AddUsersToBooking = () => {
             </RS.Row>
         </RS.Form>
 
-        {searched && <hr className="text-center my-4" />}
+        {searchRequested && <hr className="text-center my-4" />}
 
-        {atLeastOne(userResults.length) && <div className="overflow-auto">
+        {userSearchResults && atLeastOne(userSearchResults.length) && <div className="overflow-auto">
             <RS.Table bordered className="mb-0 bg-white">
                 <thead>
                     <tr>
@@ -94,7 +103,7 @@ export const AddUsersToBooking = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {selectedEvent && userResults.map(result => <tr key={result.id}>
+                    {selectedEvent && userSearchResults.map(result => <tr key={result.id}>
                         <td className="align-middle">
                             {!userBookings.includes(result.id as number) &&
                             <RS.Button color="primary" outline className="btn-sm" onClick={() => dispatch(openActiveModal(userBookingModal(result, selectedEvent, userBookings)))}>
@@ -114,7 +123,7 @@ export const AddUsersToBooking = () => {
             </RS.Table>
         </div>}
 
-        {searched && zeroOrLess(userResults.length) && <div className="text-center">
+        {searchRequested && userSearchResults && zeroOrLess(userSearchResults.length) && <div className="text-center">
             <strong>No users returned from query</strong>
         </div>}
     </Accordion>
