@@ -198,9 +198,6 @@ export const api = {
                 return endpoint.post(`/admin/users/change_email_verification_status/${status}/true`, emails);
             }
         },
-        getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
-            return endpoint.get(`/admin/content_problems`)
-        },
         getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
             return endpoint.get(`/admin/stats`)
         },

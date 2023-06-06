@@ -1,5 +1,5 @@
 import {RegisteredUserDTO, TestCaseDTO, UserSummaryForAdminUsersDTO} from "../../../IsaacApiTypes";
-import {Action, AdminStatsResponse, ContentErrorsResponse, TemplateEmail} from "../../../IsaacAppTypes";
+import {Action, AdminStatsResponse, TemplateEmail} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, ContentVersionUpdatingStatus} from "../../services";
 
 export type AdminUserSearchState = UserSummaryForAdminUsersDTO[] | null;
@@ -23,18 +23,6 @@ export const adminUserGet = (adminUserGet: AdminUserGetState = null, action: Act
             return action.getUsers;
         default:
             return adminUserGet;
-    }
-};
-
-export type AdminContentErrorsState = ContentErrorsResponse | null;
-export const adminContentErrors = (adminContentErrors: AdminContentErrorsState = null, action: Action) => {
-    switch (action.type) {
-        case ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST:
-            return null;
-        case ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS:
-            return action.errors;
-        default:
-            return adminContentErrors;
     }
 };
 
