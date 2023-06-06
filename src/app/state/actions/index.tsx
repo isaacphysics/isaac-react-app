@@ -940,17 +940,6 @@ export const fetchSearch = (query: string, types: string | undefined) => async (
 };
 
 // Admin
-export const adminUserGetRequest = (userid: number | undefined) => async (dispatch: Dispatch<Action|((d: Dispatch<Action>) => void)>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_USER_GET_REQUEST});
-    try {
-        const searchResponse = await api.admin.userGet.get(userid);
-        dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_SUCCESS, getUsers: Object.assign({}, searchResponse.data)});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_USER_GET_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("User Get Failed", e));
-    }
-};
-
 export const getAdminSiteStats = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.ADMIN_STATS_REQUEST});
     try {

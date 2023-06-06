@@ -18,14 +18,14 @@ import {
 } from "reactstrap";
 import {UserAuthenticationSettingsDTO, UserContext} from "../../../IsaacApiTypes";
 import {
-    adminUserGetRequest,
-    AdminUserGetState,
-    AppState, errorSlice,
+    AppState,
+    errorSlice,
     ErrorState,
     getChosenUserAuthSettings,
     resetPassword,
     showErrorToast,
     updateCurrentUser,
+    useAdminGetUserQuery,
     useAppDispatch
 } from "../../state";
 import {
@@ -60,6 +60,7 @@ import {ShowLoading} from "../handlers/ShowLoading";
 import {Loading} from "../handlers/IsaacSpinner";
 import {UserBetaFeatures} from "../elements/panels/UserBetaFeatures";
 import hash, {NormalOption} from "object-hash";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 const UserMFA = lazy(() => import("../elements/panels/UserMFA"));
 
@@ -73,14 +74,12 @@ const stateToProps = (state: AppState, props: any) => {
         firstLogin: (history?.location?.state as { firstLogin: any } | undefined)?.firstLogin,
         hashAnchor: hash?.slice(1) ?? null,
         authToken: searchParams?.authToken as string ?? null,
-        userOfInterest: searchParams?.userId as string ?? null,
-        adminUserToEdit: state?.adminUserGet
+        userOfInterest: searchParams?.userId as string ?? null
     }
 };
 
 const dispatchToProps = {
     resetPassword,
-    adminUserGetRequest,
     getChosenUserAuthSettings,
 };
 
@@ -94,8 +93,6 @@ interface AccountPageProps {
     hashAnchor: string | null;
     authToken: string | null;
     userOfInterest: string | null;
-    adminUserGetRequest: (userid: number | undefined) => void;
-    adminUserToEdit?: AdminUserGetState;
 }
 
 // The order of the first two arguments doesn't matter really, but sticking to it helps with debugging when something
@@ -110,9 +107,11 @@ function hashEqual<T>(current: NonNullable<T>, prev: NonNullable<T>, options?: N
     return equal;
 }
 
-const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, adminUserGetRequest, hashAnchor, authToken, userOfInterest, adminUserToEdit}: AccountPageProps) => {
+const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, userAuthSettings, userPreferences, hashAnchor, authToken, userOfInterest}: AccountPageProps) => {
     const dispatch = useAppDispatch();
-    // Memoising this derived field is necessary so that it can be used used as a dependency to a useEffect later.
+
+    const {data: adminUserToEdit} = useAdminGetUserQuery(userOfInterest ? Number(userOfInterest) : skipToken);
+    // Memoising this derived field is necessary so that it can be used as a dependency to a useEffect later.
     // Otherwise, it is a new object on each re-render and the useEffect is constantly re-triggered.
     const userToEdit = useMemo(function wrapUserWithLoggedInStatus() {
         return adminUserToEdit ? {...adminUserToEdit, loggedIn: true} : {loggedIn: false}
@@ -120,7 +119,6 @@ const AccountPageComponent = ({user, getChosenUserAuthSettings, errorMessage, us
 
     useEffect(() => {
         if (userOfInterest) {
-            adminUserGetRequest(Number(userOfInterest));
             getChosenUserAuthSettings(Number(userOfInterest));
         }
     }, [userOfInterest]);

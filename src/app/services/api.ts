@@ -173,11 +173,6 @@ export const api = {
         }
     },
     admin: {
-        userGet: {
-            get: (userid: number | undefined): AxiosPromise<ApiTypes.RegisteredUserDTO> => {
-                return endpoint.get(`/admin/users/${userid}`);
-            }
-        },
         getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
             return endpoint.get(`/admin/stats`)
         }

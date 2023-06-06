@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 import {
-    AdminUserGetState,
     authenticateWithTokenAfterPrompt,
     getActiveAuthorisations,
     getStudentAuthorisations,
@@ -30,12 +29,13 @@ import classNames from "classnames";
 import {PageFragment} from "../PageFragment";
 import {RenderNothing} from "../RenderNothing";
 import {skipToken} from "@reduxjs/toolkit/query";
+import {RegisteredUserDTO} from "../../../../IsaacApiTypes";
 
 interface TeacherConnectionsProps {
     user: PotentialUser;
     authToken: string | null;
     editingOtherUser: boolean;
-    userToEdit: AdminUserGetState;
+    userToEdit: RegisteredUserDTO;
 }
 export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdit}: TeacherConnectionsProps) => {
     const dispatch = useAppDispatch();

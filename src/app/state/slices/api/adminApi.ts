@@ -3,6 +3,7 @@ import {
     AdminSearchEndpointParams,
     EmailVerificationStatus,
     MisuseStatisticDTO,
+    RegisteredUserDTO,
     UserRole,
     UserSummaryForAdminUsersDTO
 } from "../../../../IsaacApiTypes";
@@ -118,6 +119,16 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 errorTitle: "Email verification status modification failed",
             })
         }),
+
+        adminGetUser: build.query<RegisteredUserDTO, number>({
+            query: (userId) => ({
+                url: `/admin/users/${userId}`,
+                method: "GET",
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Failed to get user",
+            }),
+        }),
     })
 });
 
@@ -130,4 +141,5 @@ export const {
     useAdminDeleteUserMutation,
     useAdminModifyUserRolesMutation,
     useAdminModifyUserEmailVerificationStatusMutation,
+    useAdminGetUserQuery,
 } = adminApi;
