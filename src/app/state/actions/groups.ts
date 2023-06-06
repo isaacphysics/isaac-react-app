@@ -15,10 +15,10 @@ export const showGroupEmailModal = createAsyncThunk<void, number[]>(
     }
 );
 
-export const showGroupInvitationModal = createAsyncThunk<void, {group: AppGroup; user: RegisteredUserDTO; firstTime: boolean}>(
+export const showGroupInvitationModal = createAsyncThunk<void, {group: AppGroup; user: RegisteredUserDTO; firstTime: boolean; backToCreateGroup?: () => void}>(
     "groups/modals/invitation",
-    async ({group, user, firstTime}, {dispatch}) => {
-        dispatch(openActiveModal(groupInvitationModal(group, user, firstTime)));
+    async ({group, user, firstTime, backToCreateGroup}, {dispatch}) => {
+        dispatch(openActiveModal(groupInvitationModal(group, user, firstTime, backToCreateGroup)));
     }
 );
 

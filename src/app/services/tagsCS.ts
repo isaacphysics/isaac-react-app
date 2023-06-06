@@ -98,7 +98,7 @@ export class CsTagService extends AbstractBaseTagService {
     ];
     public getTagHierarchy() {return CsTagService.tagHierarchy;}
     public getBaseTags() {return CsTagService.baseTags;}
-    public augmentDocWithSubject(doc: ContentDTO) {
+    public augmentDocWithSubject<T extends ContentDTO>(doc: T) {
         return {...doc, subjectId: SUBJECTS.CS};
     }
 }

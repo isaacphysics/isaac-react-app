@@ -260,10 +260,12 @@ const GroupEditor = ({group, user, createNewGroup, groupNameInputRef}: GroupCrea
                     </Col>}
                 </Row>
 
-                {additionalManagers.length == 0 &&
-                    <p>There are no additional group managers for this group.</p>}
                 {additionalManagers.length == 1 && user && additionalManagers[0].id == user.id &&
-                    <p>You are the only additional manager for this group.</p>}
+                    (user.id === group.ownerId
+                        ? <p>You are the owner of this group.</p>
+                        : <p>You are the only additional manager for this group.</p>
+                    )
+                }
                 {!(additionalManagers.length == 0 || (additionalManagers.length == 1 && user && additionalManagers[0].id == user.id)) &&
                     <p>The {additionalManagers.length} user(s) below have permission to manage this group.</p>}
 
@@ -412,7 +414,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
             if (mutationSucceeded(result)) {
                 const group = result.data;
                 if (!group.id) return false;
-                dispatch(showGroupInvitationModal({group, user, firstTime: true}));
+                dispatch(showGroupInvitationModal({group, user, firstTime: true, backToCreateGroup: () => setSelectedGroupId(undefined)}));
                 setSelectedGroupId(group.id);
                 return true;
             }
@@ -499,8 +501,8 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                                 {sortedGroups && sortedGroups.length > 0
                                     ? sortedGroups.map((g: AppGroup) =>
                                         <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
-                                            <div className="d-flex justify-content-between align-items-center">
-                                                <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link text-left" data-testid={"select-group"} className="flex-fill" onClick={() => setSelectedGroupId(g.id)}>
+                                            <div className="d-flex justify-content-between align-items-center group-name-buttons">
+                                                <Button title={isStaff(user) ? `Group id: ${g.id}` : undefined} color="link text-left" data-testid={"select-group"} className="px-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                                     {g.groupName}
                                                 </Button>
                                                 <button

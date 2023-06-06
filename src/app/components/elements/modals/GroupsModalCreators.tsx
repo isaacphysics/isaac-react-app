@@ -84,7 +84,7 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
         </p>
     </>;
 };
-export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean) => ({
+export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean, backToCreateGroup?: () => void) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
     title: firstTime ? "Group Created" : "Invite Users",
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
@@ -107,13 +107,14 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
                     Set {siteSpecific("an assignment", "a quiz")}
                 </Button>
             </Col>
-            <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
+            {firstTime && <Col xs={siteSpecific(undefined, 12)} lg={siteSpecific(undefined, "auto")}>
                 <Button block color="secondary" size={siteSpecific(undefined, "sm")} className={classNames({"text-nowrap": isAda})} onClick={() => {
                     store.dispatch(closeActiveModal());
+                    backToCreateGroup?.();
                 }}>
                     Create another group
                 </Button>
-            </Col>
+            </Col>}
         </Row>
     ]
 });

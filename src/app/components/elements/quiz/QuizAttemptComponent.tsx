@@ -12,6 +12,7 @@ import {
     isAda,
     isDefined,
     isTeacherOrAbove,
+    QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP,
     siteSpecific,
     useDeviceSize
 } from "../../../services";
@@ -23,7 +24,12 @@ import {WithFigureNumbering} from "../WithFigureNumbering";
 import {IsaacContent} from "../../content/IsaacContent";
 import {Alert, Button, Col, Row} from "reactstrap";
 import {TitleAndBreadcrumb} from "../TitleAndBreadcrumb";
-import {closeActiveModal, openActiveModal, showQuizSettingModal, useAppDispatch} from "../../../state";
+import {
+    closeActiveModal,
+    openActiveModal,
+    showQuizSettingModal,
+    useAppDispatch,
+} from "../../../state";
 import {IsaacContentValueOrChildren} from "../../content/IsaacContentValueOrChildren";
 import {UserContextPicker} from "../inputs/UserContextPicker";
 import {EditContentButton} from "../EditContentButton";
@@ -42,6 +48,7 @@ export interface QuizAttemptProps {
     pageHelp: React.ReactElement;
     preview?: boolean;
     studentUser?: UserSummaryDTO;
+    quizAssignmentId?: string;
 }
 
 function inSection(section: IsaacQuizSectionDTO, questions: QuestionDTO[]) {
@@ -114,13 +121,22 @@ function QuizHeader({attempt, preview, user}: QuizAttemptProps) {
             </div>
         </>;
     } else if (isDefined(assignment)) {
-        return <p className="d-flex">
-            <span>
-                Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
-                {isDefined(attempt.completedDate) && <><br />Completed:&nbsp;{formatDate(attempt.completedDate)}</>}
-            </span>
-            {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
-        </p>;
+        return <>
+            <p className="d-flex">
+                <span>
+                    Set by: {extractTeacherName(assignment.assignerSummary ?? null)}
+                    {isDefined(attempt.completedDate) && <><br />Completed:&nbsp;{formatDate(attempt.completedDate)}</>}
+                </span>
+                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? "Was due:" : "Due:"}&nbsp;{formatDate(assignment.dueDate)}</>}
+            </p>
+            {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && <Alert color="info">
+                Please be aware that for tests your answer to each question <b>will be visible to your teacher(s) after
+                you submit your test</b> so that they can provide further feedback and support if they wish to do so.
+                <br />
+                Assignments are different. We do not share with your teachers any of your entered answers or the
+                number of your attempts to questions in assignments.
+            </Alert>}
+        </>;
     } else {
         return <p>You {attempt.completedDate ? "freely attempted" : "are freely attempting"} this test.</p>
     }
@@ -139,7 +155,7 @@ function QuizRubric({attempt}: {attempt: QuizAttemptDTO}) {
     </div>
 }
 
-function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number }) {
+function QuizSection({attempt, page, studentUser, user, quizAssignmentId}: QuizAttemptProps & {page: number}) {
     const sections = attempt.quiz?.children;
     const section = sections && sections[page - 1];
     const rubric = attempt.quiz?.rubric;
@@ -154,11 +170,18 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
         }))
     };
 
+    const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
+
     return section ?
         <Row className="question-content-container">
             <Col className={classNames("py-4 question-panel", {"mw-760": isAda})}>
-                <UserContextPicker className="no-print text-right"/>
+                {viewingAsSomeoneElse && <div className="mb-2">
+                    You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
+                </div>}
                 <Row>
+                    <Col>
+                        <UserContextPicker className="mt-2 no-print text-right"/>
+                    </Col>
                     {rubric && renderRubric && <Col className="text-right">
                         <Button color="tertiary" outline className="mb-4 bg-light"
                             alt="Show instructions" title="Show instructions in a modal"
@@ -230,15 +253,19 @@ export function QuizPagination({page, sections, pageLink, finalLabel}: QuizAttem
 }
 
 export function QuizAttemptComponent(props: QuizAttemptProps) {
-    const {page, questions} = props;
+    const {page, questions, studentUser, user, quizAssignmentId} = props;
     // Assumes that ids of questions are defined - I don't know why this is not enforced in the editor/backend, because
     // we do unchecked casts of "possibly undefined" content ids to strings almost everywhere
     const questionNumbers = Object.assign({}, ...questions.map((q, i) => ({[q.id as string]: i + 1})));
+    const viewingAsSomeoneElse = isDefined(studentUser) && studentUser?.id !== user?.id;
     return <QuizAttemptContext.Provider value={{quizAttempt: props.attempt, questionNumbers}}>
         <QuizTitle {...props} />
         {page === null ?
             <div className="mt-4">
-                {!isDefined(props.studentUser?.id) && <QuizHeader {...props} />}
+                {!isDefined(studentUser?.id) && <QuizHeader {...props} />}
+                {viewingAsSomeoneElse && <div className="mb-2">
+                    You are viewing this test as <b>{studentUser?.givenName} {studentUser?.familyName}</b>.{quizAssignmentId && <> <Link to={`/test/assignment/${quizAssignmentId}/feedback`}>Click here</Link> to return to the teacher test feedback page.</>}
+                </div>}
                 <QuizRubric {...props}/>
                 <QuizContents {...props} />
             </div>

@@ -6,6 +6,7 @@ import plaintext from 'highlight.js/lib/languages/plaintext'
 import sql from 'highlight.js/lib/languages/sql'
 import java from 'highlight.js/lib/languages/java'
 import vbnet from 'highlight.js/lib/languages/vbnet'
+import haskell from 'highlight.js/lib/languages/haskell'
 import {LanguageFn} from "highlight.js";
 
 const importHljsCore = import("highlight.js/lib/core");
@@ -18,6 +19,7 @@ function registerLanguages() {
         hljs.registerLanguage('python', python);
         hljs.registerLanguage('php', php);
         hljs.registerLanguage('csharp', csharp);
+        hljs.registerLanguage('haskell', haskell);
         hljs.registerLanguage('plaintext', plaintext);
         hljs.registerLanguage('assembly', plaintext);
         hljs.registerLanguage('sql', sql);

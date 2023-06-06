@@ -1485,18 +1485,6 @@ export const recordEventAttendance = (eventId: string, userId: number, attendanc
     }
 };
 
-// Content errors
-export const getAdminContentErrors = () => async (dispatch: Dispatch<Action>) => {
-    dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST});
-    try {
-        const errorsResponse = await api.admin.getContentErrors();
-        dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS, errors: errorsResponse.data});
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("Loading Content Errors Failed", e));
-    }
-};
-
 // Concepts
 export const fetchConcepts = (conceptIds?: string, tagIds?: string) => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONCEPTS_REQUEST});
