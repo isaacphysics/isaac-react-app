@@ -9,11 +9,11 @@ import {
     adminUserSearchRequest,
     AppState,
     getUserIdSchoolLookup,
-    mergeUsers,
     resetPassword,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useMergeUsersMutation
 } from "../../state";
 import {EmailVerificationStatus, UserRole} from "../../../IsaacApiTypes";
 import {DateString} from "../elements/DateString";
@@ -37,8 +37,11 @@ export const AdminUserManager = () => {
         postcodeRadius: "FIVE_MILES",
     });
     const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
+
+    const [mergeUsers] = useMergeUsersMutation();
     const [mergeTargetId, setMergeTargetId] = useState<string>("");
     const [mergeSourceId, setMergeSourceId] = useState<string>("");
+
     const userIdToSchoolMapping = useAppSelector(selectors.admin.userSchoolLookup);
     const currentUser = useAppSelector((state: AppState) => state?.user?.loggedIn && state.user || null);
     let promotableRoles: UserRole[] = ["STUDENT", "TUTOR", "TEACHER", "EVENT_LEADER", "CONTENT_EDITOR"];
@@ -129,6 +132,15 @@ export const AdminUserManager = () => {
     const attemptPasswordReset = (email: string | undefined) => {
         if (isDefined(email)) {
             dispatch(resetPassword({email: email}));
+        }
+    };
+
+    const confirmMergeUsers = () => {
+        const sourceId = Number(mergeSourceId);
+        const targetId = Number(mergeTargetId);
+        const confirmMerge = window.confirm(`Are you sure you want to merge user ${sourceId} into user ${targetId}? This will delete user ${sourceId}.`);
+        if (confirmMerge) {
+            mergeUsers({sourceId, targetId});
         }
     };
 
@@ -366,7 +378,7 @@ export const AdminUserManager = () => {
                             <RS.Button
                                 type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
                                 disabled={mergeTargetId === "" || Number.isNaN(Number(mergeTargetId)) || mergeSourceId === "" || Number.isNaN(Number(mergeSourceId))}
-                                onClick={() => dispatch(mergeUsers(Number(mergeTargetId), Number(mergeSourceId)))}
+                                onClick={confirmMergeUsers}
                             >
                                 Merge
                             </RS.Button>

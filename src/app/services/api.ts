@@ -200,9 +200,6 @@ export const api = {
         },
         getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
             return endpoint.get(`/admin/stats`)
-        },
-        mergeUsers: (targetId: number, sourceId: number) => {
-            return endpoint.post(`/admin/users/merge`, {targetId, sourceId})
         }
     },
     authorisations: {

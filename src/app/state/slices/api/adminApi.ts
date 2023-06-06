@@ -4,7 +4,7 @@ import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
 import {ContentErrorsResponse} from "../../../../IsaacAppTypes";
 
-const updatedIsaacApi = isaacApi.enhanceEndpoints({
+export const adminApi = isaacApi.enhanceEndpoints({
     addTagTypes: ["MisuseStatistics"],
 }).injectEndpoints({
     endpoints: (build) => ({
@@ -48,6 +48,23 @@ const updatedIsaacApi = isaacApi.enhanceEndpoints({
                 errorTitle: "Loading Content Errors Failed",
             })
         }),
+
+        mergeUsers: build.mutation<void, {targetId: number, sourceId: number}>({
+            query: ({targetId, sourceId}) => ({
+                url: "/admin/users/merge",
+                method: "POST",
+                body: {
+                    targetId,
+                    sourceId
+                }
+            }),
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "Merging users failed",
+                onQuerySuccess: ({targetId, sourceId}, _, {dispatch}) => {
+                    dispatch(showSuccessToast("Users merged", `User with id: ${sourceId} was merged into user with id: ${targetId}`));
+                }
+            })
+        }),
     })
 });
 
@@ -55,4 +72,5 @@ export const {
     useGetMisuseStatisticsQuery,
     useResetMisuseMonitorMutation,
     useGetContentErrorsQuery,
-} = updatedIsaacApi;
+    useMergeUsersMutation,
+} = adminApi;
