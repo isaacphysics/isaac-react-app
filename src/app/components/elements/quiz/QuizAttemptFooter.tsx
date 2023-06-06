@@ -5,14 +5,14 @@ import React, {useState} from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {isDefined, siteSpecific} from "../../../services";
+import {siteSpecific} from "../../../services";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
     return ids[0] + "|" + ids[1];
 }
 
-export function QuizAttemptFooter(props: QuizAttemptProps) {
+export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: string}) {
     const {attempt, page, sections, questions, pageLink} = props;
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -23,9 +23,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
             setSubmitting(true);
             if (await dispatch(markQuizAttemptAsComplete(attempt.id as number))) {
                 dispatch(showToast({color: "success", title: "Test submitted successfully", body: "Your answers have been submitted successfully.", timeout: 5000}));
-                if (isDefined(props.feedbackLink)) {
-                    history.push(props.feedbackLink);
-                }
+                history.push(props.feedbackLink);
             }
         } finally {
             setSubmitting(false);

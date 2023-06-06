@@ -39,7 +39,7 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
     const feedbackLink = `/test/attempt/${attempt?.id}/feedback`;
 
     // Importantly, these are only used if attempt is defined
-    const subProps: QuizAttemptProps = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
+    const subProps: QuizAttemptProps & {feedbackLink: string} = {attempt: attempt as QuizAttemptDTO, page: pageNumber, questions, sections, pageLink, pageHelp, user, feedbackLink};
 
     return <Container className={`mb-5 ${attempt?.quiz?.subjectId}`}>
         <ShowLoading until={attempt || error}>
