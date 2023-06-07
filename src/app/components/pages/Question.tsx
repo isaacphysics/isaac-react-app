@@ -11,8 +11,6 @@ import {
     fastTrackProgressEnabledBoards,
     generateQuestionTitle,
     isStudent,
-    TAG_ID,
-    tags,
     useNavigation
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -35,15 +33,6 @@ import {ReportButton} from "../elements/ReportButton";
 interface QuestionPageProps extends RouteComponentProps<{questionId: string}> {
     questionIdOverride?: string;
     match: match & { params: { questionId: string } };
-}
-
-
-
-function getTags(docTags?: string[]) {
-        if (!docTags) return [];
-
-    return tags.getByIdsAsHierarchy(docTags as TAG_ID[])
-        .map(tag => ({title: tag.title}));
 }
 
 export const Question = withRouter(({questionIdOverride, match, location}: QuestionPageProps) => {
@@ -70,7 +59,7 @@ export const Question = withRouter(({questionIdOverride, match, location}: Quest
                     {/*High contrast option*/}
                     <TitleAndBreadcrumb
                         currentPageTitle={generateQuestionTitle(doc)}
-                        intermediateCrumbs={[...navigation.breadcrumbHistory, ...getTags(doc.tags)]}
+                        intermediateCrumbs={[...navigation.breadcrumbHistory]}
                         collectionType={navigation.collectionType}
                         audienceViews={determineAudienceViews(doc.audience, navigation.creationContext)}
                     >
