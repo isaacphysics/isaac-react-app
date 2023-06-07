@@ -19,7 +19,6 @@ import {Immutable} from "immer";
 ReactGA.initialize(GOOGLE_ANALYTICS_ACCOUNT_ID);
 ReactGA4.initialize(GOOGLE_ANALYTICS_4_MEASUREMENT_ID);
 ReactGA.set({ anonymizeIp: true });
-ReactGA4.set({ anonymizeIp: true });
 
 const trackPage = (page: string, options?: FieldsObject) => {
     ReactGA.set({ page, ...options });
