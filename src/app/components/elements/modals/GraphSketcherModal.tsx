@@ -68,15 +68,6 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     }, []);
 
     useEffect(() => {
-        if (isDefined(modalSketch)) {
-            modalSketch.state = {
-                ...modalSketch.state,
-                curves: initialState?.curves ?? modalSketch.state.curves ?? []
-            };
-        }
-    }, [initialState]);
-
-    useEffect(() => {
         if (modalSketch) {
             modalSketch.drawingColorName = drawingColorName;
         }
