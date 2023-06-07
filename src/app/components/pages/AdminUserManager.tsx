@@ -297,7 +297,7 @@ export const AdminUserManager = () => {
                         thenRender={searchResults => {
                             return searchResults.length > 0 ?
                                 <div className="overflow-auto">
-                                    <RS.Table bordered>
+                                    <RS.Table bordered data-testid="user-search-results-table">
                                         <thead>
                                         <tr>
                                             <th>
@@ -315,7 +315,7 @@ export const AdminUserManager = () => {
                                         </thead>
                                         <tbody>
                                         {searchResults.map((user) =>
-                                            <tr key={user.id}>
+                                            <tr key={user.id} data-testid="user-search-result-row">
                                                 <td className="text-center">
                                                     <RS.Input
                                                         type="checkbox" className="m-0 position-relative"

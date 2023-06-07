@@ -7,7 +7,7 @@ import {
     mockGroups,
     mockMyAssignments,
     mockNewsPods, mockPage,
-    mockQuizAssignments,
+    mockQuizAssignments, mockSchool,
     mockSetAssignments,
     mockUser,
     mockUserAuthSettings,
@@ -16,6 +16,7 @@ import {
 import {API_PATH} from "../app/services";
 import produce from "immer";
 import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
+import {School} from "../IsaacAppTypes";
 
 export const handlers = [
     rest.get(API_PATH + "/gameboards/user_gameboards", (req, res, ctx) => {
@@ -190,15 +191,27 @@ export const handlers = [
             ctx.status(200),
             ctx.json({results: [], totalResults: 0})
         );
-    })
+    }),
+    rest.get(API_PATH + "/users/school_lookup", (req, res, ctx) => {
+        const {user_ids} = req.params;
+        // Turn into map from user id to school
+        const schools: {[userId: number]: School} = (user_ids as string).split(",").reduce((acc: any, userId: string) => {
+            acc[userId] = mockSchool;
+            return acc;
+        }, {});
+        return res(
+            ctx.status(200),
+            ctx.json(schools)
+        );
+    }),
 ];
 
 // --- Extra handler builder functions ---
 
-export const buildNewGroupHandler = (newGroup: any) => jest.fn((req, res, ctx) => {
+export const basicHandlerThatReturns = (data: any) => jest.fn((req, res, ctx) => {
     return res(
         ctx.status(200),
-        ctx.json(newGroup)
+        ctx.json(data)
     );
 });
 export const buildAuthTokenHandler = (newGroup: any, token: string) => jest.fn((req, res, ctx) => {

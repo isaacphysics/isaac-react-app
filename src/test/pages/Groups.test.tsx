@@ -19,7 +19,7 @@ import {
     buildAuthTokenHandler,
     buildGroupHandler,
     buildGroupMembershipsHandler,
-    buildNewGroupHandler,
+    basicHandlerThatReturns,
     buildNewManagerHandler
 } from "../../mocks/handlers";
 
@@ -114,7 +114,7 @@ describe("Groups", () => {
             ownerSummary: buildMockUserSummary(mockUser, false),
             archived: false
         };
-        const newGroupHandler = buildNewGroupHandler(mockNewGroup);
+        const newGroupHandler = basicHandlerThatReturns(mockNewGroup);
         const authTokenHandler = buildAuthTokenHandler(mockNewGroup, mockToken);
         renderTestEnvironment({
             role: "TUTOR",
@@ -466,7 +466,7 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.post(API_PATH + "/groups", buildNewGroupHandler(mockNewGroup)),
+                rest.post(API_PATH + "/groups", basicHandlerThatReturns(mockNewGroup)),
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M")),
                 rest.post(API_PATH + `/groups/${mockNewGroup.id}/manager`, newGroupManagerHandler)
             ]
@@ -496,7 +496,7 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
-                rest.post(API_PATH + "/groups", buildNewGroupHandler(mockNewGroup)),
+                rest.post(API_PATH + "/groups", basicHandlerThatReturns(mockNewGroup)),
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M"))
             ]
         });

@@ -25,7 +25,7 @@ interface RenderTestEnvironmentOptions {
     initalRouteEntries?: string[];
     extraEndpoints?: RestHandler<any>[];
 }
-// Flexible helper function to setup different kinds of test environments. You can:
+// Flexible helper function to set up different kinds of test environments. You can:
 //  - Choose the role of the mock user (defaults to ADMIN)
 //  - Apply an arbitrary transformation to the mock user
 //  - Choose which page component you want  to render (if it is omitted, IsaacApp will be rendered)

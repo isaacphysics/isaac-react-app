@@ -2,6 +2,7 @@ import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
 import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
+import {School} from "../IsaacAppTypes";
 
 export const mockUser = {
     givenName: "Test",
@@ -4811,3 +4812,11 @@ export const mockPage = (pageId: string) => ({
    "published": true,
    "tags": []
 });
+
+export const mockSchool: School = {
+    name: "University of Cambridge",
+    urn: "133801",
+    postcode: "CB2 1TN",
+    closed: false,
+    dataSource: "somewhere-over-the-rainbow",
+};

@@ -3,6 +3,8 @@ import {server} from "../mocks/server";
 import "./matchers";
 
 global.window.scrollTo = jest.fn();
+global.window.HTMLElement.prototype.scrollTo = jest.fn();
+global.window.HTMLElement.prototype.scrollIntoView = jest.fn();
 jest.mock("react-ga"); // Google Analytics requires a DOM.window which doesn't exist in test
 jest.mock("../app/services/websockets"); // MSW can't handle websockets just yet
 
@@ -17,7 +19,7 @@ beforeAll(() => {
 // so they don't affect other tests.
 afterEach(() => {
     jest.clearAllMocks();
-    server.resetHandlers()
+    server.resetHandlers();
 });
 // Clean up after the tests are finished.
 afterAll(() => server.close());
