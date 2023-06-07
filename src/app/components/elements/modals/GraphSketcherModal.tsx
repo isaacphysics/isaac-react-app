@@ -12,7 +12,7 @@ import {calculateHexagonProportions, Hexagon} from "../svg/Hexagon";
 import classNames from "classnames";
 import {closeActiveModal, isaacApi, openActiveModal, store, useAppDispatch} from "../../../state";
 import {PageFragment} from "../PageFragment";
-import {isDefined, isStaff} from "../../../services";
+import {isStaff} from "../../../services";
 import {Immutable} from "immer";
 import {PotentialUser} from "../../../../IsaacAppTypes";
 
