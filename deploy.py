@@ -112,7 +112,7 @@ def update_config(ctx):
     print(f"# Update configuration files")
     ask_to_run_command(f"cd /local/src/isaac-sops-config && git pull")
     print(f"# Decrypt configuration files")
-    ask_to_run_command(f"cd /local/src/isaac-sops-config && ./deploy.sh {ctx['env']} /local/data/isaac-sops-config-decrypted")
+    ask_to_run_command(f"cd /local/src/isaac-sops-config && ./deploy_in_docker.sh /local/data/keys/$(hostname)_gpg.ppk /local/src/isaac-sops-config /local/data/isaac-sops-config-decrypted {ctx['env']}")
 
 
 def run_db_migrations(ctx):
