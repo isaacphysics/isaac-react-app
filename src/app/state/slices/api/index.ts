@@ -15,6 +15,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {
     AssignmentDTO,
     AssignmentFeedbackDTO,
+    ChoiceDTO,
     GameboardDTO,
     GameboardListDTO,
     IsaacConceptPageDTO,
@@ -738,6 +739,18 @@ const isaacApi = createApi({
             providesTags: ["ContentErrors"],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading Content Errors Failed",
+            })
+        }),
+
+        generateAnswerSpecification: build.mutation<string[], ChoiceDTO>({
+            query: (choice) => ({
+                url: "/questions/generateSpecification",
+                method: "POST",
+                body: choice
+            }),
+            transformResponse: (response: {results: string[], totalResults: number}) => response.results,
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "There was a problem generating an answer specification",
             })
         }),
     })

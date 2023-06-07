@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from "react";
 import {GraphChoiceDTO, IsaacGraphSketcherQuestionDTO} from "../../../IsaacApiTypes";
 import GraphSketcherModal from "../elements/modals/GraphSketcherModal";
 import {GraphSketcher, makeGraphSketcher, LineType, GraphSketcherState} from "isaac-graph-sketcher";
-import {isStaff, useCurrentQuestionAttempt} from "../../services";
+import {useCurrentQuestionAttempt} from "../../services";
 import {IsaacQuestionProps} from "../../../IsaacAppTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {selectors, useAppSelector} from "../../state";
@@ -88,11 +88,11 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             <div ref={previewRef} className={`${questionId}-graph-sketcher-preview`} />
         </div>
         {modalVisible && <GraphSketcherModal
+            user={user}
             close={closeModal}
             onGraphSketcherStateChange={setPendingAttemptState}
             initialState={initialState}
             question={doc}
-            allowMultiValuedFunctions={isStaff(user)}
         />}
     </div>
 };

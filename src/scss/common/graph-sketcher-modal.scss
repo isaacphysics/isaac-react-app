@@ -16,6 +16,15 @@
         height: 100%;
         z-index: 255;
 
+        code#graph-sketcher-ui-debug-window {
+            position: absolute;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            // Cursor shouldn't interact with the debug window
+            pointer-events: none;
+            max-width: max(50%, 400px);
+        }
+
         .button {
             display: block;
             position: absolute;
@@ -77,6 +86,14 @@
                 background-image: url('/assets/inequality-help-phy.svg');
             }
 
+            &#graph-sketcher-ui-debug-button {
+                background-image: url('/assets/hex-debug.svg');
+
+                &:hover {
+                    background-image: url('/assets/hex-debug-active.svg');
+                }
+            }
+
             &#graph-sketcher-ui-bezier-button {
                 background-image: url('/assets/graph-sketcher-polynomial.svg');
 
@@ -135,6 +152,11 @@
             $button-size: 90px;
             $button-spacing: 10px;
 
+            #graph-sketcher-ui-debug-window {
+                top: 3 * $button-spacing + $button-size;
+                left: 2 * $button-spacing;
+            }
+
             .button {
                 width: $button-size;
                 height: $button-size;
@@ -167,6 +189,11 @@
                 &#graph-sketcher-ui-help-button {
                     bottom: 3 * $button-spacing + $button-size;
                     right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-debug-button {
+                    top: 2 * $button-spacing;
+                    left: 2 * $button-spacing;
                 }
 
                 &#graph-sketcher-ui-bezier-button {
@@ -192,6 +219,11 @@
             $button-size: 61px;
             $button-spacing: 8px;
 
+            #graph-sketcher-ui-debug-window {
+                top: 3 * $button-spacing + $button-size;
+                left: 2 * $button-spacing;
+            }
+
             .button {
                 width: $button-size;
                 height: $button-size;
@@ -224,6 +256,11 @@
                 &#graph-sketcher-ui-help-button {
                     bottom: 3 * $button-spacing + $button-size;
                     right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-debug-button {
+                    top: 2 * $button-spacing;
+                    left: 2 * $button-spacing;
                 }
 
                 &#graph-sketcher-ui-bezier-button {

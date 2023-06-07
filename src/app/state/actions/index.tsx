@@ -959,18 +959,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
     }
 };
 
-// Generate answer spec for graph sketcher
-export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST});
-        const specResponse = await api.questions.generateSpecification(graphChoice);
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: specResponse.data });
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("There was a problem generating a graph specification", e));
-    }
-}
-
 // Content version
 export const getContentVersion = () => async (dispatch: Dispatch<Action>) => {
     dispatch({type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST});
