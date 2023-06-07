@@ -9,7 +9,6 @@ export interface ConceptGameboardButtonProps {
 
 export const ConceptGameboardButton = ({conceptId, className} : ConceptGameboardButtonProps) => {
 
-    // Currently PHY doesn't use this
     const gameboardGenerateHref = `/gameboard_builder?concepts=${conceptId}`;
 
     return <Link className={classNames(className, "btn btn-sm btn-primary")} to={gameboardGenerateHref} >
