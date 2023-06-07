@@ -22,11 +22,15 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
     const initialState: GraphSketcherState | undefined = currentAttempt?.value ? JSON.parse(currentAttempt?.value) : undefined;
     const previewRef = useRef<HTMLDivElement>(null);
 
+    // This is used to defer the updating of the current attempt until the user closes the modal.
+    const [pendingAttemptState, setPendingAttemptState] = useState<GraphSketcherState | undefined>(initialState);
+
     function openModal() {
         !readonly && setModalVisible(true);
     }
 
     function closeModal() {
+        dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(pendingAttemptState)});
         setModalVisible(false);
     }
 
@@ -43,12 +47,6 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             window.removeEventListener('keyup', handleKeyPress);
         }
     }, []);
-
-    const onGraphSketcherStateChange = (newState: GraphSketcherState) => {
-        // TODO do not update the current attempt until the modal is closed! Otherwise the user is likely to hit the
-        //  attempt limit before they have finished drawing.
-        dispatchSetCurrentAttempt({type: 'graphChoice', value: JSON.stringify(newState)});
-    };
 
     useEffect(() => {
         const { sketch, p } = makeGraphSketcher(previewRef.current || undefined, 600, 400, { previewMode: true, initialCurves: initialState?.curves });
@@ -91,7 +89,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         </div>
         {modalVisible && <GraphSketcherModal
             close={closeModal}
-            onGraphSketcherStateChange={onGraphSketcherStateChange}
+            onGraphSketcherStateChange={setPendingAttemptState}
             initialState={initialState}
             question={doc}
             allowMultiValuedFunctions={isStaff(user)}
