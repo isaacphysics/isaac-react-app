@@ -33,12 +33,6 @@ export const selectors = {
         graphSketcherSpec: (state: AppState) => state?.graphSketcherSpec,
     },
 
-    segue: {
-        contentVersion: (state: AppState) => state?.contentVersion || null,
-        versionOrUnknown: (state: AppState) => state?.constants?.segueVersion || "unknown",
-        environmentOrUnknown: (state: AppState) => state?.constants?.segueEnvironment || "unknown",
-    },
-
     error: {
         general: (state: AppState) => state?.error && state.error.type == "generalError" && state.error.generalError || null,
     },

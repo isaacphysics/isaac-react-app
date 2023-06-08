@@ -294,25 +294,6 @@ export const api = {
             return endpoint.get(`/pages/topics/${topicName}`);
         }
     },
-    contentVersion: {
-        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
-            return endpoint.get(`/info/content_versions/live_version`);
-        },
-        setLiveVersion(version: string): AxiosPromise {
-            return endpoint.post(`/admin/live_version/${version}`);
-        }
-    },
-    constants: {
-        getUnits: (): AxiosPromise<string[]> => {
-            return endpoint.get(`/content/units`);
-        },
-        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
-            return endpoint.get(`/info/segue_version`);
-        },
-        getSegueEnvironment: (): AxiosPromise<{segueEnvironment: string}> => {
-            return endpoint.get(`/info/segue_environment`);
-        }
-    },
     schools: {
         search: (query: string): AxiosPromise<AppTypes.School[]> => {
             return endpoint.get(`/schools/?limit=3&query=${encodeURIComponent(query)}`);

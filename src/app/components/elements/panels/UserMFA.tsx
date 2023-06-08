@@ -2,7 +2,7 @@ import {Button, CardBody, Col, Form, FormGroup, Input, Label, Row} from "reactst
 import React, {useMemo, useState} from "react";
 import {ValidationUser} from "../../../../IsaacAppTypes";
 import {UserAuthenticationSettingsDTO} from "../../../../IsaacApiTypes";
-import {isaacApi, selectors, useAppSelector} from "../../../state";
+import {isaacApi} from "../../../state";
 import {isDefined, SITE_TITLE} from "../../../services";
 import QRCode from 'qrcode';
 
@@ -13,7 +13,7 @@ interface UserMFAProps {
 }
 
 const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProps) => {
-    const segueEnvironment = useAppSelector(selectors.segue.environmentOrUnknown);
+    const {data: segueEnvironment} = isaacApi.endpoints.getSegueEnvironment.useQuery();
     const [successfulMFASetup, setSuccessfulMFASetup] = useState(false);
     const [mfaVerificationCode, setMFAVerificationCode] = useState<string | undefined>(undefined);
     const [qrCodeStringBase64SVG, setQrCodeStringBase64SVG] = useState<string | undefined>(undefined);

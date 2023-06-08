@@ -2,8 +2,8 @@ import React, {lazy, Suspense, useEffect} from 'react';
 import {
     AppState,
     fetchGlossaryTerms,
+    isaacApi,
     openActiveModal,
-    requestConstantsSegueEnvironment,
     requestCurrentUser,
     requestNotifications,
     selectors,
@@ -87,7 +87,7 @@ export const IsaacApp = () => {
     const dispatch = useAppDispatch();
     const serverError = useAppSelector((state: AppState) => state && state.error && state.error.type == "serverError" || false);
     const goneAwayError = useAppSelector((state: AppState) => state && state.error && state.error.type == "goneAwayError" || false);
-    const segueEnvironment = useAppSelector((state: AppState) => state && state.constants && state.constants.segueEnvironment || "unknown");
+    const {data: segueEnvironment} = isaacApi.endpoints.getSegueEnvironment.useQuery();
     const notifications = useAppSelector((state: AppState) => state && state.notifications && state.notifications.notifications || []);
     const user = useAppSelector(selectors.user.orNull);
 
@@ -100,7 +100,6 @@ export const IsaacApp = () => {
         if (!(pathname.includes("/auth/") && pathname.includes("/callback"))) {
             dispatch(requestCurrentUser());
         }
-        dispatch(requestConstantsSegueEnvironment());
         dispatch(fetchGlossaryTerms());
     }, [dispatch]);
 
