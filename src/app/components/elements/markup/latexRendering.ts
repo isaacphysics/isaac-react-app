@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {isaacApi, selectors, useAppSelector} from "../../../state";
+import {selectors, useAppSelector, useGetSegueEnvironmentQuery} from "../../../state";
 import {FigureNumberingContext, FigureNumbersById, PotentialUser} from "../../../../IsaacAppTypes";
 import he from "he";
 import {dropZoneRegex, renderA11yString, BOOLEAN_NOTATION, isAda, useUserContext} from "../../../services";
@@ -330,7 +330,7 @@ export function katexify(html: string, user: Immutable<PotentialUser> | null, bo
 // A hook wrapper around katexify that gets its required parameters from the current redux state and existing figure numbering context
 export const useRenderKatex = () => {
     const user = useAppSelector(selectors.user.orNull);
-    const {data: segueEnvironment} = isaacApi.endpoints.getSegueEnvironment.useQuery();
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const {preferredBooleanNotation} = useUserContext();
     const figureNumbers = useContext(FigureNumberingContext);
 

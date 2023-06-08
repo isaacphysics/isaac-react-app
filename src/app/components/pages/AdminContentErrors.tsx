@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {isaacApi} from "../../state";
+import {useGetContentErrorsQuery} from "../../state";
 import {Col, Container, Input, Label, Row, Table} from "reactstrap";
 import {EDITOR_URL, selectOnChange} from "../../services";
 import {ContentErrorItem} from "../../../IsaacAppTypes";
@@ -35,7 +35,7 @@ enum PUBLISHED_FILTER {
 }
 
 export const AdminContentErrors = () => {
-    const errorsQuery = isaacApi.endpoints.getContentErrors.useQuery();
+    const errorsQuery = useGetContentErrorsQuery();
 
     const [errorFilter, setErrorFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || errorStr.toLowerCase().includes(errorFilter.toLowerCase());

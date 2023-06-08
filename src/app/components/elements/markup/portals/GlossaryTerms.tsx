@@ -2,7 +2,7 @@ import {GlossaryTermDTO} from "../../../../../IsaacApiTypes";
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
 import {IsaacGlossaryTerm} from "../../../content/IsaacGlossaryTerm";
-import {useAppSelector, AppState, isaacApi} from "../../../../state";
+import {useAppSelector, AppState, useGetSegueEnvironmentQuery} from "../../../../state";
 import {v4 as uuid_v4} from "uuid";
 import {UncontrolledTooltip} from "reactstrap";
 import {PortalInHtmlHook} from "./utils";
@@ -33,7 +33,7 @@ function getTermFromCandidateTerms(candidateTerms: GlossaryTermDTO[]) {
 // See the comment on `PORTAL_HOOKS` constant for an explanation of how this works
 export const useGlossaryTermsInHtml: PortalInHtmlHook = (html) => {
     const glossaryTerms = useAppSelector((state: AppState) => state && state.glossaryTerms);
-    const {data: segueEnvironment} = isaacApi.endpoints.getSegueEnvironment.useQuery();
+    const {data: segueEnvironment} = useGetSegueEnvironmentQuery();
     const [componentUuid] = useState(uuid_v4().slice(0, 8));
 
     if (!glossaryTerms) return [html, () => []];

@@ -21,12 +21,14 @@ import {
 import {Link, useLocation} from "react-router-dom";
 import {
     assignGameboard,
-    isaacApi,
     openIsaacBooksModal,
     selectors,
     setAssignBoardPath,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetGroupsQuery,
+    useGetMySetAssignmentsQuery,
+    useUnassignGameboardMutation
 } from "../../state";
 import {ShowLoading} from "../handlers/ShowLoading";
 import range from "lodash/range";
@@ -160,7 +162,7 @@ type SetAssignmentsModalProps = {
 const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
     const {isOpen, toggle, allowScheduling, board, assignees} = props;
 
-    const [ unassignBoard ] = isaacApi.endpoints.unassignGameboard.useMutation();
+    const [ unassignBoard ] = useUnassignGameboardMutation();
 
     const hasStarted = (a : {startDate?: Date | number}) => !a.startDate || (Date.now() > a.startDate.valueOf());
 
@@ -454,8 +456,8 @@ export const SetAssignments = () => {
     // We know the user is logged in and is at least a teacher in order to visit this page
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const userPreferences = useAppSelector(selectors.user.preferences);
-    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
-    const { data: assignmentsSetByMe } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
+    const { data: groups } = useGetGroupsQuery(false);
+    const { data: assignmentsSetByMe } = useGetMySetAssignmentsQuery(undefined);
     const groupsByGameboard = useMemo<{[gameboardId: string]: BoardAssignee[]}>(() =>
         assignmentsSetByMe?.reduce((acc, assignment) => {
             if (!isDefined(assignment?.gameboardId) || !isDefined(assignment?.groupId)) return acc;

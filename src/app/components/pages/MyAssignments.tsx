@@ -1,5 +1,5 @@
 import React, {MouseEvent, useEffect, useState} from "react";
-import {isaacApi, logAction, useAppDispatch} from "../../state";
+import {logAction, useAppDispatch, useGetMyAssignmentsQuery} from "../../state";
 import {AssignmentDTO, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {Card, CardBody, Col, Container, Input, Label, Nav, NavItem, NavLink, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
@@ -15,7 +15,6 @@ import {Assignments} from "../elements/Assignments";
 import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 import classNames from "classnames";
 import {PageFragment} from "../elements/PageFragment";
-import {RenderNothing} from "../elements/RenderNothing";
 
 export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
@@ -23,7 +22,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
 
     // TODO don't refetch "my assignments" every component mount, an instead invalidate cache when actions occur
     //  that require refetching.
-    const assignmentQuery = isaacApi.endpoints.getMyAssignments.useQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
+    const assignmentQuery = useGetMyAssignmentsQuery(undefined, {refetchOnMountOrArgChange: true, refetchOnReconnect: true});
 
     const [activeTab, setActiveTab] = useState(0);
     const [assignmentTitleFilter, setAssignmentTitleFilter] = useState<string>("");
