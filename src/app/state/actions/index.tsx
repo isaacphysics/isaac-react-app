@@ -361,8 +361,8 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
         dispatch(showToast({
             color: "success",
             title: "Password reset email sent",
-            body: `A password reset email has been sent to '${params.email}'`,
-            timeout: 5000
+            body: `If an account exists with the email address ${params.email}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.`,
+            timeout: 10000
         }) as any);
     } catch (e: any) {
         dispatch(showAxiosErrorToastIfNeeded("Password reset failed", e));
