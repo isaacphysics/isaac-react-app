@@ -6,7 +6,7 @@ import {
     UserSummaryDTO
 } from "../../../../IsaacApiTypes";
 import React from "react";
-import {below, extractTeacherName, isDefined, isTeacherOrAbove, siteSpecific, useDeviceSize} from "../../../services";
+import {below, extractTeacherName, isDefined, isTeacherOrAbove, useDeviceSize} from "../../../services";
 import {Spacer} from "../Spacer";
 import {formatDate} from "../DateString";
 import {Link} from "react-router-dom";
@@ -147,7 +147,7 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
 
     return section ?
         <Row className="question-content-container">
-            <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4 question-panel">
+            <Col md={{size: 8, offset: 2}} className="py-4 question-panel">
                 <UserContextPicker className="no-print text-right"/>
                 <Row>
                     {rubric && renderRubric && <Col className="text-right">
@@ -175,8 +175,8 @@ function QuizSection({attempt, page}: { attempt: QuizAttemptDTO, page: number })
     ;
 }
 
-export const myQuizzesCrumbs = [{title: siteSpecific("My Tests", "My tests"), to: `/tests`}];
-export const teacherQuizzesCrumbs = [{title: siteSpecific("Set Tests", "Set tests"), to: `/set_tests`}];
+export const myQuizzesCrumbs = [{title: "My tests", to: `/tests`}];
+export const teacherQuizzesCrumbs = [{title: "Set tests", to: `/set_tests`}];
 const QuizTitle = ({attempt, page, pageLink, pageHelp, preview, studentUser, user}: QuizAttemptProps) => {
     let quizTitle = attempt.quiz?.title || attempt.quiz?.id || "Test";
     if (isDefined(attempt.completedDate)) {

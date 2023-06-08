@@ -1,4 +1,3 @@
-import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
 import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
@@ -4646,7 +4645,7 @@ export const mockUserAuthSettings = {
     id: mockUser.id
 };
 
-const newsPodTag = siteSpecific("physics", "news");
+const newsPodTag = "news";
 export const mockNewsPods = {
     results: [
         {

@@ -4,28 +4,14 @@ import classnames from "classnames";
 import {Link} from "react-router-dom";
 import {AugmentedEvent} from "../../../../IsaacAppTypes";
 import {DateString} from "../DateString";
-import {formatEventCardDate, isPhy} from "../../../services";
+import {formatEventCardDate} from "../../../services";
 
 export const EventCard = ({event, pod = false}: {event: AugmentedEvent; pod?: boolean}) => {
     const {id, title, subtitle, eventThumbnail, location, hasExpired, date, numberOfPlaces, eventStatus, isCancelled} = event;
 
-    const isVirtualEvent = event.tags?.includes("virtual");
-    const isTeacherEvent = event.tags?.includes("teacher");
-    const isStudentEvent = event.tags?.includes("student");
-
     return <RS.Card className={classnames("card-neat", {'disabled text-muted': hasExpired || isCancelled, 'm-4': pod, 'mb-4': !pod})}>
         {eventThumbnail && <div className={'event-card-image text-center'}>
             <RS.CardImg aria-hidden={true} top src={eventThumbnail.src} alt={"" /* Decorative image, should be hidden from screenreaders */} />
-            {
-                isPhy && (hasExpired ? <div className={"event-card-image-banner disabled"}>This event has expired</div> :
-                    ((isVirtualEvent || isTeacherEvent || isStudentEvent) &&
-                        <div className={"event-card-image-banner"}>
-                            {isTeacherEvent && "Teacher "}
-                            {isStudentEvent && `${isTeacherEvent ? " and" : ""} Student `}
-                            event
-                            {isVirtualEvent && " (Virtual)"}
-                        </div>))
-            }
         </div>}
         <RS.CardBody className="d-flex flex-column">
             {title && <RS.CardTitle tag="h3">

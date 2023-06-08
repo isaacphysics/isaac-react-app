@@ -3,7 +3,7 @@ import React, {Dispatch, SetStateAction, useState} from "react";
 import {UserEmailPreferences} from "../../../../IsaacAppTypes";
 import {TrueFalseRadioInput} from "../inputs/TrueFalseRadioInput";
 import {AppState, useAppSelector} from "../../../state";
-import {SITE_SUBJECT_TITLE, siteSpecific, validateEmailPreferences} from "../../../services";
+import {SITE_SUBJECT_TITLE, validateEmailPreferences} from "../../../services";
 
 // Extended useState hook for email preferences, enforcing a default of {ASSIGNMENTS: true}
 export const useEmailPreferenceState = (initialEmailPreferences?: Nullable<UserEmailPreferences>): [Nullable<UserEmailPreferences>, Dispatch<SetStateAction<Nullable<UserEmailPreferences>>>] => {
@@ -26,18 +26,9 @@ interface UserEmailPreferencesProps {
 export const UserEmailPreference = ({emailPreferences, setEmailPreferences, submissionAttempted, idPrefix="my-account-"}: UserEmailPreferencesProps) => {
     const error = useAppSelector((state: AppState) => state && state.error);
     const isaacEmailPreferenceDescriptions = {
-        assignments: siteSpecific(
-            "Get notified when your teacher gives your group a new assignment.",
-            "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher."
-        ),
-        news: siteSpecific(
-            "New content and website feature updates, as well as interesting news about Isaac.",
-            "Be the first to know about new topics, new platform features, and our fantastic competition giveaways."
-        ),
-        events: siteSpecific(
-            "Information about new virtual or real world physics events.",
-            "Get valuable updates on our free student workshops/teacher CPD events happening near you."
-        )
+        assignments: "If you're a student, set this to 'Yes' to receive assignment notifications from your teacher.",
+        news: "Be the first to know about new topics, new platform features, and our fantastic competition giveaways.",
+        events: "Get valuable updates on our free student workshops/teacher CPD events happening near you."
     };
 
     let errorMessage = null;

@@ -18,10 +18,8 @@ import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
     below,
     isEventLeaderOrStaff,
-    isPhy,
     MANAGE_QUIZ_TAB,
     NOT_FOUND,
-    siteSpecific,
     useDeviceSize,
     useFilteredQuizzes
 } from "../../../services";
@@ -68,10 +66,10 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
 
                 <div className="mt-4 text-right">
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
-                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
+                        {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : "Cancel test"}
                     </RS.Button>
                     <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
-                        {siteSpecific("View Results", "View results")}
+                        View results
                     </RS.Button>
                 </div>
             </RS.CardBody>
@@ -84,7 +82,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const deviceSize = useDeviceSize();
     const hashAnchor = location.hash?.slice(1) ?? null;
     const [activeTab, setActiveTab] = useState(MANAGE_QUIZ_TAB.set);
-    const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
+    const pageTitle = "Manage tests";
     const quizAssignments = useAppSelector(selectors.quizzes.assignments);
 
     // Set active tab using hash anchor
@@ -94,7 +92,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
             (hashAnchor && MANAGE_QUIZ_TAB[hashAnchor as any]) ||
             MANAGE_QUIZ_TAB.set;
         setActiveTab(tab);
-        setPageTitle(siteSpecific((tab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
     }, [hashAnchor]);
 
     useEffect(() => {
@@ -102,10 +99,6 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     }, [dispatch]);
 
     const {titleFilter, setTitleFilter, filteredQuizzes} = useFilteredQuizzes(user);
-
-    function activeTabChanged(tabIndex: number) {
-        setPageTitle(siteSpecific((tabIndex !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"))
-    }
 
     const pageHelp = <span>
         Use this page to manage and set tests to your groups. You can assign any test the Isaac team have built.
@@ -121,10 +114,10 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     </>;
 
     return <RS.Container>
-        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
-        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
+        <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} />
+        <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab}>
             {{
-                [siteSpecific("Set Tests", "Available tests")]:
+                ["Available tests"]:
                 <ShowLoading until={filteredQuizzes}>
                     {filteredQuizzes && <>
                         <p>The following tests are available to set to your groups.</p>
@@ -142,7 +135,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                                     {quiz.summary && <div className="small text-muted d-none d-md-block">{quiz.summary}</div>}
                                     <Spacer />
                                     <RS.Button className={below["md"](deviceSize) ? "btn-sm" : ""} onClick={() => dispatch(showQuizSettingModal(quiz))}>
-                                        {siteSpecific("Set Test", "Set test")}
+                                        Set test
                                     </RS.Button>
                                 </div>
                                 <div className="d-none d-md-flex align-items-center">
@@ -155,7 +148,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
                     </>}
                 </ShowLoading>,
 
-                [siteSpecific("Manage Tests", "Previously set tests")]:
+                ["Previously set tests"]:
                 <ShowLoading until={quizAssignments} ifNotFound={<RS.Alert color="warning">Tests you have assigned have failed to load, please try refreshing the page.</RS.Alert>}>
                     {quizAssignments && quizAssignments !== NOT_FOUND && <>
                         {quizAssignments.length === 0 && <p>You have not set any tests to your groups yet.</p>}

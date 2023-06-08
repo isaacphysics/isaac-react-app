@@ -6,12 +6,9 @@ import {
     documentTypePathPrefix,
     filterAudienceViewsByProperties,
     generateQuestionTitle,
-    isCS,
     isIntendedAudience,
-    isPhy,
     notRelevantMessage,
     SEARCH_RESULT_TYPE,
-    siteSpecific,
     TAG_ID,
     TAG_LEVEL,
     tags,
@@ -25,7 +22,6 @@ import {v4 as uuid_v4} from "uuid";
 import {StageAndDifficultySummaryIcons} from "../StageAndDifficultySummaryIcons";
 import {ShortcutResponse} from "../../../../IsaacAppTypes";
 import {Markup} from "../markup";
-import classNames from "classnames";
 
 export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {item: ShortcutResponse; search?: string; displayTopicTitle?: boolean}) => {
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -44,18 +40,10 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
     if (itemSubject) {
         titleClasses += itemSubject.id;
     }
-    const iconClasses = `search-item-icon ${itemSubject?.id}-fill`;
     const hierarchyTags = tags.getByIdsAsHierarchy((item.tags || []) as TAG_ID[])
-        .filter((t, i) => !isCS || i !== 0); // CS always has Computer Science at the top level
+        .filter((t, i) => i !== 0); // CS always has Computer Science at the top level
 
-    const questionIcon = siteSpecific(
-        item.correct ?
-            <svg className={iconClasses}><use href={`/assets/tick-rp-hex.svg#icon`} xlinkHref={`/assets/tick-rp-hex.svg#icon`}/></svg> :
-            <svg className={iconClasses}><use href={`/assets/question-hex.svg#icon`} xlinkHref={`/assets/question-hex.svg#icon`}/></svg>,
-        item.correct ?
-            <img src="/assets/tick-rp.svg" alt=""/> :
-            <img src="/assets/question.svg" alt="Question page"/>
-    );
+    const questionIcon = item.correct ? <img src="/assets/tick-rp.svg" alt=""/> : <img src="/assets/question.svg" alt="Question page"/>;
 
     let typeLabel;
 
@@ -73,17 +61,13 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             icon = questionIcon;
             iconLabel = item.correct ? "Completed question icon" : "Question icon";
             audienceViews = filterAudienceViewsByProperties(determineAudienceViews(item.audience), AUDIENCE_DISPLAY_FIELDS);
-            if (isCS) {
-                typeLabel = "Question";
-            }
+            typeLabel = "Question";
             break;
         case (DOCUMENT_TYPE.CONCEPT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.CONCEPT]}/${item.id}`;
             icon = <img src="/assets/concept.svg" alt="Concept page"/>;
             iconLabel = "Concept page icon";
-            if (isCS) {
-                typeLabel = "Concept";
-            }
+            typeLabel = "Concept";
             break;
         case (DOCUMENT_TYPE.EVENT):
             linkDestination = `/${documentTypePathPrefix[DOCUMENT_TYPE.EVENT]}/${item.id}`;
@@ -116,7 +100,7 @@ export const ContentSummaryListGroupItem = ({item, search, displayTopicTitle}: {
             <div className="d-md-flex flex-fill">
                 <div className={"align-self-center " + titleClasses}>
                     <div className="d-flex">
-                        <Markup encoding={"latex"} className={classNames({"text-secondary": isPhy})}>
+                        <Markup encoding={"latex"}>
                             {title ?? ""}
                         </Markup>
                         {typeLabel && <span className={"small text-muted align-self-end d-none d-md-inline ml-2 mb-1"}>

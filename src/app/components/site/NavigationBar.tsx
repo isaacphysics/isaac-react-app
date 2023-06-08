@@ -2,24 +2,24 @@ import React from "react";
 import {
     LinkItem,
     MenuBadge,
-    NavigationBar,
+    NavBar,
     NavigationSection,
     useAssignmentsCount
-} from "../../navigation/NavigationBar";
-import {useAppSelector, selectors} from "../../../state";
+} from "../navigation/NavBar";
+import {useAppSelector, selectors} from "../../state";
 import {
     isAdmin,
     isAdminOrEventManager,
     isEventLeader,
     isStaff,
     isTeacherOrAbove, isTutorOrAbove
-} from "../../../services";
+} from "../../services";
 
-export const NavigationBarCS = () => {
+export const NavigationBar = () => {
     const user = useAppSelector(selectors.user.orNull);
     const {assignmentsCount, quizzesCount} = useAssignmentsCount();
 
-    return <NavigationBar>
+    return <NavBar>
         <NavigationSection title={<>My Isaac {<MenuBadge count={assignmentsCount + quizzesCount} message="incomplete assignments and tests" />}</>}>
             <LinkItem to="/assignments">My assignments {<MenuBadge count={assignmentsCount} message="incomplete assignments" />}</LinkItem>
             <LinkItem to="/my_gameboards">My gameboards</LinkItem>
@@ -70,5 +70,5 @@ export const NavigationBarCS = () => {
             {isStaff(user) && <LinkItem to="/admin/stats">Site statistics</LinkItem>}
             {isStaff(user) && <LinkItem to="/admin/content_errors">Content errors</LinkItem>}
         </NavigationSection>}
-    </NavigationBar>
+    </NavBar>
 };

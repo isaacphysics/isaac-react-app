@@ -18,14 +18,10 @@ import {
     getFilteredExamBoardOptions,
     getFilteredStageOptions,
     groupTagSelectionsByParent,
-    isCS,
-    isPhy,
-    isStaff,
     Item,
     logEvent,
     searchResultIsPublic,
     selectOnChange,
-    siteSpecific,
     SortOrder,
     sortQuestions,
     STAGE,
@@ -117,7 +113,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
         setSortState(newSortState);
     };
 
-    const tagOptions: { options: Item<string>[]; label: string }[] = isPhy ? tags.allTags.map(groupTagSelectionsByParent) : tags.allSubcategoryTags.map(groupTagSelectionsByParent);
+    const tagOptions: { options: Item<string>[]; label: string }[] = tags.allSubcategoryTags.map(groupTagSelectionsByParent);
     const groupBaseTagOptions: GroupBase<Item<string>>[] = tagOptions;
 
     useEffect(() => {
@@ -141,16 +137,13 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
     const addSelectionsRow = <div className="d-lg-flex align-items-baseline">
         <div className="flex-grow-1 mb-1">
             <strong className={selectedQuestions.size > 10 ? "text-danger" : ""}>
-                {siteSpecific(
-                    `${selectedQuestions.size} Question${selectedQuestions.size !== 1 ? "s" : ""} Selected`,
-                    `${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`
-                )}
+                {`${selectedQuestions.size} question${selectedQuestions.size !== 1 ? "s" : ""} selected`}
             </strong>
         </div>
         <div>
             <RS.Input
                 type="button"
-                value={siteSpecific("Add Selections to Gameboard", "Add selections to gameboard")}
+                value="Add selections to gameboard"
                 disabled={isEqual(new Set(originalSelectedQuestions.keys()), new Set(selectedQuestions.keys()))}
                 className={"btn btn-block btn-secondary border-0"}
                 onClick={() => {
@@ -164,26 +157,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
 
     return <div className="mb-4">
         <RS.Row>
-            {isPhy && <RS.Col lg={3} className="text-wrap my-2">
-                <RS.Label htmlFor="question-search-book">Book</RS.Label>
-                <Select
-                    inputId="question-search-book" isClearable placeholder="None" {...selectStyle}
-                    onChange={(e) => {
-                        selectOnChange(setSearchBook, true)(e);
-                        sortableTableHeaderUpdateState(questionsSort, setQuestionsSort, "title");
-                    }}
-                    options={[
-                        {value: "phys_book_step_up", label: "Step Up to GCSE Physics"},
-                        {value: "phys_book_gcse", label: "GCSE Physics"},
-                        {value: "physics_skills_19", label: "A Level Physics (3rd Edition)"},
-                        {value: "physics_linking_concepts", label: "Linking Concepts in Pre-Uni Physics"},
-                        {value: "maths_book_gcse", label: "GCSE Maths"},
-                        {value: "maths_book", label: "Pre-Uni Maths"},
-                        {value: "chemistry_16", label: "A-Level Physical Chemistry"}
-                    ]}
-                />
-            </RS.Col>}
-            <RS.Col lg={siteSpecific(9, 12)} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
+            <RS.Col lg={12} className={`text-wrap mt-2 ${isBookSearch ? "d-none" : ""}`}>
                 <RS.Label htmlFor="question-search-topic">Topic</RS.Label>
                 <Select
                     inputId="question-search-topic" isMulti placeholder="Any" {...selectStyle}
@@ -208,7 +182,7 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     options={DIFFICULTY_ICON_ITEM_OPTIONS} onChange={selectOnChange(setSearchDifficulties, true)}
                 />
             </RS.Col>
-            {isCS && <RS.Col lg={6} className={`text-wrap my-2`}>
+            <RS.Col lg={6} className={`text-wrap my-2`}>
                 <RS.Label htmlFor="question-search-exam-board">Exam Board</RS.Label>
                 <Select
                     inputId="question-search-exam-board" isClearable isMulti placeholder="Any" {...selectStyle}
@@ -216,21 +190,16 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                     options={getFilteredExamBoardOptions({byStages: searchStages})}
                     onChange={(s: MultiValue<Item<ExamBoard>>) => selectOnChange(setSearchExamBoards, true)(s)}
                 />
-            </RS.Col>}
+            </RS.Col>
         </RS.Row>
         <RS.Row>
-            {isPhy && isStaff(user) && <RS.Col className="text-wrap mb-2">
-                <RS.Form>
-                    <RS.Label check><input type="checkbox" checked={searchFastTrack} onChange={e => setSearchFastTrack(e.target.checked)} />{' '}Show FastTrack questions</RS.Label>
-                </RS.Form>
-            </RS.Col>}
         </RS.Row>
         <RS.Row>
             <RS.Col lg={12} className="text-wrap mt-2">
                 <RS.Label htmlFor="question-search-title">Search</RS.Label>
                 <RS.Input id="question-search-title"
                     type="text"
-                    placeholder={siteSpecific("e.g. Man vs. Horse", "e.g. Creating an AST")}
+                    placeholder="e.g. Creating an AST"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setSearchQuestionName(e.target.value);
                     }}
@@ -252,8 +221,8 @@ export const QuestionSearchModal = ({originalSelectedQuestions, setOriginalSelec
                         />
                         <th className="w-25">Topic</th>
                         <th className="w-15">Stage</th>
-                        <th className={siteSpecific("w-15","w-10")}>Difficulty</th>
-                        {isCS && <th className="w-5">Exam boards</th>}
+                        <th className="w-10">Difficulty</th>
+                        <th className="w-5">Exam boards</th>
                     </tr>
                 </thead>
                 <tbody>

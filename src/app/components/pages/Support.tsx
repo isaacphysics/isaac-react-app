@@ -4,7 +4,7 @@ import {Route, withRouter} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Redirect, RouteComponentProps} from "react-router";
 import {Tabs} from "../elements/Tabs";
-import {history, isDefined, isCS, siteSpecific} from "../../services";
+import {history, isDefined} from "../../services";
 import {fromPairs} from "lodash";
 import {PageFragment} from "../elements/PageFragment";
 import {NotFound} from "./NotFound";
@@ -28,44 +28,7 @@ interface SupportCategories {
     };
 }
 
-const support: {student: SupportCategories; teacher: SupportCategories, tutor?: SupportCategories} = siteSpecific(
-    {
-        student: {
-            title: "Student FAQ",
-            categories:{
-                general: {category: "general", title: "Get started", icon: "faq"},
-                homework: {category: "homework", title: "Doing homework", icon: "faq"},
-                questions: {category: "questions", title: "Answering questions", icon: "faq"},
-                events: {category: "events", title: "Events and support", icon: "faq"},
-                troubleshooting: {category: "troubleshooting", title: "Troubleshooting & legal", icon: "faq"},
-            }
-        },
-        teacher: {
-            title: "Teacher FAQ",
-            categories: {
-                general: { category: "general", title: "Get started", icon: "faq" },
-                assignments: { category: "assignments", title: "Set work", icon: "faq" },
-                progress: { category: "progress", title: "View student progress", icon: "faq" },
-                suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
-                partner: { category: "partner", title: "Partner with us", icon: "teacher-hat" },
-                direct: { category: "direct", title: "Teacher support", icon: "teacher-hat"},
-                troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
-                legal: { category: "legal", title: "Legal", icon: "faq"}
-            }
-        },
-        tutor: {
-            title: "Tutor FAQ",
-            categories: {
-                general: { category: "general", title: "Get started", icon: "faq" },
-                assignments: { category: "assignments", title: "Set work", icon: "faq" },
-                progress: { category: "progress", title: "View student progress", icon: "faq" },
-                suggestions: { category: "suggestions", title: "Teaching suggestions", icon: "teacher-hat" },
-                troubleshooting: {category: "troubleshooting", title: "Troubleshooting", icon: "faq"},
-                legal: { category: "legal", title: "Legal", icon: "faq"}
-            }
-        }
-    },
-    {
+const support: {student: SupportCategories; teacher: SupportCategories, tutor?: SupportCategories} = {
         student: {
             title: "Student support",
             categories:{
@@ -83,8 +46,7 @@ const support: {student: SupportCategories; teacher: SupportCategories, tutor?: 
                 code: {category: "code", title: "Code and pseudocode", icon: "faq"},
             }
         }
-    }
-);
+    };
 
 function supportPath(type?: string, category?: string) {
     return `/support/${type || "student"}/${category || "general"}`;
@@ -130,7 +92,7 @@ export const SupportPageComponent = ({match: {params: {type, category}}}: RouteC
         <Row>
             <Col>
                 <TitleAndBreadcrumb currentPageTitle={section.title} />
-                {isCS && isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
+                {isDefined(type) && type !== "tutor" && <MetaDescription description={metaDescriptionMap[type]} />}
             </Col>
         </Row>
         <Row>

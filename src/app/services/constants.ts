@@ -13,12 +13,8 @@ import {
     Stage,
     UserRole
 } from "../../IsaacApiTypes";
-import {siteSpecific} from "./";
 
-export const STAGING_URL = siteSpecific(
-    "https://staging.isaacphysics.org",
-    "https://www.staging.isaaccomputerscience.org"
-);
+export const STAGING_URL = "https://www.staging.isaaccomputerscience.org";
 
 // eslint-disable-next-line no-undef
 export const API_VERSION: string = REACT_APP_API_VERSION || "any";
@@ -39,36 +35,21 @@ export const isTest = document.location.hostname.startsWith("test.");
 
 export const API_PATH: string = apiPath;
 
-export const EDITOR_ORIGIN = siteSpecific(
-    "https://editor.isaacphysics.org",
-    "https://editor.isaaccomputerscience.org",
-);
+export const EDITOR_ORIGIN = "https://editor.isaaccomputerscience.org";
 
 export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
-export const GOOGLE_ANALYTICS_ACCOUNT_ID = siteSpecific(
-    "UA-122616705-1",
-    "UA-137475074-1"
-);
-export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = siteSpecific(
-    "G-VE7RLWEL60",
-    "G-H95WP5C8DR"
-);
+export const GOOGLE_ANALYTICS_ACCOUNT_ID = "UA-137475074-1";
+export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = "G-H95WP5C8DR";
 
-export const SOCIAL_LINKS = siteSpecific(
-    {
-        youtube: {name: "YouTube", href: "https://www.youtube.com/user/isaacphysics"},
-        twitter: {name: "Twitter", href: "https://twitter.com/isaacphysics"},
-        facebook: {name: "Facebook", href: "https://www.facebook.com/isaacphysicsUK"},
-    },
-    {
+export const SOCIAL_LINKS = {
         youtube: {name: "YouTube", href: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"},
         twitter: {name: "Twitter", href: "https://twitter.com/isaaccompsci"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience"},
         instagram: {name: "Instagram", href: "https://www.instagram.com/isaaccompsci"}
     }
-);
+;
 
 // Change to "http://localhost:3000" if you want to run a local version of the code editor
 export const CODE_EDITOR_BASE_URL = "https://editor.isaaccode.org";
@@ -571,17 +552,14 @@ export const difficultyLabelMap: {[difficulty in Difficulty]: string} = {
     challenge_3: "Challenge\u00A0(C3)",
 }
 export const difficultyIconLabelMap: {[difficulty in Difficulty]: string} = {
-    practice_1: `Practice (P1) \u2B22\u2B21${siteSpecific("\u2B21", "")}`,
-    practice_2: `Practice (P2) \u2B22\u2B22${siteSpecific("\u2B21", "")}`,
+    practice_1: `Practice (P1) \u2B22\u2B21`,
+    practice_2: `Practice (P2) \u2B22\u2B22`,
     practice_3: "Practice (P3) \u2B22\u2B22\u2B22",
-    challenge_1: `Challenge (C1) \u25A0\u25A1${siteSpecific("\u25A1", "")}`,
-    challenge_2: `Challenge (C2) \u25A0\u25A0${siteSpecific("\u25A1", "")}`,
+    challenge_1: `Challenge (C1) \u25A0\u25A1`,
+    challenge_2: `Challenge (C2) \u25A0\u25A0`,
     challenge_3: "Challenge (C3) \u25A0\u25A0\u25A0",
 }
-export const difficultiesOrdered: Difficulty[] = siteSpecific(
-    ["practice_1", "practice_2", "practice_3", "challenge_1", "challenge_2", "challenge_3"],
-    ["practice_1", "practice_2", "challenge_1", "challenge_2"]
-);
+export const difficultiesOrdered: Difficulty[] = ["practice_1", "practice_2", "challenge_1", "challenge_2"];
 export const DIFFICULTY_ITEM_OPTIONS: {value: Difficulty, label: string}[] = difficultiesOrdered.map(d => (
     {value: d, label: difficultyLabelMap[d]}
 ));
@@ -945,10 +923,7 @@ export const HOME_CRUMB = {title: "Home", to: "/"};
 export const ALL_TOPICS_CRUMB = {title: "All topics", to: "/topics"};
 export const ADMIN_CRUMB = {title: "Admin", to: "/admin"};
 export const EVENTS_CRUMB = {title: "Events", to: "/events"};
-export const ASSIGNMENT_PROGRESS_CRUMB = siteSpecific(
-    {title: "Assignment Progress", to: "/assignment_progress"},
-    {title: "My markbook", to: "/my_markbook"}
-);
+export const ASSIGNMENT_PROGRESS_CRUMB = {title: "My markbook", to: "/my_markbook"};
 
 export const UserFacingRole: {[role in UserRole]: string} = {
     ADMIN: "Admin",
@@ -1049,32 +1024,7 @@ _REVERSE_GREEK_LETTERS_MAP["ε"] = "epsilon"; // Take this one in preference!
 export const REVERSE_GREEK_LETTERS_MAP = _REVERSE_GREEK_LETTERS_MAP;
 
 
-export const specificDoughnutColours: { [key: string]: string } = siteSpecific(
-    {
-        "Physics": "#944cbe",
-        "Maths": "#007fa9",
-        "Chemistry": "#e22e25",
-        "Biology": "#005210",
-        [difficultyLabelMap.practice_1]: "#509e2e",
-        [difficultyLabelMap.practice_2]: "#3b6e25",
-        [difficultyLabelMap.practice_3]: "#27421a",
-        [difficultyLabelMap.challenge_1]: "#d68000",
-        [difficultyLabelMap.challenge_2]: "#955a0f",
-        [difficultyLabelMap.challenge_3]: "#764811"
-    },
-    {}
-);
-
-export const doughnutColours = siteSpecific(
-    [
-        "#944cbe",
-        "#007fa9",
-        "#e22e25",
-        "#005210",
-        "#991846",
-        "#fea100"
-    ],
-    [
+export const doughnutColours = [
         "#feae42",
         "#000000",
         "#e51f6f",
@@ -1083,13 +1033,9 @@ export const doughnutColours = siteSpecific(
         "#0f8294",
         "#aaaaaa",
         "#dbdbdb"
-    ]
-);
+    ];
 
-export const progressColour = siteSpecific(
-    '#509E2E',
-    '#000000'
-);
+export const progressColour = '#000000';
 
 export const GRAY_120 = '#c9cad1';
 
@@ -1099,7 +1045,7 @@ export const QUESTION_FINDER_CONCEPT_LABEL_PLACEHOLDER = "Loading...";
 
 export const FEATURED_NEWS_TAG = "featured";
 
-export const ASSIGNMENT_PROGRESS_PATH = siteSpecific("assignment_progress", "my_markbook");
+export const ASSIGNMENT_PROGRESS_PATH = "my_markbook";
 
 export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";

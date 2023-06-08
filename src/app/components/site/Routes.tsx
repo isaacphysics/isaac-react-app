@@ -1,19 +1,19 @@
 import React from "react";
-import {TrackedRoute} from "../../navigation/TrackedRoute";
-import {AllTopics, AllTopicsWithoutAStage} from "../../pages/AllTopics";
-import StaticPageRoute from "../../navigation/StaticPageRoute";
-import {ComingSoon} from "../../pages/ComingSoon";
-import {Topic} from "../../pages/Topic";
-import {Students} from "../../pages/Students";
-import {TeacherTools} from "../../pages/TeacherTools";
-import {AssignmentProgress} from "../../pages/AssignmentProgress";
+import {TrackedRoute} from "../navigation/TrackedRoute";
+import {AllTopics, AllTopicsWithoutAStage} from "../pages/AllTopics";
+import StaticPageRoute from "../navigation/StaticPageRoute";
+import {ComingSoon} from "../pages/ComingSoon";
+import {Topic} from "../pages/Topic";
+import {Students} from "../pages/Students";
+import {TeacherTools} from "../pages/TeacherTools";
+import {AssignmentProgress} from "../pages/AssignmentProgress";
 import {Redirect} from "react-router";
-import {isEventLeaderOrStaff, isTutorOrAbove, STAGE} from "../../../services";
-import {SingleAssignmentProgress} from "../../pages/SingleAssignmentProgress";
-import {Glossary} from "../../pages/Glossary";
+import {isEventLeaderOrStaff, isTutorOrAbove, STAGE} from "../../services";
+import {SingleAssignmentProgress} from "../pages/SingleAssignmentProgress";
+import {Glossary} from "../pages/Glossary";
 
 let key = 0;
-export const RoutesCS = [
+export const Routes = [
     // Student and teacher
     <TrackedRoute key={key++} exact path="/students" component={Students} />,
     <TrackedRoute key={key++} exact path="/teachers" component={TeacherTools} />,

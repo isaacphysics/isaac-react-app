@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {isCS, isMobile, isTutorOrAbove, siteSpecific, useOutsideCallback} from "../../services";
+import {isMobile, isTutorOrAbove, useOutsideCallback} from "../../services";
 import {selectors, useAppSelector} from "../../state";
 
 export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClose}: {linkUrl: string; reducedWidthLink?: boolean; gameboardId?: string; clickAwayClose?: boolean}) => {
@@ -9,7 +9,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
     const shareLink = useRef<HTMLInputElement>(null);
     const csUrlOrigin = segueEnvironment !== "DEV" ? "https://isaaccs.org" : window.location.origin;
     let shortenedLinkUrl = linkUrl;
-    if (isCS && segueEnvironment !== "DEV") {
+    if (segueEnvironment !== "DEV") {
         shortenedLinkUrl = shortenedLinkUrl.replace('/questions/', '/q/');
         shortenedLinkUrl = shortenedLinkUrl.replace('/concepts/', '/c/');
         shortenedLinkUrl = shortenedLinkUrl.replace('/pages/', '/p/');
@@ -17,7 +17,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
         shortenedLinkUrl = shortenedLinkUrl.replace('/assignments/', '/a/');
     }
 
-    const shareUrl = siteSpecific(window.location.origin, csUrlOrigin) + shortenedLinkUrl;
+    const shareUrl = csUrlOrigin + shortenedLinkUrl;
 
     function toggleShareLink() {
         setShowShareLink(!showShareLink);
@@ -46,9 +46,7 @@ export const ShareLink = ({linkUrl, reducedWidthLink, gameboardId, clickAwayClos
             <input type="text" readOnly ref={shareLink} value={shareUrl} aria-label="Share URL" />
             {showDuplicateAndEdit && <React.Fragment>
                 <hr className="text-center mt-4" />
-                <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">
-                    {siteSpecific("Duplicate and Edit", "Duplicate and edit")}
-                </a>
+                <a href={`/gameboard_builder?base=${gameboardId}`} className="px-1">Duplicate and edit</a>
             </React.Fragment>}
         </div>
     </div>;

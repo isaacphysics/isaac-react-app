@@ -1,9 +1,8 @@
 import React, {ReactElement, useEffect, useRef} from "react";
-import {Button, UncontrolledTooltip} from "reactstrap";
+import {UncontrolledTooltip} from "reactstrap";
 import {
     AUDIENCE_DISPLAY_FIELDS,
     filterAudienceViewsByProperties,
-    isPhy,
     SITE_SUBJECT_TITLE,
     STAGE,
     stageLabelMap,
@@ -11,13 +10,10 @@ import {
 } from "../../services";
 import {
     AppState,
-    closeActiveModal,
     mainContentIdSlice,
-    openActiveModal,
     useAppDispatch,
     useAppSelector
 } from "../../state";
-import {PageFragment} from "./PageFragment";
 import {ViewingContext} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classnames from "classnames";
@@ -57,8 +53,6 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
     const openModal = useAppSelector((state: AppState) => Boolean(state?.activeModals?.length));
     const headerRef = useRef<HTMLHeadingElement>(null);
 
-    const showModal = modalId && isPhy;
-
     useEffect(() => {dispatch(mainContentIdSlice.actions.set("main-heading"));}, []);
     useEffect(() => {
         document.title = currentPageTitle + " — Isaac " + SITE_SUBJECT_TITLE;
@@ -67,23 +61,6 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
             element.focus();
         }
     }, [currentPageTitle]);
-
-    interface HelpModalProps {
-        modalId: string;
-    }
-
-    const HelpModal = (props: HelpModalProps) => {
-        return <PageFragment fragmentId={props.modalId} ifNotFound={help}/>
-    };
-
-    function openHelpModal(modalId: string) {
-        dispatch(openActiveModal({
-            closeAction: () => {dispatch(closeActiveModal())},
-            size: "xl",
-            title: "Help",
-            body: <HelpModal modalId={modalId}/>
-        }))
-    }
 
     return <h1 id="main-heading" tabIndex={-1} ref={headerRef} className={`h-title h-secondary d-sm-flex ${className ? className : ""}`}>
         <div className="mr-auto" data-testid={"main-heading"}>
@@ -94,12 +71,9 @@ export const PageTitle = ({currentPageTitle, subTitle, disallowLaTeX, help, clas
             <meta property="og:title" content={currentPageTitle} />
         </Helmet>
         {audienceViews && <AudienceViewer audienceViews={audienceViews} />}
-        {help && !showModal && <React.Fragment>
+        {help && <React.Fragment>
             <div id="title-help" className="title-help">Help</div>
             <UncontrolledTooltip target="#title-help" placement="bottom">{help}</UncontrolledTooltip>
-        </React.Fragment>}
-        {modalId && showModal && <React.Fragment>
-            <Button color="link" className="title-help title-help-modal" onClick={() => openHelpModal(modalId)}>Help</Button>
         </React.Fragment>}
     </h1>
 };

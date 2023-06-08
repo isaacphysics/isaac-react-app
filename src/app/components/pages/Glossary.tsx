@@ -8,7 +8,6 @@ import {PrintButton} from "../elements/PrintButton";
 import {IsaacGlossaryTerm} from '../content/IsaacGlossaryTerm';
 import {GlossaryTermDTO} from "../../../IsaacApiTypes";
 import {
-    isCS,
     isDefined,
     Item,
     NOT_FOUND,
@@ -193,7 +192,7 @@ export const Glossary = () => {
     const thenRender = <div className="glossary-page">
         <Container>
             <TitleAndBreadcrumb currentPageTitle="Glossary" />
-            {isCS && <MetaDescription description={metaDescriptionCS} />}
+            <MetaDescription description={metaDescriptionCS} />
 
             <div className="no-print d-flex align-items-center">
                 <div className="question-actions question-actions-leftmost mt-3">
@@ -257,6 +256,7 @@ export const Glossary = () => {
                     </Col>
                     <Col>
                         {terms.map(term => <IsaacGlossaryTerm
+                                key={term.id}
                                 ref={(el: HTMLElement) => {
                                     glossaryTermRefs.current.set((term.id && formatGlossaryTermId(term.id)) ?? "", el);
                                 }}

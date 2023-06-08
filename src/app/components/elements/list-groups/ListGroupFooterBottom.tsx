@@ -1,19 +1,8 @@
 import React from "react";
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {ExternalLink} from "../ExternalLink";
-import {siteSpecific} from "../../../services";
 
-export const ListGroupFooterBottom = () => siteSpecific(
-    // Physics
-    <div className="w-100">
-        <div className='text-center'>
-            All materials on this site are licensed under the {" "}
-            <ExternalLink href="https://creativecommons.org/licenses/by/4.0/">
-                <strong>Creative&nbsp;Commons&nbsp;license</strong>
-            </ExternalLink>, unless stated otherwise.
-        </div>
-    </div>,
-    // Computer Science
+export const ListGroupFooterBottom = () =>
     <div className='footer-links footer-bottom'>
         <ListGroup className='d-flex flex-wrap flex-row'>
             <ListGroupItem className='footer-bottom-info border-0 px-0 py-0 bg-transparent'>
@@ -37,5 +26,4 @@ export const ListGroupFooterBottom = () => siteSpecific(
                 </ExternalLink>
             </ListGroupItem>
         </ListGroup>
-    </div>
-);
+    </div>;

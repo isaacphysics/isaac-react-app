@@ -20,7 +20,6 @@ import {
     bookingStatusMap,
     examBoardLabelMap,
     isAdmin,
-    isCS,
     isEventLeader,
     sortOnPredicateAndReverse,
     stageLabelMap,
@@ -119,9 +118,9 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                             <th className="align-middle">
                                 Stage
                             </th>
-                            {isCS && <th className="align-middle">
+                            <th className="align-middle">
                                 Exam board
-                            </th>}
+                            </th>
                             <th className="align-middle">
                                 <RS.Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
                                     Reserved by ID
@@ -186,9 +185,9 @@ export const ManageExistingBookings = ({user, eventBookingId}: {user: PotentialU
                                     <td className="align-middle">
                                         {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => stageLabelMap[rc.stage!]))).join(", ")}
                                     </td>
-                                    {isCS && <td className="align-middle">
+                                    <td className="align-middle">
                                         {Array.from(new Set(booking.userBooked?.registeredContexts?.map(rc => examBoardLabelMap[rc.examBoard!]))).join(", ")}
-                                    </td>}
+                                    </td>
                                     <td className="align-middle text-center">{booking.reservedById || "-"}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.experienceLevel}</td>
                                     <td className="align-middle">{booking.additionalInformation && booking.additionalInformation.accessibilityRequirements}</td>

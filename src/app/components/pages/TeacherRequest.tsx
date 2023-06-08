@@ -24,7 +24,6 @@ import {
 } from "reactstrap";
 import {
     api,
-    isPhy,
     isTeacherOrAbove,
     schoolNameWithPostcode,
     SITE_SUBJECT_TITLE,
@@ -93,17 +92,6 @@ export const TeacherRequest = () => {
         isEmailDomainAllowed(emailAddress);
     }, [user]);
 
-    // Direct private tutors and parents towards the tutor account request page
-    const noSchool = <p>
-        If you don't have an associated school please fill out our
-        {" "}<Link to="/contact?preset=teacherRequest">Contact us</Link>{" "}
-        form. If you are a private tutor or parent, you can
-        {" "}<Link to="/tutor_account_request">
-            request an Isaac {SITE_SUBJECT_TITLE} Tutor account
-        </Link>.
-    </p>;
-
-
     return <Container id="contact-page" className="pb-5">
         <TitleAndBreadcrumb currentPageTitle="Teacher Account request" />
         <div className="pt-4">
@@ -151,7 +139,6 @@ export const TeacherRequest = () => {
                                         {"name of your school should be shown in the 'School' field. If any of the "}
                                         {"information is incorrect or missing, you can amend it on your "}
                                         <Link to="/account">My account</Link>{" page."}
-                                        {isPhy && noSchool}
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
