@@ -20,7 +20,7 @@ const QuizFooter = ({page, pageLink, ...rest}: QuizAttemptProps) =>
             ? <QuizPagination {...rest} page={page} pageLink={pageLink} finalLabel="Back to Contents" />
             : <>
                 <Spacer/>
-                <Button color="primary" tag={Link} replace to={pageLink(1)}>{"View questions"}</Button>
+                <Button color="secondary" tag={Link} replace to={pageLink(1)}>{"View questions"}</Button>
             </>}
     </div>;
 
