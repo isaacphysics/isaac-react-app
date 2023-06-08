@@ -6,6 +6,7 @@ import argparse
 import re
 import subprocess
 import sys
+import getpass
 
 # Global flag, whether commands should be executed by this script or not
 EXEC = False
@@ -55,7 +56,7 @@ def validate_args(args):
     return args
 
 
-def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None):
+def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: list = None, env_vars: dict = None):
     if not EXEC:
         return input(f"{command}\n")
 
@@ -70,7 +71,7 @@ def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: 
         print("Skipping command...")
         return
     if response in ["y", "yes"]:
-        process = subprocess.run(command, shell=True, universal_newlines=True, stdout=subprocess.PIPE)
+        process = subprocess.run(command, shell=True, universal_newlines=True, stdout=subprocess.PIPE, env=env_vars if env_vars else None)
         output = process.stdout
 
         if print_output:
@@ -112,7 +113,10 @@ def update_config(ctx):
     print(f"# Update configuration files")
     ask_to_run_command(f"cd /local/src/isaac-sops-config && git pull")
     print(f"# Decrypt configuration files")
-    ask_to_run_command(f"cd /local/src/isaac-sops-config && ./deploy_in_docker.sh /local/data/keys/$(hostname)_gpg.ppk /local/src/isaac-sops-config /local/data/isaac-sops-config-decrypted {ctx['env']}")
+    # GPG would normally prompt us for the key password, but it's not possible to answer that prompt through subprocess.run().
+    # Instead, we ask for it here and pass it in to the subprocess as an environment variable.
+    gpg_password = getpass.getpass("Enter password for SOPS GPG key: ")
+    ask_to_run_command(f"cd /local/src/isaac-sops-config && ./deploy_in_docker.sh /local/data/keys/$(hostname)_gpg.ppk /local/src/isaac-sops-config /local/data/isaac-sops-config-decrypted {ctx['env']}", env_vars={"GPG_KEY_PASSWORD": gpg_password})
 
 
 def run_db_migrations(ctx):
