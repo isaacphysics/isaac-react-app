@@ -14,6 +14,14 @@ import {MemoryRouter} from "react-router";
 import {screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+export function paramsToObject(entries: URLSearchParams): {[key: string]: string} {
+    const result: {[key: string]: string} = {};
+    for(const [key, value] of entries) { // each 'entry' is a [key, value] tupple
+        result[key] = value;
+    }
+    return result;
+}
+
 export const augmentErrorMessage = (message?: string) => (e: Error) => {
     return new Error(`${e.message}\n${message ? "Extra info: " + message : ""}`);
 }

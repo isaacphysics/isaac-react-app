@@ -1,15 +1,129 @@
 import {screen, waitFor, within} from "@testing-library/react";
-import {renderTestEnvironment, followHeaderNavLink} from "../utils";
-import {API_PATH, isAda, isPhy, siteSpecific} from "../../app/services";
+import {renderTestEnvironment, followHeaderNavLink, paramsToObject} from "../utils";
+import {API_PATH, isDefined, siteSpecific} from "../../app/services";
 import {rest} from "msw";
-import {basicHandlerThatReturns} from "../../mocks/handlers";
-import {buildMockUserSummary, mockUser} from "../../mocks/data";
+import {handlerThatReturns} from "../../mocks/handlers";
+import {buildMockUserSummary, mockSchool, mockUser} from "../../mocks/data";
 import userEvent from "@testing-library/user-event";
+import {AdminSearchEndpointParams} from "../../IsaacApiTypes";
 
 describe("AdminUserManager", () => {
 
+    /**
+     * Returns a mock user if the search is what we expect, otherwise returns an empty array - used for testing
+     * that the search endpoint is being called with the right parameters
+     *
+     * Will return the usersToReturn if provided, otherwise will return [mockUser].map(buildMockUserSummary).
+     */
+    const buildSearchHandler = (params: AdminSearchEndpointParams, {usersToReturn, defaultUsersToReturn}: {usersToReturn?: any[], defaultUsersToReturn?: any[]}) => jest.fn((req, res, ctx) => {
+        if (Object.entries(params).length === 0) return res(ctx.json(usersToReturn
+            ? usersToReturn.map(u => buildMockUserSummary(u, true))
+            : [buildMockUserSummary(mockUser, true)]
+        ));
+        const searchParams = paramsToObject(req.url.searchParams);
+        // If default params, return an empty array or defaultUsersToReturn
+        if (!isDefined(params.postcodeRadius) && (Object.entries(searchParams).length === 1 && searchParams["postcodeRadius"] === "FIVE_MILES")) {
+            return res(ctx.json(defaultUsersToReturn
+                ? defaultUsersToReturn.map(u => buildMockUserSummary(u, true))
+                : []
+            ));
+        }
+        // Check that the search parameters are as expected
+        const paramsAreAsExpected = Object.entries(params).every(([key, value]) => searchParams[key] === value);
+        if (paramsAreAsExpected) {
+            return res(ctx.json(usersToReturn
+                ? usersToReturn.map(u => buildMockUserSummary(u, true))
+                : [buildMockUserSummary(mockUser, true)]
+            ));
+        }
+        return res(ctx.json([]));
+    });
+
+    /**
+     * Search for users with the given parameters, and check the results are as expected using the given arguments.
+     *
+     * DOES NOT RESET THE searchHandler MOCK - if you want to make sure the search handler is called once per search,
+     * you'll need to do that yourself.
+     *
+     * The names that you use this function with (and those that you pass in as expectNames) should be suitably unique
+     * so that they will only match the users that you expect to be returned by the search.
+     *
+     * Returns the search results table element.
+     */
+    const searchWithParams = async (params: AdminSearchEndpointParams, {expectNumberOfResults, searchHandler, expectNames, debug}: {expectNumberOfResults?: number, expectNames?: string[], searchHandler?: jest.Mock, debug?: boolean}): Promise<HTMLElement> => {
+        if (isDefined(debug)) {
+            console.log("searchWithParams called with params", params);
+        }
+        // Fill in params based on the arguments
+        if (isDefined(params["email"])) {
+            const emailInput = await screen.findByLabelText<HTMLInputElement>("Find a user by email:");
+            await userEvent.type(emailInput, params.email);
+        }
+        if (isDefined(params["familyName"])) {
+            const familyNameInput = await screen.findByLabelText<HTMLInputElement>("Find a user by family name:");
+            await userEvent.type(familyNameInput, params.familyName);
+        }
+        if (isDefined(params["role"])) {
+            const roleInput = await screen.findByLabelText<HTMLInputElement>("Find by user role:");
+            await userEvent.selectOptions(roleInput, params.role);
+        }
+        if (isDefined(params["schoolOther"])) {
+            const schoolInput = await screen.findByLabelText<HTMLInputElement>("Find by manually entered school:");
+            await userEvent.type(schoolInput, params.schoolOther);
+        }
+        if (isDefined(params["postcode"])) {
+            const postcodeInput = await screen.findByLabelText<HTMLInputElement>("Find users with school within a given distance of postcode:");
+            await userEvent.type(postcodeInput, params.postcode);
+        }
+        if (isDefined(params["postcodeRadius"])) {
+            const radiusInput = await screen.findByTestId<HTMLInputElement>("postcode-radius-search");
+            await userEvent.selectOptions(radiusInput, params.postcodeRadius);
+        }
+        if (isDefined(params["schoolURN"])) {
+            const urnInput = await screen.findByLabelText<HTMLInputElement>("Find a user with school URN:");
+            await userEvent.type(urnInput, params.schoolURN);
+        }
+        // Then initiate a search
+        const searchButton = await screen.findByRole("button", {name: "Search"});
+        await userEvent.click(searchButton);
+        const searchResultsTable = await waitFor(() => {
+            const searchResultsTable = screen.getByTestId("user-search-results-table");
+            expect(searchResultsTable).toBeInTheDocument();
+            return searchResultsTable;
+        }, {onTimeout: (error) => {
+                if (isDefined(debug)) {
+                    screen.debug(undefined, 200000);
+                }
+                return error;
+            }
+        });
+        if (isDefined(debug)) {
+            screen.debug(searchResultsTable);
+        }
+        // Check the search handler was called, and the results are as expected (if arguments specified)
+        if (isDefined(searchHandler)) {
+            expect(searchHandler).toHaveBeenCalledTimes(1);
+        }
+        if (isDefined(expectNumberOfResults)) {
+            if (expectNumberOfResults === 0) {
+                const noResultsFeedback = await within(searchResultsTable).findByText("No results found");
+                expect(noResultsFeedback).toBeInTheDocument();
+            }
+            await waitFor(() => {
+                const rows = within(searchResultsTable).queryAllByTestId("user-search-result-row");
+                expect(rows).toHaveLength(expectNumberOfResults);
+            });
+        }
+        if (isDefined(expectNames)) {
+            for (const name of expectNames) {
+                expect(within(searchResultsTable).getByText(name)).toBeInTheDocument();
+            }
+        }
+        return searchResultsTable;
+    }
+
     it("shows no list of users initially", async () => {
-        const searchHandler = basicHandlerThatReturns([buildMockUserSummary(mockUser, true)]);
+        const searchHandler = handlerThatReturns({data: [buildMockUserSummary(mockUser, true)]});
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
@@ -24,8 +138,13 @@ describe("AdminUserManager", () => {
         expect(searchHandler).toHaveBeenCalledTimes(0);
     });
 
-    it("shows no list of users after searching, leaving, and coming back", async () => {
-        const searchHandler = basicHandlerThatReturns([buildMockUserSummary(mockUser, true)]);
+    it("shows no list of users after searching, leaving, and coming back. Also ensure that default search parameters are set.", async () => {
+        const searchHandler = buildSearchHandler(
+            {postcodeRadius: 'FIVE_MILES'},
+            {
+                usersToReturn: [mockUser],
+            }
+        );
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
@@ -33,15 +152,8 @@ describe("AdminUserManager", () => {
             ]
         });
         await followHeaderNavLink("Admin", "User Manager");
-        // Click the search button
-        const searchButton = await screen.findByRole("button", {name: "Search"});
-        await searchButton.click();
-        const searchResultsTable = await screen.findByTestId("user-search-results-table");
-        expect(searchResultsTable).toBeInTheDocument();
-        expect(searchHandler).toHaveBeenCalledTimes(1);
-        expect(within(searchResultsTable).getAllByTestId("user-search-result-row")).toHaveLength(1);
+        await searchWithParams({}, {expectNumberOfResults: 1, searchHandler});
         // Navigate away from the page
-        searchHandler.mockClear();
         await followHeaderNavLink("Teach", siteSpecific("Assignment Progress", "Markbook"));
         // Go back to the admin user manager page
         await followHeaderNavLink("Admin", "User Manager");
@@ -54,18 +166,13 @@ describe("AdminUserManager", () => {
     });
 
     it("allows the user to filter the search by name", async () => {
-        const searchHandler = jest.fn((req, res, ctx) => {
-            if (req.url.searchParams.get("familyName") === mockUser.familyName) {
-                return res(ctx.json([
-                    buildMockUserSummary(mockUser, true)
-                ]));
-            } else {
-                return res(ctx.json([
-                    buildMockUserSummary(mockUser, true),
-                    buildMockUserSummary({...mockUser, id: mockUser.id + 1, familyName: "Smith"}, true),
-                ]));
+        const searchHandler = buildSearchHandler(
+            {familyName: mockUser.familyName},
+            {
+                usersToReturn: [mockUser],
+                defaultUsersToReturn: [mockUser, {...mockUser, id: mockUser.id + 1, familyName: "Smith"}]
             }
-        });
+        );
         renderTestEnvironment({
             role: "ADMIN",
             extraEndpoints: [
@@ -73,23 +180,231 @@ describe("AdminUserManager", () => {
             ]
         });
         await followHeaderNavLink("Admin", "User Manager");
-        // Click the search button
-        const searchButton = await screen.findByRole("button", {name: "Search"});
-        await searchButton.click();
-        // Assert 2 rows in the table
-        const searchResultsTable = await screen.findByTestId("user-search-results-table");
-        expect(within(searchResultsTable).getAllByTestId("user-search-result-row")).toHaveLength(2);
-        // Type in the user's name
-        const nameInput = await screen.findByLabelText<HTMLInputElement>("Find a user by family name:");
-        await userEvent.type(nameInput, mockUser.familyName);
-        // Click the search button again
-        await searchButton.click();
-        // The search endpoint should have been called again, and the table should have one row
-        await waitFor(() => {
-            expect(within(searchResultsTable).getAllByTestId("user-search-result-row")).toHaveLength(1);
+        await searchWithParams({}, {expectNumberOfResults: 2, searchHandler});
+        searchHandler.mockClear();
+        await searchWithParams(
+            {familyName: mockUser.familyName},
+            {expectNumberOfResults: 1, searchHandler, expectNames: [`${mockUser.familyName}, ${mockUser.givenName}`]}
+        );
+    });
+
+    it("allows the user to filter the search by role and school urn", async () => {
+        const searchHandler = buildSearchHandler(
+            {role: mockUser.role, schoolURN: mockSchool.urn},
+            {defaultUsersToReturn: []}
+        );
+        renderTestEnvironment({
+            role: "ADMIN",
+            extraEndpoints: [
+                rest.get(API_PATH + "/admin/users", searchHandler),
+            ]
         });
-        // Expect that row to be the one we expect
-        const row = within(searchResultsTable).getByTestId("user-search-result-row");
-        expect(within(row).getByText(`${mockUser.familyName}, ${mockUser.givenName}`)).toBeInTheDocument();
+        await followHeaderNavLink("Admin", "User Manager");
+        await searchWithParams(
+            {role: mockUser.role, schoolURN: mockSchool.urn},
+            {
+                expectNumberOfResults: 1,
+                searchHandler,
+                expectNames: [`${mockUser.familyName}, ${mockUser.givenName}`]
+            }
+        );
+    });
+
+    it("allows the user to delete a user from the list", async () => {
+        const searchHandler = buildSearchHandler(
+            {},
+            {usersToReturn: [mockUser]}
+        );
+        const deleteHandler = handlerThatReturns();
+        renderTestEnvironment({
+            role: "ADMIN",
+            extraEndpoints: [
+                rest.get(API_PATH + "/admin/users", searchHandler),
+                rest.delete(API_PATH + "/admin/users/:userId", deleteHandler)
+            ]
+        });
+        await followHeaderNavLink("Admin", "User Manager");
+        const searchResultsTable = await searchWithParams(
+            {},
+            {
+                expectNumberOfResults: 1,
+                searchHandler
+            }
+        );
+        const deleteButton = await within(searchResultsTable).findByRole("button", {name: "Delete"});
+        await userEvent.click(deleteButton);
+        // Ensure the delete handler was called and that the table no longer contains the deleted user
+        await waitFor(async () => {
+            expect(deleteHandler).toHaveBeenCalledTimes(1);
+            await expect(deleteHandler).toHaveBeenRequestedWith(async (req) => {
+                return req.params.userId === mockUser.id.toString();
+            });
+            const rows = within(screen.getByTestId("user-search-results-table")).queryAllByTestId("user-search-result-row");
+            expect(rows).toHaveLength(0);
+        });
+    });
+
+    it("allows the user to change the role of multiple users", async () => {
+        const searchHandler = buildSearchHandler(
+            {},
+            {
+                usersToReturn: [
+                    mockUser,
+                    {...mockUser, id: mockUser.id + 1, familyName: "Smith"},
+                    {...mockUser, id: mockUser.id + 2, familyName: "Jones"}
+                ]
+            }
+        );
+        const roleChangeHandler = handlerThatReturns();
+        renderTestEnvironment({
+            role: "ADMIN",
+            extraEndpoints: [
+                rest.get(API_PATH + "/admin/users", searchHandler),
+                rest.post(API_PATH + `/admin/users/change_role/:role`, roleChangeHandler)
+            ]
+        });
+        await followHeaderNavLink("Admin", "User Manager");
+        const searchResultsTable = await searchWithParams(
+            {},
+            {
+                expectNumberOfResults: 3,
+                searchHandler
+            }
+        );
+        // Check the select box in the last two rows
+        const rows = within(searchResultsTable).queryAllByTestId("user-search-result-row");
+        for (const row of rows.slice(1)) {
+            const checkbox = await within(row).findByRole("checkbox");
+            await userEvent.click(checkbox);
+        }
+        // Ensure the screen shows how many users are selected
+        const selectedCount = await screen.findByTestId("user-search-numbers");
+        expect(selectedCount).toHaveTextContent("Manage users (3)");
+        expect(selectedCount).toHaveTextContent("Selected (2)");
+        // Modify roles of selected users to teacher
+        const roleSelect = await screen.findByRole("button", {name: "Modify Role"});
+        await userEvent.click(roleSelect);
+        const teacherOption = await screen.findByRole("menuitem", {name: "TEACHER"});
+        await userEvent.click(teacherOption);
+        // Ensure the role change handler was called and that the roles of the users have changed
+        // (only the first row should be admin still)
+        await waitFor(async () => {
+            expect(roleChangeHandler).toHaveBeenCalledTimes(1);
+            await expect(roleChangeHandler).toHaveBeenRequestedWith(async (req) => {
+                return req.params.role === "TEACHER";
+            });
+            const rows = within(searchResultsTable).queryAllByTestId("user-search-result-row");
+            expect(rows[0]).toHaveTextContent("ADMIN");
+            expect(rows[1]).toHaveTextContent("TEACHER");
+            expect(rows[2]).toHaveTextContent("TEACHER");
+        });
+    });
+
+    it("allows the user to change the email verification status of multiple users", async () => {
+        const searchHandler = buildSearchHandler(
+            {},
+            {
+                usersToReturn: [
+                    mockUser,
+                    {...mockUser, id: mockUser.id + 1, familyName: "Smith"},
+                    {...mockUser, id: mockUser.id + 2, familyName: "Jones"}
+                ]
+            }
+        );
+        const statusChangeHandler = handlerThatReturns();
+        renderTestEnvironment({
+            role: "ADMIN",
+            extraEndpoints: [
+                rest.get(API_PATH + "/admin/users", searchHandler),
+                rest.post(API_PATH + "/admin/users/change_email_verification_status/:status/true", statusChangeHandler)
+            ]
+        });
+        await followHeaderNavLink("Admin", "User Manager");
+        const searchResultsTable = await searchWithParams(
+            {},
+            {
+                expectNumberOfResults: 3,
+                searchHandler
+            }
+        );
+        // Check the select box in the first two rows
+        const rows = within(searchResultsTable).queryAllByTestId("user-search-result-row");
+        for (const row of rows.slice(0, 2)) {
+            const checkbox = await within(row).findByRole("checkbox");
+            await userEvent.click(checkbox);
+        }
+        // Ensure the screen shows how many users are selected
+        const selectedCount = await screen.findByTestId("user-search-numbers");
+        expect(selectedCount).toHaveTextContent("Manage users (3)");
+        expect(selectedCount).toHaveTextContent("Selected (2)");
+        // Modify email verification status of selected users to not verified
+        const roleSelect = await screen.findByRole("button", {name: "Email Status"});
+        await userEvent.click(roleSelect);
+        const statusOption = await screen.findByRole("menuitem", {name: "NOT_VERIFIED"});
+        await userEvent.click(statusOption);
+        // Ensure the status change handler was called and that the status of the users have changed
+        // (only the last row should be "verified" still)
+        await waitFor(async () => {
+            expect(statusChangeHandler).toHaveBeenCalledTimes(1);
+            await expect(statusChangeHandler).toHaveBeenRequestedWith(async (req) => {
+                return req.params.status === "NOT_VERIFIED"
+            });
+            const rows = within(searchResultsTable).queryAllByTestId("user-search-result-row");
+            expect(rows[0]).toHaveTextContent("NOT_VERIFIED");
+            expect(within(rows[0]).queryByRole("button", {name: "Reset password"})).not.toBeDisabled();
+            expect(rows[1]).toHaveTextContent("NOT_VERIFIED");
+            expect(within(rows[1]).queryByRole("button", {name: "Reset password"})).not.toBeDisabled();
+            expect(rows[2]).toHaveTextContent("VERIFIED");
+            expect(within(rows[2]).queryByRole("button", {name: "Reset password"})).not.toBeDisabled();
+        });
+        statusChangeHandler.mockClear();
+        // Expect the selection to be reset
+        expect(screen.getByTestId("user-search-numbers")).toHaveTextContent("Selected (0)");
+        // Now check that changing the status to "delivery failed" disables the reset password button
+        await userEvent.click(within(rows[0]).getByRole("checkbox"));
+        await userEvent.click(screen.getByRole("button", {name: "Email Status"}));
+        await userEvent.click(screen.getByRole("menuitem", {name: "DELIVERY_FAILED"}));
+        await waitFor(async () => {
+            expect(statusChangeHandler).toHaveBeenCalledTimes(1);
+            await expect(statusChangeHandler).toHaveBeenRequestedWith(async (req) => {
+                return req.params.status === "DELIVERY_FAILED"
+            });
+            expect(rows[0]).toHaveTextContent("DELIVERY_FAILED");
+            expect(within(rows[0]).queryByRole("button", {name: "Reset password"})).toBeDisabled();
+        });
+    });
+
+    it("allows you to request a password reset for a user", async () => {
+        const searchHandler = buildSearchHandler(
+            {},
+            {
+                usersToReturn: [mockUser]
+            }
+        );
+        const resetPasswordHandler = handlerThatReturns();
+        renderTestEnvironment({
+            role: "ADMIN",
+            extraEndpoints: [
+                rest.get(API_PATH + "/admin/users", searchHandler),
+                rest.post(API_PATH + "/users/resetpassword", resetPasswordHandler)
+            ]
+        });
+        await followHeaderNavLink("Admin", "User Manager");
+        const searchResultsTable = await searchWithParams(
+            {},
+            {
+                expectNumberOfResults: 1,
+                searchHandler
+            }
+        );
+        const resetPasswordButton = await within(searchResultsTable).findByRole("button", {name: "Reset password"});
+        await userEvent.click(resetPasswordButton);
+        await waitFor(async () => {
+            expect(resetPasswordHandler).toHaveBeenCalledTimes(1);
+            await expect(resetPasswordHandler).toHaveBeenRequestedWith(async (req) => {
+                const {email} = await req.json();
+                return email === mockUser.email;
+            });
+        });
     });
 });

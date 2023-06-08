@@ -201,13 +201,13 @@ export const AdminUserManager = () => {
                                 <RS.Row>
                                     <RS.Col md={7}>
                                         <RS.Input
-                                            id="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
+                                            id="postcode-search" data-testid="postcode-search" type="text" defaultValue={searchQuery.postcode || undefined} placeholder="e.g. CB3 0FD"
                                             onChange={e => setParamIfNotDefault("postcode", e.target.value, "")}
                                         />
                                     </RS.Col>
                                     <RS.Col md={5} className="mt-2 mt-md-0">
                                         <RS.Input
-                                            id="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
+                                            id="postcode-radius-search" data-testid="postcode-radius-search" type="select" defaultValue={searchQuery.postcodeRadius}
                                             onChange={e => setParamIfNotDefault("postcodeRadius", e.target.value, "")}
                                         >
                                             <option value="FIVE_MILES">5 miles</option>
@@ -242,9 +242,9 @@ export const AdminUserManager = () => {
 
         {/* Result panel */}
         <RS.Card className="my-4">
-            <RS.CardTitle tag="h4" className="pl-4 pt-3 mb-0">
+            <RS.CardTitle data-testid="user-search-numbers" tag="h4" className="pl-4 pt-3 mb-0">
                 Manage users ({isDefined(searchResults) && searchResults.length || 0})<br />
-                Selected ({selectedUserIds.length})
+                \Selected ({selectedUserIds.length})
             </RS.CardTitle>
 
             <RS.CardBody innerRef={adminSearchResultsRef}>
@@ -352,7 +352,7 @@ export const AdminUserManager = () => {
                                     </RS.Table>
                                 </div>
                                 :
-                                <div className="text-center"><em>No results found</em></div>;
+                                <div data-testid="user-search-results-table" className="text-center"><em>No results found</em></div>;
                         }
                     }/>
                 }

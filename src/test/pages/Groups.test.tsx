@@ -18,8 +18,7 @@ import {ResponseResolver, rest} from "msw";
 import {
     buildAuthTokenHandler,
     buildGroupHandler,
-    buildGroupMembershipsHandler,
-    basicHandlerThatReturns,
+    handlerThatReturns,
     buildNewManagerHandler
 } from "../../mocks/handlers";
 
@@ -114,7 +113,7 @@ describe("Groups", () => {
             ownerSummary: buildMockUserSummary(mockUser, false),
             archived: false
         };
-        const newGroupHandler = basicHandlerThatReturns(mockNewGroup);
+        const newGroupHandler = handlerThatReturns({data: mockNewGroup});
         const authTokenHandler = buildAuthTokenHandler(mockNewGroup, mockToken);
         renderTestEnvironment({
             role: "TUTOR",
@@ -387,10 +386,10 @@ describe("Groups", () => {
             extraEndpoints: [
                 rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
                 // Group members consist of one student who has authorised full access, and one student that hasn't
-                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, buildGroupMembershipsHandler([
+                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, handlerThatReturns({data: [
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(10), mockGroup.id, true),
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(11), mockGroup.id, false)
-                ])),
+                ]})),
                 rest.post(API_PATH + `/users/10/resetpassword`, (req, res, ctx) => {
                     passwordResetSuccessfullySent = true;
                     return res(ctx.status(200));
@@ -431,10 +430,10 @@ describe("Groups", () => {
             extraEndpoints: [
                 rest.get(API_PATH + "/groups", buildGroupHandler([mockGroup])),
                 // Group members consist of one student who has authorised full access, and one student that hasn't
-                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, buildGroupMembershipsHandler([
+                rest.get(API_PATH + `/groups/${mockGroup.id}/membership`, handlerThatReturns({data: [
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(10), mockGroup.id, true),
                     buildMockUserSummaryWithGroupMembership(buildMockStudent(11), mockGroup.id, false)
-                ]))
+                ]}))
             ]
         });
         await followHeaderNavLink("Teach", siteSpecific("Manage Groups", "Groups"));
@@ -466,7 +465,7 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TEACHER",
             extraEndpoints: [
-                rest.post(API_PATH + "/groups", basicHandlerThatReturns(mockNewGroup)),
+                rest.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M")),
                 rest.post(API_PATH + `/groups/${mockNewGroup.id}/manager`, newGroupManagerHandler)
             ]
@@ -496,7 +495,7 @@ describe("Groups", () => {
         renderTestEnvironment({
             role: "TUTOR",
             extraEndpoints: [
-                rest.post(API_PATH + "/groups", basicHandlerThatReturns(mockNewGroup)),
+                rest.post(API_PATH + "/groups", handlerThatReturns({data: mockNewGroup})),
                 rest.get(API_PATH + `/authorisations/token/${mockNewGroup.id}`, buildAuthTokenHandler(mockNewGroup, "G3N30M"))
             ]
         });

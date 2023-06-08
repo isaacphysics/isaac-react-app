@@ -3,6 +3,9 @@ import {server} from "../mocks/server";
 import "./matchers";
 
 global.window.scrollTo = jest.fn();
+global.window.alert = jest.fn();
+global.window.confirm = jest.fn(() => true);
+global.confirm = jest.fn(() => true);
 global.window.HTMLElement.prototype.scrollTo = jest.fn();
 global.window.HTMLElement.prototype.scrollIntoView = jest.fn();
 jest.mock("react-ga"); // Google Analytics requires a DOM.window which doesn't exist in test

@@ -1,7 +1,7 @@
 import {siteSpecific} from "../app/services";
 import {FEATURED_NEWS_TAG} from "../app/services";
 import {DAYS_AGO} from "../test/utils";
-import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
+import {UserRole, UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
 import {School} from "../IsaacAppTypes";
 
 export const mockUser = {
@@ -11,7 +11,7 @@ export const mockUser = {
     dateOfBirth: 777777777777,
     gender: "MALE",
     registrationDate: DAYS_AGO(100),
-    role: "ADMIN",
+    role: "ADMIN" as UserRole,
     schoolOther: "N/A",
     registeredContexts: [
         {

@@ -15,7 +15,6 @@ import {
 } from "./data";
 import {API_PATH} from "../app/services";
 import produce from "immer";
-import {UserSummaryWithGroupMembershipDTO} from "../IsaacApiTypes";
 import {School} from "../IsaacAppTypes";
 
 export const handlers = [
@@ -208,10 +207,13 @@ export const handlers = [
 
 // --- Extra handler builder functions ---
 
-export const basicHandlerThatReturns = (data: any) => jest.fn((req, res, ctx) => {
+export const handlerThatReturns = (options?: {data?: any, status?: number}) => jest.fn((req, res, ctx) => {
+    if (!options?.data) {
+        return res(ctx.status(options?.status ?? 200));
+    }
     return res(
-        ctx.status(200),
-        ctx.json(data)
+        ctx.status(options?.status ?? 200),
+        ctx.json(options.data)
     );
 });
 export const buildAuthTokenHandler = (newGroup: any, token: string) => jest.fn((req, res, ctx) => {
@@ -239,11 +241,5 @@ export const buildGroupHandler = (groups?: any[]) => jest.fn((req, res, ctx) => 
     return res(
         ctx.status(200),
         ctx.json(filteredGroups)
-    );
-});
-export const buildGroupMembershipsHandler = (members?: UserSummaryWithGroupMembershipDTO[]) => jest.fn((req, res, ctx) => {
-    return res(
-        ctx.status(200),
-        ctx.json(members)
     );
 });
