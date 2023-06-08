@@ -3,7 +3,7 @@ import {Alert, Button, Col, Row} from "reactstrap";
 import {ContentDTO, IsaacQuickQuestionDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {logAction, useAppDispatch} from "../../state";
-import {determineFastTrackSecondaryAction, isCS, useFastTrackInformation} from "../../services";
+import {determineFastTrackSecondaryAction, useFastTrackInformation} from "../../services";
 import {ConfidenceQuestions, useConfidenceQuestionsValues} from "../elements/inputs/ConfidenceQuestions";
 import classNames from "classnames";
 import {useLocation} from "react-router-dom";
@@ -74,7 +74,7 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
                                  identifier={doc.id} type={"quick_question"} />
             {isVisible && <Row className="mt-3">
                 <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
-                    <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isCS})} onClick={hideAnswer}>
+                    <Button color="secondary" type={"button"} block className="active hide-answer" onClick={hideAnswer}>
                         Hide answer
                     </Button>
                 </Col>
@@ -88,18 +88,16 @@ export const IsaacQuickQuestion = ({doc}: {doc: IsaacQuickQuestionDTO}) => {
     return <form onSubmit={e => e.preventDefault()}>
         <div className="question-component p-md-5">
             <div className={classNames({"quick-question": !fastTrackInfo.isFastTrackPage})}>
-                {isCS &&
-                    <div className="quick-question-title">
-                        <h3>Try it yourself!</h3>
+                <div className="quick-question-title">
+                    <h3>Try it yourself!</h3>
                     </div>
-                }
                 <div className="question-content clearfix">
                     <IsaacContentValueOrChildren {...doc} />
                 </div>
                 {<Options/>}
                 {isVisible && <Row>
                     <Col sm="12" md={!fastTrackInfo.isFastTrackPage ? {size: 10, offset: 1} : {}}>
-                        <Alert color={isCS ? "hide" : "secondary"}>
+                        <Alert color="hide">
                             <IsaacContentValueOrChildren {...answer} />
                         </Alert>
                     </Col>

@@ -24,7 +24,6 @@ import {Link, useLocation} from "react-router-dom";
 import {
     assignGameboard,
     isaacApi,
-    openIsaacBooksModal,
     selectors,
     setAssignBoardPath,
     showErrorToast,
@@ -49,13 +48,11 @@ import {
     generateGameboardSubjectHexagons,
     isAdminOrEventManager,
     isDefined,
-    isPhy,
     isStaff,
     Item,
     itemise,
     nthHourOf,
     selectOnChange,
-    siteSpecific,
     sortIcon,
     stageLabelMap,
     useGameboards
@@ -139,7 +136,7 @@ const AssignGroup = ({groups, board, allowScheduling}: AssignGroupProps) => {
         </Label>}
         <Button
             className="mt-2 mb-2"
-            block color={siteSpecific("secondary", "primary")}
+            block color="primary"
             onClick={assign}
             role={"button"}
             disabled={selectedGroups.length === 0 || (isDefined(assignmentNotes) && assignmentNotes.length > 500)}
@@ -195,7 +192,7 @@ const SetAssignmentsModal = (props: SetAssignmentsModalProps) => {
 
     return <Modal isOpen={isOpen} data-testid={"set-assignment-modal"} toggle={toggle}>
         <ModalHeader data-testid={"modal-header"} role={"heading"} className={"text-break"} close={
-            <button role={"button"} className={"close text-nowrap"} onClick={toggle}>
+            <button className={"close text-nowrap"} onClick={toggle}>
                 Close
             </button>
         }>
@@ -382,28 +379,18 @@ export const AddGameboardButtons = ({className, redirectBackTo}: {className: str
     const dispatch = useAppDispatch();
     return <Row className={className}>
         <Col md={6} lg={4} className="pt-1">
-            {siteSpecific(
-                // Physics
-                <Button role={"link"} onClick={() => {
-                    setAssignBoardPath(redirectBackTo);
-                    dispatch(openIsaacBooksModal());
-                }} color="secondary" block className="px-3">
-                    our books
-                </Button>,
-                // Computer science
                 <Button tag={Link} to={"/pages/gameboards"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
                     Pre-made gameboards
                 </Button>
-            )}
         </Col>
         <Col md={6} lg={4} className="pt-1">
-            <Button tag={Link} to={siteSpecific("/pages/pre_made_gameboards", "/topics")} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                {siteSpecific("our Boards for Lessons", "Topics list")}
+            <Button tag={Link} to="/topics" onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
+                Topics list
             </Button>
         </Col>
         <Col md={12} lg={4} className="pt-1">
             <Button tag={Link} to={"/gameboard_builder"} onClick={() => setAssignBoardPath(redirectBackTo)} color="secondary" block>
-                {siteSpecific("create a gameboard", "Create gameboard")}
+               Create gameboard
             </Button>
         </Col>
     </Row>;
@@ -571,16 +558,7 @@ export const SetAssignments = () => {
                                                                      placeholder="Filter boards by name"/>
                                             </Label>
                                         </Col>
-                                        {isPhy && <Col sm={6} lg={2}>
-                                            <Label className="w-100">
-                                                Subject <Input type="select" value={boardSubject}
-                                                               onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
-                                                {Object.values(BoardSubjects).map(subject => <option key={subject}
-                                                                                                     value={subject}>{subject}</option>)}
-                                            </Input>
-                                            </Label>
-                                        </Col>}
-                                        <Col lg={siteSpecific(2, {size: 2, offset: 6})}>
+                                        <Col lg={{size: 2, offset: 6}}>
                                             <Label className="w-100">
                                                 Creator <Input type="select" value={boardCreator}
                                                                onChange={e => setBoardCreator(e.target.value as BoardCreators)}>

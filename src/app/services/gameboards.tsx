@@ -1,10 +1,8 @@
 import {Difficulty, GameboardDTO, RegisteredUserDTO, Stage} from "../../IsaacApiTypes";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import countBy from "lodash/countBy";
 import sortBy from "lodash/sortBy";
-import intersection from "lodash/intersection";
-import {determineAudienceViews, difficultiesOrdered, isCS, isFound, isPhy, stagesOrdered} from "./";
-import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
+import {determineAudienceViews, difficultiesOrdered, isFound, stagesOrdered} from "./";
+import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
 import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
 
 export enum BoardCompletions {
@@ -88,28 +86,11 @@ export const generateGameboardSubjectHexagons = (boardSubjects: string[]) => {
 
 export const showWildcard = (board: GameboardDTO) => {
     const re = new RegExp('(phys_book_gcse_ch.*|pre_uni_maths.*)');
-    const isaacPhysicsBoard = isPhy && board?.tags?.includes("ISAAC_BOARD");
-    return board?.id && (re.test(board.id) || isaacPhysicsBoard)
+    return board?.id && re.test(board.id)
 };
 
 export const determineGameboardSubjects = (board: GameboardDTO) => {
-    if (isCS) {
-        return ["compsci"];
-    }
-    const subjects = ["physics", "maths", "chemistry", "biology"];
-    let allSubjects: string[] = [];
-    board.contents?.map((item) => {
-        let tags = intersection(subjects, item.tags || []);
-        tags.forEach(tag => allSubjects.push(tag));
-    }
-    );
-    // If none of the questions have a subject tag, default to physics
-    if (allSubjects.length === 0) {
-        allSubjects.push("physics");
-    }
-    let enumeratedSubjects = countBy(allSubjects);
-    return Object.keys(enumeratedSubjects).sort(function (a, b) {return subjects.indexOf(a) - subjects.indexOf(b)})
-        .sort(function (a, b) {return enumeratedSubjects[b] - enumeratedSubjects[a]});
+          return ["compsci"];
 };
 
 export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {

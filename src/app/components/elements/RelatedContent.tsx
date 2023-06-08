@@ -9,11 +9,8 @@ import {
     DOCUMENT_TYPE,
     documentTypePathPrefix,
     filterAudienceViewsByProperties,
-    isCS,
     isIntendedAudience,
-    isPhy,
     isTutorOrAbove,
-    siteSpecific,
     sortByNumberStringValue,
     sortByStringValue,
     stageLabelMap,
@@ -150,8 +147,8 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectors.user.orNull);
     const userContext = useUserContext();
-    const audienceFilteredContent = content.filter(c => isPhy || isIntendedAudience(c.audience, userContext, user));
-    const showConceptGameboardButton = isCS && isTutorOrAbove(useAppSelector(selectors.user.orNull));
+    const audienceFilteredContent = content.filter(c => isIntendedAudience(c.audience, userContext, user));
+    const showConceptGameboardButton = isTutorOrAbove(useAppSelector(selectors.user.orNull));
 
     // level, difficulty, title; all ascending (reverse the calls for required ordering)
     const sortedContent = audienceFilteredContent
@@ -187,10 +184,5 @@ export function RelatedContent({content, parentPage, conceptId = ""}: RelatedCon
         </ListGroupItem>
     };
 
-    return siteSpecific(
-        // Physics
-        renderConceptsAndQuestions(concepts, questions, makeListGroupItem, conceptId, showConceptGameboardButton),
-        // Computer Science
-        renderQuestions(questions, makeListGroupItem, conceptId, showConceptGameboardButton)
-    );
+    return renderQuestions(questions, makeListGroupItem, conceptId, showConceptGameboardButton);
 }

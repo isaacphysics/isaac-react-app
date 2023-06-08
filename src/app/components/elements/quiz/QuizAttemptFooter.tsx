@@ -5,7 +5,6 @@ import React, {useState} from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {siteSpecific} from "../../../services";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -62,7 +61,7 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
                 <Spacer/>
                 All sections complete
                 <Spacer/>
-                <Button color={siteSpecific("secondary", "primary")} onClick={submitQuiz}>{submitButton}</Button>
+                <Button color="primary" onClick={submitQuiz}>{submitButton}</Button>
             </>;
         } else {
             prequel = <p>Click &lsquo;{primaryButton}&rsquo; when you are ready to {primaryDescription} the test.</p>;
@@ -73,12 +72,12 @@ export function QuizAttemptFooter(props: QuizAttemptProps) {
                         <Button onClick={() => window.confirm("Are you sure? You haven't answered all of the questions") && submitQuiz()}>{submitButton}</Button>
                     </div>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(firstIncomplete + 1)}>{primaryButton}</Button>
+                    <Button color="primary" tag={Link} replace to={pageLink(firstIncomplete + 1)}>{primaryButton}</Button>
                 </>;
             } else {
                 controls = <>
                     <Spacer/>
-                    <Button color={siteSpecific("secondary", "primary")} tag={Link} replace to={pageLink(1)}>{primaryButton}</Button>
+                    <Button color="primary" tag={Link} replace to={pageLink(1)}>{primaryButton}</Button>
                 </>;
             }
         }

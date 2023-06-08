@@ -4,22 +4,17 @@ import {Accordion} from "../elements/Accordion";
 import {IsaacContent} from "./IsaacContent";
 import {
     DOCUMENT_TYPE,
-    isCS,
     isFound,
     isIntendedAudience,
     makeIntendedAudienceComparator,
     mergeDisplayOptions,
-    siteSpecific,
     stringifyAudience,
     useUserContext
 } from "../../services";
 import {AppState, selectors, useAppSelector} from "../../state";
 import {useLocation} from "react-router-dom";
 
-const defaultConceptDisplay = siteSpecific(
-    {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]},
-    {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
-);
+const defaultConceptDisplay = {audience: ["closed"], nonAudience: ["de-emphasised", "closed"]}
 const defaultQuestionDisplay = {audience: [], nonAudience: []};
 
 interface SectionWithDisplaySettings extends ContentDTO {
@@ -47,7 +42,6 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
 
             // For CS we want relevant sections to appear first
             .sort((a, b) => {
-                if (!isCS) {return 0;}
                 return makeIntendedAudienceComparator(user, userContext)(a, b);
             })
 
@@ -66,7 +60,7 @@ export const IsaacAccordion = ({doc}: {doc: ContentDTO}) => {
             // If cs have "show other content" set to false hide non-audience content
             .map(section => {
                 if (
-                    isCS && userContext.showOtherContent === false &&
+                    userContext.showOtherContent === false &&
                     !isIntendedAudience(section.audience, userContext, user)
                 ) {
                     section.hidden = true;

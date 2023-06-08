@@ -7,7 +7,6 @@ import {
     EXAM_BOARD,
     EXAM_BOARDS_CS_A_LEVEL,
     EXAM_BOARDS_CS_GCSE,
-    isCS,
     KEY,
     persistence,
     STAGE,
@@ -138,7 +137,7 @@ export const AllTopics = ({stage}: {stage: STAGE.A_LEVEL | STAGE.GCSE}) => {
     return <div className="pattern-02">
         <Container>
             <TitleAndBreadcrumb currentPageTitle={stage === STAGE.A_LEVEL ? "A level topics" : "GCSE topics"}/>
-            {isCS && <MetaDescription description={metaDescriptionMap[stage]} />}
+            <MetaDescription description={metaDescriptionMap[stage]} />
 
             <Tabs className="pt-3" tabContentClass="pt-3" activeTabOverride={activeTab} refreshHash={stage} onActiveTabChange={setActiveTab}>
                 {

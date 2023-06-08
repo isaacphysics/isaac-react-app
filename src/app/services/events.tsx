@@ -1,4 +1,4 @@
-import {apiHelper, atLeastOne, isTeacherOrAbove, siteSpecific, STAGE, STAGES_CS, STAGES_PHY, zeroOrLess} from "./";
+import {apiHelper, atLeastOne, isTeacherOrAbove, STAGE, STAGES_CS, zeroOrLess} from "./";
 import {IsaacEventPageDTO} from "../../IsaacApiTypes";
 import {AugmentedEvent, PotentialUser} from "../../IsaacAppTypes";
 import {DateString, FRIENDLY_DATE, TIME_ONLY} from "../components/elements/DateString";
@@ -154,8 +154,7 @@ export const formatBookingModalConfirmMessage = (event: AugmentedEvent, userCanM
 }
 
 export const stageExistsForSite = (stage: string) => {
-    const stagesForSite = siteSpecific(STAGES_PHY, STAGES_CS);
-    return stagesForSite.has(stage as STAGE);
+    return STAGES_CS.has(stage as STAGE);
 }
 
 export const userSatisfiesStudentOnlyRestrictionForEvent = (user: Immutable<PotentialUser> | null, event: AugmentedEvent) => {

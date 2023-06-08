@@ -18,7 +18,6 @@ import {
     EXAM_BOARD,
     getValue,
     history,
-    isCS,
     isDefined,
     isStaff,
     isValidGameboardId,
@@ -27,16 +26,13 @@ import {
     loadGameboardSelectedQuestions,
     logEvent,
     selectOnChange,
-    siteSpecific,
     STAGE,
-    TAG_ID,
     useUserContext
 } from "../../services";
 import Select from "react-select";
 import {useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
-import intersection from "lodash/intersection";
 import {ContentSummary} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
@@ -157,7 +153,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Label htmlFor="gameboard-builder-name">Gameboard title:</Label>
                         <Input id="gameboard-builder-name"
                                type="text"
-                               placeholder={siteSpecific("e.g. Year 12 Dynamics", "e.g. Year 12 Network components")}
+                               placeholder="e.g. Year 12 Network components"
                                value={gameboardTitle}
                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                    setGameboardTitle(e.target.value);
@@ -171,12 +167,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Label htmlFor="gameboard-builder-tag-as">Tag as</Label>
                         <Select inputId="question-search-level"
                                 isMulti
-                                options={siteSpecific([
-                                    {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
-                                ], [
+                                options={[
                                     {value: 'ISAAC_BOARD', label: 'Created by Isaac'},
                                     {value: 'CONFIDENCE_RESEARCH_BOARD', label: 'Confidence research board'}
-                                ])}
+                                ]}
                                 name="colors"
                                 value={gameboardTags}
                                 className="basic-multi-select"
@@ -222,8 +216,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 <th className="w-40">Question title</th>
                                 <th className="w-25">Topic</th>
                                 <th className="w-15">Stage</th>
-                                <th className={siteSpecific("w-15", "w-10")}>Difficulty</th>
-                                {isCS && <th className="w-5">Exam boards</th>}
+                                <th className="w-10">Difficulty</th>
+                                <th className="w-5">Exam boards</th>
                             </tr>
                             </thead>
                             <Droppable droppableId="droppable">
@@ -248,7 +242,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                         })}
                                         {provided.placeholder}
                                         <tr>
-                                            <td colSpan={siteSpecific(5, 6)}>
+                                            <td colSpan={6}>
                                                 <div className="img-center">
                                                     <ShowLoading
                                                         placeholder={<div className="text-center"><IsaacSpinner/></div>}
@@ -276,7 +270,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                                                 }))
                                                             }}
                                                         >
-                                                            {siteSpecific("Add Questions", "Add questions")}
+                                                           Add questions
                                                         </Button>
                                                     </ShowLoading>
                                                 </div>
@@ -301,23 +295,6 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 wildcard = wildcards.filter((wildcard) => wildcard.id == wildcardId)[0];
                             }
 
-                            let subjects = [];
-
-                            if (isCS) {
-                                subjects.push("computer_science");
-                            } else {
-                                const definedSubjects = [TAG_ID.physics, TAG_ID.maths, TAG_ID.chemistry, TAG_ID.biology];
-                                selectedQuestions?.forEach((item) => {
-                                    const tags = intersection(definedSubjects, item.tags || []);
-                                    tags.forEach((tag: string) => subjects.push(tag));
-                                });
-                                // If none of the questions have a subject tag, default to physics
-                                if (subjects.length === 0) {
-                                    subjects.push(TAG_ID.physics);
-                                }
-                                subjects = Array.from(new Set(subjects));
-                            }
-
                             createGameboard({
                                 gameboard: {
                                     id: gameboardURL,
@@ -328,7 +305,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     }).filter((question) => question !== undefined) as GameboardItem[],
                                     wildCard: wildcard,
                                     wildCardPosition: 0,
-                                    gameFilter: {subjects: subjects},
+                                    gameFilter: {subjects: ["computer_science"]},
                                     tags: gameboardTags.map(getValue)
                                 },
                                 previousId: baseGameboardId
@@ -347,7 +324,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         }}
                     >
                         {isWaitingForCreateGameboard ?
-                            <Spinner size={"md"}/> : siteSpecific("Save Gameboard", "Save gameboard")}
+                            <Spinner size={"md"}/> : "Save gameboard"}
                     </Button>
                 </div>
 

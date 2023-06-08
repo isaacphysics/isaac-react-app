@@ -19,7 +19,6 @@ import {
     EventStageFilter,
     EventStatusFilter,
     EventTypeFilter,
-    isCS,
     isTeacherOrAbove,
     stageExistsForSite
 } from "../../services";
@@ -70,7 +69,7 @@ export const Events = withRouter(({history, location}: RouteComponentProps) => {
     return <div>
         <RS.Container>
             <TitleAndBreadcrumb currentPageTitle={"Events"} help={pageHelp} />
-            {isCS && <MetaDescription description={metaDescriptionCS} />}
+            <MetaDescription description={metaDescriptionCS} />
             <div className="my-4">
                 {/* Filters */}
                 <RS.Form inline className="d-flex justify-content-end">

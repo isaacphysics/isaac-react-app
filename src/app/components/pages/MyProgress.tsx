@@ -12,10 +12,8 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Card, CardBody, Col, Container, Row} from "reactstrap";
 import {
     HUMAN_QUESTION_TYPES,
-    isPhy,
     isTeacherOrAbove,
     safePercentage,
-    siteSpecific
 } from "../../services";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {PotentialUser} from "../../../IsaacAppTypes";
@@ -28,27 +26,7 @@ import {ActivityGraph} from "../elements/views/ActivityGraph";
 import {ProgressBar} from "../elements/views/ProgressBar";
 import {LinkToContentSummaryList} from "../elements/list-groups/ContentSummaryListGroupItem";
 
-const siteSpecificStats = siteSpecific(
-    // Physics
-    {
-        questionTypeStatsList: [
-            "isaacMultiChoiceQuestion", "isaacNumericQuestion", "isaacSymbolicQuestion", "isaacSymbolicChemistryQuestion",
-            "isaacClozeQuestion", "isaacReorderQuestion"
-        ],
-        questionCountByTag: {
-            "phys_book_step_up": 432,
-            "phys_book_gcse": 533,
-            "physics_skills_14": 75,
-            "physics_skills_19": 614,
-            "physics_linking_concepts": 258,
-            "maths_book_gcse": 639,
-            "maths_book": 426,
-            "chemistry_16": 336
-        },
-        typeColWidth: "col-lg-6",
-        tagColWidth: "col-lg-12"
-    },
-    // Computer science
+const statistics = 
     {
         questionTypeStatsList: [
             "isaacMultiChoiceQuestion", "isaacItemQuestion", "isaacParsonsQuestion", "isaacNumericQuestion",
@@ -57,8 +35,7 @@ const siteSpecificStats = siteSpecific(
         questionCountByTag: {},
         typeColWidth: "col-lg-4",
         tagColWidth: "col-lg-12"
-    }
-);
+    };
 
 interface MyProgressProps extends RouteComponentProps<{userIdOfInterest: string}> {
     user: PotentialUser;
@@ -108,9 +85,6 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                             <Col>
                                 <AggregateQuestionStats userProgress={progress} />
                             </Col>
-                            {isPhy && <Col className="align-self-center" xs={12} md={3}>
-                                <StreakPanel userProgress={progress} />
-                            </Col>}
                         </Row>
 
                         <Card className="mt-4">
@@ -149,11 +123,11 @@ const MyProgress = withRouter((props: MyProgressProps) => {
                         <div className="mt-4">
                             <h4>Question parts correct by Type</h4>
                             <Row>
-                                {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
+                                {statistics.questionTypeStatsList.map((qType: string) => {
                                     const correct = progress?.correctByType?.[qType] || null;
                                     const attempts = progress?.attemptsByType?.[qType] || null;
                                     const percentage = safePercentage(correct, attempts);
-                                    return <Col key={qType} className={`${siteSpecificStats.typeColWidth} mt-2 type-progress-bar`}>
+                                    return <Col key={qType} className={`${statistics.typeColWidth} mt-2 type-progress-bar`}>
                                         <div className={"px-2"}>
                                             {HUMAN_QUESTION_TYPES[qType]} questions correct
                                         </div>

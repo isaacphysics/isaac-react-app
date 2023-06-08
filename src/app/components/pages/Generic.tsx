@@ -4,7 +4,7 @@ import {AppState, fetchDoc, useAppDispatch, useAppSelector} from "../../state";
 import {IsaacQuestionPageDTO} from "../../../IsaacApiTypes";
 import {ShowLoading} from "../handlers/ShowLoading";
 import {IsaacContent} from "../content/IsaacContent";
-import {DOCUMENT_TYPE, siteSpecific} from "../../services";
+import {DOCUMENT_TYPE} from "../../services";
 import {withRouter} from "react-router-dom";
 import {RelatedContent} from "../elements/RelatedContent";
 import {DocumentSubject} from "../../../IsaacAppTypes";
@@ -44,7 +44,7 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
                 </div>
 
                 <Row className="generic-content-container">
-                    <Col md={siteSpecific({size: 12}, {size: 8, offset: 2})} className="py-4">
+                    <Col md={{size: 8, offset: 2}} className="py-4">
                         <WithFigureNumbering doc={doc}>
                             <IsaacContent doc={doc} />
                         </WithFigureNumbering>

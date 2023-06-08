@@ -1,11 +1,10 @@
 import {ListGroup, ListGroupItem} from "reactstrap";
 import {IsaacHintModal} from "./IsaacHintModal";
-import React, {useContext} from "react";
+import React from "react";
 import {ContentDTO} from "../../../IsaacApiTypes";
-import {ConfidenceContext} from "../../../IsaacAppTypes";
 import {IsaacContent} from "./IsaacContent";
-import {AppState, useAppDispatch, useAppSelector, logAction} from "../../state";
-import {Tabs} from "../elements/Tabs";
+import {AppState, useAppSelector} from "../../state";
+
 
 const PrintOnlyHints = ({hints}: {hints?: ContentDTO[]}) => {
     const printHints = useAppSelector((state: AppState) => state?.printingSettings?.hintsEnabled);
@@ -34,37 +33,4 @@ export const IsaacLinkHints = ({hints, questionPartId}: HintsProps) => {
         </ListGroup>
         <PrintOnlyHints hints={hints} />
     </div>;
-};
-
-export const IsaacTabbedHints = ({hints, questionPartId}: HintsProps) => {
-    const dispatch = useAppDispatch();
-    const {recordConfidence} = useContext(ConfidenceContext);
-
-    function logHintView(viewedHintIndex: number) {
-        if (viewedHintIndex > -1) {
-            if (recordConfidence) {
-                dispatch(logAction({
-                    type: "QUESTION_CONFIDENCE_HINT",
-                    questionPartId,
-                    hintIndex: viewedHintIndex
-                }));
-            }
-            dispatch(logAction({
-                type: "VIEW_HINT",
-                questionId: questionPartId,
-                hintIndex: viewedHintIndex
-            }));
-        }
-    }
-
-    return <div className="tabbed-hints">
-        {hints && <Tabs onActiveTabChange={logHintView} className="no-print" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
-            {Object.assign({}, ...hints.map((hint, index) => ({
-                [`Hint\u00A0${index + 1}`]: <div className="mt-3 mt-lg-4 pt-2">
-                    <IsaacContent doc={hint} />
-                </div>
-            })))}
-        </Tabs>}
-        <PrintOnlyHints hints={hints} />
-    </div>
 };

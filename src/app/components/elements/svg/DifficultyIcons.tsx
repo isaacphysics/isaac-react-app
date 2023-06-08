@@ -1,7 +1,7 @@
 import React from "react";
 import {Difficulty} from "../../../../IsaacApiTypes";
 import {calculateHexagonProportions, Hexagon} from "./Hexagon";
-import {difficultyLabelMap, difficultyShortLabelMap, siteSpecific} from "../../../services";
+import {difficultyLabelMap, difficultyShortLabelMap} from "../../../services";
 import classnames from "classnames";
 import {Rectangle} from "./Rectangle";
 
@@ -9,8 +9,7 @@ import {Rectangle} from "./Rectangle";
 const difficultyIconWidth = 25;
 const difficultyIconXPadding = 1.5;
 const yPadding = 2;
-const difficultyCategories = ["P", "C"];
-const difficultyCategoryLevels = siteSpecific([1, 2, 3], [1, 2]);
+const difficultyCategoryLevels = [1, 2];
 const miniHexagon = calculateHexagonProportions(difficultyIconWidth / 2, 0);
 const miniSquare = {width: difficultyIconWidth, height: difficultyIconWidth};
 

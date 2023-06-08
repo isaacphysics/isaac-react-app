@@ -1,14 +1,12 @@
 import React, {useCallback, useMemo, useState} from "react";
 import {Button, Col, Form, Row} from "reactstrap";
 import {
-    isCS,
     isDefined,
     isLoggedIn,
     isTeacherOrAbove,
     isTutor,
     isTutorOrAbove,
     SITE_SUBJECT_TITLE,
-    siteSpecific,
     validateUserContexts,
     validateUserSchool
 } from "../../../services";
@@ -98,7 +96,7 @@ const UserContextReconfimationModalBody = () => {
             Required
         </div>
         <Row className="my-2">
-            <Col xs={12} md={siteSpecific(6, 12)} lg={6}>
+            <Col xs={12} md={12} lg={6}>
                  <UserContextAccountInput
                     user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
                     displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
@@ -109,7 +107,7 @@ const UserContextReconfimationModalBody = () => {
                 <SchoolInput
                     userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
                     submissionAttempted={submissionAttempted} idPrefix="modal"
-                    required={isCS && !isTutor(user)}
+                    required={!isTutor(user)}
                 />
             </Col>
         </Row>

@@ -1,4 +1,3 @@
-import {CsTagService, PhysicsTagService, siteSpecific} from "./";
+import {CsTagService} from "./";
 
-const subjectSpecificTagService = siteSpecific(PhysicsTagService, CsTagService);
-export const tags = new subjectSpecificTagService();
+export const tags = new CsTagService();

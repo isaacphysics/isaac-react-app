@@ -23,18 +23,14 @@ import {
     Row
 } from "reactstrap";
 import {
-    isPhy,
     isTutorOrAbove,
-    selectOnChange,
     SITE_SUBJECT_TITLE,
-    tags,
     validateEmail,
     WEBMASTER_EMAIL
 } from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link} from "react-router-dom";
 import {IsaacContent} from "../content/IsaacContent";
-import Select from "react-select";
 
 const warningFragmentId = "teacher_registration_warning_message"; // TUTOR have decided to keep this message
 
@@ -82,10 +78,6 @@ export const TutorRequest = () => {
                                     <span className="h3">
                                         You already have a tutor or teacher account
                                     </span>
-                                    {isPhy && <p className="mt-3">
-                                        Go to the <Link to="/tutor_features">Tutor features page</Link> to start using your
-                                        new account features.
-                                    </p>}
                                 </Col>
                             </Row>
                         }
@@ -133,7 +125,7 @@ export const TutorRequest = () => {
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col size={12} md={isPhy ? 6 : undefined}>
+                                        <Col size={12}>
                                             <FormGroup>
                                                 <Label htmlFor="email-input" className="form-required">Email address</Label>
                                                 <Input disabled invalid={!isValidEmail || !emailVerified} id="email-input"
@@ -143,19 +135,6 @@ export const TutorRequest = () => {
                                                     aria-describedby="emailValidationMessage" required/>
                                             </FormGroup>
                                         </Col>
-                                        {isPhy && <Col size={12} md={6}>
-                                            <FormGroup>
-                                                <Label htmlFor="subject-input">Subjects</Label>
-                                                <Select
-                                                    inputId="subject-input"
-                                                    placeholder="All"
-                                                    isClearable
-                                                    isMulti
-                                                    onChange={selectOnChange(setSubjects, true)}
-                                                    options={tags.allSubjectTags.map(tag => ({value: tag.title, label: tag.title}))}
-                                                />
-                                            </FormGroup>
-                                        </Col>}
                                     </Row>
                                     <Row>
                                         <Col size={12}>

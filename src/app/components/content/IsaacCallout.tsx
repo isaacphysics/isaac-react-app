@@ -3,7 +3,6 @@ import {ContentDTO} from "../../../IsaacApiTypes";
 import {IsaacContentValueOrChildren} from "./IsaacContentValueOrChildren";
 import {Col, Row} from "reactstrap";
 import classNames from "classnames";
-import {siteSpecific} from "../../services";
 
 const calloutStyle = {
         width: "50",
@@ -19,7 +18,7 @@ const calloutStyle = {
 export const IsaacCallout = ({doc}: {doc: ContentDTO}) =>
     <Row className={classNames("isaac-callout", calloutStyle.colour)}>
         <Col>
-            <img className={siteSpecific("float-left", "float-right")} style={calloutStyle.style} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} />
+            <img className={"float-right"} style={calloutStyle.style} width={calloutStyle.width} height={calloutStyle.height} src={calloutStyle.src} alt="callout"/>
             <IsaacContentValueOrChildren encoding={doc.encoding} value={doc.value} children={doc.children} />
         </Col>
     </Row>;

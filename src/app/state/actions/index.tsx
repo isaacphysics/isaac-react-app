@@ -58,7 +58,6 @@ import {AxiosError} from "axios";
 import ReactGA from "react-ga";
 import ReactGA4 from "react-ga4";
 import {EventOverviewFilter} from "../../components/elements/panels/EventOverviews";
-import {isaacBooksModal} from "../../components/elements/modals/IsaacBooksModal";
 import {
     AppState,
     store,
@@ -596,9 +595,7 @@ export const authenticateWithToken = (authToken: string) => async (dispatch: App
         }) as any);
     }
 };
-export const openIsaacBooksModal = () => async (dispatch: Dispatch<Action>) => {
-    dispatch(openActiveModal(isaacBooksModal()) as any);
-};
+
 export const revokeAuthorisationAfterPrompt = (userId: number, otherUser: UserSummaryWithEmailAddressDTO) => async (dispatch: Dispatch<Action>) => {
     dispatch(openActiveModal(revocationConfirmationModal(userId, otherUser)) as any);
 };

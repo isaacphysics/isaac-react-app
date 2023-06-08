@@ -1,5 +1,4 @@
 import {PasswordFeedback, ZxcvbnResult} from "../../IsaacAppTypes";
-import {siteSpecific} from "./";
 import axios from "axios";
 
 export const passwordStrengthText: {[score: number]: string} = {
@@ -10,10 +9,7 @@ export const passwordStrengthText: {[score: number]: string} = {
     4: "Very Strong"
 };
 
-const zxcvbnSrc = siteSpecific(
-    'https://cdn.isaacphysics.org',
-    'https://cdn.isaaccomputerscience.org'
-) + "/vendor/dropbox/zxcvbn-isaac.js";
+const zxcvbnSrc = 'https://cdn.isaaccomputerscience.org/vendor/dropbox/zxcvbn-isaac.js';
 
 
 export function loadZxcvbnIfNotPresent() {
