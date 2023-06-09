@@ -28,7 +28,6 @@ import {
     BoardLimit,
     BoardViews,
     determineGameboardStagesAndDifficulties,
-    determineGameboardSubjects,
     difficultiesOrdered,
     difficultyShortLabelMap,
     formatBoardOwner,
@@ -36,7 +35,8 @@ import {
     isMobile,
     sortIcon,
     stageLabelMap,
-    useGameboards
+    useGameboards,
+    GAMEBOARD_SUBJECT
 } from "../../services";
 import {formatDate} from "../elements/DateString";
 import {ShareLink} from "../elements/ShareLink";
@@ -76,7 +76,6 @@ const Board = (props: BoardTableProps) => {
         }
     }
 
-    const boardSubjects = determineGameboardSubjects(board);
     const boardStagesAndDifficulties = determineGameboardStagesAndDifficulties(board);
 
     return boardView == BoardViews.table ?
@@ -85,7 +84,7 @@ const Board = (props: BoardTableProps) => {
                 <div className="board-subject-hexagon-container table-view">
                     {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
                         <>
-                            {generateGameboardSubjectHexagons(boardSubjects)}
+                            {generateGameboardSubjectHexagons(GAMEBOARD_SUBJECT)}
                             <div className="board-percent-completed">{board.percentageCompleted}</div>
                         </>
                     }
@@ -131,7 +130,7 @@ const Board = (props: BoardTableProps) => {
                 <div className="board-subject-hexagon-container">
                     {(board.percentageCompleted == 100) ? <span className="board-subject-hexagon subject-complete"/> :
                         <>
-                            {generateGameboardSubjectHexagons(boardSubjects)}
+                            {generateGameboardSubjectHexagons(GAMEBOARD_SUBJECT)}
                             <div className="board-percent-completed">{board.percentageCompleted}</div>
                         </>
                     }

@@ -45,8 +45,6 @@ export const EmailAlterHandler = () => {
             <Col md={{offset: 1, size: 10}} lg={{offset: 2, size: 8}} xl={{offset: 3, size: 6}}>
                 <Card className="my-5 text-center">
                     <CardBody className="m-4">
-                        {/* Isaac Physics had a large icon here */}
-
                         {(!errorMessage || emailVerificationSuccess) &&
                             <React.Fragment>
                                 <h3 className="mb-4">{successMessage}</h3>

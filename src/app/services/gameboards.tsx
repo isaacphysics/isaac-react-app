@@ -89,10 +89,6 @@ export const showWildcard = (board: GameboardDTO) => {
     return board?.id && re.test(board.id)
 };
 
-export const determineGameboardSubjects = (board: GameboardDTO) => {
-          return ["compsci"];
-};
-
 export const determineCurrentCreationContext = (currentGameboard: GameboardDTO | NOT_FOUND_TYPE | undefined, currentDocId: string) => {
    if (isFound(currentGameboard) && currentGameboard.contents) {
         return currentGameboard.contents.filter(gameboardItem => gameboardItem.id === currentDocId)[0]?.creationContext;
@@ -151,10 +147,6 @@ export enum BoardCreators {
 
 export enum BoardSubjects {
     "all" = "All",
-    "physics" = "Physics",
-    "maths" = "Maths",
-    "chemistry" = "Chemistry",
-    "biology" = "Biology"
 }
 
 export enum BoardLimit {

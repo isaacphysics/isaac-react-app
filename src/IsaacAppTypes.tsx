@@ -451,16 +451,6 @@ export interface UserExamPreferences {
 
 export interface SubjectInterests {
     CS_ALEVEL?: boolean;
-    PHYSICS_GCSE?: boolean;
-    PHYSICS_ALEVEL?: boolean;
-    PHYSICS_UNI?: boolean;
-    CHEMISTRY_ALEVEL?: boolean;
-    CHEMISTRY_GCSE?: boolean;
-    CHEMISTRY_UNI?: boolean;
-    MATHS_GCSE?: boolean;
-    MATHS_ALEVEL?: boolean;
-    MATHS_UNI?: boolean;
-    ENGINEERING_UNI?: boolean;
 }
 
 export type ProgrammingLanguage = {[pl in PROGRAMMING_LANGUAGE]?: boolean}
@@ -659,7 +649,6 @@ export interface AugmentedEvent extends ApiTypes.IsaacEventPageDTO {
     isWaitingListOnly?: boolean;
     isNotClosed?: boolean;
     isCancelled?: boolean;
-    field?: "physics" | "maths";
     userBookingStatus?: ApiTypes.BookingStatus;
 }
 
@@ -903,6 +892,6 @@ export interface ClozeItemDTO extends ItemDTO {
 }
 
 export interface NewsItemProps {
-    subject: "news" | "physics";
-    orderDecending?: boolean;
+    subject: "news";
+    orderDescending?: boolean;
 }

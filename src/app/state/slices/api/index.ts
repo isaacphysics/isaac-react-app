@@ -6,7 +6,6 @@ import {
     MEMBERSHIP_STATUS,
     NO_CONTENT,
     NOT_FOUND,
-    QUESTION_CATEGORY
 } from "../../../services";
 import {BaseQueryFn} from "@reduxjs/toolkit/query";
 import {FetchArgs, FetchBaseQueryArgs, FetchBaseQueryError} from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
@@ -59,8 +58,8 @@ const isaacBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryErr
             return headers;
         }
     }
-    let result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
-    if (result.error && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
+    const result = await fetchBaseQuery(baseQueryArgs)(args, api, extraOptions);
+    if (result.error && typeof result.error.status == 'number' && result.error.status >= 500 && !(result.error.data as {bypassGenericSiteErrorPage?: boolean})?.bypassGenericSiteErrorPage) {
         if (result.error.status === 502) {
             // A '502 Bad Gateway' response means that the API no longer exists:
             api.dispatch(errorSlice.actions.apiGoneAway());
@@ -146,12 +145,12 @@ const isaacApi = createApi({
 
         // === Content ===
 
-        getNewsPodList: build.query<IsaacPodDTO[], {subject: string; orderDecending?: boolean}>({
+        getNewsPodList: build.query<IsaacPodDTO[], {subject: string; orderDescending?: boolean}>({
             query: ({subject}) => ({
                 url: `/pages/pods/${subject}`
             }),
             transformResponse: (response: {results: IsaacPodDTO[]; totalResults: number}, meta, arg) => {
-                // Sort news pods in order of id (asc or desc depending on orderDecending), with ones tagged "featured"
+                // Sort news pods in order of id (asc or desc depending on orderDescending), with ones tagged "featured"
                 // placed first
                 return response.results.sort((a, b) => {
                     const aIsFeatured = a.tags?.includes(FEATURED_NEWS_TAG);
@@ -159,7 +158,7 @@ const isaacApi = createApi({
                     if (aIsFeatured && !bIsFeatured) return -1;
                     if (!aIsFeatured && bIsFeatured) return 1;
                     return a.id && b.id
-                        ? a.id.localeCompare(b.id) * (arg.orderDecending ? -1 : 1)
+                        ? a.id.localeCompare(b.id) * (arg.orderDescending ? -1 : 1)
                         : 0;
                 });
             },
@@ -224,7 +223,7 @@ const isaacApi = createApi({
                 body: gameboard,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                onQuerySuccess: ({gameboard, previousId}, newGameboard, {dispatch}) => {
+                onQuerySuccess: ({previousId}, newGameboard, {dispatch}) => {
                     if (previousId) {
                         dispatch(logAction({
                             type: "CLONE_GAMEBOARD",
