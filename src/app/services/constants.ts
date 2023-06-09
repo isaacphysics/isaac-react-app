@@ -32,6 +32,9 @@ if (document.location.hostname === "localhost") {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
 export const isTest = document.location.hostname.startsWith("test.");
+export const isStaging = document.location.hostname.startsWith("staging.");
+
+export const envSpecific = <L, S, D>(live: L, staging: S, dev: D) => process.env.NODE_ENV === 'production' ? live : (isStaging ? staging : dev);
 
 export const API_PATH: string = apiPath;
 
@@ -41,15 +44,14 @@ export const EDITOR_URL = EDITOR_ORIGIN + "/#!/edit/master/";
 export const EDITOR_COMPARE_URL = EDITOR_ORIGIN + "/#!/compare";
 
 export const GOOGLE_ANALYTICS_ACCOUNT_ID = "UA-137475074-1";
-export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = "G-H95WP5C8DR";
+export const GOOGLE_ANALYTICS_4_MEASUREMENT_ID = envSpecific("G-H95WP5C8DR", "G-L6GMQMNCC7", "G-VKX2R5L09G");
 
 export const SOCIAL_LINKS = {
         youtube: {name: "YouTube", href: "https://www.youtube.com/channel/UC-qoIYj8kgR8RZtQphrRBYQ"},
         twitter: {name: "Twitter", href: "https://twitter.com/isaaccompsci"},
         facebook: {name: "Facebook", href: "https://www.facebook.com/IsaacComputerScience"},
         instagram: {name: "Instagram", href: "https://www.instagram.com/isaaccompsci"}
-    }
-;
+    };
 
 // Change to "http://localhost:3000" if you want to run a local version of the code editor
 export const CODE_EDITOR_BASE_URL = "https://editor.isaaccode.org";
