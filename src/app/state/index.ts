@@ -25,7 +25,18 @@ export * from "./reducers/groupsState";
 export * from "./reducers/gameboardsState";
 export * from "./reducers/progressState";
 export * from "./reducers/adminState";
-export * from "./slices/api";
+
+// Where the base isaacApi is defined
+export * from "./slices/api/baseApi";
+
+// Below here, isaacApi can be enhanced with new endpoints and tags
+export * from "./slices/api/segueInfoApi";
+export * from "./slices/api/adminApi";
+export * from "./slices/api/userApi";
+export * from "./slices/api/gameboardApi";
+export * from "./slices/api/assignmentsApi";
+export * from "./slices/api/contentApi";
+export * from "./slices/api/groupsApi";
 export * from "./slices/gameboards";
 export * from "./reducers/userState";
 export * from "./actions/popups";

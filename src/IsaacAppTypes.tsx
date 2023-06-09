@@ -25,7 +25,7 @@ import {
     DOCUMENT_TYPE,
     EXAM_BOARD,
     MEMBERSHIP_STATUS,
-    PROGRAMMING_LANGUAGE,
+    PROGRAMMING_LANGUAGE, SortOrder,
     STAGE,
     TAG_ID,
     TAG_LEVEL
@@ -119,10 +119,6 @@ export type Action =
     | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE}
 
-    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_REQUEST}
-    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS; errors: ContentErrorsResponse}
-    | {type: ACTION_TYPE.ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE}
-
     | {type: ACTION_TYPE.ADMIN_STATS_REQUEST}
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_SUCCESS; stats: AdminStatsResponse}
     | {type: ACTION_TYPE.ADMIN_STATS_RESPONSE_FAILURE}
@@ -176,18 +172,6 @@ export type Action =
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS; groupId: number; newStatus: MEMBERSHIP_STATUS}
     | {type: ACTION_TYPE.GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.CONSTANTS_UNITS_REQUEST}
-    | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS; units: string[]}
-
-    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_REQUEST}
-    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS; segueVersion: string}
-
-    | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_REQUEST}
-    | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE}
-    | {type: ACTION_TYPE.CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS; segueEnvironment: string}
 
     | {type: ACTION_TYPE.NOTIFICATIONS_REQUEST}
     | {type: ACTION_TYPE.NOTIFICATIONS_RESPONSE_FAILURE}
@@ -244,14 +228,6 @@ export type Action =
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_REQUEST}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_SUCCESS}
     | {type: ACTION_TYPE.CONTACT_FORM_SEND_RESPONSE_FAILURE; errorMessage: string}
-
-    | {type: ACTION_TYPE.CONTENT_VERSION_GET_REQUEST}
-    | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_SUCCESS; liveVersion: string}
-    | {type: ACTION_TYPE.CONTENT_VERSION_GET_RESPONSE_FAILURE}
-
-    | {type: ACTION_TYPE.CONTENT_VERSION_SET_REQUEST; version: string}
-    | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_SUCCESS; newVersion: string}
-    | {type: ACTION_TYPE.CONTENT_VERSION_SET_RESPONSE_FAILURE}
 
     | {type: ACTION_TYPE.SEARCH_REQUEST; query: string; types: string | undefined}
     | {type: ACTION_TYPE.SEARCH_RESPONSE_SUCCESS; searchResults: ApiTypes.ResultsWrapper<ApiTypes.ContentSummaryDTO>}
@@ -556,6 +532,22 @@ export enum BoardOrder {
     "-completion" = "-completion"
 }
 
+export enum AssignmentOrderType {
+    Title = "Title",
+    StartDate = "Start date",
+    DueDate = "Due date"
+}
+export type AssignmentOrderSpec = {type: AssignmentOrderType; order: SortOrder};
+
+export const AssignmentOrder = {
+    titleAscending: {type: AssignmentOrderType.Title, order: SortOrder.ASC},
+    titleDescending: {type: AssignmentOrderType.Title, order: SortOrder.DESC},
+    startDateAscending: {type: AssignmentOrderType.StartDate, order: SortOrder.ASC},
+    startDateDescending: {type: AssignmentOrderType.StartDate, order: SortOrder.DESC},
+    dueDateAscending: {type: AssignmentOrderType.DueDate, order: SortOrder.ASC},
+    dueDateDescending: {type: AssignmentOrderType.DueDate, order: SortOrder.DESC},
+};
+
 export type NumberOfBoards = number | "ALL";
 
 export interface Boards {
@@ -619,7 +611,7 @@ export const ClozeDropRegionContext = React.createContext<{
 export const QuizAttemptContext = React.createContext<{quizAttempt: QuizAttemptDTO | null; questionNumbers: {[questionId: string]: number}}>({quizAttempt: null, questionNumbers: {}});
 export const ExpandableParentContext = React.createContext<boolean>(false);
 export const ConfidenceContext = React.createContext<{recordConfidence: boolean}>({recordConfidence: false});
-export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false});
+export const AssignmentProgressPageSettingsContext = React.createContext<PageSettings>({colourBlind: false, formatAsPercentage: false, setColourBlind: () => {}, setFormatAsPercentage: () => {}, isTeacher: false, assignmentOrder: AssignmentOrder.startDateDescending});
 export const GameboardContext = React.createContext<GameboardDTO | undefined>(undefined);
 export const AssignmentScheduleContext = React.createContext<{
     boardsById: {[id: string]: GameboardDTO | undefined};
@@ -888,6 +880,7 @@ export interface PageSettings {
     formatAsPercentage: boolean;
     setFormatAsPercentage: (newValue: boolean) => void;
     isTeacher: boolean;
+    assignmentOrder?: AssignmentOrderSpec;
 }
 
 export type FasttrackConceptsState = {gameboardId: string; concept: string; items: GameboardItem[]} | null;

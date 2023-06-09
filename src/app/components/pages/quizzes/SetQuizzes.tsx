@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {
-    isaacApi,
     loadQuizAssignments,
     markQuizAsCancelled,
     selectors,
     showQuizSettingModal,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetGroupsQuery
 } from "../../../state";
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import * as RS from "reactstrap";
@@ -68,7 +68,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                 <p>Set on: <strong>{formatDate(assignment.creationDate)} by {formatAssignmentOwner(user, assignment)}</strong></p>
 
                 <div className="mt-4 text-right">
-                    <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1">
+                    <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1 bg-light">
                         {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
                     </RS.Button>
                     <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
@@ -88,7 +88,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
     const [pageTitle, setPageTitle] = useState(siteSpecific((activeTab !== MANAGE_QUIZ_TAB.manage ? "Set" : "Manage") + " Tests", "Manage tests"));
 
     // todo: This is so when the quizAssignments selector tries to augment quizzes with group names, it works. Revisit.
-    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
+    const { data: groups } = useGetGroupsQuery(false);
 
     const quizAssignments = useAppSelector(selectors.quizzes.assignments);
 

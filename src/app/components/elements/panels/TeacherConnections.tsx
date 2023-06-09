@@ -6,13 +6,15 @@ import {
     AdminUserGetState,
     authenticateWithTokenAfterPrompt,
     getActiveAuthorisations,
-    getStudentAuthorisations, isaacApi,
+    getStudentAuthorisations,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useChangeMyMembershipStatusMutation,
+    useGetGroupMembershipsQuery
 } from "../../../state";
 import classnames from "classnames";
 import {
@@ -27,7 +29,7 @@ import {
 import classNames from "classnames";
 import {PageFragment} from "../PageFragment";
 import {RenderNothing} from "../RenderNothing";
-
+import {skipToken} from "@reduxjs/toolkit/query";
 
 interface TeacherConnectionsProps {
     user: PotentialUser;
@@ -39,14 +41,14 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const dispatch = useAppDispatch();
     const activeAuthorisations = useAppSelector(selectors.connections.activeAuthorisations);
     const studentAuthorisations = useAppSelector(selectors.connections.otherUserAuthorisations);
-    const [getGroupMemberships, {data: groupMemberships}] = isaacApi.endpoints.getGroupMemberships.useLazyQuery();
-    const [changeMyMembershipStatus] = isaacApi.endpoints.changeMyMembershipStatus.useMutation();
+    const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
+    const {data: groupMemberships} = useGetGroupMembershipsQuery(groupQuery);
+    const [changeMyMembershipStatus] = useChangeMyMembershipStatusMutation();
 
     useEffect(() => {
         if (user.loggedIn && user.id) {
             dispatch(getActiveAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
             dispatch(getStudentAuthorisations((editingOtherUser && userToEdit?.id) || undefined));
-            getGroupMemberships((editingOtherUser && userToEdit?.id) || undefined);
         }
     }, [dispatch, editingOtherUser, userToEdit?.id]);
 

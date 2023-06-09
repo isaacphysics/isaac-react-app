@@ -1,4 +1,4 @@
-import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState, isaacApi} from "./index";
+import {anonymisationFunctions, anonymiseIfNeededWith, anonymiseListIfNeededWith, AppState, groupsApi} from "./index";
 import {KEY, persistence, NOT_FOUND, isDefined} from "../services";
 import {QuizAssignmentDTO} from "../../IsaacApiTypes";
 import {AppQuizAssignment, NOT_FOUND_TYPE} from "../../IsaacAppTypes";
@@ -31,12 +31,6 @@ export const selectors = {
             return !!state && !!state.questions && state.questions.questions.map(q => !!q.bestAttempt).reduce((prev, current) => prev || current);
         },
         graphSketcherSpec: (state: AppState) => state?.graphSketcherSpec,
-    },
-
-    segue: {
-        contentVersion: (state: AppState) => state?.contentVersion || null,
-        versionOrUnknown: (state: AppState) => state?.constants?.segueVersion || "unknown",
-        environmentOrUnknown: (state: AppState) => state?.constants?.segueEnvironment || "unknown",
     },
 
     error: {
@@ -98,7 +92,7 @@ function augmentWithGroupNameIfInCache(state: AppState, quizAssignments: QuizAss
     if (!isDefined(quizAssignments) || quizAssignments === NOT_FOUND) {
         return quizAssignments;
     }
-    const {data: activeGroups} = isaacApi.endpoints.getGroups.select(false)(state as any);
+    const {data: activeGroups} = groupsApi.endpoints.getGroups.select(false)(state as any);
     return quizAssignments.map(assignment => {
         const groupName = activeGroups?.find(g => g.id === assignment.groupId)?.groupName;
         return {

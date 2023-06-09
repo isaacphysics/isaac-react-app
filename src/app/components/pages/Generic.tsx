@@ -38,30 +38,28 @@ export const Generic = withRouter(({pageIdOverride, match: {params}}: GenericPag
 
     return <ShowLoading until={doc} thenRender={supertypedDoc => {
         const doc = supertypedDoc as IsaacQuestionPageDTO & DocumentSubject;
-        return <div className={doc.subjectId || ""}>
-            <Container>
-                <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
-                <MetaDescription description={doc.summary} />
-                <div className="no-print d-flex align-items-center">
-                    <EditContentButton doc={doc} />
-                    <div className="question-actions question-actions-leftmost mt-3">
-                        <ShareLink linkUrl={`/pages/${doc.id}`}/>
-                    </div>
-                    <div className="question-actions mt-3 not-mobile">
-                        <PrintButton/>
-                    </div>
+        return <Container className={doc.subjectId || ""}>
+            <TitleAndBreadcrumb currentPageTitle={doc.title as string} />
+            <MetaDescription description={doc.summary} />
+            <div className="no-print d-flex align-items-center">
+                <EditContentButton doc={doc} />
+                <div className="question-actions question-actions-leftmost mt-3">
+                    <ShareLink linkUrl={`/pages/${doc.id}`}/>
                 </div>
+                <div className="question-actions mt-3 not-mobile">
+                    <PrintButton/>
+                </div>
+            </div>
 
-                <Row className="generic-content-container">
-                    <Col className={classNames("py-4", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
-                        <WithFigureNumbering doc={doc}>
-                            <IsaacContent doc={doc} />
-                        </WithFigureNumbering>
-                    </Col>
-                </Row>
+            <Row className="generic-content-container">
+                <Col className={classNames("py-4", {"mw-760": isAda && !CS_FULL_WIDTH_OVERRIDE[pageId]})}>
+                    <WithFigureNumbering doc={doc}>
+                        <IsaacContent doc={doc} />
+                    </WithFigureNumbering>
+                </Col>
+            </Row>
 
-                {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
-            </Container>
-        </div>
+            {doc.relatedContent && <RelatedContent content={doc.relatedContent} parentPage={doc} />}
+        </Container>
     }}/>;
 });

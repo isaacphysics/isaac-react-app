@@ -3,11 +3,11 @@ import {
     AppDispatch,
     closeActiveModal,
     hideToast,
-    isaacApi,
     setQuiz,
     showQuizSettingModal,
     showToast,
-    useAppDispatch
+    useAppDispatch,
+    useGetGroupsQuery
 } from "../../../state";
 import React, {useState} from "react";
 import {isDefined, Item, selectOnChange} from "../../../services";
@@ -46,7 +46,7 @@ interface QuizSettingModalProps {
 
 export function QuizSettingModal({quiz, dueDate: initialDueDate, feedbackMode: initialFeedbackMode}: QuizSettingModalProps) {
     const dispatch: AppDispatch = useAppDispatch();
-    const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
+    const groupsQuery = useGetGroupsQuery(false);
 
     const [validated, setValidated] = useState<Set<ControlName>>(new Set());
     const [submitting, setSubmitting] = useState(false);

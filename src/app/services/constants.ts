@@ -35,6 +35,13 @@ if (document.location.hostname === "localhost") {
 } else if (document.location.hostname.endsWith(".eu.ngrok.io")) {
     apiPath = "https://isaacscience.eu.ngrok.io/isaac-api/api";
 }
+let imagePath = `${apiPath}/images`;
+if (apiPath.indexOf(`/api/${API_VERSION}/api`) > -1) {
+    // If the API contains a version number, use a special Nginx
+    // route to allow better caching:
+    imagePath = apiPath.replace(`/api/${API_VERSION}/api`, '/images');
+}
+
 export const isTest = document.location.hostname.startsWith("test.");
 export const isStaging = document.location.hostname.startsWith("staging.");
 
@@ -42,6 +49,7 @@ export const isStaging = document.location.hostname.startsWith("staging.");
 export const envSpecific = <L, T, S, D>(live: L, test: T, staging: S, dev: D) => isTest ? test : (process.env.NODE_ENV === 'production' ? live : (isStaging ? staging : dev));
 
 export const API_PATH: string = apiPath;
+export const IMAGE_PATH: string = imagePath;
 
 export const EDITOR_ORIGIN = siteSpecific(
     "https://editor.isaacphysics.org",
@@ -187,9 +195,6 @@ export enum ACTION_TYPE {
     ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST = "ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_REQUEST",
     ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS = "ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_SUCCESS",
     ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE = "ADMIN_MODIFY_EMAIL_VERIFICATION_STATUSES_RESPONSE_FAILURE",
-    ADMIN_CONTENT_ERRORS_REQUEST = "ADMIN_CONTENT_ERRORS_REQUEST",
-    ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS = "ADMIN_CONTENT_ERRORS_RESPONSE_SUCCESS",
-    ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE = "ADMIN_CONTENT_ERRORS_RESPONSE_FAILURE",
     ADMIN_STATS_REQUEST = "ADMIN_STATS_REQUEST",
     ADMIN_STATS_RESPONSE_SUCCESS = "ADMIN_STATS_RESPONSE_SUCCESS",
     ADMIN_STATS_RESPONSE_FAILURE = "ADMIN_STATS_RESPONSE_FAILURE",
@@ -237,18 +242,6 @@ export enum ACTION_TYPE {
     GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST = "GROUP_CHANGE_MEMBERSHIP_STATUS_REQUEST",
     GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS = "GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_SUCCESS",
     GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE = "GROUP_CHANGE_MEMBERSHIP_STATUS_RESPONSE_FAILURE",
-
-    CONSTANTS_UNITS_REQUEST = "CONSTANTS_UNITS_REQUEST",
-    CONSTANTS_UNITS_RESPONSE_SUCCESS = "CONSTANTS_UNITS_SUCCESS",
-    CONSTANTS_UNITS_RESPONSE_FAILURE = "CONSTANTS_UNITS_RESPONSE_FAILURE",
-
-    CONSTANTS_SEGUE_VERSION_REQUEST = "CONSTANTS_SEGUE_VERSION_REQUEST",
-    CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS = "CONSTANTS_SEGUE_VERSION_RESPONSE_SUCCESS",
-    CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE = "CONSTANTS_SEGUE_VERSION_RESPONSE_FAILURE",
-
-    CONSTANTS_SEGUE_ENVIRONMENT_REQUEST = "CONSTANTS_SEGUE_ENVIRONMENT_REQUEST",
-    CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_SUCCESS",
-    CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE = "CONSTANTS_SEGUE_ENVIRONMENT_RESPONSE_FAILURE",
 
     NOTIFICATIONS_REQUEST = "NOTIFICATIONS_REQUEST",
     NOTIFICATIONS_RESPONSE_SUCCESS = "NOTIFICATIONS_RESPONSE_SUCCESS",
@@ -384,14 +377,6 @@ export enum ACTION_TYPE {
     CONTACT_FORM_SEND_RESPONSE_SUCCESS = "CONTACT_FORM_SEND_RESPONSE_SUCCESS",
     CONTACT_FORM_SEND_RESPONSE_FAILURE = "CONTACT_FORM_SEND_RESPONSE_FAILURE",
 
-    CONTENT_VERSION_GET_REQUEST = "CONTENT_VERSION_GET_REQUEST",
-    CONTENT_VERSION_GET_RESPONSE_SUCCESS = "CONTENT_VERSION_GET_RESPONSE_SUCCESS",
-    CONTENT_VERSION_GET_RESPONSE_FAILURE = "CONTENT_VERSION_GET_RESPONSE_FAILURE",
-
-    CONTENT_VERSION_SET_REQUEST = "CONTENT_VERSION_SET_REQUEST",
-    CONTENT_VERSION_SET_RESPONSE_SUCCESS = "CONTENT_VERSION_SET_RESPONSE_SUCCESS",
-    CONTENT_VERSION_SET_RESPONSE_FAILURE = "CONTENT_VERSION_SET_RESPONSE_FAILURE",
-
     SEARCH_REQUEST = "SEARCH_REQUEST",
     SEARCH_RESPONSE_SUCCESS = "SEARCH_RESPONSE_SUCCESS",
 
@@ -473,6 +458,7 @@ export enum PROGRAMMING_LANGUAGE {
     PYTHON = "PYTHON",
     PHP = "PHP",
     CSHARP = "CSHARP",
+    HASKELL = "HASKELL",
     ASSEMBLY = "ASSEMBLY",
     PLAINTEXT = "PLAINTEXT",
     SQL = "SQL",
@@ -488,6 +474,7 @@ export const programmingLanguagesMap: {[language: string]: string} = {
     [PROGRAMMING_LANGUAGE.PHP]: "PHP",
     [PROGRAMMING_LANGUAGE.CSHARP]: "C#",
     [PROGRAMMING_LANGUAGE.ASSEMBLY]: "Assembly",
+    [PROGRAMMING_LANGUAGE.HASKELL]: "Haskell",
     [PROGRAMMING_LANGUAGE.PLAINTEXT]: "plaintext",
     [PROGRAMMING_LANGUAGE.SQL]: "SQL",
     [PROGRAMMING_LANGUAGE.JAVA]: "Java",
@@ -897,6 +884,7 @@ export enum TAG_ID {
     dnaReplication = "dna_replication",
     transcription = "transcription",
     translation = "translation",
+    genesAndAlleles = "genes_alleles",
     // Physiology
 
     // Ecology
@@ -947,12 +935,6 @@ export const documentTypePathPrefix: {[documentType in DOCUMENT_TYPE]: string} =
     [DOCUMENT_TYPE.TOPIC_SUMMARY]: "topics",
     [DOCUMENT_TYPE.QUIZ]: "quiz",
 };
-
-export enum ContentVersionUpdatingStatus {
-    UPDATING = "UPDATING",
-    SUCCESS = "SUCCESS",
-    FAILURE = "FAILURE"
-}
 
 export enum MEMBERSHIP_STATUS {
     ACTIVE = "ACTIVE",
@@ -1147,3 +1129,5 @@ export const CLOZE_ITEM_SECTION_ID = "non-selected-items";
 export const CLOZE_DROP_ZONE_ID_PREFIX = "drop-zone-";
 // Matches: [drop-zone], [drop-zone|w-50], [drop-zone|h-50] or [drop-zone|w-50h-200]
 export const dropZoneRegex = /\[drop-zone(?<params>\|(?<index>i-\d+?)?(?<width>w-\d+?)?(?<height>h-\d+?)?)?]/g;
+
+export const QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP = Date.UTC(2023, 5, 12); // 12th June 2023

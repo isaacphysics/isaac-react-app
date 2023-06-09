@@ -2,12 +2,12 @@ import React from "react";
 import {Tabs} from "./Tabs";
 import {IsaacContent} from "../content/IsaacContent";
 import {ShowLoading} from "../handlers/ShowLoading";
-import {isaacApi, resultOrNotFound} from "../../state";
+import {resultOrNotFound, useGetPageFragmentQuery} from "../../state";
 
 const COMPUTER_SCIENTIST_FRAGMENT_ID = "computer-scientist-of-the-month";
 
 export function FeaturedContentTabs() {
-    const {data: fragment, error} = isaacApi.endpoints.getPageFragment.useQuery(COMPUTER_SCIENTIST_FRAGMENT_ID);
+    const {data: fragment, error} = useGetPageFragmentQuery(COMPUTER_SCIENTIST_FRAGMENT_ID);
 
     return <div className="tabs-featured-question">
         {/* use tabOverride.current below for random tab on page refresh */}
@@ -21,7 +21,7 @@ export function FeaturedContentTabs() {
                         </div>
                     }}
                     ifNotFound={<div className="computer-scientist-of-the-month mt-4 mb-5 text-center">
-                        Unfortunately, we don't currently have a Computer Science Journey to display.<br />
+                        Unfortunately, we don&apos;t currently have a Computer Science Journey to display.<br />
                         Please check back later!
                     </div>}
                 />,

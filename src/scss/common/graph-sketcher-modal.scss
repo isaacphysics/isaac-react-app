@@ -19,8 +19,6 @@
         .button {
             display: block;
             position: absolute;
-            width: 90px;
-            height: 90px;
             cursor: pointer;
             background-color: transparent;
             background-size: contain;
@@ -38,15 +36,48 @@
             }
 
             &#graph-sketcher-ui-trash-button {
-                top: 20px;
-                right: 20px;
-                opacity: 0.5;
+                opacity: 1;
+                &:disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed !important;
+                }
                 background-image: url('/assets/inequality-trash-phy.svg');
             }
 
+            &#graph-sketcher-ui-reset-button {
+                opacity: 1;
+                &:disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed !important;
+                }
+                background-image: url('/assets/inequality-reset-phy.svg');
+            }
+
+            &#graph-sketcher-ui-undo-button {
+                background-image: url('/assets/hex-undo.svg');
+
+                &:hover {
+                    background-image: url('/assets/hex-undo-active.svg');
+                }
+            }
+
+            &#graph-sketcher-ui-redo-button {
+                background-image: url('/assets/hex-redo.svg');
+
+                &:hover {
+                    background-image: url('/assets/hex-redo-active.svg');
+                }
+            }
+
+            &#graph-sketcher-ui-submit-button {
+                background-image: url('/assets/inequality-confirm-phy.svg');
+            }
+
+            &#graph-sketcher-ui-help-button {
+                background-image: url('/assets/inequality-help-phy.svg');
+            }
+
             &#graph-sketcher-ui-bezier-button {
-                top: 20px;
-                right: 260px;
                 background-image: url('/assets/graph-sketcher-polynomial.svg');
 
                 &:hover,
@@ -56,8 +87,6 @@
             }
 
             &#graph-sketcher-ui-linear-button {
-                top: 20px;
-                right: 350px;
                 background-image: url('/assets/graph-sketcher-straight.svg');
 
                 &:hover,
@@ -65,52 +94,158 @@
                     background-image: url('/assets/graph-sketcher-straight-active.svg');
                 }
             }
-
-            &#graph-sketcher-ui-undo-button {
-                bottom: 20px;
-                left: 20px;
-                background-image: url('/assets/hex-undo.svg');
-
-                &:hover {
-                    background-image: url('/assets/hex-undo-active.svg');
-                }
-            }
-
-            &#graph-sketcher-ui-redo-button {
-                bottom: 20px;
-                left: 110px;
-                background-image: url('/assets/hex-redo.svg');
-
-                &:hover {
-                    background-image: url('/assets/hex-redo-active.svg');
-                }
-            }
-
-            &#graph-sketcher-ui-submit-button {
-                bottom: 20px;
-                right: 20px;
-                background-image: url('/assets/inequality-confirm-phy.svg');
-            }
-
-            &#graph-sketcher-ui-help-button {
-                bottom: 120px;
-                right: 20px;
-                background-image: url('/assets/inequality-help-phy.svg');
-            }
         }
 
-        .dropdown {
+        div#graph-sketcher-ui-color-select-hexagons {
             position: absolute;
-
-            &#graph-sketcher-ui-color-select {
-                top: 20px;
-                right: 120px;
-                width: 120px;
-                height: 30px;
-                border: 1px solid black;
-                background: white;
+            .hover-text {
+                white-space: nowrap;
+                text-align: center;
+                display: none;
+            }
+            &:hover .hover-text {
+                display: block;
+            }
+            svg {
+                #blue-hex-colour {
+                    fill: rgb(93,165,218);
+                    &.active {
+                        stroke: darken(rgb(93,165,218), 15%);
+                        stroke-width: 4px;
+                    }
+                }
+                #orange-hex-colour {
+                    fill: rgb(250,164,58);
+                    &.active {
+                        stroke: darken(rgb(250, 164, 58), 15%);
+                        stroke-width: 4px;
+                    }
+                }
+                #green-hex-colour {
+                    fill: rgb(96,189,104);
+                    &.active {
+                        stroke: darken(rgb(96,189,104), 15%);
+                        stroke-width: 4px;
+                    }
+                }
             }
         }
+
+        @media (min-height: 450px) {
+            $button-size: 90px;
+            $button-spacing: 10px;
+
+            .button {
+                width: $button-size;
+                height: $button-size;
+
+                &#graph-sketcher-ui-trash-button {
+                    top: 2 * $button-spacing;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-reset-button {
+                    top: 3 * $button-spacing + $button-size;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-undo-button {
+                    bottom: 2 * $button-spacing;
+                    left: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-redo-button {
+                    bottom: 2 * $button-spacing;
+                    left: 3 * $button-spacing + $button-size;
+                }
+
+                &#graph-sketcher-ui-submit-button {
+                    bottom: 2 * $button-spacing;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-help-button {
+                    bottom: 3 * $button-spacing + $button-size;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-bezier-button {
+                    top: 2 * $button-spacing;
+                    right: 4 * $button-spacing + 2 * $button-size;
+                }
+
+                &#graph-sketcher-ui-linear-button {
+                    top: 2 * $button-spacing;
+                    right: 5 * $button-spacing + 3 * $button-size;
+                }
+            }
+
+            div#graph-sketcher-ui-color-select-hexagons {
+                top: 2 * $button-spacing;
+                right: 3 * $button-spacing + $button-size;
+                width: $button-size;
+                height: $button-size;
+            }
+        }
+
+        @media (max-height: 451px) {
+            $button-size: 61px;
+            $button-spacing: 8px;
+
+            .button {
+                width: $button-size;
+                height: $button-size;
+
+                &#graph-sketcher-ui-trash-button {
+                    top: 2 * $button-spacing;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-reset-button {
+                    top: 3 * $button-spacing + $button-size;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-undo-button {
+                    bottom: 2 * $button-spacing;
+                    left: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-redo-button {
+                    bottom: 2 * $button-spacing;
+                    left: 3 * $button-spacing + $button-size;
+                }
+
+                &#graph-sketcher-ui-submit-button {
+                    bottom: 2 * $button-spacing;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-help-button {
+                    bottom: 3 * $button-spacing + $button-size;
+                    right: 2 * $button-spacing;
+                }
+
+                &#graph-sketcher-ui-bezier-button {
+                    top: 2 * $button-spacing;
+                    right: 4 * $button-spacing + 1 * $button-size + 90px;
+                }
+
+                &#graph-sketcher-ui-linear-button {
+                    top: 2 * $button-spacing;
+                    right: 5 * $button-spacing + 2 * $button-size + 90px;
+                }
+            }
+
+            div#graph-sketcher-ui-color-select-hexagons {
+                top: 2 * $button-spacing;
+                right: 3 * $button-spacing + $button-size;
+                width: 90px;
+                height: 90px;
+            }
+        }
+
+
     }
 }
 

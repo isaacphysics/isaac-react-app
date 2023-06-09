@@ -3,6 +3,7 @@ import {
     API_PATH,
     EventStageFilter,
     EventTypeFilter,
+    IMAGE_PATH,
     securePadCredentials,
     securePadPasswordReset,
     TAG_ID
@@ -65,7 +66,7 @@ export const apiHelper = {
         if ((path.indexOf("http") > -1) || (path.indexOf("/assets/") > -1)) {
             return path;
         } else {
-            return API_PATH + "/images/" + path;
+            return `${IMAGE_PATH}/${path}`;
         }
     }
 };
@@ -197,9 +198,6 @@ export const api = {
                 return endpoint.post(`/admin/users/change_email_verification_status/${status}/true`, emails);
             }
         },
-        getContentErrors: (): AxiosPromise<AppTypes.ContentErrorsResponse> => {
-            return endpoint.get(`/admin/content_problems`)
-        },
         getSiteStats: (): AxiosPromise<AppTypes.AdminStatsResponse> => {
             return endpoint.get(`/admin/stats`)
         },
@@ -294,25 +292,6 @@ export const api = {
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
-        }
-    },
-    contentVersion: {
-        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
-            return endpoint.get(`/info/content_versions/live_version`);
-        },
-        setLiveVersion(version: string): AxiosPromise {
-            return endpoint.post(`/admin/live_version/${version}`);
-        }
-    },
-    constants: {
-        getUnits: (): AxiosPromise<string[]> => {
-            return endpoint.get(`/content/units`);
-        },
-        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
-            return endpoint.get(`/info/segue_version`);
-        },
-        getSegueEnvironment: (): AxiosPromise<{segueEnvironment: string}> => {
-            return endpoint.get(`/info/segue_environment`);
         }
     },
     schools: {

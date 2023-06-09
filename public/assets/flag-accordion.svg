@@ -1,61 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   height="24"
-   viewBox="0 0 24 24"
-   width="24"
-   version="1.1"
-   id="svg9582"
-   sodipodi:docname="flag-accordion.svg"
-   inkscape:version="1.2.1 (9c6d41e, 2022-07-14)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs9586" />
-  <sodipodi:namedview
-     id="namedview9584"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     showgrid="false"
-     inkscape:zoom="9.8333333"
-     inkscape:cx="-23.542373"
-     inkscape:cy="13.779661"
-     inkscape:window-width="1920"
-     inkscape:window-height="999"
-     inkscape:window-x="0"
-     inkscape:window-y="341"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg9582" />
-  <path
-     d="M0 0h24v24H0z"
-     fill="none"
-     id="path9578" />
-  <g
-     id="g6813"
-     inkscape:label="flag"
-     transform="matrix(0.06241411,0,0,0.06241411,-7.4748469,-15.34046)"
-     style="stroke-width:48.06605429;stroke-dasharray:none">
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:48.06605429;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-       d="m 227.0682,306.94916 c 0,0 45.82278,-46.86384 93.34271,-27.8254 47.51991,19.03843 39.03422,45.39934 98.43411,21.96742"
-       id="path2980" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:48.0661;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-       d="m 234.47734,447.98243 c 0,0 45.80861,-47.04116 93.31383,-27.93069 47.50522,19.11048 39.02216,45.57114 98.40368,22.05056"
-       id="path2980-4" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:48.06605429;stroke-linecap:butt;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-       d="M 217.52226,614.25907 V 264.10131"
-       id="path5208" />
-    <path
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:47.5972;stroke-linecap:square;stroke-linejoin:bevel;stroke-dasharray:none;stroke-opacity:1"
-       d="M 433.81718,431.34037 V 302.47078"
-       id="path5232" />
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+   <g fill="none" stroke="#000" stroke-linejoin="bevel" stroke-width="3">
+      <path d="M6.697 3.817s2.86-2.925 5.826-1.737 2.436 2.834 6.144 1.371" />
+      <path d="M7.16 12.62s2.859-2.936 5.824-1.743 2.436 2.844 6.142 1.376" stroke-linecap="square" />
+      <path d="M6.102 22.998V1.143" />
+   </g>
+   <path d="M19.601 11.581V3.538" stroke="#000" stroke-linecap="square" stroke-linejoin="bevel" stroke-width="2.971" />
 </svg>

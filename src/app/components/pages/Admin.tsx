@@ -1,47 +1,41 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
-    getContentVersion,
-    requestConstantsSegueVersion,
-    selectors,
-    setContentVersion,
-    useAppDispatch,
-    useAppSelector
+    useGetContentVersionQuery, useGetSegueVersionQuery, useUpdateContentVersionMutation,
 } from "../../state";
 import {Link} from "react-router-dom";
 import * as RS from "reactstrap";
 import {RegisteredUserDTO} from "../../../IsaacApiTypes";
-import {ShowLoading} from "../handlers/ShowLoading";
-import {ContentVersionUpdatingStatus, EDITOR_COMPARE_URL, isAdmin, isPhy, siteSpecific} from "../../services";
+import {EDITOR_COMPARE_URL, isAdmin, isDefined, isPhy, siteSpecific} from "../../services";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import classnames from "classnames";
-import {AnonymiseUsersCheckbox} from "../elements/AnonymiseUsersCheckbox";
+import {AnonymisationCheckboxes} from "../elements/AnonymisationCheckboxes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {MisuseStats} from "../elements/MisuseStats";
 import classNames from "classnames";
+import {ShowLoadingQuery} from "../handlers/ShowLoadingQuery";
 
 export const Admin = ({user}: {user: RegisteredUserDTO}) => {
-    const dispatch = useAppDispatch();
-    const segueVersion = useAppSelector(selectors.segue.versionOrUnknown);
-    const contentVersion = useAppSelector(selectors.segue.contentVersion);
-    useEffect(() => {
-        dispatch(getContentVersion());
-        dispatch(requestConstantsSegueVersion());
-    }, [dispatch]);
+    const {data: segueVersion} = useGetSegueVersionQuery();
+
+    const liveContentVersionQuery = useGetContentVersionQuery();
+    const {data: liveContentVersion} = liveContentVersionQuery;
+
+    const [updateContentVersion, {
+        isLoading: contentVersionUpdateIsLoading,
+        isError: contentVersionUpdateIsError,
+        isSuccess: contentVersionUpdateIsSuccess
+    }] = useUpdateContentVersionMutation();
 
     const [newVersion, setNewVersion] = useState<string | null>(null);
-
-    const displayVersion = newVersion || (contentVersion && contentVersion.liveVersion) || null;
 
     const startVersionUpdate = function(event?: React.FormEvent) {
         if (event) {
             event.preventDefault();
         }
-        if (contentVersion && displayVersion !== contentVersion.liveVersion && newVersion != null) {
-            dispatch(setContentVersion(newVersion));
+        if (liveContentVersion && newVersion && newVersion !== liveContentVersion) {
+            updateContentVersion(newVersion);
         }
     };
-
-    const updateState = contentVersion && contentVersion.updateState || null;
 
     return <RS.Container id="admin-page">
         <TitleAndBreadcrumb currentPageTitle={`${siteSpecific("Isaac", "Ada")} administration`} breadcrumbTitleOverride="Admin tools" />
@@ -74,65 +68,70 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                 <RS.CardTitle tag="h2">Administrative tools</RS.CardTitle>
                 <RS.CardBody>
                     <h3>Manage site content</h3>
-                    {contentVersion && <React.Fragment>
-                        <div>
-                            <strong>Live Content Version</strong>
-                        </div>
-                        <ShowLoading until={displayVersion !== null} thenRender={() => {
-                            return displayVersion !== null && updateState != ContentVersionUpdatingStatus.UPDATING &&
-                                <RS.Form onSubmit={startVersionUpdate}>
-                                    <RS.InputGroup className={"separate-input-group"}>
-                                        <RS.Input
-                                            aria-label="Live content commit SHA"
-                                            type="text" value={displayVersion}
-                                            onChange={e => setNewVersion(e.target.value)}
-                                            placeholder="Enter commit SHA"
-                                        />
-                                        <RS.InputGroupAddon addonType="append">
-                                            <a
-                                                className={classnames("btn btn-secondary", {
-                                                    "p-1 border-dark": isPhy,
-                                                    "disabled": displayVersion === contentVersion.liveVersion
-                                                })}
-                                                href={`${EDITOR_COMPARE_URL}/${contentVersion?.liveVersion}/${displayVersion}`}
-                                                target="_blank" rel="noopener"
-                                            >
-                                                Preview Changes
-                                            </a>
-                                        </RS.InputGroupAddon>
-                                        <RS.InputGroupAddon addonType="append">
-                                            <RS.Button
-                                                type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
-                                                onClick={startVersionUpdate}
-                                                disabled={!isAdmin(user) || displayVersion === contentVersion.liveVersion}
-                                            >
-                                                Set Version
-                                            </RS.Button>
-                                        </RS.InputGroupAddon>
-                                    </RS.InputGroup>
-                                </RS.Form>
-                        }} />
-                        {updateState == ContentVersionUpdatingStatus.UPDATING &&
-                            <RS.Alert color="info">
-                                <h4>Updating...</h4>
-                                <p>Replacing version {contentVersion.liveVersion} with {contentVersion.updatingVersion}</p>
-                                <IsaacSpinner />
-                            </RS.Alert>
-                        }
-                        {updateState == ContentVersionUpdatingStatus.SUCCESS &&
-                            <RS.Alert color="success">
-                                <h4>Content version changed successfully.</h4>
-                            </RS.Alert>
-                        }
-                        {updateState == ContentVersionUpdatingStatus.FAILURE &&
-                            <RS.Alert color="danger">
-                                <h4>Error: Content version could not be changed.</h4>
-                            </RS.Alert>
-                        }
-                    </React.Fragment>}
-
+                    <ShowLoadingQuery
+                        defaultErrorTitle={"Error loading content version"}
+                        query={liveContentVersionQuery}
+                        thenRender={liveContentVersion => {
+                            const displayVersion = newVersion || liveContentVersion || null;
+                            return <>
+                                <div>
+                                    <strong>Live Content Version</strong>
+                                </div>
+                                {isDefined(displayVersion) && !contentVersionUpdateIsLoading &&
+                                    <RS.Form onSubmit={startVersionUpdate}>
+                                        <RS.InputGroup className={"separate-input-group"}>
+                                            <RS.Input
+                                                aria-label="Live content commit SHA"
+                                                type="text" value={displayVersion}
+                                                onChange={e => setNewVersion(e.target.value)}
+                                                placeholder="Enter commit SHA"
+                                            />
+                                            <RS.InputGroupAddon addonType="append">
+                                                <a
+                                                    className={classnames("btn btn-secondary", {
+                                                        "p-1 border-dark": isPhy,
+                                                        "disabled": displayVersion === liveContentVersion
+                                                    })}
+                                                    href={`${EDITOR_COMPARE_URL}/${liveContentVersion}/${displayVersion}`}
+                                                    target="_blank" rel="noopener"
+                                                >
+                                                    Preview Changes
+                                                </a>
+                                            </RS.InputGroupAddon>
+                                            <RS.InputGroupAddon addonType="append">
+                                                <RS.Button
+                                                    type="button" className={classNames("py-0", {"px-0 border-dark": isPhy})}
+                                                    onClick={startVersionUpdate}
+                                                    disabled={!isAdmin(user) || displayVersion === liveContentVersion}
+                                                >
+                                                    Set Version
+                                                </RS.Button>
+                                            </RS.InputGroupAddon>
+                                        </RS.InputGroup>
+                                    </RS.Form>
+                                }
+                                {contentVersionUpdateIsLoading &&
+                                    <RS.Alert color="info">
+                                        <h4>Updating...</h4>
+                                        <p>Replacing version {liveContentVersion} with {newVersion}</p>
+                                        <IsaacSpinner />
+                                    </RS.Alert>
+                                }
+                                {contentVersionUpdateIsSuccess &&
+                                    <RS.Alert color="success">
+                                        <h4>Content version changed successfully.</h4>
+                                    </RS.Alert>
+                                }
+                                {contentVersionUpdateIsError &&
+                                    <RS.Alert color="danger">
+                                        <h4>Error: Content version could not be changed.</h4>
+                                    </RS.Alert>
+                                }
+                            </>
+                        }}
+                    />
                     <h3 className={"mt-3"}>Demonstration Mode</h3>
-                    <AnonymiseUsersCheckbox/>
+                    <AnonymisationCheckboxes/>
 
                     {isAdmin(user) && <>
                         <h3 className={"mt-3"}>Misuse statistics</h3>

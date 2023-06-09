@@ -5,12 +5,13 @@ import {
     closeActiveModal,
     getEventBookingsForAllGroups,
     getEventBookingsForGroup,
-    isaacApi,
     reserveUsersOnEvent,
     store,
     submitMessage,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGetGroupsQuery,
+    useLazyGetGroupMembersQuery
 } from "../../../state";
 import {
     Button,
@@ -38,8 +39,8 @@ const ReservationsModal = () => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state: AppState) => isLoggedIn(state?.user) ? state?.user as RegisteredUserDTO : undefined);
 
-    const {data: activeGroups} = isaacApi.endpoints.getGroups.useQuery(false);
-    const [getGroupMembers] = isaacApi.endpoints.getGroupMembers.useLazyQuery();
+    const {data: activeGroups} = useGetGroupsQuery(false);
+    const [getGroupMembers] = useLazyGetGroupMembersQuery();
     const sortedActiveGroups = useMemo<AppGroup[]>(() => sortBy(activeGroups ?? [], g => g.groupName), [activeGroups]);
 
     const [selectedGroupId, setSelectedGroupId] = useState<number>();

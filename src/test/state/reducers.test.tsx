@@ -8,7 +8,6 @@ import {AnyAction} from "redux";
 import {
     AppState,
     BoardsState,
-    constants,
     gameboardsSlice,
     questions,
     rootReducer,
@@ -42,20 +41,21 @@ describe("root reducer", () => {
         });
     });
 
-    it("resets to the initial state on log out regardless of previous state", () => {
-        const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
-        actualInitialState.user = {loggedIn: false};
-        const previousStates = [
-            {'questions': q([{id: 'a_toboggan'}])},
-            {'questions': null},
-            undefined
-        ];
-        previousStates.map((previousState) => {
-            // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
-            const actualNextState = removeRTKProperties(rootReducer(previousState, {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}));
-            expect(actualNextState).toEqual(actualInitialState);
-        });
-    });
+    // FIXME make a similar test to make sure that logging out causes a refresh of the page (clearing the state)
+    // it("resets to the initial state on log out regardless of previous state", () => {
+    //     const actualInitialState = removeRTKProperties(rootReducer(undefined, ignoredTestAction));
+    //     actualInitialState.user = {loggedIn: false};
+    //     const previousStates = [
+    //         {'questions': q([{id: 'a_toboggan'}])},
+    //         {'questions': null},
+    //         undefined
+    //     ];
+    //     previousStates.map((previousState) => {
+    //         // @ts-ignore initial state so that we don't need to keep updating the test unnecessarily
+    //         const actualNextState = removeRTKProperties(rootReducer(previousState, {type: ACTION_TYPE.USER_LOG_OUT_RESPONSE_SUCCESS}));
+    //         expect(actualNextState).toEqual(actualInitialState);
+    //     });
+    // });
 });
 
 describe("user reducer", () => {
@@ -130,33 +130,9 @@ describe("questions reducer", () => {
     });
 });
 
-describe("constants reducer", () => {
-    it("returns null as an initial value", () => {
-        const actualState = constants(undefined, ignoredTestAction);
-        expect(actualState).toBe(null);
-    });
-
-    it("returns the previous state by default", () => {
-        const previousStates = [null, {units: unitsList}];
-        previousStates.map((previousState) => {
-            const actualNextState = constants(previousState, ignoredTestAction);
-            expect(actualNextState).toEqual(previousState);
-        });
-    });
-
-    it("should always add the list of units on units response success", () => {
-        const unitsAction: Action = {type: ACTION_TYPE.CONSTANTS_UNITS_RESPONSE_SUCCESS, units: unitsList};
-        const previousStates = [null, {units: ["foo"]}];
-        previousStates.map((previousState) => {
-            const actualNextState = constants(previousState, unitsAction);
-            expect(actualNextState).toEqual({units: unitsList});
-        })
-    })
-});
-
 describe("search reducer", () => {
     it("returns null as an initial value", () => {
-        const actualState = constants(undefined, ignoredTestAction);
+        const actualState = search(undefined, ignoredTestAction);
         expect(actualState).toBe(null);
     });
 

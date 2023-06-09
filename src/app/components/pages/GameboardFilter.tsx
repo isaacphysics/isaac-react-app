@@ -3,10 +3,11 @@ import {
     AppState,
     extractDataFromQueryResponse,
     fetchConcepts,
-    isaacApi,
     setAssignBoardPath,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useGenerateTemporaryGameboardMutation,
+    useLazyGetGameboardByIdQuery
 } from "../../state";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import {Link, RouteComponentProps, useHistory, withRouter} from "react-router-dom";
@@ -158,6 +159,10 @@ function generateCSBoardName(selections: Item<TAG_ID>[][]) {
         }
     }
     return "Computer Science";
+}
+
+function stripSoftHyphens(input: string): string {
+    return input.replace(/\u00AD/g, "");
 }
 
 // Shared props that both PHY and CS question filters use
@@ -454,8 +459,8 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
 
     const [gameboard, setGameboard] = useState<GameboardDTO | NOT_FOUND_TYPE | null | undefined>();
     const gameboardIdAnchor = location.hash ? location.hash.slice(1) : null;
-    const [ generateTemporaryGameboard ] = isaacApi.endpoints.generateTemporaryGameboard.useMutation();
-    const [ loadGameboard ] = isaacApi.endpoints.getGameboardById.useLazyQuery();
+    const [ generateTemporaryGameboard ] = useGenerateTemporaryGameboardMutation();
+    const [ loadGameboard ] = useLazyGetGameboardByIdQuery();
 
     useEffect(() => {
         if (isFound(gameboard) && gameboard.id !== gameboardIdAnchor) {
@@ -516,7 +521,7 @@ export const GameboardFilter = withRouter(({location}: RouteComponentProps) => {
     // Title changing states and logic
     const [customBoardTitle, setCustomBoardTitle] = useState<string>();
     const [pendingCustomBoardTitle, setPendingCustomBoardTitle] = useState<string>();
-    const defaultBoardTitle = siteSpecific(generatePhyBoardName, generateCSBoardName)(selections);
+    const defaultBoardTitle = stripSoftHyphens(siteSpecific(generatePhyBoardName, generateCSBoardName)(selections));
     const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
     function loadNewGameboard(stages: Item<string>[], difficulties: Item<string>[], concepts: Item<string>[],

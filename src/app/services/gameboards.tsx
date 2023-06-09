@@ -13,8 +13,13 @@ import {
     siteSpecific,
     stagesOrdered
 } from "./";
-import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards, ViewingContext} from "../../IsaacAppTypes";
-import {isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
+import {BoardOrder, Boards, NOT_FOUND_TYPE, NumberOfBoards} from "../../IsaacAppTypes";
+import {
+    selectors,
+    useAppDispatch,
+    useAppSelector,
+    useLazyGetGameboardsQuery
+} from "../state";
 
 export enum BoardCompletions {
     "any" = "Any",
@@ -219,7 +224,7 @@ const parseBoardLimitAsNumber: (limit: BoardLimit) => NumberOfBoards = (limit: B
 
 export const useGameboards = (initialView: BoardViews, initialLimit: BoardLimit) => {
     const dispatch = useAppDispatch();
-    const [ loadGameboards ] = isaacApi.endpoints.getGameboards.useLazyQuery();
+    const [ loadGameboards ] = useLazyGetGameboardsQuery();
     const boards = useAppSelector(selectors.boards.boards);
 
     const [boardOrder, setBoardOrder] = useState<BoardOrder>(BoardOrder.visited);

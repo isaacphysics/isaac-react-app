@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import queryString from "query-string";
-import {fetchTopicSummary, isaacApi, selectors, useAppDispatch, useAppSelector} from "../state";
+import {fetchTopicSummary, selectors, useAppDispatch, useAppSelector, useGetGameboardByIdQuery} from "../state";
 import {
     determineCurrentCreationContext,
     determineGameboardHistory,
@@ -41,7 +41,7 @@ export const useNavigation = (doc: ContentDTO | NOT_FOUND_TYPE | null): PageNavi
     const {board: gameboardId, topic, questionHistory} = useQueryParams(true);
     const currentDocId = doc && doc !== NOT_FOUND ? doc.id as string : "";
     const dispatch = useAppDispatch();
-    const {data: currentGameboard} = isaacApi.endpoints.getGameboardById.useQuery(gameboardId || skipToken);
+    const {data: currentGameboard} = useGetGameboardByIdQuery(gameboardId || skipToken);
 
     useEffect(() => {
         if (topic) dispatch(fetchTopicSummary(topic as TAG_ID));
