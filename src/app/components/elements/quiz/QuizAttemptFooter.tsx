@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import {Spacer} from "../Spacer";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
 import {Button} from "reactstrap";
-import {siteSpecific} from "../../../services";
+import {isAda, siteSpecific} from "../../../services";
 
 function extractSectionIdFromQuizQuestionId(questionId: string) {
     const ids = questionId.split("|", 3);
@@ -58,7 +58,12 @@ export function QuizAttemptFooter(props: QuizAttemptProps & {feedbackLink: strin
 
         if (allCompleted) {
             controls = <>
-                <Button color="tertiary" tag={Link} replace to={pageLink(1)}>Review answers</Button>
+                {
+                    siteSpecific(
+                        <Button color="tertiary" tag={Link} replace to={pageLink(1)}>Review answers</Button>,
+                        <Button outline color="secondary" tag={Link} replace to={pageLink(1)}>Review answers</Button>
+                    )
+                }
                 <Spacer/>
                 All sections complete
                 <Spacer/>

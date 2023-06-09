@@ -71,7 +71,7 @@ function QuizAssignment({user, assignment}: QuizAssignmentProps) {
                     <RS.Button color="tertiary" size="sm" outline onClick={cancel} disabled={isCancelling} className="mr-1 bg-light">
                         {isCancelling ? <><IsaacSpinner size="sm" /> Cancelling...</> : siteSpecific("Cancel Test", "Cancel test")}
                     </RS.Button>
-                    <RS.Button tag={Link} to={`/quiz/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
+                    <RS.Button tag={Link} to={`/test/assignment/${assignment.id}/feedback`} disabled={isCancelling} color={isCancelling ? "tertiary" : undefined} size="sm" className="ml-1">
                         {siteSpecific("View Results", "View results")}
                     </RS.Button>
                 </div>
