@@ -17,7 +17,7 @@ import {Spacer} from "../../elements/Spacer";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
-    below,
+    below, isAda,
     isEventLeaderOrStaff,
     isPhy,
     MANAGE_QUIZ_TAB,
@@ -28,6 +28,8 @@ import {
 } from "../../../services";
 import {Tabs} from "../../elements/Tabs";
 import {IsaacSpinner} from "../../handlers/IsaacSpinner";
+import {PageFragment} from "../../elements/PageFragment";
+import {RenderNothing} from "../../elements/RenderNothing";
 
 interface SetQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -127,6 +129,7 @@ const SetQuizzesPageComponent = ({user, location}: SetQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={pageTitle} help={pageHelp} modalId={isPhy ? "set_tests_help" : undefined} />
+        {isAda && <PageFragment fragmentId={"set_tests_help"} ifNotFound={RenderNothing} />}
         <Tabs className="my-4 mb-5" tabContentClass="mt-4" activeTabOverride={activeTab} onActiveTabChange={activeTabChanged}>
             {{
                 [siteSpecific("Set Tests", "Available tests")]:

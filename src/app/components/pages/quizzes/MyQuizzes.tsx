@@ -16,7 +16,7 @@ import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {formatDate} from "../../elements/DateString";
 import {AppQuizAssignment} from "../../../../IsaacAppTypes";
 import {
-    extractTeacherName,
+    extractTeacherName, isAda,
     isAttempt,
     isFound,
     isTutorOrAbove,
@@ -25,6 +25,8 @@ import {
 } from "../../../services";
 import {Spacer} from "../../elements/Spacer";
 import {Tabs} from "../../elements/Tabs";
+import {PageFragment} from "../../elements/PageFragment";
+import {RenderNothing} from "../../elements/RenderNothing";
 
 interface MyQuizzesPageProps extends RouteComponentProps {
     user: RegisteredUserDTO;
@@ -155,7 +157,7 @@ const MyQuizzesPageComponent = ({user}: MyQuizzesPageProps) => {
 
     return <RS.Container>
         <TitleAndBreadcrumb currentPageTitle={siteSpecific("My Tests", "My tests")} help={pageHelp} />
-
+        {isAda && <PageFragment fragmentId={`tests_help_${isTutorOrAbove(user) ? "teacher" : "student"}`} ifNotFound={<div className={"mt-5"}/>} />}
         <Tabs className="mb-5 mt-4" tabContentClass="mt-4">
             {{
                 [siteSpecific("In Progress Tests", "In progress tests")]:
