@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {AppState, generateSpecification, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {selectors, useAppSelector} from "../../state";
 import {Col, Container, Row} from 'reactstrap';
 import {TitleAndBreadcrumb} from '../elements/TitleAndBreadcrumb';
 import {GraphChoiceDTO} from '../../../IsaacApiTypes';
@@ -10,26 +10,20 @@ import {
     makeGraphSketcher
 } from "isaac-graph-sketcher";
 import GraphSketcherModal from '../elements/modals/GraphSketcherModal';
-import {isStaff} from "../../services";
 
 const GraphSketcherPage = () => {
-    const user = useAppSelector((state: AppState) => state && state.user || null);
+    const user = useAppSelector(selectors.user.orNull);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentAttempt, setCurrentAttempt] = useState<GraphChoiceDTO | undefined>();
-    const graphSpec = useAppSelector(selectors.questions.graphSketcherSpec);
     const [previewSketch, setPreviewSketch] = useState<GraphSketcher>();
     const [initialState, setInitialState] = useState<GraphSketcherState>();
     const previewRef = useRef(null);
-    const dispatch = useAppDispatch();
 
     function openModal() {
         setModalVisible(true);
     }
 
     function closeModal() {
-        if (currentAttempt?.value && isStaff(user)) {
-            dispatch(generateSpecification({ type: 'graphChoice', value: currentAttempt.value}));
-        }
         setModalVisible(false);
     }
 
@@ -92,14 +86,12 @@ const GraphSketcherPage = () => {
                             <div ref={previewRef} className={`graph-sketcher-preview`} />
                         </div>
                         {modalVisible && <GraphSketcherModal
+                            user={user}
                             close={closeModal}
                             onGraphSketcherStateChange={onGraphSketcherStateChange}
                             initialState={initialState}
-                            allowMultiValuedFunctions={isStaff(user)}
                         />}
                     </div>
-                    {/* TODO af599 This needs checking, not sure why graphSpec is a {[key: number]: string} instead of a string[] */}
-                    {graphSpec && Object.keys(graphSpec).map((key) => <pre key={key}>{graphSpec[key as unknown as number]}</pre>)}
                 </Col>
             </Row>
         </Container>

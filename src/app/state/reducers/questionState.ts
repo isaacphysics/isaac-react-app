@@ -79,17 +79,3 @@ export const questions = (qs: QuestionsState = null, action: Action) => {
         }
     }
 };
-
-// TODO Move this into questions to make it consistent?
-type GraphSpecState = string[] | null;
-export const graphSketcherSpec = (p: GraphSpecState = null, action: Action) => {
-    switch(action.type) {
-        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST:
-            return null;
-        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS:
-            return { ...action.specResponse.results };
-        case ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE:
-        default:
-            return p;
-    }
-}
