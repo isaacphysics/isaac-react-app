@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import {BooleanNotation, DisplaySettings, ValidationUser} from "../../../../IsaacAppTypes";
+import {BooleanNotation, DisplaySettings} from "../../../../IsaacAppTypes";
 import {
     EMPTY_BOOLEAN_NOTATION_RECORD,
     EXAM_BOARD,
@@ -8,17 +8,17 @@ import {
     getFilteredStageOptions,
     isDefined,
     isTutorOrAbove,
-    STAGE, TEACHER_REQUEST_ROUTE
+    STAGE
 } from "../../../services";
 import * as RS from "reactstrap";
 import {CustomInput, Input} from "reactstrap";
-import {UserContext} from "../../../../IsaacApiTypes";
+import {UserContext, UserRole} from "../../../../IsaacApiTypes";
 import {v4 as uuid_v4} from "uuid";
-import {Link} from "react-router-dom";
 import classNames from "classnames";
-import {Immutable} from "immer";
+import { selectors, useAppSelector } from "../../../state";
 
 interface UserContextRowProps {
+    isStudent?: boolean;
     userContext: UserContext;
     setUserContext: (ucs: UserContext) => void;
     showNullStageOption: boolean;
@@ -29,7 +29,7 @@ interface UserContextRowProps {
 }
 
 function UserContextRow({
-    userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings
+    isStudent, userContext, setUserContext, showNullStageOption, submissionAttempted, existingUserContexts, setBooleanNotation, setDisplaySettings
 }: UserContextRowProps) {
     const onlyUCWithThisStage = existingUserContexts.filter(uc => uc.stage === userContext.stage).length === 1;
     return <React.Fragment>
@@ -56,7 +56,8 @@ function UserContextRow({
             <option value=""></option>
             {getFilteredStageOptions({
                 byUserContexts: existingUserContexts.filter(uc => !(uc.stage === userContext.stage && uc.examBoard === userContext.examBoard)),
-                includeNullOptions: showNullStageOption, hideFurtherA: true
+                includeNullOptions: showNullStageOption, hideFurtherA: true,
+                byRole: isStudent ? true : undefined
             }).map(item =>
                 <option key={item.value} value={item.value}>{item.label}</option>
             )}
@@ -90,7 +91,6 @@ function UserContextRow({
 }
 
 interface UserContextAccountInputProps {
-    user: Immutable<ValidationUser>;
     userContexts: UserContext[];
     setUserContexts: (ucs: UserContext[]) => void;
     setBooleanNotation: (bn: BooleanNotation) => void;
@@ -99,14 +99,16 @@ interface UserContextAccountInputProps {
     submissionAttempted: boolean;
 }
 export function UserContextAccountInput({
-    user, userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
+    userContexts, setUserContexts, displaySettings, setDisplaySettings, setBooleanNotation, submissionAttempted,
 }: UserContextAccountInputProps) {
+    const user = useAppSelector(selectors.user.orNull);
     const tutorOrAbove = isTutorOrAbove({...user, loggedIn: true});
+    const studyingOrTeaching = tutorOrAbove ? 'teaching' : 'studying';
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
 
-    return <div>
-        <RS.Label htmlFor="user-context-selector" className="form-required">
-            <span>Show me content for:</span>
+    return <div className="mx-3">
+        <RS.Label htmlFor="user-context-selector">
+            <span>I am {studyingOrTeaching}</span>
         </RS.Label>
         <React.Fragment>
                 <span id={`show-me-content-${componentId}`} className="icon-help" />
@@ -125,7 +127,7 @@ export function UserContextAccountInput({
                     getFilteredStageOptions({byUserContexts: userContexts, hideFurtherA: true}).length > 0;
 
                 return <RS.FormGroup key={index}>
-                    <UserContextRow
+                    <UserContextRow isStudent={!tutorOrAbove}
                         userContext={userContext} showNullStageOption={userContexts.length <= 1} submissionAttempted={submissionAttempted}
                         setUserContext={newUc => setUserContexts(userContexts.map((uc, i) => i === index ? newUc : uc))}
                         existingUserContexts={userContexts} setBooleanNotation={setBooleanNotation} setDisplaySettings={setDisplaySettings}
@@ -163,12 +165,6 @@ export function UserContextAccountInput({
                             }
                         </RS.UncontrolledTooltip>
                     </RS.Label>}
-
-                    {!tutorOrAbove && <><br/>
-                        <small>
-                            If you are a teacher or tutor, <Link to={TEACHER_REQUEST_ROUTE} target="_blank">upgrade your account</Link> to choose more than one exam board and stage.
-                        </small>
-                    </>}
                 </RS.FormGroup>
             })}
         </div>

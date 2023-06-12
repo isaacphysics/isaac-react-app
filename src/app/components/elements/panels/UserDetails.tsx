@@ -132,7 +132,7 @@ export const UserDetails = (props: UserDetailsProps) => {
             </Col>
             <Col md={6}>
                 <UserContextAccountInput
-                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                    userContexts={userContexts} setUserContexts={setUserContexts}
                     displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                     setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                 />

@@ -4,7 +4,6 @@ import * as RS from "reactstrap";
 import {School, ValidationUser} from "../../../../IsaacAppTypes";
 import {api, schoolNameWithPostcode, validateUserSchool} from "../../../services";
 import {throttle} from "lodash";
-import classNames from "classnames";
 import {Immutable} from "immer";
 
 interface SchoolInputProps {
@@ -29,7 +28,7 @@ const schoolSearch = (schoolSearchText: string, setAsyncSelectOptionsCallback: (
 const throttledSchoolSearch = throttle(schoolSearch, 450, {trailing: true, leading: true});
 
 export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted, className, idPrefix="school", disableInput, required}: SchoolInputProps) => {
-    let [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
+    const [selectedSchoolObject, setSelectedSchoolObject] = useState<School | null>();
 
     // Get school associated with urn
     function fetchSchool(urn: string) {
@@ -79,11 +78,11 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 undefined))
     );
 
-    let randomNumber = Math.random();
+    const randomNumber = Math.random();
 
     const isInvalid = submissionAttempted && required && !validateUserSchool(userToUpdate);
     return <RS.FormGroup className={`school ${className}`}>
-        <RS.Label htmlFor={`school-input-${randomNumber}`} className={classNames({"form-required": required})}>School</RS.Label>
+        <RS.Label htmlFor={`school-input-${randomNumber}`} >School</RS.Label>
         {userToUpdate.schoolOther !== NOT_APPLICABLE && <React.Fragment>
             <AsyncCreatableSelect
                 isClearable
@@ -117,9 +116,5 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 label="Not associated with a school"
             />
         </div>}
-
-        <div className="invalid-school">
-            {submissionAttempted && required && !validateUserSchool(userToUpdate) ? "Please specify your school association" : null}
-        </div>
     </RS.FormGroup>
 };

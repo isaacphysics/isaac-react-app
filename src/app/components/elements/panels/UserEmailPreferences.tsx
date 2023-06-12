@@ -35,24 +35,25 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
     if (error && error.type === "generalError") {
         errorMessage = error.generalError;
     } else  if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
-        errorMessage = "Please specify all email preferences"
+        errorMessage = "Please specify all preferences"
     }
 
     return <CardBody className="pb-0">
+        <h3 className="pb-4">Your communication preferences</h3>
         <p>Get important information about the Isaac {SITE_SUBJECT_TITLE} programme delivered to your inbox.
-            These settings can be changed at any time.</p>
+            These settings can be changed at any time. Expect one email per term for News and a monthly bulletin for Events.</p>
         <FormGroup className="overflow-auto">
             <Table className="mb-0">
                 <thead>
                     <tr>
-                        <th>Email type</th>
+                        <th>Email</th>
                         <th className="d-none d-sm-table-cell">Description</th>
                         <th className="text-center">Preference</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="form-required">Assignments</td>
+                        <td>Assignments</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.assignments}
                         </td>
@@ -65,7 +66,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                         </td>
                     </tr>
                     <tr>
-                        <td className="form-required">News</td>
+                        <td>News</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.news}
                         </td>
@@ -78,7 +79,7 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                         </td>
                     </tr>
                     <tr>
-                        <td className="form-required">Events</td>
+                        <td>Events</td>
                         <td className="d-none d-sm-table-cell">
                             {isaacEmailPreferenceDescriptions.events}
                         </td>
@@ -93,11 +94,6 @@ export const UserEmailPreference = ({emailPreferences, setEmailPreferences, subm
                 </tbody>
             </Table>
             <hr />
-            <div>
-                <small>
-                    <b>Frequency</b>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher.
-                </small>
-            </div>
             {errorMessage && <h4 role="alert" className="text-danger text-center">
                 {errorMessage}
             </h4>}

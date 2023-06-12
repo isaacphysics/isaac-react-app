@@ -35,7 +35,7 @@ const buildModalText = (buildConnectionsLink: (text: string) => React.ReactNode,
     }
 });
 
-const UserContextReconfimationModalBody = () => {
+const UserContextReconfirmationModalBody = () => {
     const dispatch = useDispatch();
     const user = useSelector(selectors.user.orNull);
     const userPreferences = useSelector(selectors.user.preferences);
@@ -98,7 +98,7 @@ const UserContextReconfimationModalBody = () => {
         <Row className="my-2">
             <Col xs={12} md={12} lg={6}>
                  <UserContextAccountInput
-                    user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                    userContexts={userContexts} setUserContexts={setUserContexts}
                     displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                     setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
                  />
@@ -127,7 +127,7 @@ const UserContextReconfimationModalBody = () => {
     </Form>;
 }
 
-export const userContextReconfimationModal = {
+export const userContextReconfirmationModal = {
     title: "Please review your details",
-    body: <UserContextReconfimationModalBody />,
+    body: <UserContextReconfirmationModalBody />,
 }

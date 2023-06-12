@@ -64,9 +64,6 @@ const RequiredAccountInfoBody = () => {
 
     return <RS.Form onSubmit={formSubmission}>
         {!allUserFieldsAreValid && <RS.CardBody className="py-0">
-            <div className="text-right text-muted required-before">
-                Required
-            </div>
             {!isTutorOrAbove(user) && <div className="text-left mb-4">
                 Account type: <b>{user?.loggedIn && user.role && UserFacingRole[user.role]}</b> <span>
                     <small>(Are you a teacher or tutor? {" "}
@@ -78,6 +75,13 @@ const RequiredAccountInfoBody = () => {
             </div>}
 
             <RS.Row className="d-flex flex-wrap my-2">
+            {!validateUserSchool(initialUserValue) && <RS.Col>
+                    <SchoolInput
+                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
+                        submissionAttempted={submissionAttempted} idPrefix="modal"
+                        required={!("role" in userToUpdate && isTutor(userToUpdate))}
+                    />
+                </RS.Col>}
                 {((!validateUserGender(initialUserValue)) || !validateUserContexts(initialUserContexts)) && <RS.Col lg={6}>
                     {!validateUserGender(initialUserValue) && <div className="mb-3">
                         <GenderInput
@@ -86,29 +90,19 @@ const RequiredAccountInfoBody = () => {
                             required
                         />
                     </div>}
-                    {!validateUserContexts(initialUserContexts) && <div>
+                </RS.Col>}
+              </RS.Row>
+            <RS.Row className="d-flex flex-wrap my-2">
+            {!validateUserContexts(initialUserContexts) && 
                         <UserContextAccountInput
-                            user={userToUpdate} userContexts={userContexts} setUserContexts={setUserContexts}
+                            userContexts={userContexts} setUserContexts={setUserContexts}
                             displaySettings={displaySettings} setDisplaySettings={setDisplaySettings}
                             setBooleanNotation={setBooleanNotation} submissionAttempted={submissionAttempted}
-                        />
-                    </div>}
-                </RS.Col>}
-                {!validateUserSchool(initialUserValue) && <RS.Col>
-                    <SchoolInput
-                        userToUpdate={userToUpdate} setUserToUpdate={setUserToUpdate}
-                        submissionAttempted={submissionAttempted} idPrefix="modal"
-                        required={!("role" in userToUpdate && isTutor(userToUpdate))}
-                    />
-                </RS.Col>}
+                        />}
             </RS.Row>
-            <div className="text-muted small pb-2">
-                Providing a few extra pieces of information helps us understand the usage of Isaac {SITE_SUBJECT_TITLE} across the UK and beyond.
-                Full details on how we use your personal information can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
-            </div>
         </RS.CardBody>}
 
-        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody>
+        {!allUserFieldsAreValid && !validateEmailPreferences(initialEmailPreferencesValue) && <RS.CardBody className="p-0">
             <hr className="text-center" />
         </RS.CardBody>}
 
@@ -119,11 +113,10 @@ const RequiredAccountInfoBody = () => {
             />
         </div>}
 
-        {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) && <div>
-            <h4 role="alert" className="text-danger text-center mb-4">
-                Not all required fields have been correctly filled.
-            </h4>
-        </div>}
+        <div className="text-muted small pb-2">
+                Providing this information helps us understand the usage of Isaac {SITE_SUBJECT_TITLE}.
+                Full details on how we use your personal data can be found in our <a target="_blank" href="/privacy">Privacy Policy</a>.
+            </div>
 
         <RS.CardBody className="py-0">
             <RS.Row className="text-center pb-3">

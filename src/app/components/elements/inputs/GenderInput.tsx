@@ -15,7 +15,7 @@ interface GenderInputProps {
 }
 export const GenderInput = ({userToUpdate, setUserToUpdate, submissionAttempted, idPrefix="account", required}: GenderInputProps) => {
     return <RS.FormGroup className="my-1">
-        <RS.Label htmlFor={`${idPrefix}-gender-select`} className={classNames({"form-required": required})}>
+        <RS.Label htmlFor={`${idPrefix}-gender-select`}>
             Gender
         </RS.Label>
         <Input
