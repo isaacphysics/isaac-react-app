@@ -5,7 +5,8 @@ import {
     MisuseStatisticDTO,
     RegisteredUserDTO,
     UserRole,
-    UserSummaryForAdminUsersDTO
+    UserSummaryForAdminUsersDTO,
+    ChoiceDTO
 } from "../../../../IsaacApiTypes";
 import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
@@ -138,6 +139,18 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 errorTitle: "Failed to get user",
             }),
         }),
+
+        generateAnswerSpecification: build.mutation<string[], ChoiceDTO>({
+            query: (choice) => ({
+                url: "/questions/generateSpecification",
+                method: "POST",
+                body: choice
+            }),
+            transformResponse: (response: {results: string[], totalResults: number}) => response.results,
+            onQueryStarted: onQueryLifecycleEvents({
+                errorTitle: "There was a problem generating an answer specification",
+            })
+        }),
     })
 });
 
@@ -152,4 +165,5 @@ export const {
     useAdminModifyUserEmailVerificationStatusMutation,
     useAdminGetUserQuery,
     useGetSiteStatisticsQuery,
+    useGenerateAnswerSpecificationMutation,
 } = adminApi;

@@ -80,15 +80,13 @@ services:
     external_links:
       - $ES_CONTAINER_NAME:elasticsearch
     environment:
-      - SEGUE_CONFIG_LOCATION=/local/data/conf/segue-config.properties
+      - SEGUE_CONFIG_LOCATION=/local/data/config/$ENV/$SITE/segue-config.dec.yaml
       - JAVA_OPTIONS=-Dlog.path=/isaac-logs -Dsegue.version=$API_VERSION
     volumes:
       - /local/data/m2:/root/.m2:rw
-      - /local/data/isaac-config/$SITE/segue-config.$ENV.properties:/local/data/conf/segue-config.properties:ro
+      - /local/data/isaac-sops-config-decrypted/common/$SITE:/local/data/config/common/$SITE:ro
+      - /local/data/isaac-sops-config-decrypted/$ENV/$SITE:/local/data/config/$ENV/$SITE:ro
       - /local/data/$CONTENT_REPO:/local/data/$CONTENT_REPO:rw
-      - /local/data/keys:/local/data/keys:ro
-      - /local/data/school_list_2019.csv:/local/data/school_list_2019.csv:ro
-      - /local/data/school_list_2022.csv:/local/data/school_list_2022.csv:ro
       - /var/log/isaac/$SITE-$ENV:/isaac-logs:rw
     networks:
       default:

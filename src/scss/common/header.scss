@@ -22,8 +22,14 @@
 
 .toasts-container {
   position: fixed;
-  top: 98px;
-  right: 98px;
+  @include respond-below(sm) {
+    top: 20px;
+    right: 20px;
+  }
+  @include respond-above(sm) {
+    top: 98px;
+    right: 98px;
+  }
   z-index: 10000;
 
   .fade {
@@ -49,6 +55,7 @@
 }
 .toast-body {
   font-size: 1rem;
+  max-width: min(calc(100vw - 40px), max(50vw, 400px));
 }
 
 header {

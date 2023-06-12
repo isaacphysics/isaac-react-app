@@ -19,7 +19,6 @@ import {
     glossaryTerms,
     concepts,
     doc,
-    graphSketcherSpec,
     questions,
     activeModals,
     notifications,
@@ -78,7 +77,6 @@ export const rootReducer = combineReducers({
 
     // Question
     questions,
-    graphSketcherSpec,
 
     // Progress
     myProgress,

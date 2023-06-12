@@ -361,8 +361,8 @@ export const resetPassword = (params: {email: string}) => async (dispatch: Dispa
         dispatch(showToast({
             color: "success",
             title: "Password reset email sent",
-            body: `A password reset email has been sent to '${params.email}'`,
-            timeout: 5000
+            body: `If an account exists with the email address ${params.email}, we have sent you a password reset email. If you don’t receive an email, you may not have an account with this email address.`,
+            timeout: 10000
         }) as any);
     } catch (e: any) {
         dispatch(showAxiosErrorToastIfNeeded("Password reset failed", e));
@@ -912,18 +912,6 @@ export const testQuestion = (questionChoices: FreeTextRule[], testCases: TestCas
         dispatch(showAxiosErrorToastIfNeeded("Failed to test question", e));
     }
 };
-
-// Generate answer spec for graph sketcher
-export const generateSpecification = (graphChoice: GraphChoiceDTO) => async (dispatch: Dispatch<Action>) => {
-    try {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_REQUEST});
-        const specResponse = await api.questions.generateSpecification(graphChoice);
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_SUCCESS, specResponse: specResponse.data });
-    } catch (e) {
-        dispatch({type: ACTION_TYPE.GRAPH_SKETCHER_GENERATE_SPECIFICATION_RESPONSE_FAILURE});
-        dispatch(showAxiosErrorToastIfNeeded("There was a problem generating a graph specification", e));
-    }
-}
 
 // Search
 export const fetchSearch = (query: string, types: string | undefined) => async (dispatch: Dispatch<Action>) => {
