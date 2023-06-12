@@ -9,13 +9,14 @@ import React, {
     useState
 } from "react";
 import {
-    isaacApi,
     loadQuizAssignmentFeedback,
     loadQuizAssignments,
     openActiveModal,
     selectors,
     useAppDispatch,
     useAppSelector,
+    useGetAssignmentProgressQuery,
+    useGetGroupsQuery,
     useGroupAssignments,
     useGroupAssignmentSummary
 } from "../../state";
@@ -327,7 +328,7 @@ export const ProgressDetails = ({assignment}: {assignment: EnhancedAssignmentWit
 };
 
 const ProgressLoader = ({assignment}: {assignment: EnhancedAssignment}) => {
-    const assignmentProgressQuery = isaacApi.endpoints.getAssignmentProgress.useQuery(assignment.id);
+    const assignmentProgressQuery = useGetAssignmentProgressQuery(assignment.id);
     return <ShowLoadingQuery
         query={assignmentProgressQuery}
         defaultErrorTitle={`Error fetching ${siteSpecific("assignment", "quiz")} progress`}
@@ -579,7 +580,7 @@ export const GroupAssignmentProgress = ({group}: {group: AppGroup}) => {
 
 export function AssignmentProgress({user}: {user: RegisteredUserDTO}) {
     const dispatch = useAppDispatch();
-    const groupsQuery = isaacApi.endpoints.getGroups.useQuery(false);
+    const groupsQuery = useGetGroupsQuery(false);
     const accessibilitySettings = useAssignmentProgressAccessibilitySettings({user});
 
     const [groupSortOrder, setGroupSortOrder] = useState<GroupSortOrder>(GroupSortOrder.Alphabetical);

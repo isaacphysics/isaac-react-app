@@ -1,4 +1,4 @@
-import {isaacApi, selectors, useAppSelector} from "../../index";
+import {selectors, useAppSelector, useGetMySetAssignmentsQuery} from "../../index";
 import {isFound, SortOrder, sortStringsNumerically} from "../../../services";
 import {
     AppQuizAssignment,
@@ -13,7 +13,7 @@ import produce from "immer";
 // Returns summary assignment objects without data on gameboard contents - much faster to request these from the API
 // than those returned from useGroupAssignments
 export const useGroupAssignmentSummary = (groupId?: number) => {
-    const { data: assignments } = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
+    const { data: assignments } = useGetMySetAssignmentsQuery(undefined);
     const quizAssignments = useAppSelector(selectors.quizzes.assignments);
 
     const groupBoardAssignments = assignments?.filter(a => a.groupId === groupId);
@@ -55,7 +55,7 @@ const sortAssignments = (as: SortFuncInputType[] | undefined, sortOrder?: Assign
 
 // Returns assignment objects with full gameboard and question part data
 export const useGroupAssignments = (groupId?: number, sortOrder?: AssignmentOrderSpec) => {
-    const { data: assignments } = isaacApi.endpoints.getMySetAssignments.useQuery(groupId);
+    const { data: assignments } = useGetMySetAssignmentsQuery(groupId);
     const quizAssignments = useAppSelector(selectors.quizzes.assignments);
 
     const groupBoardAssignments = sortAssignments(assignments, sortOrder) as EnhancedAssignment[] | undefined;

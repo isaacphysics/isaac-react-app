@@ -1,7 +1,7 @@
 import {Action, PotentialUser, UserPreferencesDTO, UserSchoolLookup} from "../../../IsaacAppTypes";
 import {ACTION_TYPE} from "../../services";
 import {UserAuthenticationSettingsDTO} from "../../../IsaacApiTypes";
-import {isaacApi} from "../index";
+import {userApi} from "../index";
 import {Immutable} from "immer";
 
 type UserState = Immutable<PotentialUser> | null;
@@ -25,7 +25,7 @@ export const user = (user: UserState = null, action: Action): UserState => {
 
 type UserAuthSettingsState = UserAuthenticationSettingsDTO | null;
 export const userAuthSettings = (userAuthSettings: UserAuthSettingsState = null, action: Action) => {
-    if (isaacApi.endpoints.setupAccountMFA.matchFulfilled(action)) {
+    if (userApi.endpoints.setupAccountMFA.matchFulfilled(action)) {
         return {
             ...userAuthSettings,
             mfaStatus: true

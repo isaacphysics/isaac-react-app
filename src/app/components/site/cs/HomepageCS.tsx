@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {isaacApi, selectors, useAppSelector} from "../../../state";
+import {selectors, useAppSelector, useGetNewsPodListQuery} from "../../../state";
 import {Link} from "react-router-dom";
 import {Button, CardDeck, Col, Container, Row} from "reactstrap";
 import {SITE_TITLE} from "../../../services";
@@ -14,7 +14,7 @@ import {MetaDescription} from "../../elements/MetaDescription";
 export const HomepageCS = () => {
     useEffect( () => {document.title = SITE_TITLE;}, []);
     const user = useAppSelector(selectors.user.orNull);
-    const {data: news} = isaacApi.endpoints.getNewsPodList.useQuery({subject: "news", orderDecending: true});
+    const {data: news} = useGetNewsPodListQuery({subject: "news", orderDecending: true});
 
     return <>
         {/*<WarningBanner/>*/}

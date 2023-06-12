@@ -271,9 +271,6 @@ export const api = {
         },
         testFreeTextQuestion: (userDefinedChoices: Choice[], testCases: TestCaseDTO[]) => {
             return endpoint.post("/questions/test?type=isaacFreeTextQuestion", {userDefinedChoices, testCases});
-        },
-        generateSpecification: (graphChoice: ApiTypes.GraphChoiceDTO) => {
-            return endpoint.post("/questions/generateSpecification", graphChoice);
         }
     },
     concepts: {
@@ -294,25 +291,6 @@ export const api = {
     topics: {
         get: (topicName: TAG_ID): AxiosPromise<ApiTypes.IsaacTopicSummaryPageDTO> => {
             return endpoint.get(`/pages/topics/${topicName}`);
-        }
-    },
-    contentVersion: {
-        getLiveVersion: (): AxiosPromise<{ liveVersion: string }> => {
-            return endpoint.get(`/info/content_versions/live_version`);
-        },
-        setLiveVersion(version: string): AxiosPromise {
-            return endpoint.post(`/admin/live_version/${version}`);
-        }
-    },
-    constants: {
-        getUnits: (): AxiosPromise<string[]> => {
-            return endpoint.get(`/content/units`);
-        },
-        getSegueVersion: (): AxiosPromise<{segueVersion: string}> => {
-            return endpoint.get(`/info/segue_version`);
-        },
-        getSegueEnvironment: (): AxiosPromise<{segueEnvironment: string}> => {
-            return endpoint.get(`/info/segue_environment`);
         }
     },
     schools: {

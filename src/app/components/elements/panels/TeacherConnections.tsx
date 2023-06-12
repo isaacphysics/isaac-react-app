@@ -6,13 +6,15 @@ import {
     AdminUserGetState,
     authenticateWithTokenAfterPrompt,
     getActiveAuthorisations,
-    getStudentAuthorisations, isaacApi,
+    getStudentAuthorisations,
     releaseAllAuthorisationsAfterPrompt,
     releaseAuthorisationAfterPrompt,
     revokeAuthorisationAfterPrompt,
     selectors,
     useAppDispatch,
-    useAppSelector
+    useAppSelector,
+    useChangeMyMembershipStatusMutation,
+    useGetGroupMembershipsQuery
 } from "../../../state";
 import classnames from "classnames";
 import {
@@ -29,7 +31,6 @@ import {PageFragment} from "../PageFragment";
 import {RenderNothing} from "../RenderNothing";
 import {skipToken} from "@reduxjs/toolkit/query";
 
-
 interface TeacherConnectionsProps {
     user: PotentialUser;
     authToken: string | null;
@@ -41,8 +42,8 @@ export const TeacherConnections = ({user, authToken, editingOtherUser, userToEdi
     const activeAuthorisations = useAppSelector(selectors.connections.activeAuthorisations);
     const studentAuthorisations = useAppSelector(selectors.connections.otherUserAuthorisations);
     const groupQuery = (user.loggedIn && user.id) ? ((editingOtherUser && userToEdit?.id) || undefined) : skipToken;
-    const {data: groupMemberships} = isaacApi.endpoints.getGroupMemberships.useQuery(groupQuery);
-    const [changeMyMembershipStatus] = isaacApi.endpoints.changeMyMembershipStatus.useMutation();
+    const {data: groupMemberships} = useGetGroupMembershipsQuery(groupQuery);
+    const [changeMyMembershipStatus] = useChangeMyMembershipStatusMutation();
 
     useEffect(() => {
         if (user.loggedIn && user.id) {

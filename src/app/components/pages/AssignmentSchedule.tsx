@@ -1,4 +1,13 @@
-import {assignGameboard, isaacApi, selectors, useAppDispatch, useAppSelector} from "../../state";
+import {
+    assignGameboard,
+    selectors,
+    useAppDispatch,
+    useAppSelector,
+    useGetGameboardsQuery,
+    useGetGroupsQuery,
+    useGetMySetAssignmentsQuery,
+    useUnassignGameboardMutation
+} from "../../state";
 import {AssignmentDTO, GameboardDTO, RegisteredUserDTO, UserGroupDTO} from "../../../IsaacApiTypes";
 import groupBy from "lodash/groupBy";
 import mapValues from "lodash/mapValues";
@@ -54,7 +63,7 @@ interface AssignmentListEntryProps {
 const AssignmentListEntry = ({assignment}: AssignmentListEntryProps) => {
     const user = useAppSelector(selectors.user.orNull) as RegisteredUserDTO;
     const {openAssignmentModal, viewBy} = useContext(AssignmentScheduleContext);
-    const [ unassignGameboard ] = isaacApi.endpoints.unassignGameboard.useMutation();
+    const [ unassignGameboard ] = useUnassignGameboardMutation();
     const deleteAssignment = () => {
         if (confirm(`Are you sure you want to unassign ${assignment.gameboard?.title ?? "this gameboard"} from ${assignment.groupName ? `group ${assignment.groupName}` : "this group"}?`)) {
             unassignGameboard({boardId: assignment.gameboardId, groupId: assignment.groupId});
@@ -315,11 +324,11 @@ const AssignmentModal = ({user, showAssignmentModal, toggleAssignModal, assignme
 
 type AssignmentsGroupedByDate = [number, [number, [number, ValidAssignmentWithListingDate[]][]][]][];
 export const AssignmentSchedule = ({user}: {user: RegisteredUserDTO}) => {
-    const assignmentsSetByMeQuery = isaacApi.endpoints.getMySetAssignments.useQuery(undefined);
+    const assignmentsSetByMeQuery = useGetMySetAssignmentsQuery(undefined);
     const { data: assignmentsSetByMe } = assignmentsSetByMeQuery;
-    const gameboardsQuery = isaacApi.endpoints.getGameboards.useQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
+    const gameboardsQuery = useGetGameboardsQuery({startIndex: 0, limit: BoardLimit.All, sort: BoardOrder.created});
     const { data: gameboards } = gameboardsQuery;
-    const { data: groups } = isaacApi.endpoints.getGroups.useQuery(false);
+    const { data: groups } = useGetGroupsQuery(false);
 
     const [viewBy, setViewBy] = useState<"startDate" | "dueDate">("startDate");
 

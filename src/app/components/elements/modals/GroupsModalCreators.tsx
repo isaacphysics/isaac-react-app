@@ -4,10 +4,16 @@ import {
     showAdditionalManagerSelfRemovalModal,
     showGroupInvitationModal,
     showGroupManagersModal,
-    isaacApi,
     store,
     useAppDispatch,
     mutationSucceeded,
+    useGetGroupsQuery,
+    useUpdateGroupMutation,
+    useAddGroupManagerMutation,
+    useDeleteGroupManagerMutation,
+    usePromoteGroupManagerMutation,
+    useGetGroupTokenQuery,
+    groupsApi,
 } from "../../../state";
 import sortBy from "lodash/sortBy";
 import {history, isAda, isDefined, isTeacherOrAbove, PATHS, siteSpecific} from "../../../services";
@@ -40,7 +46,7 @@ export const additionalManagerSelfRemovalModal = (group: AppGroup, user: Registe
             <Col>
                 <Button block color="secondary" onClick={() => {
                     if (group.id && user.id) {
-                        store.dispatch(isaacApi.endpoints.deleteGroupManager.initiate({groupId: group.id, managerUserId: user.id}));
+                        store.dispatch(groupsApi.endpoints.deleteGroupManager.initiate({groupId: group.id, managerUserId: user.id}));
                     }
                     store.dispatch(closeActiveModal());
                 }}>
@@ -56,7 +62,7 @@ interface CurrentGroupInviteModalProps {
     group: AppGroup;
 }
 const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProps) => {
-    const tokenQuery = isaacApi.endpoints.getGroupToken.useQuery(group.id as number);
+    const tokenQuery = useGetGroupTokenQuery(group.id as number);
     return <>
         {firstTime && <h1>Invite users</h1>}
         <p>Use one of the following methods to add users to your group. Students joining your group will be shown your name and account email and asked to confirm sharing data.</p>
@@ -121,12 +127,12 @@ export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, f
 
 const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {groupId: number, archived: boolean, userIsOwner: boolean, user: RegisteredUserDTO}) => {
     const dispatch = useAppDispatch();
-    const {data: groups} = isaacApi.endpoints.getGroups.useQuery(archived);
+    const {data: groups} = useGetGroupsQuery(archived);
     const group = groups?.find(g => g.id === groupId);
-    const [addGroupManager] = isaacApi.endpoints.addGroupManager.useMutation();
-    const [deleteGroupManager] = isaacApi.endpoints.deleteGroupManager.useMutation();
-    const [promoteGroupManager] = isaacApi.endpoints.promoteGroupManager.useMutation();
-    const [updateGroup] = isaacApi.endpoints.updateGroup.useMutation();
+    const [addGroupManager] = useAddGroupManagerMutation();
+    const [deleteGroupManager] = useDeleteGroupManagerMutation();
+    const [promoteGroupManager] = usePromoteGroupManagerMutation();
+    const [updateGroup] = useUpdateGroupMutation();
 
     const additionalManagers = group && sortBy(group.additionalManagers, manager => manager.familyName && manager.familyName.toLowerCase()) || [];
 

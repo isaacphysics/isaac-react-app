@@ -16,11 +16,9 @@ import {
     mainContentIdSlice,
     printingSettingsSlice,
     transientUserContextSlice,
-    constants,
     glossaryTerms,
     concepts,
     doc,
-    graphSketcherSpec,
     questions,
     activeModals,
     notifications,
@@ -33,7 +31,6 @@ import {
     adminStats,
     adminUserGet,
     adminUserSearch,
-    contentVersion,
     testQuestions,
     quizAssignedToMe,
     quizAssignment,
@@ -74,7 +71,6 @@ export const rootReducer = combineReducers({
     notifications,
 
     // Static Content
-    constants,
     glossaryTerms,
 
     // Content
@@ -83,7 +79,6 @@ export const rootReducer = combineReducers({
 
     // Question
     questions,
-    graphSketcherSpec,
 
     // Progress
     myProgress,
@@ -96,7 +91,6 @@ export const rootReducer = combineReducers({
     adminUserSearch,
     adminStats,
     adminEmailTemplate,
-    contentVersion,
     testQuestions,
 
     // Groups
