@@ -60,9 +60,9 @@ def ask_to_run_command(command, print_output=True, expected_nonzero_exit_codes: 
     if not EXEC:
         return input(f"{command}\n")
 
-    response = input(f"Execute: {command}?: ")
-    while response.lower() not in ["y", "yes", "s", "skip", "a", "abort"]:
-        response = input("Please respond with one of:\n - Yes (or y)\n - Skip (or s)\n - Abort (or a)\n")
+    response = input(f"Execute: {command}?: ").lower()
+    while response not in ["y", "yes", "s", "skip", "a", "abort"]:
+        response = input("Please respond with one of:\n - Yes (or y)\n - Skip (or s)\n - Abort (or a)\n").lower()
 
     if response in ["a", "abort"]:
         print("! Aborting release process, please clean up after yourself !")
